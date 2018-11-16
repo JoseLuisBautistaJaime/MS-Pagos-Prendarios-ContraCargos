@@ -1,0 +1,77 @@
+package mx.com.nmp.pagos.mimonte.dto;
+
+/**
+ * Nombre: Tarjeta
+ * Descripcion: Clase que encapsula la informacion perteneciente a una Tarjeta.
+ *
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * Fecha: 16/11/2018 13:27 hrs.
+ * @version 0.1
+ */
+public class TarjetaDTO {
+	
+	private TipoTarjetaDTO tipo;
+	private String idTarjeta;
+	private String token;
+	private String alias;
+	private Integer digitos;
+	
+	public TarjetaDTO() {
+		super();
+	}
+
+	public TarjetaDTO(TipoTarjetaDTO tipo, String idTarjeta, String token, String alias, Integer digitos) {
+		this.tipo = tipo;
+		this.idTarjeta = idTarjeta;
+		this.token = token;
+		this.alias = alias;
+		this.digitos = digitos;
+	}
+
+	public TipoTarjetaDTO getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoTarjetaDTO tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getIdTarjeta() {
+		return idTarjeta;
+	}
+
+	public void setIdTarjeta(String idTarjeta) {
+		this.idTarjeta = idTarjeta;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public Integer getDigitos() {
+		return digitos;
+	}
+
+	public void setDigitos(Integer digitos) {
+		this.digitos = digitos;
+	}
+
+	@Override
+	public String toString() {
+		return "TarjetaDTO [tipo=" + tipo + ", idTarjeta=" + idTarjeta + ", token=" + token + ", alias=" + alias
+				+ ", digitos=" + digitos + "]";
+	}
+	
+}
