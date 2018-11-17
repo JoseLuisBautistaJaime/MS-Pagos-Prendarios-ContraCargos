@@ -11,6 +11,7 @@ package mx.com.nmp.pagos.mimonte.dto;
 public class TarjetaDTO {
 	
 	private TipoTarjetaDTO tipo;
+	private EstatusTarjetaDTO estatus;
 	private String idTarjeta;
 	private String token;
 	private String alias;
@@ -20,8 +21,9 @@ public class TarjetaDTO {
 		super();
 	}
 
-	public TarjetaDTO(TipoTarjetaDTO tipo, String idTarjeta, String token, String alias, Integer digitos) {
+	public TarjetaDTO(TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus, String idTarjeta, String token, String alias, Integer digitos) {
 		this.tipo = tipo;
+		this.estatus = estatus;
 		this.idTarjeta = idTarjeta;
 		this.token = token;
 		this.alias = alias;
@@ -34,6 +36,14 @@ public class TarjetaDTO {
 
 	public void setTipo(TipoTarjetaDTO tipo) {
 		this.tipo = tipo;
+	}
+	
+	public EstatusTarjetaDTO getEstatus() {
+		return estatus;
+	}
+
+	public void setTipo(EstatusTarjetaDTO estatus) {
+		this.estatus = estatus;
 	}
 
 	public String getIdTarjeta() {

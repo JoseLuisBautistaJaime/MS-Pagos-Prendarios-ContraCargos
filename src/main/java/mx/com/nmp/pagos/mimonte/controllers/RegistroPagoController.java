@@ -20,6 +20,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.RegistroPagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
@@ -74,7 +75,8 @@ public class RegistroPagoController {
 		operaciones.add(new OperacionDTO(1, "Operacion_1", "C123", 3500D));
 		operaciones.add(new OperacionDTO(2, "Operacion_2", "C456", 2500D));
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa");
-		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, "1", "T001002003004", "MyBSmart", 2345);
+		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO("Activa", "Activa");
+		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, estatusTarjetaDto, "1", "T001002003004", "MyBSmart", 2345);
 		registroPagoDTO = new RegistroPagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);
 		// dummy data building ends
 
