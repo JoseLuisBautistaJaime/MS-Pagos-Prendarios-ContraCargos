@@ -36,7 +36,10 @@ public class TarjetasServiceImpl implements TarjetasService {
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa");
 		tipoTarjeta.add(tipoTarjetaDto);
 
-		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO("Activa", "Activa");
+		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
+		estatusTarjetaDto.setId(1L);
+		estatusTarjetaDto.setDescripcion_corta("Activa");
+		estatusTarjetaDto.setDescripcion("Activa");
 		estatusTarjeta.add(estatusTarjetaDto);
 
 		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, estatusTarjetaDto, "1", "T001002003004", "MyBSmart",	2345);
@@ -61,7 +64,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa");
 		tipoTarjeta.add(tipoTarjetaDto);
 
-		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO("Activa", "Activa");
+		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
 		estatusTarjeta.add(estatusTarjetaDto);
 
 		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, estatusTarjetaDto, "1", "T001002003004", "MyBSmart",	2345);

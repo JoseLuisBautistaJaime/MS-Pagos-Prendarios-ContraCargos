@@ -37,7 +37,7 @@ import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCadena;
 @RestController
 @RequestMapping("/mimonte")
 @Api(value = "Servicio que permite registrar tarjetas de crédito y/o débito.",  description = "REST API para registro de Tarjetas",  produces = MediaType.APPLICATION_JSON_VALUE,  protocols = "http", tags = { "Tarjetas" })
-public class RegistroTarjetasController {
+public class TarjetasController {
 	
 	/**
      * Bean de la capa service para obtener los resultados
@@ -54,7 +54,7 @@ public class RegistroTarjetasController {
     /**
      * Instancia que registra los eventos en la bitacora
      */
-    private final Logger log = LoggerFactory.getLogger(RegistroTarjetasController.class);
+    private final Logger log = LoggerFactory.getLogger(TarjetasController.class);
 
     /**
      * Mensaje que sera enviado si se recuperaron los registros correctamente
@@ -102,7 +102,7 @@ public class RegistroTarjetasController {
     
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/v1/tarjeta/registroTarjeta", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/v1/tarjeta/", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Registra la información de la tarjeta en la base de datos.", tags = { "Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
@@ -149,7 +149,7 @@ public class RegistroTarjetasController {
     
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping(value = "/v1/tarjeta/delete/{idTarjeta}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/v1/tarjeta/{idTarjeta}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(httpMethod ="DELETE", value = "Borra la información de la tarjeta registrada en la base de datos.", tags = { "Tarjetas" })
     @ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
                     @ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
