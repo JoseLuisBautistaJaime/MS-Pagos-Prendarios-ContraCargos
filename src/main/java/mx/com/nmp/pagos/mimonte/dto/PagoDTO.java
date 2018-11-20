@@ -2,7 +2,15 @@ package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.List;
 
-public class RegistroPagoDTO {
+/**
+ * Nombre: Pago
+ * Descripcion: Clase que encapsula la informacion perteneciente a un pago.
+ *
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * Fecha: 20/11/2018 12:56 hrs.
+ * @version 0.1
+ */
+public class PagoDTO {
 
 	private List<OperacionDTO> operaciones;
 	private TarjetaDTO tarjeta;
@@ -10,11 +18,11 @@ public class RegistroPagoDTO {
 	private String concepto;
 	private Boolean guardaTarjeta;
 	
-	public RegistroPagoDTO() {
+	public PagoDTO() {
 		super();
 	}
 	
-	public RegistroPagoDTO(List<OperacionDTO> operaciones, TarjetaDTO tarjeta, Integer montoTotal, String concepto, Boolean guardaTarjeta) {
+	public PagoDTO(List<OperacionDTO> operaciones, TarjetaDTO tarjeta, Integer montoTotal, String concepto, Boolean guardaTarjeta) {
 		this.operaciones = operaciones;
 		this.tarjeta = tarjeta;
 		this.montoTotal = montoTotal;
