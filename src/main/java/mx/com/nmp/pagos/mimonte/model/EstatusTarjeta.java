@@ -14,4 +14,8 @@ public class EstatusTarjeta extends AbstractCatalogo implements Serializable {
 	 */
 	private static final long serialVersionUID = -2044332050005722621L;
 
+	public EstatusTarjeta() {
+		super();
+	}
+
 }

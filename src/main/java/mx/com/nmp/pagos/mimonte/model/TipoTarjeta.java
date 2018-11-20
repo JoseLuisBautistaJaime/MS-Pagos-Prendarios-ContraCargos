@@ -16,4 +16,8 @@ public class TipoTarjeta extends AbstractCatalogo implements Serializable {
 	 */
 	private static final long serialVersionUID = -2483408655570238078L;
 
+	public TipoTarjeta() {
+		super();
+	}
+
 }
