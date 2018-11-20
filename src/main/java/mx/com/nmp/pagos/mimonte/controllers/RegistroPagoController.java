@@ -74,7 +74,7 @@ public class RegistroPagoController {
 		List<OperacionDTO> operaciones = new ArrayList<>();
 		operaciones.add(new OperacionDTO(1, "Operacion_1", "C123", 3500D));
 		operaciones.add(new OperacionDTO(2, "Operacion_2", "C456", 2500D));
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa");
+		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO("Activa", "Activa");
 		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, estatusTarjetaDto, "1", "T001002003004", "MyBSmart", 2345);
 		registroPagoDTO = new RegistroPagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);

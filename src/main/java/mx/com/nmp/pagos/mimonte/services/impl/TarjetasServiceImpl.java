@@ -33,7 +33,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
 		List<TarjetasDTO> tarjetasDTO = new ArrayList<TarjetasDTO>();
 
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa");
+		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
 		tipoTarjeta.add(tipoTarjetaDto);
 
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
@@ -61,7 +61,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
 		List<TarjetasDTO> tarjetasDTO = new ArrayList<TarjetasDTO>();
 
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa");
+		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
 		tipoTarjeta.add(tipoTarjetaDto);
 
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
