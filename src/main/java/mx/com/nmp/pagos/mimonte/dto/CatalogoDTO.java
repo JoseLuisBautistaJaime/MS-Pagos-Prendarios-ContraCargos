@@ -8,7 +8,7 @@ import java.util.List;
  * Nombre: Catalogo
  * Descripcion: Clase que encapsula la informacion perteneciente a un catalogo.
  *
- * @author Marco Camarillo mcamarillo@quarksoft.net
+ * @author Javier Hernandez jhernandez@quarksoft.net
  * Fecha: 14/02/2018 07:34 PM
  * @version 0.1
  */

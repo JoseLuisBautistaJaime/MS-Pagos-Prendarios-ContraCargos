@@ -7,7 +7,7 @@ import java.util.Objects;
  * Nombre: EntradaCatalogo
  * Descripcion: Clase que mantiene la informacion generica sobre un registro perteneciente a un catalogo
  *
- * @author Marco Camarillo mcamarillo@quarksoft.net
+ * @author Javier Hernandez jhernandez@quarksoft.net
  * Fecha: 07/02/2018 07:31 PM
  * @version 0.1
  */

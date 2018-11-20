@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * Nombre: Catalogo
  * Descripcion: Entidad que representa un catalogo dentro del sistema.
  *
- * @author Marco Camarillo mcamarillo@quarksoft.net
+ * @author Javier Hernandez jhernandez@quarksoft.net
  * Fecha: 22/02/2018 11:03 AM
  * @version 0.1
  */

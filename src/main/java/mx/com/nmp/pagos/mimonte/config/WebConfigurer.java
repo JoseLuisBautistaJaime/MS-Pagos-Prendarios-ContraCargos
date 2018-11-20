@@ -88,7 +88,7 @@ public class WebConfigurer  implements WebMvcConfigurer, ServletContextInitializ
         CorsConfiguration config = applicationProperties.getCors();
         if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
             log.debug("Registrando filtro CORS...");
-            // source.registerCorsConfiguration("/api/**", config);
+            source.registerCorsConfiguration("/mimonte/**", config);
             source.registerCorsConfiguration("/**", config);
             // source.registerCorsConfiguration("/extrafilter/**", config);
             // source.registerCorsConfiguration("/v2/api-docs", config);
@@ -102,13 +102,14 @@ public class WebConfigurer  implements WebMvcConfigurer, ServletContextInitializ
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 
         registrationBean.setFilter(restAuthorizationHeaderUsuarioFilter());
-        registrationBean.setEnabled(true);
+        registrationBean.setEnabled(false);
         registrationBean.addUrlPatterns("/mimonte/*");
         registrationBean.setOrder(1);
         registrationBean.setDispatcherTypes(DispatcherType.ERROR, DispatcherType.FORWARD, DispatcherType.REQUEST);
 
         return registrationBean;
     }
+
 
     @Bean
     public RESTAuthorizationHeaderUsuarioFilter restAuthorizationHeaderUsuarioFilter() {

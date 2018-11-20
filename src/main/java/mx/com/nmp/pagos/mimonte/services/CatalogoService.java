@@ -10,7 +10,7 @@ import java.util.List;
  * Nombre: CatalogoService
  * Descripcion: Interface que define la operacion encargada de obtener los registros del catalogo
  *
- * @author Marco Camarillo mcamarillo@quarksoft.net
+ * @author Javier Hernandez jhernandez@quarksoft.net
  * Fecha: 07/02/2018 08:00 PM
  * @version 0.1
  */
