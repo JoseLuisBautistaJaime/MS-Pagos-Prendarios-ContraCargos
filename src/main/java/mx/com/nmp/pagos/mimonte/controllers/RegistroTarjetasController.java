@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.dto.CatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
-import mx.com.nmp.pagos.mimonte.dto.RegistroPagoDTO;
+import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetasDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
