@@ -12,7 +12,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // For example: Use only Http Basic and not form login.
-        http.httpBasic().disable();
+        http.csrf().disable().authorizeRequests().anyRequest().
+                permitAll().and().logout().deleteCookies("rememberme").
+                permitAll().and().rememberMe().tokenValiditySeconds(160);
 
     }
 

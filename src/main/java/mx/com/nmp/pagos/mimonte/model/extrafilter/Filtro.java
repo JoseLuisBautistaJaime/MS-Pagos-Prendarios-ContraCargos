@@ -6,7 +6,6 @@ package mx.com.nmp.pagos.mimonte.model.extrafilter;
 /**
  * Enumeracion que contendra los filtros sobre extrafilter
  *
- * @author <a href="https://wiki.quarksoft.net/display/~cachavez">Carlos Chávez Melena</a>
  */
 public enum Filtro {
     /**

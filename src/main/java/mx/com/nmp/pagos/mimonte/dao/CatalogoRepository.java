@@ -12,12 +12,13 @@ import java.util.List;
  * Nombre: CatalogoRepository
  * Descripcion: Repositorio que realiza las consultas sobre la entidad {@link Catalogo}
  *
- * @author Marco Camarillo mcamarillo@quarksoft.net
+ * @author Javier Hernandez jhernandez@quarksoft.net
  * Fecha: 22/02/2018 11:06 AM
  * @version 0.1
  */
 @Repository
 public interface CatalogoRepository extends JpaRepository<Catalogo, Integer> {
+
     /**
      * Metodo que obtiene el {@link Catalogo} correspondiente a la descripcion especificada.
      * @param descripcionCorta Descripcion corta que pertenece al catalogo

@@ -24,7 +24,7 @@ import java.util.*;
  * Nombre: CatalogoServiceImpl
  * Descripcion: Clase que implementa la operacion que obtiene los registros de un catalogo definido
  *
- * @author Marco Camarillo mcamarillo@quarksoft.net
+ * @author Javier Hernandez jhernandez@quarksoft.net
  * Fecha: 07/02/2018 08:02 PM
  * @version 0.1
  */

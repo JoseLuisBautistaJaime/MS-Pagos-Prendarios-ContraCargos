@@ -8,7 +8,7 @@ import java.util.Objects;
  * Nombre: AbstractCatalogo
  * Descripcion: Clase abstracta que representa las propiedades generales de un catalogo
  *
- * @author Marco Camarillo mcamarillo@quarksoft.net
+ * @author Javier Hernandez jhernandez@quarksoft.net
  * Fecha: 08/02/2018 11:05 AM
  * @version 0.1
  */
