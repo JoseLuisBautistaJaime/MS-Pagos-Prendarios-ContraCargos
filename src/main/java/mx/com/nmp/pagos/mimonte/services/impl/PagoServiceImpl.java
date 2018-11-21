@@ -2,21 +2,26 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
+import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
+import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 
 /**
- * Nombre: PagoServiceImpl
- * Descripcion: Clase que implementa la operacion que realiza pagos de partidas
+ * Nombre: PagoServiceImpl Descripcion: Clase que implementa la operacion que
+ * realiza pagos de partidas
  *
- * @author Ismael Flores iaguilar@quarksoft.net
- * Fecha: 20/11/2018 16:22 hrs.
+ * @author Ismael Flores iaguilar@quarksoft.net Fecha: 20/11/2018 16:22 hrs.
  * @version 0.1
  */
 @Service("pagoServiceImpl")
 public class PagoServiceImpl implements PagoService {
+
+	@Autowired
+	TarjetasService tarjetaService;
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
@@ -26,8 +31,52 @@ public class PagoServiceImpl implements PagoService {
 	@Override
 	public PagoDTO savePago(PagoDTO pagoDTO) {
 		log.info("Ingreso al servicio de pago: POST");
-		// Enviar peticion a BUS
+		// ENVIAR PETICION A OPEN PAY Y A BUS
+		// OPEN PAY AND BUS REQUEST
+
+		// TODO SALIO BIEN
+		// GUARDAR LA TARJETA SI NO EXISTE, PERO VALIDAR ANTES QUE NO HALLA 3
+		if (validaSiGuardar(pagoDTO)) {
+			if (validaDatos(pagoDTO)) {
+				TarjetaDTO tarjeta = pagoDTO.getTarjeta();
+				tarjetaService.addTarjetas(tarjeta);
+			} else {
+				// Lanzar Excepcion de datos incorrectos o incompletos
+			}
+		}
+
+		// SI TODO FUE BIEN GUARDAR LA TRANSACCION:
+
 		return null;
+	}
+
+	/**
+	 * Metodo que valida recibe un objeto pagoDTO y valida si se debe guardar la
+	 * tarjeta que contiene
+	 * 
+	 * @param pagoDTO Objeto PagoDTO con un objeto tarjeta dentro
+	 * @return Valor boleano indicando si se debe guardar la tarjeta
+	 */
+	private static final boolean validaSiGuardar(PagoDTO pagoDTO) {
+		boolean flag = false;
+		if (null != pagoDTO && pagoDTO.getGuardaTarjeta())
+			flag = true;
+		return flag;
+	}
+
+	/**
+	 * Metodo que recibe un objeto PagoDTO y valida su contenido para saber todos
+	 * los campos de la tarjeta son validos
+	 * 
+	 * @param pagoDTO Objeto PagoDTO con un objeto tarjeta dentro
+	 * @return Valor boleano indicando si es posible guardar la tarjeta
+	 */
+	private static final boolean validaDatos(PagoDTO pagoDTO) {
+		boolean flag = false;
+		if (null != pagoDTO && null != pagoDTO.getTarjeta() && null != pagoDTO.getTarjeta().getAlias()
+				&& null != pagoDTO.getTarjeta().getToken())
+			flag = true;
+		return flag;
 	}
 
 }
