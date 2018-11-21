@@ -119,4 +119,9 @@ public class TarjetasServiceImpl implements TarjetasService {
 		return tarjetaDto;
 	}
 
+	@Override
+	public int countTarjetasByIdCliente(Integer idCliente) {
+		return tarjetaRepository.countByIdcliente(idCliente);
+	}
+
 }

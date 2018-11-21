@@ -54,8 +54,11 @@ public class PagoServiceImpl implements PagoService {
 				throw new DatosIncompletosException(Constants.PagoConstants.INCOMPLETE_CARD_DATA);
 			}
 		}
+		// ENVIAR REGISTRO A BUS Y OPEN PAY
+		// REQUEST CODE HERE
+		
 		// SI TODO FUE BIEN GUARDAR LA TRANSACCION:
-
+		
 		return null;
 	}
 
@@ -96,7 +99,9 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	public boolean validaCantidadTarjetasExistentes(PagoDTO pagoDTO) {
 		boolean flag = false;
-		//int cantidadTarjetas = tarjetaService.countTarjetas(pagoDTO.getTarjeta().getCliente().getId());
+		int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getCliente().getId());
+		if( cantidadTarjetas < Constants.PagoConstants.MAXIMUM_AMOUNT_OF_CARDS )
+			flag = true;
 		return flag;
 	}
 	
