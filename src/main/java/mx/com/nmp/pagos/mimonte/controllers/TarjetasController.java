@@ -53,7 +53,7 @@ public class TarjetasController {
     
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/v1/tarjeta/get/{idTarjeta}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/v1/tarjetas/{idTarjeta}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(httpMethod ="GET", value = "Regresa la información de las tarjetas registradas en la base de datos.", tags = { "Tarjetas" })
     @ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
                     @ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
