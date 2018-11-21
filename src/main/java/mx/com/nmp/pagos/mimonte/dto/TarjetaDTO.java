@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.util.Date;
+
 /**
  * Nombre: Tarjeta
  * Descripcion: Clase que encapsula la informacion perteneciente a una Tarjeta.
@@ -10,11 +12,12 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class TarjetaDTO {
 
-	private ClienteDTO cliente;
-	private String idTarjeta;
 	private String token;
-	private String alias;
 	private Integer digitos;
+	private String alias;
+	private Date fechaAlta;
+	private Date fechaModificacion;
+	private ClienteDTO cliente;
 	private TipoTarjetaDTO tipo;
 	private EstatusTarjetaDTO estatus;
 	
@@ -25,7 +28,6 @@ public class TarjetaDTO {
 	public TarjetaDTO(TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus, String idTarjeta, String token, String alias, Integer digitos) {
 		this.tipo = tipo;
 		this.estatus = estatus;
-		this.idTarjeta = idTarjeta;
 		this.token = token;
 		this.alias = alias;
 		this.digitos = digitos;
@@ -47,14 +49,6 @@ public class TarjetaDTO {
 
 	public void setEstatus(EstatusTarjetaDTO estatus) {
 		this.estatus = estatus;
-	}
-
-	public String getIdTarjeta() {
-		return idTarjeta;
-	}
-
-	public void setIdTarjeta(String idTarjeta) {
-		this.idTarjeta = idTarjeta;
 	}
 
 	public String getToken() {
@@ -89,10 +83,27 @@ public class TarjetaDTO {
 		this.cliente = cliente;
 	}
 
+	public Date getFechaAlta() {
+		return fechaAlta;
+	}
+
+	public void setFechaAlta(Date fechaAlta) {
+		this.fechaAlta = fechaAlta;
+	}
+
+	public Date getFechaModificacion() {
+		return fechaModificacion;
+	}
+
+	public void setFechaModificacion(Date fechaModificacion) {
+		this.fechaModificacion = fechaModificacion;
+	}
+
 	@Override
 	public String toString() {
-		return "TarjetaDTO [cliente=" + cliente + ", idTarjeta=" + idTarjeta + ", token=" + token + ", alias=" + alias
-				+ ", digitos=" + digitos + ", tipo=" + tipo + ", estatus=" + estatus + "]";
+		return "TarjetaDTO [cliente=" + cliente + ", token=" + token + ", alias=" + alias + ", fechaAlta=" + fechaAlta
+				+ ", fechaModificacion=" + fechaModificacion + ", digitos=" + digitos + ", tipo=" + tipo + ", estatus="
+				+ estatus + "]";
 	}
 	
 }

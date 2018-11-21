@@ -2,6 +2,14 @@ package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
 
+/**
+ * Nombre: Cliente
+ * Descripcion: Clase que encapsula la informacion perteneciente a un cliente.
+ *
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * Fecha: 21/11/2018 12:00 hrs.
+ * @version 0.1
+ */
 public class ClienteDTO {
 
 	private Integer id;

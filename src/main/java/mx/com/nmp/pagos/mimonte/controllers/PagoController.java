@@ -99,12 +99,12 @@ public class PagoController {
 		// Dummy data building ends
 
 		// Real code begins
-		try {
-			 pagoDTO = pagoService.savePago(pago);	
-		}
-		catch(PagoException pex) {
-			log.error(pex.getMessage());
-		}
+//		try {
+//			 pagoDTO = pagoService.savePago(pago);	
+//		}
+//		catch(PagoException pex) {
+//			log.error(pex.getMessage());
+//		}
 		// Real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoDTO);
