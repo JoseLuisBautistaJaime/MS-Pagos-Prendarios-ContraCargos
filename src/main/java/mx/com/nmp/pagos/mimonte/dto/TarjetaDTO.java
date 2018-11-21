@@ -10,6 +10,7 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class TarjetaDTO {
 
+	private ClienteDTO cliente;
 	private String idTarjeta;
 	private String token;
 	private String alias;
@@ -80,10 +81,18 @@ public class TarjetaDTO {
 		this.digitos = digitos;
 	}
 
+	public ClienteDTO getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(ClienteDTO cliente) {
+		this.cliente = cliente;
+	}
+
 	@Override
 	public String toString() {
-		return "TarjetaDTO [tipo=" + tipo + ", estatus=" + estatus + ", idTarjeta=" + idTarjeta + ", token=" + token + ", alias=" + alias
-				+ ", digitos=" + digitos + "]";
+		return "TarjetaDTO [cliente=" + cliente + ", idTarjeta=" + idTarjeta + ", token=" + token + ", alias=" + alias
+				+ ", digitos=" + digitos + ", tipo=" + tipo + ", estatus=" + estatus + "]";
 	}
 	
 }

@@ -5,13 +5,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.config.Constants;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
+import mx.com.nmp.pagos.mimonte.exception.CantidadMaximaTarjetasAlcanzadaException;
+import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
+import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 
 /**
- * Nombre: PagoServiceImpl Descripcion: Clase que implementa la operacion que
+ * Nombre: PagoServiceImpl
+ * Descripcion: Clase que implementa la operacion que
  * realiza pagos de partidas
  *
  * @author Ismael Flores iaguilar@quarksoft.net Fecha: 20/11/2018 16:22 hrs.
@@ -29,7 +34,7 @@ public class PagoServiceImpl implements PagoService {
 	private final Logger log = LoggerFactory.getLogger(PagoServiceImpl.class);
 
 	@Override
-	public PagoDTO savePago(PagoDTO pagoDTO) {
+	public PagoDTO savePago(PagoDTO pagoDTO) throws PagoException {
 		log.info("Ingreso al servicio de pago: POST");
 		// ENVIAR PETICION A OPEN PAY Y A BUS
 		// OPEN PAY AND BUS REQUEST
@@ -38,13 +43,17 @@ public class PagoServiceImpl implements PagoService {
 		// GUARDAR LA TARJETA SI NO EXISTE, PERO VALIDAR ANTES QUE NO HALLA 3
 		if (validaSiGuardar(pagoDTO)) {
 			if (validaDatos(pagoDTO)) {
-				TarjetaDTO tarjeta = pagoDTO.getTarjeta();
-				tarjetaService.addTarjetas(tarjeta);
+				if(validaCantidadTarjetasExistentes(pagoDTO)) {
+					TarjetaDTO tarjeta = pagoDTO.getTarjeta();
+					tarjetaService.addTarjetas(tarjeta);	
+				}
+				else {
+					throw new CantidadMaximaTarjetasAlcanzadaException(Constants.PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+				}
 			} else {
-				// Lanzar Excepcion de datos incorrectos o incompletos
+				throw new DatosIncompletosException(Constants.PagoConstants.INCOMPLETE_CARD_DATA);
 			}
 		}
-
 		// SI TODO FUE BIEN GUARDAR LA TRANSACCION:
 
 		return null;
@@ -79,4 +88,16 @@ public class PagoServiceImpl implements PagoService {
 		return flag;
 	}
 
+	/**
+	 * Metodo que valida si ya existe la cantidad maxima de tarjetas en el sistema que el cliente puede tener
+	 * 
+	 * @return Valor boleanpo que indica con true si el usuario puede agregar la tarjeta
+	 * o false si no puede realizar dicha accion
+	 */
+	public boolean validaCantidadTarjetasExistentes(PagoDTO pagoDTO) {
+		boolean flag = false;
+		//int cantidadTarjetas = tarjetaService.countTarjetas(pagoDTO.getTarjeta().getCliente().getId());
+		return flag;
+	}
+	
 }
