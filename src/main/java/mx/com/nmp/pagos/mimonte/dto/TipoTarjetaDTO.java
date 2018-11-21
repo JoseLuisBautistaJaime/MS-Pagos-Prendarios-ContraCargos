@@ -9,11 +9,12 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class TipoTarjetaDTO {
 
-	private String id;
-	private String descripcion;
+	private Integer id;
 	private String descripcionCorta;
+	private String descripcion;
 	
-	public TipoTarjetaDTO(String id, String descripcion, String descripcionCorta) {
+	
+	public TipoTarjetaDTO(Integer id, String descripcion, String descripcionCorta) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
@@ -24,11 +25,11 @@ public class TipoTarjetaDTO {
 		super();
 	}
 
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

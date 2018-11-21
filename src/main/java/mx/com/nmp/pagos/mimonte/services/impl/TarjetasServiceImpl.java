@@ -34,11 +34,11 @@ public class TarjetasServiceImpl implements TarjetasService {
 		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
 		
 
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
+		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
 		tipoTarjeta.add(tipoTarjetaDto);
 
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
-		estatusTarjetaDto.setId(1L);
+		estatusTarjetaDto.setId(1);
 		estatusTarjetaDto.setDescripcionCorta("Activa");
 		estatusTarjetaDto.setDescripcion("Activa");
 		estatusTarjeta.add(estatusTarjetaDto);
@@ -63,11 +63,11 @@ public class TarjetasServiceImpl implements TarjetasService {
 		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
 		
 
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
+		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
 		tipoTarjeta.add(tipoTarjetaDto);
 
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
-		estatusTarjetaDto.setId(1L);
+		estatusTarjetaDto.setId(1);
 		estatusTarjetaDto.setDescripcionCorta("Activa");
 		estatusTarjetaDto.setDescripcion("Activa");
 		estatusTarjeta.add(estatusTarjetaDto);
@@ -91,11 +91,11 @@ public class TarjetasServiceImpl implements TarjetasService {
 		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
 		
 
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
+		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
 		tipoTarjeta.add(tipoTarjetaDto);
 
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
-		estatusTarjetaDto.setId(1L);
+		estatusTarjetaDto.setId(1);
 		estatusTarjetaDto.setDescripcionCorta("Activa");
 		estatusTarjetaDto.setDescripcion("Activa");
 		estatusTarjeta.add(estatusTarjetaDto);
