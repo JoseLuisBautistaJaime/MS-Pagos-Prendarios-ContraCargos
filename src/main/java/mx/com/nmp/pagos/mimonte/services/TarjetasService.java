@@ -6,7 +6,7 @@ import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 
 public interface TarjetasService {
 	
-	List<TarjetaDTO> getTarjetas(String idTarjeta);
+	List<TarjetaDTO> getTarjetas(Integer idCliente);
 
 	List<TarjetaDTO> addTarjetas(TarjetaDTO tarjeta);
 	

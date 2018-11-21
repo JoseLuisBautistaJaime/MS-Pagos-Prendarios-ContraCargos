@@ -27,7 +27,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 	@Autowired
 	private TarjetaRepository tarjetaRepository;
 
-	public List<TarjetaDTO> getTarjetas(String idTarjeta) {
+	public List<TarjetaDTO> getTarjetas(Integer idCliente) {
 
 		List<TipoTarjetaDTO> tipoTarjeta = new ArrayList<TipoTarjetaDTO>();
 		List<EstatusTarjetaDTO> estatusTarjeta = new ArrayList<EstatusTarjetaDTO>();
@@ -44,9 +44,10 @@ public class TarjetasServiceImpl implements TarjetasService {
 		estatusTarjeta.add(estatusTarjetaDto);
 
 		//objects
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan", "Perez","Juarez",new Date());
+		ClienteDTO clienteDTO = new ClienteDTO(1,"Juan", "Perez","Juarez",new Date());
 		
 		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
+		tarjetaDTO.add(tarjetaDto);
 		tarjetaDTO.add(tarjetaDto);
 
 		
