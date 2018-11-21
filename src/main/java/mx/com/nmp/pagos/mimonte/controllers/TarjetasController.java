@@ -31,54 +31,56 @@ import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCadena;
 
 @RestController
 @RequestMapping("/mimonte")
-@Api(value = "Servicio que permite registrar tarjetas de crédito y/o débito.",  description = "REST API para registro de Tarjetas",  produces = MediaType.APPLICATION_JSON_VALUE,  protocols = "http", tags = { "Tarjetas" })
+@Api(value = "Servicio que permite registrar tarjetas de crédito y/o débito.", description = "REST API para registro de Tarjetas", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
+		"Tarjetas" })
 public class TarjetasController {
-	
+
 	/**
-     * Bean de la capa service para obtener los resultados
-     */
-    @Autowired
-    private TarjetasService tarjetasService;
+	 * Bean de la capa service para obtener los resultados
+	 */
+	@Autowired
+	private TarjetasService tarjetasService;
 
-    /**
-     * Bean de la fabrica de instancias
-     */
-    @Autowired
-    BeanFactory beanFactory;
+	/**
+	 * Bean de la fabrica de instancias
+	 */
+	@Autowired
+	BeanFactory beanFactory;
 
-    /**
-     * Instancia que registra los eventos en la bitacora
-     */
-    private final Logger log = LoggerFactory.getLogger(TarjetasController.class);
-    
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/v1/tarjetas/{idTarjeta}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(httpMethod ="GET", value = "Regresa la información de las tarjetas registradas en la base de datos.", tags = { "Tarjetas" })
-    @ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
-                    @ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
-                    @ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
-                    @ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-    public Response get(@PathVariable(value = "idTarjeta", required = true) String idTarjeta) {
-    	
-    	 log.debug("Entrando a operacion de servicio RegistroTarjetasController.get()...");
+	/**
+	 * Instancia que registra los eventos en la bitacora
+	 */
+	private final Logger log = LoggerFactory.getLogger(TarjetasController.class);
 
-         log.debug("Validando parametro idTarjeta...");
-         ValidadorCadena.notNullNorEmpty(idTarjeta);
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/v1/tarjetas/{idTarjeta}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas en la base de datos.", tags = {
+			"Tarjetas" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
+			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
+			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response get(@PathVariable(value = "idTarjeta", required = true) String idTarjeta) {
 
-         log.debug("Intentando obtener el listado de registros para las tarjetas {}...", idTarjeta);
-         List<TarjetaDTO> tarjetaDTO = tarjetasService.getTarjetas(idTarjeta);
+		log.debug("Entrando a operacion de servicio RegistroTarjetasController.get()...");
 
-         log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
-         return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS, tarjetaDTO);
-    	
-    }
-    
-    
+		log.debug("Validando parametro idTarjeta...");
+		ValidadorCadena.notNullNorEmpty(idTarjeta);
+
+		log.debug("Intentando obtener el listado de registros para las tarjetas {}...", idTarjeta);
+		List<TarjetaDTO> tarjetaDTO = tarjetasService.getTarjetas(idTarjeta);
+
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS, tarjetaDTO);
+
+	}
+
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/v1/tarjeta", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Registra la información de la tarjeta en la base de datos.", tags = { "Tarjetas" })
+	@ApiOperation(httpMethod = "POST", value = "Registra la información de la tarjeta en la base de datos.", tags = {
+			"Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
@@ -94,56 +96,59 @@ public class TarjetasController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS_ADD, tarjetaDTO);
 
 	}
-    
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    @PutMapping(value = "/v1/tarjeta/{idTarjeta}/{alias}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(httpMethod ="PUT", value = "Actualiza la información de la tarjeta registrada en la base de datos.", tags = { "Tarjetas" })
-    @ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
-                    @ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
-                    @ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
-                    @ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-    public Response update(@PathVariable (value = "idTarjeta", required = true) String idTarjeta, @PathVariable (value = "alias", required = true) String alias) {
-    	
-//    	 log.debug("Entrando a operacion de servicio RegistroTarjetasController.update()...");
-//
-//         log.debug("Validando parametro idTarjeta...");
-//         ValidadorCadena.notNullNorEmpty(idTarjeta);
-//         
-//         log.debug("Validando parametro alias...");
-//         ValidadorCadena.notNullNorEmpty(alias);
 
-         log.debug("Intentando actualizar el registro de la tarjeta {}...", idTarjeta);
-         List<TarjetaDTO> tarjetaDTO = tarjetasService.updateTarjetas(idTarjeta);
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PutMapping(value = "/v1/tarjeta/{idTarjeta}/{alias}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "PUT", value = "Actualiza la información de la tarjeta registrada en la base de datos.", tags = {
+			"Tarjetas" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
+			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
+			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response update(@PathVariable(value = "idTarjeta", required = true) String idTarjeta,
+			@PathVariable(value = "alias", required = true) String alias) {
 
-         log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
-         return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS_UPDATE, tarjetaDTO);
-    	
-    }
-    
-    
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping(value = "/v1/tarjeta/{idTarjeta}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(httpMethod ="DELETE", value = "Borra la información de la tarjeta registrada en la base de datos.", tags = { "Tarjetas" })
-    @ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
-                    @ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
-                    @ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
-                    @ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-    public Response delete(@PathVariable (value = "idTarjeta", required = true) String idTarjeta) {
-    	
-//    	 log.debug("Entrando a operacion de servicio RegistroTarjetasController.delete()...");
-//
-//         log.debug("Validando parametro idTarjeta...");
-//         ValidadorCadena.notNullNorEmpty(idTarjeta);
+		// log.debug("Entrando a operacion de servicio
+		// RegistroTarjetasController.update()...");
+		//
+		// log.debug("Validando parametro idTarjeta...");
+		// ValidadorCadena.notNullNorEmpty(idTarjeta);
+		//
+		// log.debug("Validando parametro alias...");
+		// ValidadorCadena.notNullNorEmpty(alias);
 
-         log.debug("Intentando borrar el registro de la tarjeta {}...", idTarjeta);
-         TarjetaDTO tarjetaDTO = tarjetasService.deleteTarjetas(idTarjeta);
+		log.debug("Intentando actualizar el registro de la tarjeta {}...", idTarjeta);
+		List<TarjetaDTO> tarjetaDTO = tarjetasService.updateTarjetas(idTarjeta);
 
-         log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
-         return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS_DELETE, tarjetaDTO);
-    	
-    }
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS_UPDATE, tarjetaDTO);
+
+	}
+
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@DeleteMapping(value = "/v1/tarjeta/{idTarjeta}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "DELETE", value = "Borra la información de la tarjeta registrada en la base de datos.", tags = {
+			"Tarjetas" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
+			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
+			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response delete(@PathVariable(value = "idTarjeta", required = true) String idTarjeta) {
+
+		// log.debug("Entrando a operacion de servicio
+		// RegistroTarjetasController.delete()...");
+		//
+		// log.debug("Validando parametro idTarjeta...");
+		// ValidadorCadena.notNullNorEmpty(idTarjeta);
+
+		log.debug("Intentando borrar el registro de la tarjeta {}...", idTarjeta);
+		TarjetaDTO tarjetaDTO = tarjetasService.deleteTarjetas(idTarjeta);
+
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS_DELETE, tarjetaDTO);
+
+	}
 
 }
-
