@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -24,7 +26,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.config.Constants;
+import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
+import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
+import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCadena;
@@ -54,27 +59,73 @@ public class TarjetasController {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/v1/tarjetas/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/v1/tarjetas/{idCliente}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas en la base de datos.", tags = {
 			"Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response get(@PathVariable(value = "token", required = true) String token) {
+	public Response get(@PathVariable(value = "idCliente", required = true) Integer idCliente) {
 
 		log.debug("Entrando a operacion de servicio RegistroTarjetasController.get()...");
 
-		log.debug("Validando parametro idTarjeta...");
-		ValidadorCadena.notNullNorEmpty(token);
+//		log.debug("Validando parametro idTarjeta...");
+//		ValidadorCadena.notNullNorEmpty(idCliente);
 
-		log.debug("Intentando obtener el listado de registros para las tarjetas {}...", token);
-		List<TarjetaDTO> tarjetaDTO = tarjetasService.getTarjetas(token);
+		log.debug("Intentando obtener el listado de registros para las tarjetas {}...", idCliente);
+		List<TarjetaDTO> tarjetaDTO = tarjetasService.getTarjetas(idCliente);
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS, tarjetaDTO);
 
 	}
+	
+	@ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/v1/tarjetas", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(httpMethod ="GET", value = "Regresa la información de las tarjetas registradas en la base de datos.", tags = { "Tarjetas" })
+    @ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
+                    @ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
+                    @ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
+                    @ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+    public Response get() {
+    	
+//    	 log.debug("Entrando a operacion de servicio RegistroTarjetasController.get()...");
+//
+//         log.debug("Validando parametro idTarjeta...");
+//         ValidadorCadena.notNullNorEmpty(idTarjeta);
+//
+//         log.debug("Intentando obtener el listado de registros para las tarjetas {}...", idTarjeta);
+//         List<TarjetaDTO> tarjetaDTO = tarjetasService.getTarjetas(idTarjeta);
+    	
+    	
+    	List<TipoTarjetaDTO> tipoTarjeta = new ArrayList<TipoTarjetaDTO>();
+		List<EstatusTarjetaDTO> estatusTarjeta = new ArrayList<EstatusTarjetaDTO>();
+		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
+		
+
+		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
+		tipoTarjeta.add(tipoTarjetaDto);
+
+		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
+		estatusTarjetaDto.setId(1);
+		estatusTarjetaDto.setDescripcionCorta("Activa");
+		estatusTarjetaDto.setDescripcion("Activa");
+		estatusTarjeta.add(estatusTarjetaDto);
+		
+		//objects
+		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan", "Perez","Juarez",new Date());
+
+		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
+		tarjetaDTO.add(tarjetaDto);
+		tarjetaDTO.add(tarjetaDto);
+		tarjetaDTO.add(tarjetaDto);
+
+         log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
+         return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS, tarjetaDTO);
+    	
+    }
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)

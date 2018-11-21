@@ -92,9 +92,9 @@ public class PagoController {
 		List<OperacionDTO> operaciones = new ArrayList<>();
 		operaciones.add(new OperacionDTO(1, "Operacion_1", "C123", 3500D));
 		operaciones.add(new OperacionDTO(2, "Operacion_2", "C456", 2500D));
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
+		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
 		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan", "Perez","Juarez",new Date());
-		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1L,"Activa","Tarjeta Acvtiva");
+		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1,"Activa","Tarjeta Acvtiva");
 		TarjetaDTO tarjetaDto = new TarjetaDTO("DFDFS6SF76","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjetaDto,estatusTarjetaDto);
 		pagoDTO = new PagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);
 		// Dummy data building ends

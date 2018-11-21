@@ -9,7 +9,7 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class EstatusTarjetaDTO {
 
-	private Long id;
+	private Integer id;
 	private String descripcionCorta;
 	private String descripcion;
 
@@ -17,18 +17,18 @@ public class EstatusTarjetaDTO {
 		super();
 	}
 
-	public EstatusTarjetaDTO(Long id, String descripcionCorta, String descripcion) {
+	public EstatusTarjetaDTO(Integer id, String descripcionCorta, String descripcion) {
 		super();
 		this.id = id;
 		this.descripcionCorta = descripcionCorta;
 		this.descripcion = descripcion;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
