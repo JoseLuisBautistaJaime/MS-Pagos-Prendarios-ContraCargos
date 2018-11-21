@@ -13,7 +13,7 @@ import java.util.Date;
 public class TarjetaDTO {
 
 	private String token;
-	private Integer digitos;
+	private String digitos;
 	private String alias;
 	private Date fechaAlta;
 	private Date fechaModificacion;
@@ -24,16 +24,21 @@ public class TarjetaDTO {
 	public TarjetaDTO() {
 		super();
 	}
-
-	public TarjetaDTO(TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus, String idTarjeta, String token, String alias, Integer digitos) {
+	
+	public TarjetaDTO(String token, String digitos, String alias, Date fechaAlta, Date fechaModificacion,
+			ClienteDTO cliente, TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus) {
+		super();
+		this.token = token;
+		this.digitos = digitos;
+		this.alias = alias;
+		this.fechaAlta = fechaAlta;
+		this.fechaModificacion = fechaModificacion;
+		this.cliente = cliente;
 		this.tipo = tipo;
 		this.estatus = estatus;
-		this.token = token;
-		this.alias = alias;
-		this.digitos = digitos;
 	}
 
-	
+
 
 	public TipoTarjetaDTO getTipo() {
 		return tipo;
@@ -67,14 +72,6 @@ public class TarjetaDTO {
 		this.alias = alias;
 	}
 
-	public Integer getDigitos() {
-		return digitos;
-	}
-
-	public void setDigitos(Integer digitos) {
-		this.digitos = digitos;
-	}
-
 	public ClienteDTO getCliente() {
 		return cliente;
 	}
@@ -99,10 +96,18 @@ public class TarjetaDTO {
 		this.fechaModificacion = fechaModificacion;
 	}
 
+	public String getDigitos() {
+		return digitos;
+	}
+
+	public void setDigitos(String digitos) {
+		this.digitos = digitos;
+	}
+
 	@Override
 	public String toString() {
-		return "TarjetaDTO [cliente=" + cliente + ", token=" + token + ", alias=" + alias + ", fechaAlta=" + fechaAlta
-				+ ", fechaModificacion=" + fechaModificacion + ", digitos=" + digitos + ", tipo=" + tipo + ", estatus="
+		return "TarjetaDTO [token=" + token + ", digitos=" + digitos + ", alias=" + alias + ", fechaAlta=" + fechaAlta
+				+ ", fechaModificacion=" + fechaModificacion + ", cliente=" + cliente + ", tipo=" + tipo + ", estatus="
 				+ estatus + "]";
 	}
 	
