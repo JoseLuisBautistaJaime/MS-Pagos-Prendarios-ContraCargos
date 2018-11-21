@@ -3,17 +3,17 @@ package mx.com.nmp.pagos.mimonte.dto;
 public class EstatusTarjetaDTO {
 
 	private Long id;
-	private String descripcion_corta;
+	private String descripcionCorta;
 	private String descripcion;
 
 	public EstatusTarjetaDTO() {
 		super();
 	}
 	
-	public EstatusTarjetaDTO(Long id, String descripcion_corta, String descripcion) {
+	public EstatusTarjetaDTO(Long id, String descripcionCorta, String descripcion) {
 		super();
 		this.id = id;
-		this.descripcion_corta = descripcion_corta;
+		this.descripcionCorta = descripcionCorta;
 		this.descripcion = descripcion;
 	}
 
@@ -27,12 +27,12 @@ public class EstatusTarjetaDTO {
 		this.id = id;
 	}
 
-	public String getDescripcion_corta() {
-		return descripcion_corta;
+	public String getDescripcionCorta() {
+		return descripcionCorta;
 	}
 
-	public void setDescripcion_corta(String descripcion_corta) {
-		this.descripcion_corta = descripcion_corta;
+	public void setDescripcionCorta(String descripcionCorta) {
+		this.descripcionCorta = descripcionCorta;
 	}
 
 	public String getDescripcion() {
@@ -45,7 +45,7 @@ public class EstatusTarjetaDTO {
 
 	@Override
 	public String toString() {
-		return "EstatusTarjetaDTO [id=" + id + ", descripcion_corta=" + descripcion_corta + ", descripcion="
+		return "EstatusTarjetaDTO [id=" + id + ", descripcion_corta=" + descripcionCorta + ", descripcion="
 				+ descripcion + "]";
 	}
 

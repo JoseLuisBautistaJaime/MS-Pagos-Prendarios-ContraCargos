@@ -37,7 +37,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
 		estatusTarjetaDto.setId(1L);
-		estatusTarjetaDto.setDescripcion_corta("Activa");
+		estatusTarjetaDto.setDescripcionCorta("Activa");
 		estatusTarjetaDto.setDescripcion("Activa");
 		estatusTarjeta.add(estatusTarjetaDto);
 
@@ -63,7 +63,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
 		estatusTarjetaDto.setId(1L);
-		estatusTarjetaDto.setDescripcion_corta("Activa");
+		estatusTarjetaDto.setDescripcionCorta("Activa");
 		estatusTarjetaDto.setDescripcion("Activa");
 		estatusTarjeta.add(estatusTarjetaDto);
 
@@ -88,7 +88,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
 		estatusTarjetaDto.setId(1L);
-		estatusTarjetaDto.setDescripcion_corta("Activa");
+		estatusTarjetaDto.setDescripcionCorta("Activa");
 		estatusTarjetaDto.setDescripcion("Activa");
 		estatusTarjeta.add(estatusTarjetaDto);
 
