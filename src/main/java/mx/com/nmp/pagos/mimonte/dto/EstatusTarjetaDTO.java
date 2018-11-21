@@ -9,6 +9,15 @@ public class EstatusTarjetaDTO {
 	public EstatusTarjetaDTO() {
 		super();
 	}
+	
+	public EstatusTarjetaDTO(Long id, String descripcion_corta, String descripcion) {
+		super();
+		this.id = id;
+		this.descripcion_corta = descripcion_corta;
+		this.descripcion = descripcion;
+	}
+
+
 
 	public Long getId() {
 		return id;

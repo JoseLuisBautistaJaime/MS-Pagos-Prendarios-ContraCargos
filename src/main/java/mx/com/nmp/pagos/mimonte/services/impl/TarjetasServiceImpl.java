@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import mx.com.nmp.pagos.mimonte.dao.TarjetaRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
-import mx.com.nmp.pagos.mimonte.dto.TarjetasDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 
@@ -26,12 +25,12 @@ public class TarjetasServiceImpl implements TarjetasService {
 	@Autowired
 	private TarjetaRepository tarjetaRepository;
 
-	public List<TarjetasDTO> getTarjetas(String idTarjeta) {
+	public List<TarjetaDTO> getTarjetas(String idTarjeta) {
 
 		List<TipoTarjetaDTO> tipoTarjeta = new ArrayList<TipoTarjetaDTO>();
 		List<EstatusTarjetaDTO> estatusTarjeta = new ArrayList<EstatusTarjetaDTO>();
 		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
-		List<TarjetasDTO> tarjetasDTO = new ArrayList<TarjetasDTO>();
+		
 
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
 		tipoTarjeta.add(tipoTarjetaDto);
@@ -45,46 +44,60 @@ public class TarjetasServiceImpl implements TarjetasService {
 		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, estatusTarjetaDto, "1", "T001002003004", "MyBSmart",	2345);
 		tarjetaDTO.add(tarjetaDto);
 
-		TarjetasDTO tarjetasDto = new TarjetasDTO(tarjetaDto);
-		tarjetasDTO.add(tarjetasDto);
-		tarjetasDTO.add(tarjetasDto);
+		
 
-		return tarjetasDTO;
+		return tarjetaDTO;
 
 	}
 
 	@Override
-	public List<TarjetasDTO> addTarjetas(TarjetasDTO tarjeta) {
+	public List<TarjetaDTO> addTarjetas(TarjetaDTO tarjeta) {
 
 		List<TipoTarjetaDTO> tipoTarjeta = new ArrayList<TipoTarjetaDTO>();
 		List<EstatusTarjetaDTO> estatusTarjeta = new ArrayList<EstatusTarjetaDTO>();
 		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
-		List<TarjetasDTO> tarjetasDTO = new ArrayList<TarjetasDTO>();
+		
 
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
 		tipoTarjeta.add(tipoTarjetaDto);
 
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
+		estatusTarjetaDto.setId(1L);
+		estatusTarjetaDto.setDescripcion_corta("Activa");
+		estatusTarjetaDto.setDescripcion("Activa");
 		estatusTarjeta.add(estatusTarjetaDto);
 
 		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, estatusTarjetaDto, "1", "T001002003004", "MyBSmart",	2345);
 		tarjetaDTO.add(tarjetaDto);
 
-		TarjetasDTO tarjetasDto = new TarjetasDTO(tarjetaDto);
-		tarjetasDTO.add(tarjetasDto);
+		
 
-		return tarjetasDTO;
+		return tarjetaDTO;
 	}
 
 	@Override
-	public TarjetaDTO updateTarjetas(String idTarjeta, String alias) {
+	public List<TarjetaDTO> updateTarjetas(String idTarjeta) {
 
-		TarjetaDTO tarjetaDto = new TarjetaDTO();
+		List<TipoTarjetaDTO> tipoTarjeta = new ArrayList<TipoTarjetaDTO>();
+		List<EstatusTarjetaDTO> estatusTarjeta = new ArrayList<EstatusTarjetaDTO>();
+		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
+		
 
-		tarjetaDto.setAlias(alias);
-		tarjetaDto.setIdTarjeta(idTarjeta);
+		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
+		tipoTarjeta.add(tipoTarjetaDto);
 
-		return tarjetaDto;
+		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
+		estatusTarjetaDto.setId(1L);
+		estatusTarjetaDto.setDescripcion_corta("Activa");
+		estatusTarjetaDto.setDescripcion("Activa");
+		estatusTarjeta.add(estatusTarjetaDto);
+
+		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, estatusTarjetaDto, "1", "T001002003004", "MyBSmart",	2345);
+		tarjetaDTO.add(tarjetaDto);
+
+		
+
+		return tarjetaDTO;
 	}
 
 	@Override

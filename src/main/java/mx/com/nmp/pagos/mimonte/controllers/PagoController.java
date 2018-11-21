@@ -82,15 +82,15 @@ public class PagoController {
 		operaciones.add(new OperacionDTO(1, "Operacion_1", "C123", 3500D));
 		operaciones.add(new OperacionDTO(2, "Operacion_2", "C456", 2500D));
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO("Visa", "Tarjeta tipo Visa", "T Visa");
-<<<<<<< HEAD:src/main/java/mx/com/nmp/pagos/mimonte/controllers/RegistroPagoController.java
-//		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
-		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, null, "1", "T001002003004", "MyBSmart", 2345);
-		registroPagoDTO = new RegistroPagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);
-=======
-		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO("Activa", "Activa");
+//<<<<<<< HEAD:src/main/java/mx/com/nmp/pagos/mimonte/controllers/RegistroPagoController.java
+////		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
+//		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, null, "1", "T001002003004", "MyBSmart", 2345);
+//		registroPagoDTO = new RegistroPagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);
+//=======
+		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
 		TarjetaDTO tarjetaDto = new TarjetaDTO(tipoTarjetaDto, estatusTarjetaDto, "1", "T001002003004", "MyBSmart", 2345);
 		registroPagoDTO = new PagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);
->>>>>>> 815c3d173bc98b66d7493e675bbc71eab9535dda:src/main/java/mx/com/nmp/pagos/mimonte/controllers/PagoController.java
+//>>>>>>> 815c3d173bc98b66d7493e675bbc71eab9535dda:src/main/java/mx/com/nmp/pagos/mimonte/controllers/PagoController.java
 		// dummy data building ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", registroPagoDTO);
