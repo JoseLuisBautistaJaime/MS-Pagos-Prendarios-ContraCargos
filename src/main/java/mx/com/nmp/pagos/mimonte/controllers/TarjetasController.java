@@ -115,7 +115,7 @@ public class TarjetasController {
 		estatusTarjeta.add(estatusTarjetaDto);
 		
 		//objects
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan", "Perez","Juarez",new Date());
+		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date());
 
 		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
 		tarjetaDTO.add(tarjetaDto);

@@ -7,7 +7,7 @@ import java.util.Date;
  * Descripcion: Clase que encapsula la informacion perteneciente a una transaccion.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
- * Fecha: 21/11/2018 13:25 hrs.
+ * @Fecha 21/11/2018 13:25 hrs.
  * @version 0.1
  */
 public class TransaccionDTO {

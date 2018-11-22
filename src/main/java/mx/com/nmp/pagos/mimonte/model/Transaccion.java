@@ -2,11 +2,17 @@ package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.carrotsearch.hppc.HashOrderMixing.Strategy;
 
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
@@ -15,65 +21,90 @@ import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
  * Nombre: Transaccion
  * Descripcion: Entidad que representa una transaccion dentro del sistema.
  *
- * @author Ismael Flores Aguilar iaguilar@quarksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * Fecha: 21/11/2018 13:36 hrs.
  * @version 0.1
  */
 @Entity
-@Table(name = "transacciones")
+@Table(name = "transacciones", schema = "compose")
 public class Transaccion {
+	
+	public Transaccion() {
+		super();
+	}
+	
+	public Transaccion(Integer id, Cliente cliente, Date fechaTarnsaccion, Double monto, String autorizacion,
+			String metodo, String tarjeta, String idOpenPay, Date fechaCreacion, String descripcion, String idOrder,
+			EstatusTransaccion estatusTransaccion, String restResponse) {
+		super();
+		this.id = id;
+		this.cliente = cliente;
+		this.fechaTarnsaccion = fechaTarnsaccion;
+		this.monto = monto;
+		this.autorizacion = autorizacion;
+		this.metodo = metodo;
+		this.tarjeta = tarjeta;
+		this.idOpenPay = idOpenPay;
+		this.fechaCreacion = fechaCreacion;
+		this.descripcion = descripcion;
+		this.idOrder = idOrder;
+		this.estatusTransaccion = estatusTransaccion;
+		this.restResponse = restResponse;
+	}
 
-	@Column(name ="", nullable = true)
-	private ClienteDTO cliente;
-	
-	@Column(name ="", nullable = true)
-	private TarjetaDTO tarjeta;
-	
-	@Column(name ="", nullable = true)
-	private Date fechaCreacion;
-	
-	@Column(name ="", nullable = true)
-	private Date fechaTarnsaccion;
-	
-	@Column(name ="", nullable = true)
-	private Double monto;
-	
 	@Id
-	@GeneratedValue
-	@Column(name ="", nullable = false, unique = true)
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	@Column(name ="id", nullable = false, unique = true)
 	private Integer id;
 	
-	@Column(name ="", nullable = true)
-	private Integer estatusTransaccion;
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Column(name ="idcliente", nullable = true)
+	private Cliente cliente;
 	
-	@Column(name ="", nullable = true)
+	@Column(name ="fecha_transaccion", nullable = true)
+	private Date fechaTarnsaccion;
+	
+	@Column(name ="monto", nullable = true)
+	private Double monto;
+	
+	@Column(name ="autorizacion", nullable = true)
 	private String autorizacion;
 	
-	@Column(name ="", nullable = true)
+	@Column(name ="metodo", nullable = true)
 	private String metodo;
 	
-	@Column(name ="", nullable = true)
-	private String idOpenPay;
+	@Column(name ="tarjeta", nullable = true)
+	private String tarjeta;
 	
-	@Column(name ="", nullable = true)
+	@Column(name ="idopenpay", nullable = true)
+	private String idOpenPay;	
+	
+	@Column(name ="fecha_creacion", nullable = true)
+	private Date fechaCreacion;
+	
+	@Column(name ="descripcion", nullable = true)
 	private String descripcion;
 	
-	@Column(name ="", nullable = true)
+	@Column(name ="idorder", nullable = true)
 	private String idOrder;
 	
-	@Column(name ="", nullable = true)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.DETACH})
+	@Column(name ="estatus_transaccion", nullable = true)
+	private EstatusTransaccion estatusTransaccion;
+	
+	@Column(name ="restresponse", nullable = true)
 	private String restResponse;
 	
-	public ClienteDTO getCliente() {
+	public Cliente getCliente() {
 		return cliente;
 	}
-	public void setCliente(ClienteDTO cliente) {
+	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-	public TarjetaDTO getTarjeta() {
+	public String getTarjeta() {
 		return tarjeta;
 	}
-	public void setTarjeta(TarjetaDTO tarjeta) {
+	public void setTarjeta(String tarjeta) {
 		this.tarjeta = tarjeta;
 	}
 	public Date getFechaCreacion() {
@@ -100,10 +131,10 @@ public class Transaccion {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getEstatusTransaccion() {
+	public EstatusTransaccion getEstatusTransaccion() {
 		return estatusTransaccion;
 	}
-	public void setEstatusTransaccion(Integer estatusTransaccion) {
+	public void setEstatusTransaccion(EstatusTransaccion estatusTransaccion) {
 		this.estatusTransaccion = estatusTransaccion;
 	}
 	public String getAutorizacion() {

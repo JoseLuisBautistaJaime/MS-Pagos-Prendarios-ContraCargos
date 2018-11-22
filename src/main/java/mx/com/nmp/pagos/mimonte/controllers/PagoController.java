@@ -28,14 +28,16 @@ import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
+import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
- * Nombre: PagoController Descripcion: Clase que expone el servicio REST para la
- * el pago con tarjeta de una o varias prendas
+ * Nombre: PagoController
+ * Descripcion: Clase que expone el servicio REST para el pago con tarjeta de una o varias partidas
  *
  * @author Ismael Flores
+ * @creationDate: 19/11/2018 12:00 hrs.
  * @version 0.1
  */
 @RestController
@@ -51,7 +53,7 @@ public class PagoController {
 	BeanFactory beanFactory;
 
 	/**
-	 * Service que registra el pago a el o los lugares correspondientes
+	 * Service que registra el pago en el o los lugares correspondientes (bases de datos, otros servicios, etc.)
 	 */
 	@Autowired
 	@Qualifier("pagoServiceImpl")
@@ -93,19 +95,19 @@ public class PagoController {
 		operaciones.add(new OperacionDTO(1, "Operacion_1", "C123", 3500D));
 		operaciones.add(new OperacionDTO(2, "Operacion_2", "C456", 2500D));
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan", "Perez","Juarez",new Date());
+		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date());
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1,"Activa","Tarjeta Acvtiva");
 		TarjetaDTO tarjetaDto = new TarjetaDTO("DFDFS6SF76","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjetaDto,estatusTarjetaDto);
 		pagoDTO = new PagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);
 		// Dummy data building ends
 
 		// Real code begins
-//		try {
-//			 pagoDTO = pagoService.savePago(pago);	
-//		}
-//		catch(PagoException pex) {
-//			log.error(pex.getMessage());
-//		}
+		try {
+			 pagoDTO = pagoService.savePago(pago);	
+		}
+		catch(PagoException pex) {
+			log.error(pex.getMessage());
+		}
 		// Real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoDTO);
