@@ -3,12 +3,16 @@ package mx.com.nmp.pagos.mimonte.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.config.Constants;
@@ -40,6 +44,12 @@ public class Cliente implements Serializable{
 	
 	@Column(name="fechaAlta")
 	private Date fechaAlta;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="cliente", targetEntity = Transaccion.class)
+	private Set<Transaccion> transacciones;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="cliente", targetEntity = Tarjetas.class)
+	private Set<Tarjetas> tarjetas;
 	
 	public Cliente() {
 		super();
@@ -79,6 +89,26 @@ public class Cliente implements Serializable{
 	@Override
 	public int hashCode() {
 		return Objects.hash(idCliente, nombreTitular, fechaAlta, fechaAlta);
+	}
+
+	public Set<Transaccion> getTransacciones() {
+		return transacciones;
+	}
+
+	public void setTransacciones(Set<Transaccion> transacciones) {
+		this.transacciones = transacciones;
+	}
+
+	public void setIdCliente(Integer idCliente) {
+		this.idCliente = idCliente;
+	}
+
+	public Set<Tarjetas> getTarjetas() {
+		return tarjetas;
+	}
+
+	public void setTarjetas(Set<Tarjetas> tarjetas) {
+		this.tarjetas = tarjetas;
 	}
 
 	@Override

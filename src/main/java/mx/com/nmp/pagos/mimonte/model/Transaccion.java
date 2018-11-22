@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -58,7 +59,7 @@ public class Transaccion {
 	private Integer id;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@Column(name ="idcliente", nullable = true)
+	@JoinColumn(name ="idcliente", nullable = true)
 	private Cliente cliente;
 	
 	@Column(name ="fecha_transaccion", nullable = true)
@@ -89,7 +90,7 @@ public class Transaccion {
 	private String idOrder;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.DETACH})
-	@Column(name ="estatus_transaccion", nullable = true)
+	@JoinColumn(name ="estatus_transaccion", nullable = true)
 	private EstatusTransaccion estatusTransaccion;
 	
 	@Column(name ="restresponse", nullable = true)
