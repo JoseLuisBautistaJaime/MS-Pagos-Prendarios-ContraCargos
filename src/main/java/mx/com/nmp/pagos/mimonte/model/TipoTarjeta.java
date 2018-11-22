@@ -7,6 +7,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * Nombre: TipoTarjeta
+ * Descripcion: Entidad que representa tipo de tarjeta dentro del sistema.
+ *
+ * @author José Rodríguez jgrodriguez@quarksoft.net
+ * Fecha: 21/11/2018 17:19 Hrs.
+ * @version 0.1
+ */
 @Entity
 @Table(name = "tipo_tarjeta_c")
 public class TipoTarjeta extends AbstractCatalogo implements Serializable {
