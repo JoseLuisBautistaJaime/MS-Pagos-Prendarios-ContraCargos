@@ -5,8 +5,19 @@ import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.*;
+
+import mx.com.nmp.pagos.mimonte.config.Constants;
+
 import java.util.List;
 
+/**
+ * Nombre: Tarjetas
+ * Descripcion: Entidad que representa la tarjeta dentro del sistema.
+ *
+ * @author José Rodríguez jgrodriguez@quarksoft.net
+ * Fecha: 21/11/2018 17:19 Hrs.
+ * @version 0.1
+ */
 @Entity
 @Table(name = "tarjetas")
 public class Tarjetas implements Serializable {
@@ -17,13 +28,14 @@ public class Tarjetas implements Serializable {
 	private static final long serialVersionUID = 4139940644170406428L;
 
 	@Id
-	@Column(name = "token")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "token", unique = true, nullable = false, length = Constants.LONGITUD_TOKEN)
 	private String token;
 
-	@Column(name = "ultimos_digitos")
+	@Column(name = "ultimos_digitos", length = Constants.LONGITUD_ULTIMOS_DIGITOS)
 	private String ultimosDigitos;
 
-	@Column(name = "alias")
+	@Column(name = "alias", length = Constants.LONGITUD_ALIAS)
 	private String alias;
 
 	@Column(name = "fecha_alta")
@@ -32,8 +44,9 @@ public class Tarjetas implements Serializable {
 	@Column(name = "fecha_modificacion")
 	private Date fechaModificacion;
 
-	@Column(name = "idcliente")
-	private Long idcliente;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "idCliente")
+	private List<Cliente> cliente;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id")
@@ -87,12 +100,12 @@ public class Tarjetas implements Serializable {
 		this.fechaModificacion = fechaModificacion;
 	}
 
-	public Long getIdcliente() {
-		return idcliente;
+	public List<Cliente> getCliente() {
+		return cliente;
 	}
 
-	public void setIdcliente(Long idcliente) {
-		this.idcliente = idcliente;
+	public void setCliente(List<Cliente> cliente) {
+		this.cliente = cliente;
 	}
 
 	public List<TipoTarjeta> getTipoTarjeta() {
@@ -113,10 +126,8 @@ public class Tarjetas implements Serializable {
 
 	@Override
 	public int hashCode() {
-
-		return Objects.hash(alias, estatusTarjeta, fechaAlta, fechaModificacion, idcliente, tipoTarjeta, token,
+		return Objects.hash(alias, estatusTarjeta, fechaAlta, fechaModificacion, cliente, tipoTarjeta, token,
 				ultimosDigitos);
-
 	}
 
 	@Override
@@ -148,11 +159,6 @@ public class Tarjetas implements Serializable {
 				return false;
 		} else if (!fechaModificacion.equals(other.fechaModificacion))
 			return false;
-		if (idcliente == null) {
-			if (other.idcliente != null)
-				return false;
-		} else if (!idcliente.equals(other.idcliente))
-			return false;
 		if (tipoTarjeta == null) {
 			if (other.tipoTarjeta != null)
 				return false;
@@ -174,7 +180,7 @@ public class Tarjetas implements Serializable {
 	@Override
 	public String toString() {
 		return "Tarjetas [token=" + token + ", ultimosDigitos=" + ultimosDigitos + ", alias=" + alias + ", fechaAlta="
-				+ fechaAlta + ", fechaModificacion=" + fechaModificacion + ", idcliente=" + idcliente + ", tipoTarjeta="
+				+ fechaAlta + ", fechaModificacion=" + fechaModificacion + ", idcliente=" + cliente + ", tipoTarjeta="
 				+ tipoTarjeta + ", estatusTarjeta=" + estatusTarjeta + "]";
 	}
 
