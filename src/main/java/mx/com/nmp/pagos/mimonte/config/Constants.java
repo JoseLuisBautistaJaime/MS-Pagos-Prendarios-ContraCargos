@@ -12,6 +12,11 @@ public final class Constants {
     public static final int LONGITUD_DESCRIPCION_CORTA = 20;
     public static final int LONGITUD_DESCRIPCION = 50;
     
+    public static final int LONGITUD_NOMBRE_TITULAR = 100;
+    public static final int LONGITUD_TOKEN = 50;
+    public static final int LONGITUD_ULTIMOS_DIGITOS = 4;
+    public static final int LONGITUD_ALIAS = 100;
+    
     /**
      * Mensaje que sera enviado si se recuperaron los registros correctamente
      */
