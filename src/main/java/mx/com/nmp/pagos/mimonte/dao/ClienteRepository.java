@@ -14,6 +14,6 @@ import mx.com.nmp.pagos.mimonte.model.Cliente;
  * @version 0.1
  */
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente, String> {
+public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
 }
