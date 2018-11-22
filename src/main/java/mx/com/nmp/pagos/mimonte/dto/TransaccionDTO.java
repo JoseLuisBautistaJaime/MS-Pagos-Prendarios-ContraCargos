@@ -18,7 +18,7 @@ public class TransaccionDTO {
 	private Date fechaTarnsaccion;
 	private Double monto;
 	private Integer id;
-	private Integer estatusTransaccion;
+	private EstatusTransaccionDTO estatusTransaccion;
 	private String autorizacion;
 	private String metodo;
 	private String idOpenPay;
@@ -31,7 +31,7 @@ public class TransaccionDTO {
 	}
 	
 	public TransaccionDTO(ClienteDTO cliente, TarjetaDTO tarjeta, Date fechaCreacion, Date fechaTarnsaccion,
-			Double monto, Integer id, Integer estatusTransaccion, String autorizacion, String metodo, String idOpenPay,
+			Double monto, Integer id, EstatusTransaccionDTO estatusTransaccion, String autorizacion, String metodo, String idOpenPay,
 			String descripcion, String idOrder, String restResponse) {
 		super();
 		this.cliente = cliente;
@@ -85,12 +85,15 @@ public class TransaccionDTO {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getEstatusTransaccion() {
+	
+	public EstatusTransaccionDTO getEstatusTransaccion() {
 		return estatusTransaccion;
 	}
-	public void setEstatusTransaccion(Integer estatusTransaccion) {
+
+	public void setEstatusTransaccion(EstatusTransaccionDTO estatusTransaccion) {
 		this.estatusTransaccion = estatusTransaccion;
 	}
+
 	public String getAutorizacion() {
 		return autorizacion;
 	}
@@ -127,7 +130,7 @@ public class TransaccionDTO {
 	public void setRestResponse(String restResponse) {
 		this.restResponse = restResponse;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "TransaccionDTO [cliente=" + cliente + ", tarjeta=" + tarjeta + ", fechaCreacion=" + fechaCreacion

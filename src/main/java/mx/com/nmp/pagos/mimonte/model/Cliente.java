@@ -33,7 +33,7 @@ public class Cliente implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 7528374533024645790L;
-	
+		
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idCliente", unique = true, nullable = false)
@@ -64,10 +64,6 @@ public class Cliente implements Serializable{
 
 	public Integer getIdCliente() {
 		return idCliente;
-	}
-
-	public void setIdcliente(Integer idcliente) {
-		this.idCliente = idcliente;
 	}
 
 	public String getNombreTitular() {

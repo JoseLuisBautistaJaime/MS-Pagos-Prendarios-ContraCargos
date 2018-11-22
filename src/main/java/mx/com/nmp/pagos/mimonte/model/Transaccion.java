@@ -13,11 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.carrotsearch.hppc.HashOrderMixing.Strategy;
-
-import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
-import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
-
 /**
  * Nombre: Transaccion
  * Descripcion: Entidad que representa una transaccion dentro del sistema.

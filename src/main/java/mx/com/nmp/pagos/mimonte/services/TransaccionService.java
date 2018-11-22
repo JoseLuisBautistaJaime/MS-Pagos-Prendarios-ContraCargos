@@ -7,7 +7,7 @@ import mx.com.nmp.pagos.mimonte.dto.TransaccionDTO;
  * Descripcion: Interfaz que define la operacion encargada de registrar una transaccion.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
- * Fecha: 21/11/2018 16:53 hrs.
+ * @creationDate: 21/11/2018 16:53 hrs.
  * @version 0.1
  */
 public interface TransaccionService {

@@ -10,7 +10,6 @@ import mx.com.nmp.pagos.mimonte.builder.TransaccionBuilder;
 import mx.com.nmp.pagos.mimonte.config.Constants;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
-import mx.com.nmp.pagos.mimonte.dto.TransaccionDTO;
 import mx.com.nmp.pagos.mimonte.exception.CantidadMaximaTarjetasAlcanzadaException;
 import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
@@ -45,10 +44,10 @@ public class PagoServiceImpl implements PagoService {
 	public PagoDTO savePago(PagoDTO pagoDTO) throws PagoException {
 		log.info("Ingreso al servicio de pago: POST");
 		// ENVIAR PETICION A OPEN PAY Y A BUS
-		// OPEN PAY AND BUS REQUEST
+		// --- OPEN PAY AND BUS REQUEST HERE
 
 		// TODO SALIO BIEN
-		// GUARDAR LA TARJETA SI NO EXISTE, PERO VALIDAR ANTES QUE NO HALLA 3
+		// GUARDAR LA TARJETA SI NO EXISTE, PERO VALIDAR ANTES QUE NO HALLA 3 TARJETAS DE ESE CLIENTE
 		if (validaSiGuardar(pagoDTO)) {
 			if (validaDatos(pagoDTO)) {
 				if(validaCantidadTarjetasExistentes(pagoDTO)) {

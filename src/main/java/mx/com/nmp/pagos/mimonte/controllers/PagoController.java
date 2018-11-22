@@ -2,6 +2,7 @@ package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -83,10 +84,6 @@ public class PagoController {
 		log.debug("Entrando a operacion de servicio RegistroPagoController.post()...");
 
 		log.debug("Received object: " + pago);
-		// No validation in dummy data
-		// log.debug("Validando parámetros...");
-		// ValidadorCadena.notNullNorEmpty(registroPago);
-
 		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 
 		// Dummy data building begins
@@ -95,7 +92,7 @@ public class PagoController {
 		operaciones.add(new OperacionDTO(1, "Operacion_1", "C123", 3500D));
 		operaciones.add(new OperacionDTO(2, "Operacion_2", "C456", 2500D));
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date());
+		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date(), new HashSet<>(), new HashSet<>());
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1,"Activa","Tarjeta Acvtiva");
 		TarjetaDTO tarjetaDto = new TarjetaDTO("DFDFS6SF76","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjetaDto,estatusTarjetaDto);
 		pagoDTO = new PagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);

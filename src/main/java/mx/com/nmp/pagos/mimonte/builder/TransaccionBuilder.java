@@ -3,8 +3,8 @@ package mx.com.nmp.pagos.mimonte.builder;
 import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
+import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TransaccionDTO;
-import mx.com.nmp.pagos.mimonte.model.Catalogo;
 import mx.com.nmp.pagos.mimonte.model.Transaccion;
 
 /**
@@ -13,7 +13,7 @@ import mx.com.nmp.pagos.mimonte.model.Transaccion;
  * y viceversa
  *
  * @author Ismael Flores iaguilar@quarksoft.net
- * @CreationDate 21/11/2018 17:30 hrs.
+ * @creationDate 21/11/2018 17:30 hrs.
  * @version 0.1
  */
 @Component
@@ -42,9 +42,9 @@ public class TransaccionBuilder {
 	public static Transaccion buildTransaccionEntity(TransaccionDTO transaccionDTO) {
 		Transaccion transaccionEntity = new Transaccion();
 		transaccionEntity.setAutorizacion(transaccionDTO.getAutorizacion());
-//		transaccionEntity.setCliente(transaccionDTO.getCliente());
+		transaccionEntity.setCliente( ClienteBuilder.buildClienteFromClienteDTO(transaccionDTO.getCliente()));
 		transaccionEntity.setDescripcion(transaccionDTO.getDescripcion());
-//		transaccionEntity.setEstatusTransaccion(transaccionDTO.getEstatusTransaccion());
+		transaccionEntity.setEstatusTransaccion(EstatusTransaccionBuilder.buildEstatusTransaccionFromEstatusTransaccionDTO(transaccionDTO.getEstatusTransaccion()));
 		transaccionEntity.setFechaCreacion(transaccionDTO.getFechaCreacion());
 		transaccionEntity.setFechaTarnsaccion(transaccionDTO.getFechaTarnsaccion());
 		transaccionEntity.setId(transaccionDTO.getId());
@@ -53,7 +53,7 @@ public class TransaccionBuilder {
 		transaccionEntity.setMetodo(transaccionDTO.getMetodo());
 		transaccionEntity.setMonto(transaccionDTO.getMonto());
 		transaccionEntity.setRestResponse(transaccionDTO.getRestResponse());
-//		transaccionEntity.setTarjeta(transaccionDTO.getTarjeta());
+		transaccionEntity.setTarjeta(transaccionDTO.getTarjeta().getDigitos());
 		return transaccionEntity;
 	}
 
@@ -66,9 +66,9 @@ public class TransaccionBuilder {
 	public static TransaccionDTO buildTransaccionDTO(Transaccion transaccionEntity) {
 		TransaccionDTO transaccionDTO = new TransaccionDTO();
 		transaccionDTO.setAutorizacion(transaccionEntity.getAutorizacion());
-//		transaccionDTO.setCliente(transaccionEntity.getCliente());
+		transaccionDTO.setCliente(ClienteBuilder.buildClienteDTOFromCliente(transaccionEntity.getCliente()));
 		transaccionDTO.setDescripcion(transaccionEntity.getDescripcion());
-//		transaccionDTO.setEstatusTransaccion(transaccionEntity.getEstatusTransaccion());
+		transaccionDTO.setEstatusTransaccion(EstatusTransaccionBuilder.buildEstatusTransaccionDTOFromEstatusTransaccion(transaccionEntity.getEstatusTransaccion()));
 		transaccionDTO.setFechaCreacion(transaccionEntity.getFechaCreacion());
 		transaccionDTO.setFechaTarnsaccion(transaccionEntity.getFechaTarnsaccion());
 		transaccionDTO.setId(transaccionEntity.getId());
@@ -77,7 +77,9 @@ public class TransaccionBuilder {
 		transaccionDTO.setMetodo(transaccionEntity.getMetodo());
 		transaccionDTO.setMonto(transaccionEntity.getMonto());
 		transaccionDTO.setRestResponse(transaccionEntity.getRestResponse());
-//		transaccionDTO.setTarjeta(transaccionEntity.getTarjeta());
+		TarjetaDTO tarjeta = new TarjetaDTO();
+		tarjeta.setDigitos(transaccionEntity.getTarjeta());
+		transaccionDTO.setTarjeta(tarjeta);
 		return transaccionDTO;
 	}
 	
