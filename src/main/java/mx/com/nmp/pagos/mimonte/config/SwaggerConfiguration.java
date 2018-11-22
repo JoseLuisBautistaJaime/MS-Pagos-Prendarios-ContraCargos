@@ -11,16 +11,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.VendorExtension;
+import springfox.documentation.schema.ModelRef;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+
 import java.util.ArrayList;
 
+import static com.google.common.collect.Lists.*;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 /**
@@ -101,9 +103,19 @@ public class SwaggerConfiguration {
     public Docket swaggerSpringfoxManagementDocket(@Value("${spring.application.name}") String appName,
                                                    @Value("${management.context-path}") String managementContextPath,
                                                    @Value("${info.project.version}") String appVersion) {
+
+     ParameterBuilder build = new ParameterBuilder();
+        build.name("access_token");
+        build.description("Access Token");
+        build.modelRef(new ModelRef("string"));
+        build.parameterType("header");
+        build.required(true);
+
+        Parameter header = build.build();
+
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfo(appName + " API de consulta", "Documentación de puntos de acceso REST",
-                        appVersion, "", ApiInfo.DEFAULT_CONTACT, "", "", new ArrayList<VendorExtension>()))
+                        appVersion, "", ApiInfo.DEFAULT_CONTACT, "", "", new ArrayList<>()))
 
                 .groupName("Fase Pagos")
                 .forCodeGeneration(true)
@@ -111,7 +123,21 @@ public class SwaggerConfiguration {
                 .genericModelSubstitutes(ResponseEntity.class)
                 .select()
                 .paths(regex(managementContextPath + ".*"))
-                .build();
+                .build().globalOperationParameters(
+                       newArrayList(new ParameterBuilder()
+                               .name("X-IBM-Client-Id")
+                               .description("Token de Acceso Bluemix")
+                               .modelRef(new ModelRef("a005bb95-8e60-4a33-9af3-cf941378a561"))
+                               .parameterType("header")
+                               .required(true)
+                               .build()));
+    }
+
+
+
+
+    private ApiKey apiKey() {
+        return new ApiKey("access_token", "access_token", "header");
     }
 
 

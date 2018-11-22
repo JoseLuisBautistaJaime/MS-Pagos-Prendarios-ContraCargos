@@ -84,7 +84,7 @@
 
                 function addApiKeyAuthorization() {
                     var authToken = JSON.parse(localStorage.getItem("jhi-authenticationtoken") || sessionStorage.getItem("jhi-authenticationtoken"));
-                    var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("Authorization", "Bearer " + authToken, "header");
+                    var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("X-IBM-Client-Id", "a005bb95-8e60-4a33-9af3-cf941378a561");
                     window.swaggerUi.api.clientAuthorizations.add("bearer", apiKeyAuth);
                 }
 

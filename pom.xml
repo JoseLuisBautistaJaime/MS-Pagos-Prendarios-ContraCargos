@@ -124,6 +124,12 @@
             <version>${org.mapstruct.version}</version>
         </dependency>
 
+        <!-- ArrayList -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>23.0</version>
+        </dependency>
         <!-- WS -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
