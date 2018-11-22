@@ -13,5 +13,7 @@ public interface TarjetasService {
 	List<TarjetaDTO> updateTarjetas(String idTarjeta);
 
 	TarjetaDTO deleteTarjetas(String idTarjeta);
+	
+	public int countTarjetasByIdCliente(Integer idCliente);
 
 }

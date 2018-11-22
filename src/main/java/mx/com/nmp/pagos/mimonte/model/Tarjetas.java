@@ -44,9 +44,9 @@ public class Tarjetas implements Serializable {
 	@Column(name = "fecha_modificacion")
 	private Date fechaModificacion;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "idCliente")
-	private List<Cliente> cliente;
+	private Cliente cliente;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id")
@@ -99,12 +99,12 @@ public class Tarjetas implements Serializable {
 	public void setFechaModificacion(Date fechaModificacion) {
 		this.fechaModificacion = fechaModificacion;
 	}
-
-	public List<Cliente> getCliente() {
+	
+	public Cliente getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(List<Cliente> cliente) {
+	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
 

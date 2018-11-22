@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Nombre: Cliente
@@ -12,59 +13,72 @@ import java.util.Date;
  */
 public class ClienteDTO {
 
-	private Integer id;
-	private String nombre;
-	private String apPaterno;
-	private String apMaterno;
+	private Integer idCliente;
+	private String nombreTitular;
 	private Date fechaAlta;
+	private Set<TransaccionDTO> transacciones;
+	private Set<TarjetaDTO> tarjetas;
 	
 	public ClienteDTO() {
 		super();
 	}
-	
-	public ClienteDTO(Integer id, String nombre, String apPaterno, String apMaterno, Date fechaAlta) {
+
+	public ClienteDTO(Integer idCliente, String nombreTitular, Date fechaAlta, Set<TransaccionDTO> transacciones,
+			Set<TarjetaDTO> tarjetas) {
 		super();
-		this.id = id;
-		this.nombre = nombre;
-		this.apPaterno = apPaterno;
-		this.apMaterno = apMaterno;
+		this.idCliente = idCliente;
+		this.nombreTitular = nombreTitular;
 		this.fechaAlta = fechaAlta;
+		this.transacciones = transacciones;
+		this.tarjetas = tarjetas;
 	}
-	public Integer getId() {
-		return id;
+
+
+
+	public Integer getIdCliente() {
+		return idCliente;
 	}
-	public void setId(Integer id) {
-		this.id = id;
+
+	public void setIdCliente(Integer idCliente) {
+		this.idCliente = idCliente;
 	}
-	public String getNombre() {
-		return nombre;
+
+	public String getNombreTitular() {
+		return nombreTitular;
 	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+
+	public void setNombreTitular(String nombreTitular) {
+		this.nombreTitular = nombreTitular;
 	}
-	public String getApPaterno() {
-		return apPaterno;
-	}
-	public void setApPaterno(String apPaterno) {
-		this.apPaterno = apPaterno;
-	}
-	public String getApMaterno() {
-		return apMaterno;
-	}
-	public void setApMaterno(String apMaterno) {
-		this.apMaterno = apMaterno;
-	}
+
 	public Date getFechaAlta() {
 		return fechaAlta;
 	}
+
 	public void setFechaAlta(Date fechaAlta) {
 		this.fechaAlta = fechaAlta;
 	}
 
+	public Set<TransaccionDTO> getTransacciones() {
+		return transacciones;
+	}
+
+	public void setTransacciones(Set<TransaccionDTO> transacciones) {
+		this.transacciones = transacciones;
+	}
+
+	public Set<TarjetaDTO> getTarjetas() {
+		return tarjetas;
+	}
+
+	public void setTarjetas(Set<TarjetaDTO> tarjetas) {
+		this.tarjetas = tarjetas;
+	}
+
 	@Override
 	public String toString() {
-		return "ClienteDTO [id=" + id + ", nombre=" + nombre + ", apPaterno=" + apPaterno + ", apMaterno=" + apMaterno
-				+ ", fechaAlta=" + fechaAlta + "]";
+		return "ClienteDTO [idCliente=" + idCliente + ", nombreTitular=" + nombreTitular + ", fechaAlta=" + fechaAlta
+				+ ", transacciones=" + transacciones + ", tarjetas=" + tarjetas + "]";
 	}
 	
 }

@@ -3,8 +3,6 @@ package mx.com.nmp.pagos.mimonte.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
-import mx.com.nmp.pagos.mimonte.model.Catalogo;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 
 /**
@@ -16,5 +14,14 @@ import mx.com.nmp.pagos.mimonte.model.Tarjetas;
  * @version 0.1
  */
 @Repository
-public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {	
+public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
+	
+	/**
+	 * Obtiene la cantidad de tarjetas que pertenecen a un cliente en especifico (por id Cliente)
+	 * 
+	 * @param idcliente Integer con el id del cliente en cuestion
+	 * @return Valor Integer con la cantidad de tarjetas encontradas para ese id de cliente
+	 */
+	//public int countByIdcliente(Integer idcliente);
+	
 }

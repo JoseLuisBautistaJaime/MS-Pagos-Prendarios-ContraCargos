@@ -2,6 +2,7 @@ package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -115,7 +116,7 @@ public class TarjetasController {
 		estatusTarjeta.add(estatusTarjetaDto);
 		
 		//objects
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan", "Perez","Juarez",new Date());
+		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date(), new HashSet<>(), new HashSet<>());
 
 		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
 		tarjetaDTO.add(tarjetaDto);

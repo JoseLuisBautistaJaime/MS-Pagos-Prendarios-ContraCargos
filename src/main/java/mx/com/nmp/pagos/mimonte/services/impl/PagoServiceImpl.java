@@ -3,8 +3,10 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.builder.TransaccionBuilder;
 import mx.com.nmp.pagos.mimonte.config.Constants;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
@@ -13,13 +15,14 @@ import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
+import mx.com.nmp.pagos.mimonte.services.TransaccionService;
 
 /**
  * Nombre: PagoServiceImpl
- * Descripcion: Clase que implementa la operacion que
- * realiza pagos de partidas
+ * Descripcion: Clase que implementa la operacion que realiza pagos de partidas
  *
- * @author Ismael Flores iaguilar@quarksoft.net Fecha: 20/11/2018 16:22 hrs.
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate: 20/11/2018 16:22 hrs.
  * @version 0.1
  */
 @Service("pagoServiceImpl")
@@ -27,6 +30,10 @@ public class PagoServiceImpl implements PagoService {
 
 	@Autowired
 	TarjetasService tarjetaService;
+	
+	@Autowired
+	@Qualifier("transaccionServiceImpl")
+	TransaccionService transaccionService;
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
@@ -37,10 +44,10 @@ public class PagoServiceImpl implements PagoService {
 	public PagoDTO savePago(PagoDTO pagoDTO) throws PagoException {
 		log.info("Ingreso al servicio de pago: POST");
 		// ENVIAR PETICION A OPEN PAY Y A BUS
-		// OPEN PAY AND BUS REQUEST
+		// --- OPEN PAY AND BUS REQUEST HERE
 
 		// TODO SALIO BIEN
-		// GUARDAR LA TARJETA SI NO EXISTE, PERO VALIDAR ANTES QUE NO HALLA 3
+		// GUARDAR LA TARJETA SI NO EXISTE, PERO VALIDAR ANTES QUE NO HALLA 3 TARJETAS DE ESE CLIENTE
 		if (validaSiGuardar(pagoDTO)) {
 			if (validaDatos(pagoDTO)) {
 				if(validaCantidadTarjetasExistentes(pagoDTO)) {
@@ -54,9 +61,12 @@ public class PagoServiceImpl implements PagoService {
 				throw new DatosIncompletosException(Constants.PagoConstants.INCOMPLETE_CARD_DATA);
 			}
 		}
+		// ENVIAR REGISTRO A BUS Y OPEN PAY
+		// REQUEST CODE HERE
+		
 		// SI TODO FUE BIEN GUARDAR LA TRANSACCION:
-
-		return null;
+		transaccionService.saveTransaccion(TransaccionBuilder.buildTransaccionDTOFromPagoDTO(pagoDTO));
+		return pagoDTO;
 	}
 
 	/**
@@ -96,7 +106,9 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	public boolean validaCantidadTarjetasExistentes(PagoDTO pagoDTO) {
 		boolean flag = false;
-		//int cantidadTarjetas = tarjetaService.countTarjetas(pagoDTO.getTarjeta().getCliente().getId());
+		int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getCliente().getIdCliente());
+		if( cantidadTarjetas < Constants.PagoConstants.MAXIMUM_AMOUNT_OF_CARDS )
+			flag = true;
 		return flag;
 	}
 	
