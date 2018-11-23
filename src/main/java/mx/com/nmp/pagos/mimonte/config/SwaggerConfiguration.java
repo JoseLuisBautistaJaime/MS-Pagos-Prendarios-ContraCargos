@@ -123,14 +123,7 @@ public class SwaggerConfiguration {
                 .genericModelSubstitutes(ResponseEntity.class)
                 .select()
                 .paths(regex(managementContextPath + ".*"))
-                .build().globalOperationParameters(
-                       newArrayList(new ParameterBuilder()
-                               .name("X-IBM-Client-Id")
-                               .description("Token de Acceso Bluemix")
-                               .modelRef(new ModelRef("a005bb95-8e60-4a33-9af3-cf941378a561"))
-                               .parameterType("header")
-                               .required(true)
-                               .build()));
+                .build();
     }
 
 
