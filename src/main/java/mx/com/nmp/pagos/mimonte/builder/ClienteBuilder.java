@@ -66,11 +66,11 @@ public class ClienteBuilder {
 		clienteEntity.setIdCliente(clienteDTO.getIdCliente());
 		clienteEntity.setNombreTitular(clienteDTO.getNombreTitular());
 		List<Tarjetas> tarjetas = new ArrayList<>();
-		tarjetas.add(TarjetaBuilder.builTarjetaFromTrajetaDTO((TarjetaDTO) clienteDTO.getTarjetas().toArray()[0]));
+		//tarjetas.add(TarjetaBuilder.builTarjetaFromTrajetaDTO((TarjetaDTO) clienteDTO.getTarjeta().toArray()[0]));
 		clienteEntity.setTarjetas(tarjetas);
 		Set<Transaccion> transacciones = new HashSet<>();
-		transacciones.add(TransaccionBuilder
-				.buildTransaccionEntity(((TransaccionDTO) clienteDTO.getTransacciones().toArray()[0])));
+		//transacciones.add(TransaccionBuilder
+			//	.buildTransaccionEntity(((TransaccionDTO) clienteDTO.getTransacciones().toArray()[0])));
 		clienteEntity.setTransacciones(transacciones);
 		return clienteEntity;
 	}
@@ -88,7 +88,7 @@ public class ClienteBuilder {
 		clienteDTO.setNombreTitular(clienteEntity.getNombreTitular());
 		List<TarjetaDTO> tarjetas = new ArrayList<>();
 		tarjetas.add(TarjetaBuilder.builTarjetaDTOFromTrajeta(((Tarjetas) clienteEntity.getTarjetas().toArray()[0])));
-		clienteDTO.setTarjetas(tarjetas);
+		//clienteDTO.setTarjeta(tarjetas.get(0));
 		Set<TransaccionDTO> transacciones = new HashSet<>();
 		transacciones.add(TransaccionBuilder
 				.buildTransaccionDTO((((Transaccion) clienteEntity.getTransacciones().toArray()[0]))));

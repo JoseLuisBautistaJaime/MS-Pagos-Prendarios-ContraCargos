@@ -18,7 +18,7 @@ public class TarjetaDTO {
 	private String alias;
 	private Date fechaAlta;
 	private Date fechaModificacion;
-	private List<ClienteDTO> clientes;
+	private ClienteDTO cliente;
 	private TipoTarjetaDTO tipo;
 	private EstatusTarjetaDTO estatus;
 	
@@ -27,14 +27,14 @@ public class TarjetaDTO {
 	}
 	
 	public TarjetaDTO(String token, String digitos, String alias, Date fechaAlta, Date fechaModificacion,
-			List<ClienteDTO> clientes, TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus) {
+			ClienteDTO cliente, TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus) {
 		super();
 		this.token = token;
 		this.digitos = digitos;
 		this.alias = alias;
 		this.fechaAlta = fechaAlta;
 		this.fechaModificacion = fechaModificacion;
-		this.clientes = clientes;
+		this.cliente = cliente;
 		this.tipo = tipo;
 		this.estatus = estatus;
 	}
@@ -97,18 +97,18 @@ public class TarjetaDTO {
 		this.digitos = digitos;
 	}
 
-	public List<ClienteDTO> getClientes() {
-		return clientes;
+	public ClienteDTO getCliente() {
+		return cliente;
 	}
 
-	public void setClientes(List<ClienteDTO> clientes) {
-		this.clientes = clientes;
+	public void setCliente(ClienteDTO cliente) {
+		this.cliente = cliente;
 	}
 
 	@Override
 	public String toString() {
 		return "TarjetaDTO [token=" + token + ", digitos=" + digitos + ", alias=" + alias + ", fechaAlta=" + fechaAlta
-				+ ", fechaModificacion=" + fechaModificacion + ", clientes=" + clientes + ", tipo=" + tipo
+				+ ", fechaModificacion=" + fechaModificacion + ", clientes=" + cliente + ", tipo=" + tipo
 				+ ", estatus=" + estatus + "]";
 	}
 	

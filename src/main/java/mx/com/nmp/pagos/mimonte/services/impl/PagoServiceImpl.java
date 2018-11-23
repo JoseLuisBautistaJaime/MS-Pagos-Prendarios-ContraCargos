@@ -106,7 +106,8 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	public boolean validaCantidadTarjetasExistentes(PagoDTO pagoDTO) {
 		boolean flag = false;
-		int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getClientes().get(0).getIdCliente());
+		//int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getClientes().get(0).getIdCliente());
+		int cantidadTarjetas = 0;
 		if( cantidadTarjetas < PagoConstants.MAXIMUM_AMOUNT_OF_CARDS )
 			flag = true;
 		return flag;

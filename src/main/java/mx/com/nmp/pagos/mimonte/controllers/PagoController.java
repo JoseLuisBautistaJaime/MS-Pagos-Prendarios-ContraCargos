@@ -92,21 +92,21 @@ public class PagoController {
 		operaciones.add(new OperacionDTO(1, "Operacion_1", "C123", 3500D));
 		operaciones.add(new OperacionDTO(2, "Operacion_2", "C456", 2500D));
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date(), new HashSet<>(), new ArrayList<>());
+		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date());
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1,"Activa","Tarjeta Acvtiva");
-		List<ClienteDTO> clientesDTO = new ArrayList<>();
-		clientesDTO.add(clienteDTO);
-		TarjetaDTO tarjetaDto = new TarjetaDTO("DFDFS6SF76","2345","myBsmart",new Date(),new Date(),clientesDTO,tipoTarjetaDto,estatusTarjetaDto);
+		//List<ClienteDTO> clientesDTO = new ArrayList<>();
+		//clientesDTO.add(clienteDTO);
+		TarjetaDTO tarjetaDto = new TarjetaDTO("DFDFS6SF76","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjetaDto,estatusTarjetaDto);
 		pagoDTO = new PagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);
 		// Dummy data building ends
 
 		// Real code begins
-		try {
-			 pagoDTO = pagoService.savePago(pago);	
-		}
-		catch(PagoException pex) {
-			log.error(pex.getMessage());
-		}
+//		try {
+//			 pagoDTO = pagoService.savePago(pago);	
+//		}
+//		catch(PagoException pex) {
+//			log.error(pex.getMessage());
+//		}
 		// Real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoDTO);

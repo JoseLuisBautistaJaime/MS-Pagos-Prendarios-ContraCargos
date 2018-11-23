@@ -17,21 +17,17 @@ public class ClienteDTO {
 	private Integer idCliente;
 	private String nombreTitular;
 	private Date fechaAlta;
-	private Set<TransaccionDTO> transacciones;
-	private List<TarjetaDTO> tarjetas;
 	
 	public ClienteDTO() {
 		super();
 	}
 
-	public ClienteDTO(Integer idCliente, String nombreTitular, Date fechaAlta, Set<TransaccionDTO> transacciones,
-			List<TarjetaDTO> tarjetas) {
+	public ClienteDTO(Integer idCliente, String nombreTitular, Date fechaAlta
+			) {
 		super();
 		this.idCliente = idCliente;
 		this.nombreTitular = nombreTitular;
 		this.fechaAlta = fechaAlta;
-		this.transacciones = transacciones;
-		this.tarjetas = tarjetas;
 	}
 
 
@@ -60,26 +56,10 @@ public class ClienteDTO {
 		this.fechaAlta = fechaAlta;
 	}
 
-	public Set<TransaccionDTO> getTransacciones() {
-		return transacciones;
-	}
-
-	public void setTransacciones(Set<TransaccionDTO> transacciones) {
-		this.transacciones = transacciones;
-	}
-
-	public List<TarjetaDTO> getTarjetas() {
-		return tarjetas;
-	}
-
-	public void setTarjetas(List<TarjetaDTO> tarjetas) {
-		this.tarjetas = tarjetas;
-	}
-
 	@Override
 	public String toString() {
 		return "ClienteDTO [idCliente=" + idCliente + ", nombreTitular=" + nombreTitular + ", fechaAlta=" + fechaAlta
-				+ ", transacciones=" + transacciones + ", tarjetas=" + tarjetas + "]";
+				 + "]";
 	}
 	
 }
