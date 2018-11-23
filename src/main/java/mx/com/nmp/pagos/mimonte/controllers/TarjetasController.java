@@ -62,7 +62,7 @@ public class TarjetasController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/v1/tarjetas/cliente/{idCliente}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas en la base de datos.", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas en la base de datos con respecto al parametro del id del cliente.", tags = {
 			"Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
@@ -98,7 +98,7 @@ public class TarjetasController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/v1/tarjetas/{token}/{idCliente}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas en la base de datos.", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas en la base de datos con respecto a los parametros token y id del cliente.", tags = {
 			"Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
@@ -131,7 +131,7 @@ public class TarjetasController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/v1/tarjetas/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas en la base de datos.", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas en la base de datos con respecto al parametro del token.", tags = {
 			"Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
