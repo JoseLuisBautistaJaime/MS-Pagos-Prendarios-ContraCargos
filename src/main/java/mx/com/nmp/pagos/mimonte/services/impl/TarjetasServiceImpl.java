@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import mx.com.nmp.pagos.mimonte.dao.TarjetaRepository;
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
+import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
@@ -59,11 +60,11 @@ public class TarjetasServiceImpl implements TarjetasService {
 	}
 
 	@Override
-	public List<TarjetaDTO> addTarjetas(TarjetaDTO tarjeta) {
+	public TarjeDTO addTarjetas(TarjetaDTO tarjeta) {
 
 		List<TipoTarjetaDTO> tipoTarjeta = new ArrayList<TipoTarjetaDTO>();
 		List<EstatusTarjetaDTO> estatusTarjeta = new ArrayList<EstatusTarjetaDTO>();
-		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
+		
 		
 
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
@@ -75,45 +76,51 @@ public class TarjetasServiceImpl implements TarjetasService {
 		estatusTarjetaDto.setDescripcion("Activa");
 		estatusTarjeta.add(estatusTarjetaDto);
 
-		//objects
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date());
-//		List<ClienteDTO> clientesDTO = new ArrayList<>();
-//		clientesDTO.add(clienteDTO);
-		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
-		tarjetaDTO.add(tarjetaDto);
+
+		TarjeDTO tarjetaDto = new TarjeDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),tipoTarjeta.get(0),estatusTarjeta.get(0));
+		
 
 		
 
-		return tarjetaDTO;
+		return tarjetaDto;
 	}
 
 	@Override
-	public List<TarjetaDTO> updateTarjetas(String idTarjeta) {
+	public TarjeDTO updateTarjetas(String idTarjeta) {
 
-		List<TipoTarjetaDTO> tipoTarjeta = new ArrayList<TipoTarjetaDTO>();
-		List<EstatusTarjetaDTO> estatusTarjeta = new ArrayList<EstatusTarjetaDTO>();
-		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
+//		List<TipoTarjetaDTO> tipoTarjeta = new ArrayList<TipoTarjetaDTO>();
+//		List<EstatusTarjetaDTO> estatusTarjeta = new ArrayList<EstatusTarjetaDTO>();
+//		List<TarjetaDTO> tarjetaDTO = new ArrayList<TarjetaDTO>();
+//		
+//
+//		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
+//		tipoTarjeta.add(tipoTarjetaDto);
+//
+//		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
+//		estatusTarjetaDto.setId(1);
+//		estatusTarjetaDto.setDescripcionCorta("Activa");
+//		estatusTarjetaDto.setDescripcion("Activa");
+//		estatusTarjeta.add(estatusTarjetaDto);
+//
+//		//objects
+//		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date());
+////		List<ClienteDTO> clientesDTO = new ArrayList<>();
+////		clientesDTO.add(clienteDTO);
+//		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
+//		tarjetaDTO.add(tarjetaDto);
+		
 		
 
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
-		tipoTarjeta.add(tipoTarjetaDto);
 
-		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO();
-		estatusTarjetaDto.setId(1);
-		estatusTarjetaDto.setDescripcionCorta("Activa");
-		estatusTarjetaDto.setDescripcion("Activa");
-		estatusTarjeta.add(estatusTarjetaDto);
+		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1, "Activa", "Avtiva");
 
-		//objects
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date());
-//		List<ClienteDTO> clientesDTO = new ArrayList<>();
-//		clientesDTO.add(clienteDTO);
-		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
-		tarjetaDTO.add(tarjetaDto);
+		TarjeDTO tarjeDto = new TarjeDTO("token", "digitos", "alias", new Date(), new Date(), tipoTarjetaDto, estatusTarjetaDto);
+		
 
 		
 
-		return tarjetaDTO;
+		return tarjeDto;
 	}
 
 	@Override
@@ -128,6 +135,12 @@ public class TarjetasServiceImpl implements TarjetasService {
 	public int countTarjetasByIdCliente(Integer idCliente) {
 		return 0;
 		//return tarjetaRepository.countByIdcliente(idCliente);
+	}
+
+	@Override
+	public List<TarjetaDTO> getTarjeta(String idCliente) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
