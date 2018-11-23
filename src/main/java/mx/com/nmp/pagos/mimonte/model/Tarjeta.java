@@ -1,42 +1,33 @@
 package mx.com.nmp.pagos.mimonte.model;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.config.Constants;
 
 /**
- * Nombre: Tarjetas
- * Descripcion: Entidad que representa la tarjeta dentro del sistema.
+ * Nombre: Tarjeta
+ * Descripcion: Clase abstracta que representa las propiedades generales de una tarjeta.
  *
- * @author José Rodríguez jgrodriguez@quarksoft.net
- * Fecha: 21/11/2018 17:19 Hrs.
+ * @author Javier Hernandez jhernandez@quarksoft.net
+ * Fecha: 23/11/2018 10:43 Hrs.
  * @version 0.1
  */
-@Entity
-@Table(name = "tarjetas")
-public class Tarjetas implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4139940644170406428L;
+@MappedSuperclass
+public abstract class Tarjeta {
 
 	@Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "token", unique = true, nullable = false, length = Constants.LONGITUD_TOKEN)
 	private String token;
 
@@ -52,9 +43,6 @@ public class Tarjetas implements Serializable {
 	@Column(name = "fecha_modificacion")
 	private Date fechaModificacion;
 
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "tarjetas", targetEntity = Cliente.class)
-	private List<Cliente> clientes;
-
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id")
 	private List<TipoTarjeta> tipoTarjeta;
@@ -63,8 +51,20 @@ public class Tarjetas implements Serializable {
 	@JoinColumn(name = "id")
 	private List<EstatusTarjeta> estatusTarjeta;
 
-	public Tarjetas() {
+	public Tarjeta() {
 		super();
+	}
+
+	public Tarjeta(String token, String ultimosDigitos, String alias, Date fechaAlta, Date fechaModificacion,
+			List<TipoTarjeta> tipoTarjeta, List<EstatusTarjeta> estatusTarjeta) {
+		super();
+		this.token = token;
+		this.ultimosDigitos = ultimosDigitos;
+		this.alias = alias;
+		this.fechaAlta = fechaAlta;
+		this.fechaModificacion = fechaModificacion;
+		this.tipoTarjeta = tipoTarjeta;
+		this.estatusTarjeta = estatusTarjeta;
 	}
 
 	public String getToken() {
@@ -107,18 +107,6 @@ public class Tarjetas implements Serializable {
 		this.fechaModificacion = fechaModificacion;
 	}
 
-	public List<Cliente> getClientes() {
-		return clientes;
-	}
-
-	public void setClientes(List<Cliente> clientes) {
-		this.clientes = clientes;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	public List<TipoTarjeta> getTipoTarjeta() {
 		return tipoTarjeta;
 	}
@@ -137,8 +125,7 @@ public class Tarjetas implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(alias, estatusTarjeta, fechaAlta, fechaModificacion, clientes, tipoTarjeta, token,
-				ultimosDigitos);
+		return Objects.hash(alias, estatusTarjeta, fechaAlta, fechaModificacion, tipoTarjeta, token, ultimosDigitos);
 	}
 
 	@Override
@@ -149,7 +136,7 @@ public class Tarjetas implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Tarjetas other = (Tarjetas) obj;
+		Tarjeta other = (Tarjeta) obj;
 		if (alias == null) {
 			if (other.alias != null)
 				return false;
@@ -190,9 +177,9 @@ public class Tarjetas implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Tarjetas [token=" + token + ", ultimosDigitos=" + ultimosDigitos + ", alias=" + alias + ", fechaAlta="
-				+ fechaAlta + ", fechaModificacion=" + fechaModificacion + ", idcliente=" + clientes + ", tipoTarjeta="
-				+ tipoTarjeta + ", estatusTarjeta=" + estatusTarjeta + "]";
+		return "Tarjeta [token=" + token + ", ultimosDigitos=" + ultimosDigitos + ", alias=" + alias + ", fechaAlta="
+				+ fechaAlta + ", fechaModificacion=" + fechaModificacion + ", tipoTarjeta=" + tipoTarjeta
+				+ ", estatusTarjeta=" + estatusTarjeta + "]";
 	}
 
 }
