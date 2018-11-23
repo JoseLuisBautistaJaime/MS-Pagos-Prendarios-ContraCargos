@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.services.impl;
 
+import javax.xml.ws.http.HTTPException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,29 +45,47 @@ public class PagoServiceImpl implements PagoService {
 	@Override
 	public PagoDTO savePago(PagoDTO pagoDTO) throws PagoException {
 		log.info("Ingreso al servicio de pago: POST");
-		// ENVIAR PETICION A OPEN PAY Y A BUS
-		// --- OPEN PAY AND BUS REQUEST HERE
-
-		// TODO SALIO BIEN
-		// GUARDAR LA TARJETA SI NO EXISTE, PERO VALIDAR ANTES QUE NO HALLA 3 TARJETAS DE ESE CLIENTE
-		if (validaSiGuardar(pagoDTO)) {
-			if (validaDatos(pagoDTO)) {
-				if(validaCantidadTarjetasExistentes(pagoDTO)) {
-					TarjetaDTO tarjeta = pagoDTO.getTarjeta();
-					tarjetaService.addTarjetas(tarjeta);	
-				}
-				else {
-					throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
-				}
-			} else {
-				throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
-			}
+		// ---------------------- ENVIAR PETICION A OPEN PAY Y A BUS
+		boolean pagoRealizado = false;
+		try {
+			pagoRealizado = true;
 		}
-		// ENVIAR REGISTRO A BUS Y OPEN PAY
-		// REQUEST CODE HERE
-		
-		// SI TODO FUE BIEN GUARDAR LA TRANSACCION:
-		transaccionService.saveTransaccion(TransaccionBuilder.buildTransaccionDTOFromPagoDTO(pagoDTO));
+		catch(Exception pex) {
+			throw new PagoException(pex.getMessage());
+		}
+		if(pagoRealizado) {
+			if (validaSiGuardar(pagoDTO)) {
+				if (validaDatos(pagoDTO)) {
+					if(validaCantidadTarjetasExistentes(pagoDTO)) {
+						TarjetaDTO tarjeta = pagoDTO.getTarjeta();
+						tarjetaService.addTarjetas(tarjeta);	
+					}
+					else {
+						throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+					}
+				} else {
+					throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
+				}
+			}	
+		}
+		else {
+			log.error(PagoConstants.UNKNOWN_PAY_ERROR);
+		}
+		// ---------------------- ENVIAR REGISTRO A BUS Y OPEN PAY
+		boolean peticionBUS = false;
+		try {
+			// ---------------------- SEND REQUEST TO BUS
+			peticionBUS = true;
+		}
+		catch(HTTPException hex) {
+			
+		}
+		if(peticionBUS) {
+			transaccionService.saveTransaccion(TransaccionBuilder.buildTransaccionDTOFromPagoDTO(pagoDTO));	
+		}
+		else {
+			
+		}
 		return pagoDTO;
 	}
 

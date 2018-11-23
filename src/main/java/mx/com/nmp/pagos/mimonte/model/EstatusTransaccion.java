@@ -25,7 +25,7 @@ public class EstatusTransaccion extends AbstractCatalogo{
 	public EstatusTransaccion() {
 		super();
 	}
-	
+	 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)

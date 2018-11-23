@@ -2,6 +2,12 @@ package mx.com.nmp.pagos.mimonte.constans;
 
 public final class PagoConstants {
     	
+		/**
+		 * Mensaje que será mostrado cuando no se pueda realizar el pago por un error desconocido
+		 * 
+		 */
+		public static final String UNKNOWN_PAY_ERROR = "Error desconocido al intentar egenrar pago";
+	
     	/**
     	 * Mensaje que sera mostrado cuando se desee guardar una nueva tarjeta en un pago,
     	 * pero los datos de esta esten incompletos

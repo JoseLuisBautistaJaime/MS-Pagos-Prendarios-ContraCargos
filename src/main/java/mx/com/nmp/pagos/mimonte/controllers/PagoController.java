@@ -2,7 +2,6 @@ package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -29,7 +28,6 @@ import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
-import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
@@ -82,11 +80,10 @@ public class PagoController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response post(@RequestBody PagoDTO pago) {
 		log.debug("Entrando a operacion de servicio RegistroPagoController.post()...");
-
 		log.debug("Received object: " + pago);
 		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 
-		// Dummy data building begins
+		// --------------------- Dummy data building begins
 		PagoDTO pagoDTO;
 		List<OperacionDTO> operaciones = new ArrayList<>();
 		operaciones.add(new OperacionDTO(1, "Operacion_1", "C123", 3500D));
@@ -94,20 +91,18 @@ public class PagoController {
 		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
 		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date());
 		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1,"Activa","Tarjeta Acvtiva");
-		//List<ClienteDTO> clientesDTO = new ArrayList<>();
-		//clientesDTO.add(clienteDTO);
 		TarjetaDTO tarjetaDto = new TarjetaDTO("DFDFS6SF76","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjetaDto,estatusTarjetaDto);
 		pagoDTO = new PagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);
-		// Dummy data building ends
+		// --------------------- Dummy data building ends
 
-		// Real code begins
-//		try {
-//			 pagoDTO = pagoService.savePago(pago);	
-//		}
-//		catch(PagoException pex) {
-//			log.error(pex.getMessage());
-//		}
-		// Real code ends
+		// --------------------- Real code begins
+		// try {
+		// 	 pagoDTO = pagoService.savePago(pago);	
+		// }
+		// catch(PagoException pex) {
+		// 	log.error(pex.getMessage());
+		// }
+		// --------------------- Real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), MSG_SUCCESS, pagoDTO);
