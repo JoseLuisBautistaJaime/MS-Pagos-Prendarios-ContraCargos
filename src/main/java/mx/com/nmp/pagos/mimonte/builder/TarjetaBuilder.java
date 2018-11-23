@@ -31,7 +31,7 @@ public class TarjetaBuilder {
 	public static Tarjetas builTarjetaFromTrajetaDTO(TarjetaDTO tarjetaDTO) {
 		Tarjetas tarjetaEntity = new Tarjetas();
 		tarjetaEntity.setAlias(tarjetaDTO.getAlias());
-		tarjetaEntity.setCliente(ClienteBuilder.buildClienteFromClienteDTO(tarjetaDTO.getCliente()));
+		tarjetaEntity.setClientes(ClienteBuilder.buildListClienteFromSetClienteDTO((tarjetaDTO.getClientes())));
 		List<EstatusTarjeta> list = new ArrayList<>();
 		list.add(EstatusTarjetaBuilder.buildEstatusTarjetaFromEstatusTarjetaDTO(tarjetaDTO.getEstatus()));
 		tarjetaEntity.setEstatusTarjeta(list);
@@ -54,7 +54,7 @@ public class TarjetaBuilder {
 	public static TarjetaDTO builTarjetaDTOFromTrajeta(Tarjetas tarjetaEntity) {
 		TarjetaDTO tarjetaDTO = new TarjetaDTO();
 		tarjetaDTO.setAlias(tarjetaEntity.getAlias());
-		tarjetaDTO.setCliente( ClienteBuilder.buildClienteDTOFromCliente(tarjetaEntity.getCliente()));
+		tarjetaDTO.setClientes( ClienteBuilder.buildListClienteDTOFromSetCliente((tarjetaEntity.getClientes())));
 		tarjetaDTO.setEstatus(EstatusTarjetaBuilder.buildEstatusTarjetaDTOFromEstatusTarjeta(tarjetaEntity.getEstatusTarjeta().get(0)));
 		tarjetaDTO.setFechaAlta(tarjetaEntity.getFechaAlta());
 		tarjetaDTO.setFechaModificacion(tarjetaEntity.getFechaModificacion());

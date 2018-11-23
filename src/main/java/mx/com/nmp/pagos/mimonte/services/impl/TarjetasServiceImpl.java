@@ -45,9 +45,10 @@ public class TarjetasServiceImpl implements TarjetasService {
 		estatusTarjeta.add(estatusTarjetaDto);
 
 		//objects
-		ClienteDTO clienteDTO = new ClienteDTO(1,"Juan",new Date(), new HashSet<>(), new HashSet<>());
-		
-		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
+		ClienteDTO clienteDTO = new ClienteDTO(1,"Juan",new Date(), new HashSet<>(), new ArrayList<>());
+		List<ClienteDTO> clientesDTO = new ArrayList<>();
+		clientesDTO.add(clienteDTO);
+		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clientesDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
 		tarjetaDTO.add(tarjetaDto);
 		tarjetaDTO.add(tarjetaDto);
 
@@ -75,9 +76,10 @@ public class TarjetasServiceImpl implements TarjetasService {
 		estatusTarjeta.add(estatusTarjetaDto);
 
 		//objects
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date(), new HashSet<>(), new HashSet<>());
-		
-		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
+		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date(), new HashSet<>(), new ArrayList<>());
+		List<ClienteDTO> clientesDTO = new ArrayList<>();
+		clientesDTO.add(clienteDTO);
+		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clientesDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
 		tarjetaDTO.add(tarjetaDto);
 
 		
@@ -103,9 +105,10 @@ public class TarjetasServiceImpl implements TarjetasService {
 		estatusTarjeta.add(estatusTarjetaDto);
 
 		//objects
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date(), new HashSet<>(), new HashSet<>());
-		
-		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
+		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date(), new HashSet<>(), new ArrayList<>());
+		List<ClienteDTO> clientesDTO = new ArrayList<>();
+		clientesDTO.add(clienteDTO);
+		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clientesDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
 		tarjetaDTO.add(tarjetaDto);
 
 		

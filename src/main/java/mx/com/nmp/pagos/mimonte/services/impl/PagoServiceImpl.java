@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.TransaccionBuilder;
-import mx.com.nmp.pagos.mimonte.config.Constants;
+import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.exception.CantidadMaximaTarjetasAlcanzadaException;
@@ -55,10 +55,10 @@ public class PagoServiceImpl implements PagoService {
 					tarjetaService.addTarjetas(tarjeta);	
 				}
 				else {
-					throw new CantidadMaximaTarjetasAlcanzadaException(Constants.PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+					throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 				}
 			} else {
-				throw new DatosIncompletosException(Constants.PagoConstants.INCOMPLETE_CARD_DATA);
+				throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
 			}
 		}
 		// ENVIAR REGISTRO A BUS Y OPEN PAY
@@ -106,8 +106,8 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	public boolean validaCantidadTarjetasExistentes(PagoDTO pagoDTO) {
 		boolean flag = false;
-		int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getCliente().getIdCliente());
-		if( cantidadTarjetas < Constants.PagoConstants.MAXIMUM_AMOUNT_OF_CARDS )
+		int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getClientes().get(0).getIdCliente());
+		if( cantidadTarjetas < PagoConstants.MAXIMUM_AMOUNT_OF_CARDS )
 			flag = true;
 		return flag;
 	}

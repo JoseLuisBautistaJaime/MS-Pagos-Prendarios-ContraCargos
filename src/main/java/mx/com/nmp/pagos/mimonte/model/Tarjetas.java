@@ -2,13 +2,21 @@ package mx.com.nmp.pagos.mimonte.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.config.Constants;
-
-import java.util.List;
 
 /**
  * Nombre: Tarjetas
@@ -44,9 +52,8 @@ public class Tarjetas implements Serializable {
 	@Column(name = "fecha_modificacion")
 	private Date fechaModificacion;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "idCliente")
-	private Cliente cliente;
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "tarjetas", targetEntity = Cliente.class)
+	private List<Cliente> clientes;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id")
@@ -99,13 +106,17 @@ public class Tarjetas implements Serializable {
 	public void setFechaModificacion(Date fechaModificacion) {
 		this.fechaModificacion = fechaModificacion;
 	}
-	
-	public Cliente getCliente() {
-		return cliente;
+
+	public List<Cliente> getClientes() {
+		return clientes;
 	}
 
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
+	public void setClientes(List<Cliente> clientes) {
+		this.clientes = clientes;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public List<TipoTarjeta> getTipoTarjeta() {
@@ -126,7 +137,7 @@ public class Tarjetas implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(alias, estatusTarjeta, fechaAlta, fechaModificacion, cliente, tipoTarjeta, token,
+		return Objects.hash(alias, estatusTarjeta, fechaAlta, fechaModificacion, clientes, tipoTarjeta, token,
 				ultimosDigitos);
 	}
 
@@ -180,7 +191,7 @@ public class Tarjetas implements Serializable {
 	@Override
 	public String toString() {
 		return "Tarjetas [token=" + token + ", ultimosDigitos=" + ultimosDigitos + ", alias=" + alias + ", fechaAlta="
-				+ fechaAlta + ", fechaModificacion=" + fechaModificacion + ", idcliente=" + cliente + ", tipoTarjeta="
+				+ fechaAlta + ", fechaModificacion=" + fechaModificacion + ", idcliente=" + clientes + ", tipoTarjeta="
 				+ tipoTarjeta + ", estatusTarjeta=" + estatusTarjeta + "]";
 	}
 

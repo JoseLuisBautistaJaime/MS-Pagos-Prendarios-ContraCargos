@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Nombre: Tarjeta
@@ -17,7 +18,7 @@ public class TarjetaDTO {
 	private String alias;
 	private Date fechaAlta;
 	private Date fechaModificacion;
-	private ClienteDTO cliente;
+	private List<ClienteDTO> clientes;
 	private TipoTarjetaDTO tipo;
 	private EstatusTarjetaDTO estatus;
 	
@@ -26,14 +27,14 @@ public class TarjetaDTO {
 	}
 	
 	public TarjetaDTO(String token, String digitos, String alias, Date fechaAlta, Date fechaModificacion,
-			ClienteDTO cliente, TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus) {
+			List<ClienteDTO> clientes, TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus) {
 		super();
 		this.token = token;
 		this.digitos = digitos;
 		this.alias = alias;
 		this.fechaAlta = fechaAlta;
 		this.fechaModificacion = fechaModificacion;
-		this.cliente = cliente;
+		this.clientes = clientes;
 		this.tipo = tipo;
 		this.estatus = estatus;
 	}
@@ -72,14 +73,6 @@ public class TarjetaDTO {
 		this.alias = alias;
 	}
 
-	public ClienteDTO getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(ClienteDTO cliente) {
-		this.cliente = cliente;
-	}
-
 	public Date getFechaAlta() {
 		return fechaAlta;
 	}
@@ -104,11 +97,19 @@ public class TarjetaDTO {
 		this.digitos = digitos;
 	}
 
+	public List<ClienteDTO> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(List<ClienteDTO> clientes) {
+		this.clientes = clientes;
+	}
+
 	@Override
 	public String toString() {
 		return "TarjetaDTO [token=" + token + ", digitos=" + digitos + ", alias=" + alias + ", fechaAlta=" + fechaAlta
-				+ ", fechaModificacion=" + fechaModificacion + ", cliente=" + cliente + ", tipo=" + tipo + ", estatus="
-				+ estatus + "]";
+				+ ", fechaModificacion=" + fechaModificacion + ", clientes=" + clientes + ", tipo=" + tipo
+				+ ", estatus=" + estatus + "]";
 	}
 	
 }

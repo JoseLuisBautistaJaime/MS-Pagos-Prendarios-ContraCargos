@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,14 +18,14 @@ public class ClienteDTO {
 	private String nombreTitular;
 	private Date fechaAlta;
 	private Set<TransaccionDTO> transacciones;
-	private Set<TarjetaDTO> tarjetas;
+	private List<TarjetaDTO> tarjetas;
 	
 	public ClienteDTO() {
 		super();
 	}
 
 	public ClienteDTO(Integer idCliente, String nombreTitular, Date fechaAlta, Set<TransaccionDTO> transacciones,
-			Set<TarjetaDTO> tarjetas) {
+			List<TarjetaDTO> tarjetas) {
 		super();
 		this.idCliente = idCliente;
 		this.nombreTitular = nombreTitular;
@@ -67,11 +68,11 @@ public class ClienteDTO {
 		this.transacciones = transacciones;
 	}
 
-	public Set<TarjetaDTO> getTarjetas() {
+	public List<TarjetaDTO> getTarjetas() {
 		return tarjetas;
 	}
 
-	public void setTarjetas(Set<TarjetaDTO> tarjetas) {
+	public void setTarjetas(List<TarjetaDTO> tarjetas) {
 		this.tarjetas = tarjetas;
 	}
 

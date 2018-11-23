@@ -33,7 +33,6 @@ import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 import mx.com.nmp.pagos.mimonte.util.Response;
-import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCadena;
 
 @RestController
 @RequestMapping("/mimonte")
@@ -116,9 +115,10 @@ public class TarjetasController {
 		estatusTarjeta.add(estatusTarjetaDto);
 		
 		//objects
-		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date(), new HashSet<>(), new HashSet<>());
-
-		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clienteDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
+		ClienteDTO clienteDTO = new ClienteDTO(0,"Juan",new Date(), new HashSet<>(), new ArrayList<>());
+		List<ClienteDTO> clientesDTO = new ArrayList<>();
+		clientesDTO.add(clienteDTO);
+		TarjetaDTO tarjetaDto = new TarjetaDTO("FS3444T53GT5","2345","myBsmart",new Date(),new Date(),clientesDTO,tipoTarjeta.get(0),estatusTarjeta.get(0));
 		tarjetaDTO.add(tarjetaDto);
 		tarjetaDTO.add(tarjetaDto);
 		tarjetaDTO.add(tarjetaDto);

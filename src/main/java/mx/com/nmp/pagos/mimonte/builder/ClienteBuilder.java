@@ -1,6 +1,8 @@
 package mx.com.nmp.pagos.mimonte.builder;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Component;
@@ -25,6 +27,34 @@ import mx.com.nmp.pagos.mimonte.model.Transaccion;
 public class ClienteBuilder {
 
 	/**
+	 * Metodo que construye una lista de Entitidades Cliente desde un set de objetos ClienteDTO
+	 * 
+	 * @param List de objetos de tipo clientesDTO
+	 * @return List de entidad de tipo Cliente
+	 */
+	public static List<Cliente> buildListClienteFromSetClienteDTO(List<ClienteDTO> clientesDTO) {
+		List<Cliente> clientesSetEntity = new ArrayList<>();
+		for(ClienteDTO clienteDTO : clientesDTO) {
+			clientesSetEntity.add(buildClienteFromClienteDTO(clienteDTO));
+		}
+		return clientesSetEntity;
+	}
+	
+	/**
+	 * Metodo que construye una lista de objetos de tipo ClienteDTO desde un set de entidades de tipo Cliente 
+	 * 
+	 * @param Lista de entidades de tipo Cliente clientesEntity
+	 * @return Lista de objetos de tipo ClienteDTO
+	 */
+	public static List<ClienteDTO> buildListClienteDTOFromSetCliente(List<Cliente> clientesEntity) {
+		List<ClienteDTO> clientesSetDTO = new ArrayList<>();
+		for(Cliente cliente : clientesEntity) {
+			clientesSetDTO.add(buildClienteDTOFromCliente(cliente));
+		}
+		return clientesSetDTO;
+	}
+	
+	/**
 	 * Metodo que construye un entity Cliente desde un Objeto tipo ClienteDTO
 	 * 
 	 * @param Objeto tipo ClienteDTO clienteDTO
@@ -35,7 +65,7 @@ public class ClienteBuilder {
 		clienteEntity.setFechaAlta(clienteDTO.getFechaAlta());
 		clienteEntity.setIdCliente(clienteDTO.getIdCliente());
 		clienteEntity.setNombreTitular(clienteDTO.getNombreTitular());
-		Set<Tarjetas> tarjetas = new HashSet<>();
+		List<Tarjetas> tarjetas = new ArrayList<>();
 		tarjetas.add(TarjetaBuilder.builTarjetaFromTrajetaDTO((TarjetaDTO) clienteDTO.getTarjetas().toArray()[0]));
 		clienteEntity.setTarjetas(tarjetas);
 		Set<Transaccion> transacciones = new HashSet<>();
@@ -56,7 +86,7 @@ public class ClienteBuilder {
 		clienteDTO.setFechaAlta(clienteEntity.getFechaAlta());
 		clienteDTO.setIdCliente(clienteEntity.getIdCliente());
 		clienteDTO.setNombreTitular(clienteEntity.getNombreTitular());
-		Set<TarjetaDTO> tarjetas = new HashSet<>();
+		List<TarjetaDTO> tarjetas = new ArrayList<>();
 		tarjetas.add(TarjetaBuilder.builTarjetaDTOFromTrajeta(((Tarjetas) clienteEntity.getTarjetas().toArray()[0])));
 		clienteDTO.setTarjetas(tarjetas);
 		Set<TransaccionDTO> transacciones = new HashSet<>();
