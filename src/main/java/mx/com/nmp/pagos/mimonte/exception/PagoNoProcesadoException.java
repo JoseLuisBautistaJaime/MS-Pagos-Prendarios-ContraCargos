@@ -5,6 +5,7 @@ package mx.com.nmp.pagos.mimonte.exception;
  * Descripcion: Clase de excepcion personalizada que indica que no se ha podido realizar el pago de las partidas solicitadas
  *
  * @author: Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 26/11/2018 11:28 hrs.
  * @version: 0.1
  */
 public class PagoNoProcesadoException extends Exception {

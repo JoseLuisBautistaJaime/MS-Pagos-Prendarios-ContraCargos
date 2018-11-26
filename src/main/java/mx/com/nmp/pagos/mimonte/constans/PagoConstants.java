@@ -1,12 +1,26 @@
 package mx.com.nmp.pagos.mimonte.constans;
 
+/**
+ * Nombre: PagoConstants
+ * Descripcion: Clase que almacena las constantes usadas para operaciones relacionadas con el pago de partidas / ocntratos.
+ *
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * Fecha: 20/11/2018 10:00 hrs.
+ * @version 0.1
+ */
 public final class PagoConstants {
     	
+		/**
+		 * Mensaje que sera enviado si se se relaliza la transaccion de pago
+		 * correctamente
+		 */
+		public static final String MSG_SUCCESS = "Registro de pago realizado correctamente.";
+	
 		/**
 		 * Mensaje que será mostrado cuando no se pueda realizar el pago por un error desconocido
 		 * 
 		 */
-		public static final String UNKNOWN_PAY_ERROR = "Error desconocido al intentar egenrar pago";
+		public static final String UNKNOWN_PAY_ERROR = "Error desconocido al intentar realizar pago";
 	
     	/**
     	 * Mensaje que sera mostrado cuando se desee guardar una nueva tarjeta en un pago,

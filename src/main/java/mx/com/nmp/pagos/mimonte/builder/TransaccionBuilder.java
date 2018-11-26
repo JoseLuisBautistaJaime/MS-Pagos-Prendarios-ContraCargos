@@ -29,6 +29,12 @@ public class TransaccionBuilder {
 		return null;
 	}
 	
+	/**
+	 * Metodo que construye un objeto tipo TransaccionDTO desde un objeto tipo PagoDTO
+	 * 
+	 * @param Objeto tipo PagoDTO pagoDTO
+	 * @return Objeto de tipo TransaccionDTO
+	 */
 	public static TransaccionDTO buildTransaccionDTOFromPagoDTO(PagoDTO pagoDTO) {
 		return null;
 	}
@@ -44,7 +50,6 @@ public class TransaccionBuilder {
 		transaccionEntity.setAutorizacion(transaccionDTO.getAutorizacion());
 		transaccionEntity.setCliente( ClienteBuilder.buildClienteFromClienteDTO(transaccionDTO.getCliente()));
 		transaccionEntity.setDescripcion(transaccionDTO.getDescripcion());
-//		transaccionEntity.setEstatusTransaccion(EstatusTransaccionBuilder.buildEstatusTransaccionFromEstatusTransaccionDTO(transaccionDTO.getEstatusTransaccion()));
 		transaccionEntity.setFechaCreacion(transaccionDTO.getFechaCreacion());
 		transaccionEntity.setFechaTarnsaccion(transaccionDTO.getFechaTarnsaccion());
 		transaccionEntity.setId(transaccionDTO.getId());
@@ -68,7 +73,6 @@ public class TransaccionBuilder {
 		transaccionDTO.setAutorizacion(transaccionEntity.getAutorizacion());
 		transaccionDTO.setCliente(ClienteBuilder.buildClienteDTOFromCliente(transaccionEntity.getCliente()));
 		transaccionDTO.setDescripcion(transaccionEntity.getDescripcion());
-//		transaccionDTO.setEstatusTransaccion(EstatusTransaccionBuilder.buildEstatusTransaccionDTOFromEstatusTransaccion(transaccionEntity.getEstatusTransaccion()));
 		transaccionDTO.setFechaCreacion(transaccionEntity.getFechaCreacion());
 		transaccionDTO.setFechaTarnsaccion(transaccionEntity.getFechaTarnsaccion());
 		transaccionDTO.setId(transaccionEntity.getId());
@@ -77,6 +81,7 @@ public class TransaccionBuilder {
 		transaccionDTO.setMetodo(transaccionEntity.getMetodo());
 		transaccionDTO.setMonto(transaccionEntity.getMonto());
 		transaccionDTO.setRestResponse(transaccionEntity.getRestResponse());
+		// No es un Foreign Key por eso solo requiere los ultimos digitos de la tarjeta
 		TarjetaDTO tarjeta = new TarjetaDTO();
 		tarjeta.setDigitos(transaccionEntity.getTarjeta());
 		transaccionDTO.setTarjeta(tarjeta);

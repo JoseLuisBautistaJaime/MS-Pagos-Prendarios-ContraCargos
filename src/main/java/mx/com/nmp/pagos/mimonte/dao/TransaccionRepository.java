@@ -7,7 +7,7 @@ import mx.com.nmp.pagos.mimonte.model.Transaccion;
 
 /**
  * Nombre: TransaccionRepository
- * Descripcion: Repositorio que realiza consultas referentes a las transacciones realizadas
+ * Descripcion: Repositorio que realiza consultas referentes a transacciones
  *
  * @author: Ismael Flores iaguilar@quarksoft.net
  * @creationDate 23/11/2018 10:44 hrs.

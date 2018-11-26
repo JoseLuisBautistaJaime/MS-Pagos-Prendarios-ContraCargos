@@ -10,8 +10,8 @@ import mx.com.nmp.pagos.mimonte.dto.TransaccionDTO;
 import mx.com.nmp.pagos.mimonte.services.TransaccionService;
 
 /**
- * Nombre: TransaccionServiceImpl Descripcion: Clase que implementa la operacion
- * que realiza registro de transacciones
+ * Nombre: TransaccionServiceImpl
+ * Descripcion: Clase que realiza registro de transacciones
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @Date: 20/11/2018 16:22 hrs.

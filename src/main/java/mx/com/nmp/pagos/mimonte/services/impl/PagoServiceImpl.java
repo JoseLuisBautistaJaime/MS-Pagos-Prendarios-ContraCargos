@@ -21,7 +21,8 @@ import mx.com.nmp.pagos.mimonte.services.TransaccionService;
 
 /**
  * Nombre: PagoServiceImpl
- * Descripcion: Clase que implementa la operacion que realiza pagos de partidas
+ * Descripcion: Clase que realiza el pago de partidas /
+ * contratos
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate: 20/11/2018 16:22 hrs.
@@ -32,7 +33,7 @@ public class PagoServiceImpl implements PagoService {
 
 	@Autowired
 	TarjetasService tarjetaService;
-	
+
 	@Autowired
 	@Qualifier("transaccionServiceImpl")
 	TransaccionService transaccionService;
@@ -42,55 +43,43 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	private final Logger log = LoggerFactory.getLogger(PagoServiceImpl.class);
 
+	/**
+	 * Metodo que registra una nueva trajeta si dicha bandera es activa, envia el
+	 * registro de un pago al ESB y registra una transaccion en Base de Datos
+	 *
+	 */
 	@Override
 	public PagoDTO savePago(PagoDTO pagoDTO) throws PagoException {
 		log.info("Ingreso al servicio de pago: POST");
-		// ---------------------- ENVIAR PETICION A OPEN PAY Y A BUS
-		boolean pagoRealizado = false;
-		try {
-			pagoRealizado = true;
-		}
-		catch(Exception pex) {
-			throw new PagoException(pex.getMessage());
-		}
-		if(pagoRealizado) {
-			if (validaSiGuardar(pagoDTO)) {
-				if (validaDatos(pagoDTO)) {
-					if(validaCantidadTarjetasExistentes(pagoDTO)) {
-						TarjetaDTO tarjeta = pagoDTO.getTarjeta();
-						tarjetaService.addTarjetas(tarjeta);	
-					}
-					else {
-						throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
-					}
+		if (validaSiGuardar(pagoDTO)) {
+			if (validaDatos(pagoDTO)) {
+				if (validaCantidadTarjetasExistentes(pagoDTO)) {
+					TarjetaDTO tarjeta = pagoDTO.getTarjeta();
+					tarjetaService.addTarjetas(tarjeta);
 				} else {
-					throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
+					throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 				}
-			}	
+			} else {
+				throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
+			}
 		}
-		else {
-			log.error(PagoConstants.UNKNOWN_PAY_ERROR);
-		}
-		// ---------------------- ENVIAR REGISTRO A BUS Y OPEN PAY
 		boolean peticionBUS = false;
 		try {
-			// ---------------------- SEND REQUEST TO BUS
+			// ---------------------- SEND REQUEST TO ESB (ENTERPRISE SERVICE BUS)
 			peticionBUS = true;
+		} catch (HTTPException hex) {
+
 		}
-		catch(HTTPException hex) {
-			
-		}
-		if(peticionBUS) {
-			transaccionService.saveTransaccion(TransaccionBuilder.buildTransaccionDTOFromPagoDTO(pagoDTO));	
-		}
-		else {
-			
+		if (peticionBUS) {
+			transaccionService.saveTransaccion(TransaccionBuilder.buildTransaccionDTOFromPagoDTO(pagoDTO));
+		} else {
+
 		}
 		return pagoDTO;
 	}
 
 	/**
-	 * Metodo que valida recibe un objeto pagoDTO y valida si se debe guardar la
+	 * Metodo que recibe un objeto pagoDTO y valida si se debe guardar la
 	 * tarjeta que contiene
 	 * 
 	 * @param pagoDTO Objeto PagoDTO con un objeto tarjeta dentro
@@ -119,18 +108,19 @@ public class PagoServiceImpl implements PagoService {
 	}
 
 	/**
-	 * Metodo que valida si ya existe la cantidad maxima de tarjetas en el sistema que el cliente puede tener
+	 * Metodo que valida si ya existe la cantidad maxima de tarjetas en el sistema
+	 * que el cliente puede tener
 	 * 
-	 * @return Valor boleanpo que indica con true si el usuario puede agregar la tarjeta
-	 * o false si no puede realizar dicha accion
+	 * @return Valor boleanpo que indica con true si el usuario puede agregar la
+	 *         tarjeta o false si no puede realizar dicha accion
 	 */
 	public boolean validaCantidadTarjetasExistentes(PagoDTO pagoDTO) {
 		boolean flag = false;
-		//int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getClientes().get(0).getIdCliente());
-		int cantidadTarjetas = 0;
-		if( cantidadTarjetas < PagoConstants.MAXIMUM_AMOUNT_OF_CARDS )
+		int cantidadTarjetas =
+		tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getCliente().getIdCliente());
+		if (cantidadTarjetas < PagoConstants.MAXIMUM_AMOUNT_OF_CARDS)
 			flag = true;
 		return flag;
 	}
-	
+
 }

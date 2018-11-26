@@ -170,4 +170,13 @@ public class Transaccion {
 		this.restResponse = restResponse;
 	}
 
+	@Override
+	public String toString() {
+		return "Transaccion [id=" + id + ", cliente=" + cliente + ", fechaTarnsaccion=" + fechaTarnsaccion + ", monto="
+				+ monto + ", autorizacion=" + autorizacion + ", metodo=" + metodo + ", tarjeta=" + tarjeta
+				+ ", idOpenPay=" + idOpenPay + ", fechaCreacion=" + fechaCreacion + ", descripcion=" + descripcion
+				+ ", idOrder=" + idOrder + ", estatusTransaccion=" + estatusTransaccion + ", restResponse="
+				+ restResponse + "]";
+	}
+	
 }

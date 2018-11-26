@@ -3,7 +3,7 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.Date;
 
 /**
- * Nombre: Transaccion
+ * Nombre: TransaccionDTO
  * Descripcion: Clase que encapsula la informacion perteneciente a una transaccion.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -14,11 +14,11 @@ public class TransaccionDTO {
 
 	private ClienteDTO cliente;
 	private TarjetaDTO tarjeta;
+	private EstatusTransaccionDTO estatusTransaccion;
 	private Date fechaCreacion;
 	private Date fechaTarnsaccion;
 	private Double monto;
 	private Integer id;
-	private EstatusTransaccionDTO estatusTransaccion;
 	private String autorizacion;
 	private String metodo;
 	private String idOpenPay;
