@@ -31,7 +31,7 @@ public class EstatusTransaccionResponseDTO {
 
 	@Override
 	public String toString() {
-		return "EstatusTransacciones [idEstatusOperacion=" + idEstatusOperacion + ", folioContratro=" + folioContratro + "]";
+		return "estatusTransacciones [idEstatusOperacion=" + idEstatusOperacion + ", folioContratro=" + folioContratro + "]";
 	}
 	
 }
