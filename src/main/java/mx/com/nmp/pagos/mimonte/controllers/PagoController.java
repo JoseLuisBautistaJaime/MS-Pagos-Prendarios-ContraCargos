@@ -1,8 +1,8 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +24,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
-import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
-import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
-import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.EstatusTransaccionResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
-import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
-import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
+import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
@@ -81,16 +78,12 @@ public class PagoController {
 		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 
 		// --------------------- Dummy data building begins
-		PagoDTO pagoDTO;
-		List<OperacionDTO> operaciones = new ArrayList<>();
-		operaciones.add(new OperacionDTO(1, "Operacion_1", "C123", 3500D));
-		operaciones.add(new OperacionDTO(2, "Operacion_2", "C456", 2500D));
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
-		ClienteDTO clienteDTO = new ClienteDTO(0, "Juan", new Date());
-		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1, "Activa", "Tarjeta Acvtiva");
-		TarjetaDTO tarjetaDto = new TarjetaDTO("DFDFS6SF76", "2345", "myBsmart", new Date(), new Date(), clienteDTO,
-				tipoTarjetaDto, estatusTarjetaDto);
-		pagoDTO = new PagoDTO(operaciones, tarjetaDto, 6000, "Pago de multiples partidas", false);
+		EstatusTransaccionResponseDTO estatusTransaccionResponseDTO = new EstatusTransaccionResponseDTO(1,"C12");
+		EstatusTransaccionResponseDTO estatusTransaccionResponseDTO2 = new EstatusTransaccionResponseDTO(1,"C34");
+		List<EstatusTransaccionResponseDTO> estatusTransacciones = new ArrayList<>();
+		estatusTransacciones.add(estatusTransaccionResponseDTO);
+		estatusTransacciones.add(estatusTransaccionResponseDTO2);
+		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusTransacciones, true, getRandomNumber());
 		// --------------------- Dummy data building ends
 
 		// --------------------- Real code begins
@@ -102,8 +95,18 @@ public class PagoController {
 		// }
 		// --------------------- Real code ends
 
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoDTO);
-		return new ResponseEntity<>(beanFactory.getBean(Response.class, HttpStatus.BAD_REQUEST.toString(),
-				PagoConstants.MSG_SUCCESS, pagoDTO), HttpStatus.BAD_REQUEST);
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoResponseDTO);
+		return new ResponseEntity<>(beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				PagoConstants.MSG_SUCCESS, pagoResponseDTO), HttpStatus.OK);
+	}
+	
+	/**
+	 * Metodo que regresa un numero aleatorio entre 1 y 3 simulando la tomade decicion para un numero de ailiacion
+	 * 
+	 * @return
+	 */
+	public static int getRandomNumber() {
+		Random random = new Random();
+		return random.nextInt(3 - 1 + 1) + 1;
 	}
 }

@@ -12,6 +12,7 @@ import mx.com.nmp.pagos.mimonte.builder.TransaccionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
+import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.exception.CantidadMaximaTarjetasAlcanzadaException;
 import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
@@ -54,13 +55,12 @@ public class PagoServiceImpl implements PagoService {
 		if (validaSiGuardar(pagoDTO)) {
 			if (validaDatos(pagoDTO)) {
 				if (validaCantidadTarjetasExistentes(pagoDTO)) {
-					TarjetaDTO tarjeta = pagoDTO.getTarjeta();
-					tarjetaService.addTarjetas(tarjeta);
+					// save trajeta here
 				} else {
-					throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+					//throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 				}
 			} else {
-				throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
+				//throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
 			}
 		}
 		boolean peticionBUS = false;
@@ -116,8 +116,8 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	public boolean validaCantidadTarjetasExistentes(PagoDTO pagoDTO) {
 		boolean flag = false;
-		int cantidadTarjetas =
-		tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getCliente().getIdCliente());
+		int cantidadTarjetas = 0;
+				//tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getCliente().getIdCliente());
 		if (cantidadTarjetas < PagoConstants.MAXIMUM_AMOUNT_OF_CARDS)
 			flag = true;
 		return flag;

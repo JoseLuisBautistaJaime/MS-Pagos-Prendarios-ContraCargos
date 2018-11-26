@@ -56,7 +56,7 @@ public class TarjetaBuilder {
 	public static TarjetaDTO builTarjetaDTOFromTrajeta(Tarjetas tarjetaEntity) {
 		TarjetaDTO tarjetaDTO = new TarjetaDTO();
 		tarjetaDTO.setAlias(tarjetaEntity.getAlias());
-		tarjetaDTO.setCliente( ClienteBuilder.buildListClienteDTOFromSetCliente((tarjetaEntity.getClientes())).get(0));
+		//tarjetaDTO.setCliente( ClienteBuilder.buildListClienteDTOFromSetCliente((tarjetaEntity.getClientes())).get(0));
 		tarjetaDTO.setEstatus(new EstatusTarjetaDTO(1,"Activo", "Activo"));
 		tarjetaDTO.setFechaAlta(tarjetaEntity.getFechaAlta());
 		tarjetaDTO.setFechaModificacion(tarjetaEntity.getFechaModificacion());

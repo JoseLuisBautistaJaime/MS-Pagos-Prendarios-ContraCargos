@@ -13,22 +13,28 @@ import java.util.List;
 public class PagoDTO {
 
 	private List<OperacionDTO> operaciones;
-	private TarjetaDTO tarjeta;
+	private TarjetaPagoDTO tarjeta;
 	private Integer montoTotal;
 	private Boolean guardaTarjeta;
+	private Integer idCliente;
 	private String concepto;
 	
 	public PagoDTO() {
 		super();
 	}
-	
-	public PagoDTO(List<OperacionDTO> operaciones, TarjetaDTO tarjeta, Integer montoTotal, String concepto, Boolean guardaTarjeta) {
+
+	public PagoDTO(List<OperacionDTO> operaciones, TarjetaPagoDTO tarjeta, Integer montoTotal, Boolean guardaTarjeta,
+			Integer idCliente, String concepto) {
+		super();
 		this.operaciones = operaciones;
 		this.tarjeta = tarjeta;
 		this.montoTotal = montoTotal;
-		this.concepto = concepto;
 		this.guardaTarjeta = guardaTarjeta;
+		this.idCliente = idCliente;
+		this.concepto = concepto;
 	}
+
+
 
 	public List<OperacionDTO> getOperaciones() {
 		return operaciones;
@@ -38,11 +44,11 @@ public class PagoDTO {
 		this.operaciones = operaciones;
 	}
 
-	public TarjetaDTO getTarjeta() {
+	public TarjetaPagoDTO getTarjeta() {
 		return tarjeta;
 	}
 
-	public void setTarjeta(TarjetaDTO tarjeta) {
+	public void setTarjeta(TarjetaPagoDTO tarjeta) {
 		this.tarjeta = tarjeta;
 	}
 
@@ -70,10 +76,18 @@ public class PagoDTO {
 		this.guardaTarjeta = guardaTarjeta;
 	}
 
+	public Integer getIdCliente() {
+		return idCliente;
+	}
+
+	public void setIdCliente(Integer idCliente) {
+		this.idCliente = idCliente;
+	}
+
 	@Override
 	public String toString() {
-		return "RegistroPagoDTO [operaciones=" + operaciones + ", tarjeta=" + tarjeta + ", monto_total=" + montoTotal
-				+ ", concepto=" + concepto + ", guardaTarjeta=" + guardaTarjeta + "]";
+		return "PagoDTO [operaciones=" + operaciones + ", tarjeta=" + tarjeta + ", montoTotal=" + montoTotal
+				+ ", guardaTarjeta=" + guardaTarjeta + ", idCliente=" + idCliente + ", concepto=" + concepto + "]";
 	}
 	
 }
