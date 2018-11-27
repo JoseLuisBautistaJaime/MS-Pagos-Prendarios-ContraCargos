@@ -78,13 +78,13 @@ public class PagoController {
 		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 
 		// --------------------- Dummy data building begins
-		EstatusPagoResponseDTO estatusTransaccionResponseDTO = new EstatusPagoResponseDTO(1,"C12");
-		EstatusPagoResponseDTO estatusTransaccionResponseDTO2 = new EstatusPagoResponseDTO(1,"C34");
-		List<EstatusPagoResponseDTO> estatusTransacciones = new ArrayList<>();
-		estatusTransacciones.add(estatusTransaccionResponseDTO);
-		estatusTransacciones.add(estatusTransaccionResponseDTO2);
+		EstatusPagoResponseDTO estatusPagoResponseDTO = new EstatusPagoResponseDTO(1,"C12");
+		EstatusPagoResponseDTO estatusPagoResponseDTO2 = new EstatusPagoResponseDTO(1,"C34");
+		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
+		estatusPagos.add(estatusPagoResponseDTO);
+		estatusPagos.add(estatusPagoResponseDTO2);
 		// Ahora se obtiene un numero aleatorio, pero ese valor entre 1 y 3 debe estar en funcion de unas reglas de negocio
-		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusTransacciones, true, getRandomNumber());
+		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusPagos, true, getRandomNumber());
 		// --------------------- Dummy data building ends
 
 		// real code begins

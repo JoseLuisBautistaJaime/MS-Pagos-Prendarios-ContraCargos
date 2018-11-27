@@ -7,7 +7,7 @@ import mx.com.nmp.pagos.mimonte.model.Pago;
 
 /**
  * Nombre: PagoRepository
- * Descripcion: Repositorio que realiza consultas referentes a transacciones
+ * Descripcion: Repositorio que realiza consultas referentes a pagos
  *
  * @author: Ismael Flores iaguilar@quarksoft.net
  * @creationDate 23/11/2018 10:44 hrs.

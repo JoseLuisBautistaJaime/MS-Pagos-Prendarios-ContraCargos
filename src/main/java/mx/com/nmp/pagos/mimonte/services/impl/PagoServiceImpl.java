@@ -35,7 +35,7 @@ public class PagoServiceImpl implements PagoService {
 
 	/**
 	 * Metodo que registra una nueva trajeta si dicha bandera es activa, envia el
-	 * registro de un pago al ESB y registra una transaccion en Base de Datos
+	 * registro de un pago al ESB y registra un pago en Base de Datos
 	 *
 	 */
 	@Override
@@ -60,7 +60,7 @@ public class PagoServiceImpl implements PagoService {
 
 		}
 		if (peticionBUS) {
-			//transaccionService.saveTransaccion(PagoBuilder.buildTransaccionDTOFromPagoDTO(pagoDTO));
+			//pagoService.savePago(PagoBuilder.buildPagoDTOFromPagoDTO(pagoDTO));
 		} else {
 
 		}

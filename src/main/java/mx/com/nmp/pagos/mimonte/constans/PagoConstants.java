@@ -11,7 +11,7 @@ package mx.com.nmp.pagos.mimonte.constans;
 public final class PagoConstants {
     	
 		/**
-		 * Mensaje que sera enviado si se se relaliza la transaccion de pago
+		 * Mensaje que sera enviado si se se relaliza el pago
 		 * correctamente
 		 */
 		public static final String MSG_SUCCESS = "Registro de pago realizado correctamente.";

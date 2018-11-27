@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.model;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +14,7 @@ import javax.persistence.Table;
 
 /**
  * Nombre: EstatusPago
- * Descripcion: Entidad que representa un estatus de transaccion en el sistema.
+ * Descripcion: Entidad que representa un estatus de pago en el sistema.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * Fecha: 21/11/2018 16:41 AM
@@ -26,18 +28,15 @@ public class EstatusPago extends AbstractCatalogo{
 		super();
 	}
 	 
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "estatusTransaccion")
-    private Integer id;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "estatusPago")
+	private List<Pago> pagos;
 
-	public Integer getId() {
-		return id;
+	public List<Pago> getPagos() {
+		return pagos;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setPagos(List<Pago> pagos) {
+		this.pagos = pagos;
 	}
 	
 }

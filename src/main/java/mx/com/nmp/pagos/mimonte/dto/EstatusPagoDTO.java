@@ -2,7 +2,7 @@ package mx.com.nmp.pagos.mimonte.dto;
 
 /**
  * Nombre: EstatusPagoDTO
- * Descripcion: Clase que encapsula la informacion perteneciente al catalogo de estatus de transacciones.
+ * Descripcion: Clase que encapsula la informacion perteneciente al catalogo de estatus de pagos.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * Fecha: 21/11/2018 13:45 hrs.

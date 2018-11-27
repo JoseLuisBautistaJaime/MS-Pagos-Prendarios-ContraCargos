@@ -14,7 +14,7 @@ public class PagoDTO {
 
 	private ClienteDTO cliente;
 	private TarjetaDTO tarjeta;
-	private EstatusPagoDTO estatusTransaccion;
+	private EstatusPagoDTO estatusPago;
 	private Date fechaCreacion;
 	private Date fechaTarnsaccion;
 	private Double monto;
@@ -31,7 +31,7 @@ public class PagoDTO {
 	}
 	
 	public PagoDTO(ClienteDTO cliente, TarjetaDTO tarjeta, Date fechaCreacion, Date fechaTarnsaccion,
-			Double monto, Integer id, EstatusPagoDTO estatusTransaccion, String autorizacion, String metodo, String idOpenPay,
+			Double monto, Integer id, EstatusPagoDTO estatusPago, String autorizacion, String metodo, String idOpenPay,
 			String descripcion, String idOrder, String restResponse) {
 		super();
 		this.cliente = cliente;
@@ -40,7 +40,7 @@ public class PagoDTO {
 		this.fechaTarnsaccion = fechaTarnsaccion;
 		this.monto = monto;
 		this.id = id;
-		this.estatusTransaccion = estatusTransaccion;
+		this.estatusPago = estatusPago;
 		this.autorizacion = autorizacion;
 		this.metodo = metodo;
 		this.idOpenPay = idOpenPay;
@@ -86,12 +86,12 @@ public class PagoDTO {
 		this.id = id;
 	}
 	
-	public EstatusPagoDTO getEstatusTransaccion() {
-		return estatusTransaccion;
+	public EstatusPagoDTO getEstatusPago() {
+		return estatusPago;
 	}
 
-	public void setEstatusTransaccion(EstatusPagoDTO estatusTransaccion) {
-		this.estatusTransaccion = estatusTransaccion;
+	public void setEstatusPago(EstatusPagoDTO estatusPago) {
+		this.estatusPago = estatusPago;
 	}
 
 	public String getAutorizacion() {
@@ -134,8 +134,8 @@ public class PagoDTO {
 	@Override
 	public String toString() {
 		return "PagoDTO [cliente=" + cliente + ", tarjeta=" + tarjeta + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaTarnsaccion=" + fechaTarnsaccion + ", monto=" + monto + ", id=" + id + ", estatusTransaccion="
-				+ estatusTransaccion + ", autorizacion=" + autorizacion + ", metodo=" + metodo + ", idOpenPay="
+				+ ", fechaTarnsaccion=" + fechaTarnsaccion + ", monto=" + monto + ", id=" + id + ", estatusPago="
+				+ estatusPago + ", autorizacion=" + autorizacion + ", metodo=" + metodo + ", idOpenPay="
 				+ idOpenPay + ", descripcion=" + descripcion + ", idOrder=" + idOrder + ", restResponse=" + restResponse
 				+ "]";
 	}

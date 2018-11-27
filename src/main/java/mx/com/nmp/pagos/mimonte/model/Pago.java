@@ -31,7 +31,7 @@ public class Pago {
 	
 	public Pago(Integer id, Cliente cliente, Date fechaTarnsaccion, Double monto, String autorizacion,
 			String metodo, String tarjeta, String idOpenPay, Date fechaCreacion, String descripcion, String idOrder,
-			EstatusPago estatusTransaccion, String restResponse) {
+			EstatusPago estatusPago, String restResponse) {
 		super();
 		this.id = id;
 		this.cliente = cliente;
@@ -44,7 +44,7 @@ public class Pago {
 		this.fechaCreacion = fechaCreacion;
 		this.descripcion = descripcion;
 		this.idOrder = idOrder;
-		this.estatusTransaccion = estatusTransaccion;
+		this.estatusPago = estatusPago;
 		this.restResponse = restResponse;
 	}
 
@@ -86,7 +86,7 @@ public class Pago {
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinColumn(name ="estatus_transaccion", nullable = true)
-	private EstatusPago estatusTransaccion;
+	private EstatusPago estatusPago;
 	
 	@Column(name ="restresponse", nullable = true)
 	private String restResponse;
@@ -127,11 +127,11 @@ public class Pago {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public EstatusPago getEstatusTransaccion() {
-		return estatusTransaccion;
+	public EstatusPago getEstatusPago() {
+		return estatusPago;
 	}
-	public void setEstatusTransaccion(EstatusPago estatusTransaccion) {
-		this.estatusTransaccion = estatusTransaccion;
+	public void setEstatusPago(EstatusPago estatusPago) {
+		this.estatusPago = estatusPago;
 	}
 	public String getAutorizacion() {
 		return autorizacion;
@@ -175,7 +175,7 @@ public class Pago {
 		return "Pago [id=" + id + ", cliente=" + cliente + ", fechaTarnsaccion=" + fechaTarnsaccion + ", monto="
 				+ monto + ", autorizacion=" + autorizacion + ", metodo=" + metodo + ", tarjeta=" + tarjeta
 				+ ", idOpenPay=" + idOpenPay + ", fechaCreacion=" + fechaCreacion + ", descripcion=" + descripcion
-				+ ", idOrder=" + idOrder + ", estatusTransaccion=" + estatusTransaccion + ", restResponse="
+				+ ", idOrder=" + idOrder + ", estatusPago=" + estatusPago+ ", restResponse="
 				+ restResponse + "]";
 	}
 	

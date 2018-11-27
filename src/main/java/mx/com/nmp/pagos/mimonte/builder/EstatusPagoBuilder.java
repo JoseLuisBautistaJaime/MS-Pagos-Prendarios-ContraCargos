@@ -23,12 +23,12 @@ public class EstatusPagoBuilder {
 	 * @param Objeto tipo EstatusPagoDTO estatusPagoDTO
 	 * @return Entity tipo EstatusPago
 	 */
-	public static EstatusPago buildEstatusTransaccionFromEstatusTransaccionDTO(EstatusPagoDTO estatusTransaccionDTO) {
-		EstatusPago estatusTransaccionEntity = new EstatusPago();
-		estatusTransaccionEntity.setDescripcion(estatusTransaccionDTO.getDescripcion());
-		estatusTransaccionEntity.setDescripcionCorta(estatusTransaccionDTO.getDescripcionCorta());
-		estatusTransaccionEntity.setId(estatusTransaccionDTO.getId());
-		return estatusTransaccionEntity;
+	public static EstatusPago buildEstatusPagoFromEstatusPagoDTO(EstatusPagoDTO estatusPagoDTO) {
+		EstatusPago estatusPagoEntity = new EstatusPago();
+		estatusPagoEntity.setDescripcion(estatusPagoDTO.getDescripcion());
+		estatusPagoEntity.setDescripcionCorta(estatusPagoDTO.getDescripcionCorta());
+		estatusPagoEntity.setId(estatusPagoDTO.getId());
+		return estatusPagoEntity;
 	}
 	
 	/**
@@ -37,12 +37,12 @@ public class EstatusPagoBuilder {
 	 * @param Entity de tipo EstatusPago estatusPago
 	 * @return Objeto de tipo EstatusPagoDTO
 	 */
-	public static EstatusPagoDTO buildEstatusTransaccionDTOFromEstatusTransaccion(EstatusPago estatusTransaccion) {
-		EstatusPagoDTO estatusTransaccionDTO = new EstatusPagoDTO();
-		estatusTransaccionDTO.setDescripcion(estatusTransaccion.getDescripcion());
-		estatusTransaccionDTO.setDescripcionCorta(estatusTransaccion.getDescripcionCorta());
-		estatusTransaccionDTO.setId(estatusTransaccion.getId());
-		return estatusTransaccionDTO;
+	public static EstatusPagoDTO buildEstatusPagoDTOFromEstatusPago(EstatusPago estatusPago) {
+		EstatusPagoDTO estatusPagoDTO = new EstatusPagoDTO();
+		estatusPagoDTO.setDescripcion(estatusPago.getDescripcion());
+		estatusPagoDTO.setDescripcionCorta(estatusPago.getDescripcionCorta());
+		estatusPagoDTO.setId(estatusPago.getId());
+		return estatusPagoDTO;
 	}
 	
 }

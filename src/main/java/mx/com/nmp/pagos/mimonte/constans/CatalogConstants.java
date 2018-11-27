@@ -17,7 +17,7 @@ public final class CatalogConstants {
     /**
      * Descripcion corta del catalogo ET; Estatus de Pago;
      */
-    public static final String ESTATUS_TRANSACCION = "ET";
+    public static final String ESTATUS_PAGO = "EP";
 
     /**
      * Identificador del catalogo TT; Tipo de Tarjeta
