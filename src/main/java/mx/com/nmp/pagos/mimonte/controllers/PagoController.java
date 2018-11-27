@@ -35,8 +35,8 @@ import mx.com.nmp.pagos.mimonte.util.Response;
  * Descripcion: Clase que expone el servicio REST para el
  * pago con tarjeta de una o varias partidas
  *
- * @author Ismael Flores
- * @creationDate: 19/11/2018 12:00 hrs.
+ * @author Ismael Flores iaguilar@qaurksoft.net
+ * @creationDate 19/11/2018 12:00 hrs.
  * @version 0.1
  */
 @RestController
@@ -68,40 +68,48 @@ public class PagoController {
 	@PostMapping(value = "/v1/pago", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Registra el pago de una o mas partidas/contratos.", tags = { "Pagos" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Pago registrado"),
-			@ApiResponse(code = 400, response = Response.class, message = "El o los parámetros especificados son invalido."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parámetros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fué encontrado"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public ResponseEntity<Response> post(@RequestBody PagoRequestDTO pago) {
+	public ResponseEntity<Response> post(@RequestBody PagoRequestDTO pagoRequestDTO) {
 		log.debug("Entrando a operacion de servicio RegistroPagoController.post()...");
-		log.debug("Received object: " + pago);
+		log.debug("Received object: " + pagoRequestDTO);
 		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 
 		// --------------------- Dummy data building begins
-		EstatusPagoResponseDTO estatusPagoResponseDTO = new EstatusPagoResponseDTO(1,"C12");
-		EstatusPagoResponseDTO estatusPagoResponseDTO2 = new EstatusPagoResponseDTO(1,"C34");
+		EstatusPagoResponseDTO estatusPagoResponseDTO = new EstatusPagoResponseDTO(1, "C12");
+		EstatusPagoResponseDTO estatusPagoResponseDTO2 = new EstatusPagoResponseDTO(1, "C34");
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
 		estatusPagos.add(estatusPagoResponseDTO);
 		estatusPagos.add(estatusPagoResponseDTO2);
-		// Ahora se obtiene un numero aleatorio, pero ese valor entre 1 y 3 debe estar en funcion de unas reglas de negocio
+		// Ahora se obtiene un numero aleatorio, pero ese valor entre 1 y 3 debe estar
+		// en funcion de unas reglas de negocio
+		// en el modulo de toma de deciciones
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusPagos, true, getRandomNumber());
 		// --------------------- Dummy data building ends
 
 		// real code begins
-		
+		// ---------------- CODE HERE ------------------
+//		try {
+//			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
+//		} catch (PagoException pex) {
+//			log.error(pex.getMessage());
+//		}
 		// real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoResponseDTO);
 		return new ResponseEntity<>(beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				PagoConstants.MSG_SUCCESS, pagoResponseDTO), HttpStatus.OK);
 	}
-	
+
 	/**
-	 * Metodo que regresa un numero aleatorio entre 1 y 3 simulando la tomade decicion para un numero de afiliacion
+	 * Metodo que regresa un numero aleatorio entre 1 y 3 simulando la tomade
+	 * decicion para un numero de afiliacion
 	 * 
-	 * @return
+	 * @return int value
 	 */
-	public static int getRandomNumber() {
+	private static int getRandomNumber() {
 		Random random = new Random();
 		return random.nextInt(3 - 1 + 1) + 1;
 	}

@@ -3,12 +3,8 @@ package mx.com.nmp.pagos.mimonte.model;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -26,6 +22,10 @@ public class EstatusPago extends AbstractCatalogo{
 	
 	public EstatusPago() {
 		super();
+	}
+	
+	public EstatusPago(Integer id, String descripcionCorta, String descripcion) {
+		super(id,descripcionCorta, descripcion);
 	}
 	 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "estatusPago")

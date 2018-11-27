@@ -1,7 +1,11 @@
 package mx.com.nmp.pagos.mimonte.builder;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Component;
 
+import mx.com.nmp.pagos.mimonte.constans.EstatusPago;
+import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
@@ -18,6 +22,26 @@ import mx.com.nmp.pagos.mimonte.model.Pago;
  */
 @Component
 public class PagoBuilder {
+
+	public static Pago buildPagoFromObject(PagoRequestDTO pagoRequestDTO, ClienteDTO clienteDTO, Integer index) {
+		Pago pago = new Pago();
+		pago.setCliente(ClienteBuilder.buildClienteFromClienteDTO(clienteDTO));
+		pago.setDescripcion(pagoRequestDTO.getConcepto());
+		pago.setEstatusPago(
+				new mx.com.nmp.pagos.mimonte.model.EstatusPago(EstatusPago.REGISTERED_PAYMENT_STATUS.getId(),
+						EstatusPago.REGISTERED_PAYMENT_STATUS.getDescripcionCorta(),
+						EstatusPago.REGISTERED_PAYMENT_STATUS.getDescripcion()));
+		pago.setFechaCreacion(new Date());
+		pago.setFechaTarnsaccion(new Date());
+		pago.setAutorizacion(null);
+		pago.setIdOpenPay(null);
+		pago.setIdOrder(null);
+		pago.setMetodo(null);
+		pago.setRestResponse(null);
+		pago.setMonto(pagoRequestDTO.getOperaciones().get(index).getMonto());
+		pago.setTarjeta(pagoRequestDTO.getTarjeta().getDigitos());
+		return pago;
+	}
 
 	/**
 	 * Metodo que cosntruye un Entity de tipo Pago desde un objeto de tipo

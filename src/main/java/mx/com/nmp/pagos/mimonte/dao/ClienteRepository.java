@@ -15,5 +15,5 @@ import mx.com.nmp.pagos.mimonte.model.Cliente;
  */
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
-
+	public Cliente getClienteByIdcliente(Integer idcliente);
 }

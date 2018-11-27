@@ -1,9 +1,9 @@
 package mx.com.nmp.pagos.mimonte.builder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.hibernate.tool.hbm2ddl.TargetTypeHelper;
 import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
@@ -45,6 +45,19 @@ public class TarjetaBuilder {
 		tarjetaEntity.setToken(tarjetaDTO.getToken());
 		tarjetaEntity.setUltimosDigitos(tarjetaDTO.getDigitos());
 		return tarjetaEntity;	
+	}
+	
+	public static Tarjetas buildTarjetaFromTarjetaPagoDTO(TarjetaPagoDTO tarjetaPagoDTO, ClienteDTO clienteDTO) {
+		Tarjetas tarjeta = new Tarjetas();
+		tarjeta.setAlias(tarjetaPagoDTO.getAlias());
+		tarjeta.setClientes(Arrays.asList(ClienteBuilder.buildClienteFromClienteDTO((clienteDTO))));
+		tarjeta.setEstatusTarjeta(Arrays.asList( EstatusTarjetaBuilder.buildEstatusTarjetaFromEstatusTarjetaDTO(tarjetaPagoDTO.getEstatus())));
+		tarjeta.setFechaAlta(tarjetaPagoDTO.getFechaAlta());
+		tarjeta.setFechaModificacion(tarjetaPagoDTO.getFechaModificacion());
+		tarjeta.setTipoTarjeta(Arrays.asList(TipoTarjetaBuilder.buildTipoTarjetaFromTipoTrajetaDTO(tarjetaPagoDTO.getTipo())));
+		tarjeta.setToken(tarjetaPagoDTO.getToken());
+		tarjeta.setUltimosDigitos(tarjetaPagoDTO.getDigitos());
+		return tarjeta;
 	}
 	
 	/**

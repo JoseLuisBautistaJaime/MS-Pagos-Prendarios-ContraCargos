@@ -40,8 +40,8 @@ public class Cliente implements Serializable{
 		
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "idCliente", unique = true, nullable = false)
-	private Integer idCliente;
+	@Column(name = "idcliente", unique = true, nullable = false)
+	private Integer idcliente;
 	
 	@Column(name="nombreTitular", length = Constants.LONGITUD_NOMBRE_TITULAR)
 	private String nombreTitular;
@@ -60,15 +60,15 @@ public class Cliente implements Serializable{
 		super();
 	}
 
-	public Cliente(Integer idCliente, String nombreTitular, Date fechaAlta) {
+	public Cliente(Integer idcliente, String nombreTitular, Date fechaAlta) {
 		super();
-		this.idCliente = idCliente;
+		this.idcliente = idcliente;
 		this.nombreTitular = nombreTitular;
 		this.fechaAlta = fechaAlta;
 	}
 
-	public Integer getIdCliente() {
-		return idCliente;
+	public Integer getIdcliente() {
+		return idcliente;
 	}
 
 	public String getNombreTitular() {
@@ -89,7 +89,7 @@ public class Cliente implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(idCliente, nombreTitular, fechaAlta, fechaAlta);
+		return Objects.hash(idcliente, nombreTitular, fechaAlta, fechaAlta);
 	}
 
 	public Set<Pago> getPagos() {
@@ -100,8 +100,8 @@ public class Cliente implements Serializable{
 		this.pagos = pagos;
 	}
 
-	public void setIdCliente(Integer idCliente) {
-		this.idCliente = idCliente;
+	public void setIdcliente(Integer idcliente) {
+		this.idcliente = idcliente;
 	}
 
 	public List<Tarjetas> getTarjetas() {
@@ -126,10 +126,10 @@ public class Cliente implements Serializable{
 				return false;
 		} else if (!fechaAlta.equals(other.fechaAlta))
 			return false;
-		if (idCliente == null) {
-			if (other.idCliente != null)
+		if (idcliente == null) {
+			if (other.idcliente != null)
 				return false;
-		} else if (!idCliente.equals(other.idCliente))
+		} else if (!idcliente.equals(other.idcliente))
 			return false;
 		if (nombreTitular == null) {
 			if (other.nombreTitular != null)
@@ -141,7 +141,7 @@ public class Cliente implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Cliente [idcliente=" + idCliente + ", nombreTitular=" + nombreTitular + ", fechaAlta=" + fechaAlta
+		return "Cliente [idcliente=" + idcliente + ", nombreTitular=" + nombreTitular + ", fechaAlta=" + fechaAlta
 				+ "]";
 	}
 

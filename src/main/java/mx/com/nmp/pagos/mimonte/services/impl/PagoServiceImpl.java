@@ -1,15 +1,27 @@
 package mx.com.nmp.pagos.mimonte.services.impl;
 
-import javax.xml.ws.http.HTTPException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.builder.PagoBuilder;
+import mx.com.nmp.pagos.mimonte.builder.TarjetaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
+import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
+import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
+import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
+import mx.com.nmp.pagos.mimonte.model.EstatusPago;
+import mx.com.nmp.pagos.mimonte.model.Pago;
+import mx.com.nmp.pagos.mimonte.services.ClienteService;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 
@@ -28,6 +40,14 @@ public class PagoServiceImpl implements PagoService {
 	@Autowired
 	TarjetasService tarjetaService;
 
+	@Autowired
+	@Qualifier("clienteServiceImpl")
+	ClienteService clienteService;
+
+	@Autowired
+	@Qualifier("pagoRepository")
+	PagoRepository pagoRepository;
+
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
@@ -39,40 +59,51 @@ public class PagoServiceImpl implements PagoService {
 	 *
 	 */
 	@Override
-	public PagoRequestDTO savePago(PagoRequestDTO pagoDTO) throws PagoException {
+	public PagoResponseDTO savePago(PagoRequestDTO pagoDTO) throws PagoException {
 		log.info("Ingreso al servicio de pago: POST");
+		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
+		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
+		// Aqui se obtiene un numero de afiliacion aleatorio, pero se debe obtener de un modulo de toma de decisiones
+		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
+		boolean estatusTarjeta = false;
 		if (validaSiGuardar(pagoDTO)) {
 			if (validaDatos(pagoDTO)) {
 				if (validaCantidadTarjetasExistentes(pagoDTO)) {
-					//tarjetaService.addTarjetas( TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoDTO.getTarjeta(), ) );
+					tarjetaService.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoDTO.getTarjeta(),
+							clienteService.getClienteById(pagoDTO.getIdCliente())));
+					estatusTarjeta = true;
 				} else {
-					//throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+					// No se lanzara excepcion debido a que de esa manera no se guardaria el pago de
+					// las partidas indicadas
+					// throw new
+					// CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 				}
 			} else {
-				//throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
+				throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
 			}
 		}
-		boolean peticionBUS = false;
-		try {
-			// ---------------------- SEND REQUEST TO ESB (ENTERPRISE SERVICE BUS)
-			peticionBUS = true;
-		} catch (HTTPException hex) {
-
+		// Guardar pago de partidas
+		Pago pago = new Pago();
+		EstatusPago ep = new EstatusPago();
+		for (int i = 0; i < pagoDTO.getOperaciones().size(); i++) {
+			try {
+				pago = PagoBuilder.buildPagoFromObject(pagoDTO, clienteService.getClienteById(pagoDTO.getIdCliente()),i);
+				pagoRepository.save(pago);
+			} catch (Exception ex) {
+				log.error(ex.getMessage());
+			}
 		}
-		if (peticionBUS) {
-			//pagoService.savePago(PagoBuilder.buildPagoDTOFromPagoDTO(pagoDTO));
-		} else {
-
-		}
-		return pagoDTO;
+		pagoResponseDTO.setEstatusPagos(estatusPagos);
+		pagoResponseDTO.setExitoso(true);
+		return pagoResponseDTO;
 	}
 
 	/**
-	 * Metodo que recibe un objeto pagoDTO y valida si se debe guardar la
-	 * tarjeta que contiene
+	 * Metodo que recibe un objeto pagoDTO y valida si se debe guardar la tarjeta
+	 * que contiene
 	 * 
 	 * @param pagoDTO Objeto PagoRequestDTO con un objeto tarjeta dentro
-	 * @return Valor boleano indicando si se debe guardar la tarjeta
+	 * @return Valor boolean indicando si se debe guardar la tarjeta
 	 */
 	private static final boolean validaSiGuardar(PagoRequestDTO pagoDTO) {
 		boolean flag = false;
@@ -82,8 +113,8 @@ public class PagoServiceImpl implements PagoService {
 	}
 
 	/**
-	 * Metodo que recibe un objeto PagoRequestDTO y valida su contenido para saber todos
-	 * los campos de la tarjeta son validos
+	 * Metodo que recibe un objeto PagoRequestDTO y valida su contenido para saber
+	 * todos los campos de la tarjeta son validos
 	 * 
 	 * @param pagoDTO Objeto PagoRequestDTO con un objeto tarjeta dentro
 	 * @return Valor boleano indicando si es posible guardar la tarjeta
@@ -109,6 +140,17 @@ public class PagoServiceImpl implements PagoService {
 		if (cantidadTarjetas < PagoConstants.MAXIMUM_AMOUNT_OF_CARDS)
 			flag = true;
 		return flag;
+	}
+
+	/**
+	 * Metodo que regresa un numero aleatorio entre 1 y 3 simulando la tomade
+	 * decicion para un numero de afiliacion
+	 * 
+	 * @return int value
+	 */
+	private static int getRandomNumber() {
+		Random random = new Random();
+		return random.nextInt(3 - 1 + 1) + 1;
 	}
 
 }

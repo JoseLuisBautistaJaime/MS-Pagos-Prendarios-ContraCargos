@@ -44,5 +44,5 @@ public class EstatusPagoBuilder {
 		estatusPagoDTO.setId(estatusPago.getId());
 		return estatusPagoDTO;
 	}
-	
+		
 }

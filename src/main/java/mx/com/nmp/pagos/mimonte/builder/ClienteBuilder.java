@@ -63,7 +63,7 @@ public class ClienteBuilder {
 	public static Cliente buildClienteFromClienteDTO(ClienteDTO clienteDTO) {
 		Cliente clienteEntity = new Cliente();
 		clienteEntity.setFechaAlta(clienteDTO.getFechaAlta());
-		clienteEntity.setIdCliente(clienteDTO.getIdCliente());
+		clienteEntity.setIdcliente(clienteDTO.getIdCliente());
 		clienteEntity.setNombreTitular(clienteDTO.getNombreTitular());
 		List<Tarjetas> tarjetas = new ArrayList<>();
 		clienteEntity.setTarjetas(tarjetas);
@@ -81,7 +81,7 @@ public class ClienteBuilder {
 	public static ClienteDTO buildClienteDTOFromCliente(Cliente clienteEntity) {
 		ClienteDTO clienteDTO = new ClienteDTO();
 		clienteDTO.setFechaAlta(clienteEntity.getFechaAlta());
-		clienteDTO.setIdCliente(clienteEntity.getIdCliente());
+		clienteDTO.setIdCliente((clienteEntity.getIdcliente()));
 		clienteDTO.setNombreTitular(clienteEntity.getNombreTitular());
 		List<TarjetaDTO> tarjetas = new ArrayList<>();
 		tarjetas.add(TarjetaBuilder.builTarjetaDTOFromTrajeta(((Tarjetas) clienteEntity.getTarjetas().toArray()[0])));
