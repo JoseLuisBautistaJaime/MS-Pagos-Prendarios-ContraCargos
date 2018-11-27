@@ -5,20 +5,13 @@ import javax.xml.ws.http.HTTPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import mx.com.nmp.pagos.mimonte.builder.TransaccionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
-import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
-import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
-import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
-import mx.com.nmp.pagos.mimonte.exception.CantidadMaximaTarjetasAlcanzadaException;
-import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
+import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
-import mx.com.nmp.pagos.mimonte.services.TransaccionService;
 
 /**
  * Nombre: PagoServiceImpl
@@ -35,10 +28,6 @@ public class PagoServiceImpl implements PagoService {
 	@Autowired
 	TarjetasService tarjetaService;
 
-	@Autowired
-	@Qualifier("transaccionServiceImpl")
-	TransaccionService transaccionService;
-
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
@@ -50,12 +39,12 @@ public class PagoServiceImpl implements PagoService {
 	 *
 	 */
 	@Override
-	public PagoDTO savePago(PagoDTO pagoDTO) throws PagoException {
+	public PagoRequestDTO savePago(PagoRequestDTO pagoDTO) throws PagoException {
 		log.info("Ingreso al servicio de pago: POST");
 		if (validaSiGuardar(pagoDTO)) {
 			if (validaDatos(pagoDTO)) {
 				if (validaCantidadTarjetasExistentes(pagoDTO)) {
-					// save trajeta here
+					//tarjetaService.addTarjetas( TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoDTO.getTarjeta(), ) );
 				} else {
 					//throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 				}
@@ -71,7 +60,7 @@ public class PagoServiceImpl implements PagoService {
 
 		}
 		if (peticionBUS) {
-			transaccionService.saveTransaccion(TransaccionBuilder.buildTransaccionDTOFromPagoDTO(pagoDTO));
+			//transaccionService.saveTransaccion(PagoBuilder.buildTransaccionDTOFromPagoDTO(pagoDTO));
 		} else {
 
 		}
@@ -82,10 +71,10 @@ public class PagoServiceImpl implements PagoService {
 	 * Metodo que recibe un objeto pagoDTO y valida si se debe guardar la
 	 * tarjeta que contiene
 	 * 
-	 * @param pagoDTO Objeto PagoDTO con un objeto tarjeta dentro
+	 * @param pagoDTO Objeto PagoRequestDTO con un objeto tarjeta dentro
 	 * @return Valor boleano indicando si se debe guardar la tarjeta
 	 */
-	private static final boolean validaSiGuardar(PagoDTO pagoDTO) {
+	private static final boolean validaSiGuardar(PagoRequestDTO pagoDTO) {
 		boolean flag = false;
 		if (null != pagoDTO && pagoDTO.getGuardaTarjeta())
 			flag = true;
@@ -93,13 +82,13 @@ public class PagoServiceImpl implements PagoService {
 	}
 
 	/**
-	 * Metodo que recibe un objeto PagoDTO y valida su contenido para saber todos
+	 * Metodo que recibe un objeto PagoRequestDTO y valida su contenido para saber todos
 	 * los campos de la tarjeta son validos
 	 * 
-	 * @param pagoDTO Objeto PagoDTO con un objeto tarjeta dentro
+	 * @param pagoDTO Objeto PagoRequestDTO con un objeto tarjeta dentro
 	 * @return Valor boleano indicando si es posible guardar la tarjeta
 	 */
-	private static final boolean validaDatos(PagoDTO pagoDTO) {
+	private static final boolean validaDatos(PagoRequestDTO pagoDTO) {
 		boolean flag = false;
 		if (null != pagoDTO && null != pagoDTO.getTarjeta() && null != pagoDTO.getTarjeta().getAlias()
 				&& null != pagoDTO.getTarjeta().getToken())
@@ -114,10 +103,9 @@ public class PagoServiceImpl implements PagoService {
 	 * @return Valor boleanpo que indica con true si el usuario puede agregar la
 	 *         tarjeta o false si no puede realizar dicha accion
 	 */
-	public boolean validaCantidadTarjetasExistentes(PagoDTO pagoDTO) {
+	public boolean validaCantidadTarjetasExistentes(PagoRequestDTO pagoDTO) {
 		boolean flag = false;
-		int cantidadTarjetas = 0;
-				//tarjetaService.countTarjetasByIdCliente(pagoDTO.getTarjeta().getCliente().getIdCliente());
+		int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getIdCliente());
 		if (cantidadTarjetas < PagoConstants.MAXIMUM_AMOUNT_OF_CARDS)
 			flag = true;
 		return flag;

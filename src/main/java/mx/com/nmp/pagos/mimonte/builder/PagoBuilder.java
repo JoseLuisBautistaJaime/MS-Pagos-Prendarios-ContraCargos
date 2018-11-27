@@ -3,52 +3,54 @@ package mx.com.nmp.pagos.mimonte.builder;
 import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
+import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
-import mx.com.nmp.pagos.mimonte.dto.TransaccionDTO;
-import mx.com.nmp.pagos.mimonte.model.Transaccion;
+import mx.com.nmp.pagos.mimonte.model.Pago;
 
 /**
- * Nombre: TransaccionBuilder
- * Descripcion: Builder que se encaraga de fabricar objetos entity a partir de objetos DTO
- * y viceversa
+ * Nombre: PagoBuilder
+ * Descripcion: Builder que se encaraga de fabricar objetos
+ * entity a partir de objetos DTO y viceversa
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 21/11/2018 17:30 hrs.
  * @version 0.1
  */
 @Component
-public class TransaccionBuilder {
+public class PagoBuilder {
 
 	/**
-	 * Metodo que cosntruye un Entity de tipo Transaccion desde un objeto de tipo PagoDTO
+	 * Metodo que cosntruye un Entity de tipo Pago desde un objeto de tipo
+	 * PagoRequestDTO
 	 * 
-	 * @param Objeto de tipo PagoDTO pagoDTO
-	 * @return Entity de tipo Transaccion
+	 * @param Objeto de tipo PagoRequestDTO pagoDTO
+	 * @return Entity de tipo Pago
 	 */
-	public static Transaccion buildTransaccionEntityFromPagoDTO(PagoDTO pagoDTO) {
+	public static Pago buildTransaccionEntityFromPagoDTO(PagoRequestDTO pagoDTO) {
 		return null;
 	}
-	
+
 	/**
-	 * Metodo que construye un objeto tipo TransaccionDTO desde un objeto tipo PagoDTO
+	 * Metodo que construye un objeto tipo PagoDTO desde un objeto tipo
+	 * PagoRequestDTO
 	 * 
-	 * @param Objeto tipo PagoDTO pagoDTO
-	 * @return Objeto de tipo TransaccionDTO
+	 * @param Objeto tipo PagoRequestDTO pagoDTO
+	 * @return Objeto de tipo PagoDTO
 	 */
-	public static TransaccionDTO buildTransaccionDTOFromPagoDTO(PagoDTO pagoDTO) {
+	public static PagoDTO buildTransaccionDTOFromPagoDTO(PagoRequestDTO pagoDTO) {
 		return null;
 	}
-	
+
 	/**
-	 * Metodo que construye un objeto de tipo TransaccionDTO a un Entity Transaccion
+	 * Metodo que construye un objeto de tipo PagoDTO a un Entity Pago
 	 * 
 	 * @param Objeto de tipo transaccionDTO
-	 * @return Entity de tipo Transaccion
+	 * @return Entity de tipo Pago
 	 */
-	public static Transaccion buildTransaccionEntity(TransaccionDTO transaccionDTO) {
-		Transaccion transaccionEntity = new Transaccion();
+	public static Pago buildTransaccionEntity(PagoDTO transaccionDTO) {
+		Pago transaccionEntity = new Pago();
 		transaccionEntity.setAutorizacion(transaccionDTO.getAutorizacion());
-		transaccionEntity.setCliente( ClienteBuilder.buildClienteFromClienteDTO(transaccionDTO.getCliente()));
+		transaccionEntity.setCliente(ClienteBuilder.buildClienteFromClienteDTO(transaccionDTO.getCliente()));
 		transaccionEntity.setDescripcion(transaccionDTO.getDescripcion());
 		transaccionEntity.setFechaCreacion(transaccionDTO.getFechaCreacion());
 		transaccionEntity.setFechaTarnsaccion(transaccionDTO.getFechaTarnsaccion());
@@ -63,13 +65,13 @@ public class TransaccionBuilder {
 	}
 
 	/**
-	 * Metodo que construye un objeto de tipo TransaccionDTO desde un Entity tipo Transaccion
+	 * Metodo que construye un objeto de tipo PagoDTO desde un Entity tipo Pago
 	 * 
-	 * @param Entity de tipo Transaccion transaccionEntity
-	 * @return Objeto de tipo TransaccionDTO
+	 * @param Entity de tipo Pago transaccionEntity
+	 * @return Objeto de tipo PagoDTO
 	 */
-	public static TransaccionDTO buildTransaccionDTO(Transaccion transaccionEntity) {
-		TransaccionDTO transaccionDTO = new TransaccionDTO();
+	public static PagoDTO buildTransaccionDTO(Pago transaccionEntity) {
+		PagoDTO transaccionDTO = new PagoDTO();
 		transaccionDTO.setAutorizacion(transaccionEntity.getAutorizacion());
 		transaccionDTO.setCliente(ClienteBuilder.buildClienteDTOFromCliente(transaccionEntity.getCliente()));
 		transaccionDTO.setDescripcion(transaccionEntity.getDescripcion());
@@ -87,5 +89,5 @@ public class TransaccionBuilder {
 		transaccionDTO.setTarjeta(tarjeta);
 		return transaccionDTO;
 	}
-	
+
 }

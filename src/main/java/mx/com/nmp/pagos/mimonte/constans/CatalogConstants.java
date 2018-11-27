@@ -15,7 +15,7 @@ public final class CatalogConstants {
     public static final String ESTATUS_TARJETA = "ET";
 
     /**
-     * Descripcion corta del catalogo ET; Estatus de Transaccion;
+     * Descripcion corta del catalogo ET; Estatus de Pago;
      */
     public static final String ESTATUS_TRANSACCION = "ET";
 

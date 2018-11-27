@@ -3,10 +3,13 @@ package mx.com.nmp.pagos.mimonte.builder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.tool.hbm2ddl.TargetTypeHelper;
 import org.springframework.stereotype.Component;
 
+import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
+import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.model.EstatusTarjeta;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
@@ -33,14 +36,11 @@ public class TarjetaBuilder {
 	public static Tarjetas builTarjetaFromTrajetaDTO(TarjetaDTO tarjetaDTO) {
 		Tarjetas tarjetaEntity = new Tarjetas();
 		tarjetaEntity.setAlias(tarjetaDTO.getAlias());
-		//tarjetaEntity.setClientes(ClienteBuilder.buildListClienteFromSetClienteDTO((tarjetaDTO.getClientes())));
 		List<EstatusTarjeta> list = new ArrayList<>();
-//		list.add(EstatusTarjetaBuilder.buildEstatusTarjetaFromEstatusTarjetaDTO(tarjetaDTO.getEstatus()));
 		tarjetaEntity.setEstatusTarjeta(list);
 		tarjetaEntity.setFechaAlta(tarjetaDTO.getFechaAlta());
 		tarjetaEntity.setFechaModificacion(tarjetaDTO.getFechaModificacion());
 		List<TipoTarjeta> lst = new ArrayList<>();
-		//lst.add(TipoTarjetaBuilder.buildTipoTarjetaFromTipoTrajetaDTO((tarjetaDTO.getTipo())));
 		tarjetaEntity.setTipoTarjeta(lst);
 		tarjetaEntity.setToken(tarjetaDTO.getToken());
 		tarjetaEntity.setUltimosDigitos(tarjetaDTO.getDigitos());
@@ -56,7 +56,6 @@ public class TarjetaBuilder {
 	public static TarjetaDTO builTarjetaDTOFromTrajeta(Tarjetas tarjetaEntity) {
 		TarjetaDTO tarjetaDTO = new TarjetaDTO();
 		tarjetaDTO.setAlias(tarjetaEntity.getAlias());
-		//tarjetaDTO.setCliente( ClienteBuilder.buildListClienteDTOFromSetCliente((tarjetaEntity.getClientes())).get(0));
 		tarjetaDTO.setEstatus(new EstatusTarjetaDTO(1,"Activo", "Activo"));
 		tarjetaDTO.setFechaAlta(tarjetaEntity.getFechaAlta());
 		tarjetaDTO.setFechaModificacion(tarjetaEntity.getFechaModificacion());
@@ -64,6 +63,26 @@ public class TarjetaBuilder {
 		tarjetaDTO.setToken(tarjetaEntity.getToken());
 		tarjetaDTO.setDigitos((tarjetaEntity.getUltimosDigitos()));
 		return tarjetaDTO;	
+	}
+	
+	/**
+	 * Metodo que construye un objeto de tipo TarjetaDTO desde un objeto TarjetaPagoDTO y un objeto de tipo ClienteDTO
+	 * 
+	 * @param Objeto de tipo TarjetaPagoDTO tarjetaPagoDTO
+	 * @param Objeto de tipo ClienteDTO cliente
+	 * @return Objeto de tipo TarjetaDTO
+	 */
+	public static TarjetaDTO buildTarjetaDTOFromTarjetaPagoDTO(TarjetaPagoDTO tarjetaPagoDTO, ClienteDTO cliente) {
+		TarjetaDTO tarjetaDTO = new TarjetaDTO();
+		tarjetaDTO.setAlias(tarjetaPagoDTO.getAlias());
+		tarjetaDTO.setCliente(cliente);
+		tarjetaDTO.setDigitos(tarjetaPagoDTO.getDigitos());
+		tarjetaDTO.setEstatus(tarjetaPagoDTO.getEstatus());
+		tarjetaDTO.setFechaAlta(tarjetaPagoDTO.getFechaAlta());
+		tarjetaDTO.setFechaModificacion(tarjetaPagoDTO.getFechaModificacion());
+		tarjetaDTO.setTipo(tarjetaPagoDTO.getTipo());
+		tarjetaDTO.setToken(tarjetaPagoDTO.getToken());
+		return tarjetaDTO;
 	}
 	
 }

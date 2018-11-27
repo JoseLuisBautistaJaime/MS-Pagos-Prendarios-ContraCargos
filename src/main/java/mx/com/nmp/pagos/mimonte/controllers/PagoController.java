@@ -24,8 +24,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
-import mx.com.nmp.pagos.mimonte.dto.EstatusTransaccionResponseDTO;
-import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
+import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
+import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -72,28 +72,24 @@ public class PagoController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fué encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public ResponseEntity<Response> post(@RequestBody PagoDTO pago) {
+	public ResponseEntity<Response> post(@RequestBody PagoRequestDTO pago) {
 		log.debug("Entrando a operacion de servicio RegistroPagoController.post()...");
 		log.debug("Received object: " + pago);
 		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 
 		// --------------------- Dummy data building begins
-		EstatusTransaccionResponseDTO estatusTransaccionResponseDTO = new EstatusTransaccionResponseDTO(1,"C12");
-		EstatusTransaccionResponseDTO estatusTransaccionResponseDTO2 = new EstatusTransaccionResponseDTO(1,"C34");
-		List<EstatusTransaccionResponseDTO> estatusTransacciones = new ArrayList<>();
+		EstatusPagoResponseDTO estatusTransaccionResponseDTO = new EstatusPagoResponseDTO(1,"C12");
+		EstatusPagoResponseDTO estatusTransaccionResponseDTO2 = new EstatusPagoResponseDTO(1,"C34");
+		List<EstatusPagoResponseDTO> estatusTransacciones = new ArrayList<>();
 		estatusTransacciones.add(estatusTransaccionResponseDTO);
 		estatusTransacciones.add(estatusTransaccionResponseDTO2);
+		// Ahora se obtiene un numero aleatorio, pero ese valor entre 1 y 3 debe estar en funcion de unas reglas de negocio
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusTransacciones, true, getRandomNumber());
 		// --------------------- Dummy data building ends
 
-		// --------------------- Real code begins
-		// try {
-		// pagoDTO = pagoService.savePago(pago);
-		// }
-		// catch(PagoException pex) {
-		// log.error(pex.getMessage());
-		// }
-		// --------------------- Real code ends
+		// real code begins
+		
+		// real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoResponseDTO);
 		return new ResponseEntity<>(beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
@@ -101,7 +97,7 @@ public class PagoController {
 	}
 	
 	/**
-	 * Metodo que regresa un numero aleatorio entre 1 y 3 simulando la tomade decicion para un numero de ailiacion
+	 * Metodo que regresa un numero aleatorio entre 1 y 3 simulando la tomade decicion para un numero de afiliacion
 	 * 
 	 * @return
 	 */

@@ -1,24 +1,24 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: EstatusTransaccionDTO
+ * Nombre: EstatusPagoDTO
  * Descripcion: Clase que encapsula la informacion perteneciente al catalogo de estatus de transacciones.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * Fecha: 21/11/2018 13:45 hrs.
  * @version 0.1
  */
-public class EstatusTransaccionDTO {
+public class EstatusPagoDTO {
 
 	private Integer id;
 	private String descripcion;
 	private String descripcionCorta;
 	
-	public EstatusTransaccionDTO() {
+	public EstatusPagoDTO() {
 		super();
 	}
 	
-	public EstatusTransaccionDTO(Integer id, String descripcion, String descripcionCorta) {
+	public EstatusPagoDTO(Integer id, String descripcion, String descripcionCorta) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
@@ -45,7 +45,7 @@ public class EstatusTransaccionDTO {
 	
 	@Override
 	public String toString() {
-		return "EstatusTransaccionDTO [id=" + id + ", descripcion=" + descripcion + ", descripcionCorta="
+		return "EstatusPagoDTO [id=" + id + ", descripcion=" + descripcion + ", descripcionCorta="
 				+ descripcionCorta + "]";
 	}
 	

@@ -1,12 +1,12 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
-public class EstatusTransaccionResponseDTO {
+public class EstatusPagoResponseDTO {
 
-	public EstatusTransaccionResponseDTO() {
+	public EstatusPagoResponseDTO() {
 		super();
 	}
 	
-	public EstatusTransaccionResponseDTO(Integer idEstatusOperacion, String folioContratro) {
+	public EstatusPagoResponseDTO(Integer idEstatusOperacion, String folioContratro) {
 		super();
 		this.idEstatusOperacion = idEstatusOperacion;
 		this.folioContratro = folioContratro;

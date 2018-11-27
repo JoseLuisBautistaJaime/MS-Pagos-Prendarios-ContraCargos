@@ -14,24 +14,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * Nombre: Transaccion
- * Descripcion: Entidad que representa una transaccion dentro del sistema.
+ * Nombre: Pago
+ * Descripcion: Entidad que representa un pago dentro del sistema.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * Fecha: 21/11/2018 13:36 hrs.
  * @version 0.1
  */
 @Entity
-@Table(name = "transacciones", schema = "compose")
-public class Transaccion {
+@Table(name = "pagos", schema = "compose")
+public class Pago {
 	
-	public Transaccion() {
+	public Pago() {
 		super();
 	}
 	
-	public Transaccion(Integer id, Cliente cliente, Date fechaTarnsaccion, Double monto, String autorizacion,
+	public Pago(Integer id, Cliente cliente, Date fechaTarnsaccion, Double monto, String autorizacion,
 			String metodo, String tarjeta, String idOpenPay, Date fechaCreacion, String descripcion, String idOrder,
-			EstatusTransaccion estatusTransaccion, String restResponse) {
+			EstatusPago estatusTransaccion, String restResponse) {
 		super();
 		this.id = id;
 		this.cliente = cliente;
@@ -86,7 +86,7 @@ public class Transaccion {
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinColumn(name ="estatus_transaccion", nullable = true)
-	private EstatusTransaccion estatusTransaccion;
+	private EstatusPago estatusTransaccion;
 	
 	@Column(name ="restresponse", nullable = true)
 	private String restResponse;
@@ -127,10 +127,10 @@ public class Transaccion {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public EstatusTransaccion getEstatusTransaccion() {
+	public EstatusPago getEstatusTransaccion() {
 		return estatusTransaccion;
 	}
-	public void setEstatusTransaccion(EstatusTransaccion estatusTransaccion) {
+	public void setEstatusTransaccion(EstatusPago estatusTransaccion) {
 		this.estatusTransaccion = estatusTransaccion;
 	}
 	public String getAutorizacion() {
@@ -172,7 +172,7 @@ public class Transaccion {
 
 	@Override
 	public String toString() {
-		return "Transaccion [id=" + id + ", cliente=" + cliente + ", fechaTarnsaccion=" + fechaTarnsaccion + ", monto="
+		return "Pago [id=" + id + ", cliente=" + cliente + ", fechaTarnsaccion=" + fechaTarnsaccion + ", monto="
 				+ monto + ", autorizacion=" + autorizacion + ", metodo=" + metodo + ", tarjeta=" + tarjeta
 				+ ", idOpenPay=" + idOpenPay + ", fechaCreacion=" + fechaCreacion + ", descripcion=" + descripcion
 				+ ", idOrder=" + idOrder + ", estatusTransaccion=" + estatusTransaccion + ", restResponse="

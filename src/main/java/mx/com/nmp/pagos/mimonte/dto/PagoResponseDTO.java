@@ -15,11 +15,11 @@ public class PagoResponseDTO {
 	public PagoResponseDTO() {
 		super();
 	}
-	private List<EstatusTransaccionResponseDTO> estatusTransacciones;
+	private List<EstatusPagoResponseDTO> estatusTransacciones;
 	private Boolean exitoso;
 	private Integer idTipoAfiliacion;
 	
-	public PagoResponseDTO(List<EstatusTransaccionResponseDTO> estatusTransacciones, Boolean exitoso,
+	public PagoResponseDTO(List<EstatusPagoResponseDTO> estatusTransacciones, Boolean exitoso,
 			Integer idTipoAfiliacion) {
 		super();
 		this.estatusTransacciones = estatusTransacciones;
@@ -40,11 +40,11 @@ public class PagoResponseDTO {
 		this.idTipoAfiliacion = idTipoAfiliacion;
 	}
 	
-	public List<EstatusTransaccionResponseDTO> getEstatusTransacciones() {
+	public List<EstatusPagoResponseDTO> getEstatusTransacciones() {
 		return estatusTransacciones;
 	}
 
-	public void setEstatusTransacciones(List<EstatusTransaccionResponseDTO> estatusTransacciones) {
+	public void setEstatusTransacciones(List<EstatusPagoResponseDTO> estatusTransacciones) {
 		this.estatusTransacciones = estatusTransacciones;
 	}
 

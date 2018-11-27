@@ -22,6 +22,6 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @param idcliente Integer con el id del cliente en cuestion
 	 * @return Valor Integer con la cantidad de tarjetas encontradas para ese id de cliente
 	 */
-	//public int countByIdcliente(Integer idcliente);
+	//public int countByClientes(Integer idcliente);
 	
 }

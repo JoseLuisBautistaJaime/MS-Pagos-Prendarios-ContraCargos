@@ -11,7 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Nombre: EstatusTransaccion
+ * Nombre: EstatusPago
  * Descripcion: Entidad que representa un estatus de transaccion en el sistema.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -20,9 +20,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "estatus_transaccion_c")
-public class EstatusTransaccion extends AbstractCatalogo{
+public class EstatusPago extends AbstractCatalogo{
 	
-	public EstatusTransaccion() {
+	public EstatusPago() {
 		super();
 	}
 	 

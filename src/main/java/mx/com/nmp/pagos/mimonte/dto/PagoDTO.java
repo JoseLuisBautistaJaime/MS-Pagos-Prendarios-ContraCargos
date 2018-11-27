@@ -1,93 +1,143 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
-import java.util.List;
+import java.util.Date;
 
 /**
  * Nombre: PagoDTO
  * Descripcion: Clase que encapsula la informacion perteneciente a un pago.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
- * Fecha: 20/11/2018 12:56 hrs.
+ * @Fecha 21/11/2018 13:25 hrs.
  * @version 0.1
  */
 public class PagoDTO {
 
-	private List<OperacionDTO> operaciones;
-	private TarjetaPagoDTO tarjeta;
-	private Integer montoTotal;
-	private Boolean guardaTarjeta;
-	private Integer idCliente;
-	private String concepto;
+	private ClienteDTO cliente;
+	private TarjetaDTO tarjeta;
+	private EstatusPagoDTO estatusTransaccion;
+	private Date fechaCreacion;
+	private Date fechaTarnsaccion;
+	private Double monto;
+	private Integer id;
+	private String autorizacion;
+	private String metodo;
+	private String idOpenPay;
+	private String descripcion;
+	private String idOrder;
+	private String restResponse;
 	
 	public PagoDTO() {
 		super();
 	}
-
-	public PagoDTO(List<OperacionDTO> operaciones, TarjetaPagoDTO tarjeta, Integer montoTotal, Boolean guardaTarjeta,
-			Integer idCliente, String concepto) {
+	
+	public PagoDTO(ClienteDTO cliente, TarjetaDTO tarjeta, Date fechaCreacion, Date fechaTarnsaccion,
+			Double monto, Integer id, EstatusPagoDTO estatusTransaccion, String autorizacion, String metodo, String idOpenPay,
+			String descripcion, String idOrder, String restResponse) {
 		super();
-		this.operaciones = operaciones;
+		this.cliente = cliente;
 		this.tarjeta = tarjeta;
-		this.montoTotal = montoTotal;
-		this.guardaTarjeta = guardaTarjeta;
-		this.idCliente = idCliente;
-		this.concepto = concepto;
+		this.fechaCreacion = fechaCreacion;
+		this.fechaTarnsaccion = fechaTarnsaccion;
+		this.monto = monto;
+		this.id = id;
+		this.estatusTransaccion = estatusTransaccion;
+		this.autorizacion = autorizacion;
+		this.metodo = metodo;
+		this.idOpenPay = idOpenPay;
+		this.descripcion = descripcion;
+		this.idOrder = idOrder;
+		this.restResponse = restResponse;
 	}
-
-
-
-	public List<OperacionDTO> getOperaciones() {
-		return operaciones;
+	
+	public ClienteDTO getCliente() {
+		return cliente;
 	}
-
-	public void setOperaciones(List<OperacionDTO> operaciones) {
-		this.operaciones = operaciones;
+	public void setCliente(ClienteDTO cliente) {
+		this.cliente = cliente;
 	}
-
-	public TarjetaPagoDTO getTarjeta() {
+	public TarjetaDTO getTarjeta() {
 		return tarjeta;
 	}
-
-	public void setTarjeta(TarjetaPagoDTO tarjeta) {
+	public void setTarjeta(TarjetaDTO tarjeta) {
 		this.tarjeta = tarjeta;
 	}
-
-	public Integer getMontoTotal() {
-		return montoTotal;
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+	public Date getFechaTarnsaccion() {
+		return fechaTarnsaccion;
+	}
+	public void setFechaTarnsaccion(Date fechaTarnsaccion) {
+		this.fechaTarnsaccion = fechaTarnsaccion;
+	}
+	public Double getMonto() {
+		return monto;
+	}
+	public void setMonto(Double monto) {
+		this.monto = monto;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	public EstatusPagoDTO getEstatusTransaccion() {
+		return estatusTransaccion;
 	}
 
-	public void setMontoTotal(Integer montoTotal) {
-		this.montoTotal = montoTotal;
+	public void setEstatusTransaccion(EstatusPagoDTO estatusTransaccion) {
+		this.estatusTransaccion = estatusTransaccion;
 	}
 
-	public String getConcepto() {
-		return concepto;
+	public String getAutorizacion() {
+		return autorizacion;
 	}
-
-	public void setConcepto(String concepto) {
-		this.concepto = concepto;
+	public void setAutorizacion(String autorizacion) {
+		this.autorizacion = autorizacion;
 	}
-
-	public Boolean getGuardaTarjeta() {
-		return guardaTarjeta;
+	public String getMetodo() {
+		return metodo;
 	}
-
-	public void setGuardaTarjeta(Boolean guardaTarjeta) {
-		this.guardaTarjeta = guardaTarjeta;
+	public void setMetodo(String metodo) {
+		this.metodo = metodo;
 	}
-
-	public Integer getIdCliente() {
-		return idCliente;
+	public String getIdOpenPay() {
+		return idOpenPay;
 	}
-
-	public void setIdCliente(Integer idCliente) {
-		this.idCliente = idCliente;
+	public void setIdOpenPay(String idOpenPay) {
+		this.idOpenPay = idOpenPay;
+	}
+	public String getDescripcion() {
+		return descripcion;
+	}
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+	public String getIdOrder() {
+		return idOrder;
+	}
+	public void setIdOrder(String idOrder) {
+		this.idOrder = idOrder;
+	}
+	public String getRestResponse() {
+		return restResponse;
+	}
+	public void setRestResponse(String restResponse) {
+		this.restResponse = restResponse;
 	}
 
 	@Override
 	public String toString() {
-		return "PagoDTO [operaciones=" + operaciones + ", tarjeta=" + tarjeta + ", montoTotal=" + montoTotal
-				+ ", guardaTarjeta=" + guardaTarjeta + ", idCliente=" + idCliente + ", concepto=" + concepto + "]";
+		return "PagoDTO [cliente=" + cliente + ", tarjeta=" + tarjeta + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaTarnsaccion=" + fechaTarnsaccion + ", monto=" + monto + ", id=" + id + ", estatusTransaccion="
+				+ estatusTransaccion + ", autorizacion=" + autorizacion + ", metodo=" + metodo + ", idOpenPay="
+				+ idOpenPay + ", descripcion=" + descripcion + ", idOrder=" + idOrder + ", restResponse=" + restResponse
+				+ "]";
 	}
 	
 }

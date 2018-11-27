@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
-import mx.com.nmp.pagos.mimonte.dto.TransaccionDTO;
+import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
 import mx.com.nmp.pagos.mimonte.model.Cliente;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
-import mx.com.nmp.pagos.mimonte.model.Transaccion;
+import mx.com.nmp.pagos.mimonte.model.Pago;
 
 /**
  * Nombre: ClienteBuilder
@@ -68,9 +68,9 @@ public class ClienteBuilder {
 		List<Tarjetas> tarjetas = new ArrayList<>();
 		//tarjetas.add(TarjetaBuilder.builTarjetaFromTrajetaDTO((TarjetaDTO) clienteDTO.getTarjeta().toArray()[0]));
 		clienteEntity.setTarjetas(tarjetas);
-		Set<Transaccion> transacciones = new HashSet<>();
-		//transacciones.add(TransaccionBuilder
-			//	.buildTransaccionEntity(((TransaccionDTO) clienteDTO.getTransacciones().toArray()[0])));
+		Set<Pago> transacciones = new HashSet<>();
+		//transacciones.add(PagoBuilder
+			//	.buildTransaccionEntity(((PagoDTO) clienteDTO.getTransacciones().toArray()[0])));
 		clienteEntity.setTransacciones(transacciones);
 		return clienteEntity;
 	}
@@ -89,9 +89,9 @@ public class ClienteBuilder {
 		List<TarjetaDTO> tarjetas = new ArrayList<>();
 		tarjetas.add(TarjetaBuilder.builTarjetaDTOFromTrajeta(((Tarjetas) clienteEntity.getTarjetas().toArray()[0])));
 		//clienteDTO.setTarjeta(tarjetas.get(0));
-		Set<TransaccionDTO> transacciones = new HashSet<>();
-		transacciones.add(TransaccionBuilder
-				.buildTransaccionDTO((((Transaccion) clienteEntity.getTransacciones().toArray()[0]))));
+		Set<PagoDTO> transacciones = new HashSet<>();
+		transacciones.add(PagoBuilder
+				.buildTransaccionDTO((((Pago) clienteEntity.getTransacciones().toArray()[0]))));
 		return clienteDTO;
 	}
 

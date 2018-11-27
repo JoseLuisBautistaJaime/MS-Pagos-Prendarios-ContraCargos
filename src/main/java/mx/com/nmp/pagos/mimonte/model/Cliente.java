@@ -49,8 +49,8 @@ public class Cliente implements Serializable{
 	@Column(name="fechaAlta")
 	private Date fechaAlta;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="cliente", targetEntity = Transaccion.class)
-	private Set<Transaccion> transacciones;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="cliente", targetEntity = Pago.class)
+	private Set<Pago> transacciones;
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "Cliente_Tarjetas", joinColumns = { @JoinColumn(name = "idCliente")}, inverseJoinColumns = {@JoinColumn(name = "token")})
@@ -92,11 +92,11 @@ public class Cliente implements Serializable{
 		return Objects.hash(idCliente, nombreTitular, fechaAlta, fechaAlta);
 	}
 
-	public Set<Transaccion> getTransacciones() {
+	public Set<Pago> getTransacciones() {
 		return transacciones;
 	}
 
-	public void setTransacciones(Set<Transaccion> transacciones) {
+	public void setTransacciones(Set<Pago> transacciones) {
 		this.transacciones = transacciones;
 	}
 
