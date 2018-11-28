@@ -49,14 +49,14 @@ public class PagoController {
 	 * Bean de la fabrica de instancias
 	 */
 	@Autowired
-	BeanFactory beanFactory;
+	private BeanFactory beanFactory;
 
 	/**
 	 * Service que realiza el pago de partidas / contratos
 	 */
 	@Autowired
 	@Qualifier("pagoServiceImpl")
-	PagoService pagoService;
+	private PagoService pagoService;
 
 	/**
 	 * Instancia que registra los eventos en la bitacora

@@ -38,15 +38,15 @@ import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 public class PagoServiceImpl implements PagoService {
 
 	@Autowired
-	TarjetasService tarjetaService;
+	private TarjetasService tarjetaService;
 
 	@Autowired
 	@Qualifier("clienteServiceImpl")
-	ClienteService clienteService;
+	private ClienteService clienteService;
 
 	@Autowired
 	@Qualifier("pagoRepository")
-	PagoRepository pagoRepository;
+	private PagoRepository pagoRepository;
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
@@ -59,18 +59,18 @@ public class PagoServiceImpl implements PagoService {
 	 *
 	 */
 	@Override
-	public PagoResponseDTO savePago(PagoRequestDTO pagoDTO) throws PagoException {
+	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO) throws PagoException {
 		log.info("Ingreso al servicio de pago: POST");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
 		// Aqui se obtiene un numero de afiliacion aleatorio, pero se debe obtener de un modulo de toma de decisiones
 		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
 		boolean estatusTarjeta = false;
-		if (validaSiGuardar(pagoDTO)) {
-			if (validaDatos(pagoDTO)) {
-				if (validaCantidadTarjetasExistentes(pagoDTO)) {
-					tarjetaService.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoDTO.getTarjeta(),
-							clienteService.getClienteById(pagoDTO.getIdCliente())));
+		if (validaSiGuardar(pagoRequestDTO)) {
+			if (validaDatos(pagoRequestDTO)) {
+				if (validaCantidadTarjetasExistentes(pagoRequestDTO)) {
+					tarjetaService.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(),
+							clienteService.getClienteById(pagoRequestDTO.getIdCliente())));
 					estatusTarjeta = true;
 				} else {
 					// No se lanzara excepcion debido a que de esa manera no se guardaria el pago de
@@ -85,9 +85,9 @@ public class PagoServiceImpl implements PagoService {
 		// Guardar pago de partidas
 		Pago pago = new Pago();
 		EstatusPago ep = new EstatusPago();
-		for (int i = 0; i < pagoDTO.getOperaciones().size(); i++) {
+		for (int i = 0; i < pagoRequestDTO.getOperaciones().size(); i++) {
 			try {
-				pago = PagoBuilder.buildPagoFromObject(pagoDTO, clienteService.getClienteById(pagoDTO.getIdCliente()),i);
+				pago = PagoBuilder.buildPagoFromObject(pagoRequestDTO, clienteService.getClienteById(pagoRequestDTO.getIdCliente()),i);
 				pagoRepository.save(pago);
 			} catch (Exception ex) {
 				log.error(ex.getMessage());
@@ -134,7 +134,7 @@ public class PagoServiceImpl implements PagoService {
 	 * @return Valor boleanpo que indica con true si el usuario puede agregar la
 	 *         tarjeta o false si no puede realizar dicha accion
 	 */
-	public boolean validaCantidadTarjetasExistentes(PagoRequestDTO pagoDTO) {
+	private boolean validaCantidadTarjetasExistentes(PagoRequestDTO pagoDTO) {
 		boolean flag = false;
 		int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getIdCliente());
 		if (cantidadTarjetas < PagoConstants.MAXIMUM_AMOUNT_OF_CARDS)

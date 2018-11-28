@@ -13,7 +13,7 @@ public enum EstatusPago {
 	REGISTERED_PAYMENT_STATUS(1, "Registrado", "Pago Registrado");
 
 	/**
-	 * Id de el estatus
+	 * Id de el estatus de pago
 	 */
 	private Integer id;
 

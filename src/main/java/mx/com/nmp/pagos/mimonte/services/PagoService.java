@@ -20,6 +20,6 @@ public interface PagoService {
 	 * @param Objeto tipo pagoDTO
 	 * @return Objeto PagoRequestDTO que fue guardado
 	 */
-	public abstract PagoResponseDTO savePago (PagoRequestDTO pagoDTO) throws PagoException;
+	public abstract PagoResponseDTO savePago (PagoRequestDTO pagoRequestDTO) throws PagoException;
 	
 }

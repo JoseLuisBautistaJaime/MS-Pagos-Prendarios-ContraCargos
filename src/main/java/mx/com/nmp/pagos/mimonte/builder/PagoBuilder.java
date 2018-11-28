@@ -44,51 +44,6 @@ public class PagoBuilder {
 	}
 
 	/**
-	 * Metodo que cosntruye un Entity de tipo Pago desde un objeto de tipo
-	 * PagoRequestDTO
-	 * 
-	 * @param Objeto de tipo PagoRequestDTO pagoDTO
-	 * @return Entity de tipo Pago
-	 */
-	public static Pago buildPagoEntityFromPagoDTO(PagoRequestDTO pagoDTO) {
-		return null;
-	}
-
-	/**
-	 * Metodo que construye un objeto tipo PagoDTO desde un objeto tipo
-	 * PagoRequestDTO
-	 * 
-	 * @param Objeto tipo PagoRequestDTO pagoDTO
-	 * @return Objeto de tipo PagoDTO
-	 */
-	public static PagoDTO buildPagoDTOFromPagoDTO(PagoRequestDTO pagoDTO) {
-		return null;
-	}
-
-	/**
-	 * Metodo que construye un objeto de tipo PagoDTO a un Entity Pago
-	 * 
-	 * @param Objeto de tipo pagoDTO
-	 * @return Entity de tipo Pago
-	 */
-	public static Pago buildPagoEntity(PagoDTO pagoDTO) {
-		Pago pagoEntity = new Pago();
-		pagoEntity.setAutorizacion(pagoDTO.getAutorizacion());
-		pagoEntity.setCliente(ClienteBuilder.buildClienteFromClienteDTO(pagoDTO.getCliente()));
-		pagoEntity.setDescripcion(pagoDTO.getDescripcion());
-		pagoEntity.setFechaCreacion(pagoDTO.getFechaCreacion());
-		pagoEntity.setFechaTarnsaccion(pagoDTO.getFechaTarnsaccion());
-		pagoEntity.setId(pagoDTO.getId());
-		pagoEntity.setIdOpenPay(pagoDTO.getIdOpenPay());
-		pagoEntity.setIdOrder(pagoDTO.getIdOrder());
-		pagoEntity.setMetodo(pagoDTO.getMetodo());
-		pagoEntity.setMonto(pagoDTO.getMonto());
-		pagoEntity.setRestResponse(pagoDTO.getRestResponse());
-		pagoEntity.setTarjeta(pagoDTO.getTarjeta().getDigitos());
-		return pagoEntity;
-	}
-
-	/**
 	 * Metodo que construye un objeto de tipo PagoDTO desde un Entity tipo Pago
 	 * 
 	 * @param Entity de tipo Pago pagoEntity
