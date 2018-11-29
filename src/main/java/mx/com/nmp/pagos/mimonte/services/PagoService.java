@@ -2,6 +2,7 @@ package mx.com.nmp.pagos.mimonte.services;
 
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
+import mx.com.nmp.pagos.mimonte.exception.ClienteException;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
 
 /**
@@ -20,6 +21,6 @@ public interface PagoService {
 	 * @param Objeto tipo pagoDTO
 	 * @return Objeto PagoRequestDTO que fue guardado
 	 */
-	public abstract PagoResponseDTO savePago (PagoRequestDTO pagoRequestDTO) throws PagoException;
+	public abstract PagoResponseDTO savePago (PagoRequestDTO pagoRequestDTO) throws ClienteException, PagoException;
 	
 }

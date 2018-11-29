@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.services;
 
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
+import mx.com.nmp.pagos.mimonte.exception.ClienteException;
 
 /**
  * Nombre: ClienteService
@@ -13,11 +14,11 @@ import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 public interface ClienteService {
 
 	/**
-	 * Metodo que regresa un objeto de tipo ClienteDTO con un id especificado como parametro
+	 * Metodo que regresa un objeto de tipo ClienteDTO en base a un id recibido como parametro
 	 * 
 	 * @param Integer idCliente
 	 * @return Object ClienteDTO
 	 */
-	public ClienteDTO getClienteById(Integer idCliente);
+	public ClienteDTO getClienteById(Integer idCliente)throws ClienteException;
 	
 }

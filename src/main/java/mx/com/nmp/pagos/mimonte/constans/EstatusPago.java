@@ -2,7 +2,8 @@ package mx.com.nmp.pagos.mimonte.constans;
 
 /**
  * Nombre: EstatusPago
- * Descripcion: Mapea los estatus de pago en estructura ENUM
+ * Descripcion: Mapea los estatus de pago a una estructura ENUM
+ * NOTA: Este enum debe mantenerse actualizado para que se igual al catalogo en base de datos
  * 
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 27/11/2018 12:49 hrs.

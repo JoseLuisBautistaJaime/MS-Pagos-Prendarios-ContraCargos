@@ -93,8 +93,8 @@ public class PagoController {
 		// ---------------- CODE HERE ------------------
 //		try {
 //			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
-//		} catch (PagoException pex) {
-//			log.error(pex.getMessage());
+//		} catch (ClienteException | PagoException gex) {
+//			log.error(gex.getMessage());
 //		}
 		// real code ends
 

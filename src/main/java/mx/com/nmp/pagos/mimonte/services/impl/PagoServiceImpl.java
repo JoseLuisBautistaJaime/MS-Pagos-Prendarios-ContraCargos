@@ -17,9 +17,9 @@ import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
+import mx.com.nmp.pagos.mimonte.exception.ClienteException;
 import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
-import mx.com.nmp.pagos.mimonte.model.EstatusPago;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
@@ -37,13 +37,22 @@ import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 @Service("pagoServiceImpl")
 public class PagoServiceImpl implements PagoService {
 
+	/**
+	 * Service de tarjetas para almacenar la tarjeta si asi se requiere
+	 */
 	@Autowired
 	private TarjetasService tarjetaService;
 
+	/**
+	 * Service de clientes para obtener los datos del cliente para agregar a la tarjeta a guardar
+	 */
 	@Autowired
 	@Qualifier("clienteServiceImpl")
 	private ClienteService clienteService;
 
+	/**
+	 * Service de pagos para registrar el pago en bd
+	 */
 	@Autowired
 	@Qualifier("pagoRepository")
 	private PagoRepository pagoRepository;
@@ -59,7 +68,7 @@ public class PagoServiceImpl implements PagoService {
 	 *
 	 */
 	@Override
-	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO) throws PagoException {
+	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO) throws ClienteException, PagoException {
 		log.info("Ingreso al servicio de pago: POST");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
@@ -74,17 +83,15 @@ public class PagoServiceImpl implements PagoService {
 					estatusTarjeta = true;
 				} else {
 					// No se lanzara excepcion debido a que de esa manera no se guardaria el pago de
-					// las partidas indicadas
-					// throw new
-					// CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+					// las partidas indicadas a causa de que la tarjeta no ha podido ser guardada
+					// throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 				}
 			} else {
 				throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
 			}
 		}
-		// Guardar pago de partidas
+		// Guardar pago de partidas, uno por uno
 		Pago pago = new Pago();
-		EstatusPago ep = new EstatusPago();
 		for (int i = 0; i < pagoRequestDTO.getOperaciones().size(); i++) {
 			try {
 				pago = PagoBuilder.buildPagoFromObject(pagoRequestDTO, clienteService.getClienteById(pagoRequestDTO.getIdCliente()),i);
