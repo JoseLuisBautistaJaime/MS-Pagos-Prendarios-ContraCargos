@@ -33,5 +33,11 @@ public final class PagoConstants {
     	 * ya haya alcanzado la cantidad maxima posible de tarjetas guardadas
     	 */
     	public static final String MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED = "Ya se ha alcanzado la cantidad máxima de tarjetas por cliente";
+    	
+    	/**
+    	 * Nombre de la propiedad que en archivo de configuracion YML que contiene el dato de 
+    	 * la cantidad maxima de tarjetas posibles por cliente
+    	 */
+    	public static final String MAXIMUM_AMOUNT_OF_CARDS_PROPERTY = "${mimonte.variables.cantidad-maxima-tarjetas}";
 	
 }

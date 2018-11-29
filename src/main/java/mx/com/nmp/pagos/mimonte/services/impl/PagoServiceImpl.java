@@ -64,7 +64,7 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	private final Logger log = LoggerFactory.getLogger(PagoServiceImpl.class);
 	
-	@Value("${mimonte.variables.cantidad-maxima-tarjetas}")
+	@Value(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_PROPERTY)
 	private Integer MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT;
 
 	/**
