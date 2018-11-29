@@ -50,7 +50,7 @@ public class TarjetaBuilder {
 	public static Tarjetas buildTarjetaFromTarjetaPagoDTO(TarjetaPagoDTO tarjetaPagoDTO, ClienteDTO clienteDTO) {
 		Tarjetas tarjeta = new Tarjetas();
 		tarjeta.setAlias(tarjetaPagoDTO.getAlias());
-		tarjeta.setClientes(Arrays.asList(ClienteBuilder.buildClienteFromClienteDTO((clienteDTO))));
+		tarjeta.setClientes(ClienteBuilder.buildClienteFromClienteDTO((clienteDTO)));
 		tarjeta.setEstatusTarjeta(Arrays.asList( EstatusTarjetaBuilder.buildEstatusTarjetaFromEstatusTarjetaDTO(tarjetaPagoDTO.getEstatus())));
 		tarjeta.setFechaAlta(tarjetaPagoDTO.getFechaAlta());
 		tarjeta.setFechaModificacion(tarjetaPagoDTO.getFechaModificacion());

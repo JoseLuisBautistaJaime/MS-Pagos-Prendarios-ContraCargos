@@ -28,7 +28,7 @@ public enum EstatusPago {
 	 */
 	private String descripcionCorta;
 
-	EstatusPago(Integer id, String descripcion, String descripcionCorta) {
+	private EstatusPago(Integer id, String descripcion, String descripcionCorta) {
 		this.id = id;
 		this.descripcion = descripcion;
 		this.descripcionCorta = descripcionCorta;

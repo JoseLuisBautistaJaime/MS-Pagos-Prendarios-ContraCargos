@@ -8,10 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.PagoBuilder;
 import mx.com.nmp.pagos.mimonte.builder.TarjetaBuilder;
+import mx.com.nmp.pagos.mimonte.constans.EstatusOperacion;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
@@ -61,6 +63,9 @@ public class PagoServiceImpl implements PagoService {
 	 * Logger para el registro de actividad en la bitacora
 	 */
 	private final Logger log = LoggerFactory.getLogger(PagoServiceImpl.class);
+	
+	@Value("${mimonte.variables.cantidad-maxima-tarjetas}")
+	private Integer MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT;
 
 	/**
 	 * Metodo que registra una nueva trajeta si dicha bandera es activa, envia el
@@ -82,9 +87,7 @@ public class PagoServiceImpl implements PagoService {
 							clienteService.getClienteById(pagoRequestDTO.getIdCliente())));
 					estatusTarjeta = true;
 				} else {
-					// No se lanzara excepcion debido a que de esa manera no se guardaria el pago de
-					// las partidas indicadas a causa de que la tarjeta no ha podido ser guardada
-					// throw new CantidadMaximaTarjetasAlcanzadaException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+					// No se guarda la tarjeta por que ya se alcanzo la cantidad maxima de tarjetas por cliente
 				}
 			} else {
 				throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
@@ -96,7 +99,9 @@ public class PagoServiceImpl implements PagoService {
 			try {
 				pago = PagoBuilder.buildPagoFromObject(pagoRequestDTO, clienteService.getClienteById(pagoRequestDTO.getIdCliente()),i);
 				pagoRepository.save(pago);
+				estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), pagoRequestDTO.getOperaciones().get(i).getFolioContrato()));
 			} catch (Exception ex) {
+				estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(), pagoRequestDTO.getOperaciones().get(i).getFolioContrato()));
 				log.error(ex.getMessage());
 			}
 		}
@@ -144,7 +149,7 @@ public class PagoServiceImpl implements PagoService {
 	private boolean validaCantidadTarjetasExistentes(PagoRequestDTO pagoDTO) {
 		boolean flag = false;
 		int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getIdCliente());
-		if (cantidadTarjetas < PagoConstants.MAXIMUM_AMOUNT_OF_CARDS)
+		if (cantidadTarjetas < MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT)
 			flag = true;
 		return flag;
 	}

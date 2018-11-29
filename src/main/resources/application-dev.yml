@@ -47,4 +47,11 @@ spring:
     job:
       enabled: false
 
+# Variables utiles para app microservicios mimonte
+#Pagos
+mimonte:
+  variables:
+    cantidad-maxima-tarjetas: 3
+
 servicios:
+ 

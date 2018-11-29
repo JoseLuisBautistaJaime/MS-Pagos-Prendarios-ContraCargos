@@ -13,9 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -46,14 +43,14 @@ public class Cliente implements Serializable{
 	@Column(name="nombreTitular", length = Constants.LONGITUD_NOMBRE_TITULAR)
 	private String nombreTitular;
 	
-	@Column(name="fechaAlta")
+	@Column(name="fecha_alta")
 	private Date fechaAlta;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="cliente", targetEntity = Pago.class)
 	private Set<Pago> pagos;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "Cliente_Tarjetas", joinColumns = { @JoinColumn(name = "idCliente")}, inverseJoinColumns = {@JoinColumn(name = "token")})
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="clientes")
+	//@JoinTable(name = "Cliente_TOarjetas", joinColumns = { @JoinColumn(name = "idCliente")}, inverseJoinColumns = {@JoinColumn(name = "token")})
 	private List<Tarjetas> tarjetas;
 	
 	public Cliente() {

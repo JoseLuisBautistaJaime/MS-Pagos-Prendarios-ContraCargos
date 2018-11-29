@@ -53,7 +53,7 @@ public class Pago {
 	@Column(name ="id", nullable = false, unique = true)
 	private Integer id;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn(name ="idcliente", nullable = true)
 	private Cliente cliente;
 	

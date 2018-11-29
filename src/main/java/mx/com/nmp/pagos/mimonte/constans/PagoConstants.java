@@ -33,10 +33,5 @@ public final class PagoConstants {
     	 * ya haya alcanzado la cantidad maxima posible de tarjetas guardadas
     	 */
     	public static final String MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED = "Ya se ha alcanzado la cantidad máxima de tarjetas por cliente";
-    
-    	/**
-    	 * Cantidad maxima de tarjetas que un cliente puede tener registradas
-    	 */
-    	public static final int MAXIMUM_AMOUNT_OF_CARDS = 3;
 	
 }

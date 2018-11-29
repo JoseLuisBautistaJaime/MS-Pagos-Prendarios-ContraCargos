@@ -8,8 +8,6 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
-import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
-import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.model.Cliente;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
@@ -27,33 +25,35 @@ import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 public class ClienteBuilder {
 
 	/**
-	 * Metodo que construye una lista de Entitidades Cliente desde un set de objetos ClienteDTO
+	 * Metodo que construye una lista de Entitidades Cliente desde un set de objetos
+	 * ClienteDTO
 	 * 
 	 * @param List de objetos de tipo clientesDTO
 	 * @return List de entidad de tipo Cliente
 	 */
 	public static List<Cliente> buildListClienteFromSetClienteDTO(List<ClienteDTO> clientesDTO) {
 		List<Cliente> clientesSetEntity = new ArrayList<>();
-		for(ClienteDTO clienteDTO : clientesDTO) {
+		for (ClienteDTO clienteDTO : clientesDTO) {
 			clientesSetEntity.add(buildClienteFromClienteDTO(clienteDTO));
 		}
 		return clientesSetEntity;
 	}
-	
+
 	/**
-	 * Metodo que construye una lista de objetos de tipo ClienteDTO desde un set de entidades de tipo Cliente 
+	 * Metodo que construye una lista de objetos de tipo ClienteDTO desde un set de
+	 * entidades de tipo Cliente
 	 * 
 	 * @param Lista de entidades de tipo Cliente clientesEntity
 	 * @return Lista de objetos de tipo ClienteDTO
 	 */
 	public static List<ClienteDTO> buildListClienteDTOFromSetCliente(List<Cliente> clientesEntity) {
 		List<ClienteDTO> clientesSetDTO = new ArrayList<>();
-		for(Cliente cliente : clientesEntity) {
+		for (Cliente cliente : clientesEntity) {
 			clientesSetDTO.add(buildClienteDTOFromCliente(cliente));
 		}
 		return clientesSetDTO;
 	}
-	
+
 	/**
 	 * Metodo que construye un entity Cliente desde un Objeto tipo ClienteDTO
 	 * 
@@ -83,11 +83,6 @@ public class ClienteBuilder {
 		clienteDTO.setFechaAlta(clienteEntity.getFechaAlta());
 		clienteDTO.setIdCliente((clienteEntity.getIdcliente()));
 		clienteDTO.setNombreTitular(clienteEntity.getNombreTitular());
-		List<TarjetaDTO> tarjetas = new ArrayList<>();
-		tarjetas.add(TarjetaBuilder.builTarjetaDTOFromTrajeta(((Tarjetas) clienteEntity.getTarjetas().toArray()[0])));
-		Set<PagoDTO> pagos = new HashSet<>();
-		pagos.add(PagoBuilder
-				.buildPagoDTO((((Pago) clienteEntity.getPagos().toArray()[0]))));
 		return clienteDTO;
 	}
 

@@ -8,12 +8,11 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.config.Constants;
@@ -52,8 +51,10 @@ public class Tarjetas implements Serializable {
 	@Column(name = "fecha_modificacion")
 	private Date fechaModificacion;
 
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "tarjetas", targetEntity = Cliente.class)
-	private List<Cliente> clientes;
+	//@ManyToMany(cascade = CascadeType.ALL, mappedBy = "tarjetas", targetEntity = Cliente.class)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name="idCliente", nullable=false)
+	private Cliente clientes;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id")
@@ -107,11 +108,11 @@ public class Tarjetas implements Serializable {
 		this.fechaModificacion = fechaModificacion;
 	}
 
-	public List<Cliente> getClientes() {
+	public Cliente getClientes() {
 		return clientes;
 	}
 
-	public void setClientes(List<Cliente> clientes) {
+	public void setClientes(Cliente clientes) {
 		this.clientes = clientes;
 	}
 

@@ -91,6 +91,7 @@ public class PagoController {
 
 		// real code begins
 		// ---------------- CODE HERE ------------------
+//		PagoResponseDTO pagoResponseDTO = null;
 //		try {
 //			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
 //		} catch (ClienteException | PagoException gex) {
