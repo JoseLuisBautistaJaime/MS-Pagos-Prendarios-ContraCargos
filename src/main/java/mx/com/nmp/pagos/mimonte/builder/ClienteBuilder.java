@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.stereotype.Component;
-
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.model.Cliente;
 import mx.com.nmp.pagos.mimonte.model.Pago;
@@ -21,8 +19,13 @@ import mx.com.nmp.pagos.mimonte.model.Tarjetas;
  * @CreationDate 21/11/2018 18:07 hrs.
  * @version 0.1
  */
-@Component
 public class ClienteBuilder {
+	
+	private ClienteBuilder() {
+		/**
+		 * hidden constructor
+		 */
+	}
 
 	/**
 	 * Metodo que construye una lista de Entitidades Cliente desde un set de objetos

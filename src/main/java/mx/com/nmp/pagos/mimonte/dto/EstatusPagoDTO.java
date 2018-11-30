@@ -30,19 +30,23 @@ public class EstatusPagoDTO {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
 	public String getDescripcion() {
 		return descripcion;
 	}
+
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+
 	public String getDescripcionCorta() {
 		return descripcionCorta;
 	}
+
 	public void setDescripcionCorta(String descripcionCorta) {
 		this.descripcionCorta = descripcionCorta;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "EstatusPagoDTO [id=" + id + ", descripcion=" + descripcion + ", descripcionCorta="

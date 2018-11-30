@@ -2,8 +2,6 @@ package mx.com.nmp.pagos.mimonte.builder;
 
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
-
 import mx.com.nmp.pagos.mimonte.constans.EstatusPago;
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
@@ -20,8 +18,13 @@ import mx.com.nmp.pagos.mimonte.model.Pago;
  * @creationDate 21/11/2018 17:30 hrs.
  * @version 0.1
  */
-@Component
 public class PagoBuilder {
+	
+	private PagoBuilder() {
+		/**
+		 * hidden constructor
+		 */
+	}
 
 	public static Pago buildPagoFromObject(PagoRequestDTO pagoRequestDTO, ClienteDTO clienteDTO, Integer index) {
 		Pago pago = new Pago();

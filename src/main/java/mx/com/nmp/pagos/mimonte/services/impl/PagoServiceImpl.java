@@ -95,18 +95,24 @@ public class PagoServiceImpl implements PagoService {
 		}
 		// Guardar pago de partidas, uno por uno
 		Pago pago = new Pago();
-		for (int i = 0; i < pagoRequestDTO.getOperaciones().size(); i++) {
-			try {
-				pago = PagoBuilder.buildPagoFromObject(pagoRequestDTO, clienteService.getClienteById(pagoRequestDTO.getIdCliente()),i);
-				pagoRepository.save(pago);
-				estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), pagoRequestDTO.getOperaciones().get(i).getFolioContrato()));
-			} catch (Exception ex) {
-				estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(), pagoRequestDTO.getOperaciones().get(i).getFolioContrato()));
-				log.error(ex.getMessage());
-			}
+		if( null != pagoRequestDTO.getOperaciones() ) {
+			for (int i = 0; i < pagoRequestDTO.getOperaciones().size(); i++) {
+				try {
+					pago = PagoBuilder.buildPagoFromObject(pagoRequestDTO, clienteService.getClienteById(pagoRequestDTO.getIdCliente()),i);
+					pagoRepository.save(pago);
+					estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), pagoRequestDTO.getOperaciones().get(i).getFolioContrato()));
+				} catch (Exception ex) {
+					estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(), pagoRequestDTO.getOperaciones().get(i).getFolioContrato()));
+					log.error(ex.getMessage());
+				}
+			}	
+			pagoResponseDTO.setExitoso(true);
+		}
+		else {
+			log.error("Objeto pagoRequestDTO.getOperaciones() es nulo!");
+			pagoResponseDTO.setExitoso(false);
 		}
 		pagoResponseDTO.setEstatusPagos(estatusPagos);
-		pagoResponseDTO.setExitoso(true);
 		return pagoResponseDTO;
 	}
 

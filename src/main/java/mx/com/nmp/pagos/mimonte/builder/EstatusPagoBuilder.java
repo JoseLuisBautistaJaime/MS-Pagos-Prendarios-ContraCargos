@@ -1,7 +1,5 @@
 package mx.com.nmp.pagos.mimonte.builder;
 
-import org.springframework.stereotype.Component;
-
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoDTO;
 import mx.com.nmp.pagos.mimonte.model.EstatusPago;
 
@@ -14,9 +12,14 @@ import mx.com.nmp.pagos.mimonte.model.EstatusPago;
  * @creationDate 22/11/2018 11:52 hrs.
  * @version 0.1
  */
-@Component
 public class EstatusPagoBuilder {
 
+	private EstatusPagoBuilder() {
+		/**
+		 * hidden constructor
+		 */
+	}
+	
 	/**
 	 * Metodo que construye un entity tipo EstatusPago desde un objeto tipo EstatusPagoDTO
 	 * 

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
@@ -24,9 +22,14 @@ import mx.com.nmp.pagos.mimonte.model.TipoTarjeta;
  * @CreationDate 21/11/2018 18:10 hrs.
  * @version 0.1
  */
-@Component
 public class TarjetaBuilder {
 
+	private TarjetaBuilder() {
+		/**
+		 * hidden constructor
+		 */
+	}
+	
 	/**
 	 * Metodo que construye un entity Tarjetas desde un objeto tipo TrajetaDTO
 	 * 

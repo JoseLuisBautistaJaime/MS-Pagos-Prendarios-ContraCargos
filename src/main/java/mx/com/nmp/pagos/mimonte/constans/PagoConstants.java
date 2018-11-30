@@ -10,6 +10,12 @@ package mx.com.nmp.pagos.mimonte.constans;
  */
 public final class PagoConstants {
     	
+	private PagoConstants() {
+		/**
+		 * hidden constructor
+		 */
+	}
+	
 		/**
 		 * Mensaje que sera enviado si se se relaliza el pago
 		 * correctamente
