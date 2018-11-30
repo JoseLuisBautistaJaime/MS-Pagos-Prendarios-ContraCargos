@@ -3,7 +3,6 @@ package mx.com.nmp.pagos.mimonte.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import mx.com.nmp.pagos.mimonte.exception.ClienteException;
 import mx.com.nmp.pagos.mimonte.model.Cliente;
 
 /**
@@ -17,5 +16,5 @@ import mx.com.nmp.pagos.mimonte.model.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	
-	public Cliente findByIdcliente(Integer idcliente)throws ClienteException;
+	public Cliente findByIdcliente(Integer idcliente);
 }

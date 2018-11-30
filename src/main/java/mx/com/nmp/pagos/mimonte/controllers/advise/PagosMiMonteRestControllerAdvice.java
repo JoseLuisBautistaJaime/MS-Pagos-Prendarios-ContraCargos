@@ -4,6 +4,7 @@ package mx.com.nmp.pagos.mimonte.controllers.advise;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.ErrorResponse;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
 import mx.com.nmp.pagos.mimonte.exception.PartidaNotFoundException;
 import mx.com.nmp.pagos.mimonte.exception.ResultadoNotFoundException;
 import mx.com.nmp.pagos.mimonte.exception.SesionNotFoundException;
@@ -88,7 +89,8 @@ public class PagosMiMonteRestControllerAdvice {
             IllegalArgumentException.class,
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class,
-            UnsatisfiedServletRequestParameterException.class
+            UnsatisfiedServletRequestParameterException.class,
+            DatosIncompletosException.class
     })
     public Response manejarExcepcionBadRequest(Exception e) {
         return resolverCodigo(e, HttpStatus.BAD_REQUEST);

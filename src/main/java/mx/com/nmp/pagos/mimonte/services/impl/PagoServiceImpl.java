@@ -7,7 +7,6 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +18,12 @@ import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ClienteException;
 import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
-import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorDatosPago;
 
 /**
  * Nombre: PagoServiceImpl
@@ -49,14 +47,12 @@ public class PagoServiceImpl implements PagoService {
 	 * Service de clientes para obtener los datos del cliente para agregar a la tarjeta a guardar
 	 */
 	@Autowired
-	@Qualifier("clienteServiceImpl")
 	private ClienteService clienteService;
 
 	/**
 	 * Service de pagos para registrar el pago en bd
 	 */
 	@Autowired
-	@Qualifier("pagoRepository")
 	private PagoRepository pagoRepository;
 
 	/**
@@ -70,16 +66,20 @@ public class PagoServiceImpl implements PagoService {
 	/**
 	 * Metodo que registra una nueva trajeta si dicha bandera es activa, envia el
 	 * registro de un pago al ESB y registra un pago en Base de Datos
+	 * @throws DatosIncompletosException 
 	 *
 	 */
 	@Override
-	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO) throws ClienteException, PagoException {
+	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO){
 		log.info("Ingreso al servicio de pago: POST");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
 		// Aqui se obtiene un numero de afiliacion aleatorio, pero se debe obtener de un modulo de toma de decisiones
 		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
 		boolean estatusTarjeta = false;
+		// Se realizan validaciones generales del objeto
+		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
+		// Se realizan validacion propias del negocio
 		if (validaSiGuardar(pagoRequestDTO)) {
 			if (validaDatos(pagoRequestDTO)) {
 				if (validaCantidadTarjetasExistentes(pagoRequestDTO)) {

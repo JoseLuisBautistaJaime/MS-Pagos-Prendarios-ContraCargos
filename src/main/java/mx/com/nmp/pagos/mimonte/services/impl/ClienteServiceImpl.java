@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import mx.com.nmp.pagos.mimonte.builder.ClienteBuilder;
 import mx.com.nmp.pagos.mimonte.dao.ClienteRepository;
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
-import mx.com.nmp.pagos.mimonte.exception.ClienteException;
 import mx.com.nmp.pagos.mimonte.model.Cliente;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
 
@@ -31,7 +30,7 @@ public class ClienteServiceImpl implements ClienteService {
 	 * 
 	 */
 	@Override
-	public ClienteDTO getClienteById(Integer idcliente) throws ClienteException{
+	public ClienteDTO getClienteById(Integer idcliente){
 		Cliente cliente = clienteRepository.findByIdcliente(idcliente);
 		ClienteDTO clienteDTO = ClienteBuilder.buildClienteDTOFromCliente(cliente);
 		return clienteDTO;
