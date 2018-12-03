@@ -30,8 +30,8 @@ public class ClienteServiceImpl implements ClienteService {
 	 * 
 	 */
 	@Override
-	public ClienteDTO getClienteById(Integer idcliente) {
-		Cliente cliente = clienteRepository.getClienteByIdcliente(idcliente);
+	public ClienteDTO getClienteById(Integer idcliente){
+		Cliente cliente = clienteRepository.findByIdcliente(idcliente);
 		ClienteDTO clienteDTO = ClienteBuilder.buildClienteDTOFromCliente(cliente);
 		return clienteDTO;
 	}

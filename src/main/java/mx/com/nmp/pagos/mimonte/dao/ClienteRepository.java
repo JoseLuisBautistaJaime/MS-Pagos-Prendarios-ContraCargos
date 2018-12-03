@@ -21,7 +21,8 @@ import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	
-	public Cliente getClienteByIdcliente(Integer idcliente);
+//<<<<<<< HEAD
+//	public Cliente getClienteByIdcliente(Integer idcliente);
 	
 	/**
 	 * Consulta que obtiene las tarjetas registradas por medio del parametro idCliente.
@@ -31,5 +32,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	 */
 	@Query( value =  "select c.tarjetas from Cliente c where c.idcliente = :idcliente")
 	public List<Tarjetas> findByIdCliente(@Param("idcliente") Integer idcliente);
+
+
+	public Cliente findByIdcliente(Integer idcliente);
 
 }

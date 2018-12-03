@@ -9,7 +9,7 @@ package mx.com.nmp.pagos.mimonte.exception;
  * @creationDate 26/11/2018 11:28 hrs. 
  * @version 0.1
  */
-public class CantidadMaximaTarjetasAlcanzadaException extends PagoException {
+public class CantidadMaximaTarjetasAlcanzadaException extends RuntimeException {
 
 	/**
 	 * Serial version

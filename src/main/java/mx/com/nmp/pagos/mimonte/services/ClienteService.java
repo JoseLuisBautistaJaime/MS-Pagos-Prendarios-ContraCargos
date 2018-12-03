@@ -13,7 +13,7 @@ import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 public interface ClienteService {
 
 	/**
-	 * Metodo que regresa un objeto de tipo ClienteDTO con un id especificado como parametro
+	 * Metodo que regresa un objeto de tipo ClienteDTO en base a un id recibido como parametro
 	 * 
 	 * @param Integer idCliente
 	 * @return Object ClienteDTO

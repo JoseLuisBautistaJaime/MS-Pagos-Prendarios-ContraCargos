@@ -13,6 +13,12 @@ import mx.com.nmp.pagos.mimonte.model.TipoTarjeta;
  * @version 0.1
  */
 public class TipoTarjetaBuilder {
+	
+	private TipoTarjetaBuilder() {
+		/**
+		 * hidden constructor
+		 */
+	}
 
 	/**
 	 * Metodo que construye un entity de tipo TipoTarjeta desde un objeto tipo TipoTarjetaDTO

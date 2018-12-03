@@ -2,7 +2,7 @@ package mx.com.nmp.pagos.mimonte.constans;
 
 /**
  * Nombre: PagoConstants
- * Descripcion: Clase que almacena las constantes usadas para operaciones relacionadas con el pago de partidas / ocntratos.
+ * Descripcion: Clase que almacena las constantes usadas para operaciones relacionadas con el pago de partidas / contratos.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * Fecha: 20/11/2018 10:00 hrs.
@@ -10,6 +10,12 @@ package mx.com.nmp.pagos.mimonte.constans;
  */
 public final class PagoConstants {
     	
+	private PagoConstants() {
+		/**
+		 * hidden constructor
+		 */
+	}
+	
 		/**
 		 * Mensaje que sera enviado si se se relaliza el pago
 		 * correctamente
@@ -33,10 +39,11 @@ public final class PagoConstants {
     	 * ya haya alcanzado la cantidad maxima posible de tarjetas guardadas
     	 */
     	public static final String MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED = "Ya se ha alcanzado la cantidad máxima de tarjetas por cliente";
-    
+    	
     	/**
-    	 * Cantidad maxima de tarjetas que un cliente puede tener registradas
+    	 * Nombre de la propiedad que en archivo de configuracion YML que contiene el dato de 
+    	 * la cantidad maxima de tarjetas posibles por cliente
     	 */
-    	public static final int MAXIMUM_AMOUNT_OF_CARDS = 3;
+    	public static final String MAXIMUM_AMOUNT_OF_CARDS_PROPERTY = "${mimonte.variables.cantidad-maxima-tarjetas}";
 	
 }

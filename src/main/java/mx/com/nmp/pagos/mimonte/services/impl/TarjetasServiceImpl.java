@@ -175,8 +175,8 @@ public class TarjetasServiceImpl implements TarjetasService {
 			 tipoTarjetaRepository.findAll();
 			 estatusTarjetaRepository.findAll();
 			
-			guarda.setIdCliente(null);
-			guarda.setIdCliente(tarjeta.getCliente().getIdCliente());
+//			guarda.setIdCliente(null);
+//			guarda.setIdCliente(tarjeta.getCliente().getIdCliente());
 //			guarda.setTipoTarjeta(tipoTarjeta.get(0).getId());
 //			guarda.setEstatusTarjeta(tipoTarjeta.get(0).getId());
 			guarda = tarjetaRepository.save(guarda);

@@ -8,10 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +27,7 @@ import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorDatosPago;
 
 /**
  * Nombre: PagoController
@@ -49,14 +48,13 @@ public class PagoController {
 	 * Bean de la fabrica de instancias
 	 */
 	@Autowired
-	BeanFactory beanFactory;
+	private BeanFactory beanFactory;
 
 	/**
 	 * Service que realiza el pago de partidas / contratos
 	 */
 	@Autowired
-	@Qualifier("pagoServiceImpl")
-	PagoService pagoService;
+	private PagoService pagoService;
 
 	/**
 	 * Instancia que registra los eventos en la bitacora
@@ -72,11 +70,15 @@ public class PagoController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public ResponseEntity<Response> post(@RequestBody PagoRequestDTO pagoRequestDTO) {
+	public Response post(@RequestBody PagoRequestDTO pagoRequestDTO) {
 		log.debug("Entrando a operacion de servicio RegistroPagoController.post()...");
 		log.debug("Received object: " + pagoRequestDTO);
 		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 
+		// Inician validaciones	iniciales
+		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
+		// Finalizan validaciones iniciales
+		
 		// --------------------- Dummy data building begins
 		EstatusPagoResponseDTO estatusPagoResponseDTO = new EstatusPagoResponseDTO(1, "C12");
 		EstatusPagoResponseDTO estatusPagoResponseDTO2 = new EstatusPagoResponseDTO(1, "C34");
@@ -91,16 +93,12 @@ public class PagoController {
 
 		// real code begins
 		// ---------------- CODE HERE ------------------
-//		try {
+//		PagoResponseDTO pagoResponseDTO = null;
 //			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
-//		} catch (PagoException pex) {
-//			log.error(pex.getMessage());
-//		}
 		// real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoResponseDTO);
-		return new ResponseEntity<>(beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				PagoConstants.MSG_SUCCESS, pagoResponseDTO), HttpStatus.OK);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),PagoConstants.MSG_SUCCESS, pagoResponseDTO);
 	}
 
 	/**
@@ -113,4 +111,5 @@ public class PagoController {
 		Random random = new Random();
 		return random.nextInt(3 - 1 + 1) + 1;
 	}
+	
 }

@@ -1,8 +1,6 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Nombre: Cliente

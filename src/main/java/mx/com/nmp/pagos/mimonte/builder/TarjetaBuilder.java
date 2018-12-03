@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
@@ -24,9 +22,14 @@ import mx.com.nmp.pagos.mimonte.model.TipoTarjeta;
  * @CreationDate 21/11/2018 18:10 hrs.
  * @version 0.1
  */
-@Component
 public class TarjetaBuilder {
 
+	private TarjetaBuilder() {
+		/**
+		 * hidden constructor
+		 */
+	}
+	
 	/**
 	 * Metodo que construye un entity Tarjetas desde un objeto tipo TrajetaDTO
 	 * 
@@ -50,8 +53,12 @@ public class TarjetaBuilder {
 	public static Tarjetas buildTarjetaFromTarjetaPagoDTO(TarjetaPagoDTO tarjetaPagoDTO, ClienteDTO clienteDTO) {
 		Tarjetas tarjeta = new Tarjetas();
 		tarjeta.setAlias(tarjetaPagoDTO.getAlias());
-//		tarjeta.setClientes(Arrays.asList(ClienteBuilder.buildClienteFromClienteDTO((clienteDTO))));
-//		tarjeta.setEstatusTarjeta(Arrays.asList( EstatusTarjetaBuilder.buildEstatusTarjetaFromEstatusTarjetaDTO(tarjetaPagoDTO.getEstatus())));
+
+
+
+		tarjeta.setClientes(ClienteBuilder.buildClienteFromClienteDTO((clienteDTO)));
+		tarjeta.setEstatusTarjeta( EstatusTarjetaBuilder.buildEstatusTarjetaFromEstatusTarjetaDTO(tarjetaPagoDTO.getEstatus()));
+
 		tarjeta.setFechaAlta(tarjetaPagoDTO.getFechaAlta());
 		tarjeta.setFechaModificacion(tarjetaPagoDTO.getFechaModificacion());
 	//	tarjeta.setTipoTarjeta(Arrays.asList(TipoTarjetaBuilder.buildTipoTarjetaFromTipoTrajetaDTO(tarjetaPagoDTO.getTipo())));

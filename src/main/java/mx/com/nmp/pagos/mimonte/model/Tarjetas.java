@@ -8,10 +8,10 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -47,9 +47,9 @@ public class Tarjetas implements Serializable {
 	@Column(name = "ultimos_digitos", length = Constants.LONGITUD_ULTIMOS_DIGITOS)
 	private String ultimosDigitos;
 
-	@JsonIgnore
-	@Column(name = "idCliente")
-	private Integer idCliente;
+//	@JsonIgnore
+//	@Column(name = "idCliente")
+//	private Integer idCliente;
 	
 	@Column(name = "alias", length = Constants.LONGITUD_ALIAS)
 	private String alias;
@@ -60,9 +60,20 @@ public class Tarjetas implements Serializable {
 	@Column(name = "fecha_modificacion")
 	private Date fechaModificacion;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "tipo_tarjeta_c_id", insertable = false , updatable = false)
-	private TipoTarjeta tipoTarjeta;
+//<<<<<<< HEAD
+//	@OneToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "tipo_tarjeta_c_id", insertable = false , updatable = false)
+//	private TipoTarjeta tipoTarjeta;
+//=======
+	//@ManyToMany(cascade = CascadeType.ALL, mappedBy = "tarjetas", targetEntity = Cliente.class)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name="idCliente", nullable=false)
+	private Cliente clientes;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id")
+	private List<TipoTarjeta> tipoTarjeta;
+//>>>>>>> 36588b244a2947b34e2442e8188a814803fb5994
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "estatus_tarjeta_c", insertable = false , updatable = false)
@@ -112,17 +123,26 @@ public class Tarjetas implements Serializable {
 		this.fechaModificacion = fechaModificacion;
 	}
 
+
+	public Cliente getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(Cliente clientes) {
+		this.clientes = clientes;
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
 
 
-	public TipoTarjeta getTipoTarjeta() {
+	public List<TipoTarjeta> getTipoTarjeta() {
 		return tipoTarjeta;
 	}
 
-	public void setTipoTarjeta(TipoTarjeta tipoTarjeta) {
+	public void setTipoTarjeta(List<TipoTarjeta> tipoTarjeta) {
 		this.tipoTarjeta = tipoTarjeta;
 	}
 
@@ -136,20 +156,22 @@ public class Tarjetas implements Serializable {
 		this.estatusTarjeta = estatusTarjeta;
 	}
 
-	public Integer getIdCliente() {
-		return idCliente;
-	}
-
-	public void setIdCliente(Integer idCliente) {
-		this.idCliente = idCliente;
-	}
+//	public Integer getIdCliente() {
+//		return idCliente;
+//	}
+//
+//	public void setIdCliente(Integer idCliente) {
+//		this.idCliente = idCliente;
+//	}
 	
 	
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(alias, estatusTarjeta, fechaAlta, fechaModificacion, tipoTarjeta, token,
-				ultimosDigitos, idCliente);
+				ultimosDigitos,
+				//idCliente
+				clientes);
 	}
 
 	@Override
@@ -181,10 +203,10 @@ public class Tarjetas implements Serializable {
 				return false;
 		} else if (!fechaModificacion.equals(other.fechaModificacion))
 			return false;
-		if (idCliente == null) {
-			if (other.idCliente != null)
+		if (clientes == null) {
+			if (other.clientes != null)
 				return false;
-		} else if (!idCliente.equals(other.idCliente))
+		} else if (!clientes.equals(other.clientes))
 			return false;
 		if (tipoTarjeta == null) {
 			if (other.tipoTarjeta != null)
@@ -206,7 +228,7 @@ public class Tarjetas implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Tarjetas [token=" + token + ", ultimosDigitos=" + ultimosDigitos + ", idCliente=" + idCliente
+		return "Tarjetas [token=" + token + ", ultimosDigitos=" + ultimosDigitos + ", clientes=" + clientes
 				+ ", alias=" + alias + ", fechaAlta=" + fechaAlta + ", fechaModificacion=" + fechaModificacion
 				+ ", tipoTarjeta=" + tipoTarjeta + ", estatusTarjeta=" + estatusTarjeta + "]";
 	}

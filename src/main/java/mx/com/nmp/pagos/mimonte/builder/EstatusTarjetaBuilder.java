@@ -15,6 +15,10 @@ import mx.com.nmp.pagos.mimonte.model.EstatusTarjeta;
 public class EstatusTarjetaBuilder {
 
 	
+	private EstatusTarjetaBuilder() {
+		// hidden constructor
+	}
+	
 	/**
 	 * Metodo que construye un entity de tipo EstatusTarjeta desde un objeto de tipo EstatusTarjetaDTO
 	 * 

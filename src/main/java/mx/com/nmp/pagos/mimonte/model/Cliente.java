@@ -13,9 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -52,8 +49,13 @@ public class Cliente implements Serializable{
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="cliente", targetEntity = Pago.class)
 	private Set<Pago> pagos;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "tarjetas", joinColumns = { @JoinColumn(name = "idCliente")}, inverseJoinColumns = {@JoinColumn(name = "token")})
+//<<<<<<< HEAD
+//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	@JoinTable(name = "tarjetas", joinColumns = { @JoinColumn(name = "idCliente")}, inverseJoinColumns = {@JoinColumn(name = "token")})
+//=======
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="clientes")
+	//@JoinTable(name = "Cliente_TOarjetas", joinColumns = { @JoinColumn(name = "idCliente")}, inverseJoinColumns = {@JoinColumn(name = "token")})
+
 	private List<Tarjetas> tarjetas;
 	
 	public Cliente() {

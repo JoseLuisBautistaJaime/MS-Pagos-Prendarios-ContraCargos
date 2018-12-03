@@ -8,7 +8,7 @@ package mx.com.nmp.pagos.mimonte.exception;
  * @creationDate 26/11/2018 11:28 hrs.
  * @version: 0.1
  */
-public class DatosIncompletosException extends PagoException{
+public class DatosIncompletosException extends RuntimeException{
 
 	/**
 	 * Serial version

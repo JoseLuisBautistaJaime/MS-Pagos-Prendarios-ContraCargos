@@ -2,8 +2,6 @@ package mx.com.nmp.pagos.mimonte.builder;
 
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
-
 import mx.com.nmp.pagos.mimonte.constans.EstatusPago;
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
@@ -20,8 +18,13 @@ import mx.com.nmp.pagos.mimonte.model.Pago;
  * @creationDate 21/11/2018 17:30 hrs.
  * @version 0.1
  */
-@Component
 public class PagoBuilder {
+	
+	private PagoBuilder() {
+		/**
+		 * hidden constructor
+		 */
+	}
 
 	public static Pago buildPagoFromObject(PagoRequestDTO pagoRequestDTO, ClienteDTO clienteDTO, Integer index) {
 		Pago pago = new Pago();
@@ -41,51 +44,6 @@ public class PagoBuilder {
 		pago.setMonto(pagoRequestDTO.getOperaciones().get(index).getMonto());
 		pago.setTarjeta(pagoRequestDTO.getTarjeta().getDigitos());
 		return pago;
-	}
-
-	/**
-	 * Metodo que cosntruye un Entity de tipo Pago desde un objeto de tipo
-	 * PagoRequestDTO
-	 * 
-	 * @param Objeto de tipo PagoRequestDTO pagoDTO
-	 * @return Entity de tipo Pago
-	 */
-	public static Pago buildPagoEntityFromPagoDTO(PagoRequestDTO pagoDTO) {
-		return null;
-	}
-
-	/**
-	 * Metodo que construye un objeto tipo PagoDTO desde un objeto tipo
-	 * PagoRequestDTO
-	 * 
-	 * @param Objeto tipo PagoRequestDTO pagoDTO
-	 * @return Objeto de tipo PagoDTO
-	 */
-	public static PagoDTO buildPagoDTOFromPagoDTO(PagoRequestDTO pagoDTO) {
-		return null;
-	}
-
-	/**
-	 * Metodo que construye un objeto de tipo PagoDTO a un Entity Pago
-	 * 
-	 * @param Objeto de tipo pagoDTO
-	 * @return Entity de tipo Pago
-	 */
-	public static Pago buildPagoEntity(PagoDTO pagoDTO) {
-		Pago pagoEntity = new Pago();
-		pagoEntity.setAutorizacion(pagoDTO.getAutorizacion());
-		pagoEntity.setCliente(ClienteBuilder.buildClienteFromClienteDTO(pagoDTO.getCliente()));
-		pagoEntity.setDescripcion(pagoDTO.getDescripcion());
-		pagoEntity.setFechaCreacion(pagoDTO.getFechaCreacion());
-		pagoEntity.setFechaTarnsaccion(pagoDTO.getFechaTarnsaccion());
-		pagoEntity.setId(pagoDTO.getId());
-		pagoEntity.setIdOpenPay(pagoDTO.getIdOpenPay());
-		pagoEntity.setIdOrder(pagoDTO.getIdOrder());
-		pagoEntity.setMetodo(pagoDTO.getMetodo());
-		pagoEntity.setMonto(pagoDTO.getMonto());
-		pagoEntity.setRestResponse(pagoDTO.getRestResponse());
-		pagoEntity.setTarjeta(pagoDTO.getTarjeta().getDigitos());
-		return pagoEntity;
 	}
 
 	/**
