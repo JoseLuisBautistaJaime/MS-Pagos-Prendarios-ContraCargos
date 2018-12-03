@@ -40,20 +40,20 @@ public class Cliente implements Serializable{
 		
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "idcliente", unique = true, nullable = false)
+	@Column(name = "idCliente", unique = true, nullable = false)
 	private Integer idcliente;
 	
 	@Column(name="nombreTitular", length = Constants.LONGITUD_NOMBRE_TITULAR)
 	private String nombreTitular;
 	
-	@Column(name="fechaAlta")
+	@Column(name="fecha_alta")
 	private Date fechaAlta;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="cliente", targetEntity = Pago.class)
 	private Set<Pago> pagos;
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "Cliente_Tarjetas", joinColumns = { @JoinColumn(name = "idCliente")}, inverseJoinColumns = {@JoinColumn(name = "token")})
+	@JoinTable(name = "tarjetas", joinColumns = { @JoinColumn(name = "idCliente")}, inverseJoinColumns = {@JoinColumn(name = "token")})
 	private List<Tarjetas> tarjetas;
 	
 	public Cliente() {

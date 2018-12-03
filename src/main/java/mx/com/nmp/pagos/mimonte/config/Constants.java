@@ -23,6 +23,11 @@ public final class Constants {
     public static final String MSG_SUCCESS = "Registros recuperados correctamente.";
     
     /**
+     * Mensaje que sera enviado si no se recuperaron los registros correctamente
+     */
+    public static final String MSG_FAILURE = "Usted aún no tiene tarjetas registradas.";
+    
+    /**
      * Mensaje que sera enviado si se guarda el registro correctamente
      */
     public static final String MSG_SUCCESS_ADD = "Registro agregado correctamente.";
@@ -33,9 +38,19 @@ public final class Constants {
     public static final String MSG_SUCCESS_UPDATE = "Registro actualizado correctamente.";
     
     /**
+     * Mensaje que sera enviado si se actualiza el registro correctamente
+     */
+    public static final String MSG_NO_SUCCESS_UPDATE = "No se encontro el registro a actualizar.";
+    
+    /**
      * Mensaje que sera enviado si se borra el registro correctamente
      */
     public static final String MSG_SUCCESS_DELETE = "Registro borrado correctamente.";
+    
+    /**
+     * Mensaje que sera enviado si no se borra el registro correctamente
+     */
+    public static final String MSG_NO_SUCCESS_DELETE = "No se encontro el registro a eliminar.";
 
     private Constants() {
     }
