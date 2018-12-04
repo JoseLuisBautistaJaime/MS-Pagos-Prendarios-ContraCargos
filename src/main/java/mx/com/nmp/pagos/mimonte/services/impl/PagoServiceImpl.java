@@ -19,6 +19,7 @@ import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
+import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
@@ -90,7 +91,7 @@ public class PagoServiceImpl implements PagoService {
 					// No se guarda la tarjeta por que ya se alcanzo la cantidad maxima de tarjetas por cliente
 				}
 			} else {
-				throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
+				throw new PagoException(PagoConstants.INCOMPLETE_CARD_DATA);
 			}
 		}
 		// Guardar pago de partidas, uno por uno
