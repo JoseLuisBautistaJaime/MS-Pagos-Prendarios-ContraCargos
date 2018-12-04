@@ -18,7 +18,6 @@ import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
@@ -67,7 +66,6 @@ public class PagoServiceImpl implements PagoService {
 	/**
 	 * Metodo que registra una nueva trajeta si dicha bandera es activa, envia el
 	 * registro de un pago al ESB y registra un pago en Base de Datos
-	 * @throws DatosIncompletosException 
 	 *
 	 */
 	@Override

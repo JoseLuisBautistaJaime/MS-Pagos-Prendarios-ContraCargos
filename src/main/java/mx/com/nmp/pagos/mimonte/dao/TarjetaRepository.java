@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
+import mx.com.nmp.pagos.mimonte.model.Cliente;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 
 /**
@@ -33,7 +34,7 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @param idCliente
 	 * @return List<TarjeDTO>.
 	 */
-	public List<TarjeDTO> findByIdCliente(Integer idCliente);
+	public List<TarjeDTO> findByClientes(Cliente cliente);
 	
 	/**
 	 * Método que obtiene información de la tarjeta.
@@ -42,7 +43,7 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @param token
 	 * @return List<Tarjetas>
 	 */
-	public Tarjetas findByIdClienteAndToken(Integer idCliente, String token);
+	public Tarjetas findByClientesAndToken(Cliente cliente, String token);
 	
 
 	/**

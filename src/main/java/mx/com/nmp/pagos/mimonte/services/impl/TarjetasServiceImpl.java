@@ -126,7 +126,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 	public Response getTarjetasTokenIdCliente(Integer idCliente, String token) {
 
 		// Obtiene los registros
-		Tarjetas tarjetasCliente = tarjetaRepository.findByIdClienteAndToken(idCliente, token);
+		Tarjetas tarjetasCliente = tarjetaRepository.findByClientesAndToken(clienteRepository.findByIdcliente(idCliente), token);
 
 		// Evalua si existen registros
 		if (tarjetasCliente != null) {
