@@ -40,11 +40,11 @@ public class TarjetaBuilder {
 		Tarjetas tarjetaEntity = new Tarjetas();
 		tarjetaEntity.setAlias(tarjetaDTO.getAlias());
 		List<EstatusTarjeta> list = new ArrayList<>();
-		tarjetaEntity.setEstatusTarjeta(list);
+	//	tarjetaEntity.setEstatusTarjeta(list);
 		tarjetaEntity.setFechaAlta(tarjetaDTO.getFechaAlta());
 		tarjetaEntity.setFechaModificacion(tarjetaDTO.getFechaModificacion());
 		List<TipoTarjeta> lst = new ArrayList<>();
-		tarjetaEntity.setTipoTarjeta(lst);
+	//	tarjetaEntity.setTipoTarjeta(lst);
 		tarjetaEntity.setToken(tarjetaDTO.getToken());
 		tarjetaEntity.setUltimosDigitos(tarjetaDTO.getDigitos());
 		return tarjetaEntity;	
@@ -53,11 +53,15 @@ public class TarjetaBuilder {
 	public static Tarjetas buildTarjetaFromTarjetaPagoDTO(TarjetaPagoDTO tarjetaPagoDTO, ClienteDTO clienteDTO) {
 		Tarjetas tarjeta = new Tarjetas();
 		tarjeta.setAlias(tarjetaPagoDTO.getAlias());
+
+
+
 		tarjeta.setClientes(ClienteBuilder.buildClienteFromClienteDTO((clienteDTO)));
-		tarjeta.setEstatusTarjeta(Arrays.asList( EstatusTarjetaBuilder.buildEstatusTarjetaFromEstatusTarjetaDTO(tarjetaPagoDTO.getEstatus())));
+		tarjeta.setEstatusTarjeta( EstatusTarjetaBuilder.buildEstatusTarjetaFromEstatusTarjetaDTO(tarjetaPagoDTO.getEstatus()));
+
 		tarjeta.setFechaAlta(tarjetaPagoDTO.getFechaAlta());
 		tarjeta.setFechaModificacion(tarjetaPagoDTO.getFechaModificacion());
-		tarjeta.setTipoTarjeta(Arrays.asList(TipoTarjetaBuilder.buildTipoTarjetaFromTipoTrajetaDTO(tarjetaPagoDTO.getTipo())));
+	//	tarjeta.setTipoTarjeta(Arrays.asList(TipoTarjetaBuilder.buildTipoTarjetaFromTipoTrajetaDTO(tarjetaPagoDTO.getTipo())));
 		tarjeta.setToken(tarjetaPagoDTO.getToken());
 		tarjeta.setUltimosDigitos(tarjetaPagoDTO.getDigitos());
 		return tarjeta;

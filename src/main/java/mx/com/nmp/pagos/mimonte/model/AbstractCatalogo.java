@@ -17,13 +17,13 @@ public abstract class AbstractCatalogo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
+    protected Integer id;
 
     @Column(name="descripcion_corta", length = Constants.LONGITUD_DESCRIPCION_CORTA, unique = true)
-    private String descripcionCorta;
+    protected String descripcionCorta;
 
     @Column(name="descripcion", length = Constants.LONGITUD_DESCRIPCION)
-    private String descripcion;
+    protected String descripcion;
 
     public AbstractCatalogo() {
         super();
@@ -46,8 +46,8 @@ public abstract class AbstractCatalogo {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(Integer integer) {
+        this.id = integer;
     }
 
     public String getDescripcionCorta() {

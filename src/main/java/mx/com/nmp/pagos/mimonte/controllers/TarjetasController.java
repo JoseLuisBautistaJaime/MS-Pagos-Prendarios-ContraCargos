@@ -1,10 +1,5 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -27,12 +22,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.config.Constants;
-import mx.com.nmp.pagos.mimonte.dto.AbstractTarjetaDTO;
-import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
-import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
-import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
@@ -62,102 +53,73 @@ public class TarjetasController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/v1/tarjetas/cliente/{idCliente}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas con respecto al parámetro del id del cliente.", tags = {
-			"Tarjetas" })
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas con respecto al parámetro del id del cliente.", tags = { "Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response get(@PathVariable(value = "idCliente", required = true) Integer idCliente) {
 
-		// log.debug("Entrando a operacion de servicio
-		// RegistroTarjetasController.get()...");
+		Response response = new Response();
 
-		// log.debug("Validando parametro idTarjeta...");
-		// ValidadorCadena.notNullNorEmpty(idCliente);
+		log.info("Intentando obtener el listado de registros para las tarjetas {}...", idCliente);
 
-		List<TarjeDTO> tarjetaDTO = new ArrayList<TarjeDTO>();
+		Response tarjeta = tarjetasService.getTarjetasIdCliente(idCliente);
 
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
+		response = tarjeta;
 
-		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1, "Activa", "Avtiva");
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjeta);
 
-		TarjeDTO tarjeDto = new TarjeDTO("token", "digitos", "alias", new Date(), new Date(), tipoTarjetaDto, estatusTarjetaDto);
-		tarjetaDTO.add(tarjeDto);
-		tarjetaDTO.add(tarjeDto);
-		tarjetaDTO.add(tarjeDto);
-
-		log.info("Intentando obtener el listado de registros para las tarjetas {}...", tarjetaDTO);
-		// List<TarjetaDTO> tarjetaDTO = tarjetasService.getTarjetas(idCliente);
-
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS, tarjetaDTO);
+		return response;
 
 	}
-	
+
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/v1/tarjetas/{token}/{idCliente}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas con respecto a los parámetros token y id del cliente.", tags = {
-			"Tarjetas" })
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas con respecto a los parámetros token y id del cliente.", tags = { "Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response get(@PathVariable(value = "token", required = true) String token, @PathVariable(value = "idCliente", required = true) Integer idCliente) {
+	public Response get(@PathVariable(value = "idCliente", required = true) Integer idcliente,
+			@PathVariable(value = "token", required = true) String token) {
 
-		log.debug("Entrando a operacion de servicio RegistroTarjetasController.get()...");
+		Response response = new Response();
 
-//		log.debug("Validando parametro idTarjeta...");
-//		ValidadorCadena.notNullNorEmpty(idCliente);
+		log.info("Intentando obtener el listado de registros para las tarjetas {}...", idcliente);
 
-//		log.debug("Intentando obtener el listado de registros para las tarjetas {}...", idCliente);
-//		List<TarjetaDTO> tarjetaDTO = tarjetasService.getTarjetas(idCliente);
-		
-		
+		Response tarjeta = tarjetasService.getTarjetasTokenIdCliente(idcliente, token);
 
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
+		response = tarjeta;
 
-		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1, "Activa", "Avtiva");
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjeta);
 
-		TarjeDTO tarjeDto = new TarjeDTO("token", "digitos", "alias", new Date(), new Date(), tipoTarjetaDto, estatusTarjetaDto);
-		
-
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjeDto);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS, tarjeDto);
+		return response;
 
 	}
-	
+
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/v1/tarjetas/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas con respecto al parámetro del token.", tags = {
-			"Tarjetas" })
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas con respecto al parámetro del token.", tags = { "Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response get(@PathVariable(value = "token", required = true)  String token) {
+	public Response get(@PathVariable(value = "token", required = true) String token) {
 
-		log.debug("Entrando a operacion de servicio RegistroTarjetasController.get()...");
+		Response response = new Response();
 
-//		log.debug("Validando parametro idTarjeta...");
-//		ValidadorCadena.notNullNorEmpty(idCliente);
+		log.info("Intentando obtener el listado de registros para las tarjetas {}...", token);
 
-//		log.debug("Intentando obtener el listado de registros para las tarjetas {}...", token);
-//		List<TarjetaDTO> tarjetaDTO = tarjetasService.getTarjeta(token);
-		
-		List<TarjeDTO> tarjetaDTO = new ArrayList<TarjeDTO>();
+		Response tarjeta = tarjetasService.getTarjetasToken(token);
 
-		TipoTarjetaDTO tipoTarjetaDto = new TipoTarjetaDTO(1, "Tarjeta tipo Visa", "T Visa");
+		response = tarjeta;
 
-		EstatusTarjetaDTO estatusTarjetaDto = new EstatusTarjetaDTO(1, "Activa", "Avtiva");
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjeta);
 
-		TarjeDTO tarjeDto = new TarjeDTO("token", "digitos", "alias", new Date(), new Date(), tipoTarjetaDto, estatusTarjetaDto);
-	
-
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjeDto);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS, tarjeDto);
+		return response;
 
 	}
 	
@@ -173,13 +135,17 @@ public class TarjetasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response add(@RequestBody TarjetaDTO tarjeta) {
 
-		log.debug("Entrando a operacion de servicio RegistroTarjetasController.post()...");
+		Response response = new Response();
 
-		log.debug("Intentando obtener el listado de registros para el catalogo {}...", tarjeta);
-		TarjeDTO tarjetaDTO = tarjetasService.addTarjetas(tarjeta);
+		log.info("Intentando obtener el listado de registros para las tarjetas {}...", tarjeta);
 
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS_ADD, tarjetaDTO);
+		Response guardado = tarjetasService.addTarjetas(tarjeta);
+
+		response = guardado;
+
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", guardado);
+
+		return response;
 
 	}
 
@@ -192,23 +158,13 @@ public class TarjetasController {
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@PathVariable(value = "token", required = true) String token,
-			@PathVariable(value = "alias", required = true) String alias) {
-
-		// log.debug("Entrando a operacion de servicio
-		// RegistroTarjetasController.update()...");
-		//
-		// log.debug("Validando parametro idTarjeta...");
-		// ValidadorCadena.notNullNorEmpty(idTarjeta);
-		//
-		// log.debug("Validando parametro alias...");
-		// ValidadorCadena.notNullNorEmpty(alias);
+	public Response update(@PathVariable(value = "token", required = true) String token, @PathVariable(value = "alias", required = true) String alias) {
 
 		log.debug("Intentando actualizar el registro de la tarjeta {}...", token);
-		TarjeDTO tarjetaDTO = tarjetasService.updateTarjetas(token);
+		Response reponse = tarjetasService.updateTarjeta(token, alias);
 
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS_UPDATE, tarjetaDTO);
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", reponse);
+		return reponse;
 
 	}
 
@@ -222,17 +178,14 @@ public class TarjetasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response delete(@PathVariable(value = "token", required = true) String token) {
 
-		// log.debug("Entrando a operacion de servicio
-		// RegistroTarjetasController.delete()...");
-		//
-		// log.debug("Validando parametro idTarjeta...");
-		// ValidadorCadena.notNullNorEmpty(idTarjeta);
-
 		log.debug("Intentando borrar el registro de la tarjeta {}...", token);
-		TarjetaDTO tarjetaDTO = tarjetasService.deleteTarjetas(token);
+		Response deleteTarjeta = tarjetasService.deleteTarjeta(token);
+		
+		Response response = deleteTarjeta;
 
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaDTO);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), Constants.MSG_SUCCESS_DELETE, tarjetaDTO);
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", response);
+		
+		return response;
 
 	}
 
