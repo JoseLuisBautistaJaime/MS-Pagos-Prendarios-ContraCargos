@@ -94,7 +94,7 @@ public class PagoServiceImpl implements PagoService {
 		}
 		// Guardar pago de partidas, uno por uno
 		Pago pago = new Pago();
-		if( null != pagoRequestDTO.getOperaciones() ) {
+		if( null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty() ) {
 			for (int i = 0; i < pagoRequestDTO.getOperaciones().size(); i++) {
 				try {
 					pago = PagoBuilder.buildPagoFromObject(pagoRequestDTO, clienteService.getClienteById(pagoRequestDTO.getIdCliente()),i);
@@ -110,6 +110,7 @@ public class PagoServiceImpl implements PagoService {
 		else {
 			log.error("Objeto pagoRequestDTO.getOperaciones() es nulo!");
 			pagoResponseDTO.setExitoso(false);
+			throw new PagoException(PagoConstants.NO_OPERATIONS_MESSAGE);
 		}
 		pagoResponseDTO.setEstatusPagos(estatusPagos);
 		return pagoResponseDTO;
