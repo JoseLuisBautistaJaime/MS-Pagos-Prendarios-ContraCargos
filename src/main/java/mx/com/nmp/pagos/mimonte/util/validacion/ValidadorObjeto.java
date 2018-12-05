@@ -5,7 +5,6 @@ package mx.com.nmp.pagos.mimonte.util.validacion;
 
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.validation.Configuration;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
