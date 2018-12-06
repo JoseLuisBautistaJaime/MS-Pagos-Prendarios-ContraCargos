@@ -10,9 +10,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -30,13 +31,9 @@ import mx.com.nmp.pagos.mimonte.config.Constants;
 @Table(name = "cliente")
 public class Cliente implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7528374533024645790L;
 		
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idCliente", unique = true, nullable = false)
 	private Integer idcliente;
 	
@@ -48,14 +45,9 @@ public class Cliente implements Serializable{
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="cliente", targetEntity = Pago.class)
 	private Set<Pago> pagos;
-	
-//<<<<<<< HEAD
-//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//	@JoinTable(name = "tarjetas", joinColumns = { @JoinColumn(name = "idCliente")}, inverseJoinColumns = {@JoinColumn(name = "token")})
-//=======
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="clientes")
-	//@JoinTable(name = "Cliente_TOarjetas", joinColumns = { @JoinColumn(name = "idCliente")}, inverseJoinColumns = {@JoinColumn(name = "token")})
 
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "tarjetas", joinColumns = { @JoinColumn(name = "idCliente") }, inverseJoinColumns = {@JoinColumn(name = "token")})
 	private List<Tarjetas> tarjetas;
 	
 	public Cliente() {

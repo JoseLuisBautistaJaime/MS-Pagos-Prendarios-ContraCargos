@@ -33,7 +33,7 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @param idCliente
 	 * @return List<TarjeDTO>.
 	 */
-	public List<TarjeDTO> findByIdCliente(Integer idCliente);
+	public List<TarjeDTO> findByIdcliente(Integer idCliente);
 	
 	/**
 	 * Método que obtiene información de la tarjeta.
@@ -42,7 +42,7 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @param token
 	 * @return List<Tarjetas>
 	 */
-	public Tarjetas findByIdClienteAndToken(Integer idCliente, String token);
+	public Tarjetas findByIdclienteAndToken(Integer idCliente, String token);
 	
 
 	/**
@@ -52,5 +52,4 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @return List<Tarjetas>
 	 */
 	public Tarjetas findByToken(String token);
-
 }
