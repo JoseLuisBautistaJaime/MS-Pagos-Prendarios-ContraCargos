@@ -124,7 +124,6 @@ public class Tarjetas implements Serializable {
 	public void setEstatusTarjeta(EstatusTarjeta estatusTarjeta) {
 		this.estatusTarjeta = estatusTarjeta;
 	}
-	
 
 	public Integer getIdcliente() {
 		return idcliente;
@@ -133,6 +132,7 @@ public class Tarjetas implements Serializable {
 	public void setIdcliente(Integer idcliente) {
 		this.idcliente = idcliente;
 	}
+
 
 	@Override
 	public int hashCode() {

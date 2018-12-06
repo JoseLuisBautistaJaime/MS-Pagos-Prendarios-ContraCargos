@@ -1,15 +1,6 @@
 
 package mx.com.nmp.pagos.mimonte.controllers.advise;
 
-import mx.com.nmp.pagos.mimonte.constans.CodigoError;
-import mx.com.nmp.pagos.mimonte.dto.ErrorResponse;
-import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
-import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
-import mx.com.nmp.pagos.mimonte.exception.PartidaNotFoundException;
-import mx.com.nmp.pagos.mimonte.exception.ResultadoNotFoundException;
-import mx.com.nmp.pagos.mimonte.exception.SesionNotFoundException;
-import mx.com.nmp.pagos.mimonte.util.CodigoErrorResolver;
-import mx.com.nmp.pagos.mimonte.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -22,6 +13,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.dto.ErrorResponse;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.PagoException;
+import mx.com.nmp.pagos.mimonte.exception.PartidaNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.ResultadoNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.SesionNotFoundException;
+import mx.com.nmp.pagos.mimonte.util.CodigoErrorResolver;
+import mx.com.nmp.pagos.mimonte.util.Response;
 
 
 
@@ -90,7 +91,7 @@ public class PagosMiMonteRestControllerAdvice {
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class,
             UnsatisfiedServletRequestParameterException.class,
-            DatosIncompletosException.class
+            PagoException.class
     })
     public Response manejarExcepcionBadRequest(Exception e) {
         return resolverCodigo(e, HttpStatus.BAD_REQUEST);

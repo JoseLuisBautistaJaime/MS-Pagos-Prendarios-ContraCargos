@@ -56,7 +56,7 @@ public class TarjetaBuilder {
 
 
 
-		tarjeta.setClientes(ClienteBuilder.buildClienteFromClienteDTO((clienteDTO)));
+//		tarjeta.setClientes(ClienteBuilder.buildClienteFromClienteDTO((clienteDTO)));
 		tarjeta.setEstatusTarjeta( EstatusTarjetaBuilder.buildEstatusTarjetaFromEstatusTarjetaDTO(tarjetaPagoDTO.getEstatus()));
 
 		tarjeta.setFechaAlta(tarjetaPagoDTO.getFechaAlta());

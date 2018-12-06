@@ -18,7 +18,7 @@ import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.DatosIncompletosException;
+import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
@@ -66,7 +66,6 @@ public class PagoServiceImpl implements PagoService {
 	/**
 	 * Metodo que registra una nueva trajeta si dicha bandera es activa, envia el
 	 * registro de un pago al ESB y registra un pago en Base de Datos
-	 * @throws DatosIncompletosException 
 	 *
 	 */
 	@Override
@@ -90,12 +89,12 @@ public class PagoServiceImpl implements PagoService {
 					// No se guarda la tarjeta por que ya se alcanzo la cantidad maxima de tarjetas por cliente
 				}
 			} else {
-				throw new DatosIncompletosException(PagoConstants.INCOMPLETE_CARD_DATA);
+				throw new PagoException(PagoConstants.INCOMPLETE_CARD_DATA);
 			}
 		}
 		// Guardar pago de partidas, uno por uno
 		Pago pago = new Pago();
-		if( null != pagoRequestDTO.getOperaciones() ) {
+		if( null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty() ) {
 			for (int i = 0; i < pagoRequestDTO.getOperaciones().size(); i++) {
 				try {
 					pago = PagoBuilder.buildPagoFromObject(pagoRequestDTO, clienteService.getClienteById(pagoRequestDTO.getIdCliente()),i);
@@ -111,6 +110,7 @@ public class PagoServiceImpl implements PagoService {
 		else {
 			log.error("Objeto pagoRequestDTO.getOperaciones() es nulo!");
 			pagoResponseDTO.setExitoso(false);
+			throw new PagoException(PagoConstants.NO_OPERATIONS_MESSAGE);
 		}
 		pagoResponseDTO.setEstatusPagos(estatusPagos);
 		return pagoResponseDTO;

@@ -3,15 +3,19 @@
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
 
+import java.util.Set;
+
+import javax.validation.Configuration;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import java.util.Set;
 
 
 /**
@@ -32,7 +36,7 @@ public class ValidadorObjeto {
      * Objeto que se encarga de leer las anotaciones de validación
      */
     @Autowired
-    private Validator validator;
+    private static Validator validator;
 
     /**
      * Constructor de la clase.
@@ -40,6 +44,14 @@ public class ValidadorObjeto {
     public ValidadorObjeto() {
         super();
     }
+    
+    static {
+    	Configuration<?> config = Validation.byDefaultProvider().configure();
+        ValidatorFactory factory = config.buildValidatorFactory();
+        validator = factory.getValidator();
+        factory.close(); 
+        } 
+    
 
     /**
      * Método que valida si un objeto es nulo o no

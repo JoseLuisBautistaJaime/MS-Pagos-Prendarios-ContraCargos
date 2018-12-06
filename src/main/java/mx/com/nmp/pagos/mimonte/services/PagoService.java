@@ -2,8 +2,6 @@ package mx.com.nmp.pagos.mimonte.services;
 
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ClienteException;
-import mx.com.nmp.pagos.mimonte.exception.PagoException;
 
 /**
  * Nombre: PagoService
