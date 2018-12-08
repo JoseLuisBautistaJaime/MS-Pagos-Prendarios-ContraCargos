@@ -40,8 +40,8 @@ public class Tarjetas implements Serializable {
 	@Column(name = "ultimos_digitos", length = Constants.LONGITUD_ULTIMOS_DIGITOS)
 	private String ultimosDigitos;
 
-	@Column(name = "idCliente")
-	private Integer idcliente;
+//	@Column(name = "idCliente")
+//	private Integer idcliente;
 	
 	@Column(name = "alias", length = Constants.LONGITUD_ALIAS)
 	private String alias;
@@ -137,19 +137,29 @@ public class Tarjetas implements Serializable {
 		this.estatusTarjeta = estatusTarjeta;
 	}
 
-	public Integer getIdcliente() {
-		return idcliente;
-	}
+//	public Integer getIdcliente() {
+//		return idcliente;
+//	}
+//
+//	public void setIdcliente(Integer idcliente) {
+//		this.idcliente = idcliente;
+//	}
 
-	public void setIdcliente(Integer idcliente) {
-		this.idcliente = idcliente;
-	}
-
+	
+	
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(alias, estatusTarjeta, fechaAlta, fechaModificacion, tipoTarjeta, token,
 				ultimosDigitos);
+	}
+
+	public Cliente getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(Cliente clientes) {
+		this.clientes = clientes;
 	}
 
 	@Override
