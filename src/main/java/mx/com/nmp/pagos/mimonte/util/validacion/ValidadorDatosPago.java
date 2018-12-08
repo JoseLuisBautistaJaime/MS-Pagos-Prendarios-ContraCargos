@@ -2,6 +2,7 @@ package mx.com.nmp.pagos.mimonte.util.validacion;
 
 import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 
 /**
  * Nombre: ValidadorDatosPago
@@ -13,6 +14,12 @@ import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
  */
 public class ValidadorDatosPago {
 
+	/**
+	 * 
+	 * Metodo que valida el objeto PagoRequestDTO para que no haya datos nulos
+	 * 
+	 * @param pagoRequestDTO
+	 */
 	public static final void validacionesInicialesPago(PagoRequestDTO pagoRequestDTO) {
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(pagoRequestDTO);
@@ -27,9 +34,19 @@ public class ValidadorDatosPago {
 			vo.noNulo(operacion.getMonto());
 			vo.noNulo(operacion.getNombreOperacion());
 		}
-		vo.noNulo(pagoRequestDTO.getTarjeta());
-		vo.noNulo(pagoRequestDTO.getTarjeta().getAlias());
-		vo.noNulo(pagoRequestDTO.getTarjeta().getDigitos());
-		vo.noNulo(pagoRequestDTO.getTarjeta().getToken());
+	}
+	
+	/**
+	 * 
+	 * Metodo que valida un objeto TarjetaPagoDTO para que no contenga valores nulos
+	 * 
+	 * @param tarjeta
+	 */
+	public static final void validacionesTrajeta(TarjetaPagoDTO tarjeta) {
+		ValidadorObjeto vo = new ValidadorObjeto();
+		vo.noNulo(tarjeta);
+		vo.noNulo(tarjeta.getAlias());
+		vo.noNulo(tarjeta.getDigitos());
+		vo.noNulo(tarjeta.getToken());
 	}
 }

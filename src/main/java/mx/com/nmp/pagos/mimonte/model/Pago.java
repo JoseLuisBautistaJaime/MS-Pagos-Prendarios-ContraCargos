@@ -53,7 +53,7 @@ public class Pago {
 	@Column(name ="id", nullable = false, unique = true)
 	private Integer id;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name ="idcliente", nullable = true)
 	private Cliente cliente;
 	
@@ -84,7 +84,7 @@ public class Pago {
 	@Column(name ="idorder", nullable = true)
 	private String idOrder;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.DETACH})
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name ="estatus_transaccion", nullable = true)
 	private EstatusPago estatusPago;
 	

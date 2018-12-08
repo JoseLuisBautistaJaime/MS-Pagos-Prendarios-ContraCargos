@@ -254,9 +254,11 @@ public class TarjetasServiceImpl implements TarjetasService {
 		}
 	}
 
+	/**
+	 * Metodo que cuenta la cantidad de tarjetas que tiene un cliente especifico
+	 */
 	@Override
-	public int countTarjetasByIdCliente(Integer idCliente) {
-		//return tarjetaRepository.countByClientes(idCliente);
-		return 0;
+	public Integer countTarjetasByIdcliente(Integer idCliente) {
+		return tarjetaRepository.countTarjetasByIdcliente(idCliente);
 	}
 }

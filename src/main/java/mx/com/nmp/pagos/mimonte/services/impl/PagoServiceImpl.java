@@ -16,8 +16,10 @@ import mx.com.nmp.pagos.mimonte.constans.EstatusOperacion;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
+import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
+import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
@@ -74,34 +76,23 @@ public class PagoServiceImpl implements PagoService {
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
 		// Aqui se obtiene un numero de afiliacion aleatorio, pero se debe obtener de un modulo de toma de decisiones
-		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
-		boolean estatusTarjeta = false;
-		// Se realizan validaciones generales del objeto
+		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());		
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
-		// Se realizan validacion propias del negocio
-		if (validaSiGuardar(pagoRequestDTO)) {
-			if (validaDatos(pagoRequestDTO)) {
-				if (validaCantidadTarjetasExistentes(pagoRequestDTO)) {
-					tarjetaService.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(),
-							clienteService.getClienteById(pagoRequestDTO.getIdCliente())));
-					estatusTarjeta = true;
-				} else {
-					// No se guarda la tarjeta por que ya se alcanzo la cantidad maxima de tarjetas por cliente
-				}
-			} else {
-				throw new PagoException(PagoConstants.INCOMPLETE_CARD_DATA);
-			}
-		}
-		// Guardar pago de partidas, uno por uno
 		Pago pago = new Pago();
 		if( null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty() ) {
-			for (int i = 0; i < pagoRequestDTO.getOperaciones().size(); i++) {
+			for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
 				try {
-					pago = PagoBuilder.buildPagoFromObject(pagoRequestDTO, clienteService.getClienteById(pagoRequestDTO.getIdCliente()),i);
-					pagoRepository.save(pago);
-					estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), pagoRequestDTO.getOperaciones().get(i).getFolioContrato()));
+					Integer c = pagoRepository.checkIfPagoExists(operacion.getNombreOperacion(), pagoRequestDTO.getIdCliente(), operacion.getMonto());
+					if(null != c && c == 0) {
+						pago = PagoBuilder.buildPagoFromObject(operacion, pagoRequestDTO.getTarjeta(), clienteService.getClienteById(pagoRequestDTO.getIdCliente()));
+						pagoRepository.save(pago);
+						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));	
+					}
+					else {
+						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
+					}
 				} catch (Exception ex) {
-					estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(), pagoRequestDTO.getOperaciones().get(i).getFolioContrato()));
+					estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
 					log.error(ex.getMessage());
 				}
 			}	
@@ -112,6 +103,17 @@ public class PagoServiceImpl implements PagoService {
 			pagoResponseDTO.setExitoso(false);
 			throw new PagoException(PagoConstants.NO_OPERATIONS_MESSAGE);
 		}
+		// Se realizan validacion propias del negocio
+		if (validaSiGuardar(pagoRequestDTO)) {
+			if (validaCantidadTarjetasExistentes(pagoRequestDTO)) {
+				validaDatos(pagoRequestDTO.getTarjeta());
+					tarjetaService.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(),
+							clienteService.getClienteById(pagoRequestDTO.getIdCliente())));
+			} else {
+				throw new PagoException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+			}
+		}
+
 		pagoResponseDTO.setEstatusPagos(estatusPagos);
 		return pagoResponseDTO;
 	}
@@ -130,19 +132,16 @@ public class PagoServiceImpl implements PagoService {
 		return flag;
 	}
 
+
 	/**
+	 * 
 	 * Metodo que recibe un objeto PagoRequestDTO y valida su contenido para saber
 	 * todos los campos de la tarjeta son validos
 	 * 
-	 * @param pagoDTO Objeto PagoRequestDTO con un objeto tarjeta dentro
-	 * @return Valor boleano indicando si es posible guardar la tarjeta
+	 * @param tarjetaPagoDTO
 	 */
-	private static final boolean validaDatos(PagoRequestDTO pagoDTO) {
-		boolean flag = false;
-		if (null != pagoDTO && null != pagoDTO.getTarjeta() && null != pagoDTO.getTarjeta().getAlias()
-				&& null != pagoDTO.getTarjeta().getToken())
-			flag = true;
-		return flag;
+	private static final void validaDatos(TarjetaPagoDTO tarjetaPagoDTO) {
+		ValidadorDatosPago.validacionesTrajeta(tarjetaPagoDTO);
 	}
 
 	/**
@@ -154,7 +153,7 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	private boolean validaCantidadTarjetasExistentes(PagoRequestDTO pagoDTO) {
 		boolean flag = false;
-		int cantidadTarjetas = tarjetaService.countTarjetasByIdCliente(pagoDTO.getIdCliente());
+		int cantidadTarjetas = tarjetaService.countTarjetasByIdcliente(pagoDTO.getIdCliente());
 		if (cantidadTarjetas < MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT)
 			flag = true;
 		return flag;

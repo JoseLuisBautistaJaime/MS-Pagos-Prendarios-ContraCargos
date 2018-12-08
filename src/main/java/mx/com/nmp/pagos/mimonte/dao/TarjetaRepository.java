@@ -3,6 +3,8 @@ package mx.com.nmp.pagos.mimonte.dao;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
@@ -53,5 +55,15 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @return List<Tarjetas>
 	 */
 	public Tarjetas findByToken(String token);
+	
+	/**
+	 * 
+	 * Metodo que cuenta la cantidad de tarjetas de un cliente especifico
+	 * 
+	 * @param idcliente
+	 * @return
+	 */
+	@Query("SELECT COUNT(t.token) FROM Tarjetas t WHERE t.clientes.idcliente= :idcliente")
+	public Integer countTarjetasByIdcliente(@Param("idcliente") Integer idcliente);
 
 }

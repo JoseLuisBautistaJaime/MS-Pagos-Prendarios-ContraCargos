@@ -1,9 +1,5 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -22,7 +18,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
-import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
@@ -74,27 +69,24 @@ public class PagoController {
 		log.debug("Entrando a operacion de servicio RegistroPagoController.post()...");
 		log.debug("Received object: " + pagoRequestDTO);
 		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
-
-		// Inician validaciones	iniciales
-		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
-		// Finalizan validaciones iniciales
 		
-		// --------------------- Dummy data building begins
-		EstatusPagoResponseDTO estatusPagoResponseDTO = new EstatusPagoResponseDTO(1, "C12");
-		EstatusPagoResponseDTO estatusPagoResponseDTO2 = new EstatusPagoResponseDTO(1, "C34");
-		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
-		estatusPagos.add(estatusPagoResponseDTO);
-		estatusPagos.add(estatusPagoResponseDTO2);
-		// Ahora se obtiene un numero aleatorio, pero ese valor entre 1 y 3 debe estar
-		// en funcion de unas reglas de negocio
-		// en el modulo de toma de deciciones
-		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusPagos, true, getRandomNumber());
-		// --------------------- Dummy data building ends
+//		// --------------------- Dummy data building begins
+//		EstatusPagoResponseDTO estatusPagoResponseDTO = new EstatusPagoResponseDTO(1, "C12");
+//		EstatusPagoResponseDTO estatusPagoResponseDTO2 = new EstatusPagoResponseDTO(1, "C34");
+//		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
+//		estatusPagos.add(estatusPagoResponseDTO);
+//		estatusPagos.add(estatusPagoResponseDTO2);
+//		// Ahora se obtiene un numero aleatorio, pero ese valor entre 1 y 3 debe estar
+//		// en funcion de unas reglas de negocio
+//		// en el modulo de toma de deciciones
+//		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusPagos, true, getRandomNumber());
+//		// --------------------- Dummy data building ends
 
 		// real code begins
 		// ---------------- CODE HERE ------------------
-//		PagoResponseDTO pagoResponseDTO = null;
-//			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
+		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
+		PagoResponseDTO pagoResponseDTO = null;
+			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
 		// real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoResponseDTO);
@@ -107,9 +99,9 @@ public class PagoController {
 	 * 
 	 * @return int value
 	 */
-	private static int getRandomNumber() {
-		Random random = new Random();
-		return random.nextInt(3 - 1 + 1) + 1;
-	}
+//	private static int getRandomNumber() {
+//		Random random = new Random();
+//		return random.nextInt(3 - 1 + 1) + 1;
+//	}
 	
 }

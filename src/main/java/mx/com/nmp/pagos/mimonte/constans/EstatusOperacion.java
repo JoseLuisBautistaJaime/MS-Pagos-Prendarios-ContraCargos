@@ -12,7 +12,7 @@ package mx.com.nmp.pagos.mimonte.constans;
  */
 public enum EstatusOperacion {
 
-	SUCCESSFUL_STATUS_OPERATION(1, "Operacion Exitosa"), FAIL_STATUS_OPERATION(1, "Operacion Fallida");
+	SUCCESSFUL_STATUS_OPERATION(1, "Operacion Exitosa"), FAIL_STATUS_OPERATION(2, "Operacion Fallida");
 
 	/**
 	 * Campo id de estatus operacion

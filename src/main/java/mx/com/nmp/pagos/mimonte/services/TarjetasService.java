@@ -1,5 +1,8 @@
 package mx.com.nmp.pagos.mimonte.services;
 
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
@@ -64,8 +67,13 @@ public interface TarjetasService {
 	 */
 	public Response deleteTarjeta(String token);
 	
-	public int countTarjetasByIdCliente(Integer idCliente);
-
-	
+	/**
+	 * 
+	 * Metodo que cuenta la cantidad de tarjetas que tiene un cliente determinado
+	 * 
+	 * @param idCliente
+	 * @return
+	 */
+	public Integer countTarjetasByIdcliente(Integer idcliente);
 
 }
