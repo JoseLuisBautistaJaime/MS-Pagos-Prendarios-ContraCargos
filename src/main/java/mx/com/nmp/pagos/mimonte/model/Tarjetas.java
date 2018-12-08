@@ -2,7 +2,6 @@ package mx.com.nmp.pagos.mimonte.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
@@ -11,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -40,6 +39,9 @@ public class Tarjetas implements Serializable {
 
 	@Column(name = "ultimos_digitos", length = Constants.LONGITUD_ULTIMOS_DIGITOS)
 	private String ultimosDigitos;
+
+	@Column(name = "idCliente")
+	private Integer idcliente;
 	
 	@Column(name = "alias", length = Constants.LONGITUD_ALIAS)
 	private String alias;
@@ -54,12 +56,17 @@ public class Tarjetas implements Serializable {
 	@JoinColumn(name="idCliente", nullable=false)
 	private Cliente clientes;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id")
-	private List<TipoTarjeta> tipoTarjeta;
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "id")
+//	private List<TipoTarjeta> tipoTarjeta;
+//=======
+	@ManyToOne
+	@JoinColumn(name = "tipo_tarjeta_c_id")
+	private TipoTarjeta tipoTarjeta;
+//>>>>>>> dd58c330c9767486098cf56ae76f636597b27d82
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "estatus_tarjeta_c", insertable = false , updatable = false)
+	@ManyToOne
+	@JoinColumn(name = "estatus_tarjeta_c")
 	private EstatusTarjeta estatusTarjeta;
 
 	public Tarjetas() {
@@ -106,26 +113,17 @@ public class Tarjetas implements Serializable {
 		this.fechaModificacion = fechaModificacion;
 	}
 
-
-	public Cliente getClientes() {
-		return clientes;
-	}
-
-	public void setClientes(Cliente clientes) {
-		this.clientes = clientes;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
 
 
-	public List<TipoTarjeta> getTipoTarjeta() {
+	public TipoTarjeta getTipoTarjeta() {
 		return tipoTarjeta;
 	}
 
-	public void setTipoTarjeta(List<TipoTarjeta> tipoTarjeta) {
+	public void setTipoTarjeta(TipoTarjeta tipoTarjeta) {
 		this.tipoTarjeta = tipoTarjeta;
 	}
 
@@ -139,11 +137,19 @@ public class Tarjetas implements Serializable {
 		this.estatusTarjeta = estatusTarjeta;
 	}
 
+	public Integer getIdcliente() {
+		return idcliente;
+	}
+
+	public void setIdcliente(Integer idcliente) {
+		this.idcliente = idcliente;
+	}
+
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(alias, estatusTarjeta, fechaAlta, fechaModificacion, tipoTarjeta, token,
-				ultimosDigitos,
-				clientes);
+				ultimosDigitos);
 	}
 
 	@Override
@@ -175,11 +181,6 @@ public class Tarjetas implements Serializable {
 				return false;
 		} else if (!fechaModificacion.equals(other.fechaModificacion))
 			return false;
-		if (clientes == null) {
-			if (other.clientes != null)
-				return false;
-		} else if (!clientes.equals(other.clientes))
-			return false;
 		if (tipoTarjeta == null) {
 			if (other.tipoTarjeta != null)
 				return false;
@@ -200,10 +201,9 @@ public class Tarjetas implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Tarjetas [token=" + token + ", ultimosDigitos=" + ultimosDigitos + ", clientes=" + clientes
-				+ ", alias=" + alias + ", fechaAlta=" + fechaAlta + ", fechaModificacion=" + fechaModificacion
-				+ ", tipoTarjeta=" + tipoTarjeta + ", estatusTarjeta=" + estatusTarjeta + "]";
+		return "Tarjetas [token=" + token + ", ultimosDigitos=" + ultimosDigitos + ", alias=" + alias + ", fechaAlta="
+				+ fechaAlta + ", fechaModificacion=" + fechaModificacion + ", tipoTarjeta="
+				+ tipoTarjeta + ", estatusTarjeta=" + estatusTarjeta + "]";
 	}
-
 
 }

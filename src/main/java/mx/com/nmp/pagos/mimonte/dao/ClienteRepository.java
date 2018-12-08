@@ -11,29 +11,31 @@ import mx.com.nmp.pagos.mimonte.model.Cliente;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 
 /**
- * Nombre: ClienteRepository
- * Descripcion: Repositorio que realiza las consultas sobre la entidad {@link Cliente}
+ * Nombre: ClienteRepository Descripcion: Repositorio que realiza las consultas
+ * sobre la entidad {@link Cliente}
  *
- * @author José Rodríguez jgrodriguez@quarksoft.net
- * Fecha: 21/11/2018 18:07 Hrs.
+ * @author José Rodríguez jgrodriguez@quarksoft.net Fecha: 21/11/2018 18:07 Hrs.
  * @version 0.1
  */
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
-	
-//<<<<<<< HEAD
-//	public Cliente getClienteByIdcliente(Integer idcliente);
-	
+
 	/**
-	 * Consulta que obtiene las tarjetas registradas por medio del parametro idCliente.
+	 * Consulta que obtiene las tarjetas registradas por medio del parametro
+	 * idCliente.
 	 * 
 	 * @param idcliente
 	 * @return List<Tarjetas>
 	 */
-	@Query( value =  "select c.tarjetas from Cliente c where c.idcliente = :idcliente")
+	@Query(value = "select c.tarjetas from Cliente c where c.idcliente = :idcliente")
 	public List<Tarjetas> findByIdCliente(@Param("idcliente") Integer idcliente);
 
-
+	/**
+	 * Método que obtiene por id del cliente al cliente.
+	 * 
+	 * @param idcliente.
+	 * @return Cliente.
+	 */
 	public Cliente findByIdcliente(Integer idcliente);
 
 }

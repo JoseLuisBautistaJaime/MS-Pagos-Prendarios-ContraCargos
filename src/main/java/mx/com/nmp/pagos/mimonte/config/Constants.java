@@ -33,6 +33,11 @@ public final class Constants {
     public static final String MSG_SUCCESS_ADD = "Registro agregado correctamente.";
     
     /**
+     * Mensaje que sera enviado si no si hay tres tarjetas registradas
+     */
+    public static final String MSG_NO_SUCCESS_ADD_MAX_CARDS = "Usted ha alcanzado la cantidad máxima de tarjetas registradas. Para poder registrar una nueva tarjeta deberá eliminar una tarjeta registrada.";
+    
+    /**
      * Mensaje que sera enviado si se actualiza el registro correctamente
      */
     public static final String MSG_SUCCESS_UPDATE = "Registro actualizado correctamente.";
