@@ -5,7 +5,6 @@ import java.util.List;
 import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
-import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
  * Nombre: TarjetasService
@@ -68,8 +67,13 @@ public interface TarjetasService {
 	 */
 	public Tarjetas deleteTarjeta(String token);
 	
-	public int countTarjetasByIdCliente(Integer idCliente);
-
-	
+	/**
+	 * 
+	 * Metodo que cuenta la cantidad de tarjetas que tiene un cliente determinado
+	 * 
+	 * @param idCliente
+	 * @return
+	 */
+	public Integer countTarjetasByIdcliente(Integer idcliente);
 
 }

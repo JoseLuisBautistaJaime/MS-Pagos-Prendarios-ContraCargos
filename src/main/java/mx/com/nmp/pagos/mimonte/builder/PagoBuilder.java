@@ -4,9 +4,10 @@ import java.util.Date;
 
 import mx.com.nmp.pagos.mimonte.constans.EstatusPago;
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
+import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoDTO;
-import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
+import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 
 /**
@@ -26,10 +27,19 @@ public class PagoBuilder {
 		 */
 	}
 
-	public static Pago buildPagoFromObject(PagoRequestDTO pagoRequestDTO, ClienteDTO clienteDTO, Integer index) {
+	/**
+	 * 
+	 * Metodo que construye un entity tipo Pago de objetos DTO recibidos como parametro
+	 * 
+	 * @param operacion
+	 * @param tarjeta
+	 * @param clienteDTO
+	 * @return
+	 */
+	public static Pago buildPagoFromObject(OperacionDTO operacion, TarjetaPagoDTO tarjeta, ClienteDTO clienteDTO) {
 		Pago pago = new Pago();
 		pago.setCliente(ClienteBuilder.buildClienteFromClienteDTO(clienteDTO));
-		pago.setDescripcion(pagoRequestDTO.getConcepto());
+		pago.setDescripcion(operacion.getNombreOperacion());
 		pago.setEstatusPago(
 				new mx.com.nmp.pagos.mimonte.model.EstatusPago(EstatusPago.REGISTERED_PAYMENT_STATUS.getId(),
 						EstatusPago.REGISTERED_PAYMENT_STATUS.getDescripcionCorta(),
@@ -41,8 +51,8 @@ public class PagoBuilder {
 		pago.setIdOrder(null);
 		pago.setMetodo(null);
 		pago.setRestResponse(null);
-		pago.setMonto(pagoRequestDTO.getOperaciones().get(index).getMonto());
-		pago.setTarjeta(pagoRequestDTO.getTarjeta().getDigitos());
+		pago.setMonto(operacion.getMonto());
+		pago.setTarjeta(tarjeta.getDigitos());
 		return pago;
 	}
 

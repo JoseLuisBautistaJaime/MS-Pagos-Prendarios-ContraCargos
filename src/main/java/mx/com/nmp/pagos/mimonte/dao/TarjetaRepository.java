@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 
 /**
@@ -35,7 +34,9 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @param idCliente
 	 * @return List<TarjeDTO>.
 	 */
-	public List<TarjeDTO> findByIdcliente(Integer idCliente);
+	@Query("SELECT t FROM Tarjetas t WHERE t.clientes.idcliente = :idCliente")
+	public List<Tarjetas> findByIdcliente(@Param("idCliente") Integer idCliente);
+	//public List<TarjeDTO> findByIdcliente(Integer idCliente);
 	
 	
 	/**
@@ -55,7 +56,9 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @param token
 	 * @return List<Tarjetas>
 	 */
-	public Tarjetas findByIdclienteAndToken(Integer idCliente, String token);
+	@Query("SELECT t FROM Tarjetas t WHERE t.clientes.idcliente = :idCliente AND t.token = :token")
+	public Tarjetas findByIdclienteAndToken(@Param("idCliente")Integer idCliente, @Param("token") String token);
+	//public Tarjetas findByIdclienteAndToken(Integer idCliente, String token);
 	
 
 	/**
@@ -65,4 +68,15 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @return List<Tarjetas>
 	 */
 	public Tarjetas findByToken(String token);
+	
+	/**
+	 * 
+	 * Metodo que cuenta la cantidad de tarjetas de un cliente especifico
+	 * 
+	 * @param idcliente
+	 * @return
+	 */
+	@Query("SELECT COUNT(t.token) FROM Tarjetas t WHERE t.clientes.idcliente= :idcliente")
+	public Integer countTarjetasByIdcliente(@Param("idcliente") Integer idcliente);
+
 }
