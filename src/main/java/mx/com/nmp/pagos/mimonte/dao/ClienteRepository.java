@@ -37,5 +37,15 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	 * @return Cliente.
 	 */
 	public Cliente findByIdcliente(Integer idcliente);
+	
+	/**
+	 * Consulta que obtiene las tarjetas registradas por medio del parametro
+	 * idCliente.
+	 * 
+	 * @param idcliente
+	 * @return List<Tarjetas>
+	 */
+	@Query(value = "select c.tarjetas from Cliente c where c.idcliente = :idcliente")
+	public Cliente encuentraIdCliente(@Param("idcliente") Integer idcliente);
 
 }

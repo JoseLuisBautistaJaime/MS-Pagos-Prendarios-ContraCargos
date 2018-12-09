@@ -206,6 +206,8 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		TipoTarjeta tipoTarjeta = tipoTarjetaRepository.encontrar(tarjeta.getTipo().getId());
 		EstatusTarjeta estatusTarjeta = estatusTarjetaRepository.encontrar(tarjeta.getEstatus().getId());
+		Cliente clientes = clienteRepository.encuentraIdCliente(cliente.getIdcliente());
+		
 
 		Tarjetas token = tarjetaRepository.findByToken(tarjeta.getToken());
 
@@ -223,7 +225,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 				tarjetas.setAlias(tarjeta.getAlias());
 				tarjetas.setFechaAlta(new Date());
 				tarjetas.setFechaModificacion(null);
-				tarjetas.setIdcliente(cliente.getIdcliente());
+				tarjetas.setClientes(clientes);
 				tarjetas.setTipoTarjeta(tipoTarjeta);
 				tarjetas.setEstatusTarjeta(estatusTarjeta);
 
@@ -261,7 +263,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 				updateTarjeta.setAlias(alias);
 				updateTarjeta.setFechaAlta(updateTarjeta.getFechaAlta());
 				updateTarjeta.setFechaModificacion(new Date());
-				updateTarjeta.setIdcliente(updateTarjeta.getIdcliente());
+				updateTarjeta.setClientes(updateTarjeta.getClientes());
 				updateTarjeta.setTipoTarjeta(updateTarjeta.getTipoTarjeta());
 				updateTarjeta.setEstatusTarjeta(updateTarjeta.getEstatusTarjeta());
 
