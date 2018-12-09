@@ -40,8 +40,8 @@ public class Tarjetas implements Serializable {
 	@Column(name = "ultimos_digitos", length = Constants.LONGITUD_ULTIMOS_DIGITOS)
 	private String ultimosDigitos;
 
-	@Column(name = "idCliente")
-	private Integer idcliente;
+//	@Column(name = "idCliente")
+//	private Integer idcliente;
 	
 	@Column(name = "alias", length = Constants.LONGITUD_ALIAS)
 	private String alias;
@@ -137,13 +137,13 @@ public class Tarjetas implements Serializable {
 		this.estatusTarjeta = estatusTarjeta;
 	}
 
-	public Integer getIdcliente() {
-		return idcliente;
-	}
-
-	public void setIdcliente(Integer idcliente) {
-		this.idcliente = idcliente;
-	}
+//	public Integer getIdcliente() {
+//		return idcliente;
+//	}
+//
+//	public void setIdcliente(Integer idcliente) {
+//		this.idcliente = idcliente;
+//	}
 
 	
 	
