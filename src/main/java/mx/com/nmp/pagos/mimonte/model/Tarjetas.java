@@ -52,7 +52,7 @@ public class Tarjetas implements Serializable {
 	@Column(name = "fecha_modificacion")
 	private Date fechaModificacion;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne //(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="idCliente", nullable=false)
 	private Cliente clientes;
 

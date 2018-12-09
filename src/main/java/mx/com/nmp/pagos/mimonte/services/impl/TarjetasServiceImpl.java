@@ -9,10 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.ClienteBuilder;
+import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
 import mx.com.nmp.pagos.mimonte.dao.ClienteRepository;
 import mx.com.nmp.pagos.mimonte.dao.EstatusTarjetaRepository;
@@ -43,6 +45,9 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * Logger para el registro de actividad en la bitacora
 	 */
 	private final Logger log = LoggerFactory.getLogger(TarjetasServiceImpl.class);
+	
+	@Value(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_PROPERTY)
+	private Integer MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT;
 
 	@Autowired
 	BeanFactory beanFactory;
@@ -207,16 +212,16 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		TipoTarjeta tipoTarjeta = tipoTarjetaRepository.encontrar(tarjeta.getTipo().getId());
 		EstatusTarjeta estatusTarjeta = estatusTarjetaRepository.encontrar(tarjeta.getEstatus().getId());
-		Cliente clientes = clienteRepository.encuentraIdCliente(cliente.getIdcliente());
 		
 
 		Tarjetas token = tarjetaRepository.findByToken(tarjeta.getToken());
 
-		if (token.getToken() != null) {
-
-			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKEN_ALREADY_EXISTS);
-
-		} else {
+		
+//		if (token.getToken() != null) {
+//
+//			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKEN_ALREADY_EXISTS);
+//
+//		} 
 
 			if (tarjeta.getEstatus() != null && tarjeta.getEstatus().getId() != null && tarjeta.getTipo() != null
 					&& tarjeta.getTipo().getId() != null && tarjeta.getToken() != null) {
@@ -226,19 +231,17 @@ public class TarjetasServiceImpl implements TarjetasService {
 				tarjetas.setAlias(tarjeta.getAlias());
 				tarjetas.setFechaAlta(new Date());
 				tarjetas.setFechaModificacion(null);
-				tarjetas.setClientes(clientes);
-//				tarjetas.setClientes(ClienteBuilder.buildClienteFromClienteDTO((tarjeta.getCliente())));
+				tarjetas.setClientes(cliente);
 				tarjetas.setTipoTarjeta(tipoTarjeta);
 				tarjetas.setEstatusTarjeta(estatusTarjeta);
 
 				tarjetas = tarjetaRepository.save(tarjetas);
 
-			}
+			} 
+			
+		
 
 			return tarjetas;
-
-		}
-
 	}
 
 	/**
@@ -253,8 +256,6 @@ public class TarjetasServiceImpl implements TarjetasService {
 		Tarjetas updateTarjeta = tarjetaRepository.findByToken(token);
 
 		// Evalua si existen registros
-
-		try {
 
 			if (updateTarjeta.getEstatusTarjeta() != null && updateTarjeta.getEstatusTarjeta().getId() != null
 					&& updateTarjeta.getTipoTarjeta() != null && updateTarjeta.getTipoTarjeta().getId() != null
@@ -277,12 +278,6 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 			}
 
-		} catch (DataAccessException dae) {
-
-			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_UPDATE_NULL);
-
-		}
-
 		return updateTarjeta;
 
 	}
@@ -300,7 +295,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		// Obtiene los registros
 		Tarjetas deleteTarjeta = tarjetaRepository.findByToken(token);
 
-		try {
+	
 
 			if (deleteTarjeta.getEstatusTarjeta() != null && deleteTarjeta.getEstatusTarjeta().getId() != null
 					&& deleteTarjeta.getTipoTarjeta() != null && deleteTarjeta.getTipoTarjeta().getId() != null
@@ -309,12 +304,6 @@ public class TarjetasServiceImpl implements TarjetasService {
 				tarjetaRepository.deleteById(token);
 
 			}
-
-		} catch (DataAccessException dae) {
-
-			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKEN);
-
-		}
 
 		return deleteTarjeta;
 	}
@@ -343,7 +332,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		List<Tarjetas> tarjetaCliente = tarjetaRepository.encuentraidCliente(dto.getIdCliente());
 
-		if (tarjetaCliente.size() > 3) {
+		if (tarjetaCliente.size() > MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT) {
 
 			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_ADD_MAX_CARDS);
 
@@ -358,7 +347,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 			cliente = new Cliente();
 			cliente.setIdcliente(dto.getIdCliente() == null ? dto.getIdCliente() : dto.getIdCliente());
 			cliente.setNombreTitular(dto.getNombreTitular() == null ? dto.getNombreTitular() : dto.getNombreTitular());
-			cliente.setFechaAlta(new Date() == null ? new Date() : new Date());
+			cliente.setFechaAlta(new Date());
 
 			cliente = clienteRepository.save(cliente);
 
