@@ -9,10 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import mx.com.nmp.pagos.mimonte.config.Constants;
+import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
 import mx.com.nmp.pagos.mimonte.dao.ClienteRepository;
 import mx.com.nmp.pagos.mimonte.dao.EstatusTarjetaRepository;
 import mx.com.nmp.pagos.mimonte.dao.TarjetaRepository;
@@ -22,12 +22,12 @@ import mx.com.nmp.pagos.mimonte.dto.EstatusTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
+import mx.com.nmp.pagos.mimonte.exception.TarjetaException;
 import mx.com.nmp.pagos.mimonte.model.Cliente;
 import mx.com.nmp.pagos.mimonte.model.EstatusTarjeta;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 import mx.com.nmp.pagos.mimonte.model.TipoTarjeta;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
-import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
  * Capa de servicios en la cual esta la logica del manejo de las tarjetas.
@@ -62,52 +62,51 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * Metodo que obtiene el registro de la tarjeta.
 	 * 
 	 * @param idCliente
-	 * @return Response
+	 * @return List<TarjeDTO>
 	 */
-	public Response getTarjetasIdCliente(Integer idCliente) {
+	public List<TarjeDTO> getTarjetasIdCliente(Integer idCliente) {
 
 		// Obtiene los registros
 		List<Tarjetas> tarjetasCliente = clienteRepository.findByIdCliente(idCliente);
 
-		List<TarjeDTO> tarClie = new ArrayList<TarjeDTO>();
-		TarjeDTO tar = new TarjeDTO();
-		EstatusTarjetaDTO esta = new EstatusTarjetaDTO();
-		TipoTarjetaDTO tip = new TipoTarjetaDTO();
-		// Evalua si existen registros
-		if (!CollectionUtils.isEmpty(tarjetasCliente)) {
+		List<TarjeDTO> tarjetaCliente = new ArrayList<TarjeDTO>();
 
-			for (Tarjetas tarjetaClie : tarjetasCliente) {
+		TarjeDTO tarjeDto = null;
 
-				esta = new EstatusTarjetaDTO();
-				tip = new TipoTarjetaDTO();
+		try {
 
-				esta.setId(tarjetaClie.getEstatusTarjeta().getId());
-				esta.setDescripcion(tarjetaClie.getEstatusTarjeta().getDescripcion());
-				esta.setDescripcionCorta(tarjetaClie.getEstatusTarjeta().getDescripcionCorta());
+			log.debug("Validando parametro idCliente...");
+			if (idCliente != null) {
 
-				tip.setId(tarjetaClie.getTipoTarjeta().getId());
-				tip.setDescripcion(tarjetaClie.getTipoTarjeta().getDescripcion());
-				tip.setDescripcionCorta(tarjetaClie.getTipoTarjeta().getDescripcionCorta());
+				if (!CollectionUtils.isEmpty(tarjetasCliente)) {
 
-				tar = new TarjeDTO();
-				tar.setToken(tarjetaClie.getToken());
-				tar.setDigitos(tarjetaClie.getUltimosDigitos());
-				tar.setAlias(tarjetaClie.getAlias());
-				tar.setFechaAlta(tarjetaClie.getFechaAlta());
-				tar.setFechaModificacion(tarjetaClie.getFechaModificacion());
-				tar.setTipo(tip);
-				tar.setEstatus(esta);
-				tarClie.add(tar);
+					for (Tarjetas tarjetaClie : tarjetasCliente) {
+
+						tarjeDto = getTarjetas(tarjetaClie);
+
+						tarjetaCliente.add(tarjeDto);
+
+					}
+
+				} else {
+
+					throw new TarjetaException(TarjetaConstants.MSG_FAILURE);
+
+				}
+
+			} else {
+
+				throw new TarjetaException(TarjetaConstants.MSG_FAIL_PARAMETER);
 
 			}
 
-			return beanFactory.getBean(Response.class, HttpStatus.OK.name(), Constants.MSG_SUCCESS, tarClie);
+		} catch (DataAccessException dae) {
 
-		} else {
-
-			return beanFactory.getBean(Response.class, HttpStatus.BAD_REQUEST.name(), Constants.MSG_FAILURE, tarClie);
+			throw new TarjetaException(TarjetaConstants.MSG_FAILURE + dae.getMessage());
 
 		}
+
+		return tarjetaCliente;
 
 	}
 
@@ -115,96 +114,80 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * Metodo que obtiene el registro de la tarjeta.
 	 * 
 	 * @param token
-	 * @return Response
+	 * @return TarjeDTO.
 	 */
 	@Override
-	public Response getTarjetasToken(String token) {
+	public TarjeDTO getTarjetasToken(String token) {
 
 		// Obtiene los registros
 		Tarjetas tarjetasCliente = tarjetaRepository.findByToken(token);
-		TarjeDTO tar = new TarjeDTO();
-		EstatusTarjetaDTO esta = new EstatusTarjetaDTO();
-		TipoTarjetaDTO tip = new TipoTarjetaDTO();
 
-		// Evalua si existen registros
-		if (tarjetasCliente != null) {
+		TarjeDTO tarjeDto = null;
 
-			esta = new EstatusTarjetaDTO();
-			tip = new TipoTarjetaDTO();
+		try {
 
-			esta.setId(tarjetasCliente.getEstatusTarjeta().getId());
-			esta.setDescripcion(tarjetasCliente.getEstatusTarjeta().getDescripcion());
-			esta.setDescripcionCorta(tarjetasCliente.getEstatusTarjeta().getDescripcionCorta());
+			if (tarjetasCliente != null) {
 
-			tip.setId(tarjetasCliente.getTipoTarjeta().getId());
-			tip.setDescripcion(tarjetasCliente.getTipoTarjeta().getDescripcion());
-			tip.setDescripcionCorta(tarjetasCliente.getTipoTarjeta().getDescripcionCorta());
+				tarjeDto = getTarjetas(tarjetasCliente);
 
-			tar = new TarjeDTO();
-			tar.setToken(tarjetasCliente.getToken());
-			tar.setDigitos(tarjetasCliente.getUltimosDigitos());
-			tar.setAlias(tarjetasCliente.getAlias());
-			tar.setFechaAlta(tarjetasCliente.getFechaAlta());
-			tar.setFechaModificacion(tarjetasCliente.getFechaModificacion());
-			tar.setTipo(tip);
-			tar.setEstatus(esta);
+			} else {
 
-			return beanFactory.getBean(Response.class, HttpStatus.OK.name(), Constants.MSG_SUCCESS, tar);
+				throw new TarjetaException(TarjetaConstants.MSG_FAILURE);
 
-		} else {
+			}
 
-			return beanFactory.getBean(Response.class, HttpStatus.BAD_REQUEST.name(), Constants.MSG_FAILURE, tarjetasCliente);
+		} catch (DataAccessException dae) {
+
+			throw new TarjetaException(TarjetaConstants.MSG_FAILURE + dae.getMessage());
 
 		}
+
+		return tarjeDto;
 
 	}
 
 	/**
-	 * Metodo que obtiene el registro de la tarjeta.
+	 * Método que obtiene el registro de la tarjeta.
 	 * 
-	 * @param token
-	 * @param idCliente
-	 * @return Response
+	 * @param token.
+	 * @param idCliente.
+	 * @return TarjeDTO.
 	 */
 	@Override
-	public Response getTarjetasTokenIdCliente(Integer idCliente, String token) {
+	public TarjeDTO getTarjetasTokenIdCliente(Integer idCliente, String token) {
 
 		// Obtiene los registros
 		Tarjetas tarjetasCliente = tarjetaRepository.findByIdclienteAndToken(idCliente, token);
-		TarjeDTO tar = new TarjeDTO();
-		EstatusTarjetaDTO esta = new EstatusTarjetaDTO();
-		TipoTarjetaDTO tip = new TipoTarjetaDTO();
 
-		// Evalua si existen registros
-		if (tarjetasCliente != null) {
+		TarjeDTO tarjeDto = null;
 
-			esta = new EstatusTarjetaDTO();
-			tip = new TipoTarjetaDTO();
+		try {
 
-			esta.setId(tarjetasCliente.getEstatusTarjeta().getId());
-			esta.setDescripcion(tarjetasCliente.getEstatusTarjeta().getDescripcion());
-			esta.setDescripcionCorta(tarjetasCliente.getEstatusTarjeta().getDescripcionCorta());
+			if (idCliente != null && !token.isEmpty()) {
 
-			tip.setId(tarjetasCliente.getTipoTarjeta().getId());
-			tip.setDescripcion(tarjetasCliente.getTipoTarjeta().getDescripcion());
-			tip.setDescripcionCorta(tarjetasCliente.getTipoTarjeta().getDescripcionCorta());
+				if (tarjetasCliente != null) {
 
-			tar = new TarjeDTO();
-			tar.setToken(tarjetasCliente.getToken());
-			tar.setDigitos(tarjetasCliente.getUltimosDigitos());
-			tar.setAlias(tarjetasCliente.getAlias());
-			tar.setFechaAlta(tarjetasCliente.getFechaAlta());
-			tar.setFechaModificacion(tarjetasCliente.getFechaModificacion());
-			tar.setTipo(tip);
-			tar.setEstatus(esta);
+					tarjeDto = getTarjetas(tarjetasCliente);
 
-			return beanFactory.getBean(Response.class, HttpStatus.OK.name(), Constants.MSG_SUCCESS, tar);
+				} else {
 
-		} else {
+					throw new TarjetaException(TarjetaConstants.MSG_FAILURE);
 
-			return beanFactory.getBean(Response.class, HttpStatus.BAD_REQUEST.name(), Constants.MSG_FAILURE, tar);
+				}
+
+			} else {
+
+				throw new TarjetaException(TarjetaConstants.MSG_FAIL_PARAMETERS);
+
+			}
+
+		} catch (DataAccessException dae) {
+
+			throw new TarjetaException(TarjetaConstants.MSG_FAILURE + dae.getMessage());
 
 		}
+
+		return tarjeDto;
 
 	}
 
@@ -212,10 +195,10 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * Método que registra una tarjeta.
 	 * 
 	 * @param tarjeta.
-	 * @return Response.
+	 * @return Tarjetas.
 	 */
 	@Override
-	public Response addTarjetas(TarjetaDTO tarjeta) {
+	public Tarjetas addTarjetas(TarjetaDTO tarjeta) {
 
 		Tarjetas tarjetas = new Tarjetas();
 
@@ -224,25 +207,31 @@ public class TarjetasServiceImpl implements TarjetasService {
 		TipoTarjeta tipoTarjeta = tipoTarjetaRepository.encontrar(tarjeta.getTipo().getId());
 		EstatusTarjeta estatusTarjeta = estatusTarjetaRepository.encontrar(tarjeta.getEstatus().getId());
 
-		if (tarjeta.getEstatus() != null && tarjeta.getEstatus().getId() != null && tarjeta.getTipo() != null
-				&& tarjeta.getTipo().getId() != null && tarjeta.getToken() != null) {
+		Tarjetas token = tarjetaRepository.findByToken(tarjeta.getToken());
 
-			tarjetas.setToken(tarjeta.getToken());
-			tarjetas.setUltimosDigitos(tarjeta.getDigitos());
-			tarjetas.setAlias(tarjeta.getAlias());
-			tarjetas.setFechaAlta(new Date());
-			tarjetas.setFechaModificacion(null);
-			tarjetas.setIdcliente(cliente.getIdcliente());
-			tarjetas.setTipoTarjeta(tipoTarjeta);
-			tarjetas.setEstatusTarjeta(estatusTarjeta);
+		if (token.getToken() != null) {
 
-			tarjetas = tarjetaRepository.save(tarjetas);
-
-			return beanFactory.getBean(Response.class, HttpStatus.OK.name(), Constants.MSG_SUCCESS, tarjetas);
+			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKEN_ALREADY_EXISTS);
 
 		} else {
 
-			return beanFactory.getBean(Response.class, HttpStatus.BAD_REQUEST.name(), Constants.MSG_FAILURE, tarjetas);
+			if (tarjeta.getEstatus() != null && tarjeta.getEstatus().getId() != null && tarjeta.getTipo() != null
+					&& tarjeta.getTipo().getId() != null && tarjeta.getToken() != null) {
+
+				tarjetas.setToken(tarjeta.getToken());
+				tarjetas.setUltimosDigitos(tarjeta.getDigitos());
+				tarjetas.setAlias(tarjeta.getAlias());
+				tarjetas.setFechaAlta(new Date());
+				tarjetas.setFechaModificacion(null);
+				tarjetas.setIdcliente(cliente.getIdcliente());
+				tarjetas.setTipoTarjeta(tipoTarjeta);
+				tarjetas.setEstatusTarjeta(estatusTarjeta);
+
+				tarjetas = tarjetaRepository.save(tarjetas);
+
+			}
+
+			return tarjetas;
 
 		}
 
@@ -253,34 +242,45 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * 
 	 * @param token.
 	 * @param alias.
-	 * @return Response.
+	 * @return Tarjetas.
 	 */
-	@Override
-	public Response updateTarjeta(String token, String alias) {
+	public Tarjetas updateTarjeta(String token, String alias) {
 		// Obtiene los registros
 		Tarjetas updateTarjeta = tarjetaRepository.findByToken(token);
 
 		// Evalua si existen registros
-		if (updateTarjeta != null) {
 
-			updateTarjeta.setToken(updateTarjeta.getToken());
-			updateTarjeta.setUltimosDigitos(updateTarjeta.getUltimosDigitos());
-			updateTarjeta.setAlias(alias);
-			updateTarjeta.setFechaAlta(updateTarjeta.getFechaAlta());
-			updateTarjeta.setFechaModificacion(new Date());
-			updateTarjeta.setIdcliente(updateTarjeta.getIdcliente());
-			updateTarjeta.setTipoTarjeta(updateTarjeta.getTipoTarjeta());
-			updateTarjeta.setEstatusTarjeta(updateTarjeta.getEstatusTarjeta());
+		try {
 
-			tarjetaRepository.save(updateTarjeta);
+			if (updateTarjeta.getEstatusTarjeta() != null && updateTarjeta.getEstatusTarjeta().getId() != null
+					&& updateTarjeta.getTipoTarjeta() != null && updateTarjeta.getTipoTarjeta().getId() != null
+					&& updateTarjeta.getToken() != null) {
 
-			return beanFactory.getBean(Response.class, HttpStatus.OK.name(), Constants.MSG_SUCCESS_UPDATE, updateTarjeta);
+				updateTarjeta.setToken(updateTarjeta.getToken());
+				updateTarjeta.setUltimosDigitos(updateTarjeta.getUltimosDigitos());
+				updateTarjeta.setAlias(alias);
+				updateTarjeta.setFechaAlta(updateTarjeta.getFechaAlta());
+				updateTarjeta.setFechaModificacion(new Date());
+				updateTarjeta.setIdcliente(updateTarjeta.getIdcliente());
+				updateTarjeta.setTipoTarjeta(updateTarjeta.getTipoTarjeta());
+				updateTarjeta.setEstatusTarjeta(updateTarjeta.getEstatusTarjeta());
 
-		} else {
+				tarjetaRepository.save(updateTarjeta);
 
-			return beanFactory.getBean(Response.class, HttpStatus.BAD_REQUEST.name(), Constants.MSG_NO_SUCCESS_UPDATE, updateTarjeta);
+			} else {
+
+				throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_UPDATE_NULL);
+
+			}
+
+		} catch (DataAccessException dae) {
+
+			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_UPDATE_NULL);
 
 		}
+
+		return updateTarjeta;
+
 	}
 
 	/**
@@ -288,26 +288,31 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * 
 	 * @param token
 	 * @param idCliente
-	 * @return Response
+	 * @return void.
 	 */
 	@Override
-	public Response deleteTarjeta(String token) {
-
-		Response response = null;
+	public Tarjetas deleteTarjeta(String token) {
 
 		// Obtiene los registros
-		tarjetaRepository.deleteById(token);
+		Tarjetas deleteTarjeta = tarjetaRepository.findByToken(token);
 
-		if (token != null) {
+		try {
 
-			return beanFactory.getBean(Response.class, HttpStatus.OK.name(), Constants.MSG_SUCCESS_DELETE, response);
+			if (deleteTarjeta.getEstatusTarjeta() != null && deleteTarjeta.getEstatusTarjeta().getId() != null
+					&& deleteTarjeta.getTipoTarjeta() != null && deleteTarjeta.getTipoTarjeta().getId() != null
+					&& deleteTarjeta.getToken() != null) {
 
-		} else {
+				tarjetaRepository.deleteById(token);
 
-			return beanFactory.getBean(Response.class, HttpStatus.BAD_REQUEST.name(), Constants.MSG_NO_SUCCESS_DELETE,
-					response);
+			}
+
+		} catch (DataAccessException dae) {
+
+			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKEN);
 
 		}
+
+		return deleteTarjeta;
 	}
 
 	@Override
@@ -330,6 +335,14 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		Cliente cliente = clienteRepository.findByIdcliente(dto.getIdCliente());
 
+		List<Tarjetas> tarjetaCliente = tarjetaRepository.encuentraidCliente(dto.getIdCliente());
+
+		if (tarjetaCliente.size() > 3) {
+
+			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_ADD_MAX_CARDS);
+
+		}
+
 		if (cliente != null) {
 
 			return cliente;
@@ -348,4 +361,39 @@ public class TarjetasServiceImpl implements TarjetasService {
 		return cliente;
 
 	}
+
+	/**
+	 * Método que setea las propiedades de la tarjeta.
+	 * 
+	 * 
+	 * @param tarjetasCliente.
+	 * @return TarjeDTO.
+	 */
+	public TarjeDTO getTarjetas(Tarjetas tarjetasCliente) {
+
+		TarjeDTO tarjeDto = new TarjeDTO();
+		EstatusTarjetaDTO estatusTarjeta = new EstatusTarjetaDTO();
+		TipoTarjetaDTO tipoTarjeta = new TipoTarjetaDTO();
+
+		estatusTarjeta.setId(tarjetasCliente.getEstatusTarjeta().getId());
+		estatusTarjeta.setDescripcion(tarjetasCliente.getEstatusTarjeta().getDescripcion());
+		estatusTarjeta.setDescripcionCorta(tarjetasCliente.getEstatusTarjeta().getDescripcionCorta());
+
+		tipoTarjeta.setId(tarjetasCliente.getTipoTarjeta().getId());
+		tipoTarjeta.setDescripcion(tarjetasCliente.getTipoTarjeta().getDescripcion());
+		tipoTarjeta.setDescripcionCorta(tarjetasCliente.getTipoTarjeta().getDescripcionCorta());
+
+		tarjeDto.setToken(tarjetasCliente.getToken());
+		tarjeDto.setDigitos(tarjetasCliente.getUltimosDigitos());
+		tarjeDto.setAlias(tarjetasCliente.getAlias());
+		tarjeDto.setFechaAlta(tarjetasCliente.getFechaAlta());
+		tarjeDto.setFechaModificacion(tarjetasCliente.getFechaModificacion());
+
+		tarjeDto.setTipo(tipoTarjeta);
+		tarjeDto.setEstatus(estatusTarjeta);
+
+		return tarjeDto;
+
+	}
+
 }

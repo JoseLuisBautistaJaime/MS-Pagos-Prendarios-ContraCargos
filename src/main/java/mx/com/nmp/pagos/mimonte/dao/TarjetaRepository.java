@@ -3,6 +3,8 @@ package mx.com.nmp.pagos.mimonte.dao;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
@@ -34,6 +36,17 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @return List<TarjeDTO>.
 	 */
 	public List<TarjeDTO> findByIdcliente(Integer idCliente);
+	
+	
+	/**
+	 * Método que obtiene información de las tarjetas.
+	 * 
+	 * @param idCliente
+	 * @return List<TarjeDTO>.
+	 */
+	
+	@Query(value = " from Tarjetas t where idcliente = :idCliente ")
+	public List<Tarjetas> encuentraidCliente(@Param("idCliente") Integer idCliente);
 	
 	/**
 	 * Método que obtiene información de la tarjeta.

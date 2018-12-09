@@ -1,6 +1,10 @@
 package mx.com.nmp.pagos.mimonte.services;
 
+import java.util.List;
+
+import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
+import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -17,52 +21,52 @@ public interface TarjetasService {
 	 * Método que obtiene información de las tarjetas.
 	 * 
 	 * @param idCliente.
-	 * @return Response.
+	 * @return List<TarjeDTO>.
 	 */
-	public Response getTarjetasIdCliente(Integer idCliente);
+	public List<TarjeDTO> getTarjetasIdCliente(Integer idCliente);
 	
 	/**
 	 * Método que obtiene información de la tarjeta.
 	 * 
 	 * @param idCliente.
 	 * @param token.
-	 * @return Response.
+	 * @return TarjeDTO.
 	 */
-	public Response getTarjetasTokenIdCliente(Integer idCliente ,String token);
+	public TarjeDTO getTarjetasTokenIdCliente(Integer idCliente ,String token);
 	
 	/**
 	 * Método que obttiene información de la tarjeta.
 	 * 
 	 * @param token.
-	 * @return.
+	 * @return TarjeDTO.
 	 */
-	public Response getTarjetasToken(String token);
+	public TarjeDTO getTarjetasToken(String token);
 
 	/**
 	 * Método que registra una tarjeta.
 	 * 
 	 * @param tarjeta
-	 * @return Response.
+	 * @return Tarjetas.
 	 */
-	public Response addTarjetas(TarjetaDTO tarjeta);
+	public Tarjetas addTarjetas(TarjetaDTO tarjeta);
 	
 	/**
 	 * Método que actualiza el alias de una tarjeta.
 	 * 
 	 * @param token.
 	 * @param alias.
-	 * @return Response.
+	 * @return Tarjetas.
 	 */
-	public Response updateTarjeta(String token, String alias);
+	public Tarjetas updateTarjeta(String token, String alias);
 
 	
 	/**
 	 * Método que elimina la tarjeta.
 	 * 
 	 * @param token.
-	 * @return Response.
+	 * @return Tarjetas.
 	 */
-	public Response deleteTarjeta(String token);
+	public Tarjetas deleteTarjeta(String token);
 	
 	public int countTarjetasByIdCliente(Integer idCliente);
 
