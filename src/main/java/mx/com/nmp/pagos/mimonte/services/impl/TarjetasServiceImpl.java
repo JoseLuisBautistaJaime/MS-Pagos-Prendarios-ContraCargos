@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.builder.ClienteBuilder;
 import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
 import mx.com.nmp.pagos.mimonte.dao.ClienteRepository;
 import mx.com.nmp.pagos.mimonte.dao.EstatusTarjetaRepository;
@@ -223,7 +224,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 				tarjetas.setAlias(tarjeta.getAlias());
 				tarjetas.setFechaAlta(new Date());
 				tarjetas.setFechaModificacion(null);
-				tarjetas.setIdcliente(cliente.getIdcliente());
+				tarjetas.setClientes(ClienteBuilder.buildClienteFromClienteDTO((tarjeta.getCliente())));
 				tarjetas.setTipoTarjeta(tipoTarjeta);
 				tarjetas.setEstatusTarjeta(estatusTarjeta);
 
@@ -261,7 +262,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 				updateTarjeta.setAlias(alias);
 				updateTarjeta.setFechaAlta(updateTarjeta.getFechaAlta());
 				updateTarjeta.setFechaModificacion(new Date());
-				updateTarjeta.setIdcliente(updateTarjeta.getIdcliente());
+				updateTarjeta.setClientes(updateTarjeta.getClientes());
 				updateTarjeta.setTipoTarjeta(updateTarjeta.getTipoTarjeta());
 				updateTarjeta.setEstatusTarjeta(updateTarjeta.getEstatusTarjeta());
 
