@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -39,9 +37,6 @@ public class Tarjetas implements Serializable {
 
 	@Column(name = "ultimos_digitos", length = Constants.LONGITUD_ULTIMOS_DIGITOS)
 	private String ultimosDigitos;
-
-//	@Column(name = "idCliente")
-//	private Integer idcliente;
 	
 	@Column(name = "alias", length = Constants.LONGITUD_ALIAS)
 	private String alias;
@@ -52,18 +47,13 @@ public class Tarjetas implements Serializable {
 	@Column(name = "fecha_modificacion")
 	private Date fechaModificacion;
 
-	@OneToOne //(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="idCliente", nullable=false)
 	private Cliente clientes;
-
-//	@OneToMany(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "id")
-//	private List<TipoTarjeta> tipoTarjeta;
-//=======
+	
 	@ManyToOne
 	@JoinColumn(name = "tipo_tarjeta_c_id")
 	private TipoTarjeta tipoTarjeta;
-//>>>>>>> dd58c330c9767486098cf56ae76f636597b27d82
 
 	@ManyToOne
 	@JoinColumn(name = "estatus_tarjeta_c")
@@ -136,17 +126,6 @@ public class Tarjetas implements Serializable {
 	public void setEstatusTarjeta(EstatusTarjeta estatusTarjeta) {
 		this.estatusTarjeta = estatusTarjeta;
 	}
-
-//	public Integer getIdcliente() {
-//		return idcliente;
-//	}
-//
-//	public void setIdcliente(Integer idcliente) {
-//		this.idcliente = idcliente;
-//	}
-
-	
-	
 
 	@Override
 	public int hashCode() {

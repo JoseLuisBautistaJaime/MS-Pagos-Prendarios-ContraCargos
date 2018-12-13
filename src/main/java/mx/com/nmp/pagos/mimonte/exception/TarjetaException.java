@@ -15,6 +15,11 @@ public class TarjetaException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = -4463904039590760366L;
 
+	/**
+	 * Constructs a new exception with the specified detail message.
+	 * 
+	 * @param message the detail message.
+	 */
 	public TarjetaException(String message) {
 		super(message);
 	}
