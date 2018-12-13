@@ -35,12 +35,9 @@ spring:
       enabled: true
 
   datasource:
-#    url: jdbc:mysql://sl-us-south-1-portal.36.dblayer.com:60251/compose
-#    username: admin
-#    password: ZUEZBNNDVKQRZVDR
-    url: jdbc:mysql://localhost:3306/compose?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: root
-    password: root
+    url: jdbc:mysql://sl-us-south-1-portal.36.dblayer.com:60251/compose
+    username: admin
+    password: ZUEZBNNDVKQRZVDR
     testWhileIdle: true
     validationQuery: SELECT 1
     tomcat:
