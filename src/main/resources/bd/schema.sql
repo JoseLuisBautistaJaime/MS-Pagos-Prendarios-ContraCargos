@@ -37,3 +37,32 @@ ADD CONSTRAINT `cliente_transacion_fk`
   ON UPDATE NO ACTION;
  
 -- Fin juste a la tabla de Cliente
+
+-- DSS MODULE CREATION BEGINS
+USE compose;
+
+CREATE TABLE `catalogo_afiliacion` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ca_fk_idx` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `regla_negocio` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(50)NOT NULL,
+  `descripcion` VARCHAR(100) NOT NULL,
+  `consulta` VARCHAR(500) NOT NULL,
+  `id_afiliacion` INT(11) NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `rn_fk_idx` (`id`),
+    CONSTRAINT `ca_fk` FOREIGN KEY (`id_afiliacion`) REFERENCES `catalogo_afiliacion` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `cliente_regla_negocio` (
+  `id_cliente` INT(11) NOT NULL,
+  `id_regla_negocio` INT(11) NOT NULL,
+	CONSTRAINT `ic_fk` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`idCliente`),
+	CONSTRAINT `irn_fk` FOREIGN KEY (`id_regla_negocio`) REFERENCES `regla_negocio` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+-- DSS MODULE CREATION ENDS

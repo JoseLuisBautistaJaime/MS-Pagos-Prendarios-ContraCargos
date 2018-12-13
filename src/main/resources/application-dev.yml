@@ -35,9 +35,12 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:mysql://sl-us-south-1-portal.36.dblayer.com:60251/compose
-    username: admin
-    password: ZUEZBNNDVKQRZVDR
+#    url: jdbc:mysql://sl-us-south-1-portal.36.dblayer.com:60251/compose
+#    username: admin
+#    password: ZUEZBNNDVKQRZVDR
+    url: jdbc:mysql://localhost:3306/compose?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: root
     testWhileIdle: true
     validationQuery: SELECT 1
     tomcat:
@@ -48,10 +51,21 @@ spring:
       enabled: false
 
 # Variables utiles para app microservicios mimonte
-#Pagos
 mimonte:
   variables:
     cantidad-maxima-tarjetas: 3
+    dss:
+      cliente:
+        idcliente: {idCliente}
+      tarjeta:
+        aliastarjeta: {aliasTarjeta}
+        digitostarjeta: {digitosTarjeta}
+        tokentarjeta: {tokentarjeta}
+        tipotarjeta:
+          id: {tipoTarjetaId}
+      pago:
+        montototal: {montoTotal}
+    
 
 servicios:
  

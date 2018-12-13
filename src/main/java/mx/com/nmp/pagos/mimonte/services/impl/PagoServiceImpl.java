@@ -15,6 +15,7 @@ import mx.com.nmp.pagos.mimonte.builder.TarjetaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.EstatusOperacion;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
+import mx.com.nmp.pagos.mimonte.dss.DSSModule;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
@@ -56,6 +57,9 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	@Autowired
 	private PagoRepository pagoRepository;
+	
+	@Autowired
+	private DSSModule dssModule;
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
@@ -76,7 +80,12 @@ public class PagoServiceImpl implements PagoService {
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
 		// Aqui se obtiene un numero de afiliacion aleatorio, pero se debe obtener de un modulo de toma de decisiones
+		
+		// experimental code here
 		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());		
+//		pagoResponseDTO.setIdTipoAfiliacion(dssModule.getNoAfiliacion(pagoRequestDTO));
+		// experimental code ends
+		
 		LOG.debug("Se validara objeto pagoRequestDTO");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		Pago pago = new Pago();
