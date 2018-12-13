@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import mx.com.nmp.pagos.mimonte.config.Constants;
 
 /**
@@ -47,6 +49,7 @@ public class Tarjetas implements Serializable {
 	@Column(name = "fecha_modificacion")
 	private Date fechaModificacion;
 
+	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name="idCliente", nullable=false)
 	private Cliente clientes;

@@ -207,12 +207,11 @@ public class TarjetasServiceImpl implements TarjetasService {
 		tarjetas.setUltimosDigitos(tarjeta.getDigitos());
 		tarjetas.setAlias(tarjeta.getAlias());
 		tarjetas.setFechaAlta(new Date());
-		tarjetas.setFechaModificacion(null);
 		tarjetas.setClientes(cliente);
 		tarjetas.setTipoTarjeta(tipoTarjeta);
 		tarjetas.setEstatusTarjeta(estatusTarjeta);
 		
-		tarjetas = tarjetaRepository.save(tarjetas);
+		tarjetaRepository.save(tarjetas);
 				
 		return tarjetas;
 	}
