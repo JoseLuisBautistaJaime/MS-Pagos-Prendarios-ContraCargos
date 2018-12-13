@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Stack;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.builder.ReglaNegocioBuilder;
+import mx.com.nmp.pagos.mimonte.constans.DSSConstants;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioDTO;
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
+import mx.com.nmp.pagos.mimonte.exception.DSSException;
 import mx.com.nmp.pagos.mimonte.services.DSSService;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorObjeto;
 
@@ -29,6 +32,19 @@ public class DSSModule {
 	@Autowired
 	private DSSService dssService;
 
+	@Value(DSSConstants.DataObjectNames.ClienteData.ID_CLIENTE)
+	private String idClienteProp;
+	@Value(DSSConstants.DataObjectNames.PagoData.MONTO_TOTAL)
+	private String montoTotalProp;
+	@Value(DSSConstants.DataObjectNames.TarjetaData.ALIAS_TARJETA)
+	private String aliasTarjetaProp;
+	@Value(DSSConstants.DataObjectNames.TarjetaData.DIGITOS_TARJETA)
+	private String digitosTarjetaProp;
+	@Value(DSSConstants.DataObjectNames.TarjetaData.TOKEN_TARJETA)
+	private String tokenTarjetaProp;
+	@Value(DSSConstants.DataObjectNames.TarjetaData.TIPO_TARJETA_ID)
+	private String tipoTarjetaIdProp;
+
 	public DSSModule() {
 		super();
 	}
@@ -45,11 +61,17 @@ public class DSSModule {
 		Integer noAfiliacion = null;
 		List<ReglaNegocioDTO> reglasNegocioDTO = null;
 		Stack<ReglaNegocioResumenDTO> stack = null;
-		validaciones(pagoRequestDTO);
+		validacionesPrincipales(pagoRequestDTO);
 		reglasNegocioDTO = ReglaNegocioBuilder
 				.buildReglaNegocioDTOFromReglaNegocioList(dssService.getReglasNegocio(pagoRequestDTO.getIdCliente()));
 		stack = new Stack<>();
+		if (null == reglasNegocioDTO || reglasNegocioDTO.isEmpty())
+			throw new DSSException(DSSConstants.NO_RULES_FOUND_MESSAGE);
+		else {
+			validacionesSecundarias(pagoRequestDTO);
+		}
 		for (ReglaNegocioDTO reglaNegocioDTO : reglasNegocioDTO) {
+			replaceVariables(reglaNegocioDTO, pagoRequestDTO);
 			stack.push(dssService.executeQuery(reglaNegocioDTO.getConsulta()));
 		}
 		evaluateResultStack(stack, noAfiliacion);
@@ -77,10 +99,52 @@ public class DSSModule {
 		}
 	}
 
-	public static void validaciones(PagoRequestDTO pagoRequestDTO) {
+	/**
+	 * 
+	 * Metodo que valida que un objeto PagoRequestDTO y su objeto interno Idcliente
+	 * no sean nulos
+	 * 
+	 * @param pagoRequestDTO
+	 */
+	private static void validacionesPrincipales(PagoRequestDTO pagoRequestDTO) {
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(pagoRequestDTO);
 		vo.noNulo(pagoRequestDTO.getIdCliente());
+	}
+
+	/**
+	 * 
+	 * Metodo que valida que un objeto PagoRequestDTO y su objeto interno Tarjeta no
+	 * sean nulos
+	 * 
+	 * @param pagoRequestDTO
+	 */
+	private static void validacionesSecundarias(PagoRequestDTO pagoRequestDTO) {
+		ValidadorObjeto vo = new ValidadorObjeto();
+		vo.noNulo(pagoRequestDTO);
+		vo.noNulo(pagoRequestDTO.getTarjeta());
+		vo.noNulo(pagoRequestDTO.getTarjeta().getAlias());
+		vo.noNulo(pagoRequestDTO.getTarjeta().getDigitos());
+		vo.noNulo(pagoRequestDTO.getTarjeta().getToken());
+		vo.noNulo(pagoRequestDTO.getTarjeta().getTipo());
+		vo.noNulo(pagoRequestDTO.getTarjeta().getTipo().getId());
+	}
+
+	/**
+	 * 
+	 * Metodo que reemplaza las variables de un query por los valores del objeto en cuestion (pago, cliente, tarjeta)
+	 * 
+	 * @param reglaNegocioDTO
+	 * @param pagoRequestDTO
+	 */
+	private void replaceVariables(ReglaNegocioDTO reglaNegocioDTO, PagoRequestDTO pagoRequestDTO) {
+		reglaNegocioDTO.setConsulta(
+				reglaNegocioDTO.getConsulta().replace(idClienteProp, String.valueOf(pagoRequestDTO.getIdCliente()))
+						.replace(montoTotalProp, String.valueOf(pagoRequestDTO.getMontoTotal()))
+						.replace(aliasTarjetaProp, pagoRequestDTO.getTarjeta().getAlias())
+						.replace(digitosTarjetaProp, pagoRequestDTO.getTarjeta().getDigitos())
+						.replace(tokenTarjetaProp, pagoRequestDTO.getTarjeta().getToken())
+						.replace(tipoTarjetaIdProp, String.valueOf(pagoRequestDTO.getTarjeta().getTipo().getId())));
 	}
 
 }

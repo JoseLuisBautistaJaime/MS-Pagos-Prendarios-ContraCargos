@@ -79,7 +79,7 @@ public class PagoController {
 //		// Ahora se obtiene un numero aleatorio, pero ese valor entre 1 y 3 debe estar
 //		// en funcion de unas reglas de negocio
 //		// en el modulo de toma de deciciones
-//		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusPagos, true, getRandomNumber());
+//		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusPagos, true, 1);
 //		// --------------------- Dummy data building ends
 
 		// real code begins

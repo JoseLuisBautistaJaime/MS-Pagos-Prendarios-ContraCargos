@@ -48,10 +48,21 @@ spring:
       enabled: false
 
 # Variables utiles para app microservicios mimonte
-#Pagos
 mimonte:
   variables:
     cantidad-maxima-tarjetas: 3
+    dss:
+      cliente:
+        idcliente: {idCliente}
+      tarjeta:
+        aliastarjeta: {aliasTarjeta}
+        digitostarjeta: {digitosTarjeta}
+        tokentarjeta: {tokentarjeta}
+        tipotarjeta:
+          id: {tipoTarjetaId}
+      pago:
+        montototal: {montoTotal}
+    
 
 servicios:
  

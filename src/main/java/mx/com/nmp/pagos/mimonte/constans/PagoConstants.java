@@ -5,7 +5,7 @@ package mx.com.nmp.pagos.mimonte.constans;
  * Descripcion: Clase que almacena las constantes usadas para operaciones relacionadas con el pago de partidas / contratos.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
- * Fecha: 20/11/2018 10:00 hrs.
+ * @creationDate 20/11/2018 10:00 hrs.
  * @version 0.1
  */
 public final class PagoConstants {
