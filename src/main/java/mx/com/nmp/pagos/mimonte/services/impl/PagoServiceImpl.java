@@ -2,6 +2,7 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,8 +82,8 @@ public class PagoServiceImpl implements PagoService {
 		// Aqui se obtiene un numero de afiliacion aleatorio, pero se debe obtener de un modulo de toma de decisiones
 		
 		// experimental code here
-//		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());		
-		pagoResponseDTO.setIdTipoAfiliacion(dssModule.getNoAfiliacion(pagoRequestDTO));
+		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());		
+//		pagoResponseDTO.setIdTipoAfiliacion(dssModule.getNoAfiliacion(pagoRequestDTO));
 		// experimental code ends
 		
 		LOG.debug("Se validara objeto pagoRequestDTO");
@@ -183,9 +184,9 @@ public class PagoServiceImpl implements PagoService {
 	 * 
 	 * @return int value
 	 */
-//	private static int getRandomNumber() {
-//		Random random = new Random();
-//		return random.nextInt(3 - 1 + 1) + 1;
-//	}
+	private static int getRandomNumber() {
+		Random random = new Random();
+		return random.nextInt(3 - 1 + 1) + 1;
+	}
 
 }

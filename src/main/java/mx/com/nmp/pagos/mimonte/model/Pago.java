@@ -23,7 +23,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "pagos", schema = "compose")
-public class Pago {
+public class Pago{
 	
 	public Pago() {
 		super();

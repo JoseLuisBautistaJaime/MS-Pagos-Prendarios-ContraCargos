@@ -52,7 +52,7 @@ public class PagoBuilder {
 		pago.setMetodo(null);
 		pago.setRestResponse(null);
 		pago.setMonto(operacion.getMonto());
-		pago.setTarjeta(tarjeta.getDigitos());
+		pago.setTarjeta(null != tarjeta ? null != tarjeta.getDigitos() ? tarjeta.getDigitos():null:null);
 		return pago;
 	}
 
