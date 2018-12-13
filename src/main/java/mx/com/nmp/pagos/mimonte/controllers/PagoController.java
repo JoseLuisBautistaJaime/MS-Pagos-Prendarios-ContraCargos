@@ -66,11 +66,11 @@ public class PagoController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response post(@RequestBody PagoRequestDTO pagoRequestDTO) {
-		log.debug("Entrando a operacion de servicio RegistroPagoController.post()...");
+		log.debug("Entrando a operacion de servicio PagoController.post()...");
 		log.debug("Received object: " + pagoRequestDTO);
-		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 		
 //		// --------------------- Dummy data building begins
+//		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 //		EstatusPagoResponseDTO estatusPagoResponseDTO = new EstatusPagoResponseDTO(1, "C12");
 //		EstatusPagoResponseDTO estatusPagoResponseDTO2 = new EstatusPagoResponseDTO(1, "C34");
 //		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
@@ -84,24 +84,14 @@ public class PagoController {
 
 		// real code begins
 		// ---------------- CODE HERE ------------------
+		log.debug("Inician validaciones iniciales en validacionesInicialesPago(pagoRequestDTO)");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		PagoResponseDTO pagoResponseDTO = null;
-			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
+		log.debug("Invocando servicio pagoService.savePago(pagoRequestDTO)");
+		pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
 		// real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoResponseDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),PagoConstants.MSG_SUCCESS, pagoResponseDTO);
 	}
-
-	/**
-	 * Metodo que regresa un numero aleatorio entre 1 y 3 simulando la tomade
-	 * decicion para un numero de afiliacion
-	 * 
-	 * @return int value
-	 */
-//	private static int getRandomNumber() {
-//		Random random = new Random();
-//		return random.nextInt(3 - 1 + 1) + 1;
-//	}
-	
 }

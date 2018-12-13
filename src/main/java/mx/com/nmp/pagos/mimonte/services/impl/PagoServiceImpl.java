@@ -60,7 +60,7 @@ public class PagoServiceImpl implements PagoService {
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
-	private final Logger log = LoggerFactory.getLogger(PagoServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PagoServiceImpl.class);
 	
 	@Value(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_PROPERTY)
 	private Integer MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT;
@@ -72,44 +72,51 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	@Override
 	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO){
-		log.info("Ingreso al servicio de pago: POST");
+		LOG.debug("Ingreso al servicio: savePago(PagoRequestDTO pagoRequestDTO)");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
 		// Aqui se obtiene un numero de afiliacion aleatorio, pero se debe obtener de un modulo de toma de decisiones
 		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());		
+		LOG.debug("Se validara objeto pagoRequestDTO");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		Pago pago = new Pago();
 		if( null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty() ) {
+			LOG.debug("Se iteraran operaciones dentro de pagoRequestDTO");
 			for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
 				try {
 					Integer c = pagoRepository.checkIfPagoExists(operacion.getNombreOperacion(), pagoRequestDTO.getIdCliente(), operacion.getMonto());
 					if(null != c && c == 0) {
 						pago = PagoBuilder.buildPagoFromObject(operacion, pagoRequestDTO.getTarjeta(), clienteService.getClienteById(pagoRequestDTO.getIdCliente()));
 						pagoRepository.save(pago);
-						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));	
+						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
+						LOG.debug("Se agrego operacion correcta: " + operacion);
 					}
 					else {
 						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
+						LOG.debug("La operacion: " + operacion + " ya existe");
 					}
 				} catch (Exception ex) {
 					estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
-					log.error(ex.getMessage());
+					LOG.error("Se agrego operacion fallida: " + operacion);
+					LOG.error(ex.getMessage());
 				}
 			}	
 			pagoResponseDTO.setExitoso(true);
 		}
 		else {
-			log.error("Objeto pagoRequestDTO.getOperaciones() es nulo!");
+			LOG.error("Objeto pagoRequestDTO.getOperaciones() es nulo o es vacio!");
 			pagoResponseDTO.setExitoso(false);
 			throw new PagoException(PagoConstants.NO_OPERATIONS_MESSAGE);
 		}
 		// Se realizan validacion propias del negocio
+		LOG.debug("Se inician validaciones respecto a objeto pagoRequestDTO.getTarjeta()");
 		if (validaSiGuardar(pagoRequestDTO)) {
 			if (validaCantidadTarjetasExistentes(pagoRequestDTO)) {
 				validaDatos(pagoRequestDTO.getTarjeta());
 					tarjetaService.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(),
 							clienteService.getClienteById(pagoRequestDTO.getIdCliente())));
 			} else {
+				LOG.error(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 				throw new PagoException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 			}
 		}
@@ -129,6 +136,7 @@ public class PagoServiceImpl implements PagoService {
 		boolean flag = false;
 		if (null != pagoDTO && pagoDTO.getGuardaTarjeta())
 			flag = true;
+		LOG.debug("El resultado de: validaSiGuardar(PagoRequestDTO) es: " + flag);
 		return flag;
 	}
 
@@ -141,6 +149,7 @@ public class PagoServiceImpl implements PagoService {
 	 * @param tarjetaPagoDTO
 	 */
 	private static final void validaDatos(TarjetaPagoDTO tarjetaPagoDTO) {
+		LOG.debug("Inicia metodo: validaDatos(TarjetaPagoDTO)");
 		ValidadorDatosPago.validacionesTrajeta(tarjetaPagoDTO);
 	}
 
@@ -156,6 +165,7 @@ public class PagoServiceImpl implements PagoService {
 		int cantidadTarjetas = tarjetaService.countTarjetasByIdcliente(pagoDTO.getIdCliente());
 		if (cantidadTarjetas < MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT)
 			flag = true;
+		LOG.debug("El resultado del metodo validaCantidadTarjetasExistentes(PagoRequestDTO) es: " + flag);
 		return flag;
 	}
 
