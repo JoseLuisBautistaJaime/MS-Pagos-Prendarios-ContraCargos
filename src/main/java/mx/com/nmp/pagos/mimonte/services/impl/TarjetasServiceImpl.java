@@ -172,6 +172,9 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		if (tarjeta.getToken() == null || tarjeta.getToken().isEmpty())
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKEN_NULL_OR_VOID);
+		
+		if(tarjeta.getDigitos() == null || tarjeta.getDigitos().length() < 5 && tarjeta.getDigitos().length() > 3)
+			throw new TarjetaException(TarjetaConstants.MSG_FAIL_DIGITS_NULL_OR_VOID);		
 
 		if (tarjeta.getCliente() == null)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_CLIENT_NULL_OR_VOID);

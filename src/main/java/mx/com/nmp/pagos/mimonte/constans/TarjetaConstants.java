@@ -92,6 +92,11 @@ public final class TarjetaConstants {
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
 	public static final String MSG_FAIL_CLIENT_NULL_OR_VOID = "El cliente no puede ir nulo o vacio";
+	
+	/**
+	 * Mensaje que sera enviado si se recuperaron los registros correctamente
+	 */
+	public static final String MSG_FAIL_DIGITS_NULL_OR_VOID = "El campo digitos debe contener 4 carácteres.";
 
 	/**
 	 * Mensaje que sera enviado si no se recuperaron los registros correctamente
