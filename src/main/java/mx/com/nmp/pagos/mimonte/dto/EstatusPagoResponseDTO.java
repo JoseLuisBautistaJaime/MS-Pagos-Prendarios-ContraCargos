@@ -6,14 +6,14 @@ public class EstatusPagoResponseDTO {
 		super();
 	}
 	
-	public EstatusPagoResponseDTO(Integer idEstatusOperacion, String folioContratro) {
+	public EstatusPagoResponseDTO(Integer idEstatusOperacion, String folioContrato) {
 		super();
 		this.idEstatusOperacion = idEstatusOperacion;
-		this.folioContratro = folioContratro;
+		this.folioContrato = folioContrato;
 	}
 
 	private Integer idEstatusOperacion;
-	private String folioContratro;
+	private String folioContrato;
 	
 	public Integer getIdEstatusOperacion() {
 		return idEstatusOperacion;
@@ -22,16 +22,16 @@ public class EstatusPagoResponseDTO {
 		this.idEstatusOperacion = idEstatusOperacion;
 	}
 	
-	public String getFolioContratro() {
-		return folioContratro;
+	public String getFolioContrato() {
+		return folioContrato;
 	}
-	public void setFolioContratro(String folioContratro) {
-		this.folioContratro = folioContratro;
+	public void setFolioContrato(String folioContrato) {
+		this.folioContrato = folioContrato;
 	}
 
 	@Override
 	public String toString() {
-		return "estatusPagos [idEstatusOperacion=" + idEstatusOperacion + ", folioContratro=" + folioContratro + "]";
+		return "estatusPagos [idEstatusOperacion=" + idEstatusOperacion + ", folioContrato=" + folioContrato + "]";
 	}
 	
 }
