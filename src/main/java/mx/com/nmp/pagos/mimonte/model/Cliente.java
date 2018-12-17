@@ -34,10 +34,10 @@ public class Cliente implements Serializable {
 	private static final long serialVersionUID = 7528374533024645790L;
 
 	@Id
-	@Column(name = "idCliente", unique = true, nullable = false)
+	@Column(name = "id_cliente", unique = true, nullable = false)
 	private Integer idcliente;
 
-	@Column(name = "nombreTitular", length = Constants.LONGITUD_NOMBRE_TITULAR)
+	@Column(name = "nombre_titular", length = Constants.LONGITUD_NOMBRE_TITULAR)
 	private String nombreTitular;
 
 	@Column(name = "fecha_alta")

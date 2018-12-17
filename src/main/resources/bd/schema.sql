@@ -12,27 +12,27 @@ DROP INDEX `cliente_transaccion_fk_idx` ;
 ALTER TABLE `cliente` 
 DROP COLUMN `app_materno`,
 DROP COLUMN `app_paterno`,
-CHANGE COLUMN `idcliente` `idCliente` INT(11) NOT NULL ,
-CHANGE COLUMN `nombre` `nombreTitular` VARCHAR(100) NOT NULL ;
+CHANGE COLUMN `idcliente` `id_cliente` INT(11) NOT NULL ,
+CHANGE COLUMN `nombre` `nombre_titular` VARCHAR(100) NOT NULL ;
 
 ALTER TABLE `tarjetas` 
-CHANGE COLUMN `idcliente` `idCliente` INT(11) NOT NULL ;
+CHANGE COLUMN `idcliente` `id_cliente` INT(11) NOT NULL ;
 
 ALTER TABLE `tarjetas` 
-ADD INDEX `cliente_tarjeta_fk_idx` (`idCliente` ASC);
+ADD INDEX `cliente_tarjeta_fk_idx` (`id_cliente` ASC);
 ALTER TABLE `tarjetas` 
 ADD CONSTRAINT `cliente_tarjeta_fk`
-  FOREIGN KEY (`idCliente`)
-  REFERENCES `cliente` (`idCliente`)
+  FOREIGN KEY (`id_liente`)
+  REFERENCES `cliente` (`id_cliente`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
   
 ALTER TABLE `transacciones` 
-ADD INDEX `cliente_transacion_fk_idx` (`idcliente` ASC);
+ADD INDEX `cliente_transacion_fk_idx` (`id_cliente` ASC);
 ALTER TABLE `transacciones` 
 ADD CONSTRAINT `cliente_transacion_fk`
-  FOREIGN KEY (`idcliente`)
-  REFERENCES `cliente` (`idCliente`)
+  FOREIGN KEY (`id_cliente`)
+  REFERENCES `cliente` (`id_cliente`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
  
@@ -62,7 +62,7 @@ CREATE TABLE `regla_negocio` (
 CREATE TABLE `cliente_regla_negocio` (
   `id_cliente` INT(11) NOT NULL,
   `id_regla_negocio` INT(11) NOT NULL,
-	CONSTRAINT `ic_fk` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`idCliente`),
+	CONSTRAINT `ic_fk` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
 	CONSTRAINT `irn_fk` FOREIGN KEY (`id_regla_negocio`) REFERENCES `regla_negocio` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 -- DSS MODULE CREATION ENDS

@@ -51,7 +51,7 @@ public class Tarjetas implements Serializable {
 
 	@JsonIgnore
 	@OneToOne
-	@JoinColumn(name="idCliente", nullable=false)
+	@JoinColumn(name="id_cliente", nullable=false)
 	private Cliente clientes;
 	
 	@ManyToOne

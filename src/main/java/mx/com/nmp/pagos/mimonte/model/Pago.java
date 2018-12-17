@@ -22,7 +22,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "pagos", schema = "compose")
+@Table(name = "pagos")
 public class Pago{
 	
 	public Pago() {

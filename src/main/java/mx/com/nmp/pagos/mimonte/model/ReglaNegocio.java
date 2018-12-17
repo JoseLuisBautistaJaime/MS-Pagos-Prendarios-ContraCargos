@@ -30,7 +30,7 @@ import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
  * @version 0.1
  */
 @Entity
-@Table(name = "regla_negocio", schema = "compose")
+@Table(name = "regla_negocio")
 @SqlResultSetMapping(name = "ReglaNegocioResumenDTO", classes = {
 		@ConstructorResult(targetClass = ReglaNegocioResumenDTO.class, columns = { @ColumnResult(name = "id"),
 				@ColumnResult(name = "idAfiliacion"), @ColumnResult(name = "valido") }) })

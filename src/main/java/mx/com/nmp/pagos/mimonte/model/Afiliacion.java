@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "catalogo_afiliacion", schema = "compose")
+@Table(name = "catalogo_afiliacion")
 public class Afiliacion {
 
 	@Id
