@@ -3,8 +3,9 @@ package mx.com.nmp.pagos.mimonte.dss;
 import java.util.List;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.builder.ReglaNegocioBuilder;
@@ -12,6 +13,7 @@ import mx.com.nmp.pagos.mimonte.constans.DSSConstants;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioDTO;
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
+import mx.com.nmp.pagos.mimonte.dto.VariableDTO;
 import mx.com.nmp.pagos.mimonte.exception.DSSException;
 import mx.com.nmp.pagos.mimonte.services.DSSService;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorObjeto;
@@ -32,18 +34,10 @@ public class DSSModule {
 	@Autowired
 	private DSSService dssService;
 
-	@Value(DSSConstants.DataObjectNames.ClienteData.ID_CLIENTE)
-	private String idClienteProp;
-	@Value(DSSConstants.DataObjectNames.PagoData.MONTO_TOTAL)
-	private String montoTotalProp;
-	@Value(DSSConstants.DataObjectNames.TarjetaData.ALIAS_TARJETA)
-	private String aliasTarjetaProp;
-	@Value(DSSConstants.DataObjectNames.TarjetaData.DIGITOS_TARJETA)
-	private String digitosTarjetaProp;
-	@Value(DSSConstants.DataObjectNames.TarjetaData.TOKEN_TARJETA)
-	private String tokenTarjetaProp;
-	@Value(DSSConstants.DataObjectNames.TarjetaData.TIPO_TARJETA_ID)
-	private String tipoTarjetaIdProp;
+	/**
+	 * Logger para el registro de actividad en la bitacora
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(DSSModule.class);
 
 	public DSSModule() {
 		super();
@@ -58,23 +52,30 @@ public class DSSModule {
 	 * @return Integer
 	 */
 	public Integer getNoAfiliacion(PagoRequestDTO pagoRequestDTO) {
+		LOG.debug("Ingresando al metodo DSSModule.getNoAfiliacion()");
 		Integer noAfiliacion = null;
 		List<ReglaNegocioDTO> reglasNegocioDTO = null;
 		Stack<ReglaNegocioResumenDTO> stack = null;
 		validacionesPrincipales(pagoRequestDTO);
+		LOG.debug("Inicia el proceso de obtencion de reglas de negocio");
 		reglasNegocioDTO = ReglaNegocioBuilder
 				.buildReglaNegocioDTOFromReglaNegocioList(dssService.getReglasNegocio(pagoRequestDTO.getIdCliente()));
 		stack = new Stack<>();
+		LOG.debug("Se finalizo el proceso de obtencion de reglas de negocio");
 		if (null == reglasNegocioDTO || reglasNegocioDTO.isEmpty())
 			throw new DSSException(DSSConstants.NO_RULES_FOUND_MESSAGE);
 		else {
 			validacionesSecundarias(pagoRequestDTO);
 		}
+		LOG.debug("Inicia reemplazo de variables");
 		for (ReglaNegocioDTO reglaNegocioDTO : reglasNegocioDTO) {
-			replaceVariables(reglaNegocioDTO, pagoRequestDTO);
-			stack.push(dssService.executeQuery(reglaNegocioDTO.getConsulta()));
+			replaceVariablesDB(reglaNegocioDTO);
+			ReglaNegocioResumenDTO regla = null;
+			LOG.debug("Inicia ejecucion de query: " + reglaNegocioDTO.getConsulta());
+			regla = dssService.execQuery(reglaNegocioDTO.getConsulta());
+			stack.push(regla);
 		}
-		evaluateResultStack(stack, noAfiliacion);
+		noAfiliacion = evaluateResultStack(stack);
 		return noAfiliacion;
 	}
 
@@ -87,8 +88,10 @@ public class DSSModule {
 	 * @param         Stack<ReglaNegocioResumenDTO> stack
 	 * @param Integer noAfiliacion
 	 */
-	private static void evaluateResultStack(Stack<ReglaNegocioResumenDTO> stack, Integer noAfiliacion) {
+	private static Integer evaluateResultStack(Stack<ReglaNegocioResumenDTO> stack) {
+		LOG.debug("Inicia proceso de evaluacion de reglas de negocio");
 		ReglaNegocioResumenDTO reglaNegocioResumenDTO;
+		Integer noAfiliacion = null;
 		while (!stack.isEmpty()) {
 			reglaNegocioResumenDTO = stack.pop();
 			if (null == noAfiliacion)
@@ -97,6 +100,7 @@ public class DSSModule {
 				noAfiliacion = reglaNegocioResumenDTO.getIdAfiliacion();
 			}
 		}
+		return noAfiliacion;
 	}
 
 	/**
@@ -107,6 +111,7 @@ public class DSSModule {
 	 * @param pagoRequestDTO
 	 */
 	private static void validacionesPrincipales(PagoRequestDTO pagoRequestDTO) {
+		LOG.debug("Se realizan validaciones principales");
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(pagoRequestDTO);
 		vo.noNulo(pagoRequestDTO.getIdCliente());
@@ -120,6 +125,7 @@ public class DSSModule {
 	 * @param pagoRequestDTO
 	 */
 	private static void validacionesSecundarias(PagoRequestDTO pagoRequestDTO) {
+		LOG.debug("Se realizan validaciones secundarias");
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(pagoRequestDTO);
 		vo.noNulo(pagoRequestDTO.getTarjeta());
@@ -132,19 +138,17 @@ public class DSSModule {
 
 	/**
 	 * 
-	 * Metodo que reemplaza las variables de un query por los valores del objeto en cuestion (pago, cliente, tarjeta)
+	 * Metodo que reemplaza las variables de la consulta por valores de base de
+	 * datos
 	 * 
 	 * @param reglaNegocioDTO
-	 * @param pagoRequestDTO
 	 */
-	private void replaceVariables(ReglaNegocioDTO reglaNegocioDTO, PagoRequestDTO pagoRequestDTO) {
-		reglaNegocioDTO.setConsulta(
-				reglaNegocioDTO.getConsulta().replace(idClienteProp, String.valueOf(pagoRequestDTO.getIdCliente()))
-						.replace(montoTotalProp, String.valueOf(pagoRequestDTO.getMontoTotal()))
-						.replace(aliasTarjetaProp, pagoRequestDTO.getTarjeta().getAlias())
-						.replace(digitosTarjetaProp, pagoRequestDTO.getTarjeta().getDigitos())
-						.replace(tokenTarjetaProp, pagoRequestDTO.getTarjeta().getToken())
-						.replace(tipoTarjetaIdProp, String.valueOf(pagoRequestDTO.getTarjeta().getTipo().getId())));
+	private void replaceVariablesDB(ReglaNegocioDTO reglaNegocioDTO) {
+		LOG.debug("Inicia reemplazo de variables de base de datos para query: " + reglaNegocioDTO.getConsulta());
+		String str = reglaNegocioDTO.getConsulta();
+		for (VariableDTO variableDTO : reglaNegocioDTO.getVariables()) {
+			str.replace(variableDTO.getClave(), variableDTO.getValor());
+		}
 	}
 
 }

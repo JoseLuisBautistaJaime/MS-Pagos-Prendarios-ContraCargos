@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioDTO;
+import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
 import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
 
 /**
@@ -32,12 +33,17 @@ public class ReglaNegocioBuilder {
 	 * @return ReglaNegocioDTO
 	 */
 	public static ReglaNegocioDTO buildReglaNegocioDTOFromReglaNegocio(ReglaNegocio reglaNegocio) {
-		ReglaNegocioDTO rnDTO = new ReglaNegocioDTO();
-		rnDTO.setAfliacion(AfiliacionBuilder.buildAfiliacionDTOFromAfilaicion(reglaNegocio.getAfiliacion()));
-		rnDTO.setConsulta(reglaNegocio.getConsulta());
-		rnDTO.setDescripcion(reglaNegocio.getDescripcion());
-		rnDTO.setId(reglaNegocio.getId());
-		rnDTO.setNombre(reglaNegocio.getNombre());
+		ReglaNegocioDTO rnDTO = null;
+		if (null != reglaNegocio) {
+			rnDTO = new ReglaNegocioDTO();
+			rnDTO.setAfliacion(AfiliacionBuilder.buildAfiliacionDTOFromAfilaicion(reglaNegocio.getAfiliacion()));
+			rnDTO.setConsulta(reglaNegocio.getConsulta());
+			rnDTO.setDescripcion(reglaNegocio.getDescripcion());
+			rnDTO.setId(reglaNegocio.getId());
+			rnDTO.setNombre(reglaNegocio.getNombre());
+			rnDTO.setClientes(ClienteBuilder.buildClienteDTOFromClienteSet(reglaNegocio.getClientes()));
+			rnDTO.setVariables(VariableBuilder.buildVariableDTOFromVariableSet(reglaNegocio.getVariables()));
+		}
 		return rnDTO;
 	}
 
@@ -49,12 +55,36 @@ public class ReglaNegocioBuilder {
 	 * @param reglasNegocio
 	 * @return
 	 */
-	public static List<ReglaNegocioDTO> buildReglaNegocioDTOFromReglaNegocioList(List<ReglaNegocio> reglasNegocio) {
-		List<ReglaNegocioDTO> lstReglaNegocioDTO = new ArrayList<>();
-		for (ReglaNegocio reglaNegocio : reglasNegocio) {
-			lstReglaNegocioDTO.add(buildReglaNegocioDTOFromReglaNegocio(reglaNegocio));
+	public static List<ReglaNegocioDTO> buildReglaNegocioDTOFromReglaNegocioList(List<ReglaNegocio> reglasNegocioList) {
+		List<ReglaNegocioDTO> lstReglaNegocioDTO = null;
+		if (null != reglasNegocioList && !reglasNegocioList.isEmpty()) {
+			lstReglaNegocioDTO = new ArrayList<>();
+			for (ReglaNegocio reglaNegocio : reglasNegocioList) {
+				lstReglaNegocioDTO.add(buildReglaNegocioDTOFromReglaNegocio(reglaNegocio));
+			}
 		}
 		return lstReglaNegocioDTO;
+	}
+
+	/**
+	 * 
+	 * Metodo que construye un objeto de tipo ReglaNegocioResumenDTO desde un Array
+	 * de tipo Object
+	 * NOTA: Aqui se toma siempre una longitud de 3 ya que es la
+	 * establecida como resultado de la evaluacion de una regla de negocios
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static ReglaNegocioResumenDTO buildReglaNegocioResumenDTOFromObjArr(Object[] obj) {
+		ReglaNegocioResumenDTO reglaNegocioResumenDTO = null;
+		if (null != obj && obj.length == 3) {
+			reglaNegocioResumenDTO = new ReglaNegocioResumenDTO(
+					Integer.parseInt(null != obj[0] ? obj[0].toString() : null),
+					Integer.parseInt(null != obj[1] ? obj[1].toString() : null),
+					Integer.parseInt(null != obj[2] ? obj[2].toString() : null) == 1);
+		}
+		return reglaNegocioResumenDTO;
 	}
 
 }

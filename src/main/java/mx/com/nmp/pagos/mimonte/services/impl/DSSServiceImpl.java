@@ -2,10 +2,15 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.builder.ReglaNegocioBuilder;
 import mx.com.nmp.pagos.mimonte.dao.DSSRepository;
+import mx.com.nmp.pagos.mimonte.dao.DSSRepositoryCustom;
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
 import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
 import mx.com.nmp.pagos.mimonte.services.DSSService;
@@ -22,9 +27,19 @@ import mx.com.nmp.pagos.mimonte.services.DSSService;
 @Service("dssServiceImpl")
 public class DSSServiceImpl implements DSSService {
 
+	/**
+	 * Instancia que registra los eventos en la bitacora
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(DSSServiceImpl.class);
+	
 	@Autowired
+	@Qualifier("dssRepository")
 	private DSSRepository dssRepository;
 
+	@Autowired(required=true)
+	@Qualifier(value="dssRepositoryImpl")
+	private DSSRepositoryCustom dssRepositoryCustom;
+	
 	/**
 	 * 
 	 * Metodo que consulta todas las reglas de negocio asociadas a un cliente
@@ -47,8 +62,12 @@ public class DSSServiceImpl implements DSSService {
 	 * @return ReglaNegocioResumenDTO
 	 */
 	@Override
-	public ReglaNegocioResumenDTO executeQuery(String query) {
-		return dssRepository.executeQuery(query);
+	public ReglaNegocioResumenDTO execQuery(String query) {
+		LOG.debug("Iniciando metodo DSSServiceImpl.execQuery con query: " +  query);
+		ReglaNegocioResumenDTO reglaNegocioResumenDTO = null;
+		Object[] obj = dssRepositoryCustom.execQuery(query);
+		reglaNegocioResumenDTO = ReglaNegocioBuilder.buildReglaNegocioResumenDTOFromObjArr(obj);
+		return reglaNegocioResumenDTO;
 	}
-
+	
 }

@@ -17,7 +17,8 @@ import javax.persistence.Table;
  * Descripcion: Entidad que representa un tipo de afiliacion
  * dentro del sistema.
  *
- * @author Ismael Flores iaguilar@quarksoft.net Fecha: 12/12/2018 16:59 hrs.
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 12/12/2018 16:59 hrs.
  * @version 0.1
  */
 @Entity

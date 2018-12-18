@@ -2,8 +2,10 @@ package mx.com.nmp.pagos.mimonte.builder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.model.Cliente;
@@ -20,7 +22,7 @@ import mx.com.nmp.pagos.mimonte.model.Tarjetas;
  * @version 0.1
  */
 public class ClienteBuilder {
-	
+
 	private ClienteBuilder() {
 		/**
 		 * hidden constructor
@@ -34,10 +36,13 @@ public class ClienteBuilder {
 	 * @param List de objetos de tipo clientesDTO
 	 * @return List de entidad de tipo Cliente
 	 */
-	public static List<Cliente> buildListClienteFromSetClienteDTO(List<ClienteDTO> clientesDTO) {
-		List<Cliente> clientesSetEntity = new ArrayList<>();
-		for (ClienteDTO clienteDTO : clientesDTO) {
-			clientesSetEntity.add(buildClienteFromClienteDTO(clienteDTO));
+	public static List<Cliente> buildListClienteFromSetClienteDTO(List<ClienteDTO> clientesDTOList) {
+		List<Cliente> clientesSetEntity = null;
+		if (null != clientesDTOList && !clientesDTOList.isEmpty()) {
+			clientesSetEntity = new ArrayList<>();
+			for (ClienteDTO clienteDTO : clientesDTOList) {
+				clientesSetEntity.add(buildClienteFromClienteDTO(clienteDTO));
+			}
 		}
 		return clientesSetEntity;
 	}
@@ -49,10 +54,13 @@ public class ClienteBuilder {
 	 * @param Lista de entidades de tipo Cliente clientesEntity
 	 * @return Lista de objetos de tipo ClienteDTO
 	 */
-	public static List<ClienteDTO> buildListClienteDTOFromSetCliente(List<Cliente> clientesEntity) {
-		List<ClienteDTO> clientesSetDTO = new ArrayList<>();
-		for (Cliente cliente : clientesEntity) {
-			clientesSetDTO.add(buildClienteDTOFromCliente(cliente));
+	public static List<ClienteDTO> buildListClienteDTOFromSetCliente(List<Cliente> clientesEntityList) {
+		List<ClienteDTO> clientesSetDTO = null;
+		if (null != clientesEntityList && !clientesEntityList.isEmpty()) {
+			clientesSetDTO = new ArrayList<>();
+			for (Cliente cliente : clientesEntityList) {
+				clientesSetDTO.add(buildClienteDTOFromCliente(cliente));
+			}
 		}
 		return clientesSetDTO;
 	}
@@ -64,14 +72,17 @@ public class ClienteBuilder {
 	 * @return Entity tipo Cliente
 	 */
 	public static Cliente buildClienteFromClienteDTO(ClienteDTO clienteDTO) {
-		Cliente clienteEntity = new Cliente();
-		clienteEntity.setFechaAlta(clienteDTO.getFechaAlta());
-		clienteEntity.setIdcliente(clienteDTO.getIdCliente());
-		clienteEntity.setNombreTitular(clienteDTO.getNombreTitular());
-		List<Tarjetas> tarjetas = new ArrayList<>();
-		clienteEntity.setTarjetas(tarjetas);
-		Set<Pago> pagos = new HashSet<>();
-		clienteEntity.setPagos(pagos);
+		Cliente clienteEntity = null;
+		if (null != clienteDTO) {
+			clienteEntity = new Cliente();
+			clienteEntity.setFechaAlta(clienteDTO.getFechaAlta());
+			clienteEntity.setIdcliente(clienteDTO.getIdCliente());
+			clienteEntity.setNombreTitular(clienteDTO.getNombreTitular());
+			List<Tarjetas> tarjetas = new ArrayList<>();
+			clienteEntity.setTarjetas(tarjetas);
+			Set<Pago> pagos = new HashSet<>();
+			clienteEntity.setPagos(pagos);
+		}
 		return clienteEntity;
 	}
 
@@ -82,11 +93,34 @@ public class ClienteBuilder {
 	 * @return Objeto de tipo ClienteDTO
 	 */
 	public static ClienteDTO buildClienteDTOFromCliente(Cliente clienteEntity) {
-		ClienteDTO clienteDTO = new ClienteDTO();
-		clienteDTO.setFechaAlta(clienteEntity.getFechaAlta());
-		clienteDTO.setIdCliente((clienteEntity.getIdcliente()));
-		clienteDTO.setNombreTitular(clienteEntity.getNombreTitular());
+		ClienteDTO clienteDTO = null;
+		if (null != clienteEntity) {
+			clienteDTO = new ClienteDTO();
+			clienteDTO.setFechaAlta(clienteEntity.getFechaAlta());
+			clienteDTO.setIdCliente((clienteEntity.getIdcliente()));
+			clienteDTO.setNombreTitular(clienteEntity.getNombreTitular());
+		}
 		return clienteDTO;
+	}
+
+	/**
+	 * 
+	 * Metodo que construye un Set de objetos de tipo ClienteDTO desde un Set de
+	 * entitys tipo Cliente
+	 * 
+	 * @param clienteEntitySet
+	 * @return
+	 */
+	public static Set<ClienteDTO> buildClienteDTOFromClienteSet(Set<Cliente> clienteEntitySet) {
+		Set<ClienteDTO> clienteDTOSet = null;
+		if (null != clienteEntitySet && !clienteEntitySet.isEmpty()) {
+			clienteDTOSet = new TreeSet<ClienteDTO>();
+			Iterator<Cliente> it = clienteEntitySet.iterator();
+			while (it.hasNext()) {
+				clienteDTOSet.add(buildClienteDTOFromCliente(it.next()));
+			}
+		}
+		return clienteDTOSet;
 	}
 
 }

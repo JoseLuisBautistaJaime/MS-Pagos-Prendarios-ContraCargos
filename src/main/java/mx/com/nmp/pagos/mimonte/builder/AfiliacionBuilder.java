@@ -29,9 +29,12 @@ public class AfiliacionBuilder {
 	 * @return AfiliacionDTO
 	 */
 	public static AfiliacionDTO buildAfiliacionDTOFromAfilaicion(Afiliacion afiliacion) {
-		AfiliacionDTO afiliacionDTO = new AfiliacionDTO();
-		afiliacionDTO.setDescripcion(afiliacion.getDescripcion());
-		afiliacionDTO.setId(afiliacion.getId());
+		AfiliacionDTO afiliacionDTO = null;
+		if(null != afiliacion) {
+			afiliacionDTO = new AfiliacionDTO();
+			afiliacionDTO.setDescripcion(afiliacion.getDescripcion());
+			afiliacionDTO.setId(afiliacion.getId());	
+		}
 		return afiliacionDTO;
 	}
 
