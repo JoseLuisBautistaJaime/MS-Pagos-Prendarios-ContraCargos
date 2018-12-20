@@ -29,8 +29,7 @@ import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorDatosPago;
 
 /**
- * Nombre: PagoServiceImpl
- * Descripcion: Clase que realiza el pago de partidas /
+ * Nombre: PagoServiceImpl Descripcion: Clase que realiza el pago de partidas /
  * contratos
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -47,7 +46,8 @@ public class PagoServiceImpl implements PagoService {
 	private TarjetasService tarjetaService;
 
 	/**
-	 * Service de clientes para obtener los datos del cliente para agregar a la tarjeta a guardar
+	 * Service de clientes para obtener los datos del cliente para agregar a la
+	 * tarjeta a guardar
 	 */
 	@Autowired
 	private ClienteService clienteService;
@@ -57,7 +57,7 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	@Autowired
 	private PagoRepository pagoRepository;
-	
+
 	@Autowired
 	private DSSModule dssModule;
 
@@ -65,7 +65,7 @@ public class PagoServiceImpl implements PagoService {
 	 * Logger para el registro de actividad en la bitacora
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(PagoServiceImpl.class);
-	
+
 	@Value(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_PROPERTY)
 	private Integer MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT;
 
@@ -75,44 +75,49 @@ public class PagoServiceImpl implements PagoService {
 	 *
 	 */
 	@Override
-	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO){
+	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO) {
 		LOG.debug("Ingreso al servicio: savePago(PagoRequestDTO pagoRequestDTO)");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
-		// Aqui se obtiene un numero de afiliacion aleatorio, pero se debe obtener de un modulo de toma de decisiones
-		
+		// Aqui se obtiene un numero de afiliacion aleatorio, pero se debe obtener de un
+		// modulo de toma de decisiones
+
 		// experimental code here
-		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());		
-//		pagoResponseDTO.setIdTipoAfiliacion(dssModule.getNoAfiliacion(pagoRequestDTO));
+//		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
+		LOG.debug("Intentando obtener un numero de afiliacion");
+		pagoResponseDTO.setIdTipoAfiliacion(dssModule.getNoAfiliacion(pagoRequestDTO));
 		// experimental code ends
-		
+
 		LOG.debug("Se validara objeto pagoRequestDTO");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		Pago pago = new Pago();
-		if( null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty() ) {
+		if (null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty()) {
 			LOG.debug("Se iteraran operaciones dentro de pagoRequestDTO");
 			for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
 				try {
-					Integer c = pagoRepository.checkIfPagoExists(operacion.getNombreOperacion(), pagoRequestDTO.getIdCliente(), operacion.getMonto());
-					if(null != c && c == 0) {
-						pago = PagoBuilder.buildPagoFromObject(operacion, pagoRequestDTO.getTarjeta(), clienteService.getClienteById(pagoRequestDTO.getIdCliente()));
+					Integer c = pagoRepository.checkIfPagoExists(operacion.getNombreOperacion(),
+							pagoRequestDTO.getIdCliente(), operacion.getMonto());
+					if (null != c && c == 0) {
+						pago = PagoBuilder.buildPagoFromObject(operacion, pagoRequestDTO.getTarjeta(),
+								clienteService.getClienteById(pagoRequestDTO.getIdCliente()));
 						pagoRepository.save(pago);
-						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
+						estatusPagos.add(new EstatusPagoResponseDTO(
+								EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
 						LOG.debug("Se agrego operacion correcta: " + operacion);
-					}
-					else {
-						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
+					} else {
+						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(),
+								operacion.getFolioContrato()));
 						LOG.debug("La operacion: " + operacion + " ya existe");
 					}
 				} catch (Exception ex) {
-					estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
+					estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(),
+							operacion.getFolioContrato()));
 					LOG.error("Se agrego operacion fallida: " + operacion);
 					LOG.error(ex.getMessage());
 				}
-			}	
+			}
 			pagoResponseDTO.setExitoso(true);
-		}
-		else {
+		} else {
 			LOG.error("Objeto pagoRequestDTO.getOperaciones() es nulo o es vacio!");
 			pagoResponseDTO.setExitoso(false);
 			throw new PagoException(PagoConstants.NO_OPERATIONS_MESSAGE);
@@ -122,8 +127,8 @@ public class PagoServiceImpl implements PagoService {
 		if (validaSiGuardar(pagoRequestDTO)) {
 			if (validaCantidadTarjetasExistentes(pagoRequestDTO)) {
 				validaDatos(pagoRequestDTO.getTarjeta());
-					tarjetaService.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(),
-							clienteService.getClienteById(pagoRequestDTO.getIdCliente())));
+				tarjetaService.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(),
+						clienteService.getClienteById(pagoRequestDTO.getIdCliente())));
 			} else {
 				LOG.error(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 				throw new PagoException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
@@ -148,7 +153,6 @@ public class PagoServiceImpl implements PagoService {
 		LOG.debug("El resultado de: validaSiGuardar(PagoRequestDTO) es: " + flag);
 		return flag;
 	}
-
 
 	/**
 	 * 

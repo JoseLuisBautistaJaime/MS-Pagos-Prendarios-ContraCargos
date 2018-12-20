@@ -65,4 +65,22 @@ CREATE TABLE `cliente_regla_negocio` (
 	CONSTRAINT `ic_fk` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
 	CONSTRAINT `irn_fk` FOREIGN KEY (`id_regla_negocio`) REFERENCES `regla_negocio` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `variable` (
+  `id_variable` INT(11) NOT NULL,
+  `clave` VARCHAR(100) NOT NULL,
+  `valor` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id_variable`),
+  KEY `va_fk_idx` (`id_variable`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `regla_negocio_variable` (
+  `id_regla_negocio` INT(11) NOT NULL,
+  `id_variable` INT(11) NOT NULL,
+  CONSTRAINT `id_fk` FOREIGN KEY (`id_regla_negocio`) REFERENCES `regla_negocio` (`id`),
+  CONSTRAINT `idv_fk` FOREIGN KEY (`id_variable`) REFERENCES `variable` (`id_variable`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+
 -- DSS MODULE CREATION ENDS
+
+

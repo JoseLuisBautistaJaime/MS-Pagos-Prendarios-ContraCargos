@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.util.Set;
+
 /**
  * Nombre: ReglaNegocioDTO
  * Descripcion: Clase que encapsula la informacion
@@ -9,25 +11,30 @@ package mx.com.nmp.pagos.mimonte.dto;
  * @creationDate 12/12/2018 16:44 hrs.
  * @version 0.1
  */
-public class ReglaNegocioDTO {
+public class ReglaNegocioDTO implements Comparable<ReglaNegocioDTO> {
 
 	private AfiliacionDTO afliacion;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
 	private String consulta;
+	private Set<ClienteDTO> clientes;
+	private Set<VariableDTO> variables;
 
 	public ReglaNegocioDTO() {
 		super();
 	}
 
-	public ReglaNegocioDTO(Integer id, String nombre, String descripcion, String consulta, AfiliacionDTO afliacion) {
+	public ReglaNegocioDTO(AfiliacionDTO afliacion, Integer id, String nombre, String descripcion, String consulta,
+			Set<ClienteDTO> clientes, Set<VariableDTO> variables) {
 		super();
+		this.afliacion = afliacion;
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.consulta = consulta;
-		this.afliacion = afliacion;
+		this.clientes = clientes;
+		this.variables = variables;
 	}
 
 	public Integer getId() {
@@ -70,10 +77,30 @@ public class ReglaNegocioDTO {
 		this.afliacion = afliacion;
 	}
 
+	public Set<ClienteDTO> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(Set<ClienteDTO> clientes) {
+		this.clientes = clientes;
+	}
+
+	public Set<VariableDTO> getVariables() {
+		return variables;
+	}
+
+	public void setVariables(Set<VariableDTO> variables) {
+		this.variables = variables;
+	}
+
 	@Override
-	public String toString() {
-		return "ReglaNegocioDTO [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", consulta="
-				+ consulta + ", afliaciones=" + afliacion + "]";
+	public int compareTo(ReglaNegocioDTO o) {
+		int val = 0;
+		if (this.id > o.id)
+			val = 1;
+		else
+			val = -1;
+		return val;
 	}
 
 }

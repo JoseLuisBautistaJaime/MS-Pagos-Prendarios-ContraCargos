@@ -19,8 +19,6 @@ import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
-import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
-
 /**
  * Nombre: ReglaNegocio
  * Descripcion: Entidad que representa una regla de negocio
@@ -32,10 +30,12 @@ import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
 @Entity
 @Table(name = "regla_negocio")
 @SqlResultSetMapping(name = "ReglaNegocioResumenDTO", classes = {
-		@ConstructorResult(targetClass = ReglaNegocioResumenDTO.class, columns = { @ColumnResult(name = "id"),
-				@ColumnResult(name = "idAfiliacion"), @ColumnResult(name = "valido") }) })
+		@ConstructorResult(targetClass = mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO.class, columns = {
+				@ColumnResult(name = "id", type = Integer.class),
+				@ColumnResult(name = "idAfiliacion", type = Integer.class),
+				@ColumnResult(name = "valido", type = Boolean.class) }) })
 @NamedNativeQueries({
-		@NamedNativeQuery(name = "ReglaNegocio.executeQuery", query = ":query", resultSetMapping = "ReglaNegocioResumenDTO") })
+		@NamedNativeQuery(name = "ReglaNegocio.execQuery", query = "query", resultSetMapping = "ReglaNegocioResumenDTO") })
 public class ReglaNegocio {
 
 	@Id
@@ -58,6 +58,9 @@ public class ReglaNegocio {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reglasNegocio")
 	private Set<Cliente> clientes;
+
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "reglasNegocio")
+	private Set<Variable> variables;
 
 	public ReglaNegocio() {
 		/**
@@ -83,6 +86,18 @@ public class ReglaNegocio {
 		this.consulta = consulta;
 		this.afiliacion = afiliacion;
 		this.clientes = clientes;
+	}
+
+	public ReglaNegocio(Integer id, String nombre, String descripcion, String consulta, Afiliacion afiliacion,
+			Set<Cliente> clientes, Set<Variable> variables) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.consulta = consulta;
+		this.afiliacion = afiliacion;
+		this.clientes = clientes;
+		this.variables = variables;
 	}
 
 	public Integer getId() {
@@ -137,10 +152,18 @@ public class ReglaNegocio {
 		this.afiliacion = afiliacion;
 	}
 
+	public Set<Variable> getVariables() {
+		return variables;
+	}
+
+	public void setVariables(Set<Variable> variables) {
+		this.variables = variables;
+	}
+
 	@Override
 	public String toString() {
 		return "ReglaNegocio [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", consulta="
-				+ consulta + ", afiliacion=" + afiliacion + ", clientes=" + clientes + "]";
+				+ consulta + ", afiliacion=" + afiliacion + ", clientes=" + clientes + ", variables=" + variables + "]";
 	}
 
 }

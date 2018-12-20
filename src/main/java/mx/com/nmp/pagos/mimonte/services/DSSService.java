@@ -7,8 +7,8 @@ import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
 
 /**
  * Nombre: DSSService
- * Descripcion: Interfaz que contiene las operaciones encargadas de
- * realizar consultas relacionadas con el DSS de la aplicacion
+ * Descripcion: Interfaz que contiene las operaciones
+ * encargadas de realizar consultas relacionadas con el DSS de la aplicacion
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate: 12/12/2018 17:06 hrs.
@@ -34,6 +34,6 @@ public interface DSSService {
 	 * @param String query
 	 * @return ReglaNegocioResumenDTO
 	 */
-	public abstract ReglaNegocioResumenDTO executeQuery(String query);
+	public abstract ReglaNegocioResumenDTO execQuery(String query);
 
 }

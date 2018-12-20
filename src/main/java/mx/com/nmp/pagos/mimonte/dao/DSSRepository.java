@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
 import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
 
 /**
@@ -20,7 +19,7 @@ import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
  * @version 0.1
  */
 @Repository("dssRepository")
-public interface DSSRepository extends JpaRepository<ReglaNegocio, Integer> {
+public interface DSSRepository extends JpaRepository<ReglaNegocio, Integer>, DSSRepositoryCustom {
 
 	/**
 	 * 
@@ -30,7 +29,7 @@ public interface DSSRepository extends JpaRepository<ReglaNegocio, Integer> {
 	 * @param Integer idCliente
 	 * @return objeto List<ReglaNegocio>
 	 */
-	@Query("SELECT rn FROM ReglaNegocio rn INNER JOIN Cliente cl ON cl.idcliente = :idCliente")
+	@Query("SELECT DISTINCT rn FROM ReglaNegocio rn JOIN rn.clientes cls ON cls.idcliente = :idCliente")
 	public List<ReglaNegocio> getReglasNegocio(@Param("idCliente") Integer idCliente);
 
 	/**
@@ -41,6 +40,8 @@ public interface DSSRepository extends JpaRepository<ReglaNegocio, Integer> {
 	 * @param String query
 	 * @return ReglaNegocioResumenDTO
 	 */
-	public ReglaNegocioResumenDTO executeQuery(@Param("query") String query);
+	@SuppressWarnings("unchecked")
+	@Query(value="query", nativeQuery=true)
+	public Object[] execQuery(String query);
 
 }
