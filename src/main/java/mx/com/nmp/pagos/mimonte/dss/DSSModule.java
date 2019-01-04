@@ -145,9 +145,11 @@ public class DSSModule {
 	 */
 	private void replaceVariablesDB(ReglaNegocioDTO reglaNegocioDTO) {
 		LOG.debug("Inicia reemplazo de variables de base de datos para query: " + reglaNegocioDTO.getConsulta());
-		String str = reglaNegocioDTO.getConsulta();
-		for (VariableDTO variableDTO : reglaNegocioDTO.getVariables()) {
-			str.replace(variableDTO.getClave(), variableDTO.getValor());
+		String str = null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null;
+		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getVariables()) {
+			for (VariableDTO variableDTO : reglaNegocioDTO.getVariables()) {
+				str.replace(variableDTO.getClave(), variableDTO.getValor());
+			}
 		}
 	}
 

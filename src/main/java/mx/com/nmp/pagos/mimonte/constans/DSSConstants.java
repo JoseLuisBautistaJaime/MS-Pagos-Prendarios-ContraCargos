@@ -23,27 +23,4 @@ public class DSSConstants {
 	 */
 	public static final String NO_RULES_FOUND_MESSAGE = "No se encontro ninguna regla para el cliente solicitado";
 
-	public final class QueryData {
-		private QueryData() {
-			/**
-			 * hidden constructor
-			 */
-		}
-
-		/**
-		 * Variable para cargar la consulta 1
-		 */
-		public static final String QUERY_1 = "${mimonte.variables.querys.query1}";
-
-		/**
-		 * Variable para cargar la consulta 2
-		 */
-		public static final String QUERY_2 = "${mimonte.variables.querys.query2}";
-
-		/**
-		 * Variable para cargar la consulta 3
-		 */
-		public static final String QUERY_3 = "${mimonte.variables.querys.query3}";
-	}
-
 }
