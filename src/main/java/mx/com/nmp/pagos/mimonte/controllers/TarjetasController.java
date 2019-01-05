@@ -25,6 +25,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.config.Constants;
 import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
+import mx.com.nmp.pagos.mimonte.dto.AliasDTO;
 import mx.com.nmp.pagos.mimonte.dto.CatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
@@ -154,25 +155,25 @@ public class TarjetasController {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/v1/tarjeta/{token}/{alias}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/v1/tarjeta/update", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Actualiza la información de la tarjeta registrada en la base de datos.", tags = {
 			"Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@PathVariable(value = "token", required = true) String token, @PathVariable(value = "alias", required = true) String alias) {
+	public Response update(@RequestBody AliasDTO  alias) {
 		
 		log.debug("Entrando a operacion de servicio TarjetasController.update()...");
 
 	    log.debug("Validando parametro token...");
-	    ValidadorCadena.notNullNorEmpty(token);
+	    ValidadorCadena.notNullNorEmpty(alias.getToken());
 	    
 	    log.debug("Validando parametro alias...");
-	    ValidadorCadena.notNullNorEmpty(alias);
+	    ValidadorCadena.notNullNorEmpty(alias.getAlias());
 
-	    log.debug("Intentando obtener el listado de registros para la tarjeta {}...", token + " " + alias);
-	    Tarjetas updateTarjetas = tarjetasService.updateTarjeta(token, alias);
+	    log.debug("Intentando obtener el listado de registros para la tarjeta {}...", alias.getToken() + " " + alias);
+	    Tarjetas updateTarjetas = tarjetasService.updateTarjeta(alias.getToken(), alias.getAlias());
 
 	    log.debug("Regresando instancia Response con la respuesta obtenida: {}...", updateTarjetas);
 	    return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_UPDATE, updateTarjetas);
