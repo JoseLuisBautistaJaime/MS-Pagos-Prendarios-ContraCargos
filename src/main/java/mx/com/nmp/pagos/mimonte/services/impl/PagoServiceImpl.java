@@ -14,14 +14,15 @@ import mx.com.nmp.pagos.mimonte.builder.PagoBuilder;
 import mx.com.nmp.pagos.mimonte.builder.TarjetaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.EstatusOperacion;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
+import mx.com.nmp.pagos.mimonte.dao.ClienteRepository;
 import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
-import mx.com.nmp.pagos.mimonte.dss.DSSModule;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
+import mx.com.nmp.pagos.mimonte.model.Cliente;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
@@ -59,7 +60,10 @@ public class PagoServiceImpl implements PagoService {
 	private PagoRepository pagoRepository;
 
 	@Autowired
-	private DSSModule dssModule;
+	private ClienteRepository clienteRepository;
+	
+//	@Autowired
+//	private DSSModule dssModule;
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
@@ -83,13 +87,16 @@ public class PagoServiceImpl implements PagoService {
 		// modulo de toma de decisiones
 
 		// experimental code here
-//		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
+		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
 		LOG.debug("Intentando obtener un numero de afiliacion");
-		pagoResponseDTO.setIdTipoAfiliacion(dssModule.getNoAfiliacion(pagoRequestDTO));
+//		pagoResponseDTO.setIdTipoAfiliacion(dssModule.getNoAfiliacion(pagoRequestDTO));
 		// experimental code ends
 
 		LOG.debug("Se validara objeto pagoRequestDTO");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
+		Cliente cl = clienteRepository.findByIdcliente(pagoRequestDTO.getIdCliente());
+		if(null == cl)
+			throw new PagoException(PagoConstants.CLIENTE_NOT_FOUND);
 		Pago pago = new Pago();
 		if (null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty()) {
 			LOG.debug("Se iteraran operaciones dentro de pagoRequestDTO");

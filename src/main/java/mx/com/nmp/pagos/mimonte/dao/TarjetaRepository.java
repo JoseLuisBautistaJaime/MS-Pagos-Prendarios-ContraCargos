@@ -46,7 +46,7 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @return List<TarjeDTO>.
 	 */
 	
-	@Query(value = "SELECT t FROM Tarjetas t where t.clientes.idcliente = :idCliente ")
+	@Query(value = "SELECT t FROM Tarjetas t where t.clientes.idcliente = :idCliente")
 	public List<Tarjetas> encuentraidCliente(@Param("idCliente") Integer idCliente);
 	
 	/**

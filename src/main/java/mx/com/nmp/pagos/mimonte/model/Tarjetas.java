@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -50,8 +52,8 @@ public class Tarjetas implements Serializable {
 	private Date fechaModificacion;
 
 	@JsonIgnore
-	@OneToOne
-	@JoinColumn(name="id_cliente", nullable=false)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name="id_cliente", nullable = false)
 	private Cliente clientes;
 	
 	@ManyToOne

@@ -51,5 +51,10 @@ public final class PagoConstants {
     	 * la cantidad maxima de tarjetas posibles por cliente
     	 */
     	public static final String MAXIMUM_AMOUNT_OF_CARDS_PROPERTY = "${mimonte.variables.cantidad-maxima-tarjetas}";
-	
+
+    	/**
+    	 * Mensaje que es enviado cuando se intenta registrar el pago de un cliente que no existe
+    	 */
+    	public static final String CLIENTE_NOT_FOUND = "El cliente no existe";
+    	
 }
