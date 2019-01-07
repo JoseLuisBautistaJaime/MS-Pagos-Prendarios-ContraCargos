@@ -278,7 +278,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		if (deleteTarjeta == null)
 			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_DELETE);
 
-		tarjetaRepository.deleteById(token);
+		tarjetaRepository.eliminarTarjeta(token);
 
 		return deleteTarjeta;
 	}
