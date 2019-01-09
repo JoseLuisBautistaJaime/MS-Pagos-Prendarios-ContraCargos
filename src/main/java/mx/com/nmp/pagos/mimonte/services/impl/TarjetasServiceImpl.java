@@ -213,7 +213,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		tarjetas.setClientes(cliente);
 		tarjetas.setTipoTarjeta(tipoTarjeta);
 		tarjetas.setEstatusTarjeta(estatusTarjeta);
-		
+		tarjetas.setId_openpay(tarjeta.getId_openpay());
 		tarjetaRepository.save(tarjetas);
 				
 		return tarjetas;
@@ -358,7 +358,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		tarjeDto.setAlias(tarjetasCliente.getAlias());
 		tarjeDto.setFechaAlta(tarjetasCliente.getFechaAlta());
 		tarjeDto.setFechaModificacion(tarjetasCliente.getFechaModificacion());
-
+		tarjeDto.setId_openpay(tarjetasCliente.getId_openpay());
 		tarjeDto.setTipo(tipoTarjeta);
 		tarjeDto.setEstatus(estatusTarjeta);
 

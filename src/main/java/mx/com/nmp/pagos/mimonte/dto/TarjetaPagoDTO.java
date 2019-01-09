@@ -9,7 +9,7 @@ public class TarjetaPagoDTO extends AbstractTarjetaDTO {
 	}
 
 	public TarjetaPagoDTO(String token, String digitos, String alias, Date fechaAlta, Date fechaModificacion,
-			TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus) {
-		super(token,digitos,alias,fechaAlta,fechaModificacion,tipo,estatus);
+			TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus,String id_openpay) {
+		super(token,digitos,alias,fechaAlta,fechaModificacion,tipo,estatus,id_openpay);
 	}
 }

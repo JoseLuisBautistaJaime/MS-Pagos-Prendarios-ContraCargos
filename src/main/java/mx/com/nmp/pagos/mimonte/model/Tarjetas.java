@@ -63,6 +63,9 @@ public class Tarjetas implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "estatus_tarjeta_c")
 	private EstatusTarjeta estatusTarjeta;
+	
+	@Column(name = "id_openpay")
+	private String id_openpay;
 
 	public Tarjetas() {
 		super();
@@ -131,11 +134,19 @@ public class Tarjetas implements Serializable {
 	public void setEstatusTarjeta(EstatusTarjeta estatusTarjeta) {
 		this.estatusTarjeta = estatusTarjeta;
 	}
+	
+	public String getId_openpay() {
+		return id_openpay;
+	}
+
+	public void setId_openpay(String id_openpay) {
+		this.id_openpay = id_openpay;
+	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(alias, estatusTarjeta, fechaAlta, fechaModificacion, tipoTarjeta, token,
-				ultimosDigitos);
+				ultimosDigitos, id_openpay);
 	}
 
 	public Cliente getClientes() {
@@ -190,6 +201,11 @@ public class Tarjetas implements Serializable {
 				return false;
 		} else if (!ultimosDigitos.equals(other.ultimosDigitos))
 			return false;
+		if (id_openpay == null) {
+			if (other.id_openpay != null)
+				return false;
+		} else if (!id_openpay.equals(other.id_openpay))
+			return false;
 		return true;
 	}
 
@@ -197,7 +213,7 @@ public class Tarjetas implements Serializable {
 	public String toString() {
 		return "Tarjetas [token=" + token + ", ultimosDigitos=" + ultimosDigitos + ", alias=" + alias + ", fechaAlta="
 				+ fechaAlta + ", fechaModificacion=" + fechaModificacion + ", tipoTarjeta="
-				+ tipoTarjeta + ", estatusTarjeta=" + estatusTarjeta + "]";
+				+ tipoTarjeta + ", estatusTarjeta=" + estatusTarjeta + ", id_openpay=" + id_openpay + "]";
 	}
 
 }

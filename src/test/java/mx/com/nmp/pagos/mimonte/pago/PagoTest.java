@@ -48,7 +48,7 @@ public class PagoTest {
 		pagoRequestDTO.setMontoTotal(10000);
 		pagoRequestDTO.setGuardaTarjeta(false);
 		pagoRequestDTO.setIdCliente(1);
-		pagoRequestDTO.setTarjeta(new TarjetaPagoDTO("TOK3N12345","9876","TestCard",new Date(),new Date(),new TipoTarjetaDTO(1,"Tarjeta Visa","Visa"),new EstatusTarjetaDTO(1,"Registrada","Tarjeta Registrada")));
+		pagoRequestDTO.setTarjeta(new TarjetaPagoDTO("TOK3N12345","9876","TestCard",new Date(),new Date(),new TipoTarjetaDTO(1,"Tarjeta Visa","Visa"),new EstatusTarjetaDTO(1,"Registrada","Tarjeta Registrada"),"1qaz2wsx"));
 		operacionesDTO = new ArrayList<>();
 		operacionesDTO.add(new OperacionDTO(1,"Pago de partida","CP123",5000D));
 		operacionesDTO.add(new OperacionDTO(2,"Pago de partida 2","CP456",5000D));

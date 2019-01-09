@@ -83,4 +83,12 @@ CREATE TABLE `regla_negocio_variable` (
 
 -- DSS MODULE CREATION ENDS
 
+-- ADD OPENPAY ID
+
+ALTER TABLE `compose`.`tarjetas` 
+ADD COLUMN `id_openpay` VARCHAR(40) NULL AFTER `estatus_tarjeta_c`;
+
+-- END OPENPAY ID
+
+
 

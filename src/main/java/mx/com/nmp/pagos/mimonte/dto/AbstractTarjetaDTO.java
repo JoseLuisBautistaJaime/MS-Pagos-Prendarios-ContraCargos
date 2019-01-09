@@ -27,13 +27,15 @@ public abstract class AbstractTarjetaDTO {
 	protected  TipoTarjetaDTO tipo;
 
 	protected  EstatusTarjetaDTO estatus;
+	
+	protected  String id_openpay;
 
 	public AbstractTarjetaDTO() {
 		super();
 	}
 
 	public AbstractTarjetaDTO(String token, String digitos, String alias, Date fechaAlta, Date fechaModificacion,
-			TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus) {
+			TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus, String id_openpay) {
 		super();
 		this.token = token;
 		this.digitos = digitos;
@@ -42,6 +44,7 @@ public abstract class AbstractTarjetaDTO {
 		this.fechaModificacion = fechaModificacion;
 		this.tipo = tipo;
 		this.estatus = estatus;
+		this.id_openpay = id_openpay;
 	}
 
 	public TipoTarjetaDTO getTipo() {
@@ -99,11 +102,20 @@ public abstract class AbstractTarjetaDTO {
 	public void setDigitos(String digitos) {
 		this.digitos = digitos;
 	}
+	
+	
+	public String getId_openpay() {
+		return id_openpay;
+	}
+
+	public void setId_openpay(String id_openpay) {
+		this.id_openpay = id_openpay;
+	}
 
 	@Override
 	public String toString() {
 		return "TarjetaDTO [token=" + token + ", digitos=" + digitos + ", alias=" + alias + ", fechaAlta=" + fechaAlta
-				+ ", fechaModificacion=" + fechaModificacion + ", tipo=" + tipo + ", estatus=" + estatus + "]";
+				+ ", fechaModificacion=" + fechaModificacion + ", tipo=" + tipo + ", estatus=" + estatus + ", id_openpay=" + id_openpay + "]";
 	}
 
 }

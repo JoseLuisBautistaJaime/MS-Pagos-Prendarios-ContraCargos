@@ -21,8 +21,8 @@ public class TarjeDTO extends AbstractTarjetaDTO implements Serializable {
 	}
 
 	public TarjeDTO(String token, String digitos, String alias, Date fechaAlta, Date fechaModificacion,
-			TipoTarjetaDTO tipoTarjeta, EstatusTarjetaDTO estatusTarjeta) {
-		super(token, digitos, alias, fechaAlta, fechaModificacion, tipoTarjeta, estatusTarjeta);
+			TipoTarjetaDTO tipoTarjeta, EstatusTarjetaDTO estatusTarjeta, String id_openpay) {
+		super(token, digitos, alias, fechaAlta, fechaModificacion, tipoTarjeta, estatusTarjeta, id_openpay);
 
 	}
 
