@@ -36,7 +36,7 @@ public class PagoBuilder {
 	 * @param clienteDTO
 	 * @return
 	 */
-	public static Pago buildPagoFromObject(OperacionDTO operacion, TarjetaPagoDTO tarjeta, ClienteDTO clienteDTO) {
+	public static Pago buildPagoFromObject(OperacionDTO operacion, TarjetaPagoDTO tarjeta, ClienteDTO clienteDTO, String idTransaccionMidas) {
 		Pago pago = new Pago();
 		pago.setCliente(ClienteBuilder.buildClienteFromClienteDTO(clienteDTO));
 		pago.setDescripcion(operacion.getNombreOperacion());
@@ -51,7 +51,10 @@ public class PagoBuilder {
 		pago.setIdOrder(null);
 		pago.setMetodo(null);
 		pago.setRestResponse(null);
+		pago.setIdTransaccionMidas(Integer.parseInt(idTransaccionMidas));
 		pago.setMonto(operacion.getMonto());
+		pago.setFolioPartida(Integer.parseInt(operacion.getFolioContrato()));
+		pago.setIdOperacion(operacion.getIdOperacion());
 		pago.setTarjeta(null != tarjeta ? null != tarjeta.getDigitos() ? tarjeta.getDigitos():null:null);
 		return pago;
 	}

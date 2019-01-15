@@ -159,4 +159,24 @@ public final class TarjetaConstants {
 	 */
 	public static final String MSG_NO_SUCCESS_DELETE = "No se encontro el registro a eliminar.";
 
+	/**
+	 * Mensaje que es mostrado cuando se intenta agrefar una tarjeta con digitos que contienen caracteres que no son numeros
+	 */
+	public static final String MSG_ONLY_NUMBERS = "Los digitos de la tarjeta deben contener solo numeros";
+	
+	/**
+	 * Mensaje que es mostrado cuando el nombre del titular esta formado por uno o mas caracteres diferentes a letras
+	 */
+	public static final String MSG_ONLY_LETTERS = "El nombre del titular solo puede contener letras y espacios";
+	
+	/**
+	 * Valores a evaluar para solo letras
+	 */
+	public static final String LETTER_VALUES = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚÜ ";
+	
+	/**
+	 * Mensaje que aparece cuando se intenta agregar un alias de tarjeta que ya existe para el cliente en cuestion
+	 */
+	public static final String ALIAS_ALREADY_EXIST_FOR_CURRENT_CLIENT = "El alias ya existe para una de las tarjetas de este cliente";
+	
 }

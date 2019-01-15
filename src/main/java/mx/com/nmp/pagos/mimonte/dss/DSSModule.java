@@ -6,6 +6,7 @@ import java.util.Stack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.builder.ReglaNegocioBuilder;
@@ -31,9 +32,30 @@ import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorObjeto;
 @Component("dssModule")
 public class DSSModule {
 
+	/**
+	 * Servicio DSS para procesar peticiones referentes a modulo DSS
+	 */
 	@Autowired
 	private DSSService dssService;
-
+		
+	/**
+	 * Propiedad para uso de variable idCliente en consultas de reglas de negocio
+	 */
+	@Value(DSSConstants.ID_CLIENTE_PROP)
+	private String ID_CLIENTE_VAR;
+	
+	/**
+	 * Propiedad para uso de variable idReglaNegocio en consultas de reglas de negocio
+	 */
+	@Value(DSSConstants.ID_REGLA_PROP)
+	private String ID_REGLA_VAR;
+	
+	/**
+	 * Propiedad para uso de variable idAfiliacion en consultas de reglas de negocio
+	 */
+	@Value(DSSConstants.ID_AFILAICION_REGLA_PROP)
+	private String ID_AFILAICION_REGLA_VAR;
+	
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
@@ -70,6 +92,7 @@ public class DSSModule {
 		LOG.debug("Inicia reemplazo de variables");
 		for (ReglaNegocioDTO reglaNegocioDTO : reglasNegocioDTO) {
 			replaceVariablesDB(reglaNegocioDTO);
+			replaceLocalVariables(reglaNegocioDTO, pagoRequestDTO.getIdCliente());
 			ReglaNegocioResumenDTO regla = null;
 			LOG.debug("Inicia ejecucion de query: " + reglaNegocioDTO.getConsulta());
 			regla = dssService.execQuery(reglaNegocioDTO.getConsulta());
@@ -138,18 +161,39 @@ public class DSSModule {
 
 	/**
 	 * 
+	 * Metodo que reemplaza las variables de la consulta por los valores reales de el objeto en cuestion
+	 * 
+	 * @param reglaNegocioDTO
+	 */
+	private void replaceLocalVariables(ReglaNegocioDTO reglaNegocioDTO, Integer idCliente) {
+		LOG.debug("Inicia reemplazo de variables de base de datos para query: " + (null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta():null));
+		String str = null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null;
+		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getAfliacion() && null != reglaNegocioDTO.getAfliacion().getId()
+				&& null != reglaNegocioDTO.getId()
+				&& null != idCliente && idCliente != 0
+				) {
+			str.replace(ID_REGLA_VAR, String.valueOf(reglaNegocioDTO.getId()));
+			str.replace(ID_AFILAICION_REGLA_VAR, String.valueOf(reglaNegocioDTO.getAfliacion().getId()));
+			str.replace(ID_CLIENTE_VAR, String.valueOf(idCliente));
+			reglaNegocioDTO.setConsulta(str);
+		}
+	}
+	
+	/**
+	 * 
 	 * Metodo que reemplaza las variables de la consulta por valores de base de
 	 * datos
 	 * 
 	 * @param reglaNegocioDTO
 	 */
 	private void replaceVariablesDB(ReglaNegocioDTO reglaNegocioDTO) {
-		LOG.debug("Inicia reemplazo de variables de base de datos para query: " + reglaNegocioDTO.getConsulta());
+		LOG.debug("Inicia reemplazo de variables de base de datos para query: " + (null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta():null));
 		String str = null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null;
 		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getVariables()) {
 			for (VariableDTO variableDTO : reglaNegocioDTO.getVariables()) {
 				str.replace(variableDTO.getClave(), variableDTO.getValor());
 			}
+			reglaNegocioDTO.setConsulta(str);
 		}
 	}
 

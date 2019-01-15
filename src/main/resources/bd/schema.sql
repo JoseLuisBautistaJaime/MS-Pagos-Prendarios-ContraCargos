@@ -1,41 +1,41 @@
 -- Inicio juste a la tabla de Cliente
-ALTER TABLE `tarjetas` 
+ALTER TABLE `tarjetas`
 DROP FOREIGN KEY `cliente_tarjeta_fk`;
-ALTER TABLE `tarjetas` 
+ALTER TABLE `tarjetas`
 DROP INDEX `cliente_tarjeta_fk_idx` ;
 
-ALTER TABLE `transacciones` 
+ALTER TABLE `transacciones`
 DROP FOREIGN KEY `cliente_transaccion_fk`;
-ALTER TABLE `transacciones` 
+ALTER TABLE `transacciones`
 DROP INDEX `cliente_transaccion_fk_idx` ;
 
-ALTER TABLE `cliente` 
+ALTER TABLE `cliente`
 DROP COLUMN `app_materno`,
 DROP COLUMN `app_paterno`,
 CHANGE COLUMN `idcliente` `id_cliente` INT(11) NOT NULL ,
 CHANGE COLUMN `nombre` `nombre_titular` VARCHAR(100) NOT NULL ;
 
-ALTER TABLE `tarjetas` 
+ALTER TABLE `tarjetas`
 CHANGE COLUMN `idcliente` `id_cliente` INT(11) NOT NULL ;
 
-ALTER TABLE `tarjetas` 
+ALTER TABLE `tarjetas`
 ADD INDEX `cliente_tarjeta_fk_idx` (`id_cliente` ASC);
-ALTER TABLE `tarjetas` 
+ALTER TABLE `tarjetas`
 ADD CONSTRAINT `cliente_tarjeta_fk`
   FOREIGN KEY (`id_liente`)
   REFERENCES `cliente` (`id_cliente`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
-  
-ALTER TABLE `transacciones` 
+
+ALTER TABLE `transacciones`
 ADD INDEX `cliente_transacion_fk_idx` (`id_cliente` ASC);
-ALTER TABLE `transacciones` 
+ALTER TABLE `transacciones`
 ADD CONSTRAINT `cliente_transacion_fk`
   FOREIGN KEY (`id_cliente`)
   REFERENCES `cliente` (`id_cliente`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
- 
+
 -- Fin juste a la tabla de Cliente
 
 -- DSS MODULE CREATION BEGINS
@@ -85,10 +85,31 @@ CREATE TABLE `regla_negocio_variable` (
 
 -- ADD OPENPAY ID
 
-ALTER TABLE `compose`.`tarjetas` 
+ALTER TABLE `compose`.`tarjetas`
 ADD COLUMN `id_openpay` VARCHAR(40) NULL AFTER `estatus_tarjeta_c`;
 
 -- END OPENPAY ID
 
+-- NEW CATALOGS [catalogo_afiliacion, estatus_transaccion_c, regla_negocio, variable]
+INSERT INTO cat_catalogo(id, descripcion_corta, descripcion, nombre_tabla, activo)
+	VALUES(3, 'Afiliacion', 'Catalogo de afiliaciones', 'catalogo_afiliacion', 1),
+    (4, 'EstatusPago', 'Estatus de las transacciones o pagos', 'estatus_transaccion_c', 1),
+    (5, 'ReglaNegocio', 'Reglas de negocio', 'regla_negocio', 1),
+    (6, 'Variable', 'Variables para la aplicacion', 'variable', 1);
+-- NEW CATALOGS ENDS
 
+-- INSERT DEFAULT VALUE IN STATUS TRANSACTION CATALOG
+INSERT INTO estatus_transaccion_c(id, descripcion_corta, descripcion) VALUES(1,'PRegistrado','Pago Registrado');
+-- INSERT INTO STATUS TRANSACTION ENDS
+
+-- NEW COLUMNS FOR VALIDATION IDEMPOTENT REQUEST BEGINS
+ALTER TABLE pagos ADD COLUMN id_transaccion_midas INT NULL;
+ALTER TABLE pagos ADD COLUMN folio_partida INT NULL;
+ALTER TABLE pagos ADD COLUMN id_operacion INT NULL;
+-- NEW COLUMNS FOR IDEMPOTENT REQUEST ENDS
+-- INDEXES FOR NEW COLUMNS BEGINS
+CREATE INDEX idx_id_transaccion_midas ON pagos(id_transaccion_midas);
+CREATE INDEX idx_folio_partida ON pagos(folio_partida);
+CREATE INDEX idx_id_operacion ON pagos(id_operacion);
+-- INDEXES FOR NEW COLUMNS ENDS
 

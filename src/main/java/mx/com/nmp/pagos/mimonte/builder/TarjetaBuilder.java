@@ -102,6 +102,7 @@ public class TarjetaBuilder {
 		tarjetaDTO.setFechaModificacion(tarjetaPagoDTO.getFechaModificacion());
 		tarjetaDTO.setTipo(tarjetaPagoDTO.getTipo());
 		tarjetaDTO.setToken(tarjetaPagoDTO.getToken());
+		tarjetaDTO.setId_openpay(tarjetaPagoDTO.getId_openpay());
 		return tarjetaDTO;
 	}
 	

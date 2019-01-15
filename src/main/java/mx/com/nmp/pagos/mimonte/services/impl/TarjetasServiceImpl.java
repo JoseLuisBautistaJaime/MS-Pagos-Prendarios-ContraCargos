@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
+import mx.com.nmp.pagos.mimonte.controllers.TarjetasController;
 import mx.com.nmp.pagos.mimonte.dao.ClienteRepository;
 import mx.com.nmp.pagos.mimonte.dao.EstatusTarjetaRepository;
 import mx.com.nmp.pagos.mimonte.dao.TarjetaRepository;
@@ -193,6 +194,8 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		if (tarjeta.getTipo().getId() == null || tarjeta.getTipo().getId() < 1)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_ID_TIPO_SHOULD_NOT_BE_NULL_OR_VOID);
+		
+		doTypeValidations(tarjeta);
 
 		Tarjetas tarjetas = new Tarjetas();
 
@@ -205,6 +208,15 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		if(token != null)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKENS);
+		
+		List<Tarjetas> tarjetasList = tarjetaRepository.findByIdcliente(tarjeta.getCliente().getIdCliente());
+		if(null != tarjetasList && !tarjetasList.isEmpty()) {
+			for(Tarjetas tarjetaVal : tarjetasList) {
+				if(null != tarjetaVal && null != tarjetaVal.getAlias() && tarjetaVal.getAlias().equals(tarjeta.getAlias())) {
+					throw new TarjetaException(TarjetaConstants.ALIAS_ALREADY_EXIST_FOR_CURRENT_CLIENT);
+				}
+			}	
+		}
 		
 		tarjetas.setToken(tarjeta.getToken());
 		tarjetas.setUltimosDigitos(tarjeta.getDigitos());
@@ -307,7 +319,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		List<Tarjetas> tarjetaCliente = tarjetaRepository.encuentraidCliente(dto.getIdCliente());
 
-		if (tarjetaCliente.size() > MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT) {
+		if (tarjetaCliente.size() >= MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT) {
 
 			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_ADD_MAX_CARDS);
 
@@ -364,6 +376,27 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		return tarjeDto;
 
+	}
+	
+	/**
+	 * 
+	 * Metodo que realiza validaciones de tipos de datos en parametros
+	 * 
+	 * @throws TarjetaException
+	 */
+	public static void doTypeValidations(TarjetaDTO tarjeta)throws TarjetaException{
+		try {
+			Integer.parseInt(tarjeta.getDigitos());
+		}
+		catch(NumberFormatException nex) {
+			throw new TarjetaException(TarjetaConstants.MSG_ONLY_NUMBERS);
+		}
+		char[] clArray= tarjeta.getCliente().getNombreTitular().toUpperCase().toCharArray();
+		for(int i = 0; i < clArray.length; i ++) {
+			if(!TarjetaConstants.LETTER_VALUES.contains(String.valueOf(clArray[i]))) {
+				throw new TarjetaException(TarjetaConstants.MSG_ONLY_LETTERS);
+			}
+		}
 	}
 
 }

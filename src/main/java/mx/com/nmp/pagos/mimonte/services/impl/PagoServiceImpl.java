@@ -94,6 +94,12 @@ public class PagoServiceImpl implements PagoService {
 
 		LOG.debug("Se validara objeto pagoRequestDTO");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
+		try {
+			ValidadorDatosPago.doTypeValidations(pagoRequestDTO);	
+		}
+		catch(PagoException pex){
+			throw new PagoException(pex.getMessage());
+		}
 		Cliente cl = clienteRepository.findByIdcliente(pagoRequestDTO.getIdCliente());
 		if(null == cl)
 			throw new PagoException(PagoConstants.CLIENTE_NOT_FOUND);
@@ -102,11 +108,10 @@ public class PagoServiceImpl implements PagoService {
 			LOG.debug("Se iteraran operaciones dentro de pagoRequestDTO");
 			for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
 				try {
-					Integer c = pagoRepository.checkIfPagoExists(operacion.getNombreOperacion(),
-							pagoRequestDTO.getIdCliente(), operacion.getMonto());
+					Integer c = pagoRepository.checkIfPagoExists(Integer.parseInt(pagoRequestDTO.getIdTransaccionMidas()), Integer.parseInt(operacion.getFolioContrato()), operacion.getIdOperacion(), operacion.getMonto());
 					if (null != c && c == 0) {
 						pago = PagoBuilder.buildPagoFromObject(operacion, pagoRequestDTO.getTarjeta(),
-								clienteService.getClienteById(pagoRequestDTO.getIdCliente()));
+								clienteService.getClienteById(pagoRequestDTO.getIdCliente()), pagoRequestDTO.getIdTransaccionMidas());
 						pagoRepository.save(pago);
 						estatusPagos.add(new EstatusPagoResponseDTO(
 								EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));

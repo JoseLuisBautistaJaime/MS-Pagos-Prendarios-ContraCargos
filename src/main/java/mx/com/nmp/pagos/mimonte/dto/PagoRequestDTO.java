@@ -18,13 +18,14 @@ public class PagoRequestDTO {
 	private Boolean guardaTarjeta;
 	private Integer idCliente;
 	private String concepto;
+	private String idTransaccionMidas;
 	
 	public PagoRequestDTO() {
 		super();
 	}
 
-	public PagoRequestDTO(List<OperacionDTO> operaciones, TarjetaPagoDTO tarjeta, Integer montoTotal, Boolean guardaTarjeta,
-			Integer idCliente, String concepto) {
+	public PagoRequestDTO(List<OperacionDTO> operaciones, TarjetaPagoDTO tarjeta, Integer montoTotal,
+			Boolean guardaTarjeta, Integer idCliente, String concepto, String idTransaccionMidas) {
 		super();
 		this.operaciones = operaciones;
 		this.tarjeta = tarjeta;
@@ -32,9 +33,8 @@ public class PagoRequestDTO {
 		this.guardaTarjeta = guardaTarjeta;
 		this.idCliente = idCliente;
 		this.concepto = concepto;
+		this.idTransaccionMidas = idTransaccionMidas;
 	}
-
-
 
 	public List<OperacionDTO> getOperaciones() {
 		return operaciones;
@@ -83,11 +83,20 @@ public class PagoRequestDTO {
 	public void setIdCliente(Integer idCliente) {
 		this.idCliente = idCliente;
 	}
+	
+	public String getIdTransaccionMidas() {
+		return idTransaccionMidas;
+	}
+
+	public void setIdTransaccionMidas(String idTransaccionMidas) {
+		this.idTransaccionMidas = idTransaccionMidas;
+	}
 
 	@Override
 	public String toString() {
 		return "PagoRequestDTO [operaciones=" + operaciones + ", tarjeta=" + tarjeta + ", montoTotal=" + montoTotal
-				+ ", guardaTarjeta=" + guardaTarjeta + ", idCliente=" + idCliente + ", concepto=" + concepto + "]";
+				+ ", guardaTarjeta=" + guardaTarjeta + ", idCliente=" + idCliente + ", concepto=" + concepto
+				+ ", idTransaccion=" + idTransaccionMidas + "]";
 	}
 	
 }
