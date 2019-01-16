@@ -3,28 +3,27 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.List;
 
 /**
- * Nombre: PagoRequestDTO
- * Descripcion: Clase que encapsula la informacion perteneciente a un pago.
+ * Nombre: PagoRequestDTO Descripcion: Clase que encapsula la informacion
+ * perteneciente a un pago.
  *
- * @author Ismael Flores iaguilar@quarksoft.net
- * Fecha: 20/11/2018 12:56 hrs.
+ * @author Ismael Flores iaguilar@quarksoft.net Fecha: 20/11/2018 12:56 hrs.
  * @version 0.1
  */
 public class PagoRequestDTO {
 
 	private List<OperacionDTO> operaciones;
 	private TarjetaPagoDTO tarjeta;
-	private Integer montoTotal;
+	private Double montoTotal;
 	private Boolean guardaTarjeta;
 	private Integer idCliente;
 	private String concepto;
 	private String idTransaccionMidas;
-	
+
 	public PagoRequestDTO() {
 		super();
 	}
 
-	public PagoRequestDTO(List<OperacionDTO> operaciones, TarjetaPagoDTO tarjeta, Integer montoTotal,
+	public PagoRequestDTO(List<OperacionDTO> operaciones, TarjetaPagoDTO tarjeta, Double montoTotal,
 			Boolean guardaTarjeta, Integer idCliente, String concepto, String idTransaccionMidas) {
 		super();
 		this.operaciones = operaciones;
@@ -52,11 +51,11 @@ public class PagoRequestDTO {
 		this.tarjeta = tarjeta;
 	}
 
-	public Integer getMontoTotal() {
+	public Double getMontoTotal() {
 		return montoTotal;
 	}
 
-	public void setMontoTotal(Integer montoTotal) {
+	public void setMontoTotal(Double montoTotal) {
 		this.montoTotal = montoTotal;
 	}
 
@@ -83,7 +82,7 @@ public class PagoRequestDTO {
 	public void setIdCliente(Integer idCliente) {
 		this.idCliente = idCliente;
 	}
-	
+
 	public String getIdTransaccionMidas() {
 		return idTransaccionMidas;
 	}
@@ -98,5 +97,5 @@ public class PagoRequestDTO {
 				+ ", guardaTarjeta=" + guardaTarjeta + ", idCliente=" + idCliente + ", concepto=" + concepto
 				+ ", idTransaccion=" + idTransaccionMidas + "]";
 	}
-	
+
 }
