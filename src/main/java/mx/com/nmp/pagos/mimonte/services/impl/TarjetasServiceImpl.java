@@ -25,6 +25,7 @@ import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoTarjetaDTO;
 import mx.com.nmp.pagos.mimonte.exception.TarjetaException;
+import mx.com.nmp.pagos.mimonte.exception.TarjetaIdentifierException;
 import mx.com.nmp.pagos.mimonte.model.Cliente;
 import mx.com.nmp.pagos.mimonte.model.EstatusTarjeta;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
@@ -166,7 +167,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * @return Tarjetas.
 	 */
 	@Override
-	public Tarjetas addTarjetas(TarjetaDTO tarjeta) {
+	public Tarjetas addTarjetas(TarjetaDTO tarjeta) throws TarjetaException{
 
 		if (tarjeta.getAlias() == null || tarjeta.getAlias().isEmpty())
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_PARAMETERS_ALIAS_SHOULD_NOT_BE_NULL_OR_VOID);
@@ -207,7 +208,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		Tarjetas token = tarjetaRepository.findByToken(tarjeta.getToken());
 
 		if(token != null)
-			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKENS);
+			throw new TarjetaIdentifierException(TarjetaConstants.MSG_FAIL_TOKENS);
 		
 		List<Tarjetas> tarjetasList = tarjetaRepository.findByIdcliente(tarjeta.getCliente().getIdCliente());
 		if(null != tarjetasList && !tarjetasList.isEmpty()) {
@@ -391,12 +392,14 @@ public class TarjetasServiceImpl implements TarjetasService {
 		catch(NumberFormatException nex) {
 			throw new TarjetaException(TarjetaConstants.MSG_ONLY_NUMBERS);
 		}
-		char[] clArray= tarjeta.getCliente().getNombreTitular().toUpperCase().toCharArray();
-		for(int i = 0; i < clArray.length; i ++) {
-			if(!TarjetaConstants.LETTER_VALUES.contains(String.valueOf(clArray[i]))) {
-				throw new TarjetaException(TarjetaConstants.MSG_ONLY_LETTERS);
+		if(null != tarjeta.getCliente() && null != tarjeta.getCliente().getNombreTitular()) {
+			char[] clArray= tarjeta.getCliente().getNombreTitular().toUpperCase().toCharArray();
+			for(int i = 0; i < clArray.length; i ++) {
+				if(!TarjetaConstants.LETTER_VALUES.contains(String.valueOf(clArray[i]))) {
+					throw new TarjetaException(TarjetaConstants.MSG_ONLY_LETTERS);
+				}
 			}
-		}
+		}		
 	}
 
 }

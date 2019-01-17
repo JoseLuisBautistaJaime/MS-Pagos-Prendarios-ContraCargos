@@ -20,4 +20,14 @@ public interface ClienteService {
 	 */
 	public ClienteDTO getClienteById(Integer idCliente);
 	
+	
+	/**
+	 * 
+	 * Metodo que guarda un cliente
+	 * 
+	 * @param cliente
+	 * @return
+	 */
+	public ClienteDTO saveCliente(ClienteDTO clienteDTO);
+	
 }

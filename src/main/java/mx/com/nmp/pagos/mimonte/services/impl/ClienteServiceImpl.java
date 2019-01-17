@@ -36,4 +36,11 @@ public class ClienteServiceImpl implements ClienteService {
 		return clienteDTO;
 	}
 
+	@Override
+	public ClienteDTO saveCliente(ClienteDTO clienteDTO) {
+		Cliente cliente = ClienteBuilder.buildClienteFromClienteDTO(clienteDTO);
+		ClienteDTO clienteDTORet = ClienteBuilder.buildClienteDTOFromCliente(clienteRepository.save(cliente));
+		return clienteDTORet;
+	}
+
 }

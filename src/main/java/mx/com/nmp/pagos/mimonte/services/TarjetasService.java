@@ -4,6 +4,7 @@ import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
+import mx.com.nmp.pagos.mimonte.exception.TarjetaException;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 
 /**
@@ -47,7 +48,7 @@ public interface TarjetasService {
 	 * @param tarjeta
 	 * @return Tarjetas.
 	 */
-	public Tarjetas addTarjetas(TarjetaDTO tarjeta);
+	public Tarjetas addTarjetas(TarjetaDTO tarjeta)throws TarjetaException;
 	
 	/**
 	 * Método que actualiza el alias de una tarjeta.

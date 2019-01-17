@@ -23,13 +23,9 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
 	 * Metodo que consulta si ya existe un pago a registrar en base de datos para no
 	 * duplicarlo
 	 * 
-	 * @param nombre
-	 * @param idcliente
-	 * @param monto
+	 * @param idTransaccionMidas
 	 * @return
 	 */
-	@Query("SELECT COUNT(p.id) FROM Pago p WHERE p.idTransaccionMidas = :idTransaccionMidas AND p.folioPartida = :folioContrato AND p.idOperacion = :idOperacion AND p.monto = :montoOperacion")
-	public Integer checkIfPagoExists(@Param("idTransaccionMidas") Integer idTransaccionMidas,
-			@Param("folioContrato") Integer folioContrato, @Param("idOperacion") Integer idOperacion,
-			@Param("montoOperacion") Double montoOperacion);
+	@Query("SELECT COUNT(p.id) FROM Pago p WHERE p.idTransaccionMidas = :idTransaccionMidas")
+	public Integer countByIdTransaccionMidas(@Param("idTransaccionMidas") Integer idTransaccionMidas);
 }

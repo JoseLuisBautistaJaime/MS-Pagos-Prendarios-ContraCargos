@@ -179,4 +179,8 @@ public final class TarjetaConstants {
 	 */
 	public static final String ALIAS_ALREADY_EXIST_FOR_CURRENT_CLIENT = "El alias ya existe para una de las tarjetas de este cliente";
 	
+	/**
+	 * Mensaje que es mostrado en el servicio de pago cuando se intenta guardar una tarjeta que ya existe
+	 */
+	public static final String MSG_TARJETAS_ERROR = "La tarjeta no se guardo ya que el token de tarjetas ya existe";
 }

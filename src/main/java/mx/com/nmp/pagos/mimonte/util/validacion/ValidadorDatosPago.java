@@ -84,6 +84,9 @@ public class ValidadorDatosPago {
 		catch(NumberFormatException nex) {
 			throw new PagoException(PagoConstants.NUMBER_FORMAT_IN_ID_TRANSACCION_MIDAS);
 		}
+		if(pagoRequestDTO.getGuardaTarjeta() && null == pagoRequestDTO.getTarjeta()) {
+			throw new PagoException(PagoConstants.MSG_CARD_DATA_IS_NULL);
+		}
 	}
 	
 }

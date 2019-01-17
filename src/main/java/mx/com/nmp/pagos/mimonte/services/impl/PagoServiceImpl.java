@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -14,15 +15,17 @@ import mx.com.nmp.pagos.mimonte.builder.PagoBuilder;
 import mx.com.nmp.pagos.mimonte.builder.TarjetaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.EstatusOperacion;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
-import mx.com.nmp.pagos.mimonte.dao.ClienteRepository;
+import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
 import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
+import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
-import mx.com.nmp.pagos.mimonte.model.Cliente;
+import mx.com.nmp.pagos.mimonte.exception.TarjetaException;
+import mx.com.nmp.pagos.mimonte.exception.TarjetaIdentifierException;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
@@ -59,9 +62,6 @@ public class PagoServiceImpl implements PagoService {
 	@Autowired
 	private PagoRepository pagoRepository;
 
-	@Autowired
-	private ClienteRepository clienteRepository;
-	
 //	@Autowired
 //	private DSSModule dssModule;
 
@@ -95,38 +95,51 @@ public class PagoServiceImpl implements PagoService {
 		LOG.debug("Se validara objeto pagoRequestDTO");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		try {
-			ValidadorDatosPago.doTypeValidations(pagoRequestDTO);	
-		}
-		catch(PagoException pex){
+			ValidadorDatosPago.doTypeValidations(pagoRequestDTO);
+		} catch (PagoException pex) {
 			throw new PagoException(pex.getMessage());
 		}
-		Cliente cl = clienteRepository.findByIdcliente(pagoRequestDTO.getIdCliente());
-		if(null == cl)
-			throw new PagoException(PagoConstants.CLIENTE_NOT_FOUND);
+		// Comienzan validaciones de tarjetas
+		Boolean flagOkCardData = false;
+		LOG.debug("Se inician validaciones respecto a objeto pagoRequestDTO.getTarjeta()");
+		if (validaSiGuardar(pagoRequestDTO)) {
+			if (validaCantidadTarjetasExistentes(pagoRequestDTO)) {
+				validaDatos(pagoRequestDTO.getTarjeta());
+				flagOkCardData = true;
+			} else {
+				LOG.info(PagoConstants.MSG_CARD_WAS_NOT_SAVED);
+			}
+		}
+		// Finalizan validaciones de tarjeta
+		ClienteDTO cl = clienteService.getClienteById(pagoRequestDTO.getIdCliente());
+		if (null == cl) {
+			cl = clienteService.saveCliente(new ClienteDTO(pagoRequestDTO.getIdCliente(), null, new Date()));
+		}
 		Pago pago = new Pago();
 		if (null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty()) {
 			LOG.debug("Se iteraran operaciones dentro de pagoRequestDTO");
-			for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
-				try {
-					Integer c = pagoRepository.checkIfPagoExists(Integer.parseInt(pagoRequestDTO.getIdTransaccionMidas()), Integer.parseInt(operacion.getFolioContrato()), operacion.getIdOperacion(), operacion.getMonto());
-					if (null != c && c == 0) {
-						pago = PagoBuilder.buildPagoFromObject(operacion, pagoRequestDTO.getTarjeta(),
-								clienteService.getClienteById(pagoRequestDTO.getIdCliente()), pagoRequestDTO.getIdTransaccionMidas());
+			Integer flag = 0;
+			flag = pagoRepository.countByIdTransaccionMidas(Integer.parseInt(pagoRequestDTO.getIdTransaccionMidas()));
+			if (null != flag && flag == 0) {
+				for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
+					try {
+						pago = PagoBuilder.buildPagoFromObject(operacion, pagoRequestDTO.getTarjeta(), cl,
+								pagoRequestDTO.getIdTransaccionMidas());
 						pagoRepository.save(pago);
 						estatusPagos.add(new EstatusPagoResponseDTO(
 								EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
 						LOG.debug("Se agrego operacion correcta: " + operacion);
-					} else {
+					} catch (Exception ex) {
 						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(),
 								operacion.getFolioContrato()));
-						LOG.debug("La operacion: " + operacion + " ya existe");
+						LOG.error("Se agrego operacion fallida: " + operacion);
+						LOG.error(ex.getMessage());
 					}
-				} catch (Exception ex) {
-					estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(),
-							operacion.getFolioContrato()));
-					LOG.error("Se agrego operacion fallida: " + operacion);
-					LOG.error(ex.getMessage());
 				}
+			} else if (null == flag) {
+				throw new PagoException(PagoConstants.MSG_CAN_NO_CHECK_IF_PAGO_EXISTS);
+			} else {
+				throw new PagoException(PagoConstants.TRANSACTION_ID_ALREADY_EXISTS);
 			}
 			pagoResponseDTO.setExitoso(true);
 		} else {
@@ -136,14 +149,15 @@ public class PagoServiceImpl implements PagoService {
 		}
 		// Se realizan validacion propias del negocio
 		LOG.debug("Se inician validaciones respecto a objeto pagoRequestDTO.getTarjeta()");
-		if (validaSiGuardar(pagoRequestDTO)) {
-			if (validaCantidadTarjetasExistentes(pagoRequestDTO)) {
-				validaDatos(pagoRequestDTO.getTarjeta());
-				tarjetaService.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(),
-						clienteService.getClienteById(pagoRequestDTO.getIdCliente())));
-			} else {
-				LOG.error(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
-				throw new PagoException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+		if (flagOkCardData) {
+			try {
+				tarjetaService
+						.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(), cl));
+			} catch (TarjetaException tex) {
+				if (tex instanceof TarjetaIdentifierException)
+					LOG.info(TarjetaConstants.MSG_TARJETAS_ERROR);
+				else
+					LOG.info(tex.getMessage());
 			}
 		}
 
