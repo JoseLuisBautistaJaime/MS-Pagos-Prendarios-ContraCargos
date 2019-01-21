@@ -84,49 +84,49 @@ public class TarjetasController {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/v1/tarjetas/{token}/{idCliente}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas con respecto a los parámetros token y id del cliente.", tags = { "Tarjetas" })
+	@GetMapping(value = "/v1/tarjetas/{id_openpay}/{idCliente}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas con respecto a los parámetros id_openpay y id del cliente.", tags = { "Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response get(@PathVariable(value = "idCliente", required = true) Integer idcliente, @PathVariable(value = "token", required = true) String token) {
+	public Response get(@PathVariable(value = "idCliente", required = true) Integer idcliente, @PathVariable(value = "id_openpay", required = true) String id_openpay) {
 
 		log.debug("Entrando a operacion de servicio TarjetasController.get()...");
 
-		log.debug("Validando parametro token...");
-		ValidadorCadena.notNullNorEmpty(token);
+		log.debug("Validando parametro id_openpay...");
+		ValidadorCadena.notNullNorEmpty(id_openpay);
 
-		TarjeDTO tarjetaIdClienteAndToken = tarjetasService.getTarjetasTokenIdCliente(idcliente, token);
+		TarjeDTO tarjetaIdClienteAndIdOpenPay = tarjetasService.getTarjetasTokenIdCliente(idcliente, id_openpay);
 
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaIdClienteAndToken);
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaIdClienteAndIdOpenPay);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS, tarjetaIdClienteAndToken);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS, tarjetaIdClienteAndIdOpenPay);
 
 	}
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/v1/tarjetas/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas con respecto al parámetro del token.", tags = { "Tarjetas" })
+	@GetMapping(value = "/v1/tarjetas/{id_openpay}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de las tarjetas registradas con respecto al parámetro del id_openpay.", tags = { "Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response get(@PathVariable(value = "token", required = true) String token) {
+	public Response get(@PathVariable(value = "id_openpay", required = true) String id_openpay) {
 
 		log.debug("Entrando a operacion de servicio TarjetasController.get()...");
 
-		log.debug("Validando parametro token...");
-		ValidadorCadena.notNullNorEmpty(token);
+		log.debug("Validando parametro id_openpay...");
+		ValidadorCadena.notNullNorEmpty(id_openpay);
 
-		log.debug("Intentando obtener el listado de registros para el tarjetas {}...", token);
+		log.debug("Intentando obtener el listado de registros para el tarjetas {}...", id_openpay);
 
-		TarjeDTO tarjetaToken = tarjetasService.getTarjetasToken(token);
+		TarjeDTO tarjetaOpenPay = tarjetasService.getTarjetasToken(id_openpay);
 
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaToken);
+		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaOpenPay);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS, tarjetaToken);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS, tarjetaOpenPay);
 
 	}
 	
@@ -166,14 +166,14 @@ public class TarjetasController {
 		
 		log.debug("Entrando a operacion de servicio TarjetasController.update()...");
 
-	    log.debug("Validando parametro token...");
-	    ValidadorCadena.notNullNorEmpty(alias.getToken());
+	    log.debug("Validando parametro idOpenPay...");
+	    ValidadorCadena.notNullNorEmpty(alias.getId_openpay());
 	    
 	    log.debug("Validando parametro alias...");
 	    ValidadorCadena.notNullNorEmpty(alias.getAlias());
 
-	    log.debug("Intentando obtener el listado de registros para la tarjeta {}...", alias.getToken() + " " + alias);
-	    Tarjetas updateTarjetas = tarjetasService.updateTarjeta(alias.getToken(), alias.getAlias());
+	    log.debug("Intentando obtener el listado de registros para la tarjeta {}...", alias.getId_openpay() + " " + alias);
+	    Tarjetas updateTarjetas = tarjetasService.updateTarjeta(alias.getId_openpay(), alias.getAlias());
 
 	    log.debug("Regresando instancia Response con la respuesta obtenida: {}...", updateTarjetas);
 	    return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_UPDATE, updateTarjetas);
@@ -182,21 +182,21 @@ public class TarjetasController {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@DeleteMapping(value = "/v1/tarjeta/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(value = "/v1/tarjeta/{id_openpay}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "DELETE", value = "Borra la información de la tarjeta registrada en la base de datos.", tags = {	"Tarjetas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response delete(@PathVariable(value = "token", required = true) String token) {
+	public Response delete(@PathVariable(value = "id_openpay", required = true) String id_openpay) {
 		
 		log.debug("Entrando a operacion de servicio TarjetasController.delete()...");
 		
-		log.debug("Validando parametro token...");
-	    ValidadorCadena.notNullNorEmpty(token);
+		log.debug("Validando parametro id_openpay...");
+	    ValidadorCadena.notNullNorEmpty(id_openpay);
 
-		log.debug("Intentando borrar el registro de la tarjeta {}...", token);
-		 Tarjetas deletetarjeta = tarjetasService.deleteTarjeta(token);
+		log.debug("Intentando borrar el registro de la tarjeta {}...", id_openpay);
+		 Tarjetas deletetarjeta = tarjetasService.deleteTarjeta(id_openpay);
 		
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", deletetarjeta);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_DELETE, deletetarjeta);

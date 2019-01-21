@@ -36,7 +36,7 @@ public final class TarjetaConstants {
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String MSG_FAIL_TOKEN_ALREADY_EXISTS = "El token ya existe";
+	public static final String MSG_FAIL_TOKEN_ALREADY_EXISTS = "El id_openpay ya existe";
 	
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
@@ -71,17 +71,17 @@ public final class TarjetaConstants {
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String MSG_FAIL_TOKEN = "El token no existe";
+	public static final String MSG_FAIL_TOKEN = "El id_openpay no existe";
 	
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String MSG_FAIL_TOKENS = "El token ya existe.";
+	public static final String MSG_FAIL_TOKENS = "El id_openpay ya existe.";
 	
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String MSG_FAIL_TOKEN_NULL_OR_VOID = "El token esta nulo o vacio";
+	public static final String MSG_FAIL_TOKEN_NULL_OR_VOID = "El id_openpay esta nulo o vacio";
 	
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
@@ -111,7 +111,7 @@ public final class TarjetaConstants {
 	/**
 	 * Mensaje que sera enviado si no se recuperaron los registros correctamente
 	 */
-	public static final String MSG_FAILURE_TOKEN_IDCLIENTE = "El token o el idCliente estan vacios o nulos ";
+	public static final String MSG_FAILURE_TOKEN_IDCLIENTE = "El id_openpay o el idCliente estan vacios o nulos ";
 	
 	/**
 	 * Mensaje que sera enviado si no se recuperaron los registros correctamente
@@ -122,7 +122,7 @@ public final class TarjetaConstants {
 	/**
 	 * Mensaje que sera enviado si no se recuperaron los registros correctamente
 	 */
-	public static final String MSG_FAILURE_TOKEN = "El token es nulo o vacio";
+	public static final String MSG_FAILURE_TOKEN = "El id_openpay es nulo o vacio";
 
 	/**
 	 * Mensaje que sera enviado si se guarda el registro correctamente
@@ -147,7 +147,7 @@ public final class TarjetaConstants {
 	/**
 	 * Mensaje que sera enviado si se actualiza el registro correctamente
 	 */
-	public static final String MSG_NO_SUCCESS_UPDATE_NULL = "No se encontraron registros con el token especificado";
+	public static final String MSG_NO_SUCCESS_UPDATE_NULL = "No se encontraron registros con el id_openpay especificado";
 
 	/**
 	 * Mensaje que sera enviado si se borra el registro correctamente
@@ -182,5 +182,5 @@ public final class TarjetaConstants {
 	/**
 	 * Mensaje que es mostrado en el servicio de pago cuando se intenta guardar una tarjeta que ya existe
 	 */
-	public static final String MSG_TARJETAS_ERROR = "La tarjeta no se guardo ya que el token de tarjetas ya existe";
+	public static final String MSG_TARJETAS_ERROR = "La tarjeta no se guardo ya que el id_openpay de tarjetas ya existe";
 }

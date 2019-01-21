@@ -113,3 +113,9 @@ CREATE INDEX idx_folio_partida ON pagos(folio_partida);
 CREATE INDEX idx_id_operacion ON pagos(id_operacion);
 -- INDEXES FOR NEW COLUMNS ENDS
 
+-- ALTER CAMBIO DE DATO TOKEN Y OPENPAY
+ALTER TABLE `compose`.`tarjetas` 
+CHANGE COLUMN `token` `id_openpay` VARCHAR(40) NOT NULL ,
+CHANGE COLUMN `id_openpay` `token` VARCHAR(40) NULL DEFAULT NULL ;
+-- FIN CAMBIO TOKEN Y OPENPAY
+

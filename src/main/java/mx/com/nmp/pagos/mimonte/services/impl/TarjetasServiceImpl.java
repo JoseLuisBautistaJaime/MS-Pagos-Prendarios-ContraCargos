@@ -103,13 +103,13 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * @return TarjeDTO.
 	 */
 	@Override
-	public TarjeDTO getTarjetasToken(String token) {
+	public TarjeDTO getTarjetasToken(String id_openpay) {
 
-		if (token == null || token.equals(""))
+		if (id_openpay == null || id_openpay.equals(""))
 			throw new TarjetaException(TarjetaConstants.MSG_FAILURE);
 
 		// Obtiene los registros
-		Tarjetas tarjetasCliente = tarjetaRepository.findByToken(token);
+		Tarjetas tarjetasCliente = tarjetaRepository.findByIdOpenPay(id_openpay);
 
 		if (tarjetasCliente == null)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKEN);
@@ -134,16 +134,16 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * @return TarjeDTO.
 	 */
 	@Override
-	public TarjeDTO getTarjetasTokenIdCliente(Integer idCliente, String token) {
+	public TarjeDTO getTarjetasTokenIdCliente(Integer idCliente, String id_openpay) {
 
 		if (idCliente == null || idCliente < 1)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_PARAMETER_IDCLIENTE);
 
-		if (token == null || token.isEmpty())
+		if (id_openpay == null || id_openpay.isEmpty())
 			throw new TarjetaException(TarjetaConstants.MSG_FAILURE_TOKEN);
 
 		// Obtiene los registros
-		Tarjetas tarjetasCliente = tarjetaRepository.findByIdclienteAndToken(idCliente, token);
+		Tarjetas tarjetasCliente = tarjetaRepository.findByIdclienteAndIdOpenPay(idCliente, id_openpay);
 
 		if (tarjetasCliente == null)
 			throw new TarjetaException(TarjetaConstants.MSG_FAILURES);
@@ -172,7 +172,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		if (tarjeta.getAlias() == null || tarjeta.getAlias().isEmpty())
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_PARAMETERS_ALIAS_SHOULD_NOT_BE_NULL_OR_VOID);
 
-		if (tarjeta.getToken() == null || tarjeta.getToken().isEmpty())
+		if (tarjeta.getId_openpay() == null || tarjeta.getId_openpay().isEmpty())
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKEN_NULL_OR_VOID);
 		
 		if(tarjeta.getDigitos() == null || tarjeta.getDigitos().length() < 4 || tarjeta.getDigitos().length() > 4)
@@ -205,9 +205,9 @@ public class TarjetasServiceImpl implements TarjetasService {
 		TipoTarjeta tipoTarjeta = tipoTarjetaRepository.encontrar(tarjeta.getTipo().getId());
 		EstatusTarjeta estatusTarjeta = estatusTarjetaRepository.encontrar(tarjeta.getEstatus().getId());
 
-		Tarjetas token = tarjetaRepository.findByToken(tarjeta.getToken());
+		Tarjetas idOpen = tarjetaRepository.findByIdOpenPay(tarjeta.getId_openpay());
 
-		if(token != null)
+		if(idOpen != null)
 			throw new TarjetaIdentifierException(TarjetaConstants.MSG_FAIL_TOKENS);
 		
 		List<Tarjetas> tarjetasList = tarjetaRepository.findByIdcliente(tarjeta.getCliente().getIdCliente());
@@ -239,9 +239,9 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * @param alias.
 	 * @return Tarjetas.
 	 */
-	public Tarjetas updateTarjeta(String token, String alias) {
+	public Tarjetas updateTarjeta(String id_openpay, String alias) {
 
-		if (token == null || token.isEmpty()) {
+		if (id_openpay == null || id_openpay.isEmpty()) {
 
 			throw new TarjetaException(TarjetaConstants.MSG_FAILURE_TOKEN);
 
@@ -254,7 +254,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		}
 
 		// Obtiene los registros
-		Tarjetas updateTarjeta = tarjetaRepository.findByToken(token);
+		Tarjetas updateTarjeta = tarjetaRepository.findByIdOpenPay(id_openpay);
 
 		// Evalua si existen registros
 		if (updateTarjeta == null)
@@ -277,21 +277,21 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * @return void.
 	 */
 	@Override
-	public Tarjetas deleteTarjeta(String token) {
+	public Tarjetas deleteTarjeta(String id_openpay) {
 
-		if (token == null || token.isEmpty()) {
+		if (id_openpay == null || id_openpay.isEmpty()) {
 
 			throw new TarjetaException(TarjetaConstants.MSG_FAILURE_TOKEN);
 
 		}
 
 		// Obtiene los registros
-		Tarjetas deleteTarjeta = tarjetaRepository.findByToken(token);
+		Tarjetas deleteTarjeta = tarjetaRepository.findByIdOpenPay(id_openpay);
 
 		if (deleteTarjeta == null)
 			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_DELETE);
 
-		tarjetaRepository.eliminarTarjeta(token);
+		tarjetaRepository.eliminarTarjeta(id_openpay);
 
 		return deleteTarjeta;
 	}

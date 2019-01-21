@@ -19,9 +19,9 @@ public class TarjetaDTO extends AbstractTarjetaDTO {
 		super();
 	}
 
-	public TarjetaDTO(String token, String digitos, String alias, Date fechaAlta, Date fechaModificacion,
-			ClienteDTO cliente, TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus,String id_openpay) {
-		super(token, digitos, alias, fechaAlta, fechaModificacion, tipo, estatus, id_openpay);
+	public TarjetaDTO(String id_openpay, String digitos, String alias, Date fechaAlta, Date fechaModificacion,
+			ClienteDTO cliente, TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus,String token) {
+		super(id_openpay, digitos, alias, fechaAlta, fechaModificacion, tipo, estatus, token);
 	}
 
 	public ClienteDTO getCliente() {
@@ -34,9 +34,9 @@ public class TarjetaDTO extends AbstractTarjetaDTO {
 
 	@Override
 	public String toString() {
-		return "TarjetaDTO [cliente=" + cliente + ", token=" + token + ", digitos=" + digitos + ", alias=" + alias
+		return "TarjetaDTO [cliente=" + cliente + ", id_openpay=" + id_openpay + ", digitos=" + digitos + ", alias=" + alias
 				+ ", fechaAlta=" + fechaAlta + ", fechaModificacion=" + fechaModificacion + ", tipo=" + tipo
-				+ ", estatus=" + estatus + ", id_openpay=" + id_openpay + "]";
+				+ ", estatus=" + estatus + ", token=" + token + "]";
 	}
 	
 }

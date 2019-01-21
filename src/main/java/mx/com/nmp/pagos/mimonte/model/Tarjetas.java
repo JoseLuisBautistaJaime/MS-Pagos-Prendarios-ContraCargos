@@ -36,8 +36,8 @@ public class Tarjetas implements Serializable {
 	private static final long serialVersionUID = 4139940644170406428L;
 
 	@Id
-	@Column(name = "token", unique = true, nullable = false, length = Constants.LONGITUD_TOKEN)
-	private String token;
+	@Column(name = "id_openpay", unique = true, nullable = false, length = Constants.LONGITUD_TOKEN)
+	private String id_openpay;
 
 	@Column(name = "ultimos_digitos", length = Constants.LONGITUD_ULTIMOS_DIGITOS)
 	private String ultimosDigitos;
@@ -64,8 +64,8 @@ public class Tarjetas implements Serializable {
 	@JoinColumn(name = "estatus_tarjeta_c")
 	private EstatusTarjeta estatusTarjeta;
 	
-	@Column(name = "id_openpay")
-	private String id_openpay;
+	@Column(name = "token")
+	private String token;
 
 	public Tarjetas() {
 		super();
@@ -211,9 +211,9 @@ public class Tarjetas implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Tarjetas [token=" + token + ", ultimosDigitos=" + ultimosDigitos + ", alias=" + alias + ", fechaAlta="
+		return "Tarjetas [id_openpay=" + id_openpay + ", ultimosDigitos=" + ultimosDigitos + ", alias=" + alias + ", fechaAlta="
 				+ fechaAlta + ", fechaModificacion=" + fechaModificacion + ", tipoTarjeta="
-				+ tipoTarjeta + ", estatusTarjeta=" + estatusTarjeta + ", id_openpay=" + id_openpay + "]";
+				+ tipoTarjeta + ", estatusTarjeta=" + estatusTarjeta + ", token=" + token + "]";
 	}
 
 }

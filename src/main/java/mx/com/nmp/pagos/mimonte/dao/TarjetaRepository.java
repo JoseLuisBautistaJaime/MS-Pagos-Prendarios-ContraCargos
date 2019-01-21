@@ -59,8 +59,8 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @param token
 	 * @return List<Tarjetas>
 	 */
-	@Query("SELECT t FROM Tarjetas t WHERE t.clientes.idcliente = :idCliente AND t.token = :token")
-	public Tarjetas findByIdclienteAndToken(@Param("idCliente")Integer idCliente, @Param("token") String token);
+	@Query("SELECT t FROM Tarjetas t WHERE t.clientes.idcliente = :idCliente AND t.id_openpay = :id_openpay")
+	public Tarjetas findByIdclienteAndIdOpenPay(@Param("idCliente")Integer idCliente, @Param("id_openpay") String id_openpay);
 	//public Tarjetas findByIdclienteAndToken(Integer idCliente, String token);
 	
 
@@ -70,7 +70,8 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @param token
 	 * @return List<Tarjetas>
 	 */
-	public Tarjetas findByToken(String token);
+	@Query("SELECT t FROM Tarjetas t WHERE  t.id_openpay = :id_openpay")
+	public Tarjetas findByIdOpenPay (@Param("id_openpay") String id_openpay);
 	
 	/**
 	 * 
@@ -84,7 +85,7 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	
 	@Transactional
 	@Modifying
-	@Query("DELETE FROM Tarjetas WHERE token = :token ")
-	public void eliminarTarjeta(@Param("token") String token);
+	@Query("DELETE FROM Tarjetas WHERE id_openpay = :id_openpay ")
+	public void eliminarTarjeta(@Param("id_openpay") String id_openpay);
 
 }

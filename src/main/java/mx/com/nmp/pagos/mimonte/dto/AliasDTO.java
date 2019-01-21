@@ -2,13 +2,16 @@ package mx.com.nmp.pagos.mimonte.dto;
 
 public class AliasDTO {
 		
-	String token;
+	String id_openpay;
 	String alias;
-	public String getToken() {
-		return token;
+	
+	
+	
+	public String getId_openpay() {
+		return id_openpay;
 	}
-	public void setToken(String token) {
-		this.token = token;
+	public void setId_openpay(String id_openpay) {
+		this.id_openpay = id_openpay;
 	}
 	public String getAlias() {
 		return alias;

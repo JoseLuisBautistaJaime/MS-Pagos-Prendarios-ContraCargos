@@ -32,7 +32,7 @@ public interface TarjetasService {
 	 * @param token.
 	 * @return TarjeDTO.
 	 */
-	public TarjeDTO getTarjetasTokenIdCliente(Integer idCliente ,String token);
+	public TarjeDTO getTarjetasTokenIdCliente(Integer idCliente ,String id_openpay);
 	
 	/**
 	 * Método que obttiene información de la tarjeta.
@@ -40,7 +40,7 @@ public interface TarjetasService {
 	 * @param token.
 	 * @return TarjeDTO.
 	 */
-	public TarjeDTO getTarjetasToken(String token);
+	public TarjeDTO getTarjetasToken(String id_openpay);
 
 	/**
 	 * Método que registra una tarjeta.
@@ -57,7 +57,7 @@ public interface TarjetasService {
 	 * @param alias.
 	 * @return Tarjetas.
 	 */
-	public Tarjetas updateTarjeta(String token, String alias);
+	public Tarjetas updateTarjeta(String id_openpay, String alias);
 
 	
 	/**
@@ -66,7 +66,7 @@ public interface TarjetasService {
 	 * @param token.
 	 * @return Tarjetas.
 	 */
-	public Tarjetas deleteTarjeta(String token);
+	public Tarjetas deleteTarjeta(String id_openpay);
 	
 	/**
 	 * 

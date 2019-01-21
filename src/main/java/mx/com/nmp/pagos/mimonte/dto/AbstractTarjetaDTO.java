@@ -14,7 +14,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class AbstractTarjetaDTO {
 
-	protected  String token;
+	protected  String id_openpay;
 
 	protected  String digitos;
 
@@ -28,23 +28,23 @@ public abstract class AbstractTarjetaDTO {
 
 	protected  EstatusTarjetaDTO estatus;
 	
-	protected  String id_openpay;
+	protected  String token;
 
 	public AbstractTarjetaDTO() {
 		super();
 	}
 
-	public AbstractTarjetaDTO(String token, String digitos, String alias, Date fechaAlta, Date fechaModificacion,
-			TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus, String id_openpay) {
+	public AbstractTarjetaDTO(String id_openpay, String digitos, String alias, Date fechaAlta, Date fechaModificacion,
+			TipoTarjetaDTO tipo, EstatusTarjetaDTO estatus, String token) {
 		super();
-		this.token = token;
+		this.id_openpay = id_openpay;
 		this.digitos = digitos;
 		this.alias = alias;
 		this.fechaAlta = fechaAlta;
 		this.fechaModificacion = fechaModificacion;
 		this.tipo = tipo;
 		this.estatus = estatus;
-		this.id_openpay = id_openpay;
+		this.token = token;
 	}
 
 	public TipoTarjetaDTO getTipo() {
@@ -114,8 +114,8 @@ public abstract class AbstractTarjetaDTO {
 
 	@Override
 	public String toString() {
-		return "TarjetaDTO [token=" + token + ", digitos=" + digitos + ", alias=" + alias + ", fechaAlta=" + fechaAlta
-				+ ", fechaModificacion=" + fechaModificacion + ", tipo=" + tipo + ", estatus=" + estatus + ", id_openpay=" + id_openpay + "]";
+		return "TarjetaDTO [id_openpay=" + id_openpay + ", digitos=" + digitos + ", alias=" + alias + ", fechaAlta=" + fechaAlta
+				+ ", fechaModificacion=" + fechaModificacion + ", tipo=" + tipo + ", estatus=" + estatus + ", token=" + token + "]";
 	}
 
 }
