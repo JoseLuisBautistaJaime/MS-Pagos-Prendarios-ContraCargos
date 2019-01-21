@@ -1,1 +1,10 @@
 /target/
+${project.testresult.directory}/
+.classpath
+.project
+.scannerwork/
+.settings/
+sonar-scanner.properties
+src/main/resources/diagramas/
+src/main/resources/scripts/
+.gitignore

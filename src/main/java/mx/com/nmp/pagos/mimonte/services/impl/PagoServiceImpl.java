@@ -112,6 +112,19 @@ public class PagoServiceImpl implements PagoService {
 		}
 		// Finalizan validaciones de tarjeta
 		ClienteDTO cl = clienteService.getClienteById(pagoRequestDTO.getIdCliente());
+		// Se realizan validacion propias del negocio
+		LOG.debug("Se inician validaciones respecto a objeto pagoRequestDTO.getTarjeta()");
+		if (flagOkCardData) {
+			try {
+				tarjetaService
+						.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(), cl));
+			} catch (TarjetaException tex) {
+				if (tex instanceof TarjetaIdentifierException)
+					LOG.info(TarjetaConstants.MSG_TARJETAS_ERROR);
+				else
+					LOG.info(tex.getMessage());
+			}
+		}
 		if (null == cl) {
 			cl = clienteService.saveCliente(new ClienteDTO(pagoRequestDTO.getIdCliente(), null, new Date()));
 		}
@@ -146,19 +159,6 @@ public class PagoServiceImpl implements PagoService {
 			LOG.error("Objeto pagoRequestDTO.getOperaciones() es nulo o es vacio!");
 			pagoResponseDTO.setExitoso(false);
 			throw new PagoException(PagoConstants.NO_OPERATIONS_MESSAGE);
-		}
-		// Se realizan validacion propias del negocio
-		LOG.debug("Se inician validaciones respecto a objeto pagoRequestDTO.getTarjeta()");
-		if (flagOkCardData) {
-			try {
-				tarjetaService
-						.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(), cl));
-			} catch (TarjetaException tex) {
-				if (tex instanceof TarjetaIdentifierException)
-					LOG.info(TarjetaConstants.MSG_TARJETAS_ERROR);
-				else
-					LOG.info(tex.getMessage());
-			}
 		}
 
 		pagoResponseDTO.setEstatusPagos(estatusPagos);
