@@ -17,6 +17,7 @@ import mx.com.nmp.pagos.mimonte.constans.EstatusOperacion;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
 import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
+import mx.com.nmp.pagos.mimonte.dss.DSSModule;
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
@@ -62,8 +63,9 @@ public class PagoServiceImpl implements PagoService {
 	@Autowired
 	private PagoRepository pagoRepository;
 
-//	@Autowired
-//	private DSSModule dssModule;
+	@Autowired
+	@SuppressWarnings("unused")
+	private DSSModule dssModule;
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
@@ -83,15 +85,10 @@ public class PagoServiceImpl implements PagoService {
 		LOG.debug("Ingreso al servicio: savePago(PagoRequestDTO pagoRequestDTO)");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
-		// Aqui se obtiene un numero de afiliacion aleatorio, pero se debe obtener de un
-		// modulo de toma de decisiones
-
-		// experimental code here
 		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
-		LOG.debug("Intentando obtener un numero de afiliacion");
+//		LOG.debug("Intentando obtener un numero de afiliacion");
+		// DSS invocation
 //		pagoResponseDTO.setIdTipoAfiliacion(dssModule.getNoAfiliacion(pagoRequestDTO));
-		// experimental code ends
-
 		LOG.debug("Se validara objeto pagoRequestDTO");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		try {
@@ -111,10 +108,14 @@ public class PagoServiceImpl implements PagoService {
 			}
 		}
 		// Finalizan validaciones de tarjeta
+		// Inicia validacion de id transaccion
+		Integer flag = 0;
+		flag = pagoRepository.countByIdTransaccionMidas(Integer.parseInt(pagoRequestDTO.getIdTransaccionMidas()));
+		// Finaliza validacion de id transaccion
 		ClienteDTO cl = clienteService.getClienteById(pagoRequestDTO.getIdCliente());
 		// Se realizan validacion propias del negocio
 		LOG.debug("Se inician validaciones respecto a objeto pagoRequestDTO.getTarjeta()");
-		if (flagOkCardData) {
+		if (flagOkCardData && (null != flag && flag == 0)) {
 			try {
 				tarjetaService
 						.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(), cl));
@@ -131,8 +132,6 @@ public class PagoServiceImpl implements PagoService {
 		Pago pago = new Pago();
 		if (null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty()) {
 			LOG.debug("Se iteraran operaciones dentro de pagoRequestDTO");
-			Integer flag = 0;
-			flag = pagoRepository.countByIdTransaccionMidas(Integer.parseInt(pagoRequestDTO.getIdTransaccionMidas()));
 			if (null != flag && flag == 0) {
 				for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
 					try {

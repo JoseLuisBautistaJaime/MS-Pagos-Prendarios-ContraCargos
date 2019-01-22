@@ -8,8 +8,7 @@ import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
 import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
 
 /**
- * Nombre: ReglaNegocioBuilder
- * Descripcion: Builder que se encaraga de fabricar
+ * Nombre: ReglaNegocioBuilder Descripcion: Builder que se encaraga de fabricar
  * objetos de entities y viceversa
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -41,7 +40,6 @@ public class ReglaNegocioBuilder {
 			rnDTO.setDescripcion(reglaNegocio.getDescripcion());
 			rnDTO.setId(reglaNegocio.getId());
 			rnDTO.setNombre(reglaNegocio.getNombre());
-			rnDTO.setClientes(ClienteBuilder.buildClienteDTOFromClienteSet(reglaNegocio.getClientes()));
 			rnDTO.setVariables(VariableBuilder.buildVariableDTOFromVariableSet(reglaNegocio.getVariables()));
 		}
 		return rnDTO;
@@ -69,8 +67,7 @@ public class ReglaNegocioBuilder {
 	/**
 	 * 
 	 * Metodo que construye un objeto de tipo ReglaNegocioResumenDTO desde un Array
-	 * de tipo Object
-	 * NOTA: Aqui se toma siempre una longitud de 3 ya que es la
+	 * de tipo Object NOTA: Aqui se toma siempre una longitud de 3 ya que es la
 	 * establecida como resultado de la evaluacion de una regla de negocios
 	 * 
 	 * @param obj

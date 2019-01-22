@@ -20,8 +20,7 @@ import mx.com.nmp.pagos.mimonte.services.DSSService;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorObjeto;
 
 /**
- * Nombre: DSSModule
- * Descripcion: Clase DSS que encuentra el numero asigna el
+ * Nombre: DSSModule Descripcion: Clase DSS que encuentra el numero asigna el
  * numero de afiliaicion de un clinete en base a unas reglas previamnete
  * establecidas
  *
@@ -37,25 +36,26 @@ public class DSSModule {
 	 */
 	@Autowired
 	private DSSService dssService;
-		
+
 	/**
 	 * Propiedad para uso de variable idCliente en consultas de reglas de negocio
 	 */
 	@Value(DSSConstants.ID_CLIENTE_PROP)
 	private String ID_CLIENTE_VAR;
-	
+
 	/**
-	 * Propiedad para uso de variable idReglaNegocio en consultas de reglas de negocio
+	 * Propiedad para uso de variable idReglaNegocio en consultas de reglas de
+	 * negocio
 	 */
 	@Value(DSSConstants.ID_REGLA_PROP)
 	private String ID_REGLA_VAR;
-	
+
 	/**
 	 * Propiedad para uso de variable idAfiliacion en consultas de reglas de negocio
 	 */
 	@Value(DSSConstants.ID_AFILAICION_REGLA_PROP)
 	private String ID_AFILAICION_REGLA_VAR;
-	
+
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
@@ -86,9 +86,9 @@ public class DSSModule {
 		LOG.debug("Se finalizo el proceso de obtencion de reglas de negocio");
 		if (null == reglasNegocioDTO || reglasNegocioDTO.isEmpty())
 			throw new DSSException(DSSConstants.NO_RULES_FOUND_MESSAGE);
-		else {
-			validacionesSecundarias(pagoRequestDTO);
-		}
+//		else {
+//			validacionesSecundarias(pagoRequestDTO);
+//		}
 		LOG.debug("Inicia reemplazo de variables");
 		for (ReglaNegocioDTO reglaNegocioDTO : reglasNegocioDTO) {
 			replaceVariablesDB(reglaNegocioDTO);
@@ -142,43 +142,25 @@ public class DSSModule {
 
 	/**
 	 * 
-	 * Metodo que valida que un objeto PagoRequestDTO y su objeto interno Tarjeta no
-	 * sean nulos
-	 * 
-	 * @param pagoRequestDTO
-	 */
-	private static void validacionesSecundarias(PagoRequestDTO pagoRequestDTO) {
-		LOG.debug("Se realizan validaciones secundarias");
-		ValidadorObjeto vo = new ValidadorObjeto();
-		vo.noNulo(pagoRequestDTO);
-		vo.noNulo(pagoRequestDTO.getTarjeta());
-		vo.noNulo(pagoRequestDTO.getTarjeta().getAlias());
-		vo.noNulo(pagoRequestDTO.getTarjeta().getDigitos());
-		vo.noNulo(pagoRequestDTO.getTarjeta().getToken());
-		vo.noNulo(pagoRequestDTO.getTarjeta().getTipo());
-		vo.noNulo(pagoRequestDTO.getTarjeta().getTipo().getId());
-	}
-
-	/**
-	 * 
-	 * Metodo que reemplaza las variables de la consulta por los valores reales de el objeto en cuestion
+	 * Metodo que reemplaza las variables de la consulta por los valores reales de
+	 * el objeto en cuestion
 	 * 
 	 * @param reglaNegocioDTO
 	 */
 	private void replaceLocalVariables(ReglaNegocioDTO reglaNegocioDTO, Integer idCliente) {
-		LOG.debug("Inicia reemplazo de variables de base de datos para query: " + (null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta():null));
+		LOG.debug("Inicia reemplazo de variables de base de datos para query: "
+				+ (null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null));
 		String str = null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null;
-		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getAfliacion() && null != reglaNegocioDTO.getAfliacion().getId()
-				&& null != reglaNegocioDTO.getId()
-				&& null != idCliente && idCliente != 0
-				) {
-			str.replace(ID_REGLA_VAR, String.valueOf(reglaNegocioDTO.getId()));
-			str.replace(ID_AFILAICION_REGLA_VAR, String.valueOf(reglaNegocioDTO.getAfliacion().getId()));
-			str.replace(ID_CLIENTE_VAR, String.valueOf(idCliente));
+		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getAfliacion()
+				&& null != reglaNegocioDTO.getAfliacion().getId() && null != reglaNegocioDTO.getId()
+				&& null != idCliente && idCliente != 0) {
+			str = str.replace(ID_REGLA_VAR, String.valueOf(reglaNegocioDTO.getId()));
+			str = str.replace(ID_AFILAICION_REGLA_VAR, String.valueOf(reglaNegocioDTO.getAfliacion().getId()));
+			str = str.replace(ID_CLIENTE_VAR, String.valueOf(idCliente));
 			reglaNegocioDTO.setConsulta(str);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * Metodo que reemplaza las variables de la consulta por valores de base de
@@ -187,11 +169,12 @@ public class DSSModule {
 	 * @param reglaNegocioDTO
 	 */
 	private void replaceVariablesDB(ReglaNegocioDTO reglaNegocioDTO) {
-		LOG.debug("Inicia reemplazo de variables de base de datos para query: " + (null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta():null));
+		LOG.debug("Inicia reemplazo de variables de base de datos para query: "
+				+ (null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null));
 		String str = null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null;
 		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getVariables()) {
 			for (VariableDTO variableDTO : reglaNegocioDTO.getVariables()) {
-				str.replace(variableDTO.getClave(), variableDTO.getValor());
+				str = str.replace(variableDTO.getClave(), variableDTO.getValor());
 			}
 			reglaNegocioDTO.setConsulta(str);
 		}
