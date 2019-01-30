@@ -118,6 +118,10 @@ public final class TarjetaConstants {
 	 */
 	public static final String MSG_FAILURE_ALIAS = "El alias esta nulo o vacio.";
 	
+	/**
+	 * Mensaje que sera enviado si no se recuperaron los registros correctamente
+	 */
+	public static final String MSG_FAILURE_UPTOKEN = "El token esta nulo o vacio.";
 	
 	/**
 	 * Mensaje que sera enviado si no se recuperaron los registros correctamente

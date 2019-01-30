@@ -58,6 +58,16 @@ public interface TarjetasService {
 	 * @return Tarjetas.
 	 */
 	public Tarjetas updateTarjeta(String id_openpay, String alias);
+	
+	/**
+	 * Método que actualiza el alias de una tarjeta.
+	 * 
+	 * @param id_openpay.
+	 * @param token.
+	 * @return Tarjetas.
+	 */
+	public Tarjetas updateToken(String id_openpay, String token);
+
 
 	
 	/**

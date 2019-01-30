@@ -268,6 +268,43 @@ public class TarjetasServiceImpl implements TarjetasService {
 		return updateTarjeta;
 
 	}
+	
+	/**
+	 * Metodo que actualiza el alias de la tarjeta.
+	 * 
+	 * @param token.
+	 * @param alias.
+	 * @return Tarjetas.
+	 */
+	public Tarjetas updateToken(String id_openpay, String token) {
+
+		if (id_openpay == null || id_openpay.isEmpty()) {
+
+			throw new TarjetaException(TarjetaConstants.MSG_FAILURE_TOKEN);
+
+		}
+
+		if (token == null || token.isEmpty()) {
+
+			throw new TarjetaException(TarjetaConstants.MSG_FAILURE_UPTOKEN);
+
+		}
+
+		// Obtiene los registros
+		Tarjetas updateTarjeta = tarjetaRepository.findByIdOpenPay(id_openpay);
+
+		// Evalua si existen registros
+		if (updateTarjeta == null)
+			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_UPDATE_NULL);
+
+		updateTarjeta.setToken(token);
+		updateTarjeta.setFechaModificacion(new Date());
+
+		tarjetaRepository.save(updateTarjeta);
+
+		return updateTarjeta;
+
+	}
 
 	/**
 	 * Metodo que elimina el registro de la tarjeta.

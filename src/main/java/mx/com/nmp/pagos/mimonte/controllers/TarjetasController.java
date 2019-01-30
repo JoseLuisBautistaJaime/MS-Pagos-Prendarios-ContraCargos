@@ -29,6 +29,7 @@ import mx.com.nmp.pagos.mimonte.dto.AliasDTO;
 import mx.com.nmp.pagos.mimonte.dto.CatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
+import mx.com.nmp.pagos.mimonte.dto.TokenDTO;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 import mx.com.nmp.pagos.mimonte.services.impl.TarjetasServiceImpl;
@@ -179,7 +180,34 @@ public class TarjetasController {
 	    return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_UPDATE, updateTarjetas);
 
 	}
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PutMapping(value = "/v1/tarjeta/updateToken", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "PUT", value = "Actualiza la información de la tarjeta registrada en la base de datos.", tags = {
+			"Tarjetas" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
+			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
+			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response updateToken(@RequestBody TokenDTO  token) {
+		
+		log.debug("Entrando a operacion de servicio TarjetasController.updateToken()...");
 
+	    log.debug("Validando parametro idOpenPay...");
+	    ValidadorCadena.notNullNorEmpty(token.getId_openpay());
+	    
+	    log.debug("Validando parametro alias...");
+	    ValidadorCadena.notNullNorEmpty(token.getToken());
+
+	    log.debug("Intentando obtener el listado de registros para la tarjeta {}...", token.getId_openpay() + " " + token.getToken());
+	    Tarjetas updateTarjetas = tarjetasService.updateToken(token.getId_openpay(),token.getToken());
+
+	    log.debug("Regresando instancia Response con la respuesta obtenida: {}...", updateTarjetas);
+	    return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_UPDATE, updateTarjetas);
+
+	}
+	
+	
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = "/v1/tarjeta/{id_openpay}", produces = MediaType.APPLICATION_JSON_VALUE)
