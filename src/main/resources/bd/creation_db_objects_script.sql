@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS `compose`.`cliente` ;
 
 CREATE TABLE IF NOT EXISTS `compose`.`cliente` (
   `id_cliente` INT(11) NOT NULL,
-  `nombre_titular` VARCHAR(100) NOT NULL,
+  `nombre_titular` VARCHAR(100) NULL,
   `fecha_alta` DATETIME NOT NULL,
   PRIMARY KEY (`id_cliente`))
 ENGINE = InnoDB
