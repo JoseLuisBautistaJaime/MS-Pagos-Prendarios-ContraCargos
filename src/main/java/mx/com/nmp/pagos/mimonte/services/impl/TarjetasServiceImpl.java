@@ -204,6 +204,12 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		TipoTarjeta tipoTarjeta = tipoTarjetaRepository.encontrar(tarjeta.getTipo().getId());
 		EstatusTarjeta estatusTarjeta = estatusTarjetaRepository.encontrar(tarjeta.getEstatus().getId());
+		
+		if ( tipoTarjeta.getId() <= 0)
+			throw new TarjetaException(TarjetaConstants.MSG_FAIL_CAN_NOT_FIND_THE_CARD_STATUS_RECORD);
+
+		if (estatusTarjeta.getId() <= 0)
+			throw new TarjetaException(TarjetaConstants.MSG_FAIL_CAN_NOT_FIND_THE_CARD_TYPE_RECORD);
 
 		Tarjetas idOpen = tarjetaRepository.findByIdOpenPay(tarjeta.getId_openpay());
 

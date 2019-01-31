@@ -61,6 +61,16 @@ public final class TarjetaConstants {
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
+	public static final String MSG_FAIL_CAN_NOT_FIND_THE_CARD_TYPE_RECORD= "No se encontro registro para el tipo de tarjeta.";
+	
+	/**
+	 * Mensaje que sera enviado si se recuperaron los registros correctamente
+	 */
+	public static final String MSG_FAIL_CAN_NOT_FIND_THE_CARD_STATUS_RECORD = "No se encontro el registro para el estatus de tarjeta.";
+	
+	/**
+	 * Mensaje que sera enviado si se recuperaron los registros correctamente
+	 */
 	public static final String MSG_FAIL_TIPO_SHOULD_NOT_BE_NULL_OR_VOID = "El tipo no debe ir vacio o nulo.";
 	
 	/**
