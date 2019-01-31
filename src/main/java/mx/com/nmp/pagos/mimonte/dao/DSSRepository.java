@@ -1,7 +1,10 @@
 package mx.com.nmp.pagos.mimonte.dao;
 
+import java.sql.SQLDataException;
+import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,8 +13,7 @@ import org.springframework.stereotype.Repository;
 import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
 
 /**
- * Nombre: DSSRepository
- * Descripcion: Interfaz que define las operaciones
+ * Nombre: DSSRepository Descripcion: Interfaz que define las operaciones
  * encargadas de consultar informacion referente a DSS de la aplicacion
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -30,7 +32,8 @@ public interface DSSRepository extends JpaRepository<ReglaNegocio, Integer>, DSS
 	 * @return objeto List<ReglaNegocio>
 	 */
 	@Query("SELECT DISTINCT rn FROM ReglaNegocio rn JOIN rn.clientes cls ON cls.idcliente = :idCliente")
-	public List<ReglaNegocio> getReglasNegocio(@Param("idCliente") Integer idCliente);
+	public List<ReglaNegocio> getReglasNegocio(@Param("idCliente") Long idCliente)
+			throws DataIntegrityViolationException, SQLDataException, SQLException;
 
 	/**
 	 * 
@@ -41,7 +44,7 @@ public interface DSSRepository extends JpaRepository<ReglaNegocio, Integer>, DSS
 	 * @return ReglaNegocioResumenDTO
 	 */
 	@SuppressWarnings("unchecked")
-	@Query(value="query", nativeQuery=true)
-	public Object[] execQuery(String query);
+	@Query(value = "query", nativeQuery = true)
+	public Object[] execQuery(String query) throws DataIntegrityViolationException;
 
 }

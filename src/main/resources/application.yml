@@ -49,3 +49,4 @@ mimonte:
       idcliente: "{idCliente}"
       idregla: "{idRegla}"
       idafiliacionregla: "{idAfiliacionRegla}"
+      idtipo: "{idTipo}"

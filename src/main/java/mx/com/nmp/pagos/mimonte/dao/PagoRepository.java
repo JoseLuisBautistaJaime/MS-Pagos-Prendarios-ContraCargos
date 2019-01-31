@@ -1,5 +1,9 @@
 package mx.com.nmp.pagos.mimonte.dao;
 
+import java.sql.SQLDataException;
+import java.sql.SQLException;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,5 +31,6 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
 	 * @return
 	 */
 	@Query("SELECT COUNT(p.id) FROM Pago p WHERE p.idTransaccionMidas = :idTransaccionMidas")
-	public Integer countByIdTransaccionMidas(@Param("idTransaccionMidas") Integer idTransaccionMidas);
+	public Integer countByIdTransaccionMidas(@Param("idTransaccionMidas") Integer idTransaccionMidas)
+			throws DataIntegrityViolationException, SQLDataException, SQLException;
 }

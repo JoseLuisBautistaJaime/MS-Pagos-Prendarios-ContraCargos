@@ -13,8 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Nombre: Afiliacion
- * Descripcion: Entidad que representa un tipo de afiliacion
+ * Nombre: Afiliacion Descripcion: Entidad que representa un tipo de afiliacion
  * dentro del sistema.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -33,6 +32,9 @@ public class Afiliacion {
 	@Column(name = "descripcion", nullable = false)
 	private String descripcion;
 
+	@Column(name = "tipo")
+	private Integer tipo;
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "afiliacion")
 	private Set<ReglaNegocio> reglas;
 
@@ -42,11 +44,12 @@ public class Afiliacion {
 		 */
 	}
 
-	public Afiliacion(Integer id, String descripcion, Set<ReglaNegocio> reglas) {
+	public Afiliacion(Integer id, String descripcion, Set<ReglaNegocio> reglas, Integer tipo) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
 		this.reglas = reglas;
+		this.tipo = tipo;
 	}
 
 	public Integer getId() {
@@ -73,9 +76,25 @@ public class Afiliacion {
 		this.reglas = reglas;
 	}
 
+	public Integer getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Integer tipo) {
+		this.tipo = tipo;
+	}
+
+	public Set<ReglaNegocio> getReglas() {
+		return reglas;
+	}
+
+	public void setReglas(Set<ReglaNegocio> reglas) {
+		this.reglas = reglas;
+	}
+
 	@Override
 	public String toString() {
-		return "Afiliacion [id=" + id + ", descripcion=" + descripcion + ", reglas=" + reglas + "]";
+		return "Afiliacion [id=" + id + ", descripcion=" + descripcion + ", reglas=" + reglas + ", tipo=" + tipo + "]";
 	}
 
 }

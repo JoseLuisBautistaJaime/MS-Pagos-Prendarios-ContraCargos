@@ -18,7 +18,7 @@ public interface ClienteService {
 	 * @param Integer idCliente
 	 * @return Object ClienteDTO
 	 */
-	public ClienteDTO getClienteById(Integer idCliente);
+	public ClienteDTO getClienteById(Long idCliente);
 	
 	
 	/**

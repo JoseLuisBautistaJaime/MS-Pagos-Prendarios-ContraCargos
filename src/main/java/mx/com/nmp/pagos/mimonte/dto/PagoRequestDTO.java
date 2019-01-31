@@ -15,7 +15,7 @@ public class PagoRequestDTO {
 	private TarjetaPagoDTO tarjeta;
 	private Double montoTotal;
 	private Boolean guardaTarjeta;
-	private Integer idCliente;
+	private Long idCliente;
 	private String concepto;
 	private String idTransaccionMidas;
 
@@ -24,7 +24,7 @@ public class PagoRequestDTO {
 	}
 
 	public PagoRequestDTO(List<OperacionDTO> operaciones, TarjetaPagoDTO tarjeta, Double montoTotal,
-			Boolean guardaTarjeta, Integer idCliente, String concepto, String idTransaccionMidas) {
+			Boolean guardaTarjeta, Long idCliente, String concepto, String idTransaccionMidas) {
 		super();
 		this.operaciones = operaciones;
 		this.tarjeta = tarjeta;
@@ -75,11 +75,11 @@ public class PagoRequestDTO {
 		this.guardaTarjeta = guardaTarjeta;
 	}
 
-	public Integer getIdCliente() {
+	public Long getIdCliente() {
 		return idCliente;
 	}
 
-	public void setIdCliente(Integer idCliente) {
+	public void setIdCliente(Long idCliente) {
 		this.idCliente = idCliente;
 	}
 

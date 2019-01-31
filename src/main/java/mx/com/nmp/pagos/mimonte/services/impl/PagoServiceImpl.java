@@ -1,14 +1,18 @@
 package mx.com.nmp.pagos.mimonte.services.impl;
 
+import java.sql.SQLDataException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.PagoBuilder;
@@ -78,17 +82,30 @@ public class PagoServiceImpl implements PagoService {
 	/**
 	 * Metodo que registra una nueva trajeta si dicha bandera es activa, envia el
 	 * registro de un pago al ESB y registra un pago en Base de Datos
+	 * 
+	 * @throws SQLException
+	 * @throws NumberFormatException
+	 * @throws SQLDataException
+	 * @throws                       @throws @throws @throws
+	 *                               DataIntegrityViolationException
 	 *
 	 */
 	@Override
-	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO) {
+	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO)
+			throws DataIntegrityViolationException, NumberFormatException, SQLDataException, SQLException {
 		LOG.debug("Ingreso al servicio: savePago(PagoRequestDTO pagoRequestDTO)");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
-		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
+//		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
 //		LOG.debug("Intentando obtener un numero de afiliacion");
 		// DSS invocation
-//		pagoResponseDTO.setIdTipoAfiliacion(dssModule.getNoAfiliacion(pagoRequestDTO));
+		Map<String, Integer> mapResult = dssModule.getNoAfiliacion(pagoRequestDTO);
+		pagoResponseDTO.setIdTipoAfiliacion(
+				null != mapResult && !mapResult.isEmpty() ? mapResult.get(PagoConstants.ID_AFILIACION_MAPPING_NAME)
+						: null);
+		pagoResponseDTO.setTipo(
+				null != mapResult && !mapResult.isEmpty() ? mapResult.get(PagoConstants.ID_TIPO_MAPPING_NAME) : null);
+
 		LOG.debug("Se validara objeto pagoRequestDTO");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		try {

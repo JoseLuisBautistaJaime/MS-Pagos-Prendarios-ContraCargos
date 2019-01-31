@@ -28,7 +28,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	 * @return List<Tarjetas>
 	 */
 	@Query(value = "select c.tarjetas from Cliente c where c.idcliente = :idcliente")
-	public List<Tarjetas> findByIdCliente(@Param("idcliente") Integer idcliente);
+	public List<Tarjetas> findByIdCliente(@Param("idcliente") Long idcliente);
 
 	/**
 	 * Método que obtiene por id del cliente al cliente.
@@ -36,7 +36,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	 * @param idcliente.
 	 * @return Cliente.
 	 */
-	public Cliente findByIdcliente(Integer idcliente);
+	public Cliente findByIdcliente(Long idcliente);
 	
 	/**
 	 * Consulta que obtiene las tarjetas registradas por medio del parametro

@@ -42,6 +42,7 @@ DROP TABLE IF EXISTS `compose`.`catalogo_afiliacion` ;
 CREATE TABLE IF NOT EXISTS `compose`.`catalogo_afiliacion` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion` VARCHAR(100) NOT NULL,
+  `tipo` INT(1) NULL,
   PRIMARY KEY (`id`),
   INDEX `ca_fk_idx` (`id` ASC))
 ENGINE = InnoDB
@@ -55,7 +56,7 @@ DEFAULT CHARACTER SET = latin1;
 DROP TABLE IF EXISTS `compose`.`cliente` ;
 
 CREATE TABLE IF NOT EXISTS `compose`.`cliente` (
-  `id_cliente` INT(11) NOT NULL,
+  `id_cliente` BIGINT UNSIGNED NOT NULL,
   `nombre_titular` VARCHAR(100) NULL,
   `fecha_alta` DATETIME NOT NULL,
   PRIMARY KEY (`id_cliente`))
@@ -91,7 +92,7 @@ DEFAULT CHARACTER SET = latin1;
 DROP TABLE IF EXISTS `compose`.`cliente_regla_negocio` ;
 
 CREATE TABLE IF NOT EXISTS `compose`.`cliente_regla_negocio` (
-  `id_cliente` INT(11) NOT NULL,
+  `id_cliente` INT UNSIGNED NOT NULL,
   `id_regla_negocio` INT(11) NOT NULL,
   INDEX `ic_fk` (`id_cliente` ASC),
   INDEX `irn_fk` (`id_regla_negocio` ASC),
@@ -142,7 +143,7 @@ DROP TABLE IF EXISTS `compose`.`pagos` ;
 
 CREATE TABLE IF NOT EXISTS `compose`.`pagos` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `idcliente` INT(11) NULL DEFAULT NULL,
+  `idcliente` BIGINT UNSIGNED NOT NULL,
   `fecha_transaccion` DATETIME NULL DEFAULT NULL,
   `monto` DOUBLE NULL DEFAULT NULL,
   `autorizacion` VARCHAR(100) NULL DEFAULT NULL,
@@ -237,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `compose`.`tarjetas` (
   `alias` VARCHAR(100) NULL DEFAULT NULL,
   `fecha_alta` DATETIME NULL DEFAULT NULL,
   `fecha_modificacion` DATETIME NULL DEFAULT NULL,
-  `id_cliente` INT(11) NOT NULL,
+  `id_cliente` BIGINT UNSIGNED NOT NULL,
   `tipo_tarjeta_c_id` INT(11) NOT NULL,
   `estatus_tarjeta_c` INT(11) NOT NULL,
   `token` VARCHAR(40) NULL DEFAULT NULL,

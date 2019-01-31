@@ -1,6 +1,10 @@
 package mx.com.nmp.pagos.mimonte.services;
 
+import java.sql.SQLDataException;
+import java.sql.SQLException;
 import java.util.List;
+
+import org.springframework.dao.DataIntegrityViolationException;
 
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
 import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
@@ -24,7 +28,7 @@ public interface DSSService {
 	 * @param Integer idCliente
 	 * @return objeto List<ReglaNegocio>
 	 */
-	public abstract List<ReglaNegocio> getReglasNegocio(Integer idCliente);
+	public abstract List<ReglaNegocio> getReglasNegocio(Long idCliente)throws DataIntegrityViolationException, SQLDataException, SQLException;
 
 	/**
 	 * 
@@ -34,6 +38,6 @@ public interface DSSService {
 	 * @param String query
 	 * @return ReglaNegocioResumenDTO
 	 */
-	public abstract ReglaNegocioResumenDTO execQuery(String query);
+	public abstract ReglaNegocioResumenDTO execQuery(String query)throws DataIntegrityViolationException, SQLDataException, SQLException;
 
 }

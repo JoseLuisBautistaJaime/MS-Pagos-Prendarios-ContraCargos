@@ -1,11 +1,16 @@
 package mx.com.nmp.pagos.mimonte.services;
 
+import java.sql.SQLDataException;
+import java.sql.SQLException;
+
+import org.springframework.dao.DataIntegrityViolationException;
+
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 
 /**
- * Nombre: PagoService
- * Descripcion: Interfaz que define la operacion encargada de realizar un pago de una o mas partidas/contratos
+ * Nombre: PagoService Descripcion: Interfaz que define la operacion encargada
+ * de realizar un pago de una o mas partidas/contratos
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate: 20/11/2018 13:45 hrs.
@@ -19,6 +24,7 @@ public interface PagoService {
 	 * @param Objeto tipo pagoDTO
 	 * @return Objeto PagoRequestDTO que fue guardado
 	 */
-	public abstract PagoResponseDTO savePago (PagoRequestDTO pagoRequestDTO);
-	
+	public abstract PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO)
+			throws DataIntegrityViolationException, SQLDataException, SQLException;
+
 }

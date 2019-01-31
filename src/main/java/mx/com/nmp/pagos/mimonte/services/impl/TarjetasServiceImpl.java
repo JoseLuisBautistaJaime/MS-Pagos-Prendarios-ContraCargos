@@ -70,7 +70,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * @param idCliente
 	 * @return List<TarjeDTO>
 	 */
-	public List<TarjeDTO> getTarjetasIdCliente(Integer idCliente) {
+	public List<TarjeDTO> getTarjetasIdCliente(Long idCliente) {
 
 		if (idCliente == null || idCliente < 1)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_PARAMETER);
@@ -134,7 +134,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * @return TarjeDTO.
 	 */
 	@Override
-	public TarjeDTO getTarjetasTokenIdCliente(Integer idCliente, String id_openpay) {
+	public TarjeDTO getTarjetasTokenIdCliente(Long idCliente, String id_openpay) {
 
 		if (idCliente == null || idCliente < 1)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_PARAMETER_IDCLIENTE);
@@ -337,7 +337,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * Metodo que cuenta la cantidad de tarjetas que tiene un cliente especifico
 	 */
 	@Override
-	public Integer countTarjetasByIdcliente(Integer idCliente) {
+	public Integer countTarjetasByIdcliente(Long idCliente) {
 		return tarjetaRepository.countTarjetasByIdcliente(idCliente);
 	}
 

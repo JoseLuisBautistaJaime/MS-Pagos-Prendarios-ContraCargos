@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class ClienteDTO implements Comparable<ClienteDTO> {
 
-	private Integer idCliente;
+	private Long idCliente;
 	private String nombreTitular;
 	private Date fechaAlta;
 
@@ -19,18 +19,18 @@ public class ClienteDTO implements Comparable<ClienteDTO> {
 		super();
 	}
 
-	public ClienteDTO(Integer idCliente, String nombreTitular, Date fechaAlta) {
+	public ClienteDTO(Long idCliente, String nombreTitular, Date fechaAlta) {
 		super();
 		this.idCliente = idCliente;
 		this.nombreTitular = nombreTitular;
 		this.fechaAlta = fechaAlta;
 	}
 
-	public Integer getIdCliente() {
+	public Long getIdCliente() {
 		return idCliente;
 	}
 
-	public void setIdCliente(Integer idCliente) {
+	public void setIdCliente(Long idCliente) {
 		this.idCliente = idCliente;
 	}
 

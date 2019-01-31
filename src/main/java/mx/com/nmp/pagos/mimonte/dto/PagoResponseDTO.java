@@ -3,8 +3,8 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.List;
 
 /**
- * Nombre: PagoResponseDTO
- * Descripcion: Clase que encapsula la informacion perteneciente al response de un pago.
+ * Nombre: PagoResponseDTO Descripcion: Clase que encapsula la informacion
+ * perteneciente al response de un pago.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 26/11/2018 13:11 hrs.
@@ -15,31 +15,37 @@ public class PagoResponseDTO {
 	public PagoResponseDTO() {
 		super();
 	}
+
 	private List<EstatusPagoResponseDTO> estatusPagos;
 	private Boolean exitoso;
 	private Integer idTipoAfiliacion;
-	
-	public PagoResponseDTO(List<EstatusPagoResponseDTO> estatusPagos, Boolean exitoso,
-			Integer idTipoAfiliacion) {
+	private Integer tipo;
+
+	public PagoResponseDTO(List<EstatusPagoResponseDTO> estatusPagos, Boolean exitoso, Integer idTipoAfiliacion,
+			Integer tipo) {
 		super();
 		this.estatusPagos = estatusPagos;
 		this.exitoso = exitoso;
 		this.idTipoAfiliacion = idTipoAfiliacion;
+		this.tipo = tipo;
 	}
-	
+
 	public Boolean getExitoso() {
 		return exitoso;
 	}
+
 	public void setExitoso(Boolean exitoso) {
 		this.exitoso = exitoso;
 	}
+
 	public Integer getIdTipoAfiliacion() {
 		return idTipoAfiliacion;
 	}
+
 	public void setIdTipoAfiliacion(Integer idTipoAfiliacion) {
 		this.idTipoAfiliacion = idTipoAfiliacion;
 	}
-	
+
 	public List<EstatusPagoResponseDTO> getEstatusPagos() {
 		return estatusPagos;
 	}
@@ -48,10 +54,18 @@ public class PagoResponseDTO {
 		this.estatusPagos = estatusPagos;
 	}
 
+	public Integer getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Integer tipo) {
+		this.tipo = tipo;
+	}
+
 	@Override
 	public String toString() {
-		return "PagoResponseDTO [estatusPagos=" + estatusPagos + ", exitoso="
-				+ exitoso + ", idTipoAfiliacion=" + idTipoAfiliacion + "]";
+		return "PagoResponseDTO [estatusPagos=" + estatusPagos + ", exitoso=" + exitoso + ", idTipoAfiliacion="
+				+ idTipoAfiliacion + ", tipo=" + tipo + "]";
 	}
-	
+
 }

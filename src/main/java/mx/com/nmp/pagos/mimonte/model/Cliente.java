@@ -35,7 +35,7 @@ public class Cliente implements Serializable {
 
 	@Id
 	@Column(name = "id_cliente", unique = true, nullable = false)
-	private Integer idcliente;
+	private Long idcliente;
 
 	@Column(name = "nombre_titular", length = Constants.LONGITUD_NOMBRE_TITULAR)
 	private String nombreTitular;
@@ -59,14 +59,14 @@ public class Cliente implements Serializable {
 		super();
 	}
 
-	public Cliente(Integer idcliente, String nombreTitular, Date fechaAlta) {
+	public Cliente(Long idcliente, String nombreTitular, Date fechaAlta) {
 		super();
 		this.idcliente = idcliente;
 		this.nombreTitular = nombreTitular;
 		this.fechaAlta = fechaAlta;
 	}
 	
-	public Cliente(Integer idcliente, String nombreTitular, Date fechaAlta, Set<Pago> pagos, List<Tarjetas> tarjetas,
+	public Cliente(Long idcliente, String nombreTitular, Date fechaAlta, Set<Pago> pagos, List<Tarjetas> tarjetas,
 			Set<ReglaNegocio> reglasNegocio) {
 		super();
 		this.idcliente = idcliente;
@@ -77,7 +77,7 @@ public class Cliente implements Serializable {
 		this.reglasNegocio = reglasNegocio;
 	}
 
-	public Integer getIdcliente() {
+	public Long getIdcliente() {
 		return idcliente;
 	}
 
@@ -110,7 +110,7 @@ public class Cliente implements Serializable {
 		this.pagos = pagos;
 	}
 
-	public void setIdcliente(Integer idcliente) {
+	public void setIdcliente(Long idcliente) {
 		this.idcliente = idcliente;
 	}
 

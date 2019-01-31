@@ -1,9 +1,13 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
+import java.sql.SQLException;
+
+import org.jfree.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,13 +24,13 @@ import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
+import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorDatosPago;
 
 /**
- * Nombre: PagoController
- * Descripcion: Clase que expone el servicio REST para el
+ * Nombre: PagoController Descripcion: Clase que expone el servicio REST para el
  * pago con tarjeta de una o varias partidas
  *
  * @author Ismael Flores iaguilar@qaurksoft.net
@@ -68,7 +72,7 @@ public class PagoController {
 	public Response post(@RequestBody PagoRequestDTO pagoRequestDTO) {
 		log.debug("Entrando a operacion de servicio PagoController.post()...");
 		log.debug("Received object: " + pagoRequestDTO);
-		
+
 //		// --------------------- Dummy data building begins
 //		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 //		EstatusPagoResponseDTO estatusPagoResponseDTO = new EstatusPagoResponseDTO(1, "C12");
@@ -88,10 +92,19 @@ public class PagoController {
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		PagoResponseDTO pagoResponseDTO = null;
 		log.debug("Invocando servicio pagoService.savePago(pagoRequestDTO)");
-		pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
+		try {
+			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
+		} catch (DataIntegrityViolationException | SQLException ex) {
+			Log.error("Error guardando el pago");
+			if (ex instanceof PagoException)
+				throw new PagoException(ex.getMessage());
+			else if (ex instanceof DataIntegrityViolationException || ex instanceof SQLException)
+				throw new PagoException(PagoConstants.CONSTRAINT_DATABASE_ERROR);
+		}
 		// real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoResponseDTO);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),PagoConstants.MSG_SUCCESS, pagoResponseDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), PagoConstants.MSG_SUCCESS,
+				pagoResponseDTO);
 	}
 }

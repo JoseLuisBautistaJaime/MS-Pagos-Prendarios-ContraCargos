@@ -4,8 +4,7 @@ import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.model.Afiliacion;
 
 /**
- * Nombre: AfiliacionBuilder
- * Descripcion: Builder que se encaraga de fabricar
+ * Nombre: AfiliacionBuilder Descripcion: Builder que se encaraga de fabricar
  * objetos de entities y viceversa
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -30,10 +29,11 @@ public class AfiliacionBuilder {
 	 */
 	public static AfiliacionDTO buildAfiliacionDTOFromAfilaicion(Afiliacion afiliacion) {
 		AfiliacionDTO afiliacionDTO = null;
-		if(null != afiliacion) {
+		if (null != afiliacion) {
 			afiliacionDTO = new AfiliacionDTO();
 			afiliacionDTO.setDescripcion(afiliacion.getDescripcion());
-			afiliacionDTO.setId(afiliacion.getId());	
+			afiliacionDTO.setId(afiliacion.getId());
+			afiliacionDTO.setTipo(afiliacion.getTipo());
 		}
 		return afiliacionDTO;
 	}

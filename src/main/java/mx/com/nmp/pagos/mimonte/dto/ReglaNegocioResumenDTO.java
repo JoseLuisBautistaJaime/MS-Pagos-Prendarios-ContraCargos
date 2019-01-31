@@ -1,8 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: ReglaNegocioResumenDTO 
- * Descripcion: Clase que encapsula la
+ * Nombre: ReglaNegocioResumenDTO Descripcion: Clase que encapsula la
  * informacion perteneciente a una Regla de Negocio Resumen.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -14,16 +13,18 @@ public class ReglaNegocioResumenDTO implements Comparable<ReglaNegocioResumenDTO
 	private Integer id;
 	private Integer idAfiliacion;
 	private Boolean valido;
+	private Integer tipo;
 
 	public ReglaNegocioResumenDTO() {
 		super();
 	}
 
-	public ReglaNegocioResumenDTO(Integer id, Integer idAfiliacion, Boolean valido) {
+	public ReglaNegocioResumenDTO(Integer id, Integer idAfiliacion, Boolean valido, Integer tipo) {
 		super();
 		this.id = id;
 		this.valido = valido;
 		this.idAfiliacion = idAfiliacion;
+		this.tipo = tipo;
 	}
 
 	public Integer getId() {
@@ -50,9 +51,18 @@ public class ReglaNegocioResumenDTO implements Comparable<ReglaNegocioResumenDTO
 		this.idAfiliacion = idAfiliacion;
 	}
 
+	public Integer getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Integer tipo) {
+		this.tipo = tipo;
+	}
+
 	@Override
 	public String toString() {
-		return "ReglaNegocioResumenDTO [id=" + id + ", valido=" + valido + ", idAfiliacion=" + idAfiliacion + "]";
+		return "ReglaNegocioResumenDTO [id=" + id + ", valido=" + valido + ", idAfiliacion=" + idAfiliacion + ", tipo="
+				+ tipo + "]";
 	}
 
 	@Override

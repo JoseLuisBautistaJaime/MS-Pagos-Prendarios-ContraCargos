@@ -46,9 +46,10 @@ public final class PagoConstants {
 	 * guardadas
 	 */
 	public static final String MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED = "Ya se ha alcanzado la cantidad máxima de tarjetas por cliente";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se intenta guardar una tarjeta que ya existe mediante el servicio de Pago
+	 * Mensaje que es mostrado cuando se intenta guardar una tarjeta que ya existe
+	 * mediante el servicio de Pago
 	 */
 	public static final String MSG_CARD_WAS_NOT_SAVED = "El pago se registro de manera correcta pero la tarjeta no se guardo por que ya existe";
 
@@ -107,14 +108,33 @@ public final class PagoConstants {
 	 * con id de transaccion que ya existe
 	 */
 	public static final String TRANSACTION_ID_ALREADY_EXISTS = "La transaccion que desea registrar ya existe";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se genra un error durante la validacion de si el id de transaccion ya existe
+	 * Mensaje que es mostrado cuando se genra un error durante la validacion de si
+	 * el id de transaccion ya existe
 	 */
 	public static final String MSG_CAN_NO_CHECK_IF_PAGO_EXISTS = "No se puede comprobar si el pago existe, contacte al Administrador";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se intenta guardar una tarjeta y el request no tiene el objeto tarjeta
+	 * Mensaje que es mostrado cuando se intenta guardar una tarjeta y el request no
+	 * tiene el objeto tarjeta
 	 */
 	public static final String MSG_CARD_DATA_IS_NULL = "Si desea guardar la tarjeta el objeto tarjeta no debe ser nulo";
+
+	/**
+	 * Valor de nombre de clave en mapa en id de afiliacion
+	 */
+	public static final String ID_AFILIACION_MAPPING_NAME = "idAfiliacionMap";
+
+	/**
+	 * Valor de nombre de clave en mapa en tipo
+	 */
+	public static final String ID_TIPO_MAPPING_NAME = "idTipoMap";
+
+	/**
+	 * Mensaje que es mostrado cuando se intenat violar una regla de integridad de
+	 * base de datos
+	 */
+	public static final String CONSTRAINT_DATABASE_ERROR = "Error con uno mas ids de base de datos que intenta insertar";
+
 }
