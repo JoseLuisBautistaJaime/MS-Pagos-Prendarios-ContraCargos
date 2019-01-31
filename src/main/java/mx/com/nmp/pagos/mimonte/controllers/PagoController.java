@@ -96,10 +96,10 @@ public class PagoController {
 			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
 		} catch (DataIntegrityViolationException | SQLException ex) {
 			Log.error("Error guardando el pago");
-			if (ex instanceof PagoException)
-				throw new PagoException(ex.getMessage());
-			else if (ex instanceof DataIntegrityViolationException || ex instanceof SQLException)
+			if (ex instanceof DataIntegrityViolationException || ex instanceof SQLException)
 				throw new PagoException(PagoConstants.CONSTRAINT_DATABASE_ERROR);
+			else if (ex instanceof PagoException)
+				throw new PagoException(ex.getMessage());
 		}
 		// real code ends
 
