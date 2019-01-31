@@ -101,7 +101,7 @@ public final class TarjetaConstants {
 	/**
 	 * Mensaje que sera enviado si no se recuperaron los registros correctamente
 	 */
-	public static final String MSG_FAILURE = "Usted aún no tiene tarjetas registradas. con el idCliente: ";
+	public static final String MSG_FAILURE = " Usted aún no tiene tarjetas registradas. ";
 	
 	/**
 	 * Mensaje que sera enviado si no se recuperaron los registros correctamente
