@@ -92,7 +92,7 @@ DEFAULT CHARACTER SET = latin1;
 DROP TABLE IF EXISTS `compose`.`cliente_regla_negocio` ;
 
 CREATE TABLE IF NOT EXISTS `compose`.`cliente_regla_negocio` (
-  `id_cliente` INT UNSIGNED NOT NULL,
+  `id_cliente` BIGINT UNSIGNED NOT NULL,
   `id_regla_negocio` INT(11) NOT NULL,
   INDEX `ic_fk` (`id_cliente` ASC),
   INDEX `irn_fk` (`id_regla_negocio` ASC),
