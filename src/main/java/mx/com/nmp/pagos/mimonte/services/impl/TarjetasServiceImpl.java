@@ -205,11 +205,11 @@ public class TarjetasServiceImpl implements TarjetasService {
 		TipoTarjeta tipoTarjeta = tipoTarjetaRepository.encontrar(tarjeta.getTipo().getId());
 		EstatusTarjeta estatusTarjeta = estatusTarjetaRepository.encontrar(tarjeta.getEstatus().getId());
 		
-		if ( tipoTarjeta.getId() != null)
-			throw new TarjetaException(TarjetaConstants.MSG_FAIL_CAN_NOT_FIND_THE_CARD_STATUS_RECORD);
-
-		if (estatusTarjeta.getId() != null)
+		if (tipoTarjeta == null || tipoTarjeta.getId() == null)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_CAN_NOT_FIND_THE_CARD_TYPE_RECORD);
+		
+		if (estatusTarjeta == null || estatusTarjeta.getId() == null)
+			throw new TarjetaException(TarjetaConstants.MSG_FAIL_CAN_NOT_FIND_THE_CARD_STATUS_RECORD);
 
 		Tarjetas idOpen = tarjetaRepository.findByIdOpenPay(tarjeta.getId_openpay());
 
@@ -261,10 +261,14 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		// Obtiene los registros
 		Tarjetas updateTarjeta = tarjetaRepository.findByIdOpenPay(id_openpay);
-
+		
 		// Evalua si existen registros
 		if (updateTarjeta == null)
 			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_UPDATE_NULL);
+		
+		//Evalua si ya existe el mismo alias en la tarjeta
+		if(updateTarjeta.getAlias().equals(alias)) 
+			throw new TarjetaException(TarjetaConstants.MSG_THE_ALIAS_IS_ALREADY_ASSIGNED_TO_A_CARD);
 
 		updateTarjeta.setAlias(alias);
 		updateTarjeta.setFechaModificacion(new Date());

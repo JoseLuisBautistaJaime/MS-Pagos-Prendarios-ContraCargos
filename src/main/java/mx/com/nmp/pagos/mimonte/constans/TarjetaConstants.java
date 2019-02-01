@@ -162,6 +162,11 @@ public final class TarjetaConstants {
 	 * Mensaje que sera enviado si se actualiza el registro correctamente
 	 */
 	public static final String MSG_NO_SUCCESS_UPDATE_NULL = "No se encontraron registros con el id_openpay especificado";
+	
+	/**
+	 * Mensaje que sera enviado si se actualiza el registro correctamente
+	 */
+	public static final String MSG_THE_ALIAS_IS_ALREADY_ASSIGNED_TO_A_CARD = "El alias ya existe para una de las tarjetas de este cliente.";
 
 	/**
 	 * Mensaje que sera enviado si se borra el registro correctamente
