@@ -18,7 +18,7 @@ public class TipoAutorizacionDTO {
 		super();
 	}
 
-	public TipoAutorizacionDTO(Integer id, String descripcion, String descripcionCorta) {
+	public TipoAutorizacionDTO(Integer id, String descripcion) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;

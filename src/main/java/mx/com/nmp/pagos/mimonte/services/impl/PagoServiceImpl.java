@@ -97,15 +97,16 @@ public class PagoServiceImpl implements PagoService {
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
 		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
+		pagoResponseDTO.setTipoAutorizacion(new TipoAutorizacionDTO(2, "3DSecure"));
 
 		// Esta seccion comentada es la invocacion al modulo DSS
-//		LOG.debug("Intentando obtener un numero de afiliacion");
+		LOG.debug("Intentando obtener un numero de afiliacion");
 		// DSS invocation
 //		Map<String, Object> mapResult = dssModule.getNoAfiliacion(pagoRequestDTO);
 //		pagoResponseDTO.setIdTipoAfiliacion(null != mapResult && !mapResult.isEmpty()
 //				? Integer.parseInt(String.valueOf(mapResult.get(PagoConstants.ID_AFILIACION_MAPPING_NAME)))
 //				: null);
-//		pagoResponseDTO.setTipoAfiliacion(null != mapResult && !mapResult.isEmpty()
+//		pagoResponseDTO.setTipoAutorizacion(null != mapResult && !mapResult.isEmpty()
 //				? (TipoAutorizacionDTO) mapResult.get(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME)
 //				: null);
 
