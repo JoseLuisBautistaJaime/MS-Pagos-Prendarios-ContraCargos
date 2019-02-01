@@ -33,7 +33,7 @@ public class AfiliacionBuilder {
 			afiliacionDTO = new AfiliacionDTO();
 			afiliacionDTO.setDescripcion(afiliacion.getDescripcion());
 			afiliacionDTO.setId(afiliacion.getId());
-			afiliacionDTO.setTipo(TipoAfiliacionBuilder.buildTipoAfilaicionDTOFromTipoAfiliacion(afiliacion.getTipo()));
+			afiliacionDTO.setTipo(TipoAutorizacionBuilder.buildTipoAfilaicionDTOFromTipoAfiliacion(afiliacion.getTipo()));
 		}
 		return afiliacionDTO;
 	}

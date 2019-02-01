@@ -8,15 +8,23 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * Nombre: TipoAutorizacion Descripcion: Entidad que representa un tipo de
+ * autorizacion dentro del sistema en el catalogo de afiliaciones.
+ *
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 01/02/2019 11:57 hrs.
+ * @version 0.1
+ */
 @Entity
 @Table(name = "tipo_afiliacion_c")
-public class TipoAfiliacion extends AbstractCatalogo {
+public class TipoAutorizacion extends AbstractCatalogo {
 
-	public TipoAfiliacion() {
+	public TipoAutorizacion() {
 		super();
 	}
 
-	public TipoAfiliacion(Set<Afiliacion> afiliaciones) {
+	public TipoAutorizacion(Set<Afiliacion> afiliaciones) {
 		super();
 		this.afiliaciones = afiliaciones;
 	}
@@ -34,7 +42,7 @@ public class TipoAfiliacion extends AbstractCatalogo {
 
 	@Override
 	public String toString() {
-		return "TipoAfiliacion [afiliaciones=" + afiliaciones + "]";
+		return "TipoAutorizacion [afiliaciones=" + afiliaciones + "]";
 	}
 
 }

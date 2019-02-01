@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
+import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.exception.TarjetaException;
 import mx.com.nmp.pagos.mimonte.exception.TarjetaIdentifierException;
@@ -104,7 +106,7 @@ public class PagoServiceImpl implements PagoService {
 //				? Integer.parseInt(String.valueOf(mapResult.get(PagoConstants.ID_AFILIACION_MAPPING_NAME)))
 //				: null);
 //		pagoResponseDTO.setTipoAfiliacion(null != mapResult && !mapResult.isEmpty()
-//				? (TipoAfiliacionDTO) mapResult.get(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME)
+//				? (TipoAutorizacionDTO) mapResult.get(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME)
 //				: null);
 
 		LOG.debug("Se validara objeto pagoRequestDTO");

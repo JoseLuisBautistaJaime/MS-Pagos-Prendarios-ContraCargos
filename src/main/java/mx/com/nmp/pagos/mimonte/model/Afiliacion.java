@@ -36,7 +36,7 @@ public class Afiliacion {
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "tipo")
-	private TipoAfiliacion tipo;
+	private TipoAutorizacion tipo;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "afiliacion")
 	private Set<ReglaNegocio> reglas;
@@ -47,7 +47,7 @@ public class Afiliacion {
 		 */
 	}
 
-	public Afiliacion(Integer id, String descripcion, Set<ReglaNegocio> reglas, TipoAfiliacion tipo) {
+	public Afiliacion(Integer id, String descripcion, Set<ReglaNegocio> reglas, TipoAutorizacion tipo) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
@@ -79,11 +79,11 @@ public class Afiliacion {
 		this.reglas = reglas;
 	}
 
-	public TipoAfiliacion getTipo() {
+	public TipoAutorizacion getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(TipoAfiliacion tipo) {
+	public void setTipo(TipoAutorizacion tipo) {
 		this.tipo = tipo;
 	}
 
