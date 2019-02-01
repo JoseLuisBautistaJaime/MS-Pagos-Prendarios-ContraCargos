@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -160,8 +159,10 @@ public class PagoServiceImpl implements PagoService {
 			if (null != flag && flag == 0) {
 				for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
 					try {
-						pago = PagoBuilder.buildPagoFromObject(operacion, pagoRequestDTO.getTarjeta(), cl,
-								pagoRequestDTO.getIdTransaccionMidas());
+						pago = PagoBuilder.buildPagoFromObject(operacion,
+								(null != pagoRequestDTO && null != pagoRequestDTO.getGuardaTarjeta()
+										&& pagoRequestDTO.getGuardaTarjeta()) ? pagoRequestDTO.getTarjeta() : null,
+								cl, pagoRequestDTO.getIdTransaccionMidas());
 						pagoRepository.save(pago);
 						// Los estatus siguientes EstatusOperacion.XXXX son identicos a los del catalogo
 						// de estatus de transaccion de la base de datos, se hace por medio de un enum

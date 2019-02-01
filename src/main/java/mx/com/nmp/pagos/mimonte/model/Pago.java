@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 /**
  * Nombre: Pago Descripcion: Entidad que representa un pago dentro del sistema.
@@ -28,17 +27,10 @@ public class Pago {
 		super();
 	}
 
-	public Pago(Long id, Cliente cliente, Date fechaTarnsaccion, Double monto,
-			@Size(max = 100, message = "El campo debe ser un valor alfanumerico de 1 a 100 caracteres") String autorizacion,
-			@Size(min = 1, max = 45, message = "El campo debe ser un valor alfanumerico de 1 a 45 caracteres") String metodo,
-			@Size(min = 4, max = 4, message = "El campo debe ser un valor de 4 caracteres") String tarjeta,
-			@Size(min = 1, max = 4, message = "El campo debe ser un valor de 1 a 100 caracteres") String idOpenPay,
-			Date fechaCreacion,
-			@Size(min = 1, max = 200, message = "El campo debe ser un valor de 1 a 200 caracteres") String descripcion,
-			@Size(min = 1, max = 100, message = "El campo debe ser un valor de 1 a 100 caracteres") String idOrder,
-			EstatusPago estatusPago,
-			@Size(min = 1, max = 400, message = "El campo debe ser un valor de 1 a 400 caracteres") String restResponse,
-			Integer idTransaccionMidas, Integer folioPartida, Integer idOperacion) {
+	public Pago(Long id, Cliente cliente, Date fechaTarnsaccion, Double monto, String autorizacion, String metodo,
+			String tarjeta, String idOpenPay, Date fechaCreacion, String descripcion, String idOrder,
+			EstatusPago estatusPago, String restResponse, Integer idTransaccionMidas, Integer folioPartida,
+			Integer idOperacion) {
 		super();
 		this.id = id;
 		this.cliente = cliente;
@@ -73,30 +65,24 @@ public class Pago {
 	@Column(name = "monto", nullable = true)
 	private Double monto;
 
-	@Size(max = 100, message = "El campo debe ser un valor alfanumerico de 1 a 100 caracteres")
 	@Column(name = "autorizacion", nullable = true)
 	private String autorizacion;
 
-	@Size(min = 1, max = 45, message = "El campo debe ser un valor alfanumerico de 1 a 45 caracteres")
 	@Column(name = "metodo", nullable = true)
 	private String metodo;
 
-	@Size(min = 4, max = 4, message = "El campo debe ser un valor de 4 caracteres")
 	@Column(name = "tarjeta", nullable = true)
 	private String tarjeta;
 
-	@Size(min = 1, max = 4, message = "El campo debe ser un valor de 1 a 100 caracteres")
 	@Column(name = "idopenpay", nullable = true)
 	private String idOpenPay;
 
 	@Column(name = "fecha_creacion", nullable = true)
 	private Date fechaCreacion;
 
-	@Size(min = 1, max = 200, message = "El campo debe ser un valor de 1 a 200 caracteres")
 	@Column(name = "descripcion", nullable = true)
 	private String descripcion;
 
-	@Size(min = 1, max = 100, message = "El campo debe ser un valor de 1 a 100 caracteres")
 	@Column(name = "idorder", nullable = true)
 	private String idOrder;
 
@@ -104,16 +90,15 @@ public class Pago {
 	@JoinColumn(name = "estatus_transaccion", nullable = true)
 	private EstatusPago estatusPago;
 
-	@Size(min = 1, max = 400, message = "El campo debe ser un valor de 1 a 400 caracteres")
 	@Column(name = "restresponse", nullable = true)
 	private String restResponse;
 
 	@Column(name = "id_transaccion_midas", nullable = true)
 	private Integer idTransaccionMidas;
-	
+
 	@Column(name = "folio_partida", nullable = true)
 	private Integer folioPartida;
-	
+
 	@Column(name = "id_operacion", nullable = true)
 	private Integer idOperacion;
 
@@ -228,7 +213,7 @@ public class Pago {
 	public void setIdTransaccionMidas(Integer idTransaccionMidas) {
 		this.idTransaccionMidas = idTransaccionMidas;
 	}
-	
+
 	public Integer getFolioPartida() {
 		return folioPartida;
 	}
