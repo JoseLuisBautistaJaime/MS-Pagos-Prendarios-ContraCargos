@@ -79,7 +79,7 @@ public class PagoServiceImpl implements PagoService {
 	private Integer MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT;
 
 	/**
-
+	 * 
 	 * 
 	 * @throws SQLException
 	 * @throws NumberFormatException
@@ -131,6 +131,8 @@ public class PagoServiceImpl implements PagoService {
 		flag = pagoRepository.countByIdTransaccionMidas(Integer.parseInt(pagoRequestDTO.getIdTransaccionMidas()));
 		// Finaliza validacion de id transaccion
 		ClienteDTO cl = clienteService.getClienteById(pagoRequestDTO.getIdCliente());
+		if (null == cl)
+			cl = clienteService.saveCliente(new ClienteDTO(pagoRequestDTO.getIdCliente(), null, new Date()));
 		// Se realizan validacion propias del negocio
 		LOG.debug("Se inician validaciones respecto a objeto pagoRequestDTO.getTarjeta()");
 		if (flagOkCardData && (null != flag && flag == 0)) {
@@ -149,9 +151,6 @@ public class PagoServiceImpl implements PagoService {
 				}
 			}
 		}
-		if (null == cl) {
-			cl = clienteService.saveCliente(new ClienteDTO(pagoRequestDTO.getIdCliente(), null, new Date()));
-		}
 		Pago pago = new Pago();
 		if (null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty()) {
 			LOG.debug("Se iteraran operaciones dentro de pagoRequestDTO");
@@ -162,7 +161,8 @@ public class PagoServiceImpl implements PagoService {
 								pagoRequestDTO.getIdTransaccionMidas());
 						pagoRepository.save(pago);
 						// Los estatus siguientes EstatusOperacion.XXXX son identicos a los del catalogo
-						// de estatus de transaccion de la base de datos, se hace por medio de un enum para
+						// de estatus de transaccion de la base de datos, se hace por medio de un enum
+						// para
 						// quitar carga de trabajo al servidor
 						estatusPagos.add(new EstatusPagoResponseDTO(
 								EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
