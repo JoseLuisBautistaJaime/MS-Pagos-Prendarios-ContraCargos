@@ -60,6 +60,12 @@ public class PagoController {
 	 */
 	private final Logger log = LoggerFactory.getLogger(PagoController.class);
 
+	/**
+	 * Metodo post que recibe la peticion para guardar un pago
+	 * 
+	 * @param pagoRequestDTO
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/v1/pago", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +79,7 @@ public class PagoController {
 		log.debug("Entrando a operacion de servicio PagoController.post()...");
 		log.debug("Received object: " + pagoRequestDTO);
 
-//		// --------------------- Dummy data building begins
+//		// --------------------- Dummy data building begins (SE CONSERVA ESTE COSIGO COMENTADO SOLO COMO PRUEBA DE QUE SE REALIZO LA TRAMA DUMMY PARA EL SERVICIO DE PAGOS) --------------////
 //		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
 //		EstatusPagoResponseDTO estatusPagoResponseDTO = new EstatusPagoResponseDTO(1, "C12");
 //		EstatusPagoResponseDTO estatusPagoResponseDTO2 = new EstatusPagoResponseDTO(1, "C34");
@@ -84,10 +90,8 @@ public class PagoController {
 //		// en funcion de unas reglas de negocio
 //		// en el modulo de toma de deciciones
 //		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusPagos, true, 1);
-//		// --------------------- Dummy data building ends
+//		// --------------------- Dummy data building ends-------------///////
 
-		// real code begins
-		// ---------------- CODE HERE ------------------
 		log.debug("Inician validaciones iniciales en validacionesInicialesPago(pagoRequestDTO)");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		PagoResponseDTO pagoResponseDTO = null;
@@ -101,7 +105,6 @@ public class PagoController {
 			else if (ex instanceof PagoException)
 				throw new PagoException(ex.getMessage());
 		}
-		// real code ends
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoResponseDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), PagoConstants.MSG_SUCCESS,

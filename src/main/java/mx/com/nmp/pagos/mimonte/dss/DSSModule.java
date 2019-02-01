@@ -85,10 +85,10 @@ public class DSSModule {
 	 * @throws SQLDataException
 	 * @throws DataIntegrityViolationException
 	 */
-	public Map<String, Integer> getNoAfiliacion(PagoRequestDTO pagoRequestDTO)
+	public Map<String, Object> getNoAfiliacion(PagoRequestDTO pagoRequestDTO)
 			throws DataIntegrityViolationException, SQLDataException, SQLException {
 		LOG.debug("Ingresando al metodo DSSModule.getNoAfiliacion()");
-		Map<String, Integer> mapValues = null;
+		Map<String, Object> mapValues = null;
 		List<ReglaNegocioDTO> reglasNegocioDTO = null;
 		Stack<ReglaNegocioResumenDTO> stack = null;
 		validacionesPrincipales(pagoRequestDTO);
@@ -99,16 +99,16 @@ public class DSSModule {
 		LOG.debug("Se finalizo el proceso de obtencion de reglas de negocio");
 		if (null == reglasNegocioDTO || reglasNegocioDTO.isEmpty())
 			throw new DSSException(DSSConstants.NO_RULES_FOUND_MESSAGE);
-//		else {
-//			validacionesSecundarias(pagoRequestDTO);
-//		}
 		LOG.debug("Inicia reemplazo de variables");
 		for (ReglaNegocioDTO reglaNegocioDTO : reglasNegocioDTO) {
 			replaceVariablesDB(reglaNegocioDTO);
 			replaceLocalVariables(reglaNegocioDTO, pagoRequestDTO.getIdCliente());
 			ReglaNegocioResumenDTO regla = null;
-			LOG.debug("Inicia ejecucion de query: " + reglaNegocioDTO.getConsulta());
+			LOG.debug("Inicia ejecucion de query: " + null != reglaNegocioDTO.getConsulta()
+					? reglaNegocioDTO.getConsulta()
+					: null);
 			regla = dssService.execQuery(reglaNegocioDTO.getConsulta());
+			regla.setTipoAfiliacion(reglaNegocioDTO.getAfliacion().getTipo());
 			stack.push(regla);
 		}
 		mapValues = evaluateResultStack(stack);
@@ -124,20 +124,20 @@ public class DSSModule {
 	 * @param     Stack<ReglaNegocioResumenDTO> stack
 	 * @param Map noAfiliacion
 	 */
-	private static Map<String, Integer> evaluateResultStack(Stack<ReglaNegocioResumenDTO> stack) {
+	private static Map<String, Object> evaluateResultStack(Stack<ReglaNegocioResumenDTO> stack) {
 		LOG.debug("Inicia proceso de evaluacion de reglas de negocio");
 		ReglaNegocioResumenDTO reglaNegocioResumenDTO;
-		Map<String, Integer> mapValues = null;
+		Map<String, Object> mapValues = null;
 		while (!stack.isEmpty()) {
 			reglaNegocioResumenDTO = stack.pop();
 			if (null == mapValues || mapValues.isEmpty()) {
-				mapValues = new HashMap<String, Integer>();
+				mapValues = new HashMap<String, Object>();
 				mapValues.put(PagoConstants.ID_AFILIACION_MAPPING_NAME, reglaNegocioResumenDTO.getIdAfiliacion());
-				mapValues.put(PagoConstants.ID_TIPO_MAPPING_NAME, reglaNegocioResumenDTO.getTipo());
-			} else if (reglaNegocioResumenDTO.getValido() && reglaNegocioResumenDTO.getIdAfiliacion() > mapValues
-					.get(PagoConstants.ID_AFILIACION_MAPPING_NAME)) {
+				mapValues.put(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME, reglaNegocioResumenDTO.getTipoAfiliacion());
+			} else if (reglaNegocioResumenDTO.getValido() && reglaNegocioResumenDTO.getIdAfiliacion() > Integer
+					.parseInt(String.valueOf(mapValues.get(PagoConstants.ID_AFILIACION_MAPPING_NAME)))) {
 				mapValues.put(PagoConstants.ID_AFILIACION_MAPPING_NAME, reglaNegocioResumenDTO.getIdAfiliacion());
-				mapValues.put(PagoConstants.ID_TIPO_MAPPING_NAME, reglaNegocioResumenDTO.getTipo());
+				mapValues.put(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME, reglaNegocioResumenDTO.getTipoAfiliacion());
 
 			}
 		}

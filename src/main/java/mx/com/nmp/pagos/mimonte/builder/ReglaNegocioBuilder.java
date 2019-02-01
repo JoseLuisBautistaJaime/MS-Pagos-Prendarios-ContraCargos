@@ -75,12 +75,11 @@ public class ReglaNegocioBuilder {
 	 */
 	public static ReglaNegocioResumenDTO buildReglaNegocioResumenDTOFromObjArr(Object[] obj) {
 		ReglaNegocioResumenDTO reglaNegocioResumenDTO = null;
-		if (null != obj && obj.length == 4) {
+		if (null != obj && obj.length == 3) {
 			reglaNegocioResumenDTO = new ReglaNegocioResumenDTO(
 					Integer.parseInt(null != obj[0] ? obj[0].toString() : null),
 					Integer.parseInt(null != obj[1] ? obj[1].toString() : null),
-					Integer.parseInt(null != obj[2] ? obj[2].toString() : null) == 1,
-					Integer.parseInt(null != obj[3] ? obj[3].toString() : null));
+					Integer.parseInt(null != obj[2] ? obj[2].toString() : null) == 1);
 		}
 		return reglaNegocioResumenDTO;
 	}

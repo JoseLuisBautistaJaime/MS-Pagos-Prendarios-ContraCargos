@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -80,8 +79,7 @@ public class PagoServiceImpl implements PagoService {
 	private Integer MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT;
 
 	/**
-	 * Metodo que registra una nueva trajeta si dicha bandera es activa, envia el
-	 * registro de un pago al ESB y registra un pago en Base de Datos
+
 	 * 
 	 * @throws SQLException
 	 * @throws NumberFormatException
@@ -96,15 +94,18 @@ public class PagoServiceImpl implements PagoService {
 		LOG.debug("Ingreso al servicio: savePago(PagoRequestDTO pagoRequestDTO)");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
-//		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
+		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
+
+		// Esta seccion comentada es la invocacion al modulo DSS
 //		LOG.debug("Intentando obtener un numero de afiliacion");
 		// DSS invocation
-		Map<String, Integer> mapResult = dssModule.getNoAfiliacion(pagoRequestDTO);
-		pagoResponseDTO.setIdTipoAfiliacion(
-				null != mapResult && !mapResult.isEmpty() ? mapResult.get(PagoConstants.ID_AFILIACION_MAPPING_NAME)
-						: null);
-		pagoResponseDTO.setTipo(
-				null != mapResult && !mapResult.isEmpty() ? mapResult.get(PagoConstants.ID_TIPO_MAPPING_NAME) : null);
+//		Map<String, Object> mapResult = dssModule.getNoAfiliacion(pagoRequestDTO);
+//		pagoResponseDTO.setIdTipoAfiliacion(null != mapResult && !mapResult.isEmpty()
+//				? Integer.parseInt(String.valueOf(mapResult.get(PagoConstants.ID_AFILIACION_MAPPING_NAME)))
+//				: null);
+//		pagoResponseDTO.setTipoAfiliacion(null != mapResult && !mapResult.isEmpty()
+//				? (TipoAfiliacionDTO) mapResult.get(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME)
+//				: null);
 
 		LOG.debug("Se validara objeto pagoRequestDTO");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
@@ -137,10 +138,15 @@ public class PagoServiceImpl implements PagoService {
 				tarjetaService
 						.addTarjetas(TarjetaBuilder.buildTarjetaDTOFromTarjetaPagoDTO(pagoRequestDTO.getTarjeta(), cl));
 			} catch (TarjetaException tex) {
+				// A qui se evalua si el tipo de excepcion es de identificador de tarjeta
+				// (idopenpay) existente, entonces el flujo sigue, de lo contrario el flujo se
+				// detiene
 				if (tex instanceof TarjetaIdentifierException)
 					LOG.info(TarjetaConstants.MSG_TARJETAS_ERROR);
-				else
+				else {
 					LOG.info(tex.getMessage());
+					throw new TarjetaException(tex.getMessage());
+				}
 			}
 		}
 		if (null == cl) {
@@ -155,6 +161,9 @@ public class PagoServiceImpl implements PagoService {
 						pago = PagoBuilder.buildPagoFromObject(operacion, pagoRequestDTO.getTarjeta(), cl,
 								pagoRequestDTO.getIdTransaccionMidas());
 						pagoRepository.save(pago);
+						// Los estatus siguientes EstatusOperacion.XXXX son identicos a los del catalogo
+						// de estatus de transaccion de la base de datos, se hace por medio de un enum para
+						// quitar carga de trabajo al servidor
 						estatusPagos.add(new EstatusPagoResponseDTO(
 								EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
 						LOG.debug("Se agrego operacion correcta: " + operacion);

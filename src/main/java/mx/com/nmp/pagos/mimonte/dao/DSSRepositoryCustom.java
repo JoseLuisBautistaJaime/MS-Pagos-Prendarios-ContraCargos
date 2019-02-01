@@ -19,11 +19,13 @@ import org.springframework.stereotype.Repository;
 public interface DSSRepositoryCustom {
 
 	/**
-	 * 
 	 * Metodo que ejecuta una consulta contenida en un tipo de dato String
 	 * 
 	 * @param query
 	 * @return
+	 * @throws DataIntegrityViolationException
+	 * @throws SQLDataException
+	 * @throws SQLException
 	 */
 	<S extends Object> S execQuery(String query) throws DataIntegrityViolationException, SQLDataException, SQLException;
 

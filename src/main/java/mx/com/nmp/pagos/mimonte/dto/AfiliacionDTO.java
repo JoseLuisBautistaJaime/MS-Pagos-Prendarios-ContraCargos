@@ -12,13 +12,13 @@ public class AfiliacionDTO {
 
 	private Integer id;
 	private String descripcion;
-	private Integer tipo;
+	private TipoAfiliacionDTO tipo;
 
 	public AfiliacionDTO() {
 		super();
 	}
 
-	public AfiliacionDTO(Integer id, String descripcion, Integer tipo) {
+	public AfiliacionDTO(Integer id, String descripcion, TipoAfiliacionDTO tipo) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
@@ -41,11 +41,11 @@ public class AfiliacionDTO {
 		this.descripcion = descripcion;
 	}
 
-	public Integer getTipo() {
+	public TipoAfiliacionDTO getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(Integer tipo) {
+	public void setTipo(TipoAfiliacionDTO tipo) {
 		this.tipo = tipo;
 	}
 

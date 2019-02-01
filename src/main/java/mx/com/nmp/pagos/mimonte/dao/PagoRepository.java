@@ -23,12 +23,14 @@ import mx.com.nmp.pagos.mimonte.model.Pago;
 public interface PagoRepository extends JpaRepository<Pago, Integer> {
 
 	/**
-	 * 
 	 * Metodo que consulta si ya existe un pago a registrar en base de datos para no
 	 * duplicarlo
 	 * 
 	 * @param idTransaccionMidas
 	 * @return
+	 * @throws DataIntegrityViolationException
+	 * @throws SQLDataException
+	 * @throws SQLException
 	 */
 	@Query("SELECT COUNT(p.id) FROM Pago p WHERE p.idTransaccionMidas = :idTransaccionMidas")
 	public Integer countByIdTransaccionMidas(@Param("idTransaccionMidas") Integer idTransaccionMidas)

@@ -13,18 +13,25 @@ public class ReglaNegocioResumenDTO implements Comparable<ReglaNegocioResumenDTO
 	private Integer id;
 	private Integer idAfiliacion;
 	private Boolean valido;
-	private Integer tipo;
+	private TipoAfiliacionDTO tipoAfiliacion;
 
 	public ReglaNegocioResumenDTO() {
 		super();
 	}
 
-	public ReglaNegocioResumenDTO(Integer id, Integer idAfiliacion, Boolean valido, Integer tipo) {
+	public ReglaNegocioResumenDTO(Integer id, Integer idAfiliacion, Boolean valido, TipoAfiliacionDTO tipoAfiliacion) {
 		super();
 		this.id = id;
 		this.valido = valido;
 		this.idAfiliacion = idAfiliacion;
-		this.tipo = tipo;
+		this.tipoAfiliacion = tipoAfiliacion;
+	}
+
+	public ReglaNegocioResumenDTO(Integer id, Integer idAfiliacion, Boolean valido) {
+		super();
+		this.id = id;
+		this.valido = valido;
+		this.idAfiliacion = idAfiliacion;
 	}
 
 	public Integer getId() {
@@ -51,18 +58,18 @@ public class ReglaNegocioResumenDTO implements Comparable<ReglaNegocioResumenDTO
 		this.idAfiliacion = idAfiliacion;
 	}
 
-	public Integer getTipo() {
-		return tipo;
+	public TipoAfiliacionDTO getTipoAfiliacion() {
+		return tipoAfiliacion;
 	}
 
-	public void setTipo(Integer tipo) {
-		this.tipo = tipo;
+	public void setTipoAfiliacion(TipoAfiliacionDTO tipoAfiliacion) {
+		this.tipoAfiliacion = tipoAfiliacion;
 	}
 
 	@Override
 	public String toString() {
 		return "ReglaNegocioResumenDTO [id=" + id + ", valido=" + valido + ", idAfiliacion=" + idAfiliacion + ", tipo="
-				+ tipo + "]";
+				+ tipoAfiliacion + "]";
 	}
 
 	@Override

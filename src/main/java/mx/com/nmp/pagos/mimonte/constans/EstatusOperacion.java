@@ -1,8 +1,7 @@
 package mx.com.nmp.pagos.mimonte.constans;
 
 /**
- * Nombre: EstatusOperacion
- * Descripcion: Mapea los estatus de una operacion a
+ * Nombre: EstatusOperacion Descripcion: Mapea los estatus de una operacion a
  * una estructura ENUM NOTA: Este enum debe mantenerse actualizado para que se
  * igual al catalogo en base de datos
  * 
@@ -12,7 +11,8 @@ package mx.com.nmp.pagos.mimonte.constans;
  */
 public enum EstatusOperacion {
 
-	SUCCESSFUL_STATUS_OPERATION(1, "Operacion Exitosa"), FAIL_STATUS_OPERATION(2, "Operacion Fallida");
+	SUCCESSFUL_STATUS_OPERATION(1, "Operacion Exitosa", "Operacion realizada de manera exitosa"),
+	FAIL_STATUS_OPERATION(2, "Operacion Fallida", "Operacion ralizada de manera fallida");
 
 	/**
 	 * Campo id de estatus operacion
@@ -24,9 +24,15 @@ public enum EstatusOperacion {
 	 */
 	private String descripcion;
 
-	private EstatusOperacion(Integer id, String descripcion) {
+	/**
+	 * Campo de descripcion completa
+	 */
+	private String descripcionCompleta;
+
+	private EstatusOperacion(Integer id, String descripcion, String descripcionCompleta) {
 		this.id = id;
 		this.descripcion = descripcion;
+		this.descripcionCompleta = descripcionCompleta;
 	}
 
 	/**
@@ -45,6 +51,15 @@ public enum EstatusOperacion {
 	 */
 	public String getDescripcion() {
 		return descripcion;
+	}
+
+	/**
+	 * Recupera el valor de {@code descripcionCompleta}
+	 * 
+	 * @return
+	 */
+	public String getDescripcionCompleta() {
+		return descripcionCompleta;
 	}
 
 }

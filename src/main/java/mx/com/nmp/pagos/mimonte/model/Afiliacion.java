@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -32,8 +34,9 @@ public class Afiliacion {
 	@Column(name = "descripcion", nullable = false)
 	private String descripcion;
 
-	@Column(name = "tipo")
-	private Integer tipo;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "tipo")
+	private TipoAfiliacion tipo;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "afiliacion")
 	private Set<ReglaNegocio> reglas;
@@ -44,7 +47,7 @@ public class Afiliacion {
 		 */
 	}
 
-	public Afiliacion(Integer id, String descripcion, Set<ReglaNegocio> reglas, Integer tipo) {
+	public Afiliacion(Integer id, String descripcion, Set<ReglaNegocio> reglas, TipoAfiliacion tipo) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
@@ -76,11 +79,11 @@ public class Afiliacion {
 		this.reglas = reglas;
 	}
 
-	public Integer getTipo() {
+	public TipoAfiliacion getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(Integer tipo) {
+	public void setTipo(TipoAfiliacion tipo) {
 		this.tipo = tipo;
 	}
 

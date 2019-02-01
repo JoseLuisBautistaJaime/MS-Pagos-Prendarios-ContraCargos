@@ -127,9 +127,9 @@ public final class PagoConstants {
 	public static final String ID_AFILIACION_MAPPING_NAME = "idAfiliacionMap";
 
 	/**
-	 * Valor de nombre de clave en mapa en tipo
+	 * Valor de nombre de el tipoAutorizacion en la afiliacion
 	 */
-	public static final String ID_TIPO_MAPPING_NAME = "idTipoMap";
+	public static final String TIPO_AUTORIZACION_MAPPING_NAME = "tipoAutorizacion";
 
 	/**
 	 * Mensaje que es mostrado cuando se intenat violar una regla de integridad de

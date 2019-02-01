@@ -28,7 +28,7 @@ public class Pago {
 		super();
 	}
 
-	public Pago(Integer id, Cliente cliente, Date fechaTarnsaccion, Double monto,
+	public Pago(Long id, Cliente cliente, Date fechaTarnsaccion, Double monto,
 			@Size(max = 100, message = "El campo debe ser un valor alfanumerico de 1 a 100 caracteres") String autorizacion,
 			@Size(min = 1, max = 45, message = "El campo debe ser un valor alfanumerico de 1 a 45 caracteres") String metodo,
 			@Size(min = 4, max = 4, message = "El campo debe ser un valor de 4 caracteres") String tarjeta,
@@ -61,7 +61,7 @@ public class Pago {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, unique = true)
-	private Integer id;
+	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "idcliente", nullable = true)
@@ -157,11 +157,11 @@ public class Pago {
 		this.monto = monto;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

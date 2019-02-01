@@ -19,15 +19,15 @@ public class PagoResponseDTO {
 	private List<EstatusPagoResponseDTO> estatusPagos;
 	private Boolean exitoso;
 	private Integer idTipoAfiliacion;
-	private Integer tipo;
+	private TipoAfiliacionDTO tipoAfiliacion;
 
 	public PagoResponseDTO(List<EstatusPagoResponseDTO> estatusPagos, Boolean exitoso, Integer idTipoAfiliacion,
-			Integer tipo) {
+			TipoAfiliacionDTO tipoAfiliacion) {
 		super();
 		this.estatusPagos = estatusPagos;
 		this.exitoso = exitoso;
 		this.idTipoAfiliacion = idTipoAfiliacion;
-		this.tipo = tipo;
+		this.tipoAfiliacion = tipoAfiliacion;
 	}
 
 	public Boolean getExitoso() {
@@ -54,18 +54,18 @@ public class PagoResponseDTO {
 		this.estatusPagos = estatusPagos;
 	}
 
-	public Integer getTipo() {
-		return tipo;
+	public TipoAfiliacionDTO getTipoAfiliacion() {
+		return tipoAfiliacion;
 	}
 
-	public void setTipo(Integer tipo) {
-		this.tipo = tipo;
+	public void setTipoAfiliacion(TipoAfiliacionDTO tipoAfiliacion) {
+		this.tipoAfiliacion = tipoAfiliacion;
 	}
 
 	@Override
 	public String toString() {
 		return "PagoResponseDTO [estatusPagos=" + estatusPagos + ", exitoso=" + exitoso + ", idTipoAfiliacion="
-				+ idTipoAfiliacion + ", tipo=" + tipo + "]";
+				+ idTipoAfiliacion + ", tipoAfiliacion=" + tipoAfiliacion;
 	}
 
 }

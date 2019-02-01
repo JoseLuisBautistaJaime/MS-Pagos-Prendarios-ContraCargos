@@ -130,3 +130,43 @@ SET foreign_key_checks = 1;
 
 -- SE AGREGA COLUMNA DE VERIFICACION DE 3D SECURE A CATALOGO DE AFILIACION
 ALTER TABLE catalogo_afiliacion ADD COLUMN tipo INT(1) NULL;
+
+-- SE MODIFICA ID DE de tabla pagos para soportar numero mas grandes
+ALTER TABLE pagos MODIFY id BIGINT UNSIGNED NOT NULL;
+
+-- CREACION DE CATALOG DE ESTATUS DE OPERACION
+-- -----------------------------------------------------
+-- Table `compose`.`estatus_operacion_c`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `compose`.`estatus_operacion_c` ;
+
+CREATE TABLE IF NOT EXISTS `compose`.`estatus_operacion_c` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
+  `descripcion` VARCHAR(200) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `compose`.`tipo_afiliacion_c`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `compose`.`tipo_afiliacion_c` ;
+
+CREATE TABLE IF NOT EXISTS `compose`.`tipo_afiliacion_c` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
+  `descripcion` VARCHAR(200) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = latin1;
+
+-- ALTER DE COLUMNA TIPO EN TABLA catalogo_afiliacion PARA CONVERTIRLO EN FOREING KEY
+ALTER TABLE catalogo_afiliacion MODIFY tipo INT(11) NOT NULL;
+
+-- CREACION DE DE FOREIGN KEY A TABLA catalogo_afiliaicon DE ID TIPO AFILIACION
+SET foreign_key_checks = 0;
+ALTER TABLE catalogo_afiliacion ADD CONSTRAINT fk_id_tipo_afiliacion FOREIGN KEY (tipo) REFERENCES tipo_afiliacion_c(id);
+SET foreign_key_checks = 1;

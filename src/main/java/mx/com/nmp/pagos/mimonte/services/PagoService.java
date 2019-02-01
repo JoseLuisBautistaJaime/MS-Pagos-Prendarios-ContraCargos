@@ -21,8 +21,11 @@ public interface PagoService {
 	/**
 	 * Metodo que se encarga de registrar un pago
 	 * 
-	 * @param Objeto tipo pagoDTO
-	 * @return Objeto PagoRequestDTO que fue guardado
+	 * @param pagoRequestDTO
+	 * @return
+	 * @throws DataIntegrityViolationException
+	 * @throws SQLDataException
+	 * @throws SQLException
 	 */
 	public abstract PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO)
 			throws DataIntegrityViolationException, SQLDataException, SQLException;
