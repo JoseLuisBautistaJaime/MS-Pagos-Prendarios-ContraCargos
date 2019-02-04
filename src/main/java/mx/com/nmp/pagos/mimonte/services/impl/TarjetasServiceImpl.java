@@ -217,9 +217,15 @@ public class TarjetasServiceImpl implements TarjetasService {
 			throw new TarjetaIdentifierException(TarjetaConstants.MSG_FAIL_TOKENS);
 		
 		List<Tarjetas> tarjetasList = tarjetaRepository.findByIdcliente(tarjeta.getCliente().getIdCliente());
+		
 		if(null != tarjetasList && !tarjetasList.isEmpty()) {
 			for(Tarjetas tarjetaVal : tarjetasList) {
-				if(null != tarjetaVal && null != tarjetaVal.getAlias() && tarjetaVal.getAlias().equals(tarjeta.getAlias())) {
+				
+				String aliasBd = tarjetaVal.getAlias().toUpperCase();
+				
+				String aliasUsu = tarjeta.getAlias().toUpperCase();
+				
+				if(null != tarjetaVal && null != aliasBd && aliasBd.equals(aliasUsu)) {
 					throw new TarjetaException(TarjetaConstants.ALIAS_ALREADY_EXIST_FOR_CURRENT_CLIENT);
 				}
 			}	
@@ -262,13 +268,19 @@ public class TarjetasServiceImpl implements TarjetasService {
 		// Obtiene los registros
 		Tarjetas updateTarjeta = tarjetaRepository.findByIdOpenPay(id_openpay);
 		
+		
+		
 		// Evalua si existen registros
 		if (updateTarjeta == null)
 			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_UPDATE_NULL);
 		
+		String aliasBd = updateTarjeta.getAlias().toUpperCase();
+		
+		String aliasUsu = alias.toUpperCase();
+		
 		//Evalua si ya existe el mismo alias en la tarjeta
-		if(updateTarjeta.getAlias().equals(alias)) 
-			throw new TarjetaException(TarjetaConstants.MSG_THE_ALIAS_IS_ALREADY_ASSIGNED_TO_A_CARD);
+		if(aliasBd.equals(aliasUsu)) 
+			throw new TarjetaException(TarjetaConstants.ALIAS_ALREADY_EXIST_FOR_CURRENT_CLIENT);
 
 		updateTarjeta.setAlias(alias);
 		updateTarjeta.setFechaModificacion(new Date());
