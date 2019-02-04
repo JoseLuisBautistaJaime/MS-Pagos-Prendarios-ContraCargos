@@ -46,4 +46,9 @@ public class DSSConstants {
 	 */
 	public static final String ID_AFILAICION_REGLA_PROP = "${mimonte.variables.dss.idafiliacionregla}";
 
+	/**
+	 * Propiedad para mapear el tipo de afiliacion de el archivo de propiedades
+	 */
+	public static final String ID_TIPO_REGLA_PROP = "${mimonte.variables.dss.idtipo}";
+
 }

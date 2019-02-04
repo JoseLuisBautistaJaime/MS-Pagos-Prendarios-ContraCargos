@@ -188,7 +188,7 @@ public class TarjetasControllerTest {
 		EstatusTarjetaDTO estatusTarjeta = new EstatusTarjetaDTO();
 		TipoTarjetaDTO tipoTarjeta = new TipoTarjetaDTO();
 		ClienteDTO clienteDTO = new ClienteDTO();
-		clienteDTO.setIdCliente(1);
+		clienteDTO.setIdCliente(1L);
 		clienteDTO.setNombreTitular("cliente test");
 		estatusTarjeta.setId(1);
 		estatusTarjeta.setDescripcion("Descripcion estatus Test");

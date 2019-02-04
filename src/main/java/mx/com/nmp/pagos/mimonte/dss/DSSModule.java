@@ -1,16 +1,22 @@
 package mx.com.nmp.pagos.mimonte.dss;
 
+import java.sql.SQLDataException;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.builder.ReglaNegocioBuilder;
 import mx.com.nmp.pagos.mimonte.constans.DSSConstants;
+import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioDTO;
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
@@ -56,6 +62,9 @@ public class DSSModule {
 	@Value(DSSConstants.ID_AFILAICION_REGLA_PROP)
 	private String ID_AFILAICION_REGLA_VAR;
 
+	@Value(DSSConstants.ID_TIPO_REGLA_PROP)
+	private String ID_TIPO_REGLA_VAR;
+
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
@@ -72,10 +81,14 @@ public class DSSModule {
 	 * 
 	 * @param PagoRequestDTO pagoRequestDTO
 	 * @return Integer
+	 * @throws SQLException
+	 * @throws SQLDataException
+	 * @throws DataIntegrityViolationException
 	 */
-	public Integer getNoAfiliacion(PagoRequestDTO pagoRequestDTO) {
+	public Map<String, Object> getNoAfiliacion(PagoRequestDTO pagoRequestDTO)
+			throws DataIntegrityViolationException, SQLDataException, SQLException {
 		LOG.debug("Ingresando al metodo DSSModule.getNoAfiliacion()");
-		Integer noAfiliacion = null;
+		Map<String, Object> mapValues = null;
 		List<ReglaNegocioDTO> reglasNegocioDTO = null;
 		Stack<ReglaNegocioResumenDTO> stack = null;
 		validacionesPrincipales(pagoRequestDTO);
@@ -86,20 +99,20 @@ public class DSSModule {
 		LOG.debug("Se finalizo el proceso de obtencion de reglas de negocio");
 		if (null == reglasNegocioDTO || reglasNegocioDTO.isEmpty())
 			throw new DSSException(DSSConstants.NO_RULES_FOUND_MESSAGE);
-//		else {
-//			validacionesSecundarias(pagoRequestDTO);
-//		}
 		LOG.debug("Inicia reemplazo de variables");
 		for (ReglaNegocioDTO reglaNegocioDTO : reglasNegocioDTO) {
 			replaceVariablesDB(reglaNegocioDTO);
 			replaceLocalVariables(reglaNegocioDTO, pagoRequestDTO.getIdCliente());
 			ReglaNegocioResumenDTO regla = null;
-			LOG.debug("Inicia ejecucion de query: " + reglaNegocioDTO.getConsulta());
+			LOG.debug("Inicia ejecucion de query: " + null != reglaNegocioDTO.getConsulta()
+					? reglaNegocioDTO.getConsulta()
+					: null);
 			regla = dssService.execQuery(reglaNegocioDTO.getConsulta());
+			regla.setTipoAfiliacion(reglaNegocioDTO.getAfliacion().getTipo());
 			stack.push(regla);
 		}
-		noAfiliacion = evaluateResultStack(stack);
-		return noAfiliacion;
+		mapValues = evaluateResultStack(stack);
+		return mapValues;
 	}
 
 	/**
@@ -108,22 +121,27 @@ public class DSSModule {
 	 * cliente y toma el que tiene prioridad mayor y cuya regla se haya cumplido
 	 * satisfactoriamente
 	 * 
-	 * @param         Stack<ReglaNegocioResumenDTO> stack
-	 * @param Integer noAfiliacion
+	 * @param     Stack<ReglaNegocioResumenDTO> stack
+	 * @param Map noAfiliacion
 	 */
-	private static Integer evaluateResultStack(Stack<ReglaNegocioResumenDTO> stack) {
+	private static Map<String, Object> evaluateResultStack(Stack<ReglaNegocioResumenDTO> stack) {
 		LOG.debug("Inicia proceso de evaluacion de reglas de negocio");
 		ReglaNegocioResumenDTO reglaNegocioResumenDTO;
-		Integer noAfiliacion = null;
+		Map<String, Object> mapValues = null;
 		while (!stack.isEmpty()) {
 			reglaNegocioResumenDTO = stack.pop();
-			if (null == noAfiliacion)
-				noAfiliacion = reglaNegocioResumenDTO.getIdAfiliacion();
-			else if (reglaNegocioResumenDTO.getValido() && reglaNegocioResumenDTO.getIdAfiliacion() > noAfiliacion) {
-				noAfiliacion = reglaNegocioResumenDTO.getIdAfiliacion();
+			if (null == mapValues || mapValues.isEmpty()) {
+				mapValues = new HashMap<String, Object>();
+				mapValues.put(PagoConstants.ID_AFILIACION_MAPPING_NAME, reglaNegocioResumenDTO.getIdAfiliacion());
+				mapValues.put(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME, reglaNegocioResumenDTO.getTipoAfiliacion());
+			} else if (reglaNegocioResumenDTO.getValido() && reglaNegocioResumenDTO.getIdAfiliacion() > Integer
+					.parseInt(String.valueOf(mapValues.get(PagoConstants.ID_AFILIACION_MAPPING_NAME)))) {
+				mapValues.put(PagoConstants.ID_AFILIACION_MAPPING_NAME, reglaNegocioResumenDTO.getIdAfiliacion());
+				mapValues.put(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME, reglaNegocioResumenDTO.getTipoAfiliacion());
+
 			}
 		}
-		return noAfiliacion;
+		return mapValues;
 	}
 
 	/**
@@ -147,16 +165,17 @@ public class DSSModule {
 	 * 
 	 * @param reglaNegocioDTO
 	 */
-	private void replaceLocalVariables(ReglaNegocioDTO reglaNegocioDTO, Integer idCliente) {
+	private void replaceLocalVariables(ReglaNegocioDTO reglaNegocioDTO, Long idCliente) {
 		LOG.debug("Inicia reemplazo de variables de base de datos para query: "
 				+ (null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null));
 		String str = null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null;
 		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getAfliacion()
-				&& null != reglaNegocioDTO.getAfliacion().getId() && null != reglaNegocioDTO.getId()
-				&& null != idCliente && idCliente != 0) {
+				&& null != reglaNegocioDTO.getAfliacion().getId() && null != reglaNegocioDTO.getAfliacion().getTipo()
+				&& null != reglaNegocioDTO.getId() && null != idCliente && idCliente != 0) {
 			str = str.replace(ID_REGLA_VAR, String.valueOf(reglaNegocioDTO.getId()));
 			str = str.replace(ID_AFILAICION_REGLA_VAR, String.valueOf(reglaNegocioDTO.getAfliacion().getId()));
 			str = str.replace(ID_CLIENTE_VAR, String.valueOf(idCliente));
+			str = str.replace(ID_TIPO_REGLA_VAR, String.valueOf(reglaNegocioDTO.getAfliacion().getTipo()));
 			reglaNegocioDTO.setConsulta(str);
 		}
 	}

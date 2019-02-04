@@ -67,7 +67,7 @@ public class TarjetasController {
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response get(@PathVariable(value = "idCliente", required = true) Integer idCliente) {
+	public Response get(@PathVariable(value = "idCliente", required = true) Long idCliente) {
 		
 		log.debug("Entrando a operacion de servicio TarjetasController.get()...");
 
@@ -91,7 +91,7 @@ public class TarjetasController {
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response get(@PathVariable(value = "idCliente", required = true) Integer idcliente, @PathVariable(value = "id_openpay", required = true) String id_openpay) {
+	public Response get(@PathVariable(value = "idCliente", required = true) Long idcliente, @PathVariable(value = "id_openpay", required = true) String id_openpay) {
 
 		log.debug("Entrando a operacion de servicio TarjetasController.get()...");
 

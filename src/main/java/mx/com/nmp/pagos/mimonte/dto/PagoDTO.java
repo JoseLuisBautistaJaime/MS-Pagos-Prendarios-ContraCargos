@@ -18,7 +18,7 @@ public class PagoDTO {
 	private Date fechaCreacion;
 	private Date fechaTarnsaccion;
 	private Double monto;
-	private Integer id;
+	private Long id;
 	private String autorizacion;
 	private String metodo;
 	private String idOpenPay;
@@ -31,7 +31,7 @@ public class PagoDTO {
 	}
 	
 	public PagoDTO(ClienteDTO cliente, TarjetaDTO tarjeta, Date fechaCreacion, Date fechaTarnsaccion,
-			Double monto, Integer id, EstatusPagoDTO estatusPago, String autorizacion, String metodo, String idOpenPay,
+			Double monto, Long id, EstatusPagoDTO estatusPago, String autorizacion, String metodo, String idOpenPay,
 			String descripcion, String idOrder, String restResponse) {
 		super();
 		this.cliente = cliente;
@@ -79,10 +79,10 @@ public class PagoDTO {
 	public void setMonto(Double monto) {
 		this.monto = monto;
 	}
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	

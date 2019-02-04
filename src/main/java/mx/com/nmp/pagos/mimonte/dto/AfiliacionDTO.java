@@ -1,8 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: AfiliacionDTO
- * Descripcion: Clase que encapsula la informacion
+ * Nombre: AfiliacionDTO Descripcion: Clase que encapsula la informacion
  * perteneciente a un tipo de Afiliacion.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -13,15 +12,17 @@ public class AfiliacionDTO {
 
 	private Integer id;
 	private String descripcion;
+	private TipoAutorizacionDTO tipo;
 
 	public AfiliacionDTO() {
 		super();
 	}
 
-	public AfiliacionDTO(Integer id, String descripcion) {
+	public AfiliacionDTO(Integer id, String descripcion, TipoAutorizacionDTO tipo) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
+		this.tipo = tipo;
 	}
 
 	public Integer getId() {
@@ -40,9 +41,17 @@ public class AfiliacionDTO {
 		this.descripcion = descripcion;
 	}
 
+	public TipoAutorizacionDTO getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoAutorizacionDTO tipo) {
+		this.tipo = tipo;
+	}
+
 	@Override
 	public String toString() {
-		return "AfiliacionDTO [id=" + id + ", descripcion=" + descripcion + "]";
+		return "AfiliacionDTO [id=" + id + ", descripcion=" + descripcion + ", tipo=" + tipo + "]";
 	}
 
 }

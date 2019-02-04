@@ -42,6 +42,7 @@ DROP TABLE IF EXISTS `compose`.`catalogo_afiliacion` ;
 CREATE TABLE IF NOT EXISTS `compose`.`catalogo_afiliacion` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion` VARCHAR(100) NOT NULL,
+  `tipo` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `ca_fk_idx` (`id` ASC))
 ENGINE = InnoDB
@@ -55,7 +56,7 @@ DEFAULT CHARACTER SET = latin1;
 DROP TABLE IF EXISTS `compose`.`cliente` ;
 
 CREATE TABLE IF NOT EXISTS `compose`.`cliente` (
-  `id_cliente` INT(11) NOT NULL,
+  `id_cliente` BIGINT UNSIGNED NOT NULL,
   `nombre_titular` VARCHAR(100) NULL,
   `fecha_alta` DATETIME NOT NULL,
   PRIMARY KEY (`id_cliente`))
@@ -91,7 +92,7 @@ DEFAULT CHARACTER SET = latin1;
 DROP TABLE IF EXISTS `compose`.`cliente_regla_negocio` ;
 
 CREATE TABLE IF NOT EXISTS `compose`.`cliente_regla_negocio` (
-  `id_cliente` INT(11) NOT NULL,
+  `id_cliente` BIGINT UNSIGNED NOT NULL,
   `id_regla_negocio` INT(11) NOT NULL,
   INDEX `ic_fk` (`id_cliente` ASC),
   INDEX `irn_fk` (`id_regla_negocio` ASC),
@@ -141,8 +142,8 @@ DEFAULT CHARACTER SET = latin1;
 DROP TABLE IF EXISTS `compose`.`pagos` ;
 
 CREATE TABLE IF NOT EXISTS `compose`.`pagos` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `idcliente` INT(11) NULL DEFAULT NULL,
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `idcliente` BIGINT UNSIGNED NOT NULL,
   `fecha_transaccion` DATETIME NULL DEFAULT NULL,
   `monto` DOUBLE NULL DEFAULT NULL,
   `autorizacion` VARCHAR(100) NULL DEFAULT NULL,
@@ -172,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `compose`.`pagos` (
     FOREIGN KEY (`idcliente`)
     REFERENCES `compose`.`cliente` (`id_cliente`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 173
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -237,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `compose`.`tarjetas` (
   `alias` VARCHAR(100) NULL DEFAULT NULL,
   `fecha_alta` DATETIME NULL DEFAULT NULL,
   `fecha_modificacion` DATETIME NULL DEFAULT NULL,
-  `id_cliente` INT(11) NOT NULL,
+  `id_cliente` BIGINT UNSIGNED NOT NULL,
   `tipo_tarjeta_c_id` INT(11) NOT NULL,
   `estatus_tarjeta_c` INT(11) NOT NULL,
   `token` VARCHAR(40) NULL DEFAULT NULL,
@@ -263,6 +264,33 @@ CREATE TABLE IF NOT EXISTS `compose`.`tarjetas` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
+-- -----------------------------------------------------
+-- Table `compose`.`estatus_operacion_c`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `compose`.`estatus_operacion_c` ;
+
+CREATE TABLE IF NOT EXISTS `compose`.`estatus_operacion_c` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
+  `descripcion` VARCHAR(200) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `compose`.`tipo_afiliacion_c`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `compose`.`tipo_afiliacion_c` ;
+
+CREATE TABLE IF NOT EXISTS `compose`.`tipo_afiliacion_c` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
+  `descripcion` VARCHAR(200) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = latin1;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

@@ -23,7 +23,7 @@ public interface TarjetasService {
 	 * @param idCliente.
 	 * @return List<TarjeDTO>.
 	 */
-	public List<TarjeDTO> getTarjetasIdCliente(Integer idCliente);
+	public List<TarjeDTO> getTarjetasIdCliente(Long idCliente);
 	
 	/**
 	 * Método que obtiene información de la tarjeta.
@@ -32,7 +32,7 @@ public interface TarjetasService {
 	 * @param token.
 	 * @return TarjeDTO.
 	 */
-	public TarjeDTO getTarjetasTokenIdCliente(Integer idCliente ,String id_openpay);
+	public TarjeDTO getTarjetasTokenIdCliente(Long idCliente ,String id_openpay);
 	
 	/**
 	 * Método que obttiene información de la tarjeta.
@@ -85,6 +85,6 @@ public interface TarjetasService {
 	 * @param idCliente
 	 * @return
 	 */
-	public Integer countTarjetasByIdcliente(Integer idcliente);
+	public Integer countTarjetasByIdcliente(Long idcliente);
 
 }

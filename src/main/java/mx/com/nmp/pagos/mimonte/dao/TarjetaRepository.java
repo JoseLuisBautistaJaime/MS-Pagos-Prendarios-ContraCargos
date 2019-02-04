@@ -38,7 +38,7 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @return List<TarjeDTO>.
 	 */
 	@Query("SELECT t FROM Tarjetas t WHERE t.clientes.idcliente = :idCliente")
-	public List<Tarjetas> findByIdcliente(@Param("idCliente") Integer idCliente);
+	public List<Tarjetas> findByIdcliente(@Param("idCliente") Long idCliente);
 	//public List<TarjeDTO> findByIdcliente(Integer idCliente);
 	
 	
@@ -50,7 +50,7 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 */
 	
 	@Query(value = "SELECT t FROM Tarjetas t where t.clientes.idcliente = :idCliente")
-	public List<Tarjetas> encuentraidCliente(@Param("idCliente") Integer idCliente);
+	public List<Tarjetas> encuentraidCliente(@Param("idCliente") Long idCliente);
 	
 	/**
 	 * Método que obtiene información de la tarjeta.
@@ -60,7 +60,7 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @return List<Tarjetas>
 	 */
 	@Query("SELECT t FROM Tarjetas t WHERE t.clientes.idcliente = :idCliente AND t.id_openpay = :id_openpay")
-	public Tarjetas findByIdclienteAndIdOpenPay(@Param("idCliente")Integer idCliente, @Param("id_openpay") String id_openpay);
+	public Tarjetas findByIdclienteAndIdOpenPay(@Param("idCliente")Long idCliente, @Param("id_openpay") String id_openpay);
 	//public Tarjetas findByIdclienteAndToken(Integer idCliente, String token);
 	
 
@@ -81,7 +81,7 @@ public interface TarjetaRepository extends JpaRepository<Tarjetas, String> {
 	 * @return
 	 */
 	@Query("SELECT COUNT(t.token) FROM Tarjetas t WHERE t.clientes.idcliente= :idcliente")
-	public Integer countTarjetasByIdcliente(@Param("idcliente") Integer idcliente);
+	public Integer countTarjetasByIdcliente(@Param("idcliente") Long idcliente);
 	
 	@Transactional
 	@Modifying

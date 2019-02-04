@@ -11,8 +11,7 @@ import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 
 /**
- * Nombre: PagoBuilder
- * Descripcion: Builder que se encaraga de fabricar objetos
+ * Nombre: PagoBuilder Descripcion: Builder que se encaraga de fabricar objetos
  * entity a partir de objetos DTO y viceversa
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -20,7 +19,7 @@ import mx.com.nmp.pagos.mimonte.model.Pago;
  * @version 0.1
  */
 public class PagoBuilder {
-	
+
 	private PagoBuilder() {
 		/**
 		 * hidden constructor
@@ -29,14 +28,16 @@ public class PagoBuilder {
 
 	/**
 	 * 
-	 * Metodo que construye un entity tipo Pago de objetos DTO recibidos como parametro
+	 * Metodo que construye un entity tipo Pago de objetos DTO recibidos como
+	 * parametro
 	 * 
 	 * @param operacion
 	 * @param tarjeta
 	 * @param clienteDTO
 	 * @return
 	 */
-	public static Pago buildPagoFromObject(OperacionDTO operacion, TarjetaPagoDTO tarjeta, ClienteDTO clienteDTO, String idTransaccionMidas) {
+	public static Pago buildPagoFromObject(OperacionDTO operacion, TarjetaPagoDTO tarjeta, ClienteDTO clienteDTO,
+			String idTransaccionMidas) {
 		Pago pago = new Pago();
 		pago.setCliente(ClienteBuilder.buildClienteFromClienteDTO(clienteDTO));
 		pago.setDescripcion(operacion.getNombreOperacion());
@@ -55,7 +56,7 @@ public class PagoBuilder {
 		pago.setMonto(operacion.getMonto());
 		pago.setFolioPartida(Integer.parseInt(operacion.getFolioContrato()));
 		pago.setIdOperacion(operacion.getIdOperacion());
-		pago.setTarjeta(null != tarjeta ? null != tarjeta.getDigitos() ? tarjeta.getDigitos():null:null);
+		pago.setTarjeta(null != tarjeta ? null != tarjeta.getDigitos() ? tarjeta.getDigitos() : null : null);
 		return pago;
 	}
 
