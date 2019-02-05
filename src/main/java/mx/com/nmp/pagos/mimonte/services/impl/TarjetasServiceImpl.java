@@ -273,14 +273,27 @@ public class TarjetasServiceImpl implements TarjetasService {
 		// Evalua si existen registros
 		if (updateTarjeta == null)
 			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_UPDATE_NULL);
+
+		List<Tarjetas> tarjetasList = tarjetaRepository.findByIdcliente(updateTarjeta.getClientes().getIdcliente());
 		
-		String aliasBd = updateTarjeta.getAlias().toUpperCase();
-		
-		String aliasUsu = alias.toUpperCase();
-		
-		//Evalua si ya existe el mismo alias en la tarjeta
-		if(aliasBd.equals(aliasUsu)) 
-			throw new TarjetaException(TarjetaConstants.ALIAS_ALREADY_EXIST_FOR_CURRENT_CLIENT);
+		if(null != tarjetasList && !tarjetasList.isEmpty()) {
+			
+			for(Tarjetas tarjetaVal : tarjetasList) {
+				
+				String aliasBd = tarjetaVal.getAlias().toUpperCase();
+				
+				String aliasUsu = alias.toUpperCase();
+				
+				//Evalua si ya existe el mismo alias en la tarjeta
+				if(null != tarjetaVal && null != aliasBd && aliasBd.equals(aliasUsu)) {
+					
+					throw new TarjetaException(TarjetaConstants.ALIAS_ALREADY_EXIST_FOR_CURRENT_CLIENT);
+					
+				}
+				
+			}
+			
+		}
 
 		updateTarjeta.setAlias(alias);
 		updateTarjeta.setFechaModificacion(new Date());
