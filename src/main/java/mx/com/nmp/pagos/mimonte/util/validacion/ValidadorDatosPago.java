@@ -69,7 +69,7 @@ public class ValidadorDatosPago {
 				throw new PagoException(PagoConstants.OPERATION_AMOUNT_LESS_OR_EQUAL_THAN_0);
 
 			try {
-				Integer.parseInt(operacion.getFolioContrato());
+				Long.parseLong(operacion.getFolioContrato());
 			} catch (NumberFormatException nex) {
 				throw new PagoException(PagoConstants.NUMBER_FORMAT_IN_FOLIO_CONTRATO);
 			}
@@ -77,7 +77,7 @@ public class ValidadorDatosPago {
 		if (!Double.valueOf(pagoRequestDTO.getMontoTotal()).equals(sum))
 			throw new PagoException(PagoConstants.IRREGULAR_OPERATIONS_AMOUNT);
 		try {
-			Integer.parseInt(pagoRequestDTO.getIdTransaccionMidas());
+			Long.parseLong(pagoRequestDTO.getIdTransaccionMidas());
 		} catch (NumberFormatException nex) {
 			throw new PagoException(PagoConstants.NUMBER_FORMAT_IN_ID_TRANSACCION_MIDAS);
 		}
