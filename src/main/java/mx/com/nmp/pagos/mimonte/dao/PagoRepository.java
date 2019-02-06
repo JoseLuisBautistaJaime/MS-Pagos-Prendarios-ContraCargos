@@ -33,6 +33,6 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
 	 * @throws SQLException
 	 */
 	@Query("SELECT COUNT(p.id) FROM Pago p WHERE p.idTransaccionMidas = :idTransaccionMidas")
-	public Integer countByIdTransaccionMidas(@Param("idTransaccionMidas") Integer idTransaccionMidas)
+	public Integer countByIdTransaccionMidas(@Param("idTransaccionMidas") Long idTransaccionMidas)
 			throws DataIntegrityViolationException, SQLDataException, SQLException;
 }

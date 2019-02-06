@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.builder;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import mx.com.nmp.pagos.mimonte.constans.EstatusPago;
@@ -19,6 +21,16 @@ import mx.com.nmp.pagos.mimonte.model.Pago;
  * @version 0.1
  */
 public class PagoBuilder {
+
+	/**
+	 * DecimalFormat para truncar a 2 decimales el monto de operaciones
+	 */
+	private static final DecimalFormat DF;
+
+	static {
+		DF = new DecimalFormat("#.##");
+		DF.setRoundingMode(RoundingMode.FLOOR);
+	}
 
 	private PagoBuilder() {
 		/**
@@ -52,9 +64,9 @@ public class PagoBuilder {
 		pago.setIdOrder(null);
 		pago.setMetodo(null);
 		pago.setRestResponse(null);
-		pago.setIdTransaccionMidas(Integer.parseInt(idTransaccionMidas));
-		pago.setMonto(operacion.getMonto());
-		pago.setFolioPartida(Integer.parseInt(operacion.getFolioContrato()));
+		pago.setIdTransaccionMidas(Long.parseLong(idTransaccionMidas));
+		pago.setMonto(new Double(DF.format(operacion.getMonto())));
+		pago.setFolioPartida(Long.parseLong(operacion.getFolioContrato()));
 		pago.setIdOperacion(operacion.getIdOperacion());
 		pago.setTarjeta(null != tarjeta ? null != tarjeta.getDigitos() ? tarjeta.getDigitos() : null : null);
 		return pago;
