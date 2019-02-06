@@ -221,9 +221,9 @@ public class TarjetasServiceImpl implements TarjetasService {
 		if(null != tarjetasList && !tarjetasList.isEmpty()) {
 			for(Tarjetas tarjetaVal : tarjetasList) {
 				
-				String aliasBd = tarjetaVal.getAlias().toUpperCase();
+				String aliasBd = tarjetaVal.getAlias().toUpperCase().trim();
 				
-				String aliasUsu = tarjeta.getAlias().toUpperCase();
+				String aliasUsu = tarjeta.getAlias().toUpperCase().trim();
 				
 				if(null != tarjetaVal && null != aliasBd && aliasBd.equals(aliasUsu)) {
 					throw new TarjetaException(TarjetaConstants.ALIAS_ALREADY_EXIST_FOR_CURRENT_CLIENT);
@@ -233,7 +233,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		
 		tarjetas.setToken(tarjeta.getToken());
 		tarjetas.setUltimosDigitos(tarjeta.getDigitos());
-		tarjetas.setAlias(tarjeta.getAlias());
+		tarjetas.setAlias(tarjeta.getAlias().trim());
 		tarjetas.setFechaAlta(new Date());
 		tarjetas.setClientes(cliente);
 		tarjetas.setTipoTarjeta(tipoTarjeta);
@@ -280,9 +280,9 @@ public class TarjetasServiceImpl implements TarjetasService {
 			
 			for(Tarjetas tarjetaVal : tarjetasList) {
 				
-				String aliasBd = tarjetaVal.getAlias().toUpperCase();
+				String aliasBd = tarjetaVal.getAlias().toUpperCase().trim();
 				
-				String aliasUsu = alias.toUpperCase();
+				String aliasUsu = alias.toUpperCase().trim();
 				
 				//Evalua si ya existe el mismo alias en la tarjeta
 				if(null != tarjetaVal && null != aliasBd && aliasBd.equals(aliasUsu)) {
@@ -295,7 +295,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 			
 		}
 
-		updateTarjeta.setAlias(alias);
+		updateTarjeta.setAlias(alias.trim());
 		updateTarjeta.setFechaModificacion(new Date());
 
 		tarjetaRepository.save(updateTarjeta);
