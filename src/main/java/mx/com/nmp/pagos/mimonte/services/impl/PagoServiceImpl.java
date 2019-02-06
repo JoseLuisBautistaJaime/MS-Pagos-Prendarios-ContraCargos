@@ -124,7 +124,8 @@ public class PagoServiceImpl implements PagoService {
 				validaDatos(pagoRequestDTO.getTarjeta());
 				flagOkCardData = true;
 			} else {
-				LOG.info(PagoConstants.MSG_CARD_WAS_NOT_SAVED);
+				LOG.info(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+				throw new PagoException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 			}
 		}
 		// Finalizan validaciones de tarjeta
