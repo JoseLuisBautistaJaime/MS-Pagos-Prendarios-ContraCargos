@@ -131,6 +131,11 @@ public final class TarjetaConstants {
 	/**
 	 * Mensaje que sera enviado si no se recuperaron los registros correctamente
 	 */
+	public static final String MSG_FAILURE_ALIAS_EXCEED_DIGITS = "El alias no debe contener mas de 10 digitos.";	 
+	
+	/**
+	 * Mensaje que sera enviado si no se recuperaron los registros correctamente
+	 */
 	public static final String MSG_FAILURE_UPTOKEN = "El token esta nulo o vacio.";
 	
 	/**
@@ -184,9 +189,19 @@ public final class TarjetaConstants {
 	public static final String MSG_ONLY_LETTERS = "El nombre del titular solo puede contener letras y espacios";
 	
 	/**
+	 * Mensaje que es mostrado cuando el alias contiene simbolos.
+	 */
+	public static final String MSG_WITHOUT_SYMBOLS = "No se permiten simbolos en el alias";
+	
+	/**
 	 * Valores a evaluar para solo letras
 	 */
 	public static final String LETTER_VALUES = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚÜ ";
+	
+	/**
+	 * Valores a evaluar para solo letras y numeros.
+	 */
+	public static final String SYMBOL = ("([a-z]|[A-Z]|[0-9]|[áéíóúÁÉÍÓÚ]|\\s)+");
 	
 	/**
 	 * Mensaje que aparece cuando se intenta agregar un alias de tarjeta que ya existe para el cliente en cuestion

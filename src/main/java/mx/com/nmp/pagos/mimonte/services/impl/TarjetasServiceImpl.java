@@ -171,6 +171,12 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		if (tarjeta.getAlias() == null || tarjeta.getAlias().isEmpty())
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_PARAMETERS_ALIAS_SHOULD_NOT_BE_NULL_OR_VOID);
+		
+		if(tarjeta.getAlias().length() > 10)
+			throw new TarjetaException(TarjetaConstants.MSG_FAILURE_ALIAS_EXCEED_DIGITS);
+		
+		if(tarjeta.getAlias().matches(TarjetaConstants.SYMBOL) == false)
+			throw new TarjetaException(TarjetaConstants.MSG_WITHOUT_SYMBOLS);
 
 		if (tarjeta.getId_openpay() == null || tarjeta.getId_openpay().isEmpty())
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_TOKEN_NULL_OR_VOID);
@@ -253,46 +259,41 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 */
 	public Tarjetas updateTarjeta(String id_openpay, String alias) {
 
-		if (id_openpay == null || id_openpay.isEmpty()) {
-
+		if (id_openpay == null || id_openpay.isEmpty())
 			throw new TarjetaException(TarjetaConstants.MSG_FAILURE_TOKEN);
 
-		}
-
-		if (alias == null || alias.isEmpty()) {
-
+		if (alias == null || alias.isEmpty())
 			throw new TarjetaException(TarjetaConstants.MSG_FAILURE_ALIAS);
 
-		}
+		if (alias.length() > 10)
+			throw new TarjetaException(TarjetaConstants.MSG_FAILURE_ALIAS_EXCEED_DIGITS);
+
+		if (alias.matches(TarjetaConstants.SYMBOL) == false)
+			throw new TarjetaException(TarjetaConstants.MSG_WITHOUT_SYMBOLS);
 
 		// Obtiene los registros
 		Tarjetas updateTarjeta = tarjetaRepository.findByIdOpenPay(id_openpay);
-		
-		
-		
+
 		// Evalua si existen registros
 		if (updateTarjeta == null)
 			throw new TarjetaException(TarjetaConstants.MSG_NO_SUCCESS_UPDATE_NULL);
 
 		List<Tarjetas> tarjetasList = tarjetaRepository.findByIdcliente(updateTarjeta.getClientes().getIdcliente());
-		
-		if(null != tarjetasList && !tarjetasList.isEmpty()) {
-			
-			for(Tarjetas tarjetaVal : tarjetasList) {
-				
+
+		if (null != tarjetasList && !tarjetasList.isEmpty()) {
+
+			for (Tarjetas tarjetaVal : tarjetasList) {
+
 				String aliasBd = tarjetaVal.getAlias().toUpperCase().trim();
-				
+
 				String aliasUsu = alias.toUpperCase().trim();
-				
-				//Evalua si ya existe el mismo alias en la tarjeta
-				if(null != tarjetaVal && null != aliasBd && aliasBd.equals(aliasUsu)) {
-					
+
+				// Evalua si ya existe el mismo alias en la tarjeta
+				if (null != tarjetaVal && null != aliasBd && aliasBd.equals(aliasUsu))
 					throw new TarjetaException(TarjetaConstants.ALIAS_ALREADY_EXIST_FOR_CURRENT_CLIENT);
-					
-				}
-				
+
 			}
-			
+
 		}
 
 		updateTarjeta.setAlias(alias.trim());
