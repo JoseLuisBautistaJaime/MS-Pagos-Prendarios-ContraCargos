@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.PagoBuilder;
 import mx.com.nmp.pagos.mimonte.builder.TarjetaBuilder;
@@ -90,6 +92,7 @@ public class PagoServiceImpl implements PagoService {
 	 *
 	 */
 	@Override
+	@Transactional(rollbackFor = Throwable.class, noRollbackFor = TarjetaIdentifierException.class, propagation = Propagation.REQUIRED)
 	public PagoResponseDTO savePago(PagoRequestDTO pagoRequestDTO)
 			throws DataIntegrityViolationException, NumberFormatException, SQLDataException, SQLException {
 		LOG.debug("Ingreso al servicio: savePago(PagoRequestDTO pagoRequestDTO)");
