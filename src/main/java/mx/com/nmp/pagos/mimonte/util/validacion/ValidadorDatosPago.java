@@ -97,8 +97,8 @@ public class ValidadorDatosPago {
 			if (null != pagoRequestDTO.getConcepto()
 					&& pagoRequestDTO.getConcepto().length() > PagoConstants.DataBaseFieldType.PAGO_DESCRIPCION_FIELD)
 				throw new PagoException(PagoConstants.FieldSizeConstants.DESCRIPTION_SIZE_TOO_LONG);
-			if (null != pagoRequestDTO.getIdTransaccionMidas() && pagoRequestDTO.getIdTransaccionMidas()
-					.length() > PagoConstants.DataBaseFieldType.PAGO_ID_TRANSACCION_MIDAS_FIELD)
+			if (null != pagoRequestDTO.getIdTransaccionMidas() && Long.parseLong(pagoRequestDTO
+					.getIdTransaccionMidas()) > PagoConstants.DataBaseFieldType.PAGO_ID_TRANSACCION_MIDAS_FIELD)
 				throw new PagoException(PagoConstants.FieldSizeConstants.MIDAS_TRANSACTION_ID_TOO_LONG);
 			if (null != pagoRequestDTO.getMontoTotal()
 					&& pagoRequestDTO.getMontoTotal() > PagoConstants.DataBaseFieldType.PAGO_MONTO_TOTAL_FIELD)
@@ -113,7 +113,7 @@ public class ValidadorDatosPago {
 				throw new PagoException(PagoConstants.NO_OPERATIONS_MESSAGE);
 			else {
 				for (OperacionDTO operacionDTO : pagoRequestDTO.getOperaciones()) {
-					if (null != operacionDTO.getFolioContrato() && Integer.parseInt(
+					if (null != operacionDTO.getFolioContrato() && Long.parseLong(
 							operacionDTO.getFolioContrato()) > PagoConstants.DataBaseFieldType.PAGO_FOLIO_PARTIDA_FIELD)
 						throw new PagoException(PagoConstants.FieldSizeConstants.CONTRACT_FOLIO_TOO_LONG);
 					if (null != operacionDTO.getIdOperacion()
