@@ -17,6 +17,159 @@ public final class PagoConstants {
 	}
 
 	/**
+	 * @description Constantes relacionadas con el tamano de campos de base de datos
+	 *
+	 * @author Ismael Flores iaguilar@quarksoft.net
+	 * @creationDate 06/02/2019 13:19 hrs.
+	 * @version 0.1
+	 */
+	public static final class FieldSizeConstants {
+
+		private FieldSizeConstants() {
+			/**
+			 * Hidden constructor
+			 */
+		}
+
+		/**
+		 * Mensaje que es mostrado cuando se revasa el tamano de la descripcion
+		 */
+		public static final String DESCRIPTION_SIZE_TOO_LONG = "El tamano de la descripcion es muy grande";
+
+		/**
+		 * Mensaje que es mostrado cuando se intenta guardar un id de transaccion midas
+		 * superior al definido en base de datos
+		 */
+		public static final String MIDAS_TRANSACTION_ID_TOO_LONG = "El id de transaccion midas es muy grande";
+
+		/**
+		 * Mensaje que es mostrado cuando se intenta ingresar un numero de monto total
+		 * mayor al definido en base de datos
+		 */
+		public static final String TOTAL_AMOUNT_TOO_LONG = "El monto total es muy grande";
+
+		/**
+		 * Mensaje que es mostrado cuando el id del cliente es menor o igual a 0
+		 */
+		public static final String CLIENT_ID_LESS_OR_EQUAL_THAN_0 = "El id de cliente debe ser mayor a 0";
+
+		/**
+		 * Mensaje que es mostrado cuando se intenta ingresar un id de cliente mas
+		 * grande que el definido en base de datos
+		 */
+		public static final String CLIENT_ID_TOO_LONG = "El id de cliente es muy grande";
+
+		/**
+		 * Mensaje que es mostrado cuando se intenta ingresar un folio de partida que
+		 * revaza en tamano al definido en base de datos
+		 */
+		public static final String CONTRACT_FOLIO_TOO_LONG = "El folio de partida es muy largo";
+
+		/**
+		 * Mensaje que es mostrado cuando el id de operacion es de un tamano superior al
+		 * definido en base de datos
+		 */
+		public static final String OPERATION_ID_TOO_LONG = "El id de operacion es muy largo";
+
+		/**
+		 * Mensaje que es mostrado cuando se intenta insertar un monto superior al
+		 * dfinido en base de datos
+		 */
+		public static final String OPERATION_AMOUNT_TOO_LONG = "El monto de una operacion es muy grande";
+
+	}
+
+	/**
+	 * @description Constantes relacionadas con variables que existen en el archivo
+	 *              de propiedades de la aplicacion
+	 *
+	 * @author Ismael Flores iaguilar@quarksoft.net
+	 * @creationDate 06/02/2019 13:19 hrs.
+	 * @version 0.1
+	 */
+	public static final class VariablesConstants {
+
+		private VariablesConstants() {
+			/**
+			 * empty constructor
+			 */
+		}
+
+		/**
+		 * Nombre de la propiedad que en archivo de configuracion YML que contiene el
+		 * dato de la cantidad maxima de tarjetas posibles por cliente
+		 */
+		public static final String MAXIMUM_AMOUNT_OF_CARDS_PROPERTY = "${mimonte.variables.cantidad-maxima-tarjetas}";
+	}
+
+	/**
+	 * @description Constantes relacionadas claves de mapas usados en la apliccion
+	 *              para el modulo de pagos
+	 *
+	 * @author Ismael Flores iaguilar@quarksoft.net
+	 * @creationDate 06/02/2019 13:19 hrs.
+	 * @version 0.1
+	 */
+	public static final class MapValuesConstants {
+		private MapValuesConstants() {
+			/**
+			 * hidden constructor
+			 */
+		}
+
+		/**
+		 * Valor de nombre de clave en mapa en id de afiliacion
+		 */
+		public static final String ID_AFILIACION_MAPPING_NAME = "idAfiliacionMap";
+
+		/**
+		 * Valor de nombre de el tipoAutorizacion en la afiliacion
+		 */
+		public static final String TIPO_AUTORIZACION_MAPPING_NAME = "tipoAutorizacion";
+
+	}
+
+	/**
+	 * @description Constantes relacionadas con el tamano de campos de base de datos
+	 *              usados para el mapeo en la aplicacion
+	 *
+	 * @author Ismael Flores iaguilar@quarksoft.net
+	 * @creationDate 06/02/2019 13:19 hrs.
+	 * @version 0.1
+	 */
+	public static final class DataBaseFieldType {
+
+		private DataBaseFieldType() {
+			/**
+			 * hidden constructor
+			 */
+		}
+
+		public static final Integer PAGO_DESCRIPCION_FIELD = 200;
+		public static final Long PAGO_ID_TRANSACCION_MIDAS_FIELD = JavaTypeLimit.LONG_VALUE;
+		public static final Double PAGO_MONTO_TOTAL_FIELD = JavaTypeLimit.DOUBLE_VALUE;
+		public static final Long PAGO_ID_CLIENTE_FIELD = JavaTypeLimit.LONG_VALUE;
+		public static final Long PAGO_FOLIO_PARTIDA_FIELD = JavaTypeLimit.LONG_VALUE;
+		public static final Integer PAGO_ID_OPERACION_FIELD = JavaTypeLimit.INTEGER_VALUE;
+		public static final Integer PAGO_NOMBRE_OPERACION_FIELD = 200;
+		public static final Double PAGO_MONTO_OPERACION_FIELD = JavaTypeLimit.DOUBLE_VALUE;
+
+	}
+
+	/**
+	 * @description Constantes relacionadas con el tamano estandar de campos de JAVA
+	 *
+	 * @author Ismael Flores iaguilar@quarksoft.net
+	 * @creationDate 06/02/2019 13:19 hrs.
+	 * @version 0.1
+	 */
+	public static final class JavaTypeLimit {
+		public static final Long LONG_VALUE = 9223372036854775807L;
+		public static final Integer INTEGER_VALUE = 2147483647;
+		public static final Double DOUBLE_VALUE = 1.7976931348623157E+308;
+	}
+
+	/**
 	 * Mensaje que sera enviado si se se relaliza el pago correctamente
 	 */
 	public static final String MSG_SUCCESS = "Registro de pago realizado correctamente.";
@@ -54,21 +207,10 @@ public final class PagoConstants {
 	public static final String MSG_CARD_WAS_NOT_SAVED = "El pago se registro de manera correcta pero la tarjeta no se guardo por que ya existe";
 
 	/**
-	 * Nombre de la propiedad que en archivo de configuracion YML que contiene el
-	 * dato de la cantidad maxima de tarjetas posibles por cliente
-	 */
-	public static final String MAXIMUM_AMOUNT_OF_CARDS_PROPERTY = "${mimonte.variables.cantidad-maxima-tarjetas}";
-
-	/**
 	 * Mensaje que es enviado cuando se intenta registrar el pago de un cliente que
 	 * no existe
 	 */
 	public static final String CLIENTE_NOT_FOUND = "El cliente no existe";
-
-	/**
-	 * Mensaje que es mostrado cuando el id del cliente es menor o igual a 0
-	 */
-	public static final String CLIENT_ID_LESS_OR_EQUAL_THAN_0 = "El id de cliente debe ser mayor a 0";
 
 	/**
 	 * Mensaje que es enviado cuando la suma de el monto de las operaciones es
@@ -122,19 +264,19 @@ public final class PagoConstants {
 	public static final String MSG_CARD_DATA_IS_NULL = "Si desea guardar la tarjeta el objeto tarjeta no debe ser nulo";
 
 	/**
-	 * Valor de nombre de clave en mapa en id de afiliacion
-	 */
-	public static final String ID_AFILIACION_MAPPING_NAME = "idAfiliacionMap";
-
-	/**
-	 * Valor de nombre de el tipoAutorizacion en la afiliacion
-	 */
-	public static final String TIPO_AUTORIZACION_MAPPING_NAME = "tipoAutorizacion";
-
-	/**
 	 * Mensaje que es mostrado cuando se intenat violar una regla de integridad de
 	 * base de datos
 	 */
 	public static final String CONSTRAINT_DATABASE_ERROR = "Error con uno mas ids de base de datos que intenta insertar";
+
+	/**
+	 * Mensaje que es enviado cuando la infromacion del pago es nula o vacia
+	 */
+	public static final String PAYMENT_INFORMATION_EMPTY_OR_NULL = "La informacion del pago es nula o vacia";
+
+	/**
+	 * Mensaje que es mostrado cuando el objeto tarjeta es vacio o nulo
+	 */
+	public static final String CARD_OBJECT_IS_NULL_OR_EMPTY = "El objeto tarjeta es nulo o vacio";
 
 }

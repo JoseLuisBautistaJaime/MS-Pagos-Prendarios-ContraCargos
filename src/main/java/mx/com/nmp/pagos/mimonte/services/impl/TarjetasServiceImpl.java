@@ -46,7 +46,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 */
 	private final Logger log = LoggerFactory.getLogger(TarjetasServiceImpl.class);
 
-	@Value(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_PROPERTY)
+	@Value(PagoConstants.VariablesConstants.MAXIMUM_AMOUNT_OF_CARDS_PROPERTY)
 	private Integer MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT;
 
 	@Autowired

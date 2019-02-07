@@ -171,3 +171,7 @@ ALTER TABLE catalogo_afiliacion MODIFY tipo INT(11) NOT NULL;
 SET foreign_key_checks = 0;
 ALTER TABLE catalogo_afiliacion ADD CONSTRAINT fk_id_tipo_afiliacion FOREIGN KEY (tipo) REFERENCES tipo_afiliacion_c(id);
 SET foreign_key_checks = 1;
+
+-- ALTER pagos MODIFY id_transaccion_midas AND folio_partida FROM INT TO BIGINT UNSIGNED[06-02-2019 : 12:41 hrs.]
+ALTER TABLE pagos MODIFY id_transaccion_midas BIGINT UNSIGNED NULL DEFAULT NULL;
+ALTER TABLE pagos MODIFY folio_partida BIGINT UNSIGNED NULL DEFAULT NULL;

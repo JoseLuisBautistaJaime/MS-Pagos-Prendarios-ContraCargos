@@ -132,12 +132,12 @@ public class DSSModule {
 			reglaNegocioResumenDTO = stack.pop();
 			if (null == mapValues || mapValues.isEmpty()) {
 				mapValues = new HashMap<String, Object>();
-				mapValues.put(PagoConstants.ID_AFILIACION_MAPPING_NAME, reglaNegocioResumenDTO.getIdAfiliacion());
-				mapValues.put(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME, reglaNegocioResumenDTO.getTipoAfiliacion());
+				mapValues.put(PagoConstants.MapValuesConstants.ID_AFILIACION_MAPPING_NAME, reglaNegocioResumenDTO.getIdAfiliacion());
+				mapValues.put(PagoConstants.MapValuesConstants.TIPO_AUTORIZACION_MAPPING_NAME, reglaNegocioResumenDTO.getTipoAfiliacion());
 			} else if (reglaNegocioResumenDTO.getValido() && reglaNegocioResumenDTO.getIdAfiliacion() > Integer
-					.parseInt(String.valueOf(mapValues.get(PagoConstants.ID_AFILIACION_MAPPING_NAME)))) {
-				mapValues.put(PagoConstants.ID_AFILIACION_MAPPING_NAME, reglaNegocioResumenDTO.getIdAfiliacion());
-				mapValues.put(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME, reglaNegocioResumenDTO.getTipoAfiliacion());
+					.parseInt(String.valueOf(mapValues.get(PagoConstants.MapValuesConstants.ID_AFILIACION_MAPPING_NAME)))) {
+				mapValues.put(PagoConstants.MapValuesConstants.ID_AFILIACION_MAPPING_NAME, reglaNegocioResumenDTO.getIdAfiliacion());
+				mapValues.put(PagoConstants.MapValuesConstants.TIPO_AUTORIZACION_MAPPING_NAME, reglaNegocioResumenDTO.getTipoAfiliacion());
 
 			}
 		}

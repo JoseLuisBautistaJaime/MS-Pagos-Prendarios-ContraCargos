@@ -29,7 +29,7 @@ public class Pago {
 
 	public Pago(Long id, Cliente cliente, Date fechaTarnsaccion, Double monto, String autorizacion, String metodo,
 			String tarjeta, String idOpenPay, Date fechaCreacion, String descripcion, String idOrder,
-			EstatusPago estatusPago, String restResponse, Integer idTransaccionMidas, Integer folioPartida,
+			EstatusPago estatusPago, String restResponse, Long idTransaccionMidas, Long folioPartida,
 			Integer idOperacion) {
 		super();
 		this.id = id;
@@ -94,10 +94,10 @@ public class Pago {
 	private String restResponse;
 
 	@Column(name = "id_transaccion_midas", nullable = true)
-	private Integer idTransaccionMidas;
+	private Long idTransaccionMidas;
 
 	@Column(name = "folio_partida", nullable = true)
-	private Integer folioPartida;
+	private Long folioPartida;
 
 	@Column(name = "id_operacion", nullable = true)
 	private Integer idOperacion;
@@ -206,19 +206,19 @@ public class Pago {
 		this.restResponse = restResponse;
 	}
 
-	public Integer getIdTransaccionMidas() {
+	public Long getIdTransaccionMidas() {
 		return idTransaccionMidas;
 	}
 
-	public void setIdTransaccionMidas(Integer idTransaccionMidas) {
+	public void setIdTransaccionMidas(Long idTransaccionMidas) {
 		this.idTransaccionMidas = idTransaccionMidas;
 	}
 
-	public Integer getFolioPartida() {
+	public Long getFolioPartida() {
 		return folioPartida;
 	}
 
-	public void setFolioPartida(Integer folioPartida) {
+	public void setFolioPartida(Long folioPartida) {
 		this.folioPartida = folioPartida;
 	}
 

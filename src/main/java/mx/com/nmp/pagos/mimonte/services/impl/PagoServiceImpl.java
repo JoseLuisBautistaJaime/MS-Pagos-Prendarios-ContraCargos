@@ -76,7 +76,7 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(PagoServiceImpl.class);
 
-	@Value(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_PROPERTY)
+	@Value(PagoConstants.VariablesConstants.MAXIMUM_AMOUNT_OF_CARDS_PROPERTY)
 	private Integer MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT;
 
 	/**
@@ -113,6 +113,7 @@ public class PagoServiceImpl implements PagoService {
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		try {
 			ValidadorDatosPago.doTypeValidations(pagoRequestDTO);
+			ValidadorDatosPago.doSizeValidations(pagoRequestDTO);
 		} catch (PagoException pex) {
 			throw new PagoException(pex.getMessage());
 		}
@@ -131,7 +132,7 @@ public class PagoServiceImpl implements PagoService {
 		// Finalizan validaciones de tarjeta
 		// Inicia validacion de id transaccion
 		Integer flag = 0;
-		flag = pagoRepository.countByIdTransaccionMidas(Integer.parseInt(pagoRequestDTO.getIdTransaccionMidas()));
+		flag = pagoRepository.countByIdTransaccionMidas(Long.parseLong(pagoRequestDTO.getIdTransaccionMidas()));
 		// Finaliza validacion de id transaccion
 		ClienteDTO cl = clienteService.getClienteById(pagoRequestDTO.getIdCliente());
 		if (null == cl)
