@@ -3,6 +3,10 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.Date;
 
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.Size;
+
+import mx.com.nmp.pagos.mimonte.config.Constants;
+import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
 
 /**
  * Nombre: AbstractTarjetaDTO Descripcion: Clase abstracta que representa las
@@ -14,6 +18,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class AbstractTarjetaDTO {
 
+	@Size(max = Constants.LONGITUD_ID_OPENPAY, message = TarjetaConstants.MSG_ID_OPENPAY_VALUE_TOO_LONG)
 	protected  String id_openpay;
 
 	protected  String digitos;
@@ -28,6 +33,7 @@ public abstract class AbstractTarjetaDTO {
 
 	protected  EstatusTarjetaDTO estatus;
 	
+	@Size(max = Constants.LONGITUD_TOKEN, message = TarjetaConstants.MSG_TOKEN_VALUE_TOO_LONG)
 	protected  String token;
 
 	public AbstractTarjetaDTO() {

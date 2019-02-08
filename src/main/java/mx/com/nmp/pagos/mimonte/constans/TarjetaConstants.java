@@ -213,4 +213,15 @@ public final class TarjetaConstants {
 	 */
 	public static final String MSG_TARJETAS_ERROR = "La tarjeta no se guardo ya que el id_openpay de tarjetas ya existe";
 	
+	/**
+	 * Mensaje que es mostrado cuando la longitud del id openpay es mayor a la definida en base de datos
+	 */
+	public static final String MSG_ID_OPENPAY_VALUE_TOO_LONG = "La longitud del id openpay es muy grande";
+	
+	/**
+	 * Mensaje que es mostrado cuando la longitud del token es mayor a la definida en base de datos
+	 */
+	public static final String MSG_TOKEN_VALUE_TOO_LONG = "La longitud del token es muy grande";
+	
+	
 }

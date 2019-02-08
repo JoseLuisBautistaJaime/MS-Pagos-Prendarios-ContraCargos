@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Size;
 
 import mx.com.nmp.pagos.mimonte.config.Constants;
 
@@ -29,6 +30,7 @@ public abstract class Tarjeta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "token", unique = true, nullable = false, length = Constants.LONGITUD_TOKEN)
+	@Size(max = Constants.LONGITUD_TOKEN)
 	private String token;
 
 	@Column(name = "ultimos_digitos", length = Constants.LONGITUD_ULTIMOS_DIGITOS)

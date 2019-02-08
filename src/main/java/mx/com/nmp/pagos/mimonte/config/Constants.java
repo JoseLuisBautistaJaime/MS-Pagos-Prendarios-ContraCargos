@@ -13,7 +13,8 @@ public final class Constants {
     public static final int LONGITUD_DESCRIPCION = 50;
     
     public static final int LONGITUD_NOMBRE_TITULAR = 100;
-    public static final int LONGITUD_TOKEN = 50;
+    public static final int LONGITUD_TOKEN = 40;
+    public static final int LONGITUD_ID_OPENPAY = 40;
     public static final int LONGITUD_ULTIMOS_DIGITOS = 4;
     public static final int LONGITUD_ALIAS = 100;
     

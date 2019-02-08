@@ -159,6 +159,7 @@ public class PagoServiceImpl implements PagoService {
 			}
 		}
 		Pago pago = new Pago();
+		boolean globalStatus = true;
 		if (null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty()) {
 			LOG.debug("Se iteraran operaciones dentro de pagoRequestDTO");
 			if (null != flag && flag == 0) {
@@ -176,11 +177,14 @@ public class PagoServiceImpl implements PagoService {
 						estatusPagos.add(new EstatusPagoResponseDTO(
 								EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
 						LOG.debug("Se agrego operacion correcta: " + operacion);
-					} catch (Exception ex) {
+					} 
+					catch (Exception ex) {
 						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(),
 								operacion.getFolioContrato()));
 						LOG.error("Se agrego operacion fallida: " + operacion);
-						LOG.error(ex.getMessage());
+						LOG.warn(PagoConstants.ROLL_BACK_EXCEPCION_MESSAGE.concat(" : ").concat(ex.getMessage()));
+						globalStatus = false;
+						throw new PagoException(PagoConstants.ROLL_BACK_EXCEPCION_MESSAGE);
 					}
 				}
 			} else if (null == flag) {
@@ -188,7 +192,7 @@ public class PagoServiceImpl implements PagoService {
 			} else {
 				throw new PagoException(PagoConstants.TRANSACTION_ID_ALREADY_EXISTS);
 			}
-			pagoResponseDTO.setExitoso(true);
+			pagoResponseDTO.setExitoso(globalStatus);
 		} else {
 			LOG.error("Objeto pagoRequestDTO.getOperaciones() es nulo o es vacio!");
 			pagoResponseDTO.setExitoso(false);

@@ -279,4 +279,9 @@ public final class PagoConstants {
 	 */
 	public static final String CARD_OBJECT_IS_NULL_OR_EMPTY = "El objeto tarjeta es nulo o vacio";
 
+	/**
+	 * Mensaje que es mostrado cuando se genera un error no esperado o no controlado
+	 * y se realiza un rollback
+	 */
+	public static final String ROLL_BACK_EXCEPCION_MESSAGE = "Ocurrio un error insesperado y no se realizo ninguna accion, por favor revize los datos del request";
 }

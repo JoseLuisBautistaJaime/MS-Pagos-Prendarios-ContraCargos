@@ -13,10 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import mx.com.nmp.pagos.mimonte.config.Constants;
+import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
 
 /**
  * Nombre: Tarjetas
@@ -36,6 +38,7 @@ public class Tarjetas implements Serializable {
 	private static final long serialVersionUID = 4139940644170406428L;
 
 	@Id
+	@Size(max = Constants.LONGITUD_ID_OPENPAY, message = TarjetaConstants.MSG_ID_OPENPAY_VALUE_TOO_LONG)
 	@Column(name = "id_openpay", unique = true, nullable = false, length = Constants.LONGITUD_TOKEN)
 	private String id_openpay;
 
@@ -64,6 +67,7 @@ public class Tarjetas implements Serializable {
 	@JoinColumn(name = "estatus_tarjeta_c")
 	private EstatusTarjeta estatusTarjeta;
 	
+	@Size(max = Constants.LONGITUD_TOKEN, message = TarjetaConstants.MSG_TOKEN_VALUE_TOO_LONG)
 	@Column(name = "token")
 	private String token;
 
