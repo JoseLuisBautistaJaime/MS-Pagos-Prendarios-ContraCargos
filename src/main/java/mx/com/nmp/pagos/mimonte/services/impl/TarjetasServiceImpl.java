@@ -11,6 +11,8 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
@@ -167,6 +169,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 	 * @return Tarjetas.
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Throwable.class, noRollbackFor = TarjetaIdentifierException.class)
 	public Tarjetas addTarjetas(TarjetaDTO tarjeta) throws TarjetaException{
 
 		if (tarjeta.getAlias() == null || tarjeta.getAlias().isEmpty())
