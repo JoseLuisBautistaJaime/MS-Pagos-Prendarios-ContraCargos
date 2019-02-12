@@ -3,6 +3,8 @@ package mx.com.nmp.pagos.mimonte.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.config.java.AbstractCloudConfig;
+import org.springframework.cloud.service.PooledServiceConnectorConfig;
+import org.springframework.cloud.service.relational.DataSourceConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -25,7 +27,9 @@ public class CloudDatabaseConfiguration extends AbstractCloudConfig {
     @Bean
     public DataSource dataSource() {
         LOGGER.info("Configurando datasource JDBC desde proveedor cloud...");
-        return connectionFactory().dataSource();
+        PooledServiceConnectorConfig.PoolConfig poolConfig = new PooledServiceConnectorConfig.PoolConfig(10, 50, 3000);
+        DataSourceConfig dbConfig = new DataSourceConfig(poolConfig, null);
+        return connectionFactory().dataSource(dbConfig);
     }
 
 }
