@@ -19,11 +19,11 @@ CREATE SCHEMA IF NOT EXISTS `compose` DEFAULT CHARACTER SET latin1 ;
 USE `compose` ;
 
 -- -----------------------------------------------------
--- Table `compose`.`cat_catalogo`
+-- Table `cat_catalogo`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`cat_catalogo` ;
+DROP TABLE IF EXISTS `cat_catalogo` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`cat_catalogo` (
+CREATE TABLE IF NOT EXISTS `cat_catalogo` (
   `id` SMALLINT(6) NOT NULL,
   `descripcion_corta` VARCHAR(20) NULL DEFAULT NULL,
   `descripcion` VARCHAR(50) NULL DEFAULT NULL,
@@ -35,11 +35,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`catalogo_afiliacion`
+-- Table `catalogo_afiliacion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`catalogo_afiliacion` ;
+DROP TABLE IF EXISTS `catalogo_afiliacion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`catalogo_afiliacion` (
+CREATE TABLE IF NOT EXISTS `catalogo_afiliacion` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion` VARCHAR(100) NOT NULL,
   `tipo` INT(11) NOT NULL,
@@ -51,11 +51,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`cliente`
+-- Table `cliente`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`cliente` ;
+DROP TABLE IF EXISTS `cliente` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`cliente` (
+CREATE TABLE IF NOT EXISTS `cliente` (
   `id_cliente` BIGINT(20) UNSIGNED NOT NULL,
   `nombre_titular` VARCHAR(100) NULL DEFAULT NULL,
   `fecha_alta` DATETIME NOT NULL,
@@ -65,11 +65,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`regla_negocio`
+-- Table `regla_negocio`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`regla_negocio` ;
+DROP TABLE IF EXISTS `regla_negocio` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`regla_negocio` (
+CREATE TABLE IF NOT EXISTS `regla_negocio` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(50) NOT NULL,
   `descripcion` VARCHAR(100) NOT NULL,
@@ -80,38 +80,38 @@ CREATE TABLE IF NOT EXISTS `compose`.`regla_negocio` (
   INDEX `ca_fk` (`id_afiliacion` ASC),
   CONSTRAINT `ca_fk`
     FOREIGN KEY (`id_afiliacion`)
-    REFERENCES `compose`.`catalogo_afiliacion` (`id`))
+    REFERENCES `catalogo_afiliacion` (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`cliente_regla_negocio`
+-- Table `cliente_regla_negocio`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`cliente_regla_negocio` ;
+DROP TABLE IF EXISTS `cliente_regla_negocio` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`cliente_regla_negocio` (
+CREATE TABLE IF NOT EXISTS `cliente_regla_negocio` (
   `id_cliente` BIGINT(20) UNSIGNED NOT NULL,
   `id_regla_negocio` INT(11) NOT NULL,
   INDEX `ic_fk` (`id_cliente` ASC),
   INDEX `irn_fk` (`id_regla_negocio` ASC),
   CONSTRAINT `ic_fk`
     FOREIGN KEY (`id_cliente`)
-    REFERENCES `compose`.`cliente` (`id_cliente`),
+    REFERENCES `cliente` (`id_cliente`),
   CONSTRAINT `irn_fk`
     FOREIGN KEY (`id_regla_negocio`)
-    REFERENCES `compose`.`regla_negocio` (`id`))
+    REFERENCES `regla_negocio` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`estatus_operacion_c`
+-- Table `estatus_operacion_c`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`estatus_operacion_c` ;
+DROP TABLE IF EXISTS `estatus_operacion_c` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`estatus_operacion_c` (
+CREATE TABLE IF NOT EXISTS `estatus_operacion_c` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
@@ -122,11 +122,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`estatus_tarjeta_c`
+-- Table `estatus_tarjeta_c`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`estatus_tarjeta_c` ;
+DROP TABLE IF EXISTS `estatus_tarjeta_c` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`estatus_tarjeta_c` (
+CREATE TABLE IF NOT EXISTS `estatus_tarjeta_c` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
@@ -137,11 +137,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`estatus_transaccion_c`
+-- Table `estatus_transaccion_c`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`estatus_transaccion_c` ;
+DROP TABLE IF EXISTS `estatus_transaccion_c` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`estatus_transaccion_c` (
+CREATE TABLE IF NOT EXISTS `estatus_transaccion_c` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(100) NULL DEFAULT NULL,
@@ -152,11 +152,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`pagos`
+-- Table `pagos`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`pagos` ;
+DROP TABLE IF EXISTS `pagos` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`pagos` (
+CREATE TABLE IF NOT EXISTS `pagos` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `idcliente` BIGINT(20) UNSIGNED NOT NULL,
   `fecha_transaccion` DATETIME NULL DEFAULT NULL,
@@ -181,21 +181,21 @@ CREATE TABLE IF NOT EXISTS `compose`.`pagos` (
   INDEX `idx_id_operacion` (`id_operacion` ASC),
   CONSTRAINT `esatus_transaccion_fk`
     FOREIGN KEY (`estatus_transaccion`)
-    REFERENCES `compose`.`estatus_transaccion_c` (`id`),
+    REFERENCES `estatus_transaccion_c` (`id`),
   CONSTRAINT `fk_cliente_id`
     FOREIGN KEY (`idcliente`)
-    REFERENCES `compose`.`cliente` (`id_cliente`))
+    REFERENCES `cliente` (`id_cliente`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 60
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`variable`
+-- Table `variable`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`variable` ;
+DROP TABLE IF EXISTS `variable` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`variable` (
+CREATE TABLE IF NOT EXISTS `variable` (
   `id_variable` INT(11) NOT NULL,
   `clave` VARCHAR(100) NOT NULL,
   `valor` VARCHAR(100) NOT NULL,
@@ -206,31 +206,31 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`regla_negocio_variable`
+-- Table `regla_negocio_variable`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`regla_negocio_variable` ;
+DROP TABLE IF EXISTS `regla_negocio_variable` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`regla_negocio_variable` (
+CREATE TABLE IF NOT EXISTS `regla_negocio_variable` (
   `id_regla_negocio` INT(11) NOT NULL,
   `id_variable` INT(11) NOT NULL,
   INDEX `id_fk` (`id_regla_negocio` ASC),
   INDEX `idv_fk` (`id_variable` ASC),
   CONSTRAINT `id_fk`
     FOREIGN KEY (`id_regla_negocio`)
-    REFERENCES `compose`.`regla_negocio` (`id`),
+    REFERENCES `regla_negocio` (`id`),
   CONSTRAINT `idv_fk`
     FOREIGN KEY (`id_variable`)
-    REFERENCES `compose`.`variable` (`id_variable`))
+    REFERENCES `variable` (`id_variable`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tipo_tarjeta_c`
+-- Table `tipo_tarjeta_c`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tipo_tarjeta_c` ;
+DROP TABLE IF EXISTS `tipo_tarjeta_c` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tipo_tarjeta_c` (
+CREATE TABLE IF NOT EXISTS `tipo_tarjeta_c` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
@@ -241,11 +241,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tarjetas`
+-- Table `tarjetas`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tarjetas` ;
+DROP TABLE IF EXISTS `tarjetas` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tarjetas` (
+CREATE TABLE IF NOT EXISTS `tarjetas` (
   `id_openpay` VARCHAR(40) NOT NULL,
   `ultimos_digitos` VARCHAR(4) NULL DEFAULT NULL,
   `alias` VARCHAR(100) NULL DEFAULT NULL,
@@ -261,23 +261,23 @@ CREATE TABLE IF NOT EXISTS `compose`.`tarjetas` (
   INDEX `cliente_tarjeta_fk` (`id_cliente` ASC),
   CONSTRAINT `cliente_tarjeta_fk`
     FOREIGN KEY (`id_cliente`)
-    REFERENCES `compose`.`cliente` (`id_cliente`),
+    REFERENCES `cliente` (`id_cliente`),
   CONSTRAINT `estatus_tarjeta_fk`
     FOREIGN KEY (`estatus_tarjeta_c`)
-    REFERENCES `compose`.`estatus_tarjeta_c` (`id`),
+    REFERENCES `estatus_tarjeta_c` (`id`),
   CONSTRAINT `tipo_tarjeta_tarjeta_fk`
     FOREIGN KEY (`tipo_tarjeta_c_id`)
-    REFERENCES `compose`.`tipo_tarjeta_c` (`id`))
+    REFERENCES `tipo_tarjeta_c` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tipo_afiliacion_c`
+-- Table `tipo_afiliacion_c`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tipo_afiliacion_c` ;
+DROP TABLE IF EXISTS `tipo_afiliacion_c` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tipo_afiliacion_c` (
+CREATE TABLE IF NOT EXISTS `tipo_afiliacion_c` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
