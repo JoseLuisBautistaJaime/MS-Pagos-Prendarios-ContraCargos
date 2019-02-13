@@ -1,8 +1,12 @@
 package mx.com.nmp.pagos.mimonte.config;
 
 
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.TimeZone;
 
 /**
  * Propiedades de configuración de la aplicación
@@ -15,6 +19,12 @@ public class ApplicationProperties {
 
     private final CorsConfiguration cors = new CorsConfiguration();
     private final Swagger swagger = new Swagger();
+
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer jacksonObjectMapperCustomization() {
+        return jacksonObjectMapperBuilder ->
+                jacksonObjectMapperBuilder.timeZone(TimeZone.getDefault());
+    }
 
     public CorsConfiguration getCors() {
         return cors;
