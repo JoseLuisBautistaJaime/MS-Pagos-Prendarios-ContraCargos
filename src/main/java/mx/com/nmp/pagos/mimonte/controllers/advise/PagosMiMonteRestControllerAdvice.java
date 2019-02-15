@@ -90,8 +90,7 @@ public class PagosMiMonteRestControllerAdvice {
             IllegalArgumentException.class,
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class,
-            UnsatisfiedServletRequestParameterException.class,
-            PagoException.class
+            UnsatisfiedServletRequestParameterException.class
     })
     public Response manejarExcepcionBadRequest(Exception e) {
         return resolverCodigo(e, HttpStatus.BAD_REQUEST);
