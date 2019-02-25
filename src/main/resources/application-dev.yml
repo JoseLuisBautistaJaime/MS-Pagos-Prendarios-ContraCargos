@@ -1,0 +1,61 @@
+# ===================================================================================================
+# Configuración Spring Boot - DEV
+#
+# Configuración para el profile de Spring "dev".
+# Aquí se establece la configuración necesaria para el perfil de ejecución local con
+# base de datos también local
+# ===================================================================================================
+
+# ===================================================================================================
+# Propiedades estandar de Spring.
+# Referencia completa en:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================================================
+
+
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+    include: swagger
+  jpa:
+    hibernate:
+      ddl-auto: none
+    generate-ddl: false
+    properties:
+      jadira:
+        usertype:
+          autoRegisterUserTypes: true
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+  datasource:
+    url: jdbc:mysql://sl-us-south-1-portal.36.dblayer.com:60251/compose?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: admin
+    password: ZUEZBNNDVKQRZVDR
+    testWhileIdle: true
+    validationQuery: SELECT 1
+    tomcat:
+      max-active: 1
+    driver-class-name: com.mysql.jdbc.Driver
+
+  batch:
+    job:
+      enabled: false
+
+# Variables utiles para app microservicios mimonte
+mimonte:
+  variables:
+    cantidad-maxima-tarjetas: 3
+    dss:
+      idcliente: "{idCliente}"
+      idregla: "{idRegla}"
+      idafiliacionregla: "{idAfiliacionRegla}"
+      idtipo: "{idTipo}"
+
+servicios:
