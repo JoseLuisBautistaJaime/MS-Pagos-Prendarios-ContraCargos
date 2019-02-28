@@ -20,7 +20,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "pagos")
+@Table(name = "to_pagos")
 public class Pago {
 
 	public Pago() {

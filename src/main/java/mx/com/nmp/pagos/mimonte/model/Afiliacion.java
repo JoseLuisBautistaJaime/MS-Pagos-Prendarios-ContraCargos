@@ -23,7 +23,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "catalogo_afiliacion")
+@Table(name = "tk_afiliacion")
 public class Afiliacion {
 
 	@Id

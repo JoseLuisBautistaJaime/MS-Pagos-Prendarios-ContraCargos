@@ -23,7 +23,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "variable")
+@Table(name = "tk_variable")
 public class Variable {
 
 	@Id
@@ -38,7 +38,7 @@ public class Variable {
 	private String valor;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "regla_negocio_variable", joinColumns = {
+	@JoinTable(name = "tr_regla_negocio_variable", joinColumns = {
 			@JoinColumn(name = "id_variable", nullable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "id_regla_negocio", nullable = false) })
 	private Set<ReglaNegocio> reglasNegocio;

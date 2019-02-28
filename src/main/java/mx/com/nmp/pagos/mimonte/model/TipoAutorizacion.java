@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "tipo_afiliacion_c")
+@Table(name = "tk_tipo_afiliacion")
 public class TipoAutorizacion extends AbstractCatalogo {
 
 	public TipoAutorizacion() {

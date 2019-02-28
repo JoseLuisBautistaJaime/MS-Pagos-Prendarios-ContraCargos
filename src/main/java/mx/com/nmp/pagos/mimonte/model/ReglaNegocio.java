@@ -28,7 +28,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "regla_negocio")
+@Table(name = "tk_regla_negocio")
 @SqlResultSetMapping(name = "ReglaNegocioResumenDTO", classes = {
 		@ConstructorResult(targetClass = mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO.class, columns = {
 				@ColumnResult(name = "id", type = Integer.class),

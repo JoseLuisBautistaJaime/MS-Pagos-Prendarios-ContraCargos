@@ -10,7 +10,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "estatus_operacion_c")
+@Table(name = "tk_estatus_operacion")
 public class EstatusOperacion extends AbstractCatalogo {
 
 	public EstatusOperacion() {

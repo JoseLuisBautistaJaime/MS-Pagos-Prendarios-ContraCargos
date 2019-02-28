@@ -29,7 +29,7 @@ import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
  * @version 0.1
  */
 @Entity
-@Table(name = "tarjetas")
+@Table(name = "tc_tarjetas")
 public class Tarjetas implements Serializable {
 
 	/**

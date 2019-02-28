@@ -16,7 +16,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "tipo_tarjeta_c")
+@Table(name = "tk_tipo_tarjeta")
 public class TipoTarjeta extends AbstractCatalogo implements Serializable {
 
 	/**
