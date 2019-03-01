@@ -198,6 +198,21 @@
             <artifactId>dropbox-core-sdk</artifactId>
             <version>3.0.6</version>
         </dependency>
+        
+        <!-- Authomated test -->
+        <dependency>
+			<groupId>com.intuit.karate</groupId>
+		  	<artifactId>karate-apache</artifactId>
+		  	<version>0.6.0</version>
+		  	<scope>test</scope>
+		</dependency>
+		<dependency>
+		  	<groupId>com.intuit.karate</groupId>
+			<artifactId>karate-junit4</artifactId>
+			<version>0.6.0</version>
+			<scope>test</scope>
+		</dependency>
+		
     </dependencies>
 
     <dependencyManagement>
@@ -309,6 +324,14 @@
 			     </includes>
 			</resource>
 		</resources>
+		<testResources>
+            <testResource>
+                <directory>src/test/java</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
     </build>
 
 
