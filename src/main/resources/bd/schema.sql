@@ -175,3 +175,19 @@ SET foreign_key_checks = 1;
 -- ALTER pagos MODIFY id_transaccion_midas AND folio_partida FROM INT TO BIGINT UNSIGNED[06-02-2019 : 12:41 hrs.]
 ALTER TABLE pagos MODIFY id_transaccion_midas BIGINT UNSIGNED NULL DEFAULT NULL;
 ALTER TABLE pagos MODIFY folio_partida BIGINT UNSIGNED NULL DEFAULT NULL;
+
+-- RENOMBRADO DE TABLAS PARA SEGUIR ESTANDAR DE NOMBRADO DE MIDAS --
+RENAME TABLE cat_catalogo TO tk_catalogo;
+RENAME TABLE catalogo_afiliacion TO tk_afiliacion;
+RENAME TABLE cliente TO tk_cliente;
+RENAME TABLE cliente_regla_negocio TO tr_cliente_regla_negocio;
+RENAME TABLE estatus_operacion_c TO tk_estatus_operacion;
+RENAME TABLE estatus_tarjeta_c TO tk_estatus_tarjeta;
+RENAME TABLE estatus_transaccion_c TO tk_estatus_transaccion;
+RENAME TABLE pagos TO to_pagos;
+RENAME TABLE regla_negocio TO tk_regla_negocio;
+RENAME TABLE regla_negocio_variable TO tr_regla_negocio_variable;
+RENAME TABLE tarjetas TO tc_tarjetas;
+RENAME TABLE tipo_afiliacion_c TO tk_tipo_afiliacion;
+RENAME TABLE tipo_tarjeta_c TO tk_tipo_tarjeta;
+RENAME TABLE variable TO tk_variable;
