@@ -191,3 +191,15 @@ RENAME TABLE tarjetas TO tc_tarjetas;
 RENAME TABLE tipo_afiliacion_c TO tk_tipo_afiliacion;
 RENAME TABLE tipo_tarjeta_c TO tk_tipo_tarjeta;
 RENAME TABLE variable TO tk_variable;
+
+ALTER TABLE tc_tarjetas CHANGE tipo_tarjeta_c_id id_tipo_tarjeta INT(11) NOT NULL;
+ALTER TABLE tc_tarjetas CHANGE estatus_tarjeta_c id_estatus_tarjeta INT(11) NOT NULL;
+
+ALTER TABLE to_pagos CHANGE idcliente id_cliente BIGINT(20) UNSIGNED NOT NULL;
+ALTER TABLE to_pagos CHANGE idopenpay id_openpay VARCHAR(100) NULL;
+ALTER TABLE to_pagos CHANGE idorder id_order VARCHAR(100) NULL;
+ALTER TABLE to_pagos CHANGE estatus_transaccion id_estatus_transaccion INT(11) NOT NULL;
+ALTER TABLE to_pagos CHANGE restresponse rest_response VARCHAR(400) NULL;
+
+
+
