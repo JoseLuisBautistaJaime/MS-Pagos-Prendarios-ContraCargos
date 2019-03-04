@@ -158,32 +158,32 @@ DROP TABLE IF EXISTS `to_pagos` ;
 
 CREATE TABLE IF NOT EXISTS `to_pagos` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `idcliente` BIGINT(20) UNSIGNED NOT NULL,
+  `id_cliente` BIGINT(20) UNSIGNED NOT NULL,
   `fecha_transaccion` DATETIME NULL DEFAULT NULL,
   `monto` DOUBLE NULL DEFAULT NULL,
   `autorizacion` VARCHAR(100) NULL DEFAULT NULL,
   `metodo` VARCHAR(45) NULL DEFAULT NULL,
   `tarjeta` VARCHAR(4) NULL DEFAULT NULL,
-  `idopenpay` VARCHAR(100) NULL DEFAULT NULL,
+  `id_openpay` VARCHAR(100) NULL DEFAULT NULL,
   `fecha_creacion` DATETIME NULL DEFAULT NULL,
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
-  `idorder` VARCHAR(100) NULL DEFAULT NULL,
-  `estatus_transaccion` INT(11) NULL DEFAULT NULL,
-  `restresponse` VARCHAR(400) NULL DEFAULT NULL,
+  `id_order` VARCHAR(100) NULL DEFAULT NULL,
+  `id_estatus_transaccion` INT(11) NULL DEFAULT NULL,
+  `rest_response` VARCHAR(400) NULL DEFAULT NULL,
   `id_transaccion_midas` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
   `folio_partida` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
   `id_operacion` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `esatus_transaccion_fk_idx` (`estatus_transaccion` ASC),
-  INDEX `cliente_transacion_fk_idx` (`idcliente` ASC),
+  INDEX `esatus_transaccion_fk_idx` (`id_estatus_transaccion` ASC),
+  INDEX `cliente_transacion_fk_idx` (`id_cliente` ASC),
   INDEX `idx_id_transaccion_midas` (`id_transaccion_midas` ASC),
   INDEX `idx_folio_partida` (`folio_partida` ASC),
   INDEX `idx_id_operacion` (`id_operacion` ASC),
   CONSTRAINT `esatus_transaccion_fk`
-    FOREIGN KEY (`estatus_transaccion`)
+    FOREIGN KEY (`id_estatus_transaccion`)
     REFERENCES `tk_estatus_transaccion` (`id`),
   CONSTRAINT `fk_cliente_id`
-    FOREIGN KEY (`idcliente`)
+    FOREIGN KEY (`id_cliente`)
     REFERENCES `tk_cliente` (`id_cliente`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 60
@@ -252,21 +252,21 @@ CREATE TABLE IF NOT EXISTS `tc_tarjetas` (
   `fecha_alta` DATETIME NULL DEFAULT NULL,
   `fecha_modificacion` DATETIME NULL DEFAULT NULL,
   `id_cliente` BIGINT(20) UNSIGNED NOT NULL,
-  `tipo_tarjeta_c_id` INT(11) NOT NULL,
-  `estatus_tarjeta_c` INT(11) NOT NULL,
+  `id_tipo_tarjeta` INT(11) NOT NULL,
+  `id_estatus_tarjeta` INT(11) NOT NULL,
   `token` VARCHAR(40) NULL DEFAULT NULL,
   PRIMARY KEY (`id_openpay`),
-  INDEX `tipo_tarjeta_tarjeta_fk_idx` (`tipo_tarjeta_c_id` ASC),
-  INDEX `estatus_tarjeta_fk_idx` (`estatus_tarjeta_c` ASC),
+  INDEX `tipo_tarjeta_tarjeta_fk_idx` (`id_tipo_tarjeta` ASC),
+  INDEX `estatus_tarjeta_fk_idx` (`id_estatus_tarjeta` ASC),
   INDEX `cliente_tarjeta_fk` (`id_cliente` ASC),
   CONSTRAINT `cliente_tarjeta_fk`
     FOREIGN KEY (`id_cliente`)
     REFERENCES `tk_cliente` (`id_cliente`),
   CONSTRAINT `estatus_tarjeta_fk`
-    FOREIGN KEY (`estatus_tarjeta_c`)
+    FOREIGN KEY (`id_estatus_tarjeta`)
     REFERENCES `tk_estatus_tarjeta` (`id`),
   CONSTRAINT `tipo_tarjeta_tarjeta_fk`
-    FOREIGN KEY (`tipo_tarjeta_c_id`)
+    FOREIGN KEY (`id_tipo_tarjeta`)
     REFERENCES `tk_tipo_tarjeta` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;

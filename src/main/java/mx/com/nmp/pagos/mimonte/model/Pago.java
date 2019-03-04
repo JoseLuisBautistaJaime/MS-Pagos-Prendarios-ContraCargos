@@ -56,7 +56,7 @@ public class Pago {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-	@JoinColumn(name = "idcliente", nullable = true)
+	@JoinColumn(name = "id_cliente", nullable = true)
 	private Cliente cliente;
 
 	@Column(name = "fecha_transaccion", nullable = true)
@@ -74,7 +74,7 @@ public class Pago {
 	@Column(name = "tarjeta", nullable = true)
 	private String tarjeta;
 
-	@Column(name = "idopenpay", nullable = true)
+	@Column(name = "id_openpay", nullable = true)
 	private String idOpenPay;
 
 	@Column(name = "fecha_creacion", nullable = true)
@@ -83,14 +83,14 @@ public class Pago {
 	@Column(name = "descripcion", nullable = true)
 	private String descripcion;
 
-	@Column(name = "idorder", nullable = true)
+	@Column(name = "id_order", nullable = true)
 	private String idOrder;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-	@JoinColumn(name = "estatus_transaccion", nullable = true)
+	@JoinColumn(name = "id_estatus_transaccion", nullable = true)
 	private EstatusPago estatusPago;
 
-	@Column(name = "restresponse", nullable = true)
+	@Column(name = "rest_response", nullable = true)
 	private String restResponse;
 
 	@Column(name = "id_transaccion_midas", nullable = true)

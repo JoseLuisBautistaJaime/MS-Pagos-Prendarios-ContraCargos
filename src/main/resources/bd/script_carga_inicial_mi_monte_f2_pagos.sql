@@ -16,7 +16,7 @@ INSERT INTO tk_tipo_tarjeta(id, descripcion_corta, descripcion)
 
 -- INSERCION INICIAL EN CATALOGO TK_CATALOGO
 INSERT INTO tk_catalogo(id, descripcion_corta,descripcion, nombre_tabla, activo)
-	VALUES(1,'Afiliacion','El catalog de afiliaicones','catalogo_afiliacion',1),
+	VALUES(1,'Afiliacion','El catalog de afiliaicones','tk_afiliacion',1),
 		(2,'Estatus Tarjeta','Catalogo de estatus de tarjeta posibles','tk_estatus_tarjeta',1),
 		(3,'Estatus Transaccion','Estatus de transacciones posibles','tk_estatus_transaccion',1),
 		(4,'Tipo Tarjeta','Catalogo de tipos de tarjetas','tk_tipo_tarjeta',1);

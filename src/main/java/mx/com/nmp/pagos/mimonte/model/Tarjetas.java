@@ -60,11 +60,11 @@ public class Tarjetas implements Serializable {
 	private Cliente clientes;
 	
 	@ManyToOne
-	@JoinColumn(name = "tipo_tarjeta_c_id")
+	@JoinColumn(name = "id_tipo_tarjeta")
 	private TipoTarjeta tipoTarjeta;
 
 	@ManyToOne
-	@JoinColumn(name = "estatus_tarjeta_c")
+	@JoinColumn(name = "id_estatus_tarjeta")
 	private EstatusTarjeta estatusTarjeta;
 	
 	@Size(max = Constants.LONGITUD_TOKEN, message = TarjetaConstants.MSG_TOKEN_VALUE_TOO_LONG)
