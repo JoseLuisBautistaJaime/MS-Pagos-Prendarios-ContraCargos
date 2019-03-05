@@ -28,7 +28,7 @@ import mx.com.nmp.pagos.mimonte.config.Constants;
  * @version 0.1
  */
 @Entity
-@Table(name = "cliente")
+@Table(name = "tk_cliente")
 public class Cliente implements Serializable {
 
 	private static final long serialVersionUID = 7528374533024645790L;
@@ -50,7 +50,7 @@ public class Cliente implements Serializable {
 	private List<Tarjetas> tarjetas;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "cliente_regla_negocio", joinColumns = {
+	@JoinTable(name = "tr_cliente_regla_negocio", joinColumns = {
 			@JoinColumn(name = "id_cliente", nullable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "id_regla_negocio", nullable = false) })
 	private Set<ReglaNegocio> reglasNegocio;
