@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
  * @version 0.1
  */
 @Entity
-@Table(name = "cat_catalogo")
+@Table(name = "tk_catalogo")
 public class Catalogo extends AbstractCatalogo {
     /**
      * Nombre de la tabla a la que corresponde el catalogo
