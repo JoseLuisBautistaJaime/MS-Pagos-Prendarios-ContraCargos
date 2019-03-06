@@ -13,8 +13,8 @@ import mx.com.nmp.pagos.mimonte.model.Entidad;
  * @creationDate 06/03/2019 12:35 hrs.
  * @version 0.1
  */
-@Repository("entidadRepository")
-public interface EntidadRepository extends JpaRepository<Entidad, Long> {
+//@Repository("entidadRepository")
+public interface EntidadRepository /*extends JpaRepository<Entidad, Long>*/ {
 
 	/**
 	 * Reagresa una entidad por su nombre y estatus
@@ -23,6 +23,6 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	 * @param status
 	 * @return
 	 */
-	public Entidad findByNombreAndStatus(String nombre, Boolean status);
+//	public Entidad findByNombreAndStatus(String nombre, Boolean status);
 
 }

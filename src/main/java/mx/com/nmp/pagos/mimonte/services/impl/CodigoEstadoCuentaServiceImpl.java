@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.CodigoEstadoCuentaBuilder;
 import mx.com.nmp.pagos.mimonte.dao.CodigoEstadoCuentaRepository;
@@ -21,13 +22,14 @@ import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
  * @creationDate 06/03/2019 12:39 hrs.
  * @version 0.1
  */
+//@Service("codigoEstadoCuentaServiceImpl")
 public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoEstadoCuentaDTO> {
 
 	/**
 	 * Service de el catalogo CodigoEstadoCuenta
 	 */
-	@Autowired
-	@Qualifier("codigoEstadoCuentaRepository")
+//	@Autowired
+//	@Qualifier("codigoEstadoCuentaRepository")
 	private CodigoEstadoCuentaRepository codigoEstadoCuentaRepository;
 
 	/**
@@ -36,10 +38,11 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T save(CodigoEstadoCuentaDTO e) {
-		CodigoEstadoCuentaGenDTO codigoEstadoCuentaDTO = null;
-		codigoEstadoCuentaRepository
-				.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTO(e));
-		return (T) codigoEstadoCuentaDTO;
+//		CodigoEstadoCuentaGenDTO codigoEstadoCuentaDTO = null;
+//		codigoEstadoCuentaRepository
+//				.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTO(e));
+//		return (T) codigoEstadoCuentaDTO;
+		return null;
 	}
 
 	/**
@@ -48,10 +51,11 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T update(CodigoEstadoCuentaDTO e) {
-		CodigoEstadoCuentaGenDTO codigoEstadoCuentaDTO = null;
-		codigoEstadoCuentaRepository
-				.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTO(e));
-		return (T) codigoEstadoCuentaDTO;
+//		CodigoEstadoCuentaGenDTO codigoEstadoCuentaDTO = null;
+//		codigoEstadoCuentaRepository
+//				.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTO(e));
+//		return (T) codigoEstadoCuentaDTO;
+		return null;
 	}
 
 	/**
@@ -60,9 +64,10 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T findById(Long id) {
-		CodigoEstadoCuentaGenDTO codigoEstadoCuentaDTO = null;
-		codigoEstadoCuentaRepository.findById(id);
-		return (T) codigoEstadoCuentaDTO;
+//		CodigoEstadoCuentaGenDTO codigoEstadoCuentaDTO = null;
+//		codigoEstadoCuentaRepository.findById(id);
+//		return (T) codigoEstadoCuentaDTO;
+		return null;
 	}
 
 	/**
@@ -73,8 +78,9 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	 * @return
 	 */
 	public List<CodigoEstadoCuentaDTO> findByEntidad_Id(Long idEntidad) {
-		return CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOListFromCodigoEstadoCuentaList(
-				codigoEstadoCuentaRepository.findByBaseEntidad_Id(idEntidad));
+//		return CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOListFromCodigoEstadoCuentaList(
+//				codigoEstadoCuentaRepository.findByBaseEntidad_Id(idEntidad));
+		return null;
 	}
 
 }

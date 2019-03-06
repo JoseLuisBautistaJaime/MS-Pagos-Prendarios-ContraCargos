@@ -20,14 +20,14 @@ import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
  * @creationDate 06/03/2019 12:33 hrs.
  * @version 0.1
  */
-@Service("entidadServiceImpl")
+//@Service("entidadServiceImpl")
 public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 
 	/**
 	 * Repository del catalogo Entidad
 	 */
-	@Autowired
-	@Qualifier("entidadRepository")
+//	@Autowired
+//	@Qualifier("entidadRepository")
 	private EntidadRepository entidadRepository;
 
 	/**
@@ -36,8 +36,9 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T save(EntidadDTO e) {
-		return (T) EntidadBuilder
-				.buildEntidadDTOFromEntidad(entidadRepository.save(EntidadBuilder.buildEntidadFromEntidadDTO(e)));
+//		return (T) EntidadBuilder
+//				.buildEntidadDTOFromEntidad(entidadRepository.save(EntidadBuilder.buildEntidadFromEntidadDTO(e)));
+		return null;
 	}
 
 	/**
@@ -46,8 +47,9 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e) {
-		return (T) EntidadBuilder
-				.buildEntidadDTOFromEntidad(entidadRepository.save(EntidadBuilder.buildEntidadFromEntidadDTO(e)));
+//		return (T) EntidadBuilder
+//				.buildEntidadDTOFromEntidad(entidadRepository.save(EntidadBuilder.buildEntidadFromEntidadDTO(e)));
+		return null;
 	}
 
 	/**
@@ -56,8 +58,9 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T findById(Long id) {
-		return (T) EntidadBuilder.buildEntidadDTOFromEntidad(
-				entidadRepository.findById(id).isPresent() ? entidadRepository.findById(id).get() : null);
+//		return (T) EntidadBuilder.buildEntidadDTOFromEntidad(
+//				entidadRepository.findById(id).isPresent() ? entidadRepository.findById(id).get() : null);
+		return null;
 	}
 
 	/**
@@ -68,8 +71,9 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	 * @return
 	 */
 	public EntidadResponseDTO findByNombreAndEstatus(String nombre, Boolean status) {
-		return EntidadBuilder
-				.buildEntidadResponseDTOFromEntidad(entidadRepository.findByNombreAndStatus(nombre, status));
+//		return EntidadBuilder
+//				.buildEntidadResponseDTOFromEntidad(entidadRepository.findByNombreAndStatus(nombre, status));
+		return null;
 	}
 
 }

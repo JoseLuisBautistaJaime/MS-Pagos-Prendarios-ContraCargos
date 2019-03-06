@@ -16,8 +16,8 @@ import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
  * @creationDate 06/03/2019 12:42 hrs.
  * @version 0.1
  */
-@Repository("codigoEstadoCuentaRepository")
-public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstadoCuenta, Long> {
+//@Repository("codigoEstadoCuentaRepository")
+public interface CodigoEstadoCuentaRepository /*extends JpaRepository<CodigoEstadoCuenta, Long>*/ {
 
 	/**
 	 * Regresa un alista de catalogos CodigoEstadoCuenta en base a el id de una de
@@ -26,6 +26,6 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * @param idEntidad
 	 * @return
 	 */
-	public List<CodigoEstadoCuenta> findByBaseEntidad_Id(Long idEntidad);
+//	public List<CodigoEstadoCuenta> findByBaseEntidad_Id(Long idEntidad);
 
 }

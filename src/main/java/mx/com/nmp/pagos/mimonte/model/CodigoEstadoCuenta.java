@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Nombre: CodigoEstadoCuenta Descripcion: Clase que encapsula la informacion de
@@ -14,11 +15,11 @@ import javax.persistence.Table;
  * @creationDate 05/03/2019 14:10 hrs.
  * @version 0.1
  */
-@Entity
-@Table(name = "tc_codigo_estado_cuenta")
+//@Entity
+//@Table(name = "tc_codigo_estado_cuenta")
 public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparable<CodigoEstadoCuenta> {
 
-	@Column(name = "leyenda", nullable = false)
+//	@Column(name = "leyenda", nullable = false)
 	private String leyenda;
 
 	private BaseEntidad baseEntidad;

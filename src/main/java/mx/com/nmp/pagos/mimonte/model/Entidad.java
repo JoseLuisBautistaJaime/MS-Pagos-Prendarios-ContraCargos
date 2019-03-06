@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import mx.com.nmp.pagos.mimonte.dto.ContactoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
@@ -18,17 +19,17 @@ import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
  * @creationDate 05/03/2019 14:09 hrs.
  * @version 0.1
  */
-@Entity
-@Table(name = "tc_entidad")
+//@Entity
+//@Table(name = "tc_entidad")
 public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> {
 
-	@Column(name = "nombre", nullable = false)
+//	@Column(name = "nombre", nullable = false)
 	private String nombre;
 	
-	@Column(name = "descripcion", nullable = false)
+//	@Column(name = "descripcion", nullable = false)
 	private String descripcion;
 	
-	private Set<CuentaDTO> cuentas;
+	private Set<CuentaDTO> cuentas;	
 	private Set<ContactoDTO> contactos;
 
 	public Entidad() {

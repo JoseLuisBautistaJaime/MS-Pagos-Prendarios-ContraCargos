@@ -61,8 +61,8 @@ public class EntidadController {
 	/**
 	 * Service para catalogo de entidades
 	 */
-	@Autowired
-	@Qualifier("entidadRepository")
+//	@Autowired
+//	@Qualifier("entidadRepository")
 	private EntidadServiceImpl entidadServiceImpl;
 
 	/**

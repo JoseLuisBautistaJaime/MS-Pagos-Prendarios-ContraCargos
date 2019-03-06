@@ -63,8 +63,8 @@ public class CodigoEstadoCuentaController {
 	/**
 	 * Service para el catalogo de codigos de estados de cuenta
 	 */
-	@Autowired
-	@Qualifier("codigoEstadoCuentaServiceImpl")
+//	@Autowired
+//	@Qualifier("codigoEstadoCuentaServiceImpl")
 	private CodigoEstadoCuentaServiceImpl codigoEstadoCuentaServiceImpl;
 
 	/**
