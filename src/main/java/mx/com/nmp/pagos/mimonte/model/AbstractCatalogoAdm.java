@@ -70,14 +70,6 @@ public abstract class AbstractCatalogoAdm {
 		this.estatus = estatus;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -94,19 +86,20 @@ public abstract class AbstractCatalogoAdm {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
 	public String getLastModifiedBy() {
 		return lastModifiedBy;
 	}
 
 	public void setLastModifiedBy(String lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	@Override
-	public String toString() {
-		return "AbstractCatalogoAdm [id=" + id + ", status=" + estatus + ", createdDate=" + createdDate
-				+ ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy="
-				+ lastModifiedBy + "]";
 	}
 
 }
