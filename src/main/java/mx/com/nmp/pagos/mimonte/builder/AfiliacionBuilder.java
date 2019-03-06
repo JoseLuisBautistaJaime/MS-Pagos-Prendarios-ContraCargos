@@ -24,14 +24,14 @@ public class AfiliacionBuilder {
 	 * Metodo que convierte de un entity tipo Afiliacion a un objeto de tipo
 	 * AfiliacionDTO
 	 * 
-	 * @param Afiliacion afiliacion
+	 * @param AfiliacionController afiliacion
 	 * @return AfiliacionDTO
 	 */
 	public static AfiliacionDTO buildAfiliacionDTOFromAfilaicion(Afiliacion afiliacion) {
 		AfiliacionDTO afiliacionDTO = null;
 		if (null != afiliacion) {
 			afiliacionDTO = new AfiliacionDTO();
-			afiliacionDTO.setDescripcion(afiliacion.getDescripcion());
+			afiliacionDTO.setNumero(afiliacion.getDescripcion());
 			afiliacionDTO.setId(afiliacion.getId());
 			afiliacionDTO.setTipo(TipoAutorizacionBuilder.buildTipoAfilaicionDTOFromTipoAfiliacion(afiliacion.getTipo()));
 		}
