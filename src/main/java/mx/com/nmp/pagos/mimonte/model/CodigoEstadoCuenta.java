@@ -2,6 +2,10 @@ package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  * Nombre: CodigoEstadoCuenta Descripcion: Clase que encapsula la informacion de
  * una entidad de catalogo de tipo CodigoEstadoCuenta
@@ -10,9 +14,13 @@ import java.util.Date;
  * @creationDate 05/03/2019 14:10 hrs.
  * @version 0.1
  */
+@Entity
+@Table(name = "tc_codigo_estado_cuenta")
 public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparable<CodigoEstadoCuenta> {
 
+	@Column(name = "leyenda", nullable = false)
 	private String leyenda;
+
 	private BaseEntidad baseEntidad;
 	private Categoria categoria;
 

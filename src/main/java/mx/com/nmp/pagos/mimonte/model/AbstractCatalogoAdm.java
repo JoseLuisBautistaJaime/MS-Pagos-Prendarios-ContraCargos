@@ -24,34 +24,34 @@ public abstract class AbstractCatalogoAdm {
 	@Column(name = "id")
 	protected Long id;
 
-	@Column(name = "status")
-	protected Boolean status;
+	@Column(name = "estatus")
+	protected Boolean estatus;
 
-	@Column(name = "creation_date")
-	protected Date creationDate;
+	@Column(name = "created_date")
+	protected Date createdDate;
 
-	@Column(name = "modification_date")
-	protected Date modificationDate;
+	@Column(name = "last_modified_date")
+	protected Date lastModifiedDate;
 
 	@Column(name = "created_by")
 	protected String createdBy;
 
-	@Column(name = "modified_by")
-	protected String modifiedBy;
+	@Column(name = "last_modified_by")
+	protected String lastModifiedBy;
 
 	public AbstractCatalogoAdm() {
 		super();
 	}
 
-	public AbstractCatalogoAdm(Long id, Boolean status, Date creationDate, Date modificationDate, String createdBy,
-			String modifiedBy) {
+	public AbstractCatalogoAdm(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy) {
 		super();
 		this.id = id;
-		this.status = status;
-		this.creationDate = creationDate;
-		this.modificationDate = modificationDate;
+		this.estatus = estatus;
+		this.createdDate = createdDate;
+		this.lastModifiedDate = lastModifiedDate;
 		this.createdBy = createdBy;
-		this.modifiedBy = modifiedBy;
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	public Long getId() {
@@ -62,28 +62,12 @@ public abstract class AbstractCatalogoAdm {
 		this.id = id;
 	}
 
-	public Boolean getStatus() {
-		return status;
+	public Boolean getEstatus() {
+		return estatus;
 	}
 
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
-
-	public Date getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
-
-	public Date getModificationDate() {
-		return modificationDate;
-	}
-
-	public void setModificationDate(Date modificationDate) {
-		this.modificationDate = modificationDate;
+	public void setEstatus(Boolean estatus) {
+		this.estatus = estatus;
 	}
 
 	public String getCreatedBy() {
@@ -94,19 +78,35 @@ public abstract class AbstractCatalogoAdm {
 		this.createdBy = createdBy;
 	}
 
-	public String getModifiedBy() {
-		return modifiedBy;
+	public Date getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	@Override
 	public String toString() {
-		return "AbstractCatalogoAdm [id=" + id + ", status=" + status + ", creationDate=" + creationDate
-				+ ", modificationDate=" + modificationDate + ", createdBy=" + createdBy + ", modifiedBy=" + modifiedBy
-				+ "]";
+		return "AbstractCatalogoAdm [id=" + id + ", status=" + estatus + ", createdDate=" + createdDate
+				+ ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy="
+				+ lastModifiedBy + "]";
 	}
 
 }

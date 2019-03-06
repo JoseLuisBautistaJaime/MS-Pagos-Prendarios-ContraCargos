@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +24,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
 import mx.com.nmp.pagos.mimonte.dto.ContactoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
+import mx.com.nmp.pagos.mimonte.services.impl.EntidadServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -56,6 +59,13 @@ public class EntidadController {
 	private final Logger log = LoggerFactory.getLogger(EntidadController.class);
 
 	/**
+	 * Service para catalogo de entidades
+	 */
+	@Autowired
+	@Qualifier("entidadRepository")
+	private EntidadServiceImpl entidadServiceImpl;
+
+	/**
 	 * Guarda un nuevo catalogo Entidad
 	 * 
 	 * @param pagoRequestDTO
@@ -71,6 +81,7 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody EntidadDTO entidadDTOReq) {
+//		entidadServiceImpl.save(entidadDTOReq);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad guardada correctamente",
 				buildDummy());
 	}
@@ -91,6 +102,7 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody EntidadDTO entidadDTOReq) {
+//		entidadServiceImpl.save(entidadDTOReq);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad actualizada correctamente",
 				buildDummy());
 	}
@@ -112,6 +124,8 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
+//		EntidadResponseDTO entidadResponseDTO = EntidadBuilder
+//				.buildEntidadResponseDTOFromEntidadDTO((EntidadDTO) entidadServiceImpl.findById(idEntidad));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad recuperada correctamente",
 				buildDummy());
 	}
@@ -135,7 +149,7 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@PathVariable(value = "nombre", required = true) String nombre,
 			@PathVariable(value = "estatus", required = true) Boolean estatus) {
-
+//		EntidadResponseDTO entidadResponseDTO = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad recuperada correctamente",
 				buildDummy());
 	}

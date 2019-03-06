@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +24,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.builder.CodigoEstadoCuentaBuilder;
 import mx.com.nmp.pagos.mimonte.dto.BaseCodigoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
+import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaGenDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
+import mx.com.nmp.pagos.mimonte.services.impl.CodigoEstadoCuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -57,6 +61,13 @@ public class CodigoEstadoCuentaController {
 	private final Logger log = LoggerFactory.getLogger(CodigoEstadoCuentaController.class);
 
 	/**
+	 * Service para el catalogo de codigos de estados de cuenta
+	 */
+	@Autowired
+	@Qualifier("codigoEstadoCuentaServiceImpl")
+	private CodigoEstadoCuentaServiceImpl codigoEstadoCuentaServiceImpl;
+
+	/**
 	 * Guarda un nuevo catalogo Codigo Estado dse Cuenta
 	 * 
 	 * @param pagoRequestDTO
@@ -73,6 +84,10 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CodigoEstadoCuentaDTO codigoEstadoCuentaDTO) {
+		
+//		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
+//				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTO));
+		
 		BaseCodigoDTO baseCodigoDTO = new BaseCodigoDTO(1L, true, "Leyenda");
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				"Codigo de estado de cuenta guardado correctamente", baseCodigoDTO);
@@ -96,6 +111,10 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CodigoEstadoCuentaDTO codigoEstadoCuentaDTOReq) {
+
+//		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
+//				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTOReq));
+
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = buildDummy();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				"Codigo de estado de cuenta actualizado correctamente", codigoEstadoCuentaDTO);
@@ -119,6 +138,10 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idCodigo", required = true) Long idCodigo) {
+
+//		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
+//				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.findById(idCodigo));
+
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = buildDummy();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				"Codigo de estado de cuenta recuperado correctamente", codigoEstadoCuentaDTO);
@@ -142,6 +165,9 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
+
+//		List<CodigoEstadoCuentaDTO> lstX = codigoEstadoCuentaServiceImpl.findByEntidad_Id(idEntidad);
+
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = buildDummy();
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO2 = buildDummy();
 		List<CodigoEstadoCuentaDTO> lst = new ArrayList<>();

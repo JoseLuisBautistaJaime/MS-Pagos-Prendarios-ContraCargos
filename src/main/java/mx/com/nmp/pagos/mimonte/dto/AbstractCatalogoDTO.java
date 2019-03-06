@@ -13,25 +13,25 @@ import java.util.Date;
 public abstract class AbstractCatalogoDTO {
 
 	protected Long id;
-	protected Boolean status;
-	protected Date creationDate;
-	protected Date modificationDate;
+	protected Boolean estatus;
+	protected Date createdDate;
+	protected Date lastModifiedDate;
 	protected String createdBy;
-	protected String modifiedBy;
+	protected String lastModifiedBy;
 
 	public AbstractCatalogoDTO() {
 		super();
 	}
 
-	public AbstractCatalogoDTO(Long id, Boolean status, Date creationDate, Date modificationDate, String createdBy,
-			String modifiedBy) {
+	public AbstractCatalogoDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy) {
 		super();
 		this.id = id;
-		this.status = status;
-		this.creationDate = creationDate;
-		this.modificationDate = modificationDate;
+		this.estatus = estatus;
+		this.createdDate = createdDate;
+		this.lastModifiedDate = lastModifiedDate;
 		this.createdBy = createdBy;
-		this.modifiedBy = modifiedBy;
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	public Long getId() {
@@ -42,28 +42,12 @@ public abstract class AbstractCatalogoDTO {
 		this.id = id;
 	}
 
-	public Boolean getStatus() {
-		return status;
+	public Boolean getEstatus() {
+		return estatus;
 	}
 
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
-
-	public Date getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
-
-	public Date getModificationDate() {
-		return modificationDate;
-	}
-
-	public void setModificationDate(Date modificationDate) {
-		this.modificationDate = modificationDate;
+	public void setEstatus(Boolean estatus) {
+		this.estatus = estatus;
 	}
 
 	public String getCreatedBy() {
@@ -74,12 +58,35 @@ public abstract class AbstractCatalogoDTO {
 		this.createdBy = createdBy;
 	}
 
-	public String getModifiedBy() {
-		return modifiedBy;
+	public Date getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	@Override
+	public String toString() {
+		return "AbstractCatalogoDTO [id=" + id + ", estatus=" + estatus + ", createdDate=" + createdDate
+				+ ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy="
+				+ lastModifiedBy + "]";
 	}
 
 }
