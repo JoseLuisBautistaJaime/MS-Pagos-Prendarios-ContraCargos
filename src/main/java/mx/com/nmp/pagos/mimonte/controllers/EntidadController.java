@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.dto.ContactoDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
+import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -67,8 +71,8 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody EntidadDTO entidadDTOReq) {
-		EntidadDTO entidadDTO = buildDummy();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", entidadDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad guardada correctamente",
+				buildDummy());
 	}
 
 	/**
@@ -87,8 +91,8 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody EntidadDTO entidadDTOReq) {
-		EntidadDTO entidadDTO = buildDummy();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", entidadDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad actualizada correctamente",
+				buildDummy());
 	}
 
 	/**
@@ -108,8 +112,8 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
-		EntidadDTO entidadDTO = buildDummy();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", entidadDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad recuperada correctamente",
+				buildDummy());
 	}
 
 	/**
@@ -131,8 +135,9 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@PathVariable(value = "nombre", required = true) String nombre,
 			@PathVariable(value = "estatus", required = true) Boolean estatus) {
-		EntidadDTO entidadDTO = buildDummy();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", entidadDTO);
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad recuperada correctamente",
+				buildDummy());
 	}
 
 	/**
@@ -140,9 +145,16 @@ public class EntidadController {
 	 * 
 	 * @return
 	 */
-	public static EntidadDTO buildDummy() {
-		EntidadDTO entidadDTO = new EntidadDTO(1, true, new Date(), null, 1L, "Banamex", null, null);
-		return entidadDTO;
+	public static EntidadResponseDTO buildDummy() {
+		Set<CuentaDTO> set = new HashSet<>();
+		set.add(new CuentaDTO());
+		set.add(new CuentaDTO());
+		Set<ContactoDTO> set2 = new HashSet<>();
+		set2.add(new ContactoDTO());
+		set2.add(new ContactoDTO());
+		EntidadResponseDTO entidadResoponseDTO = new EntidadResponseDTO(1L, "Banamex", "Banco banamex", true, set,
+				set2);
+		return entidadResoponseDTO;
 	}
 
 }

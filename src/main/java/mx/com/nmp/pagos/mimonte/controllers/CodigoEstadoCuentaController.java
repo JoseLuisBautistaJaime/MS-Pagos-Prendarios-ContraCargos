@@ -1,7 +1,6 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -24,12 +23,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dto.BaseCodigoDTO;
-import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
-import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -76,9 +73,9 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CodigoEstadoCuentaDTO codigoEstadoCuentaDTO) {
-		BaseCodigoDTO baseCodigoDTO = new BaseCodigoDTO(1L, true);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "",
-				baseCodigoDTO);
+		BaseCodigoDTO baseCodigoDTO = new BaseCodigoDTO(1L, true, "Leyenda");
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				"Codigo de estado de cuenta guardado correctamente", baseCodigoDTO);
 	}
 
 	/**
@@ -100,8 +97,8 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CodigoEstadoCuentaDTO codigoEstadoCuentaDTOReq) {
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = buildDummy();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "",
-				codigoEstadoCuentaDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				"Codigo de estado de cuenta actualizado correctamente", codigoEstadoCuentaDTO);
 	}
 
 	/**
@@ -123,8 +120,8 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idCodigo", required = true) Long idCodigo) {
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = buildDummy();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "",
-				codigoEstadoCuentaDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				"Codigo de estado de cuenta recuperado correctamente", codigoEstadoCuentaDTO);
 	}
 
 	/**
@@ -150,8 +147,8 @@ public class CodigoEstadoCuentaController {
 		List<CodigoEstadoCuentaDTO> lst = new ArrayList<>();
 		lst.add(codigoEstadoCuentaDTO);
 		lst.add(codigoEstadoCuentaDTO2);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "",
-				lst);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				"Codigos de estado de cuenta recuperados correctamente", lst);
 	}
 
 	/**
@@ -160,8 +157,8 @@ public class CodigoEstadoCuentaController {
 	 * @return
 	 */
 	public static CodigoEstadoCuentaDTO buildDummy() {
-		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO(1, true, new Date(), null, 1L,
-				"Leyenda dummy", new BaseEntidadDTO(1L, "Banamex"),
+		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO(1L, "Geronimo", true,
+				new EntidadDTO("Banamex", null, null, "Banco Banamex"),
 				new CategoriaDTO(1, "Categoria 1", "Categoria Uno"));
 		return codigoEstadoCuentaDTO;
 	}

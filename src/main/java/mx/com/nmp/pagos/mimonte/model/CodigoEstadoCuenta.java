@@ -27,9 +27,9 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 		this.categoria = categoria;
 	}
 
-	public CodigoEstadoCuenta(Integer id, Boolean estatus, Date fechaCreacion, Date fechaModificacion,
-			Long usuarioCreador, String leyenda, BaseEntidad baseEntidad, Categoria categoria) {
-		super(id, estatus, fechaCreacion, fechaModificacion, usuarioCreador);
+	public CodigoEstadoCuenta(Long id, Boolean status, Date creationDate, Date modificationDate, String createdBy,
+			String modifiedBy, String leyenda, BaseEntidad baseEntidad, Categoria categoria) {
+		super(id, status, creationDate, modificationDate, createdBy, modifiedBy);
 		this.leyenda = leyenda;
 		this.baseEntidad = baseEntidad;
 		this.categoria = categoria;

@@ -24,16 +24,16 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 		super();
 	}
 
-	public Entidad(Integer id, Boolean estatus, Date fechaCreacion, Date fechaModificacion, Long usuarioCreador,
-			String nombre, Set<CuentaDTO> cuentas, Set<ContactoDTO> contactos) {
-		super(id, estatus, fechaCreacion, fechaModificacion, usuarioCreador);
+	public Entidad(String nombre, Set<CuentaDTO> cuentas, Set<ContactoDTO> contactos) {
+		super();
 		this.nombre = nombre;
 		this.cuentas = cuentas;
 		this.contactos = contactos;
 	}
 
-	public Entidad(String nombre, Set<CuentaDTO> cuentas, Set<ContactoDTO> contactos) {
-		super();
+	public Entidad(Long id, Boolean status, Date creationDate, Date modificationDate, String createdBy,
+			String modifiedBy, String nombre, Set<CuentaDTO> cuentas, Set<ContactoDTO> contactos) {
+		super(id, status, creationDate, modificationDate, createdBy, modifiedBy);
 		this.nombre = nombre;
 		this.cuentas = cuentas;
 		this.contactos = contactos;

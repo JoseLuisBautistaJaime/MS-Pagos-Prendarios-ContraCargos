@@ -1,7 +1,5 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
-import java.util.Date;
-
 /**
  * Nombre: CodigoEstadoCuentaDTO Descripcion: Clase que encapsula la informacion
  * de un catalogo de codigo de estado de cuenta
@@ -10,28 +8,24 @@ import java.util.Date;
  * @creationDate 05/03/2019 14:07 hrs.
  * @version 0.1
  */
-public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Comparable<CodigoEstadoCuentaDTO> {
+public class CodigoEstadoCuentaDTO implements Comparable<CodigoEstadoCuentaDTO> {
 
+	private Long id;
 	private String leyenda;
-	private BaseEntidadDTO baseEntidad;
+	private Boolean status;
+	private EntidadDTO entidad;
 	private CategoriaDTO categoria;
 
 	public CodigoEstadoCuentaDTO() {
 		super();
 	}
 
-	public CodigoEstadoCuentaDTO(String leyenda, BaseEntidadDTO baseEntidad, CategoriaDTO categoria) {
+	public CodigoEstadoCuentaDTO(Long id, String leyenda, Boolean status, EntidadDTO entidad, CategoriaDTO categoria) {
 		super();
+		this.id = id;
 		this.leyenda = leyenda;
-		this.baseEntidad = baseEntidad;
-		this.categoria = categoria;
-	}
-
-	public CodigoEstadoCuentaDTO(Integer id, Boolean estatus, Date fechaCreacion, Date fechaModificacion,
-			Long usuarioCreador, String leyenda, BaseEntidadDTO baseEntidad, CategoriaDTO categoria) {
-		super(id, estatus, fechaCreacion, fechaModificacion, usuarioCreador);
-		this.leyenda = leyenda;
-		this.baseEntidad = baseEntidad;
+		this.status = status;
+		this.entidad = entidad;
 		this.categoria = categoria;
 	}
 
@@ -43,12 +37,12 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 		this.leyenda = leyenda;
 	}
 
-	public BaseEntidadDTO getBaseEntidad() {
-		return baseEntidad;
+	public EntidadDTO getEntidad() {
+		return entidad;
 	}
 
-	public void setBaseEntidad(BaseEntidadDTO baseEntidad) {
-		this.baseEntidad = baseEntidad;
+	public void setEntidad(EntidadDTO entidad) {
+		this.entidad = entidad;
 	}
 
 	public CategoriaDTO getCategoria() {
@@ -59,9 +53,20 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 		this.categoria = categoria;
 	}
 
-	@Override
-	public String toString() {
-		return "CodigoEstadoCuenta [leyenda=" + leyenda + ", baseEntidad=" + baseEntidad + "]";
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 
 	@Override
