@@ -9,8 +9,9 @@ import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
  * @author Ismael Flores Aguilar iaguilar@quarksoft.net
  * @creationDate 04/03/2019 11:00 hrs.
  * @version 0.1
+ * @param <E>
  */
-public interface CatalogoAdmService {
+public interface CatalogoAdmService<E> {
 
 	/**
 	 * Guarda un objeto de tipo catalogo
@@ -18,7 +19,7 @@ public interface CatalogoAdmService {
 	 * @param t
 	 * @return
 	 */
-	public <T extends AbstractCatalogoDTO> T save(T t);
+	public <T extends AbstractCatalogoDTO> T save(E e);
 
 	/**
 	 * Actualiza un objeto de tipo catalogo
@@ -26,7 +27,7 @@ public interface CatalogoAdmService {
 	 * @param t
 	 * @return
 	 */
-	public <T extends AbstractCatalogoDTO> T update(T t);
+	public <T extends AbstractCatalogoDTO> T update(E e);
 
 	/**
 	 * Regresa un objeto de tipo catalogo por id
