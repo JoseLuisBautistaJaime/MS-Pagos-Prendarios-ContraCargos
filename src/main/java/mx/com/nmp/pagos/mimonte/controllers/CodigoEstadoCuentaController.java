@@ -24,8 +24,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.dto.BaseCodigoDTO;
+import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
+import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.CodigoEstadoCuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -88,7 +90,7 @@ public class CodigoEstadoCuentaController {
 
 		BaseCodigoDTO baseCodigoDTO = new BaseCodigoDTO(1L, true, "Leyenda");
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				"Codigo de estado de cuenta guardado correctamente", baseCodigoDTO);
+				"Alta exitosa", baseCodigoDTO);
 	}
 
 	/**
@@ -113,9 +115,9 @@ public class CodigoEstadoCuentaController {
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTOReq));
 
-		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = buildDummy();
+		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				"Codigo de estado de cuenta actualizado correctamente", codigoEstadoCuentaDTO);
+				"Actualizacion exitosa", codigoEstadoCuentaDTO);
 	}
 
 	/**
@@ -140,9 +142,9 @@ public class CodigoEstadoCuentaController {
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.findById(idCodigo));
 
-		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = buildDummy();
+		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				"Codigo de estado de cuenta recuperado correctamente", codigoEstadoCuentaDTO);
+				"Consulta exitosa", codigoEstadoCuentaDTO);
 	}
 
 	/**
@@ -166,13 +168,13 @@ public class CodigoEstadoCuentaController {
 
 //		List<CodigoEstadoCuentaDTO> lstX = codigoEstadoCuentaServiceImpl.findByEntidad_Id(idEntidad);
 
-		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = buildDummy();
-		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO2 = buildDummy();
-		List<CodigoEstadoCuentaDTO> lst = new ArrayList<>();
+		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
+		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy2();
+		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
 		lst.add(codigoEstadoCuentaDTO);
 		lst.add(codigoEstadoCuentaDTO2);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				"Codigos de estado de cuenta recuperados correctamente", lst);
+				"Consulta exitosa", lst);
 	}
 
 	/**
@@ -182,7 +184,17 @@ public class CodigoEstadoCuentaController {
 	 */
 	public static CodigoEstadoCuentaDTO buildDummy() {
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO(1L, "Geronimo", true,
-				new EntidadDTO("Banamex", null, null, "Banco Banamex"), new CategoriaDTO(1, "Categoria 1"));
+				new EntidadDTO("Banamex", null, null, "Banco Banamex"), new CategoriaDTO(1L, "Categoria 1"));
+		return codigoEstadoCuentaDTO;
+	}
+
+	/**
+	 * Crea un objeto de respuesta dummy
+	 * @return
+	 */
+	public static CodigoEstadoCuentaUpdtDTO buildDummy2() {
+		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaUpdtDTO(1L, "Geronimo", true,
+				new BaseEntidadDTO(1L, "Banamex", "Banco Banamex"), new CategoriaDTO(1L, "Categoria 1"));
 		return codigoEstadoCuentaDTO;
 	}
 

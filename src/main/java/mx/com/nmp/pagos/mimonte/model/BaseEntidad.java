@@ -12,15 +12,17 @@ public class BaseEntidad implements Comparable<BaseEntidad> {
 
 	private Long id;
 	private String nombre;
+	private String descripcion;
 
 	public BaseEntidad() {
 		super();
 	}
 
-	public BaseEntidad(Long id, String nombre) {
+	public BaseEntidad(Long id, String nombre, String descripcion) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
+		this.descripcion = descripcion;
 	}
 
 	public Long getId() {
@@ -39,6 +41,14 @@ public class BaseEntidad implements Comparable<BaseEntidad> {
 		this.nombre = nombre;
 	}
 
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
 	@Override
 	public int compareTo(BaseEntidad o) {
 		return o.getNombre().compareTo(this.nombre);
@@ -46,7 +56,7 @@ public class BaseEntidad implements Comparable<BaseEntidad> {
 
 	@Override
 	public String toString() {
-		return "BaseEntidad [id=" + id + ", nombre=" + nombre + "]";
+		return "BaseEntidad [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
 	}
 
 }
