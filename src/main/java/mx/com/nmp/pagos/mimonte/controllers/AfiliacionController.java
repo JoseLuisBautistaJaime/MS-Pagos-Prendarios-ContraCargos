@@ -63,7 +63,7 @@ public class AfiliacionController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/catalogos/afiliacion", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Crea un nuevo catalogo entidad.", tags = { "Entidad" })
+	@ApiOperation(httpMethod = "POST", value = "Crea un nuevo catalogo entidad.", tags = { "Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Entidad creada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
@@ -104,7 +104,7 @@ public class AfiliacionController {
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/afiliacion/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo afiliacion en base a su id", tags = {
-			"Entidad" })
+			"Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontrada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
