@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +23,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import mx.com.nmp.pagos.mimonte.builder.CodigoEstadoCuentaBuilder;
 import mx.com.nmp.pagos.mimonte.dto.BaseCodigoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
-import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaGenDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.CodigoEstadoCuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -63,6 +60,7 @@ public class CodigoEstadoCuentaController {
 	/**
 	 * Service para el catalogo de codigos de estados de cuenta
 	 */
+	@SuppressWarnings("unused")
 //	@Autowired
 //	@Qualifier("codigoEstadoCuentaServiceImpl")
 	private CodigoEstadoCuentaServiceImpl codigoEstadoCuentaServiceImpl;
@@ -84,10 +82,10 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CodigoEstadoCuentaDTO codigoEstadoCuentaDTO) {
-		
+
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTO));
-		
+
 		BaseCodigoDTO baseCodigoDTO = new BaseCodigoDTO(1L, true, "Leyenda");
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				"Codigo de estado de cuenta guardado correctamente", baseCodigoDTO);
@@ -184,8 +182,7 @@ public class CodigoEstadoCuentaController {
 	 */
 	public static CodigoEstadoCuentaDTO buildDummy() {
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO(1L, "Geronimo", true,
-				new EntidadDTO("Banamex", null, null, "Banco Banamex"),
-				new CategoriaDTO(1, "Categoria 1", "Categoria Uno"));
+				new EntidadDTO("Banamex", null, null, "Banco Banamex"), new CategoriaDTO(1, "Categoria 1"));
 		return codigoEstadoCuentaDTO;
 	}
 

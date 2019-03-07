@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +23,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
-import mx.com.nmp.pagos.mimonte.dto.ContactoDTO;
-import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.EntidadServiceImpl;
@@ -61,6 +60,7 @@ public class EntidadController {
 	/**
 	 * Service para catalogo de entidades
 	 */
+	@SuppressWarnings("unused")
 //	@Autowired
 //	@Qualifier("entidadRepository")
 	private EntidadServiceImpl entidadServiceImpl;
@@ -160,12 +160,18 @@ public class EntidadController {
 	 * @return
 	 */
 	public static EntidadResponseDTO buildDummy() {
-		Set<CuentaDTO> set = new HashSet<>();
-		set.add(new CuentaDTO());
-		set.add(new CuentaDTO());
-		Set<ContactoDTO> set2 = new HashSet<>();
-		set2.add(new ContactoDTO());
-		set2.add(new ContactoDTO());
+		Set<AfiliacionEntDTO> afiliaciones = new HashSet<>();
+		afiliaciones.add(new AfiliacionEntDTO(1L, 12345678L, true));
+		afiliaciones.add(new AfiliacionEntDTO(2L, 44423699L, true));
+		Set<AfiliacionEntDTO> afiliaciones2 = new HashSet<>();
+		afiliaciones2.add(new AfiliacionEntDTO(3L, 88345670L, true));
+		afiliaciones2.add(new AfiliacionEntDTO(4L, 33423699L, true));
+		Set<CuentaEntDTO> set = new HashSet<>();
+		set.add(new CuentaEntDTO(1L, 123456789L, true, afiliaciones));
+		set.add(new CuentaEntDTO(2L, 999456770L, true, afiliaciones2));
+		Set<ContactoEntDTO> set2 = new HashSet<>();
+		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com", true));
+		set2.add(new ContactoEntDTO(2L, "Maria DB", "mari_DB@gmail.com", true));
 		EntidadResponseDTO entidadResoponseDTO = new EntidadResponseDTO(1L, "Banamex", "Banco banamex", true, set,
 				set2);
 		return entidadResoponseDTO;

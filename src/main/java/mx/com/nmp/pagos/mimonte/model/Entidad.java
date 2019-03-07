@@ -8,8 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import mx.com.nmp.pagos.mimonte.dto.ContactoDTO;
-import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 
 /**
  * Nombre: Entidad Descripcion: Clase que encapsula la informacion de una
@@ -29,14 +29,14 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 //	@Column(name = "descripcion", nullable = false)
 	private String descripcion;
 	
-	private Set<CuentaDTO> cuentas;	
-	private Set<ContactoDTO> contactos;
+	private Set<CuentaEntDTO> cuentas;	
+	private Set<ContactoEntDTO> contactos;
 
 	public Entidad() {
 		super();
 	}
 
-	public Entidad(String nombre, Set<CuentaDTO> cuentas, Set<ContactoDTO> contactos, String descripcion) {
+	public Entidad(String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos, String descripcion) {
 		super();
 		this.nombre = nombre;
 		this.cuentas = cuentas;
@@ -45,7 +45,7 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	}
 
 	public Entidad(Long id, Boolean status, Date creationDate, Date modificationDate, String createdBy,
-			String modifiedBy, String nombre, Set<CuentaDTO> cuentas, Set<ContactoDTO> contactos, String descripcion) {
+			String modifiedBy, String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos, String descripcion) {
 		super(id, status, creationDate, modificationDate, createdBy, modifiedBy);
 		this.nombre = nombre;
 		this.cuentas = cuentas;
@@ -61,19 +61,19 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 		this.nombre = nombre;
 	}
 
-	public Set<CuentaDTO> getCuentas() {
+	public Set<CuentaEntDTO> getCuentas() {
 		return cuentas;
 	}
 
-	public void setCuentas(Set<CuentaDTO> cuentas) {
+	public void setCuentas(Set<CuentaEntDTO> cuentas) {
 		this.cuentas = cuentas;
 	}
 
-	public Set<ContactoDTO> getContactos() {
+	public Set<ContactoEntDTO> getContactos() {
 		return contactos;
 	}
 
-	public void setContactos(Set<ContactoDTO> contactos) {
+	public void setContactos(Set<ContactoEntDTO> contactos) {
 		this.contactos = contactos;
 	}
 

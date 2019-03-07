@@ -12,15 +12,25 @@ public class BaseEntidadDTO implements Comparable<BaseEntidadDTO> {
 
 	private Long id;
 	private String nombre;
+	private String descripcion;
 
 	public BaseEntidadDTO() {
 		super();
 	}
 
-	public BaseEntidadDTO(Long id, String nombre) {
+	public BaseEntidadDTO(Long id, String nombre, String descripcion) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
+		this.descripcion = descripcion;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	public Long getId() {

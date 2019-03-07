@@ -16,15 +16,15 @@ public class EntidadResponseDTO implements Comparable<EntidadResponseDTO> {
 	private String nombre;
 	private String descripcion;
 	private Boolean estatus;
-	private Set<CuentaDTO> cuentas;
-	private Set<ContactoDTO> contactos;
+	private Set<CuentaEntDTO> cuentas;
+	private Set<ContactoEntDTO> contactos;
 
 	public EntidadResponseDTO() {
 		super();
 	}
 
-	public EntidadResponseDTO(Long id, String nombre, String descripcion, Boolean estatus, Set<CuentaDTO> cuentas,
-			Set<ContactoDTO> contactos) {
+	public EntidadResponseDTO(Long id, String nombre, String descripcion, Boolean estatus, Set<CuentaEntDTO> cuentas,
+			Set<ContactoEntDTO> contactos) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -66,19 +66,19 @@ public class EntidadResponseDTO implements Comparable<EntidadResponseDTO> {
 		this.estatus = estatus;
 	}
 
-	public Set<CuentaDTO> getCuentas() {
+	public Set<CuentaEntDTO> getCuentas() {
 		return cuentas;
 	}
 
-	public void setCuentas(Set<CuentaDTO> cuentas) {
+	public void setCuentas(Set<CuentaEntDTO> cuentas) {
 		this.cuentas = cuentas;
 	}
 
-	public Set<ContactoDTO> getContactos() {
+	public Set<ContactoEntDTO> getContactos() {
 		return contactos;
 	}
 
-	public void setContactos(Set<ContactoDTO> contactos) {
+	public void setContactos(Set<ContactoEntDTO> contactos) {
 		this.contactos = contactos;
 	}
 

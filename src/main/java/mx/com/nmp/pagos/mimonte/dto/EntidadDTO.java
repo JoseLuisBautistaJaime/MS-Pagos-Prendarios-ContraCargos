@@ -15,14 +15,14 @@ public class EntidadDTO extends AbstractCatalogoDTO implements Comparable<Entida
 
 	private String nombre;
 	private String descripcion;
-	private Set<CuentaDTO> cuentas;
-	private Set<ContactoDTO> contactos;
+	private Set<CuentaEntDTO> cuentas;
+	private Set<ContactoEntDTO> contactos;
 
 	public EntidadDTO() {
 		super();
 	}
 
-	public EntidadDTO(String nombre, Set<CuentaDTO> cuentas, Set<ContactoDTO> contactos, String descripcion) {
+	public EntidadDTO(String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos, String descripcion) {
 		super();
 		this.nombre = nombre;
 		this.cuentas = cuentas;
@@ -31,7 +31,7 @@ public class EntidadDTO extends AbstractCatalogoDTO implements Comparable<Entida
 	}
 
 	public EntidadDTO(Long id, Boolean status, Date creationDate, Date modificationDate, String createdBy,
-			String modifiedBy, String nombre, Set<CuentaDTO> cuentas, Set<ContactoDTO> contactos, String descripcion) {
+			String modifiedBy, String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos, String descripcion) {
 		super(id, status, creationDate, modificationDate, createdBy, modifiedBy);
 		this.nombre = nombre;
 		this.cuentas = cuentas;
@@ -55,19 +55,19 @@ public class EntidadDTO extends AbstractCatalogoDTO implements Comparable<Entida
 		this.descripcion = descripcion;
 	}
 
-	public Set<CuentaDTO> getCuentas() {
+	public Set<CuentaEntDTO> getCuentas() {
 		return cuentas;
 	}
 
-	public void setCuentas(Set<CuentaDTO> cuentas) {
+	public void setCuentas(Set<CuentaEntDTO> cuentas) {
 		this.cuentas = cuentas;
 	}
 
-	public Set<ContactoDTO> getContactos() {
+	public Set<ContactoEntDTO> getContactos() {
 		return contactos;
 	}
 
-	public void setContactos(Set<ContactoDTO> contactos) {
+	public void setContactos(Set<ContactoEntDTO> contactos) {
 		this.contactos = contactos;
 	}
 

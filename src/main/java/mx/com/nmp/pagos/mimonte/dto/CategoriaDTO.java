@@ -11,17 +11,15 @@ package mx.com.nmp.pagos.mimonte.dto;
 public class CategoriaDTO implements Comparable<CategoriaDTO> {
 
 	private Integer id;
-	private String nombre;
 	private String descripcion;
 
 	public CategoriaDTO() {
 		super();
 	}
 
-	public CategoriaDTO(Integer id, String nombre, String descripcion) {
+	public CategoriaDTO(Integer id, String descripcion) {
 		super();
 		this.id = id;
-		this.nombre = nombre;
 		this.descripcion = descripcion;
 	}
 
@@ -31,14 +29,6 @@ public class CategoriaDTO implements Comparable<CategoriaDTO> {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
 	}
 
 	public String getDescripcion() {
@@ -51,12 +41,12 @@ public class CategoriaDTO implements Comparable<CategoriaDTO> {
 
 	@Override
 	public int compareTo(CategoriaDTO o) {
-		return o.getNombre().compareTo(this.nombre);
+		return o.getId().compareTo(this.id);
 	}
 
 	@Override
 	public String toString() {
-		return "CategoriaDTO [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
+		return "CategoriaDTO [id=" + id + ", descripcion=" + descripcion + "]";
 	}
 
 }
