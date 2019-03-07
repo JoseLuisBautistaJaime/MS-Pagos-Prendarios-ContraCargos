@@ -3,23 +3,23 @@ Feature: MS Conciliacion - Catalogo entidad
     * url 'http://localhost:8080'
     * header Accept = 'application/json'
   Scenario: Registrar una entidad
-    Given path 'mimonte/v1/conciliacion/entidades'
-    And request {"nombre": "E1","descripcion": "descripcion 1","contactos": [{id: 1,"nombre": "contact 1","email": "contact1@gmail.com","status": true}],"cuentas": [{"id": 1,"numero": "55608767","status": true,"afiliaciones": [{"id": 1,"numero": "3322344","estatus": true}, {"id": 2,"numero": "4343254","estatus": true}]}]}
+    Given path 'mimonte/catalogos/entidades'
+    And request {"contactos": [{"email": "ismael@gmail.com","estatus": true,"id": 1,"nombre": "Ismael"}],"createdBy": "Ismael","cuentas": [{"afiliaciones": [{"estatus": true,"id": 1,"numero": 123123123}],"estatus": true,"id": 1,"numeroCuenta": 11621836374}],"descripcion": "Banco Banamex","nombre": "Banamex"}
     When method POST
     Then status 200
 
   Scenario: Actualizar una entidad
-    Given path 'mimonte/v1/conciliacion/entidades'
-    And request {"id": 1, "nombre": "E1","descripcion": "descripcion 1","contactos": [{id: 1,"nombre": "contact 1","email": "contact1@gmail.com","status": true}],"cuentas": [{"id": 1,"numero": "55608767","status": true,"afiliaciones": [{"id": 1,"numero": "3322344","estatus": true}, {"id": 2,"numero": "4343254","estatus": true}]}]}
+    Given path 'mimonte/catalogos/entidades'
+    And request {"contactos": [{"email": "ismael@gmail.com","estatus": true,"id": 1,"nombre": "Ismael"}],"createdBy": "Ismael","cuentas": [{"afiliaciones": [{"estatus": true,"id": 1,"numero": 123123}],"estatus": true,"id": 1}],"descripcion": "Banco Banamex","estatus": true,"id": 1,"lastModifiedBy": "Otro chaval","lastModifiedDate": "2019-03-07T21:02:16.308Z","nombre": "Banamex"}
     When method PUT
     Then status 200
 
   Scenario: Consultar una entidad por id
-    Given path 'mimonte/v1/conciliacion/entidades/{identidad}'
+    Given path 'mimonte/catalogos/entidades/1'
     When method GET
     Then status 200
 
   Scenario: Consultar una entidad por nombre y estatus
-    Given path 'mimonte/v1/conciliacion/entidades/{nombre}/{estatus}'
+    Given path 'mimonte/catalogos/entidades/consulta/Banamex/true'
     When method GET
     Then status 200

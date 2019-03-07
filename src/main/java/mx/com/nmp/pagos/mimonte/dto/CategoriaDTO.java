@@ -10,24 +10,24 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class CategoriaDTO implements Comparable<CategoriaDTO> {
 
-	private Integer id;
+	private Long id;
 	private String descripcion;
 
 	public CategoriaDTO() {
 		super();
 	}
 
-	public CategoriaDTO(Integer id, String descripcion) {
+	public CategoriaDTO(Long id, String descripcion) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

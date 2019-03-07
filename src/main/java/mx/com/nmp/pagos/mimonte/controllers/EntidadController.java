@@ -82,7 +82,7 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody EntidadDTO entidadDTOReq) {
 //		entidadServiceImpl.save(entidadDTOReq);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad guardada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa",
 				buildDummy());
 	}
 
@@ -103,7 +103,7 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody EntidadDTO entidadDTOReq) {
 //		entidadServiceImpl.save(entidadDTOReq);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad actualizada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",
 				buildDummy());
 	}
 
@@ -126,7 +126,7 @@ public class EntidadController {
 	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
 //		EntidadResponseDTO entidadResponseDTO = EntidadBuilder
 //				.buildEntidadResponseDTOFromEntidadDTO((EntidadDTO) entidadServiceImpl.findById(idEntidad));
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad recuperada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
 				buildDummy());
 	}
 
@@ -150,7 +150,7 @@ public class EntidadController {
 	public Response findByNombreAndEstatus(@PathVariable(value = "nombre", required = true) String nombre,
 			@PathVariable(value = "estatus", required = true) Boolean estatus) {
 //		EntidadResponseDTO entidadResponseDTO = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad recuperada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
 				buildDummy());
 	}
 
