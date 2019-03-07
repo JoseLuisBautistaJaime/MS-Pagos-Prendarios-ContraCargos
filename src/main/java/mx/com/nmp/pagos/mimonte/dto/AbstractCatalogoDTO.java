@@ -2,33 +2,43 @@ package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
 
+/**
+ * Nombre: AbstractCatalogoDTO Descripcion: Clase abstracta que que encapsula la
+ * informacion basica de una catalogo administrable y sirve para
+ *
+ * @author Ismael Flores iaguilar@qaurksoft.net
+ * @creationDate 05/03/2019 19:51 hrs.
+ * @version 0.1
+ */
 public abstract class AbstractCatalogoDTO {
 
-	protected Integer id;
+	protected Long id;
 	protected Boolean estatus;
-	protected Date fechaCreacion;
-	protected Date fechaModificacion;
-	protected Long usuarioCreador;
+	protected Date createdDate;
+	protected Date lastModifiedDate;
+	protected String createdBy;
+	protected String lastModifiedBy;
 
 	public AbstractCatalogoDTO() {
 		super();
 	}
 
-	public AbstractCatalogoDTO(Integer id, Boolean estatus, Date fechaCreacion, Date fechaModificacion,
-			Long usuarioCreador) {
+	public AbstractCatalogoDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
-		this.fechaCreacion = fechaCreacion;
-		this.fechaModificacion = fechaModificacion;
-		this.usuarioCreador = usuarioCreador;
+		this.createdDate = createdDate;
+		this.lastModifiedDate = lastModifiedDate;
+		this.createdBy = createdBy;
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -40,34 +50,43 @@ public abstract class AbstractCatalogoDTO {
 		this.estatus = estatus;
 	}
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
+	public String getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
-	public Date getFechaModificacion() {
-		return fechaModificacion;
+	public Date getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setFechaModificacion(Date fechaModificacion) {
-		this.fechaModificacion = fechaModificacion;
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
-	public Long getUsuarioCreador() {
-		return usuarioCreador;
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 
-	public void setUsuarioCreador(Long usuarioCreador) {
-		this.usuarioCreador = usuarioCreador;
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	@Override
 	public String toString() {
-		return "AbstractCatalogoDTO [id=" + id + ", estatus=" + estatus + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaModificacion=" + fechaModificacion + ", usuarioCreador=" + usuarioCreador + "]";
+		return "AbstractCatalogoDTO [id=" + id + ", estatus=" + estatus + ", createdDate=" + createdDate
+				+ ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy="
+				+ lastModifiedBy + "]";
 	}
 
 }

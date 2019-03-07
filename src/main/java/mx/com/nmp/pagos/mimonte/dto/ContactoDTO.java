@@ -29,6 +29,7 @@ public class ContactoDTO {
 	@Override
 	public String toString() {
 		return "ContactoDTO [contacto=" + contacto + "]";
+
 	}
 
 }

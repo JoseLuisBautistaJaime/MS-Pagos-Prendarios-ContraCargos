@@ -8,45 +8,57 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+/**
+ * Nombre: AbstractCatalogoAdm Descripcion: Entity abstracta que que encapsula
+ * la informacion basica de una catalogo administrable y sirve para
+ *
+ * @author Ismael Flores iaguilar@qaurksoft.net
+ * @creationDate 05/03/2019 19:51 hrs.
+ * @version 0.1
+ */
 @MappedSuperclass
 public abstract class AbstractCatalogoAdm {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	protected Integer id;
+	protected Long id;
 
 	@Column(name = "estatus")
 	protected Boolean estatus;
 
-	@Column(name = "fecha_creacion")
-	protected Date fechaCreacion;
+	@Column(name = "created_date")
+	protected Date createdDate;
 
-	@Column(name = "fecha_modificacion")
-	protected Date fechaModificacion;
+	@Column(name = "last_modified_date")
+	protected Date lastModifiedDate;
 
-	@Column(name = "usuario_creador")
-	protected Long usuarioCreador;
+	@Column(name = "created_by")
+	protected String createdBy;
+
+	@Column(name = "last_modified_by")
+	protected String lastModifiedBy;
 
 	public AbstractCatalogoAdm() {
 		super();
 	}
 
-	public AbstractCatalogoAdm(Integer id, Boolean estatus, Date fechaCreacion, Date fechaModificacion,
-			Long usuarioCreador) {
+	public AbstractCatalogoAdm(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
-		this.fechaCreacion = fechaCreacion;
-		this.fechaModificacion = fechaModificacion;
-		this.usuarioCreador = usuarioCreador;
+		this.createdDate = createdDate;
+		this.lastModifiedDate = lastModifiedDate;
+		this.createdBy = createdBy;
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -58,34 +70,36 @@ public abstract class AbstractCatalogoAdm {
 		this.estatus = estatus;
 	}
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
+	public Date getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
-	public Date getFechaModificacion() {
-		return fechaModificacion;
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 
-	public void setFechaModificacion(Date fechaModificacion) {
-		this.fechaModificacion = fechaModificacion;
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public Long getUsuarioCreador() {
-		return usuarioCreador;
+	public String getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setUsuarioCreador(Long usuarioCreador) {
-		this.usuarioCreador = usuarioCreador;
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
-	@Override
-	public String toString() {
-		return "AbstractCatalogoAdm [id=" + id + ", estatus=" + estatus + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaModificacion=" + fechaModificacion + ", usuarioCreador=" + usuarioCreador + "]";
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 }
