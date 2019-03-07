@@ -23,10 +23,10 @@ public class ContactoResponseDTO extends AbstractCatalogoDTO{
 		super();
 		
 	}
-
-	public ContactoResponseDTO(String nombre, String email, String descripcion, Integer id, Boolean estatus, Date fechaCreacion, Date fechaModificacion,
-			Long usuarioCreador, TipoContactoDTO tipoContacto) {
-		super(id, estatus, fechaCreacion, fechaModificacion, usuarioCreador);
+	
+	public ContactoResponseDTO(String nombre, String email, String descripcion,Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy, TipoContactoDTO tipoContacto) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 		
 	}
 
@@ -64,9 +64,10 @@ public class ContactoResponseDTO extends AbstractCatalogoDTO{
 
 	@Override
 	public String toString() {
-		return "ContactoResponseDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion + ", tipoContacto=" + tipoContacto + ", id="
-				+ id + ", estatus=" + estatus + ", fechaCreacion=" + fechaCreacion + ", fechaModificacion="
-				+ fechaModificacion + ", usuarioCreador=" + usuarioCreador + "]";
+		return "ContactoResponseDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion
+				+ ", tipoContacto=" + tipoContacto + ", id=" + id + ", estatus=" + estatus + ", createdDate="
+				+ createdDate + ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy
+				+ ", lastModifiedBy=" + lastModifiedBy + "]";
 	}
 
 }

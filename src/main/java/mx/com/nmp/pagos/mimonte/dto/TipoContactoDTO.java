@@ -18,9 +18,9 @@ public class TipoContactoDTO extends AbstractCatalogoDTO{
 		
 	}
 
-	public TipoContactoDTO(String descripcion, Integer id, Boolean estatus, Date fechaCreacion, Date fechaModificacion,
-			Long usuarioCreador) {
-		super(id, estatus, fechaCreacion, fechaModificacion, usuarioCreador);
+	public TipoContactoDTO(String descripcion, Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 		
 	}
 
@@ -34,9 +34,9 @@ public class TipoContactoDTO extends AbstractCatalogoDTO{
 
 	@Override
 	public String toString() {
-		return "TipoContactoDTO [descripcion=" + descripcion + ", id=" + id + ", estatus=" + estatus
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaModificacion=" + fechaModificacion + ", usuarioCreador="
-				+ usuarioCreador + "]";
+		return "TipoContactoDTO [descripcion=" + descripcion + ", id=" + id + ", estatus=" + estatus + ", createdDate="
+				+ createdDate + ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy
+				+ ", lastModifiedBy=" + lastModifiedBy + "]";
 	}
 
 }
