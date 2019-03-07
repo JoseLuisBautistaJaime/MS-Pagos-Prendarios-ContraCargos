@@ -20,8 +20,8 @@ public class ContactoRespDTO extends AbstractCatDTO{
 		super();
 	}
 
-	public ContactoRespDTO(String nombre, String email, String descripcion, TipoContactoRespDTO tipoContactoRespDTO, Integer id, Boolean estatus, String estatu) {
-		super(id, estatus, estatu);
+	public ContactoRespDTO(String nombre, String email, String descripcion, TipoContactoRespDTO tipoContactoRespDTO, Integer id, Boolean estatus) {
+		super(id, estatus);
 	}
 
 	public String getNombre() {

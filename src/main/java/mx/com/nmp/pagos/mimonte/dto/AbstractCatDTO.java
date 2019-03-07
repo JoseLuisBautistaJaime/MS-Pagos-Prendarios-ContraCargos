@@ -9,7 +9,7 @@ public abstract class AbstractCatDTO {
 		super();
 	}
 
-	public AbstractCatDTO(Integer id, Boolean estatus, String estatu) {
+	public AbstractCatDTO(Integer id, Boolean estatus) {
 		super();
 		this.id = id;
 		this.estatus = estatus;

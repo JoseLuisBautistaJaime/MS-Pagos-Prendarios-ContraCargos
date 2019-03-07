@@ -23,8 +23,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
-import mx.com.nmp.pagos.mimonte.dto.ContactoDTO;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
@@ -56,7 +55,6 @@ public class ContactosController {
 	 */
 	private final Logger log = LoggerFactory.getLogger(ContactosController.class);
 	
-	
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/catalogos/contacto", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,16 +78,12 @@ public class ContactosController {
 		contactoResponseDTO.setId(1234);
 		contactoResponseDTO.setNombre("micontacto");
 		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
-		
-		ContactoDTO contactoDTO = new ContactoDTO();
-		contactoDTO.setContacto(contactoResponseDTO);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_ADD, contactoDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE, contactoResponseDTO);
 		
 // End Dummy
 
 	}
-	
 	
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
@@ -115,20 +109,16 @@ public class ContactosController {
 		contactoResponseDTO.setNombre("micontacto");
 		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
 		
-		ContactoDTO contactoDTO = new ContactoDTO();
-		contactoDTO.setContacto(contactoResponseDTO);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_ADD, contactoDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE, contactoResponseDTO);
 		
 //		End Dummy
 
 	}
 	
-	
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = "/catalogos/estatus", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "PUT", value = "Actualiza la información de los contactos registrada en la base de datos.", tags = {	"Contactos" })
+	@ApiOperation(httpMethod = "PUT", value = "Actualiza la información del estatus del contacto registrada en la base de datos.", tags = {	"Contactos" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 	@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 	@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
@@ -149,15 +139,13 @@ public class ContactosController {
 		contactoResponseDTO.setNombre("micontacto");
 		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
 		
-		ContactoDTO contactoDTO = new ContactoDTO();
-		contactoDTO.setContacto(contactoResponseDTO);
+		
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_ADD, contactoDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE, contactoResponseDTO);
 		
 //		End Dummy
 
 	}
-	
 	
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
@@ -183,12 +171,9 @@ public class ContactosController {
 		contactoResponseDTO.setNombre("micontacto");
 		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
 		
-		ContactoDTO contactoDTO = new ContactoDTO();
-		contactoDTO.setContacto(contactoResponseDTO);
-		
 //		End Dummy
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS, contactoDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, contactoResponseDTO);
 
 	}
 	
@@ -240,7 +225,7 @@ public class ContactosController {
 		
 //		End Dummy
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS, contactosRespList);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, contactosRespList);
 
 	}
 

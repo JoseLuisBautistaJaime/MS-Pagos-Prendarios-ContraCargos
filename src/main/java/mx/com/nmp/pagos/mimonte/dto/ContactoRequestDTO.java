@@ -17,12 +17,14 @@ public class ContactoRequestDTO {
 	private String descripcion;
 	
 	private Long tipoContacto;
+	
+	private String createdBy;
 
 	public ContactoRequestDTO() {
 		super();
 	}
 
-	public ContactoRequestDTO(String nombre, String email, String descripcion, Long tipoContacto) {
+	public ContactoRequestDTO(String nombre, String email, String descripcion, Long tipoContacto, String createdBy) {
 		super();
 	}
 	
@@ -58,10 +60,18 @@ public class ContactoRequestDTO {
 		this.tipoContacto = tipoContacto;
 	}
 
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
 	@Override
 	public String toString() {
 		return "ContactoRequestDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion
-				+ ", tipoContacto=" + tipoContacto + "]";
+				+ ", tipoContacto=" + tipoContacto + " , createdBy=" + createdBy + " ]";
 	}
 	
 }

@@ -18,13 +18,15 @@ public class ContactoReqUpdateDTO {
 	private String descripcion;
 	
 	private TipoContactoReqDTO tipoContactoReqDTO;
+	
+	private String lastModifiedBy;
 
 	public ContactoReqUpdateDTO() {
 		super();
 	}
 
 	public ContactoReqUpdateDTO(Integer id, Boolean estatus, String nombre, String email, String descripcion,
-			TipoContactoReqDTO tipoContactoReqDTO) {
+			TipoContactoReqDTO tipoContactoReqDTO, String lastModifiedBy) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
@@ -32,6 +34,7 @@ public class ContactoReqUpdateDTO {
 		this.email = email;
 		this.descripcion = descripcion;
 		this.tipoContactoReqDTO = tipoContactoReqDTO;
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	public Integer getId() {
@@ -82,10 +85,18 @@ public class ContactoReqUpdateDTO {
 		this.tipoContactoReqDTO = tipoContactoReqDTO;
 	}
 
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
+
 	@Override
 	public String toString() {
 		return "ContactoReqUpdateDTO [id=" + id + ", estatus=" + estatus + ", nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion
-				+ ", tipoContactoReqDTO=" + tipoContactoReqDTO + "]";
+				+ ", tipoContactoReqDTO=" + tipoContactoReqDTO + " , lastModifiedBy=" + lastModifiedBy + "]";
 	}
 
 }

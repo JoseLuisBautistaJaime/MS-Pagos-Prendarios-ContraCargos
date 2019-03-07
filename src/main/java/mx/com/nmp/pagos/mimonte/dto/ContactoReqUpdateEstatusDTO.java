@@ -11,15 +11,18 @@ public class ContactoReqUpdateEstatusDTO {
 	private Integer id;
 	
 	private Boolean estatus;
+	
+	private String lastModifiedBy;
 
 	public ContactoReqUpdateEstatusDTO() {
 		super();
 	}
 
-	public ContactoReqUpdateEstatusDTO(Integer id, Boolean estatus) {
+	public ContactoReqUpdateEstatusDTO(Integer id, Boolean estatus, String lastModifiedBy) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	public Integer getId() {
@@ -38,9 +41,17 @@ public class ContactoReqUpdateEstatusDTO {
 		this.estatus = estatus;
 	}
 
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
+
 	@Override
 	public String toString() {
-		return "ContactoReqUpdateEstatusDTO [id=" + id + ", estatus=" + estatus + "]";
+		return "ContactoReqUpdateEstatusDTO [id=" + id + ", estatus=" + estatus + ", lastModifiedBy=" + lastModifiedBy + "]";
 	}
 
 }

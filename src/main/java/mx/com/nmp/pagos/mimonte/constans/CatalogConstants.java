@@ -23,8 +23,27 @@ public final class CatalogConstants {
      * Identificador del catalogo TT; Tipo de Tarjeta
      */
     public static final String TIPO_TARJETA = "TT";
-
-
+    
+    /**
+	 * Mensaje que sera enviado si se recuperaron los registros correctamente
+	 */
+	public static final String CONT_MSG_SUCCESS = "Consulta Existosa.";
+	
+	/**
+	 * Mensaje que sera enviado si se recuperaron los registros correctamente
+	 */
+	public static final String CONT_MSG_SUCCESS_SAVE = "Alta Existosa.";
+	
+	/**
+	 * Mensaje que sera enviado si se recuperaron los registros correctamente
+	 */
+	public static final String CONT_MSG_SUCCESS_UPDATE = "Actualización Existosa.";
+	
+	/**
+	 * Mensaje que sera enviado si se recuperaron los registros correctamente
+	 */
+	public static final String CONT_MSG_SUCCESS_DELETE = "Baja Existosa.";
+	
     /**
      * Constructor privado, ya que será una clase para constantes por lo tanto no debe ser instanciada.
      */
