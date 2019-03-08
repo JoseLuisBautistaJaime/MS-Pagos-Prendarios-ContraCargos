@@ -62,7 +62,7 @@ public class EntidadController {
 	 */
 	@SuppressWarnings("unused")
 //	@Autowired
-//	@Qualifier("entidadRepository")
+//	@Qualifier("entidadServiceImpl")
 	private EntidadServiceImpl entidadServiceImpl;
 
 	/**

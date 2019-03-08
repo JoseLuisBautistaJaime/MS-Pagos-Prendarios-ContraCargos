@@ -1,10 +1,5 @@
 package mx.com.nmp.pagos.mimonte.services.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
@@ -26,6 +21,7 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	/**
 	 * Repository del catalogo Entidad
 	 */
+	@SuppressWarnings("unused")
 //	@Autowired
 //	@Qualifier("entidadRepository")
 	private EntidadRepository entidadRepository;
@@ -33,7 +29,7 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	/**
 	 * Guarda una entidad
 	 */
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T save(EntidadDTO e) {
 //		return (T) EntidadBuilder
@@ -44,7 +40,7 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	/**
 	 * Actualiza una entidad
 	 */
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e) {
 //		return (T) EntidadBuilder
@@ -55,7 +51,7 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	/**
 	 * Encuentra una entidad por id
 	 */
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T findById(Long id) {
 //		return (T) EntidadBuilder.buildEntidadDTOFromEntidad(

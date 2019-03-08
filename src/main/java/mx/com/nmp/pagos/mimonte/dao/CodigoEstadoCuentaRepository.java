@@ -1,12 +1,5 @@
 package mx.com.nmp.pagos.mimonte.dao;
 
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
-
 /**
  * Nombre: CodigoEstadoCuentaRepository Descripcion: Interface en donde se
  * realizan operaciones de base de datos relacionadas con el catalogo
