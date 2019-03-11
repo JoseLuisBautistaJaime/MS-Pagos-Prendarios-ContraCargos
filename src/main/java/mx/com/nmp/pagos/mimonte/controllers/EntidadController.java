@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,8 +62,8 @@ public class EntidadController {
 	 * Service para catalogo de entidades
 	 */
 	@SuppressWarnings("unused")
-//	@Autowired
-//	@Qualifier("entidadServiceImpl")
+	@Autowired
+	@Qualifier("entidadServiceImpl")
 	private EntidadServiceImpl entidadServiceImpl;
 
 	/**
@@ -81,7 +82,8 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody EntidadDTO entidadDTOReq) {
-//		entidadServiceImpl.save(entidadDTOReq);
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa",
+//				entidadServiceImpl.save(entidadDTOReq));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa",
 				buildDummy());
 	}
@@ -102,9 +104,8 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody EntidadDTO entidadDTOReq) {
-//		entidadServiceImpl.save(entidadDTOReq);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",
-				buildDummy());
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",entidadServiceImpl.save(entidadDTOReq));
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa", buildDummy());
 	}
 
 	/**
@@ -126,8 +127,8 @@ public class EntidadController {
 	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
 //		EntidadResponseDTO entidadResponseDTO = EntidadBuilder
 //				.buildEntidadResponseDTOFromEntidadDTO((EntidadDTO) entidadServiceImpl.findById(idEntidad));
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
-				buildDummy());
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", entidadResponseDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummy());
 	}
 
 	/**
@@ -150,8 +151,8 @@ public class EntidadController {
 	public Response findByNombreAndEstatus(@PathVariable(value = "nombre", required = true) String nombre,
 			@PathVariable(value = "estatus", required = true) Boolean estatus) {
 //		EntidadResponseDTO entidadResponseDTO = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
-				buildDummy());
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),"Consulta exitosa", entidadResponseDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummy());
 	}
 
 	/**

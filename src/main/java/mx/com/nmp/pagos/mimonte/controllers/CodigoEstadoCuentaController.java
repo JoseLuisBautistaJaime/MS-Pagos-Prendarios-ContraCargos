@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,9 +63,8 @@ public class CodigoEstadoCuentaController {
 	/**
 	 * Service para el catalogo de codigos de estados de cuenta
 	 */
-	@SuppressWarnings("unused")
-//	@Autowired
-//	@Qualifier("codigoEstadoCuentaServiceImpl")
+	@Autowired
+	@Qualifier("codigoEstadoCuentaServiceImpl")
 	private CodigoEstadoCuentaServiceImpl codigoEstadoCuentaServiceImpl;
 
 	/**
@@ -84,10 +84,9 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CodigoEstadoCuentaDTO codigoEstadoCuentaDTO) {
-
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTO));
-
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
 		BaseCodigoDTO baseCodigoDTO = new BaseCodigoDTO(1L, true, "Leyenda");
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				"Alta exitosa", baseCodigoDTO);
@@ -111,13 +110,12 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CodigoEstadoCuentaDTO codigoEstadoCuentaDTOReq) {
-
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTOReq));
-
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				"Actualizacion exitosa", codigoEstadoCuentaDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",
+				codigoEstadoCuentaDTO);
 	}
 
 	/**
@@ -138,13 +136,11 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idCodigo", required = true) Long idCodigo) {
-
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.findById(idCodigo));
-
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				"Consulta exitosa", codigoEstadoCuentaDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", codigoEstadoCuentaDTO);
 	}
 
 	/**
@@ -165,16 +161,14 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
-
 //		List<CodigoEstadoCuentaDTO> lstX = codigoEstadoCuentaServiceImpl.findByEntidad_Id(idEntidad);
-
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", lstX);
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy2();
 		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
 		lst.add(codigoEstadoCuentaDTO);
 		lst.add(codigoEstadoCuentaDTO2);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				"Consulta exitosa", lst);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", lst);
 	}
 
 	/**
@@ -190,6 +184,7 @@ public class CodigoEstadoCuentaController {
 
 	/**
 	 * Crea un objeto de respuesta dummy
+	 * 
 	 * @return
 	 */
 	public static CodigoEstadoCuentaUpdtDTO buildDummy2() {
