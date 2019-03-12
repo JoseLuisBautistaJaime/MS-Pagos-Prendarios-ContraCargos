@@ -33,7 +33,8 @@ public abstract class EntidadBuilder {
 			entidadDTO.setCreatedBy(entidad.getCreatedBy());
 			entidadDTO.setCreatedDate(entidad.getCreatedDate());
 			entidadDTO.setCuentas(null);
-			entidadDTO.setDescripcion(entidad.getDescripcion());
+			entidadDTO.setDescription(entidad.getDescription());
+			entidadDTO.setShortDescription(entidad.getShortDescription());
 			entidadDTO.setId(entidad.getId());
 			entidadDTO.setLastModifiedDate(entidad.getLastModifiedDate());
 			entidadDTO.setNombre(entidad.getNombre());
@@ -57,7 +58,8 @@ public abstract class EntidadBuilder {
 			entidad.setCreatedBy(entidadDTO.getCreatedBy());
 			entidad.setCreatedDate(entidadDTO.getCreatedDate());
 			entidad.setCuentas(null);
-			entidad.setDescripcion(entidadDTO.getDescripcion());
+			entidad.setDescription(entidadDTO.getDescription());
+			entidad.setShortDescription(entidadDTO.getShortDescription());
 			entidad.setId(entidadDTO.getId());
 			entidad.setLastModifiedDate(entidadDTO.getLastModifiedDate());
 			entidad.setNombre(entidadDTO.getNombre());
@@ -79,7 +81,7 @@ public abstract class EntidadBuilder {
 			entidadResponseDTO = new EntidadResponseDTO();
 			entidadResponseDTO.setContactos(null);
 			entidadResponseDTO.setCuentas(null);
-			entidadResponseDTO.setDescripcion(entidad.getDescripcion());
+			entidadResponseDTO.setDescripcion(entidad.getDescription());
 			entidadResponseDTO.setId(entidad.getId());
 			entidadResponseDTO.setNombre(entidad.getNombre());
 			entidadResponseDTO.setEstatus(entidad.getEstatus());
@@ -100,7 +102,7 @@ public abstract class EntidadBuilder {
 			entidadResponseDTO = new EntidadResponseDTO();
 			entidadResponseDTO.setContactos(null);
 			entidadResponseDTO.setCuentas(null);
-			entidadResponseDTO.setDescripcion(entidadDTO.getDescripcion());
+			entidadResponseDTO.setDescripcion(entidadDTO.getDescription());
 			entidadResponseDTO.setId(entidadDTO.getId());
 			entidadResponseDTO.setNombre(entidadDTO.getNombre());
 			entidadResponseDTO.setEstatus(entidadDTO.getEstatus());

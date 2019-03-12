@@ -7,7 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -29,38 +29,35 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
 
-	@Column(name = "descripcion", nullable = false)
-	private String descripcion;
-
 	@Transient
 	private Set<CuentaEntDTO> cuentas;
 
 	@Transient
 	private Set<ContactoEntDTO> contactos;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "entidad")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "entidades")
 	private Set<CodigoEstadoCuenta> codigoEstadoCuentaSet;
 
 	public Entidad() {
 		super();
 	}
 
-	public Entidad(String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos, String descripcion) {
+	public Entidad(String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos,
+			Set<CodigoEstadoCuenta> codigoEstadoCuentaSet) {
 		super();
 		this.nombre = nombre;
 		this.cuentas = cuentas;
 		this.contactos = contactos;
-		this.descripcion = descripcion;
 	}
 
-	public Entidad(Long id, Boolean status, Date creationDate, Date modificationDate, String createdBy,
-			String modifiedBy, String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos,
-			String descripcion) {
-		super(id, status, creationDate, modificationDate, createdBy, modifiedBy);
+	public Entidad(String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos,
+			Set<CodigoEstadoCuenta> codigoEstadoCuentaSet, Long id, Boolean estatus, Date createdDate,
+			Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
+			String shortDescription) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.nombre = nombre;
 		this.cuentas = cuentas;
 		this.contactos = contactos;
-		this.descripcion = descripcion;
 	}
 
 	public String getNombre() {
@@ -87,14 +84,6 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 		this.contactos = contactos;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
 	@Override
 	public int compareTo(Entidad o) {
 		return o.getNombre().compareTo(this.nombre);
@@ -102,7 +91,7 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 
 	@Override
 	public String toString() {
-		return "Entidad [nombre=" + nombre + "]";
+		return "Entidad [nombre=" + nombre + "cuentas=" + cuentas + ", contactos=" + contactos + "]";
 	}
 
 }

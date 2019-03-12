@@ -10,7 +10,12 @@ import java.util.Date;
  * @creationDate 05/03/2019 19:51 hrs.
  * @version 0.1
  */
-public abstract class AbstractCatalogoDTO {
+public abstract class AbstractCatalogoDTO implements java.io.Serializable {
+
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 6853393208200640526L;
 
 	protected Long id;
 	protected Boolean estatus;
@@ -18,13 +23,15 @@ public abstract class AbstractCatalogoDTO {
 	protected Date lastModifiedDate;
 	protected String createdBy;
 	protected String lastModifiedBy;
+	protected String description;
+	protected String shortDescription;
 
 	public AbstractCatalogoDTO() {
 		super();
 	}
 
 	public AbstractCatalogoDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy) {
+			String lastModifiedBy, String description, String shortDescription) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
@@ -32,6 +39,24 @@ public abstract class AbstractCatalogoDTO {
 		this.lastModifiedDate = lastModifiedDate;
 		this.createdBy = createdBy;
 		this.lastModifiedBy = lastModifiedBy;
+		this.description = description;
+		this.shortDescription = shortDescription;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
 	}
 
 	public Long getId() {
@@ -86,7 +111,7 @@ public abstract class AbstractCatalogoDTO {
 	public String toString() {
 		return "AbstractCatalogoDTO [id=" + id + ", estatus=" + estatus + ", createdDate=" + createdDate
 				+ ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy="
-				+ lastModifiedBy + "]";
+				+ lastModifiedBy + ", description=" + description + ", shortDescription=" + shortDescription + "]";
 	}
 
 }

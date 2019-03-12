@@ -3,31 +3,49 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.Date;
 
 /**
- * Nombre: ContactoResponseDTO Descripcion: Clase que encapsula la informacion perteneciente a los contactos.
+ * Nombre: ContactoResponseDTO Descripcion: Clase que encapsula la informacion
+ * perteneciente a los contactos.
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net
  * @creationDate 05/03/2019 13:27 hrs.
  * @version 0.1
  */
-public class ContactoResponseDTO extends AbstractCatalogoDTO{
-	
+public class ContactoResponseDTO extends AbstractCatalogoDTO {
+
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String nombre;
-	
+
 	private String email;
-	
+
 	private String descripcion;
-	
+
 	private TipoContactoDTO tipoContacto;
 
 	public ContactoResponseDTO() {
 		super();
-		
+
 	}
-	
-	public ContactoResponseDTO(String nombre, String email, String descripcion,Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy, TipoContactoDTO tipoContacto) {
-		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy);
-		
+
+	public ContactoResponseDTO(String nombre, String email, String descripcion, TipoContactoDTO tipoContacto) {
+		super();
+		this.nombre = nombre;
+		this.email = email;
+		this.descripcion = descripcion;
+		this.tipoContacto = tipoContacto;
+	}
+
+	public ContactoResponseDTO(String nombre, String email, String descripcion, TipoContactoDTO tipoContacto, Long id,
+			Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy,
+			String description, String shortDescription) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
+		this.nombre = nombre;
+		this.email = email;
+		this.descripcion = descripcion;
+		this.tipoContacto = tipoContacto;
 	}
 
 	public String getNombre() {

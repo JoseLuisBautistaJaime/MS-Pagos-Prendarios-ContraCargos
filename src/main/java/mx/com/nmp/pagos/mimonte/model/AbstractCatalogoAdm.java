@@ -39,12 +39,18 @@ public abstract class AbstractCatalogoAdm {
 	@Column(name = "last_modified_by")
 	protected String lastModifiedBy;
 
+	@Column(name = "description")
+	protected String description;
+
+	@Column(name = "short_description")
+	protected String shortDescription;
+
 	public AbstractCatalogoAdm() {
 		super();
 	}
 
 	public AbstractCatalogoAdm(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy) {
+			String lastModifiedBy, String description, String shortDescription) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
@@ -52,6 +58,8 @@ public abstract class AbstractCatalogoAdm {
 		this.lastModifiedDate = lastModifiedDate;
 		this.createdBy = createdBy;
 		this.lastModifiedBy = lastModifiedBy;
+		this.description = description;
+		this.shortDescription = shortDescription;
 	}
 
 	public Long getId() {
@@ -100,6 +108,29 @@ public abstract class AbstractCatalogoAdm {
 
 	public void setLastModifiedBy(String lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
+
+	@Override
+	public String toString() {
+		return "AbstractCatalogoAdm [id=" + id + ", estatus=" + estatus + ", createdDate=" + createdDate
+				+ ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy="
+				+ lastModifiedBy + ", description=" + description + ", shortDescription=" + shortDescription + "]";
 	}
 
 }

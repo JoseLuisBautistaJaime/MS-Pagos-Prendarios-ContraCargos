@@ -2,6 +2,8 @@ package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,8 +90,7 @@ public class CodigoEstadoCuentaController {
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTO));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
 		BaseCodigoDTO baseCodigoDTO = new BaseCodigoDTO(1L, true, "Leyenda");
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				"Alta exitosa", baseCodigoDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", baseCodigoDTO);
 	}
 
 	/**
@@ -161,7 +162,7 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
-//		List<CodigoEstadoCuentaDTO> lstX = codigoEstadoCuentaServiceImpl.findByEntidad_Id(idEntidad);
+//		List<CodigoEstadoCuentaDTO> lstX = codigoEstadoCuentaServiceImpl.findByEntidades_Id(idEntidad);
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", lstX);
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy2();
@@ -177,8 +178,11 @@ public class CodigoEstadoCuentaController {
 	 * @return
 	 */
 	public static CodigoEstadoCuentaDTO buildDummy() {
-		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO(1L, "Geronimo", true,
-				new EntidadDTO("Banamex", null, null, "Banco Banamex"), new CategoriaDTO(1L, "Categoria 1"));
+		Set<EntidadDTO> set = new TreeSet<>();
+		set.add(new EntidadDTO("Banamex", null, null, null));
+		set.add(new EntidadDTO("Bancomer", null, null, null));
+		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO("Leyenda 1", true, set,
+				new CategoriaDTO(1L, "Categoria 1"));
 		return codigoEstadoCuentaDTO;
 	}
 

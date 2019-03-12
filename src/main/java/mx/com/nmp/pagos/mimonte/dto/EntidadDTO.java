@@ -3,6 +3,8 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.Date;
 import java.util.Set;
 
+import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
+
 /**
  * Nombre: EntidadDTO Descripcion: Clase que encapsula la unformacion de un
  * catalogo de entidad
@@ -13,30 +15,37 @@ import java.util.Set;
  */
 public class EntidadDTO extends AbstractCatalogoDTO implements Comparable<EntidadDTO> {
 
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 8080221303907003366L;
+
 	private String nombre;
-	private String descripcion;
 	private Set<CuentaEntDTO> cuentas;
 	private Set<ContactoEntDTO> contactos;
+	private Set<CodigoEstadoCuenta> codigoEstadoCuentaSet;
 
 	public EntidadDTO() {
 		super();
 	}
 
-	public EntidadDTO(String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos, String descripcion) {
+	public EntidadDTO(String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos,
+			Set<CodigoEstadoCuenta> codigoEstadoCuentaSet) {
 		super();
 		this.nombre = nombre;
 		this.cuentas = cuentas;
 		this.contactos = contactos;
-		this.descripcion = descripcion;
+		this.codigoEstadoCuentaSet = codigoEstadoCuentaSet;
 	}
 
-	public EntidadDTO(Long id, Boolean status, Date creationDate, Date modificationDate, String createdBy,
-			String modifiedBy, String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos, String descripcion) {
-		super(id, status, creationDate, modificationDate, createdBy, modifiedBy);
+	public EntidadDTO(String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos, Long id, Boolean estatus,
+			Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
+			String shortDescription, Set<CodigoEstadoCuenta> codigoEstadoCuentaSet) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.nombre = nombre;
 		this.cuentas = cuentas;
 		this.contactos = contactos;
-		this.descripcion = descripcion;
+		this.codigoEstadoCuentaSet = codigoEstadoCuentaSet;
 	}
 
 	public String getNombre() {
@@ -45,14 +54,6 @@ public class EntidadDTO extends AbstractCatalogoDTO implements Comparable<Entida
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
 	}
 
 	public Set<CuentaEntDTO> getCuentas() {
@@ -71,6 +72,14 @@ public class EntidadDTO extends AbstractCatalogoDTO implements Comparable<Entida
 		this.contactos = contactos;
 	}
 
+	public Set<CodigoEstadoCuenta> getCodigoEstadoCuentaSet() {
+		return codigoEstadoCuentaSet;
+	}
+
+	public void setCodigoEstadoCuentaSet(Set<CodigoEstadoCuenta> codigoEstadoCuentaSet) {
+		this.codigoEstadoCuentaSet = codigoEstadoCuentaSet;
+	}
+
 	@Override
 	public int compareTo(EntidadDTO arg0) {
 		return arg0.getNombre().compareTo(this.nombre);
@@ -78,8 +87,8 @@ public class EntidadDTO extends AbstractCatalogoDTO implements Comparable<Entida
 
 	@Override
 	public String toString() {
-		return "EntidadDTO [nombre=" + nombre + ", descripcion=" + descripcion + ", cuentas=" + cuentas + ", contactos="
-				+ contactos + "]";
+		return "EntidadDTO [nombre=" + nombre + ", cuentas=" + cuentas + ", contactos=" + contactos
+				+ ", codigoEstadoCuentaSet=" + codigoEstadoCuentaSet + "]";
 	}
 
 }

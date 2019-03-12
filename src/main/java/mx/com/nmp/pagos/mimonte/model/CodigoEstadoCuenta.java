@@ -1,12 +1,15 @@
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -25,30 +28,35 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 	@Column(name = "leyenda", nullable = false)
 	private String leyenda;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_entidad", nullable = false)
-	private Entidad entidad;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "tr_codigo_estado_cuenta_entidad", joinColumns = {
+			@JoinColumn(name = "id_codigo_estado_cuenta", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "id_entidad", nullable = false) })
+	private Set<Entidad> entidades;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_categoria", nullable = false)
+	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
 
 	public CodigoEstadoCuenta() {
 		super();
 	}
 
-	public CodigoEstadoCuenta(String leyenda, Entidad entidad, Categoria categoria) {
+	public CodigoEstadoCuenta(String codigo, String leyenda, String primerRenglon, String segundoRenglon,
+			String referencia, Set<Entidad> entidades, Categoria categoria) {
 		super();
 		this.leyenda = leyenda;
-		this.entidad = entidad;
+		this.entidades = entidades;
 		this.categoria = categoria;
 	}
 
-	public CodigoEstadoCuenta(Long id, Boolean status, Date creationDate, Date modificationDate, String createdBy,
-			String modifiedBy, String leyenda, Entidad entidad, Categoria categoria) {
-		super(id, status, creationDate, modificationDate, createdBy, modifiedBy);
+	public CodigoEstadoCuenta(String codigo, String leyenda, String primerRenglon, String segundoRenglon,
+			String referencia, Set<Entidad> entidades, Categoria categoria, Long id, Boolean estatus, Date createdDate,
+			Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
+			String shortDescription) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.leyenda = leyenda;
-		this.entidad = entidad;
+		this.entidades = entidades;
 		this.categoria = categoria;
 	}
 
@@ -60,12 +68,12 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 		this.leyenda = leyenda;
 	}
 
-	public Entidad getEntidad() {
-		return entidad;
+	public Set<Entidad> getEntidades() {
+		return entidades;
 	}
 
-	public void setEntidad(Entidad entidad) {
-		this.entidad = entidad;
+	public void setEntidades(Set<Entidad> entidades) {
+		this.entidades = entidades;
 	}
 
 	public Categoria getCategoria() {
@@ -74,6 +82,11 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	@Override
+	public String toString() {
+		return "CodigoEstadoCuenta [leyenda=" + leyenda + ", entidad=" + entidades	 + ", categoria=" + categoria + "]";
 	}
 
 	@Override

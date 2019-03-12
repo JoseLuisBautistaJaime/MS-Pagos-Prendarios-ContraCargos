@@ -61,7 +61,7 @@ public class EntidadController {
 	/**
 	 * Service para catalogo de entidades
 	 */
-	@SuppressWarnings("unused")
+//	@SuppressWarnings("unused")
 	@Autowired
 	@Qualifier("entidadServiceImpl")
 	private EntidadServiceImpl entidadServiceImpl;

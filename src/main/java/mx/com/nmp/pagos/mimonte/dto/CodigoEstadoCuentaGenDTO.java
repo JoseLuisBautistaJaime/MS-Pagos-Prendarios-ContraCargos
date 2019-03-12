@@ -13,6 +13,11 @@ import java.util.Date;
  */
 public class CodigoEstadoCuentaGenDTO extends AbstractCatalogoDTO {
 
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 4252462570216032264L;
+
 	private String leyenda;
 	private EntidadDTO entidad;
 	private CategoriaDTO categoria;
@@ -28,9 +33,10 @@ public class CodigoEstadoCuentaGenDTO extends AbstractCatalogoDTO {
 		this.categoria = categoria;
 	}
 
-	public CodigoEstadoCuentaGenDTO(Long id, Boolean status, Date creationDate, Date modificationDate, String createdBy,
-			String modifiedBy, String leyenda, EntidadDTO entidad, CategoriaDTO categoria) {
-		super(id, status, creationDate, modificationDate, createdBy, modifiedBy);
+	public CodigoEstadoCuentaGenDTO(String leyenda, EntidadDTO entidad, CategoriaDTO categoria, Long id,
+			Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy,
+			String description, String shortDescription) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.leyenda = leyenda;
 		this.entidad = entidad;
 		this.categoria = categoria;

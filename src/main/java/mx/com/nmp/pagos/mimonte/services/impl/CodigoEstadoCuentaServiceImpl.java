@@ -28,7 +28,7 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	/**
 	 * Service de el catalogo CodigoEstadoCuenta
 	 */
-	@SuppressWarnings("unused")
+//	@SuppressWarnings("unused")
 	@Autowired
 	@Qualifier("codigoEstadoCuentaRepository")
 	private CodigoEstadoCuentaRepository codigoEstadoCuentaRepository;
@@ -78,9 +78,9 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	 * @param idEntidad
 	 * @return
 	 */
-	public List<CodigoEstadoCuentaDTO> findByEntidad_Id(Long idEntidad) {
+	public List<CodigoEstadoCuentaDTO> findByEntidades_Id(Long idEntidad) {
 		return CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOListFromCodigoEstadoCuentaList(
-				codigoEstadoCuentaRepository.findByEntidad_Id(idEntidad));
+				codigoEstadoCuentaRepository.findByEntidades_Id(idEntidad));
 //		return null;
 	}
 

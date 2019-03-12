@@ -26,6 +26,6 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * @param idEntidad
 	 * @return
 	 */
-	public List<CodigoEstadoCuenta> findByEntidad_Id(final Long idEntidad);
+	public List<CodigoEstadoCuenta> findByEntidades_Id(final Long idEntidad);
 
 }
