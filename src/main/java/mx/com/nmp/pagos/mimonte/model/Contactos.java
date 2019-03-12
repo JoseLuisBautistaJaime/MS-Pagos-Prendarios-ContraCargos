@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -27,8 +26,8 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable{
 	}
 
 	public Contactos(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy) {
-		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy);
+			String lastModifiedBy, String description, String shortDescription) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 	}
 
 	@Column(name = "nombre")
