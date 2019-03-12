@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -21,11 +22,23 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable{
 
 	private static final long serialVersionUID = -2473378930460136183L;
 	
+	public Contactos() {
+		super();
+	}
+
+	public Contactos(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy);
+	}
+
 	@Column(name = "nombre")
 	private String nombre;
 	
 	@Column(name = "email")
 	private String email;
+	
+	@Column(name = "descripcion")
+	private String descripcion;
 	
 	@Column(name = "tipo_contacto")
 	private TipoContacto tipoContacto;
@@ -50,13 +63,21 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable{
 		return tipoContacto;
 	}
 
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
 	public void setTipoContacto(TipoContacto tipoContacto) {
 		this.tipoContacto = tipoContacto;
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(nombre, email, tipoContacto);
+		return Objects.hash(nombre, email, descripcion,tipoContacto);
 	}
 
 	@Override
@@ -78,6 +99,11 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable{
 				return false;
 		} else if (!nombre.equals(other.nombre))
 			return false;
+		if (descripcion == null) {
+			if (other.descripcion != null)
+				return false;
+		} else if (!descripcion.equals(other.descripcion))
+			return false;
 		if (tipoContacto == null) {
 			if (other.tipoContacto != null)
 				return false;
@@ -88,7 +114,7 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Contactos [nombre=" + nombre + ", email=" + email + ", tipoContacto=" + tipoContacto + "]";
+		return "Contactos [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion + ", tipoContacto=" + tipoContacto + "]";
 	}
 
 }
