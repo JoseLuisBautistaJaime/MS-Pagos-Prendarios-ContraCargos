@@ -202,4 +202,264 @@ ALTER TABLE to_pagos CHANGE estatus_transaccion id_estatus_transaccion INT(11) N
 ALTER TABLE to_pagos CHANGE restresponse rest_response VARCHAR(400) NULL;
 
 
+-- INICIAN MODIFICACIONES EN MODULO CATALOGOS --
+
+SET FOREIGN_KEY_CHECKS=0;
+DROP TABLE tk_afiliacion;
+-- -----------------------------------------------------
+-- Table `tc_afiliacion`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tc_afiliacion` ;
+
+CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `description` VARCHAR(150) NULL DEFAULT NULL,
+  `tipo` INT(11) NOT NULL,
+  `estatus` BIT(1) NOT NULL DEFAULT b'1',
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `short_description` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `ca_fk_idx` (`id` ASC),
+  INDEX `´ctr_tipo_afiliacion_afi1´` (`tipo` ASC),
+  CONSTRAINT `´ctr_tipo_afiliacion_afi1´`
+    FOREIGN KEY (`tipo`)
+    REFERENCES `tk_tipo_afiliacion` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `tk_categoria`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tk_categoria` ;
+
+CREATE TABLE IF NOT EXISTS `tk_categoria` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `mombre` VARCHAR(100) NOT NULL,
+  `description` VARCHAR(150) NULL DEFAULT NULL,
+  `estatus` BIT(1) NOT NULL DEFAULT b'1',
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `short_description` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_categoria` (`id` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `tc_codigo_estado_cuenta`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tc_codigo_estado_cuenta` ;
+
+CREATE TABLE IF NOT EXISTS `tc_codigo_estado_cuenta` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `estatus` BIT(1) NOT NULL DEFAULT b'1',
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `leyenda` VARCHAR(200) NOT NULL,
+  `id_categoria` BIGINT(20) NOT NULL,
+  `codigo` VARCHAR(20) NULL DEFAULT NULL,
+  `description` VARCHAR(150) NULL DEFAULT NULL,
+  `short_description` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_codigo_estado_cuenta` (`id` ASC),
+  INDEX `idx_categoria` (`id_categoria` ASC),
+  CONSTRAINT `ctr_fk_categoria`
+    FOREIGN KEY (`id_categoria`)
+    REFERENCES `tk_categoria` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `tk_tipo_contacto`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tk_tipo_contacto` ;
+
+CREATE TABLE IF NOT EXISTS `tk_tipo_contacto` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `estatus` BIT(1) NOT NULL,
+  `description` VARCHAR(150) NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NOT NULL,
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  `short_description` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `tc_contactos`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tc_contactos` ;
+
+CREATE TABLE IF NOT EXISTS `tc_contactos` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `estatus` BIT(1) NOT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `description` VARCHAR(150) NULL DEFAULT NULL,
+  `id_tipo_contacto` BIGINT(20) NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NOT NULL,
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  `short_description` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `id_tipo_contacto_fk_idx` (`id_tipo_contacto` ASC),
+  CONSTRAINT `id_tipo_contacto_fk`
+    FOREIGN KEY (`id_tipo_contacto`)
+    REFERENCES `tk_tipo_contacto` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `tc_cuenta`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tc_cuenta` ;
+
+CREATE TABLE IF NOT EXISTS `tc_cuenta` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `estatus` BIT(1) NOT NULL DEFAULT b'1',
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `numero_cuenta` VARCHAR(50) NULL DEFAULT NULL,
+  `short_description` VARCHAR(100) NULL DEFAULT NULL,
+  `description` VARCHAR(150) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_cuenta` (`id` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `tc_entidad`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tc_entidad` ;
+
+CREATE TABLE IF NOT EXISTS `tc_entidad` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `estatus` BIT(1) NOT NULL DEFAULT b'1',
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
+  `description` VARCHAR(150) NULL DEFAULT NULL,
+  `short_description` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_entidad` (`id` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `tr_codigo_estado_cuenta_entidad`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tr_codigo_estado_cuenta_entidad` ;
+
+CREATE TABLE IF NOT EXISTS `tr_codigo_estado_cuenta_entidad` (
+  `id_codigo_estado_cuenta` BIGINT(20) NOT NULL,
+  `id_entidad` BIGINT(20) NOT NULL,
+  INDEX `idx_codigo_estado_cuenta` (`id_codigo_estado_cuenta` ASC),
+  INDEX `idx_entidad` (`id_entidad` ASC),
+  CONSTRAINT `ctr_fk_codigo_estado_cuent_tr1`
+    FOREIGN KEY (`id_codigo_estado_cuenta`)
+    REFERENCES `tc_codigo_estado_cuenta` (`id`),
+  CONSTRAINT `ctr_fk_entidad_tr3`
+    FOREIGN KEY (`id_entidad`)
+    REFERENCES `tc_entidad` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `tr_cuenta_afiliacion`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tr_cuenta_afiliacion` ;
+
+CREATE TABLE IF NOT EXISTS `tr_cuenta_afiliacion` (
+  `id_cuenta` BIGINT(20) NOT NULL,
+  `id_afiliacion` BIGINT(20) NOT NULL,
+  INDEX `idx_cuenta` (`id_cuenta` ASC),
+  INDEX `idx_afiliacion` (`id_afiliacion` ASC),
+  CONSTRAINT `ctr_fk_afiliacion_tr1`
+    FOREIGN KEY (`id_afiliacion`)
+    REFERENCES `tc_afiliacion` (`id`),
+  CONSTRAINT `ctr_fk_cuenta_tr1`
+    FOREIGN KEY (`id_cuenta`)
+    REFERENCES `tc_cuenta` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `tr_entidad_contactos`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tr_entidad_contactos` ;
+
+CREATE TABLE IF NOT EXISTS `tr_entidad_contactos` (
+  `id_entidad` BIGINT(20) NOT NULL,
+  `id_contacto` BIGINT(20) NOT NULL,
+  INDEX `idx_entidad` (`id_entidad` ASC),
+  INDEX `idx_contacto` (`id_contacto` ASC),
+  CONSTRAINT `ctr_fk_contacto_tr1`
+    FOREIGN KEY (`id_contacto`)
+    REFERENCES `tc_contactos` (`id`),
+  CONSTRAINT `ctr_fk_entidad_tr2`
+    FOREIGN KEY (`id_entidad`)
+    REFERENCES `tc_entidad` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `tr_entidad_cuenta`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tr_entidad_cuenta` ;
+
+CREATE TABLE IF NOT EXISTS `tr_entidad_cuenta` (
+  `id_entidad` BIGINT(20) NOT NULL,
+  `id_cuenta` BIGINT(20) NOT NULL,
+  INDEX `idx_entidad` (`id_entidad` ASC),
+  INDEX `idx_cuenta` (`id_cuenta` ASC),
+  CONSTRAINT `ctr_fk_cuenta_tr2`
+    FOREIGN KEY (`id_cuenta`)
+    REFERENCES `tc_cuenta` (`id`),
+  CONSTRAINT `ctr_fk_entidad_tr1`
+    FOREIGN KEY (`id_entidad`)
+    REFERENCES `tc_entidad` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+ALTER TABLE tc_tarjetas DROP FOREIGN KEY estatus_tarjeta_fk;
+ALTER TABLE tc_tarjetas DROP FOREIGN KEY tipo_tarjeta_tarjeta_fk;
+
+ALTER TABLE tk_regla_negocio DROP FOREIGN KEY ca_fk;
+
+ALTER TABLE to_pagos DROP FOREIGN KEY esatus_transaccion_fk;
+
+ALTER TABLE tr_cliente_regla_negocio DROP FOREIGN KEY ic_fk;
+ALTER TABLE tr_cliente_regla_negocio DROP FOREIGN KEY irn_fk;
+
+ALTER TABLE tk_cliente MODIFY COLUMN fecha_alta DATETIME NOT NULL;
+
+desc tc_tarjetas;
+
+ALTER TABLE tc_tarjetas ADD FOREIGN KEY estatus_tarjeta_fk (id_estatus_tarjeta) REFERENCES tk_estatus_tarjeta (id);
+ALTER TABLE tc_tarjetas ADD FOREIGN KEY tipo_tarjeta_tarjeta_fk (id_tipo_tarjeta) REFERENCES tk_tipo_tarjeta (id);
+
+ALTER TABLE tk_regla_negocio CHANGE id_afiliacion id_afiliacion BIGINT(20) NOT NULL;
+ALTER TABLE tk_regla_negocio ADD FOREIGN KEY ctr_afiliacion_fk1 (id_afiliacion) REFERENCES tc_afiliacion(id);
+
+ALTER TABLE to_pagos CHANGE id_estatus_transaccion id_estatus_transaccion INT(11) NOT NULL;
+
+ALTER TABLE tr_cliente_regla_negocio ADD FOREIGN KEY ic_fk_2(id_cliente) REFERENCES tk_cliente(id_cliente);
+ALTER TABLE tr_cliente_regla_negocio ADD FOREIGN KEY irn_fk(id_regla_negocio) REFERENCES tk_regla_negocio(id);
+
+SET FOREIGN_KEY_CHECKS=1;
 
