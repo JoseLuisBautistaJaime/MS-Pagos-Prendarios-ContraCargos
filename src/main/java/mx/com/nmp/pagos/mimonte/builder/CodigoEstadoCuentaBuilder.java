@@ -6,6 +6,7 @@ import java.util.List;
 import mx.com.nmp.pagos.mimonte.dto.BaseCodigoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaGenDTO;
+import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
 
 /**
@@ -101,6 +102,29 @@ public class CodigoEstadoCuentaBuilder {
 			}
 		}
 		return codigoEstadoCuentaDTOList;
+	}
+
+	public static CodigoEstadoCuentaDTO buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(
+			CodigoEstadoCuentaReqDTO codigoEstadoCuentaReqDTO) {
+		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
+		if (null != codigoEstadoCuentaReqDTO) {
+			codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO();
+			codigoEstadoCuentaDTO.setCategoria(
+					CategoriaBuilder.buildCategoriaDTOFromCategoriaReqDTO(codigoEstadoCuentaReqDTO.getCategoria()));
+			codigoEstadoCuentaDTO.setCreatedBy(codigoEstadoCuentaReqDTO.getCreatedBy());
+			codigoEstadoCuentaDTO.setCreatedDate(codigoEstadoCuentaReqDTO.getCreatedDate());
+			codigoEstadoCuentaDTO.setDescription(codigoEstadoCuentaReqDTO.getDescription());
+			codigoEstadoCuentaDTO
+					.setEntidad(EntidadBuilder.buildEntidadDTOFromEntidadReqDTO(codigoEstadoCuentaReqDTO.getEntidad()));
+			codigoEstadoCuentaDTO.setEstatus(codigoEstadoCuentaReqDTO.getEstatus());
+			codigoEstadoCuentaDTO.setId(codigoEstadoCuentaReqDTO.getId());
+			codigoEstadoCuentaDTO.setLastModifiedBy(codigoEstadoCuentaReqDTO.getLastModifiedBy());
+			codigoEstadoCuentaDTO.setLastModifiedDate(codigoEstadoCuentaReqDTO.getLastModifiedDate());
+			codigoEstadoCuentaDTO.setLeyenda(codigoEstadoCuentaReqDTO.getLeyenda());
+			codigoEstadoCuentaDTO.setShortDescription(codigoEstadoCuentaReqDTO.getShortDescription());
+			codigoEstadoCuentaDTO.setStatus(codigoEstadoCuentaReqDTO.getStatus());
+		}
+		return codigoEstadoCuentaDTO;
 	}
 
 }

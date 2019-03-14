@@ -86,7 +86,8 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTO) {
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
-//				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTO));
+//				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(CodigoEstadoCuentaBuilder
+//						.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTO)));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
 		BaseCodigoDTO baseCodigoDTO = new BaseCodigoDTO(1L, true, "Leyenda");
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", baseCodigoDTO);
@@ -111,7 +112,8 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTOReq) {
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
-//				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTOReq));
+//				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(CodigoEstadoCuentaBuilder
+//						.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTOReq)));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",
