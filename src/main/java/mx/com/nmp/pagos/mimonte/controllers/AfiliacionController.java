@@ -1,6 +1,8 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.AfiliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -104,7 +107,7 @@ public class AfiliacionController {
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.update(afiliacionDTOReq);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad actualizada correctamente",
-				buildDummy());
+				buildDummyUP());
 	}
 
 	/**
@@ -128,7 +131,7 @@ public class AfiliacionController {
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.findById(idAfiliacion);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad recuperada correctamente",
-				buildDummy());
+				buildDummyUP());
 	}
 
 	/**
@@ -153,7 +156,7 @@ public class AfiliacionController {
 //		AfiliacionDTO afiliacionDTO = afiliacionServiceImpl.findByCuentasId(idCuenta);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
-				buildDummy());
+				buildDummyList());
 	}
 
 	@ResponseBody
@@ -165,10 +168,9 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response deleteByidAfiliacion(@PathVariable(value = "nombre", required = true) String nombre,
-			@PathVariable(value = "estatus", required = true) Boolean estatus) {
+	public Response deleteByidAfiliacion(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion) {
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion eliminada correctamente");
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion eliminada correctamente",null);
 	}
 
 	/**
@@ -179,15 +181,54 @@ public class AfiliacionController {
 	public static AfiliacionDTO buildDummy() {
 
 		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
-		afiliacionDto.setCreatedBy("Victi Moran");
+		TipoAutorizacionDTO tipo = new TipoAutorizacionDTO();
+		tipo.setDescripcion("3d secure ");
+		tipo.setId(2);
+		afiliacionDto.setCreatedBy("Victor Moran");
+		afiliacionDto.setCreatedDate(new Date());
+		afiliacionDto.setEstatus(true);
+		afiliacionDto.setId(234L);
+		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setTipo(tipo);
+
+		return afiliacionDto;
+	}
+	public static AfiliacionDTO buildDummyUP() {
+
+		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
+		TipoAutorizacionDTO tipo = new TipoAutorizacionDTO();
+		tipo.setDescripcion("3d secure ");
+		tipo.setId(2);
+		afiliacionDto.setCreatedBy("Victor Moran");
 		afiliacionDto.setCreatedDate(new Date());
 		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(234L);
 		afiliacionDto.setLastModifiedBy("Viktor Reznov");
 		afiliacionDto.setLastModifiedDate(new Date());
 		afiliacionDto.setNumero(12345678L);
-		afiliacionDto.setTipo(new TipoAutorizacionDTO());
+		afiliacionDto.setTipo(tipo);
 
+		return afiliacionDto;
+	}
+	public static AfiliacionDTO buildDummyList() {
+
+		List<AfiliacionDTO> afiliaciones = new ArrayList<AfiliacionDTO>();
+		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
+		TipoAutorizacionDTO tipo = new TipoAutorizacionDTO();
+		tipo.setDescripcion("3d secure ");
+		tipo.setId(2);
+		afiliacionDto.setCreatedBy("Victor Moran");
+		afiliacionDto.setCreatedDate(new Date());
+		afiliacionDto.setEstatus(true);
+		afiliacionDto.setId(234L);
+		afiliacionDto.setLastModifiedBy("Viktor Reznov");
+		afiliacionDto.setLastModifiedDate(new Date());
+		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setTipo(tipo);
+		afiliaciones.add(afiliacionDto);
+		afiliacionDto.setId(6789L);
+		afiliacionDto.setNumero(987654L);
+		afiliaciones.add(afiliacionDto);
 		return afiliacionDto;
 	}
 

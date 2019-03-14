@@ -7,8 +7,8 @@ public class CuentaDTO {
 
 	private Long id;
 	private Long numero;
-	private List<AfiliacionDTO> afiliaciones;
-	private List<CodigoEstadoCuentaDTO> codigos;
+	private List<AfiliacionRespDTO> afiliaciones;
+
 	private Boolean estatus;
 	private Date createdDate;
 	private Date lastModifiedDate;
@@ -20,13 +20,12 @@ public class CuentaDTO {
 
 	}
 
-	public CuentaDTO(Long id, Long numero, List<AfiliacionDTO> afiliaciones, List<CodigoEstadoCuentaDTO> codigos,
+	public CuentaDTO(Long id, Long numero, List<AfiliacionRespDTO> afiliaciones, 
 			Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super();
 		this.id = id;
 		this.numero = numero;
 		this.afiliaciones = afiliaciones;
-		this.codigos = codigos;
 		this.estatus = estatus;
 		this.createdDate = createdDate;
 		this.lastModifiedDate = lastModifiedDate;
@@ -50,21 +49,15 @@ public class CuentaDTO {
 		this.numero = numero;
 	}
 
-	public List<AfiliacionDTO> getAfiliaciones() {
+	public List<AfiliacionRespDTO> getAfiliaciones() {
 		return afiliaciones;
 	}
 
-	public void setAfiliaciones(List<AfiliacionDTO> afiliaciones) {
+	public void setAfiliaciones(List<AfiliacionRespDTO> afiliaciones) {
 		this.afiliaciones = afiliaciones;
 	}
 
-	public List<CodigoEstadoCuentaDTO> getCodigos() {
-		return codigos;
-	}
 
-	public void setCodigos(List<CodigoEstadoCuentaDTO> codigos) {
-		this.codigos = codigos;
-	}
 
 	public Boolean getEstatus() {
 		return estatus;
@@ -108,7 +101,7 @@ public class CuentaDTO {
 
 	@Override
 	public String toString() {
-		return "CuentaDTO [id=" + id + ", numero=" + numero + ", afiliaciones=" + afiliaciones + ", codigos=" + codigos
+		return "CuentaDTO [id=" + id + ", numero=" + numero + ", afiliaciones=" + afiliaciones
 				+ ", estatus=" + estatus + ", createdDate=" + createdDate + ", lastModifiedDate=" + lastModifiedDate
 				+ ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy + "]";
 	}
