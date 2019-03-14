@@ -33,4 +33,21 @@ public class TipoAutorizacionBuilder {
 		}
 		return tipoAfiliacionDTO;
 	}
+
+	/**
+	 * Construye un entity de tipo TipoAutorizacion a partir de un objeto de tipo
+	 * TipoAutorizacionDTO
+	 * 
+	 * @param tipoAfiliacionDTO
+	 * @return
+	 */
+	public static TipoAutorizacion buildTipoAfilaicionFromTipoAfiliacionDTO(TipoAutorizacionDTO tipoAfiliacionDTO) {
+		TipoAutorizacion tipoAfiliacion = null;
+		if (null != tipoAfiliacionDTO) {
+			tipoAfiliacion = new TipoAutorizacion();
+			tipoAfiliacion.setId(tipoAfiliacionDTO.getId());
+			tipoAfiliacion.setDescripcion(tipoAfiliacionDTO.getDescripcion());
+		}
+		return tipoAfiliacion;
+	}
 }

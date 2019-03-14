@@ -12,6 +12,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+/**
+ * Nombre: Cuenta Descripcion: Clase que encapsula la informacion de una Cuenta
+ *
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 13/03/2019 20:22 hrs.
+ * @version 0.1
+ */
 @Entity
 @Table(name = "tc_cuenta")
 public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, java.io.Serializable {
@@ -29,6 +36,9 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 			@JoinColumn(name = "id_afiliacion") })
 	private Set<Afiliacion> afiliaciones;
 
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cuentas")
+	private Set<Entidad> entidades;
+
 	public Cuenta() {
 		super();
 	}
@@ -45,6 +55,14 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.numeroCuenta = numeroCuenta;
 		this.afiliaciones = afiliaciones;
+	}
+
+	public Set<Entidad> getEntidades() {
+		return entidades;
+	}
+
+	public void setEntidades(Set<Entidad> entidades) {
+		this.entidades = entidades;
 	}
 
 	public Long getNumeroCuenta() {
@@ -65,7 +83,8 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 
 	@Override
 	public String toString() {
-		return "Cuenta [numeroCuenta=" + numeroCuenta + ", afiliaciones=" + afiliaciones + "]";
+		return "Cuenta [numeroCuenta=" + numeroCuenta + ", afiliaciones=" + afiliaciones + ", entidades=" + entidades
+				+ "]";
 	}
 
 	@Override

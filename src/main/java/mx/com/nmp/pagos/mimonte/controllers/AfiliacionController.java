@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,8 +25,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
+import mx.com.nmp.pagos.mimonte.services.impl.AfiliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -55,6 +56,12 @@ public class AfiliacionController {
 	private final Logger log = LoggerFactory.getLogger(AfiliacionController.class);
 
 	/**
+	 * Service de Afiliacion
+	 */
+	@Qualifier("afiliacionServiceImpl")
+	private AfiliacionServiceImpl afiliacionServiceImpl;
+
+	/**
 	 * Guarda un nuevo catalogo Entidad
 	 * 
 	 * @param pagoRequestDTO
@@ -69,7 +76,10 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody EntidadDTO entidadDTOReq) {
+	public Response save(@RequestBody AfiliacionDTO afiliacionDTOReq) {
+
+//		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.save(afiliacionDTOReq);
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad guardada correctamente",
 				buildDummy());
 	}
@@ -89,7 +99,10 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@RequestBody EntidadDTO entidadDTOReq) {
+	public Response update(@RequestBody AfiliacionDTO afiliacionDTOReq) {
+
+//		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.update(afiliacionDTOReq);
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad actualizada correctamente",
 				buildDummy());
 	}
@@ -111,6 +124,9 @@ public class AfiliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion) {
+
+//		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.findById(idAfiliacion);
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad recuperada correctamente",
 				buildDummy());
 	}
@@ -132,8 +148,9 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) String idCuenta,
-			@PathVariable(value = "idCuenta", required = true) Boolean estatus) {
+	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta) {
+
+//		AfiliacionDTO afiliacionDTO = afiliacionServiceImpl.findByCuentasId(idCuenta);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
 				buildDummy());

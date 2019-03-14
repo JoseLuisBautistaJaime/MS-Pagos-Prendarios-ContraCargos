@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +31,7 @@ import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
+import mx.com.nmp.pagos.mimonte.services.impl.CuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -58,6 +60,10 @@ public class CuentasController {
 	@SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(CuentasController.class);
 
+	@Autowired
+	@Qualifier("cuentaServiceImpl")
+	private CuentaServiceImpl cuentaServiceImpl;
+
 	/**
 	 * Guarda un nuevo catalogo Cuenta
 	 * 
@@ -74,6 +80,10 @@ public class CuentasController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CuentaDTO CuentaDTOReq) {
+
+//		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(
+//				cuentaServiceImpl.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(CuentaDTOReq)));
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta guardada correctamente",
 				buildDummy());
 	}
@@ -94,6 +104,10 @@ public class CuentasController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CuentaDTO CuentaDTOReq) {
+
+//		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(
+//				cuentaServiceImpl.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(CuentaDTOReq)));
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta actualizada correctamente",
 				buildDummy());
 	}
@@ -115,6 +129,9 @@ public class CuentasController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idcuentas", required = true) Long idcuentas) {
+
+//		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(cuentaServiceImpl.findById(idcuentas));
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta recuperada correctamente",
 				buildDummy());
 	}
@@ -135,8 +152,9 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) String idCuenta,
-			@PathVariable(value = "idCuenta", required = true) Boolean estatus) {
+	public Response findByCuenta(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
+
+//		List<CuentaDTO> cuentaDTOList = cuentaServiceImpl.findByEntidadId(idEntidad);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas recuperadas correctamente",
 				buildDummyEnti());
@@ -189,10 +207,10 @@ public class CuentasController {
 		cuentasDto.setCreated_by("Moran");
 		cuentasDto.setCreated_date(new Date());
 		cuentasDto.setEstatus(true);
-		cuentasDto.setId(234);
+		cuentasDto.setId(234L);
 		cuentasDto.setLast_modified_by("Moran");
 		cuentasDto.setLast_modified_date(new Date());
-		cuentasDto.setNumero("12345678");
+		cuentasDto.setNumero(12345678L);
 		cuentasDto.setAfiliaciones(afiliaciones);
 		cuentasDto.setCodigos(codigos);
 		return cuentasDto;
@@ -226,10 +244,10 @@ public class CuentasController {
 		cuentasDto.setCreated_by("Moran");
 		cuentasDto.setCreated_date(new Date());
 		cuentasDto.setEstatus(true);
-		cuentasDto.setId(234);
+		cuentasDto.setId(234L);
 		cuentasDto.setLast_modified_by("Moran");
 		cuentasDto.setLast_modified_date(new Date());
-		cuentasDto.setNumero("12345678");
+		cuentasDto.setNumero(12345678L);
 		cuentasDto.setAfiliaciones(afiliaciones);
 		cuentasDto.setCodigos(codigos);
 		cuentas.add(cuentasDto);

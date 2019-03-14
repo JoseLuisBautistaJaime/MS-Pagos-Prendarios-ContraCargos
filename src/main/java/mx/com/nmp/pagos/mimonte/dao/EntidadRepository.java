@@ -9,7 +9,7 @@ import mx.com.nmp.pagos.mimonte.model.Entidad;
  * Nombre: EntidadRepository Descripcion: Interface de capa DAO que sirve para
  * realizar operaciones de base de datos relacionadas con el catalogo Entidad
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 06/03/2019 12:35 hrs.
  * @version 0.1
  */

@@ -35,7 +35,7 @@ public class ReglaNegocioBuilder {
 		ReglaNegocioDTO rnDTO = null;
 		if (null != reglaNegocio) {
 			rnDTO = new ReglaNegocioDTO();
-			rnDTO.setAfliacion(AfiliacionBuilder.buildAfiliacionDTOFromAfilaicion(reglaNegocio.getAfiliacion()));
+			rnDTO.setAfliacion(AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(reglaNegocio.getAfiliacion()));
 			rnDTO.setConsulta(reglaNegocio.getConsulta());
 			rnDTO.setDescripcion(reglaNegocio.getDescripcion());
 			rnDTO.setId(reglaNegocio.getId());

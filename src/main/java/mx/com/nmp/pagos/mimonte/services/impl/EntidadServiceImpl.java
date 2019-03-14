@@ -16,7 +16,7 @@ import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
  * catalogo de entidades que sirve para realizar operaciones de logica de
  * negocios para el catalogo de entidades
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 06/03/2019 12:33 hrs.
  * @version 0.1
  */

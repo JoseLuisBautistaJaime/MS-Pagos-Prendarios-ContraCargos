@@ -3,26 +3,40 @@ package mx.com.nmp.pagos.mimonte.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 /**
- * Nombre: Contacto
- * Descripcion: Entidad que representa al contacto dentro del sistema.
+ * Nombre: Contacto Descripcion: Entidad que representa al contacto dentro del
+ * sistema.
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net Fecha: 05/03/2019 12:04 Hrs.
  * @version 0.1
  */
 @Entity
 @Table(name = "tk_contactos")
-public class Contactos extends AbstractCatalogoAdm implements Serializable{
+public class Contactos extends AbstractCatalogoAdm implements Serializable {
 
 	private static final long serialVersionUID = -2473378930460136183L;
-	
+
 	public Contactos() {
 		super();
+	}
+
+	public Contactos(String nombre, String email, String descripcion, TipoContacto tipoContacto,
+			Set<Entidad> entidades) {
+		super();
+		this.nombre = nombre;
+		this.email = email;
+		this.descripcion = descripcion;
+		this.tipoContacto = tipoContacto;
+		this.entidades = entidades;
 	}
 
 	public Contactos(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
@@ -32,15 +46,18 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable{
 
 	@Column(name = "nombre")
 	private String nombre;
-	
+
 	@Column(name = "email")
 	private String email;
-	
+
 	@Column(name = "descripcion")
 	private String descripcion;
-	
+
 	@Column(name = "tipo_contacto")
 	private TipoContacto tipoContacto;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contactos")
+	private Set<Entidad> entidades;
 
 	public String getNombre() {
 		return nombre;
@@ -73,10 +90,18 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable{
 	public void setTipoContacto(TipoContacto tipoContacto) {
 		this.tipoContacto = tipoContacto;
 	}
-	
+
+	public Set<Entidad> getEntidades() {
+		return entidades;
+	}
+
+	public void setEntidades(Set<Entidad> entidades) {
+		this.entidades = entidades;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(nombre, email, descripcion,tipoContacto);
+		return Objects.hash(nombre, email, descripcion, tipoContacto);
 	}
 
 	@Override
@@ -113,7 +138,8 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Contactos [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion + ", tipoContacto=" + tipoContacto + "]";
+		return "Contactos [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion + ", tipoContacto="
+				+ tipoContacto + "]";
 	}
 
 }

@@ -7,12 +7,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
-import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 
 /**
  * Nombre: Entidad Descripcion: Clase que encapsula la informacion de una
@@ -29,11 +27,15 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
 
-	@Transient
-	private Set<CuentaEntDTO> cuentas;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "tr_entidad_cuenta", joinColumns = { @JoinColumn(name = "id_entidad") }, inverseJoinColumns = {
+			@JoinColumn(name = "id_cuenta") })
+	private Set<Cuenta> cuentas;
 
-	@Transient
-	private Set<ContactoEntDTO> contactos;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "tr_entidad_contacto", joinColumns = { @JoinColumn(name = "id_entidad") }, inverseJoinColumns = {
+			@JoinColumn(name = "id_contacto") })
+	private Set<Contactos> contactos;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "entidades")
 	private Set<CodigoEstadoCuenta> codigoEstadoCuentaSet;
@@ -42,7 +44,7 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 		super();
 	}
 
-	public Entidad(String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos,
+	public Entidad(String nombre, Set<Cuenta> cuentas, Set<Contactos> contactos,
 			Set<CodigoEstadoCuenta> codigoEstadoCuentaSet) {
 		super();
 		this.nombre = nombre;
@@ -50,7 +52,7 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 		this.contactos = contactos;
 	}
 
-	public Entidad(String nombre, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos,
+	public Entidad(String nombre, Set<Cuenta> cuentas, Set<Contactos> contactos,
 			Set<CodigoEstadoCuenta> codigoEstadoCuentaSet, Long id, Boolean estatus, Date createdDate,
 			Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
 			String shortDescription) {
@@ -68,19 +70,19 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 		this.nombre = nombre;
 	}
 
-	public Set<CuentaEntDTO> getCuentas() {
+	public Set<Cuenta> getCuentas() {
 		return cuentas;
 	}
 
-	public void setCuentas(Set<CuentaEntDTO> cuentas) {
+	public void setCuentas(Set<Cuenta> cuentas) {
 		this.cuentas = cuentas;
 	}
 
-	public Set<ContactoEntDTO> getContactos() {
+	public Set<Contactos> getContactos() {
 		return contactos;
 	}
 
-	public void setContactos(Set<ContactoEntDTO> contactos) {
+	public void setContactos(Set<Contactos> contactos) {
 		this.contactos = contactos;
 	}
 
