@@ -88,12 +88,12 @@ public abstract class CuentaBuilder {
 		if (null != cuentaBaseDTO) {
 			cuentaDTO = new CuentaDTO();
 			cuentaDTO.setAfiliaciones(new ArrayList<>(cuentaBaseDTO.getAfiliaciones()));
-			cuentaDTO.setCreated_by(cuentaBaseDTO.getCreatedBy());
-			cuentaDTO.setCreated_date(cuentaBaseDTO.getCreatedDate());
+			cuentaDTO.setCreatedBy(cuentaBaseDTO.getCreatedBy());
+			cuentaDTO.setCreatedDate(cuentaBaseDTO.getCreatedDate());
 			cuentaDTO.setEstatus(cuentaBaseDTO.getEstatus());
 			cuentaDTO.setId(cuentaBaseDTO.getId());
-			cuentaDTO.setLast_modified_by(cuentaBaseDTO.getLastModifiedBy());
-			cuentaDTO.setLast_modified_date(cuentaBaseDTO.getLastModifiedDate());
+			cuentaDTO.setLastModifiedBy(cuentaBaseDTO.getLastModifiedBy());
+			cuentaDTO.setLastModifiedDate(cuentaBaseDTO.getLastModifiedDate());
 			cuentaDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
 
 		}
@@ -114,12 +114,12 @@ public abstract class CuentaBuilder {
 			Set<AfiliacionDTO> targetSet = new TreeSet<>();
 			org.apache.commons.collections4.CollectionUtils.addAll(targetSet, cuentaDTO.getAfiliaciones());
 			cuentaBaseDTO.setAfiliaciones(targetSet);
-			cuentaBaseDTO.setCreatedBy(cuentaDTO.getCreated_by());
-			cuentaBaseDTO.setCreatedDate(cuentaDTO.getCreated_date());
+			cuentaBaseDTO.setCreatedBy(cuentaDTO.getCreatedBy());
+			cuentaBaseDTO.setCreatedDate(cuentaDTO.getCreatedDate());
 			cuentaBaseDTO.setEstatus(cuentaDTO.getEstatus());
 			cuentaBaseDTO.setId(cuentaDTO.getId());
-			cuentaBaseDTO.setLastModifiedBy(cuentaDTO.getLast_modified_by());
-			cuentaBaseDTO.setLastModifiedDate(cuentaDTO.getLast_modified_date());
+			cuentaBaseDTO.setLastModifiedBy(cuentaDTO.getLastModifiedBy());
+			cuentaBaseDTO.setLastModifiedDate(cuentaDTO.getLastModifiedDate());
 			cuentaBaseDTO.setNumeroCuenta(cuentaDTO.getNumero());
 
 		}
@@ -138,12 +138,12 @@ public abstract class CuentaBuilder {
 			cuentaDTO = new CuentaDTO();
 			cuentaDTO.setAfiliaciones(
 					AfiliacionBuilder.buildAfiliacionDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
-			cuentaDTO.setCreated_by(cuenta.getCreatedBy());
-			cuentaDTO.setCreated_date(cuenta.getCreatedDate());
+			cuentaDTO.setCreatedBy(cuenta.getCreatedBy());
+			cuentaDTO.setCreatedDate(cuenta.getCreatedDate());
 			cuentaDTO.setEstatus(cuenta.getEstatus());
 			cuentaDTO.setId(cuenta.getId());
-			cuentaDTO.setLast_modified_by(cuenta.getLastModifiedBy());
-			cuentaDTO.setLast_modified_date(cuenta.getLastModifiedDate());
+			cuentaDTO.setLastModifiedBy(cuenta.getLastModifiedBy());
+			cuentaDTO.setLastModifiedDate(cuenta.getLastModifiedDate());
 			cuentaDTO.setNumero(cuenta.getNumeroCuenta());
 		}
 		return cuentaDTO;
