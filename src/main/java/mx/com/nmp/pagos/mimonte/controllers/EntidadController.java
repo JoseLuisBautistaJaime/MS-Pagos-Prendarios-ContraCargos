@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
-import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
+import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.EntidadServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -81,11 +81,10 @@ public class EntidadController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody EntidadDTO entidadDTOReq) {
+	public Response save(@RequestBody EntidadBaseDTO entidadDTOReq) {
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa",
 //				entidadServiceImpl.save(entidadDTOReq));
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa",
-				buildDummy());
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", buildDummy());
 	}
 
 	/**
@@ -103,7 +102,7 @@ public class EntidadController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@RequestBody EntidadDTO entidadDTOReq) {
+	public Response update(@RequestBody EntidadBaseDTO entidadDTOReq) {
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",entidadServiceImpl.save(entidadDTOReq));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa", buildDummy());
 	}

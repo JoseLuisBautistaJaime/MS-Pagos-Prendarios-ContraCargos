@@ -28,6 +28,7 @@ import mx.com.nmp.pagos.mimonte.dto.BaseCodigoDTO;
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
+import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.CodigoEstadoCuentaServiceImpl;
@@ -83,7 +84,7 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody CodigoEstadoCuentaDTO codigoEstadoCuentaDTO) {
+	public Response save(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTO) {
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTO));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
@@ -108,7 +109,7 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@RequestBody CodigoEstadoCuentaDTO codigoEstadoCuentaDTOReq) {
+	public Response update(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTOReq) {
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(codigoEstadoCuentaDTOReq));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
@@ -177,7 +178,7 @@ public class CodigoEstadoCuentaController {
 	 */
 	public static CodigoEstadoCuentaDTO buildDummy() {
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO("Leyenda 1", true,
-				new EntidadDTO("Bancomer", null, null, null), new CategoriaDTO(1L, "Categoria 1"));
+				new EntidadDTO("Bancomer", null, null), new CategoriaDTO(1L, "Categoria 1"));
 		return codigoEstadoCuentaDTO;
 	}
 
