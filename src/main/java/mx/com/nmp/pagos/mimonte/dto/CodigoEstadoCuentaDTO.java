@@ -1,7 +1,6 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
-import java.util.Set;
 
 /**
  * Nombre: CodigoEstadoCuentaDTO Descripcion: Clase que encapsula la informacion
@@ -20,28 +19,27 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 
 	private String leyenda;
 	private Boolean status;
-	private Set<EntidadDTO> entidades;
+	private EntidadDTO entidad;
 	private CategoriaDTO categoria;
 
 	public CodigoEstadoCuentaDTO() {
 		super();
 	}
 
-	public CodigoEstadoCuentaDTO(String leyenda, Boolean status, Set<EntidadDTO> entidades, CategoriaDTO categoria) {
+	public CodigoEstadoCuentaDTO(String leyenda, Boolean status, EntidadDTO entidad, CategoriaDTO categoria) {
 		super();
 		this.leyenda = leyenda;
 		this.status = status;
-		this.entidades = entidades;
 		this.categoria = categoria;
 	}
 
-	public CodigoEstadoCuentaDTO(String leyenda, Boolean status, Set<EntidadDTO> entidades, CategoriaDTO categoria,
-			Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy,
+	public CodigoEstadoCuentaDTO(String leyenda, Boolean status, EntidadDTO entidad, CategoriaDTO categoria, Long id,
+			Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy,
 			String description, String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.leyenda = leyenda;
 		this.status = status;
-		this.entidades = entidades;
+		this.entidad = entidad;
 		this.categoria = categoria;
 	}
 
@@ -53,12 +51,12 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 		this.leyenda = leyenda;
 	}
 
-	public Set<EntidadDTO> getEntidades() {
-		return entidades;
+	public EntidadDTO getEntidad() {
+		return entidad;
 	}
 
-	public void setEntidades(Set<EntidadDTO> entidades) {
-		this.entidades = entidades;
+	public void setEntidad(EntidadDTO entidad) {
+		this.entidad = entidad;
 	}
 
 	public CategoriaDTO getCategoria() {
@@ -79,7 +77,7 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 
 	@Override
 	public String toString() {
-		return "CodigoEstadoCuentaDTO [leyenda=" + leyenda + ", status=" + status + ", entidades=" + entidades
+		return "CodigoEstadoCuentaDTO [leyenda=" + leyenda + ", status=" + status + ", entidades=" + entidad
 				+ ", categoria=" + categoria + "]";
 	}
 

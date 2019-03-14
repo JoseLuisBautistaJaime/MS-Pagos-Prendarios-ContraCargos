@@ -1,15 +1,14 @@
 package mx.com.nmp.pagos.mimonte.model;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -23,16 +22,11 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "tk_afiliacion")
-public class Afiliacion {
+@Table(name = "tc_afiliacion")
+public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afiliacion> {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false, unique = true)
-	private Integer id;
-
-	@Column(name = "descripcion", nullable = false)
-	private String descripcion;
+	@Column(name = "numero")
+	private Long numero;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "tipo")
@@ -41,34 +35,52 @@ public class Afiliacion {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "afiliacion")
 	private Set<ReglaNegocio> reglas;
 
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "afiliaciones")
+	private Set<Cuenta> cuentas;
+
 	public Afiliacion() {
 		/**
 		 * empty constructor
 		 */
 	}
 
-	public Afiliacion(Integer id, String descripcion, Set<ReglaNegocio> reglas, TipoAutorizacion tipo) {
+	public Afiliacion(Set<ReglaNegocio> reglas, TipoAutorizacion tipo) {
 		super();
-		this.id = id;
-		this.descripcion = descripcion;
 		this.reglas = reglas;
 		this.tipo = tipo;
 	}
 
-	public Integer getId() {
-		return id;
+	public Afiliacion(TipoAutorizacion tipo, Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
+		super();
+		this.tipo = tipo;
+		this.reglas = reglas;
+		this.cuentas = cuentas;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public Afiliacion(Long numero, TipoAutorizacion tipo, Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
+		super();
+		this.numero = numero;
+		this.tipo = tipo;
+		this.reglas = reglas;
+		this.cuentas = cuentas;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+	public Afiliacion(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy, String description, String shortDescription, Long numero, TipoAutorizacion tipo,
+			Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
+		this.numero = numero;
+		this.tipo = tipo;
+		this.reglas = reglas;
+		this.cuentas = cuentas;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+	public Long getNumero() {
+		return numero;
+	}
+
+	public void setNumero(Long numero) {
+		this.numero = numero;
 	}
 
 	public Set<ReglaNegocio> getRegla() {
@@ -95,9 +107,22 @@ public class Afiliacion {
 		this.reglas = reglas;
 	}
 
+	public Set<Cuenta> getCuentas() {
+		return cuentas;
+	}
+
+	public void setCuentas(Set<Cuenta> cuentas) {
+		this.cuentas = cuentas;
+	}
+
 	@Override
 	public String toString() {
-		return "Afiliacion [id=" + id + ", descripcion=" + descripcion + ", reglas=" + reglas + ", tipo=" + tipo + "]";
+		return "Afiliacion [numero=" + numero + ", tipo=" + tipo + ", reglas=" + reglas + ", cuentas=" + cuentas + "]";
+	}
+
+	@Override
+	public int compareTo(Afiliacion o) {
+		return o.numero.compareTo(this.numero);
 	}
 
 }

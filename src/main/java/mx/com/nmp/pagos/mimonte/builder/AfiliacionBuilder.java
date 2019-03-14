@@ -31,7 +31,7 @@ public class AfiliacionBuilder {
 		AfiliacionDTO afiliacionDTO = null;
 		if (null != afiliacion) {
 			afiliacionDTO = new AfiliacionDTO();
-			afiliacionDTO.setNumero(afiliacion.getDescripcion());
+			afiliacionDTO.setNumero(afiliacion.getNumero());
 			afiliacionDTO.setId(afiliacion.getId());
 			afiliacionDTO.setTipo(TipoAutorizacionBuilder.buildTipoAfilaicionDTOFromTipoAfiliacion(afiliacion.getTipo()));
 		}

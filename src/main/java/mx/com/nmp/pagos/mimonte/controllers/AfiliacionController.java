@@ -29,8 +29,8 @@ import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
- * Nombre: AfiliacionController Descripcion: Clase que expone el servicio REST para
- * las operaciones relacionadas con el catalogo de afiliacion
+ * Nombre: AfiliacionController Descripcion: Clase que expone el servicio REST
+ * para las operaciones relacionadas con el catalogo de afiliacion
  *
  * @author Victor Manuel Moran Hernandez
  * @creationDate 06/03/2019 13:12 hrs.
@@ -138,11 +138,11 @@ public class AfiliacionController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
 				buildDummy());
 	}
+
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = "/catalogos/afiliacion/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "DELETE", value = "Elimina el registro en base a su id", tags = {
-			"Afiliacion" })
+	@ApiOperation(httpMethod = "DELETE", value = "Elimina el registro en base a su id", tags = { "Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
@@ -162,15 +162,15 @@ public class AfiliacionController {
 	public static AfiliacionDTO buildDummy() {
 
 		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
-		afiliacionDto.setCreated_by("Moran");
-		afiliacionDto.setCreated_date(new Date());
+		afiliacionDto.setCreatedBy("Victi Moran");
+		afiliacionDto.setCreatedDate(new Date());
 		afiliacionDto.setEstatus(true);
-		afiliacionDto.setId(234);
-		afiliacionDto.setLast_modified_by("Moran");
-		afiliacionDto.setLast_modified_date(new Date());
-		afiliacionDto.setNumero("12345678");
+		afiliacionDto.setId(234L);
+		afiliacionDto.setLastModifiedBy("Viktor Reznov");
+		afiliacionDto.setLastModifiedDate(new Date());
+		afiliacionDto.setNumero(12345678L);
 		afiliacionDto.setTipo(new TipoAutorizacionDTO());
-		
+
 		return afiliacionDto;
 	}
 

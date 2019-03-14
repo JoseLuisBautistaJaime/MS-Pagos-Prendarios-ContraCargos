@@ -36,7 +36,7 @@ public class CodigoEstadoCuentaBuilder {
 		if (null != codigoEstadoCuenta) {
 			codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO();
 			codigoEstadoCuentaDTO.setCategoria(null);
-			codigoEstadoCuentaDTO.setEntidades(null);
+			codigoEstadoCuentaDTO.setEntidad(null);
 			codigoEstadoCuentaDTO.setId(codigoEstadoCuenta.getId());
 			codigoEstadoCuentaDTO.setLeyenda(codigoEstadoCuenta.getLeyenda());
 			codigoEstadoCuentaDTO.setStatus(codigoEstadoCuenta.getEstatus());

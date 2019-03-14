@@ -40,6 +40,7 @@ DROP TABLE IF EXISTS `tc_afiliacion` ;
 
 CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `numero` BIGINT(20) NOT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   `tipo` INT(11) NOT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',

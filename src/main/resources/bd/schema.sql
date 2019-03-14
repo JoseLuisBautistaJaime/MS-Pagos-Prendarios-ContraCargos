@@ -461,5 +461,7 @@ ALTER TABLE to_pagos CHANGE id_estatus_transaccion id_estatus_transaccion INT(11
 ALTER TABLE tr_cliente_regla_negocio ADD FOREIGN KEY ic_fk_2(id_cliente) REFERENCES tk_cliente(id_cliente);
 ALTER TABLE tr_cliente_regla_negocio ADD FOREIGN KEY irn_fk(id_regla_negocio) REFERENCES tk_regla_negocio(id);
 
+ALTER TABLE tc_afiliacion ADD COLUMN numero BIGINT(20) NOT NULL;
+
 SET FOREIGN_KEY_CHECKS=1;
 

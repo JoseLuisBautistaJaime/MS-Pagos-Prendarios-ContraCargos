@@ -129,8 +129,7 @@ public class CuentasController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/cuentas/entidad/{idEntidad}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo Cuenta en base a su id", tags = {
-			"cuentas" })
+	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo Cuenta en base a su id", tags = { "cuentas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
@@ -142,11 +141,11 @@ public class CuentasController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas recuperadas correctamente",
 				buildDummyEnti());
 	}
+
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = "/catalogos/cuentas/{idcuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "DELETE", value = "Elimina el registro en base a su id", tags = {
-			"cuentas" })
+	@ApiOperation(httpMethod = "DELETE", value = "Elimina el registro en base a su id", tags = { "cuentas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
@@ -168,13 +167,13 @@ public class CuentasController {
 		CuentaDTO cuentasDto = new CuentaDTO();
 		List<AfiliacionDTO> afiliaciones = new ArrayList<AfiliacionDTO>();
 		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
-		afiliacionDto.setCreated_by("Moran");
-		afiliacionDto.setCreated_date(new Date());
+		afiliacionDto.setCreatedBy("Moran");
+		afiliacionDto.setCreatedDate(new Date());
 		afiliacionDto.setEstatus(true);
-		afiliacionDto.setId(234);
-		afiliacionDto.setLast_modified_by("Moran");
-		afiliacionDto.setLast_modified_date(new Date());
-		afiliacionDto.setNumero("12345678");
+		afiliacionDto.setId(234L);
+		afiliacionDto.setLastModifiedBy("Victi");
+		afiliacionDto.setLastModifiedDate(new Date());
+		afiliacionDto.setNumero(12345678L);
 		afiliacionDto.setTipo(new TipoAutorizacionDTO());
 		afiliaciones.add(afiliacionDto);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
@@ -198,19 +197,20 @@ public class CuentasController {
 		cuentasDto.setCodigos(codigos);
 		return cuentasDto;
 	}
-	public static List<CuentaDTO>  buildDummyEnti() {
+
+	public static List<CuentaDTO> buildDummyEnti() {
 
 		List<CuentaDTO> cuentas = new ArrayList<CuentaDTO>();
 		CuentaDTO cuentasDto = new CuentaDTO();
 		List<AfiliacionDTO> afiliaciones = new ArrayList<AfiliacionDTO>();
 		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
-		afiliacionDto.setCreated_by("Moran");
-		afiliacionDto.setCreated_date(new Date());
+		afiliacionDto.setCreatedBy("Moran");
+		afiliacionDto.setLastModifiedDate(new Date());
 		afiliacionDto.setEstatus(true);
-		afiliacionDto.setId(234);
-		afiliacionDto.setLast_modified_by("Moran");
-		afiliacionDto.setLast_modified_date(new Date());
-		afiliacionDto.setNumero("12345678");
+		afiliacionDto.setId(234L);
+		afiliacionDto.setLastModifiedBy("Viktor Reznov");
+		afiliacionDto.setLastModifiedDate(new Date());
+		afiliacionDto.setNumero(12345678L);
 		afiliacionDto.setTipo(new TipoAutorizacionDTO());
 		afiliaciones.add(afiliacionDto);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
@@ -233,10 +233,10 @@ public class CuentasController {
 		cuentasDto.setAfiliaciones(afiliaciones);
 		cuentasDto.setCodigos(codigos);
 		cuentas.add(cuentasDto);
-		afiliacionDto.setId(12345);
-		afiliacionDto.setLast_modified_by("Nestor");
-		afiliacionDto.setLast_modified_date(new Date());
-		afiliacionDto.setNumero("654321");
+		afiliacionDto.setId(12345L);
+		afiliacionDto.setLastModifiedBy("Nestor");
+		afiliacionDto.setLastModifiedDate(new Date());
+		afiliacionDto.setNumero(654321L);
 		cuentas.add(cuentasDto);
 		return cuentas;
 	}

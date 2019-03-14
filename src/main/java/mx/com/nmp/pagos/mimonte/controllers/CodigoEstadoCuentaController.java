@@ -2,8 +2,6 @@ package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,11 +176,8 @@ public class CodigoEstadoCuentaController {
 	 * @return
 	 */
 	public static CodigoEstadoCuentaDTO buildDummy() {
-		Set<EntidadDTO> set = new TreeSet<>();
-		set.add(new EntidadDTO("Banamex", null, null, null));
-		set.add(new EntidadDTO("Bancomer", null, null, null));
-		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO("Leyenda 1", true, set,
-				new CategoriaDTO(1L, "Categoria 1"));
+		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO("Leyenda 1", true,
+				new EntidadDTO("Bancomer", null, null, null), new CategoriaDTO(1L, "Categoria 1"));
 		return codigoEstadoCuentaDTO;
 	}
 
