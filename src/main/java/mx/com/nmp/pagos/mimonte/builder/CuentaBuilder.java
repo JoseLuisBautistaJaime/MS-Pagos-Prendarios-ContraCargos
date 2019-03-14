@@ -2,10 +2,7 @@ package mx.com.nmp.pagos.mimonte.builder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
-import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
@@ -83,22 +80,22 @@ public abstract class CuentaBuilder {
 	 * @param cuentaBaseDTO
 	 * @return
 	 */
-	public static CuentaDTO buildCuentaDTOFromCuentaBaseDTO(CuentaBaseDTO cuentaBaseDTO) {
-		CuentaDTO cuentaDTO = null;
-		if (null != cuentaBaseDTO) {
-			cuentaDTO = new CuentaDTO();
-			cuentaDTO.setAfiliaciones(new ArrayList<>(cuentaBaseDTO.getAfiliaciones()));
-			cuentaDTO.setCreatedBy(cuentaBaseDTO.getCreatedBy());
-			cuentaDTO.setCreatedDate(cuentaBaseDTO.getCreatedDate());
-			cuentaDTO.setEstatus(cuentaBaseDTO.getEstatus());
-			cuentaDTO.setId(cuentaBaseDTO.getId());
-			cuentaDTO.setLastModifiedBy(cuentaBaseDTO.getLastModifiedBy());
-			cuentaDTO.setLastModifiedDate(cuentaBaseDTO.getLastModifiedDate());
-			cuentaDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
-
-		}
-		return cuentaDTO;
-	}
+//	public static CuentaDTO buildCuentaDTOFromCuentaBaseDTO(CuentaBaseDTO cuentaBaseDTO) {
+//		CuentaDTO cuentaDTO = null;
+//		if (null != cuentaBaseDTO) {
+//			cuentaDTO = new CuentaDTO();
+//			cuentaDTO.setAfiliaciones(new ArrayList<>(cuentaBaseDTO.getAfiliaciones()));
+//			cuentaDTO.setCreatedBy(cuentaBaseDTO.getCreatedBy());
+//			cuentaDTO.setCreatedDate(cuentaBaseDTO.getCreatedDate());
+//			cuentaDTO.setEstatus(cuentaBaseDTO.getEstatus());
+//			cuentaDTO.setId(cuentaBaseDTO.getId());
+//			cuentaDTO.setLastModifiedBy(cuentaBaseDTO.getLastModifiedBy());
+//			cuentaDTO.setLastModifiedDate(cuentaBaseDTO.getLastModifiedDate());
+//			cuentaDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
+//
+//		}
+//		return cuentaDTO;
+//	}
 
 	/**
 	 * Construye un objeto de tipo CuentaBaseDTO a partir de un objeto de tipo
@@ -107,24 +104,24 @@ public abstract class CuentaBuilder {
 	 * @param cuentaDTO
 	 * @return
 	 */
-	public static CuentaBaseDTO buildCuentaBaseDTOFromCuentaDTO(CuentaDTO cuentaDTO) {
-		CuentaBaseDTO cuentaBaseDTO = null;
-		if (null != cuentaDTO) {
-			cuentaBaseDTO = new CuentaBaseDTO();
-			Set<AfiliacionDTO> targetSet = new TreeSet<>();
-			org.apache.commons.collections4.CollectionUtils.addAll(targetSet, cuentaDTO.getAfiliaciones());
-			cuentaBaseDTO.setAfiliaciones(targetSet);
-			cuentaBaseDTO.setCreatedBy(cuentaDTO.getCreatedBy());
-			cuentaBaseDTO.setCreatedDate(cuentaDTO.getCreatedDate());
-			cuentaBaseDTO.setEstatus(cuentaDTO.getEstatus());
-			cuentaBaseDTO.setId(cuentaDTO.getId());
-			cuentaBaseDTO.setLastModifiedBy(cuentaDTO.getLastModifiedBy());
-			cuentaBaseDTO.setLastModifiedDate(cuentaDTO.getLastModifiedDate());
-			cuentaBaseDTO.setNumeroCuenta(cuentaDTO.getNumero());
-
-		}
-		return cuentaBaseDTO;
-	}
+//	public static CuentaBaseDTO buildCuentaBaseDTOFromCuentaDTO(CuentaDTO cuentaDTO) {
+//		CuentaBaseDTO cuentaBaseDTO = null;
+//		if (null != cuentaDTO) {
+//			cuentaBaseDTO = new CuentaBaseDTO();
+//			Set<AfiliacionDTO> targetSet = new TreeSet<>();
+//			org.apache.commons.collections4.CollectionUtils.addAll(targetSet, cuentaDTO.getAfiliaciones());
+//			cuentaBaseDTO.setAfiliaciones(targetSet);
+//			cuentaBaseDTO.setCreatedBy(cuentaDTO.getCreatedBy());
+//			cuentaBaseDTO.setCreatedDate(cuentaDTO.getCreatedDate());
+//			cuentaBaseDTO.setEstatus(cuentaDTO.getEstatus());
+//			cuentaBaseDTO.setId(cuentaDTO.getId());
+//			cuentaBaseDTO.setLastModifiedBy(cuentaDTO.getLastModifiedBy());
+//			cuentaBaseDTO.setLastModifiedDate(cuentaDTO.getLastModifiedDate());
+//			cuentaBaseDTO.setNumeroCuenta(cuentaDTO.getNumero());
+//
+//		}
+//		return cuentaBaseDTO;
+//	}
 
 	/**
 	 * Construye un objeto de tipo CuentaDTO a partir de un entity de tipo Cuenta
@@ -137,7 +134,7 @@ public abstract class CuentaBuilder {
 		if (null != cuenta) {
 			cuentaDTO = new CuentaDTO();
 			cuentaDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
 			cuentaDTO.setCreatedBy(cuenta.getCreatedBy());
 			cuentaDTO.setCreatedDate(cuenta.getCreatedDate());
 			cuentaDTO.setEstatus(cuenta.getEstatus());
