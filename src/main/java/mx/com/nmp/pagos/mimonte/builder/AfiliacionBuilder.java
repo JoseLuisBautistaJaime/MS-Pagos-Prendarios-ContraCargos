@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
 import mx.com.nmp.pagos.mimonte.model.Afiliacion;
 
 /**
@@ -112,6 +113,23 @@ public class AfiliacionBuilder {
 			afiliacionDTOList = new ArrayList<>(buildAfiliacionDTOListFromAfiliacionSet(afiliacionSet));
 		}
 		return afiliacionDTOList;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo AfiliacionRespDTO a partir de un set
+	 * de entities de tipo Afiliacion
+	 * 
+	 * @param afiliacionSet
+	 * @return
+	 */
+	public static List<AfiliacionRespDTO> buildAfiliacionRespDTOListFromAfiliacionSet(Set<Afiliacion> afiliacionSet) {
+		List<AfiliacionRespDTO> afiliacionRespDTOList = null;
+		if (null != afiliacionSet) {
+			afiliacionRespDTOList = new ArrayList<>();
+			for (Afiliacion afiliacion : afiliacionSet)
+				afiliacionRespDTOList.add(new AfiliacionRespDTO(afiliacion.getId(), afiliacion.getNumero()));
+		}
+		return afiliacionRespDTOList;
 	}
 
 }

@@ -27,6 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
@@ -45,7 +46,7 @@ import mx.com.nmp.pagos.mimonte.util.Response;
 @RestController
 @RequestMapping(value = "/mimonte")
 @Api(value = "Servicio que permite realizar operciones sobre el catalogo de cuentas.", description = "REST API para realizar operaciones sobre el catalogo de cuentas", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
-		"cuentas" })
+		"Cuentas" })
 public class CuentasController {
 
 	/**
@@ -169,10 +170,9 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response deleteByidcuentas(@PathVariable(value = "nombre", required = true) String nombre,
-			@PathVariable(value = "estatus", required = true) Boolean estatus) {
+	public Response deleteByidcuentas(@PathVariable(value = "idcuenta", required = true) Long idcuenta) {
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas eliminada correctamente");
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas eliminada correctamente",null);
 	}
 
 	/**
@@ -180,19 +180,42 @@ public class CuentasController {
 	 * 
 	 * @return
 	 */
+	
+	public static CuentaDTO buildDummyNew() {
+
+		CuentaDTO cuentasDto = new CuentaDTO();
+		List<AfiliacionRespDTO> afiliaciones = new ArrayList<AfiliacionRespDTO>();
+		AfiliacionRespDTO afiliacionDto = new AfiliacionRespDTO();
+		afiliacionDto.setId(234L);
+		afiliacionDto.setNumero(12345678L);
+		afiliaciones.add(afiliacionDto);
+		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
+		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
+		CategoriaDTO cate = new CategoriaDTO();
+		cate.setId(123l);
+		cate.setDescripcion("Categoria Dummy");
+		codigo.setEstatus(true);
+		codigo.setCategoria(cate);
+		codigo.setLeyenda("Leyenda de codigo");
+		codigo.setId(1234l);
+		codigos.add(codigo);
+		cuentasDto.setCreatedBy("Moran");
+		cuentasDto.setCreatedDate(new Date());
+		cuentasDto.setEstatus(true);
+		cuentasDto.setId(234L);
+		cuentasDto.setNumero(12345678L);
+		cuentasDto.setAfiliaciones(afiliaciones);
+		
+		return cuentasDto;
+	}
+	
 	public static CuentaDTO buildDummy() {
 
 		CuentaDTO cuentasDto = new CuentaDTO();
-		List<AfiliacionDTO> afiliaciones = new ArrayList<AfiliacionDTO>();
-		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
-		afiliacionDto.setCreatedBy("Moran");
-		afiliacionDto.setCreatedDate(new Date());
-		afiliacionDto.setEstatus(true);
+		List<AfiliacionRespDTO> afiliaciones = new ArrayList<AfiliacionRespDTO>();
+		AfiliacionRespDTO afiliacionDto = new AfiliacionRespDTO();
 		afiliacionDto.setId(234L);
-		afiliacionDto.setLastModifiedBy("Victi");
-		afiliacionDto.setLastModifiedDate(new Date());
 		afiliacionDto.setNumero(12345678L);
-		afiliacionDto.setTipo(new TipoAutorizacionDTO());
 		afiliaciones.add(afiliacionDto);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
 		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
@@ -212,7 +235,7 @@ public class CuentasController {
 		cuentasDto.setLastModifiedDate(new Date());
 		cuentasDto.setNumero(12345678L);
 		cuentasDto.setAfiliaciones(afiliaciones);
-		cuentasDto.setCodigos(codigos);
+		
 		return cuentasDto;
 	}
 
@@ -220,27 +243,15 @@ public class CuentasController {
 
 		List<CuentaDTO> cuentas = new ArrayList<CuentaDTO>();
 		CuentaDTO cuentasDto = new CuentaDTO();
-		List<AfiliacionDTO> afiliaciones = new ArrayList<AfiliacionDTO>();
-		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
-		afiliacionDto.setCreatedBy("Moran");
-		afiliacionDto.setLastModifiedDate(new Date());
-		afiliacionDto.setEstatus(true);
+		List<AfiliacionRespDTO> afiliaciones = new ArrayList<AfiliacionRespDTO>();
+		AfiliacionRespDTO afiliacionDto = new AfiliacionRespDTO();
 		afiliacionDto.setId(234L);
-		afiliacionDto.setLastModifiedBy("Viktor Reznov");
-		afiliacionDto.setLastModifiedDate(new Date());
-		afiliacionDto.setNumero(12345678L);
-		afiliacionDto.setTipo(new TipoAutorizacionDTO());
 		afiliaciones.add(afiliacionDto);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
 		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
 		CategoriaDTO cate = new CategoriaDTO();
 		cate.setId(123l);
 		cate.setDescripcion("Categoria Dummy");
-		codigo.setEstatus(true);
-		codigo.setCategoria(cate);
-		codigo.setLeyenda("Leyenda de codigo");
-		codigo.setId(1234l);
-		codigos.add(codigo);
 		cuentasDto.setCreatedBy("Moran");
 		cuentasDto.setCreatedDate(new Date());
 		cuentasDto.setEstatus(true);
@@ -249,11 +260,8 @@ public class CuentasController {
 		cuentasDto.setLastModifiedDate(new Date());
 		cuentasDto.setNumero(12345678L);
 		cuentasDto.setAfiliaciones(afiliaciones);
-		cuentasDto.setCodigos(codigos);
 		cuentas.add(cuentasDto);
 		afiliacionDto.setId(12345L);
-		afiliacionDto.setLastModifiedBy("Nestor");
-		afiliacionDto.setLastModifiedDate(new Date());
 		afiliacionDto.setNumero(654321L);
 		cuentas.add(cuentasDto);
 		return cuentas;
