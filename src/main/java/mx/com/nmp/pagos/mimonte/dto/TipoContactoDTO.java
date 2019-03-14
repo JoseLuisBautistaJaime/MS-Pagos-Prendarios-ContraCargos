@@ -22,6 +22,11 @@ public class TipoContactoDTO extends AbstractCatalogoDTO {
 
 	}
 
+	public TipoContactoDTO(Long id) {
+		super.id = id;
+
+	}
+
 	public TipoContactoDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
 			String lastModifiedBy, String description, String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);

@@ -29,6 +29,7 @@ import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoContactoRespDTO;
+import mx.com.nmp.pagos.mimonte.services.impl.ContactoServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -53,6 +54,12 @@ public class ContactosController {
 	BeanFactory beanFactory;
 
 	/**
+	 * Bean de la capa service para obtener los resultados
+	 */
+	@Autowired
+	private ContactoServiceImpl contactoServiceImpl;
+
+	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
 	private final Logger log = LoggerFactory.getLogger(ContactosController.class);
@@ -68,17 +75,21 @@ public class ContactosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response add(@RequestBody ContactoRequestDTO contacto) {
 
+		// ContactoRespDTO tipoContactoRespDTOReal =
+		// (ContactoRespDTO)ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(
+		// contactoServiceImpl.save(ContactosBuilder.buildContactoBaseDTOFromContactoRequestDTO(contacto)));
+
 		// Dummy
 
 		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
 		tipoContactoRespDTO.setDescripcion("contacto");
-		tipoContactoRespDTO.setId(1);
+		tipoContactoRespDTO.setId(1L);
 
 		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
 		contactoResponseDTO.setEmail("miemail@email.com");
 		contactoResponseDTO.setDescripcion("contacto");
 		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1234);
+		contactoResponseDTO.setId(1234L);
 		contactoResponseDTO.setNombre("micontacto");
 		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
 
@@ -104,13 +115,13 @@ public class ContactosController {
 
 		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
 		tipoContactoRespDTO.setDescripcion("contacto");
-		tipoContactoRespDTO.setId(1);
+		tipoContactoRespDTO.setId(1L);
 
 		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
 		contactoResponseDTO.setEmail("miemail@email.com");
 		contactoResponseDTO.setDescripcion("contacto");
 		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1234);
+		contactoResponseDTO.setId(1234L);
 		contactoResponseDTO.setNombre("micontacto");
 		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
 
@@ -136,13 +147,13 @@ public class ContactosController {
 
 		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
 		tipoContactoRespDTO.setDescripcion("contacto");
-		tipoContactoRespDTO.setId(1);
+		tipoContactoRespDTO.setId(1L);
 
 		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
 		contactoResponseDTO.setEmail("miemail@email.com");
 		contactoResponseDTO.setDescripcion("contacto");
 		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1234);
+		contactoResponseDTO.setId(1234L);
 		contactoResponseDTO.setNombre("micontacto");
 		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
@@ -167,13 +178,13 @@ public class ContactosController {
 
 		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
 		tipoContactoRespDTO.setDescripcion("contacto");
-		tipoContactoRespDTO.setId(1);
+		tipoContactoRespDTO.setId(1L);
 
 		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
 		contactoResponseDTO.setEmail("miemail@email.com");
 		contactoResponseDTO.setDescripcion("contacto");
 		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1234);
+		contactoResponseDTO.setId(1234L);
 		contactoResponseDTO.setNombre("micontacto");
 		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
 
@@ -201,13 +212,13 @@ public class ContactosController {
 
 		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
 		tipoContactoRespDTO.setDescripcion("contacto");
-		tipoContactoRespDTO.setId(1);
+		tipoContactoRespDTO.setId(1L);
 
 		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
 		contactoResponseDTO.setEmail("miemail@email.com");
 		contactoResponseDTO.setDescripcion("contacto");
 		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1);
+		contactoResponseDTO.setId(1L);
 		contactoResponseDTO.setNombre("micontacto");
 		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
 
@@ -215,7 +226,7 @@ public class ContactosController {
 		contactoResponseDTO2.setEmail("miemail@email.com");
 		contactoResponseDTO2.setDescripcion("contacto");
 		contactoResponseDTO2.setEstatus(true);
-		contactoResponseDTO2.setId(2);
+		contactoResponseDTO2.setId(2L);
 		contactoResponseDTO2.setNombre("micontacto");
 		contactoResponseDTO2.setTipoContactoResDTO(tipoContactoRespDTO);
 
@@ -223,7 +234,7 @@ public class ContactosController {
 		contactoResponseDTO3.setEmail("miemail@email.com");
 		contactoResponseDTO3.setDescripcion("contacto");
 		contactoResponseDTO3.setEstatus(true);
-		contactoResponseDTO3.setId(3);
+		contactoResponseDTO3.setId(3L);
 		contactoResponseDTO3.setNombre("micontacto");
 		contactoResponseDTO3.setTipoContactoResDTO(tipoContactoRespDTO);
 

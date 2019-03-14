@@ -15,6 +15,6 @@ import mx.com.nmp.pagos.mimonte.model.Contactos;
  * @version 0.1
  */
 @Repository
-public interface ContactoRespository extends JpaRepository<Contactos, Integer>{
+public interface ContactoRespository extends JpaRepository<Contactos, Long>{
 
 }

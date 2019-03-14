@@ -2,24 +2,24 @@ package mx.com.nmp.pagos.mimonte.dto;
 
 public abstract class AbstractCatDTO {
 	
-	protected Integer id;
+	protected Long id;
 	protected Boolean estatus;
 	
 	public AbstractCatDTO() {
 		super();
 	}
 
-	public AbstractCatDTO(Integer id, Boolean estatus) {
+	public AbstractCatDTO(Long id, Boolean estatus) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

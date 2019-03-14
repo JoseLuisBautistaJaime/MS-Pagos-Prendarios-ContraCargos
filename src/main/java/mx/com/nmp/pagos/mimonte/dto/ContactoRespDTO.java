@@ -1,26 +1,29 @@
 package mx.com.nmp.pagos.mimonte.dto;
+
 /**
- * Nombre: ContactoRespDTO Descripcion: Clase que encapsula la informacion perteneciente a los contactos.
+ * Nombre: ContactoRespDTO Descripcion: Clase que encapsula la informacion
+ * perteneciente a los contactos.
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net
  * @creationDate 06/03/2019 16:06 hrs.
  * @version 0.1
  */
-public class ContactoRespDTO extends AbstractCatDTO{
-	
+public class ContactoRespDTO extends AbstractCatDTO {
+
 	private String nombre;
-	
+
 	private String email;
-	
+
 	private String descripcion;
-	
+
 	private TipoContactoRespDTO tipoContactoRespDTO;
 
 	public ContactoRespDTO() {
 		super();
 	}
 
-	public ContactoRespDTO(String nombre, String email, String descripcion, TipoContactoRespDTO tipoContactoRespDTO, Integer id, Boolean estatus) {
+	public ContactoRespDTO(String nombre, String email, String descripcion, TipoContactoRespDTO tipoContactoRespDTO,
+			Long id, Boolean estatus) {
 		super(id, estatus);
 	}
 
@@ -58,8 +61,8 @@ public class ContactoRespDTO extends AbstractCatDTO{
 
 	@Override
 	public String toString() {
-		return "ContactoRespDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion + ", TipoContactoRespDTO=" + tipoContactoRespDTO + ", id=" + id
-				+ ", estatus=" + estatus + "]";
+		return "ContactoRespDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion
+				+ ", TipoContactoRespDTO=" + tipoContactoRespDTO + ", id=" + id + ", estatus=" + estatus + "]";
 	}
 
 }

@@ -9,11 +9,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * Nombre: Contacto Descripcion: Entidad que representa al contacto dentro del
+ * Nombre: Contactos Descripcion: Entidad que representa al contacto dentro del
  * sistema.
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net Fecha: 05/03/2019 12:04 Hrs.
@@ -29,12 +31,10 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable {
 		super();
 	}
 
-	public Contactos(String nombre, String email, String descripcion, TipoContacto tipoContacto,
-			Set<Entidad> entidades) {
+	public Contactos(String nombre, String email, TipoContacto tipoContacto, Set<Entidad> entidades) {
 		super();
 		this.nombre = nombre;
 		this.email = email;
-		this.descripcion = descripcion;
 		this.tipoContacto = tipoContacto;
 		this.entidades = entidades;
 	}
@@ -50,10 +50,8 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable {
 	@Column(name = "email")
 	private String email;
 
-	@Column(name = "descripcion")
-	private String descripcion;
-
-	@Column(name = "tipo_contacto")
+	@ManyToOne
+	@JoinColumn(name = "tipo_contacto")
 	private TipoContacto tipoContacto;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contactos")
@@ -79,14 +77,6 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable {
 		return tipoContacto;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
 	public void setTipoContacto(TipoContacto tipoContacto) {
 		this.tipoContacto = tipoContacto;
 	}
@@ -101,7 +91,7 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(nombre, email, descripcion, tipoContacto);
+		return Objects.hash(nombre, email, tipoContacto);
 	}
 
 	@Override
@@ -123,11 +113,6 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable {
 				return false;
 		} else if (!nombre.equals(other.nombre))
 			return false;
-		if (descripcion == null) {
-			if (other.descripcion != null)
-				return false;
-		} else if (!descripcion.equals(other.descripcion))
-			return false;
 		if (tipoContacto == null) {
 			if (other.tipoContacto != null)
 				return false;
@@ -138,8 +123,7 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Contactos [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion + ", tipoContacto="
-				+ tipoContacto + "]";
+		return "Contactos [nombre=" + nombre + ", email=" + email + ", tipoContacto=" + tipoContacto + "]";
 	}
 
 }

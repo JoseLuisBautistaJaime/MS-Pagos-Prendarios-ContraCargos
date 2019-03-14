@@ -21,8 +21,6 @@ public class ContactoResponseDTO extends AbstractCatalogoDTO {
 
 	private String email;
 
-	private String descripcion;
-
 	private TipoContactoDTO tipoContacto;
 
 	public ContactoResponseDTO() {
@@ -30,21 +28,20 @@ public class ContactoResponseDTO extends AbstractCatalogoDTO {
 
 	}
 
-	public ContactoResponseDTO(String nombre, String email, String descripcion, TipoContactoDTO tipoContacto) {
+	public ContactoResponseDTO(String nombre, String email, TipoContactoDTO tipoContacto) {
 		super();
 		this.nombre = nombre;
 		this.email = email;
-		this.descripcion = descripcion;
 		this.tipoContacto = tipoContacto;
 	}
 
-	public ContactoResponseDTO(String nombre, String email, String descripcion, TipoContactoDTO tipoContacto, Long id,
-			Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy,
-			String description, String shortDescription) {
+	public ContactoResponseDTO(String nombre, String email, TipoContactoDTO tipoContacto, Long id, Boolean estatus,
+			Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
+			String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.nombre = nombre;
 		this.email = email;
-		this.descripcion = descripcion;
+
 		this.tipoContacto = tipoContacto;
 	}
 
@@ -64,14 +61,6 @@ public class ContactoResponseDTO extends AbstractCatalogoDTO {
 		this.email = email;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
 	public TipoContactoDTO getTipoContacto() {
 		return tipoContacto;
 	}
@@ -82,10 +71,9 @@ public class ContactoResponseDTO extends AbstractCatalogoDTO {
 
 	@Override
 	public String toString() {
-		return "ContactoResponseDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion
-				+ ", tipoContacto=" + tipoContacto + ", id=" + id + ", estatus=" + estatus + ", createdDate="
-				+ createdDate + ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy
-				+ ", lastModifiedBy=" + lastModifiedBy + "]";
+		return "ContactoResponseDTO [nombre=" + nombre + ", email=" + email + ", " + "tipoContacto=" + tipoContacto
+				+ ", id=" + id + ", estatus=" + estatus + ", createdDate=" + createdDate + ", lastModifiedDate="
+				+ lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy + "]";
 	}
 
 }

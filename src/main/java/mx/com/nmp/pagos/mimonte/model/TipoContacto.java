@@ -23,20 +23,13 @@ public class TipoContacto extends AbstractCatalogoAdm implements Serializable {
 		super();
 	}
 
+	public TipoContacto(Long id) {
+		super.id = id;
+	}
+
 	public TipoContacto(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
 			String lastModifiedBy, String description, String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		return true;
 	}
 
 }
