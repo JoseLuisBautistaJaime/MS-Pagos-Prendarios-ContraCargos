@@ -168,7 +168,7 @@ public class CuentasController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = "/catalogos/cuentas/{idcuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "DELETE", value = "Elimina el registro en base a su id", tags = { "Cuentas" })
+	@ApiOperation(httpMethod = "PUT", value = "Elimina el registro en base a su id", tags = { "Cuentas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
@@ -208,7 +208,7 @@ public class CuentasController {
 		cuentasDto.setCreatedDate(new Date());
 		cuentasDto.setEstatus(true);
 		cuentasDto.setId(234L);
-		cuentasDto.setNumero(12345678L);
+		cuentasDto.setNumero("12345678");
 		cuentasDto.setAfiliaciones(afiliaciones);
 
 		return cuentasDto;
@@ -238,7 +238,7 @@ public class CuentasController {
 		cuentasDto.setId(234L);
 		cuentasDto.setLastModifiedBy("Moran");
 		cuentasDto.setLastModifiedDate(new Date());
-		cuentasDto.setNumero(12345678L);
+		cuentasDto.setNumero("12345678");
 		cuentasDto.setAfiliaciones(afiliaciones);
 
 		return cuentasDto;
@@ -261,7 +261,7 @@ public class CuentasController {
 		cuentasDto.setId(234L);
 		cuentasDto.setLastModifiedBy("Moran");
 		cuentasDto.setLastModifiedDate(new Date());
-		cuentasDto.setNumero(12345678L);
+		cuentasDto.setNumero("12345678");
 		cuentasDto.setAfiliaciones(afiliaciones);
 		cuentas.add(cuentasDto);
 		afiliacionDto.setId(12345L);

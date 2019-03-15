@@ -29,7 +29,7 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 	private static final long serialVersionUID = 2945422432743246862L;
 
 	@Column(name = "numero_cuenta", nullable = false)
-	private Long numeroCuenta;
+	private String numeroCuenta;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "tr_cuenta_afiliacion", joinColumns = { @JoinColumn(name = "id_cuenta") }, inverseJoinColumns = {
@@ -43,14 +43,14 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 		super();
 	}
 
-	public Cuenta(Long numeroCuenta, Set<Afiliacion> afiliaciones) {
+	public Cuenta(String numeroCuenta, Set<Afiliacion> afiliaciones) {
 		super();
 		this.numeroCuenta = numeroCuenta;
 		this.afiliaciones = afiliaciones;
 	}
 
 	public Cuenta(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy, String description, String shortDescription, Long numeroCuenta,
+			String lastModifiedBy, String description, String shortDescription, String numeroCuenta,
 			Set<Afiliacion> afiliaciones) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.numeroCuenta = numeroCuenta;
@@ -65,11 +65,11 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 		this.entidades = entidades;
 	}
 
-	public Long getNumeroCuenta() {
+	public String getNumeroCuenta() {
 		return numeroCuenta;
 	}
 
-	public void setNumeroCuenta(Long numeroCuenta) {
+	public void setNumeroCuenta(String numeroCuenta) {
 		this.numeroCuenta = numeroCuenta;
 	}
 

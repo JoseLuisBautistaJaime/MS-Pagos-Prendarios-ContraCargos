@@ -178,8 +178,8 @@ public class EntidadController {
 		afiliaciones2.add(new AfiliacionEntDTO(3L, 88345670L, true));
 		afiliaciones2.add(new AfiliacionEntDTO(4L, 33423699L, true));
 		Set<CuentaEntDTO> set = new HashSet<>();
-		set.add(new CuentaEntDTO(1L, 123456789L, true, afiliaciones));
-		set.add(new CuentaEntDTO(2L, 999456770L, true, afiliaciones2));
+		set.add(new CuentaEntDTO(1L, "123456789", true, afiliaciones));
+		set.add(new CuentaEntDTO(2L, "999456770", true, afiliaciones2));
 		Set<ContactoEntDTO> set2 = new HashSet<>();
 		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com", true));
 		set2.add(new ContactoEntDTO(2L, "Maria DB", "mari_DB@gmail.com", true));

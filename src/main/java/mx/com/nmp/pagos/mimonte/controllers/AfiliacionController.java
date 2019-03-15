@@ -167,7 +167,7 @@ public class AfiliacionController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = "/catalogos/afiliacion/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "DELETE", value = "Elimina el registro en base a su id", tags = { "Afiliacion" })
+	@ApiOperation(httpMethod = "PUT", value = "Eliminacion logica del registro en base a su id", tags = { "Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),

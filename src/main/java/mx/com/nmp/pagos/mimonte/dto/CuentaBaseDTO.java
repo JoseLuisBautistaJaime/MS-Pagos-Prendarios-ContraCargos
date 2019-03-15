@@ -18,32 +18,32 @@ public class CuentaBaseDTO extends AbstractCatalogoDTO implements Comparable<Cue
 	 */
 	private static final long serialVersionUID = -1128729505717430633L;
 
-	private Long numeroCuenta;
+	private String numeroCuenta;
 	private Set<AfiliacionDTO> afiliaciones;
 
 	public CuentaBaseDTO() {
 		super();
 	}
 
-	public CuentaBaseDTO(Long numeroCuenta, Set<AfiliacionDTO> afiliaciones) {
+	public CuentaBaseDTO(String numeroCuenta, Set<AfiliacionDTO> afiliaciones) {
 		super();
 		this.numeroCuenta = numeroCuenta;
 		this.afiliaciones = afiliaciones;
 	}
 
 	public CuentaBaseDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy, String description, String shortDescription, Long numeroCuenta,
+			String lastModifiedBy, String description, String shortDescription, String numeroCuenta,
 			Set<AfiliacionDTO> afiliaciones) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.numeroCuenta = numeroCuenta;
 		this.afiliaciones = afiliaciones;
 	}
 
-	public Long getNumeroCuenta() {
+	public String getNumeroCuenta() {
 		return numeroCuenta;
 	}
 
-	public void setNumeroCuenta(Long numeroCuenta) {
+	public void setNumeroCuenta(String numeroCuenta) {
 		this.numeroCuenta = numeroCuenta;
 	}
 

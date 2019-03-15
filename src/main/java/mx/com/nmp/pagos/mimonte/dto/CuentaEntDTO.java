@@ -13,7 +13,7 @@ import java.util.Set;
 public class CuentaEntDTO implements Comparable<CuentaEntDTO> {
 
 	private Long id;
-	private Long numeroCuenta;
+	private String numeroCuenta;
 	private Boolean estatus;
 	private Set<AfiliacionEntDTO> afiliaciones;
 
@@ -21,7 +21,7 @@ public class CuentaEntDTO implements Comparable<CuentaEntDTO> {
 		super();
 	}
 
-	public CuentaEntDTO(Long id, Long numeroCuenta, Boolean estatus, Set<AfiliacionEntDTO> afiliaciones) {
+	public CuentaEntDTO(Long id, String numeroCuenta, Boolean estatus, Set<AfiliacionEntDTO> afiliaciones) {
 		super();
 		this.id = id;
 		this.numeroCuenta = numeroCuenta;
@@ -37,11 +37,11 @@ public class CuentaEntDTO implements Comparable<CuentaEntDTO> {
 		this.id = id;
 	}
 
-	public Long getNumeroCuenta() {
+	public String getNumeroCuenta() {
 		return numeroCuenta;
 	}
 
-	public void setNumeroCuenta(Long numeroCuenta) {
+	public void setNumeroCuenta(String numeroCuenta) {
 		this.numeroCuenta = numeroCuenta;
 	}
 

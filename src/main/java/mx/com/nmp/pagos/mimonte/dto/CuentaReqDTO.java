@@ -13,7 +13,7 @@ import java.util.List;
 public class CuentaReqDTO implements Comparable<CuentaReqDTO> {
 
 	private Long id;
-	private Long numero;
+	private String numero;
 	private Boolean estatus;
 	private List<AfiliacionReqDTO> afiliaicones;
 
@@ -21,7 +21,7 @@ public class CuentaReqDTO implements Comparable<CuentaReqDTO> {
 		super();
 	}
 
-	public CuentaReqDTO(Long id, Long numero, Boolean estatus, List<AfiliacionReqDTO> afiliaicones) {
+	public CuentaReqDTO(Long id, String numero, Boolean estatus, List<AfiliacionReqDTO> afiliaicones) {
 		super();
 		this.id = id;
 		this.numero = numero;
@@ -37,11 +37,11 @@ public class CuentaReqDTO implements Comparable<CuentaReqDTO> {
 		this.id = id;
 	}
 
-	public Long getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Long numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 

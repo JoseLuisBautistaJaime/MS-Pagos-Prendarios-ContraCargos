@@ -6,7 +6,7 @@ import java.util.List;
 public class CuentaDTO {
 
 	private Long id;
-	private Long numero;
+	private String numero;
 	private List<AfiliacionRespDTO> afiliaciones;
 
 	private Boolean estatus;
@@ -20,7 +20,7 @@ public class CuentaDTO {
 
 	}
 
-	public CuentaDTO(Long id, Long numero, List<AfiliacionRespDTO> afiliaciones, 
+	public CuentaDTO(Long id, String numero, List<AfiliacionRespDTO> afiliaciones, 
 			Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super();
 		this.id = id;
@@ -41,11 +41,11 @@ public class CuentaDTO {
 		this.id = id;
 	}
 
-	public Long getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Long numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 
