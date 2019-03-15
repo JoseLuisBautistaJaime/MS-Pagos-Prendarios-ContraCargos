@@ -132,4 +132,40 @@ public class AfiliacionBuilder {
 		return afiliacionRespDTOList;
 	}
 
+	/**
+	 * Construye una lista de objetos de tipo AfiliacionRespDTO a partir de una
+	 * lista de objetos de tipo AfiliacionDTO
+	 * 
+	 * @param afiliacionDTOSet
+	 * @return
+	 */
+	public static List<AfiliacionRespDTO> buildAfiliacionRespDTOListFromAfiliacionDTOSet(
+			Set<AfiliacionDTO> afiliacionDTOSet) {
+		List<AfiliacionRespDTO> afiliacionRespDTOList = null;
+		if (null != afiliacionDTOSet) {
+			afiliacionRespDTOList = new ArrayList<>();
+			for (AfiliacionDTO afiliacionDTO : afiliacionDTOSet)
+				afiliacionRespDTOList.add(new AfiliacionRespDTO(afiliacionDTO.getId(), afiliacionDTO.getNumero()));
+		}
+		return afiliacionRespDTOList;
+	}
+
+	/**
+	 * Construye un set de objetos de tipo AfiliacionDTO a partir de una lista de
+	 * objetos de tipo AfiliacionRespDTO
+	 * 
+	 * @param afiliacionDTOList
+	 * @return
+	 */
+	public static Set<AfiliacionDTO> buildAfiliacionRespDTOListFromAfiliacionDTOSet(
+			List<AfiliacionRespDTO> afiliacionDTOList) {
+		Set<AfiliacionDTO> afiliacionRespDTOSet = null;
+		if (null != afiliacionDTOList) {
+			afiliacionRespDTOSet = new TreeSet<>();
+			for (AfiliacionRespDTO AfiliacionRespDTO : afiliacionDTOList)
+				afiliacionRespDTOSet.add(new AfiliacionDTO(AfiliacionRespDTO.getId(), null));
+		}
+		return afiliacionRespDTOSet;
+	}
+
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,12 +27,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
-import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.CuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
@@ -80,10 +80,11 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody CuentaDTO CuentaDTOReq) {
+	public Response save(@RequestBody CuentaDTO CuentaDTOReq,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 //		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(
-//				cuentaServiceImpl.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(CuentaDTOReq)));
+//				cuentaServiceImpl.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(CuentaDTOReq), createdBy));
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta guardada correctamente",
 				buildDummy());
@@ -104,10 +105,11 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@RequestBody CuentaDTO CuentaDTOReq) {
+	public Response update(@RequestBody CuentaDTO cuentaDTOReq,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 
 //		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(
-//				cuentaServiceImpl.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(CuentaDTOReq)));
+//				cuentaServiceImpl.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq), lastModifiedBy));
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta actualizada correctamente",
 				buildDummy());
@@ -129,7 +131,8 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findById(@PathVariable(value = "idcuentas", required = true) Long idcuentas) {
+	public Response findById(@PathVariable(value = "idcuentas", required = true) Long idcuentas,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 //		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(cuentaServiceImpl.findById(idcuentas));
 
@@ -153,7 +156,8 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByCuenta(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
+	public Response findByCuenta(@PathVariable(value = "idEntidad", required = true) Long idEntidad,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 //		List<CuentaDTO> cuentaDTOList = cuentaServiceImpl.findByEntidadId(idEntidad);
 
@@ -170,9 +174,10 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response deleteByidcuentas(@PathVariable(value = "idcuenta", required = true) Long idcuenta) {
+	public Response deleteByidcuentas(@PathVariable(value = "idcuenta", required = true) Long idcuenta,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas eliminada correctamente",null);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas eliminada correctamente", null);
 	}
 
 	/**
@@ -180,7 +185,7 @@ public class CuentasController {
 	 * 
 	 * @return
 	 */
-	
+
 	public static CuentaDTO buildDummyNew() {
 
 		CuentaDTO cuentasDto = new CuentaDTO();
@@ -205,10 +210,10 @@ public class CuentasController {
 		cuentasDto.setId(234L);
 		cuentasDto.setNumero(12345678L);
 		cuentasDto.setAfiliaciones(afiliaciones);
-		
+
 		return cuentasDto;
 	}
-	
+
 	public static CuentaDTO buildDummy() {
 
 		CuentaDTO cuentasDto = new CuentaDTO();
@@ -235,7 +240,7 @@ public class CuentasController {
 		cuentasDto.setLastModifiedDate(new Date());
 		cuentasDto.setNumero(12345678L);
 		cuentasDto.setAfiliaciones(afiliaciones);
-		
+
 		return cuentasDto;
 	}
 
@@ -247,8 +252,6 @@ public class CuentasController {
 		AfiliacionRespDTO afiliacionDto = new AfiliacionRespDTO();
 		afiliacionDto.setId(234L);
 		afiliaciones.add(afiliacionDto);
-		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
-		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
 		CategoriaDTO cate = new CategoriaDTO();
 		cate.setId(123l);
 		cate.setDescripcion("Categoria Dummy");

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,6 +25,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.BaseCodigoDTO;
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
@@ -84,11 +86,14 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTO) {
+	public Response save(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTO,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(CodigoEstadoCuentaBuilder
-//						.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTO)));
+//						.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTO), createdBy));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
+
 		BaseCodigoDTO baseCodigoDTO = new BaseCodigoDTO(1L, true, "Leyenda");
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", baseCodigoDTO);
 	}
@@ -110,11 +115,14 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTOReq) {
+	public Response update(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTOReq,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(CodigoEstadoCuentaBuilder
-//						.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTOReq)));
+//						.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTOReq), lastModifiedBy));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
+
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",
 				codigoEstadoCuentaDTO);
@@ -138,9 +146,11 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idCodigo", required = true) Long idCodigo) {
+
 //		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
 //				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.findById(idCodigo));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
+
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", codigoEstadoCuentaDTO);
 	}
@@ -162,7 +172,8 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByNombreAndEstatus(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
+	public Response findByNombreAndEstatus(@PathVariable(value = "idEntidad", required = true) Long idEntidad,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 //		List<CodigoEstadoCuentaDTO> lstX = codigoEstadoCuentaServiceImpl.findByEntidades_Id(idEntidad);
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", lstX);
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();

@@ -28,7 +28,6 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	/**
 	 * Service de el catalogo CodigoEstadoCuenta
 	 */
-//	@SuppressWarnings("unused")
 	@Autowired
 	@Qualifier("codigoEstadoCuentaRepository")
 	private CodigoEstadoCuentaRepository codigoEstadoCuentaRepository;
@@ -38,12 +37,14 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T save(CodigoEstadoCuentaDTO e) {
+	public <T extends AbstractCatalogoDTO> T save(CodigoEstadoCuentaDTO e, String createdBy) {
+		if (null != e)
+			e.setCreatedBy(createdBy);
 		CodigoEstadoCuentaGenDTO codigoEstadoCuentaDTO = null;
 		codigoEstadoCuentaRepository
 				.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTO(e));
 		return (T) codigoEstadoCuentaDTO;
-//		return null;
+
 	}
 
 	/**
@@ -51,12 +52,13 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T update(CodigoEstadoCuentaDTO e) {
+	public <T extends AbstractCatalogoDTO> T update(CodigoEstadoCuentaDTO e, String lastModifiedBy) {
+		if (null != e)
+			e.setLastModifiedBy(lastModifiedBy);
 		CodigoEstadoCuentaGenDTO codigoEstadoCuentaDTO = null;
 		codigoEstadoCuentaRepository
 				.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTO(e));
 		return (T) codigoEstadoCuentaDTO;
-//		return null;
 	}
 
 	/**
@@ -68,7 +70,6 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 		CodigoEstadoCuentaGenDTO codigoEstadoCuentaDTO = null;
 		codigoEstadoCuentaRepository.findById(id);
 		return (T) codigoEstadoCuentaDTO;
-//		return null;
 	}
 
 	/**
@@ -81,7 +82,6 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	public List<CodigoEstadoCuentaDTO> findByEntidades_Id(Long idEntidad) {
 		return CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOListFromCodigoEstadoCuentaList(
 				codigoEstadoCuentaRepository.findByEntidades_Id(idEntidad));
-//		return null;
 	}
 
 }

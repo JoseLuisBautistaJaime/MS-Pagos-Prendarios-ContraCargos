@@ -24,14 +24,18 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T save(ContactoBaseDTO e) {
+	public <T extends AbstractCatalogoDTO> T save(ContactoBaseDTO e, String createdBy) {
+		if (null != e)
+			e.setCreatedBy(createdBy);
 		return (T) ContactosBuilder.buildContactosDTOFromContactos(
 				contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTO(e)));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T update(ContactoBaseDTO e) {
+	public <T extends AbstractCatalogoDTO> T update(ContactoBaseDTO e, String lastModifiedBy) {
+		if (null != e)
+			e.setCreatedBy(lastModifiedBy);
 		return (T) ContactosBuilder.buildContactosDTOFromContactos(
 				contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTO(e)));
 	}

@@ -35,10 +35,11 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T save(EntidadDTO e) {
+	public <T extends AbstractCatalogoDTO> T save(EntidadDTO e, String createdBy) {
+		if (null != e)
+			e.setCreatedBy(createdBy);
 		return (T) EntidadBuilder
 				.buildEntidadDTOFromEntidad(entidadRepository.save(EntidadBuilder.buildEntidadFromEntidadDTO(e)));
-//		return null;
 	}
 
 	/**
@@ -46,10 +47,11 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e) {
+	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e, String lastModifiedBy) {
+		if (null != e)
+			e.setLastModifiedBy(lastModifiedBy);
 		return (T) EntidadBuilder
 				.buildEntidadDTOFromEntidad(entidadRepository.save(EntidadBuilder.buildEntidadFromEntidadDTO(e)));
-//		return null;
 	}
 
 	/**
@@ -60,7 +62,6 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	public <T extends AbstractCatalogoDTO> T findById(Long id) {
 		return (T) EntidadBuilder.buildEntidadDTOFromEntidad(
 				entidadRepository.findById(id).isPresent() ? entidadRepository.findById(id).get() : null);
-//		return null;
 	}
 
 	/**
@@ -73,7 +74,6 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	public EntidadResponseDTO findByNombreAndEstatus(final String nombre, final Boolean estatus) {
 		return EntidadBuilder
 				.buildEntidadResponseDTOFromEntidad(entidadRepository.findByNombreAndEstatus(nombre, estatus));
-//		return null;
 	}
 
 }

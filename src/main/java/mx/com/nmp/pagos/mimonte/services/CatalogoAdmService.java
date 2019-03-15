@@ -16,18 +16,20 @@ public interface CatalogoAdmService<E> {
 	/**
 	 * Guarda un objeto de tipo catalogo
 	 * 
-	 * @param t
+	 * @param e
+	 * @param createdBy
 	 * @return
 	 */
-	public <T extends AbstractCatalogoDTO> T save(E e);
+	public <T extends AbstractCatalogoDTO> T save(E e, String createdBy);
 
 	/**
 	 * Actualiza un objeto de tipo catalogo
 	 * 
-	 * @param t
+	 * @param e
+	 * @param lastModifiedBy
 	 * @return
 	 */
-	public <T extends AbstractCatalogoDTO> T update(E e);
+	public <T extends AbstractCatalogoDTO> T update(E e, String lastModifiedBy);
 
 	/**
 	 * Regresa un objeto de tipo catalogo por id

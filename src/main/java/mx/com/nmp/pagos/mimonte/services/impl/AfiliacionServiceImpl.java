@@ -34,7 +34,9 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T save(AfiliacionDTO e) {
+	public <T extends AbstractCatalogoDTO> T save(AfiliacionDTO e, String createdBy) {
+		if (null != e)
+			e.setCreatedBy(createdBy);
 		return (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(
 				afiliacionRepository.save(AfiliacionBuilder.buildAfiliacionFromAfiliacionDTO(e)));
 	}
@@ -44,7 +46,9 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T update(AfiliacionDTO e) {
+	public <T extends AbstractCatalogoDTO> T update(AfiliacionDTO e, String lastModifiedBy) {
+		if (null != e)
+			e.setLastModifiedBy(lastModifiedBy);
 		return (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(
 				afiliacionRepository.save(AfiliacionBuilder.buildAfiliacionFromAfiliacionDTO(e)));
 	}

@@ -39,7 +39,9 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T save(CuentaBaseDTO e) {
+	public <T extends AbstractCatalogoDTO> T save(CuentaBaseDTO e, String createdBy) {
+		if (null != e)
+			e.setCreatedBy(createdBy);
 		return (T) CuentaBuilder
 				.buildCuentaBaseDTOFromCuenta(cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e)));
 	}
@@ -52,7 +54,9 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T update(CuentaBaseDTO e) {
+	public <T extends AbstractCatalogoDTO> T update(CuentaBaseDTO e, String lastModifiedBy) {
+		if (null != e)
+			e.setLastModifiedBy(lastModifiedBy);
 		return (T) CuentaBuilder
 				.buildCuentaBaseDTOFromCuenta(cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e)));
 	}

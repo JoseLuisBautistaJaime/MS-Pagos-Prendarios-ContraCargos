@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,6 +25,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
@@ -81,9 +83,12 @@ public class EntidadController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody EntidadBaseDTO entidadDTOReq) {
+	public Response save(@RequestBody EntidadBaseDTO entidadDTOReq,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa",
-//				entidadServiceImpl.save(EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq)));
+//				entidadServiceImpl.save(EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq), createdBy));
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", buildDummy());
 	}
 
@@ -102,9 +107,12 @@ public class EntidadController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@RequestBody EntidadBaseDTO entidadDTOReq) {
+	public Response update(@RequestBody EntidadBaseDTO entidadDTOReq,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",
-//				entidadServiceImpl.save(EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq)));
+//				entidadServiceImpl.save(EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq), lastModifiedBy));
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa", buildDummy());
 	}
 
@@ -124,7 +132,8 @@ public class EntidadController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
+	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 //		EntidadResponseDTO entidadResponseDTO = EntidadBuilder
 //				.buildEntidadResponseDTOFromEntidadDTO((EntidadDTO) entidadServiceImpl.findById(idEntidad));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", entidadResponseDTO);
@@ -149,7 +158,8 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@PathVariable(value = "nombre", required = true) String nombre,
-			@PathVariable(value = "estatus", required = true) Boolean estatus) {
+			@PathVariable(value = "estatus", required = true) Boolean estatus,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 //		EntidadResponseDTO entidadResponseDTO = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", entidadResponseDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummy());

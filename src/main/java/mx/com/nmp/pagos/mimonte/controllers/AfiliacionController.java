@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,8 +27,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.AfiliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -79,9 +80,10 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody AfiliacionDTO afiliacionDTOReq) {
-
-//		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.save(afiliacionDTOReq);
+	public Response save(@RequestBody AfiliacionDTO afiliacionDTOReq,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+//		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.save(afiliacionDTOReq, createdBy);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad guardada correctamente",
 				buildDummy());
@@ -102,9 +104,10 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@RequestBody AfiliacionDTO afiliacionDTOReq) {
-
-//		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.update(afiliacionDTOReq);
+	public Response update(@RequestBody AfiliacionDTO afiliacionDTOReq,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+//		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.update(afiliacionDTOReq, createdBy);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad actualizada correctamente",
 				buildDummyUP());
@@ -126,7 +129,8 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findById(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion) {
+	public Response findById(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.findById(idAfiliacion);
 
@@ -151,7 +155,8 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta) {
+	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 //		AfiliacionDTO afiliacionDTO = afiliacionServiceImpl.findByCuentasId(idCuenta);
 
@@ -168,9 +173,11 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response deleteByidAfiliacion(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion) {
+	public Response deleteByidAfiliacion(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion eliminada correctamente",null);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion eliminada correctamente",
+				null);
 	}
 
 	/**
@@ -193,6 +200,7 @@ public class AfiliacionController {
 
 		return afiliacionDto;
 	}
+
 	public static AfiliacionDTO buildDummyUP() {
 
 		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
@@ -210,6 +218,7 @@ public class AfiliacionController {
 
 		return afiliacionDto;
 	}
+
 	public static AfiliacionDTO buildDummyList() {
 
 		List<AfiliacionDTO> afiliaciones = new ArrayList<AfiliacionDTO>();
