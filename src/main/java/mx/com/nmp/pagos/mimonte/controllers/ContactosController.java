@@ -384,7 +384,6 @@ public class ContactosController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getAll() {
-
 		// Dummy
 
 		List<ContactoRespDTO> contactosRespList = new ArrayList<ContactoRespDTO>();

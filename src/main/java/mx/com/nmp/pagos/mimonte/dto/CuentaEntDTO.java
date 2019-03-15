@@ -1,6 +1,6 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Nombre: CuentaEntDTO Descripcion: Clase que encapsula la informacion de una
@@ -13,18 +13,18 @@ import java.util.Set;
 public class CuentaEntDTO implements Comparable<CuentaEntDTO> {
 
 	private Long id;
-	private String numeroCuenta;
+	private String numero;
 	private Boolean estatus;
-	private Set<AfiliacionEntDTO> afiliaciones;
+	private List<AfiliacionEntDTO> afiliaciones;
 
 	public CuentaEntDTO() {
 		super();
 	}
 
-	public CuentaEntDTO(Long id, String numeroCuenta, Boolean estatus, Set<AfiliacionEntDTO> afiliaciones) {
+	public CuentaEntDTO(Long id, String numero, Boolean estatus, List<AfiliacionEntDTO> afiliaciones) {
 		super();
 		this.id = id;
-		this.numeroCuenta = numeroCuenta;
+		this.numero = numero;
 		this.estatus = estatus;
 		this.afiliaciones = afiliaciones;
 	}
@@ -37,12 +37,12 @@ public class CuentaEntDTO implements Comparable<CuentaEntDTO> {
 		this.id = id;
 	}
 
-	public String getNumeroCuenta() {
-		return numeroCuenta;
+	public String getNumero() {
+		return numero;
 	}
 
-	public void setNumeroCuenta(String numeroCuenta) {
-		this.numeroCuenta = numeroCuenta;
+	public void setNumero(String numero) {
+		this.numero = numero;
 	}
 
 	public Boolean getEstatus() {
@@ -53,11 +53,11 @@ public class CuentaEntDTO implements Comparable<CuentaEntDTO> {
 		this.estatus = estatus;
 	}
 
-	public Set<AfiliacionEntDTO> getAfiliaciones() {
+	public List<AfiliacionEntDTO> getAfiliaciones() {
 		return afiliaciones;
 	}
 
-	public void setAfiliaciones(Set<AfiliacionEntDTO> afiliaciones) {
+	public void setAfiliaciones(List<AfiliacionEntDTO> afiliaciones) {
 		this.afiliaciones = afiliaciones;
 	}
 

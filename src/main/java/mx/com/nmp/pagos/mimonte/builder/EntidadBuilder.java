@@ -124,16 +124,16 @@ public abstract class EntidadBuilder {
 		if (null != entidadBaseDTO) {
 			entidadDTO = new EntidadDTO();
 			entidadDTO.setContactos(entidadBaseDTO.getContactos());
-			entidadDTO.setCreatedBy(entidadBaseDTO.getCreatedBy());
-			entidadDTO.setCreatedDate(entidadBaseDTO.getCreatedDate());
+			entidadDTO.setCreatedBy(null);
+			entidadDTO.setCreatedDate(null);
 			entidadDTO.setCuentas(entidadBaseDTO.getCuentas());
 			entidadDTO.setDescription(entidadBaseDTO.getDescripcion());
-			entidadDTO.setEstatus(entidadBaseDTO.getEstatus());
+			entidadDTO.setEstatus(null);
 			entidadDTO.setId(entidadBaseDTO.getId());
-			entidadDTO.setLastModifiedBy(entidadBaseDTO.getLastModifiedBy());
-			entidadDTO.setLastModifiedDate(entidadBaseDTO.getLastModifiedDate());
+			entidadDTO.setLastModifiedBy(null);
+			entidadDTO.setLastModifiedDate(null);
 			entidadDTO.setNombre(entidadBaseDTO.getNombre());
-			entidadDTO.setShortDescription(entidadBaseDTO.getShortDescription());
+			entidadDTO.setShortDescription(null);
 		}
 		return entidadDTO;
 	}

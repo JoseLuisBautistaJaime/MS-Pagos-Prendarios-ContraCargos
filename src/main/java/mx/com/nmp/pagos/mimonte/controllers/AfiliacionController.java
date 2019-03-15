@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +28,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespPostDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.AfiliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -82,11 +82,11 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody AfiliacionDTO afiliacionDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		
+
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.save(afiliacionDTOReq, createdBy);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad guardada correctamente",
-				buildDummy());
+				buildDummyPost());
 	}
 
 	/**
@@ -106,11 +106,11 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody AfiliacionDTO afiliacionDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		
+
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.update(afiliacionDTOReq, createdBy);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad actualizada correctamente",
-				buildDummyUP());
+				buildDummyPost());
 	}
 
 	/**
@@ -129,13 +129,12 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findById(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response findById(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion) {
 
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.findById(idAfiliacion);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad recuperada correctamente",
-				buildDummyUP());
+				buildDummyPost());
 	}
 
 	/**
@@ -155,8 +154,7 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta) {
 
 //		AfiliacionDTO afiliacionDTO = afiliacionServiceImpl.findByCuentasId(idCuenta);
 
@@ -166,8 +164,9 @@ public class AfiliacionController {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@DeleteMapping(value = "/catalogos/afiliacion/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "PUT", value = "Eliminacion logica del registro en base a su id", tags = { "Afiliacion" })
+	@PutMapping(value = "/catalogos/afiliacion/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "PUT", value = "Eliminacion logica del registro en base a su id", tags = {
+			"Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
@@ -178,6 +177,19 @@ public class AfiliacionController {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion eliminada correctamente",
 				null);
+	}
+
+	/**
+	 * Crea un objeto de respuesta dummy
+	 * 
+	 * @return
+	 */
+	public static AfiliacionRespPostDTO buildDummyPost() {
+		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
+		afiliacionDto.setEstatus(true);
+		afiliacionDto.setId(234L);
+		afiliacionDto.setNumero(12345678L);
+		return afiliacionDto;
 	}
 
 	/**
@@ -219,26 +231,19 @@ public class AfiliacionController {
 		return afiliacionDto;
 	}
 
-	public static AfiliacionDTO buildDummyList() {
+	public static List<AfiliacionRespPostDTO> buildDummyList() {
 
-		List<AfiliacionDTO> afiliaciones = new ArrayList<AfiliacionDTO>();
-		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
-		TipoAutorizacionDTO tipo = new TipoAutorizacionDTO();
-		tipo.setDescripcion("3d secure ");
-		tipo.setId(2);
-		afiliacionDto.setCreatedBy("Victor Moran");
-		afiliacionDto.setCreatedDate(new Date());
+		List<AfiliacionRespPostDTO> afiliaciones = new ArrayList<>();
+		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
+		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
 		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(234L);
-		afiliacionDto.setLastModifiedBy("Viktor Reznov");
-		afiliacionDto.setLastModifiedDate(new Date());
 		afiliacionDto.setNumero(12345678L);
-		afiliacionDto.setTipo(tipo);
 		afiliaciones.add(afiliacionDto);
-		afiliacionDto.setId(6789L);
-		afiliacionDto.setNumero(987654L);
-		afiliaciones.add(afiliacionDto);
-		return afiliacionDto;
+		afiliacionDto2.setId(6789L);
+		afiliacionDto2.setNumero(987654L);
+		afiliaciones.add(afiliacionDto2);
+		return afiliaciones;
 	}
 
 }

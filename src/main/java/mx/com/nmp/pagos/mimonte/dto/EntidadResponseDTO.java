@@ -1,5 +1,6 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -16,6 +17,8 @@ public class EntidadResponseDTO implements Comparable<EntidadResponseDTO> {
 	private String nombre;
 	private String descripcion;
 	private Boolean estatus;
+	private Date fechaCreacion;
+	private String creadoPor;
 	private Set<CuentaEntDTO> cuentas;
 	private Set<ContactoEntDTO> contactos;
 
@@ -23,15 +26,33 @@ public class EntidadResponseDTO implements Comparable<EntidadResponseDTO> {
 		super();
 	}
 
-	public EntidadResponseDTO(Long id, String nombre, String descripcion, Boolean estatus, Set<CuentaEntDTO> cuentas,
-			Set<ContactoEntDTO> contactos) {
+	public EntidadResponseDTO(Long id, String nombre, String descripcion, Boolean estatus, Date fechaCreacion,
+			String creadoPor, Set<CuentaEntDTO> cuentas, Set<ContactoEntDTO> contactos) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.estatus = estatus;
+		this.fechaCreacion = fechaCreacion;
+		this.creadoPor = creadoPor;
 		this.cuentas = cuentas;
 		this.contactos = contactos;
+	}
+
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public String getCreadoPor() {
+		return creadoPor;
+	}
+
+	public void setCreadoPor(String creadoPor) {
+		this.creadoPor = creadoPor;
 	}
 
 	public Long getId() {

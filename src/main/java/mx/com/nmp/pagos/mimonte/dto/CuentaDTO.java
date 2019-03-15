@@ -3,6 +3,14 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Nombre: CuentaDTO Descripcion: Clase que encapsula la informacion de un
+ * objeto cuenta
+ *
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 15/03/2019 13:21 hrs.
+ * @version 0.1
+ */
 public class CuentaDTO {
 
 	private Long id;

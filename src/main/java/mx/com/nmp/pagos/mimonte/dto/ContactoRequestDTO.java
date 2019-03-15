@@ -1,31 +1,45 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
-import java.util.Date;
-
 /**
- * Nombre: Contacto Descripcion: Clase que encapsula la informacion perteneciente a un contacto.
+ * Nombre: Contacto Descripcion: Clase que encapsula la informacion
+ * perteneciente a un contacto.
  *
  * @author José Rodriguez jgrodriguez@quarksoft.net Fecha: 05/03/2019 14:27 hrs.
  * @version 0.1
  */
 public class ContactoRequestDTO {
-	
+
 	private String nombre;
-	
+
 	private String email;
-	
+
 	private String descripcion;
-	
+
 	private Long tipoContacto;
+
+	private String userRequest;
 
 	public ContactoRequestDTO() {
 		super();
 	}
 
-	public ContactoRequestDTO(String nombre, String email, String descripcion, Long tipoContacto, String createdBy) {
+	public ContactoRequestDTO(String nombre, String email, String descripcion, Long tipoContacto, String userRequest) {
 		super();
+		this.nombre = nombre;
+		this.email = email;
+		this.descripcion = descripcion;
+		this.tipoContacto = tipoContacto;
+		this.userRequest = userRequest;
 	}
-	
+
+	public String getUserRequest() {
+		return userRequest;
+	}
+
+	public void setUserRequest(String userRequest) {
+		this.userRequest = userRequest;
+	}
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -58,6 +72,12 @@ public class ContactoRequestDTO {
 		this.tipoContacto = tipoContacto;
 	}
 
+	@Override
+	public String toString() {
+		return "ContactoRequestDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion
+				+ ", tipoContacto=" + tipoContacto + ", userRequest=" + userRequest + "]";
+	}
+
 //	public String getCreatedBy() {
 //		return createdBy;
 //	}
@@ -66,10 +86,4 @@ public class ContactoRequestDTO {
 //		this.createdBy = createdBy;
 //	}
 
-	@Override
-	public String toString() {
-		return "ContactoRequestDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion
-				+ ", tipoContacto=" + tipoContacto + " ]";
-	}
-	
 }

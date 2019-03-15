@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,10 +27,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaRespDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.CuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
@@ -87,7 +89,7 @@ public class CuentasController {
 //				cuentaServiceImpl.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(CuentaDTOReq), createdBy));
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta guardada correctamente",
-				buildDummy());
+				dummyRespDTO());
 	}
 
 	/**
@@ -112,7 +114,7 @@ public class CuentasController {
 //				cuentaServiceImpl.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq), lastModifiedBy));
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta actualizada correctamente",
-				buildDummy());
+				buildDummyUpdt());
 	}
 
 	/**
@@ -131,13 +133,12 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findById(@PathVariable(value = "idcuentas", required = true) Long idcuentas,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response findById(@PathVariable(value = "idcuentas", required = true) Long idcuentas) {
 
 //		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(cuentaServiceImpl.findById(idcuentas));
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta recuperada correctamente",
-				buildDummy());
+				buildDummyUpdt());
 	}
 
 	/**
@@ -156,18 +157,17 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByCuenta(@PathVariable(value = "idEntidad", required = true) Long idEntidad,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response findByCuenta(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
 
 //		List<CuentaDTO> cuentaDTOList = cuentaServiceImpl.findByEntidadId(idEntidad);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas recuperadas correctamente",
-				buildDummyEnti());
+				buildDummyUpdtLst());
 	}
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@DeleteMapping(value = "/catalogos/cuentas/{idcuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/catalogos/cuentas/{idcuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Elimina el registro en base a su id", tags = { "Cuentas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
@@ -206,6 +206,88 @@ public class CuentasController {
 		codigos.add(codigo);
 		cuentasDto.setCreatedBy("Moran");
 		cuentasDto.setCreatedDate(new Date());
+		cuentasDto.setEstatus(true);
+		cuentasDto.setId(234L);
+		cuentasDto.setNumero("12345678");
+		cuentasDto.setAfiliaciones(afiliaciones);
+
+		return cuentasDto;
+	}
+
+	public static CuentaRespDTO dummyRespDTO() {
+		CuentaRespDTO cuentaRespDTO = new CuentaRespDTO();
+		cuentaRespDTO.setEstatus(true);
+		cuentaRespDTO.setId(1L);
+		cuentaRespDTO.setNumero("43275498759");
+		return cuentaRespDTO;
+	}
+
+	/**
+	 * Respuesta dummy para actualizar y consulta por id id de entidades asociadas
+	 * 
+	 * @return
+	 */
+	public static List<CuentaEntDTO> buildDummyUpdtLst() {
+		List<CuentaEntDTO> cuentasDto = new ArrayList<>();
+		CuentaEntDTO cuentaEntDTO1 = new CuentaEntDTO();
+		CuentaEntDTO cuentaEntDTO2 = new CuentaEntDTO();
+		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
+		AfiliacionEntDTO afiliacionDto = new AfiliacionEntDTO();
+		AfiliacionEntDTO afiliacionDto2 = new AfiliacionEntDTO();
+		afiliacionDto.setId(234L);
+		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setEstatus(true);
+		afiliacionDto2.setId(555234L);
+		afiliacionDto2.setNumero(4541545456L);
+		afiliacionDto2.setEstatus(true);
+		afiliaciones.add(afiliacionDto);
+		afiliaciones.add(afiliacionDto2);
+		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
+		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
+		CategoriaDTO cate = new CategoriaDTO();
+		cate.setId(123l);
+		cate.setDescripcion("Categoria Dummy");
+		codigo.setEstatus(true);
+		codigo.setCategoria(cate);
+		codigo.setLeyenda("Leyenda de codigo");
+		codigo.setId(1234l);
+		codigos.add(codigo);
+		cuentaEntDTO1.setEstatus(true);
+		cuentaEntDTO1.setId(234L);
+		cuentaEntDTO1.setNumero("12345678");
+		cuentaEntDTO1.setAfiliaciones(afiliaciones);
+		cuentaEntDTO2.setEstatus(true);
+		cuentaEntDTO2.setId(23443L);
+		cuentaEntDTO2.setNumero("1234454556");
+		cuentaEntDTO2.setAfiliaciones(afiliaciones);
+		cuentasDto.add(cuentaEntDTO1);
+		cuentasDto.add(cuentaEntDTO2);
+		return cuentasDto;
+	}
+
+	/**
+	 * Respuesta dummy para consulta por
+	 * 
+	 * @return
+	 */
+	public static CuentaEntDTO buildDummyUpdt() {
+		CuentaEntDTO cuentasDto = new CuentaEntDTO();
+		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
+		AfiliacionEntDTO afiliacionDto = new AfiliacionEntDTO();
+		afiliacionDto.setId(234L);
+		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setEstatus(true);
+		afiliaciones.add(afiliacionDto);
+		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
+		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
+		CategoriaDTO cate = new CategoriaDTO();
+		cate.setId(123l);
+		cate.setDescripcion("Categoria Dummy");
+		codigo.setEstatus(true);
+		codigo.setCategoria(cate);
+		codigo.setLeyenda("Leyenda de codigo");
+		codigo.setId(1234l);
+		codigos.add(codigo);
 		cuentasDto.setEstatus(true);
 		cuentasDto.setId(234L);
 		cuentasDto.setNumero("12345678");
