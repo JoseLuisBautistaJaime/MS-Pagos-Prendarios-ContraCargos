@@ -8,4 +8,4 @@ applications:
   env:
     TZ: America/Mexico_City
   services:
-    - 1775-pagosdb
+    - 1775-conciliaciondb
