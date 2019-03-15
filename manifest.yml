@@ -1,6 +1,6 @@
 ---
 applications:
-- name: dev1775-mimonte-fase2
+- name: dev1775-mimonte-conciliacion
   buildpack: https://github.com/cloudfoundry/java-buildpack.git
   memory: 1G
   timeout: 460
