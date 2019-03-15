@@ -48,7 +48,7 @@ public final class CatalogConstants {
 	 * El nombre del header donde se especificara el nombre de usuario qque realiza
 	 * la operacion
 	 */
-	public static final String REQUEST_USER_HEADER = "createdBy";
+	public static final String REQUEST_USER_HEADER = "requestUser";
 
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
