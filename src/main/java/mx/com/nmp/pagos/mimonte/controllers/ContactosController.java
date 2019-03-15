@@ -30,6 +30,7 @@ import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoContactoRespDTO;
+import mx.com.nmp.pagos.mimonte.dto.getContactosDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.ContactoServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
@@ -383,6 +384,60 @@ public class ContactosController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getAll() {
+
+		// Dummy
+
+		List<ContactoRespDTO> contactosRespList = new ArrayList<ContactoRespDTO>();
+
+		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
+		tipoContactoRespDTO.setDescripcion("contacto");
+		tipoContactoRespDTO.setId(1L);
+
+		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
+		contactoResponseDTO.setEmail("miemail@email.com");
+		contactoResponseDTO.setDescripcion("contacto");
+		contactoResponseDTO.setEstatus(true);
+		contactoResponseDTO.setId(1L);
+		contactoResponseDTO.setNombre("micontacto");
+		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		ContactoRespDTO contactoResponseDTO2 = new ContactoRespDTO();
+		contactoResponseDTO2.setEmail("miemail@email.com");
+		contactoResponseDTO2.setDescripcion("contacto");
+		contactoResponseDTO2.setEstatus(true);
+		contactoResponseDTO2.setId(2L);
+		contactoResponseDTO2.setNombre("micontacto");
+		contactoResponseDTO2.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		ContactoRespDTO contactoResponseDTO3 = new ContactoRespDTO();
+		contactoResponseDTO3.setEmail("miemail@email.com");
+		contactoResponseDTO3.setDescripcion("contacto");
+		contactoResponseDTO3.setEstatus(true);
+		contactoResponseDTO3.setId(3L);
+		contactoResponseDTO3.setNombre("micontacto");
+		contactoResponseDTO3.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		contactosRespList.add(contactoResponseDTO);
+		contactosRespList.add(contactoResponseDTO2);
+		contactosRespList.add(contactoResponseDTO3);
+
+		// End Dummy
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				contactosRespList);
+
+	}
+	
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/catalogo/getContacto", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de los contactos registrados.", tags = {
+			"Contactos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
+			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
+			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response getAlls(@RequestBody getContactosDTO contacto) {
 
 		// Dummy
 
