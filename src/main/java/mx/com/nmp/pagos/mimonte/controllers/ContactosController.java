@@ -79,9 +79,10 @@ public class ContactosController {
 	public Response add(@RequestBody ContactoRequestDTO contacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
-//		 ContactoRespDTO tipoContactoRespDTOReal =
-//		 (ContactoRespDTO)ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(
-//		 contactoServiceImpl.save(ContactosBuilder.buildContactoBaseDTOFromContactoRequestDTO(contacto), createdBy));
+		// ContactoRespDTO tipoContactoRespDTOReal =
+		// (ContactoRespDTO)ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(
+		// contactoServiceImpl.save(ContactosBuilder.buildContactoBaseDTOFromContactoRequestDTO(contacto),
+		// createdBy));
 
 		// Dummy
 
@@ -176,8 +177,7 @@ public class ContactosController {
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response getContacto(@PathVariable(value = "idContacto", required = true) Integer idContacto,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response getIdContacto(@PathVariable(value = "idContacto", required = true) Long idContacto) {
 
 		// Dummy
 
@@ -202,15 +202,187 @@ public class ContactosController {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/catalogo/{idTipoContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/catalogo/contactos/{idTipoContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Regresa la información de los tipos de contactos registrados con respecto al parámetro id.", tags = {
 			"Contactos" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response getContactos(@PathVariable(value = "idTipoContacto", required = true) Integer idTipoContacto,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response getIdTipoContacto(@PathVariable(value = "idTipoContacto", required = true) Long idTipoContacto) {
+
+		// Dummy
+
+		List<ContactoRespDTO> contactosRespList = new ArrayList<ContactoRespDTO>();
+
+		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
+		tipoContactoRespDTO.setDescripcion("contacto");
+		tipoContactoRespDTO.setId(1L);
+
+		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
+		contactoResponseDTO.setEmail("miemail@email.com");
+		contactoResponseDTO.setDescripcion("contacto");
+		contactoResponseDTO.setEstatus(true);
+		contactoResponseDTO.setId(1L);
+		contactoResponseDTO.setNombre("micontacto");
+		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		ContactoRespDTO contactoResponseDTO2 = new ContactoRespDTO();
+		contactoResponseDTO2.setEmail("miemail@email.com");
+		contactoResponseDTO2.setDescripcion("contacto");
+		contactoResponseDTO2.setEstatus(true);
+		contactoResponseDTO2.setId(2L);
+		contactoResponseDTO2.setNombre("micontacto");
+		contactoResponseDTO2.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		ContactoRespDTO contactoResponseDTO3 = new ContactoRespDTO();
+		contactoResponseDTO3.setEmail("miemail@email.com");
+		contactoResponseDTO3.setDescripcion("contacto");
+		contactoResponseDTO3.setEstatus(true);
+		contactoResponseDTO3.setId(3L);
+		contactoResponseDTO3.setNombre("micontacto");
+		contactoResponseDTO3.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		contactosRespList.add(contactoResponseDTO);
+		contactosRespList.add(contactoResponseDTO2);
+		contactosRespList.add(contactoResponseDTO3);
+
+		// End Dummy
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				contactosRespList);
+
+	}
+
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/catalogo/{Nombres}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de los contactos registrados con respecto al parámetro del nombre.", tags = {
+			"Contactos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
+			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
+			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response getNombreContacto(@PathVariable(value = "Nombres", required = true) String nombres) {
+
+		// Dummy
+
+		List<ContactoRespDTO> contactosRespList = new ArrayList<ContactoRespDTO>();
+
+		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
+		tipoContactoRespDTO.setDescripcion("contacto");
+		tipoContactoRespDTO.setId(1L);
+
+		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
+		contactoResponseDTO.setEmail("miemail@email.com");
+		contactoResponseDTO.setDescripcion("contacto");
+		contactoResponseDTO.setEstatus(true);
+		contactoResponseDTO.setId(1L);
+		contactoResponseDTO.setNombre("micontacto");
+		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		ContactoRespDTO contactoResponseDTO2 = new ContactoRespDTO();
+		contactoResponseDTO2.setEmail("miemail@email.com");
+		contactoResponseDTO2.setDescripcion("contacto");
+		contactoResponseDTO2.setEstatus(true);
+		contactoResponseDTO2.setId(2L);
+		contactoResponseDTO2.setNombre("micontacto");
+		contactoResponseDTO2.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		ContactoRespDTO contactoResponseDTO3 = new ContactoRespDTO();
+		contactoResponseDTO3.setEmail("miemail@email.com");
+		contactoResponseDTO3.setDescripcion("contacto");
+		contactoResponseDTO3.setEstatus(true);
+		contactoResponseDTO3.setId(3L);
+		contactoResponseDTO3.setNombre("micontacto");
+		contactoResponseDTO3.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		contactosRespList.add(contactoResponseDTO);
+		contactosRespList.add(contactoResponseDTO2);
+		contactosRespList.add(contactoResponseDTO3);
+
+		// End Dummy
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				contactosRespList);
+
+	}
+
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/catalogo/contacto/{emails}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de los contactos registrados con respecto al parámetro del email.", tags = {
+			"Contactos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
+			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
+			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response getEmailContacto(@PathVariable(value = "emails", required = true) String email) {
+
+		// Dummy
+
+		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
+		tipoContactoRespDTO.setDescripcion("contacto");
+		tipoContactoRespDTO.setId(1L);
+
+		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
+		contactoResponseDTO.setEmail("miemail@email.com");
+		contactoResponseDTO.setDescripcion("contacto");
+		contactoResponseDTO.setEstatus(true);
+		contactoResponseDTO.setId(1L);
+		contactoResponseDTO.setNombre("micontacto");
+		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		// End Dummy
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				contactoResponseDTO);
+
+	}
+
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/catalogo/{nombre}/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de los contactos registrados con respecto al parámetro del nombre y del email.", tags = {
+			"Contactos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
+			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
+			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response getNombreEmailContacto(@PathVariable(value = "nombre", required = true) String nombre,
+			@PathVariable(value = "email", required = true) String email) {
+
+		// Dummy
+
+		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
+		tipoContactoRespDTO.setDescripcion("contacto");
+		tipoContactoRespDTO.setId(1L);
+
+		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
+		contactoResponseDTO.setEmail("miemail@email.com");
+		contactoResponseDTO.setDescripcion("contacto");
+		contactoResponseDTO.setEstatus(true);
+		contactoResponseDTO.setId(1L);
+		contactoResponseDTO.setNombre("micontacto");
+		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
+
+		// End Dummy
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				contactoResponseDTO);
+
+	}
+
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/catalogo/", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa la información de los contactos registrados.", tags = {
+			"Contactos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
+			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
+			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response getAll() {
 
 		// Dummy
 
