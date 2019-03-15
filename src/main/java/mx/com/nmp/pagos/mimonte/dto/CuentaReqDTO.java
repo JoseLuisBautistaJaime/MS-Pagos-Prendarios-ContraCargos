@@ -15,18 +15,18 @@ public class CuentaReqDTO implements Comparable<CuentaReqDTO> {
 	private Long id;
 	private String numero;
 	private Boolean estatus;
-	private List<AfiliacionReqDTO> afiliaicones;
+	private List<AfiliacionReqDTO> afiliaciones;
 
 	public CuentaReqDTO() {
 		super();
 	}
 
-	public CuentaReqDTO(Long id, String numero, Boolean estatus, List<AfiliacionReqDTO> afiliaicones) {
+	public CuentaReqDTO(Long id, String numero, Boolean estatus, List<AfiliacionReqDTO> afiliaciones) {
 		super();
 		this.id = id;
 		this.numero = numero;
 		this.estatus = estatus;
-		this.afiliaicones = afiliaicones;
+		this.afiliaciones = afiliaciones;
 	}
 
 	public Long getId() {
@@ -53,18 +53,18 @@ public class CuentaReqDTO implements Comparable<CuentaReqDTO> {
 		this.estatus = estatus;
 	}
 
-	public List<AfiliacionReqDTO> getAfiliaicones() {
-		return afiliaicones;
+	public List<AfiliacionReqDTO> getAfiliaciones() {
+		return afiliaciones;
 	}
 
-	public void setAfiliaicones(List<AfiliacionReqDTO> afiliaicones) {
-		this.afiliaicones = afiliaicones;
+	public void setAfiliaciones(List<AfiliacionReqDTO> afiliaciones) {
+		this.afiliaciones = afiliaciones;
 	}
 
 	@Override
 	public String toString() {
 		return "CuentaReqDTO [id=" + id + ", numero=" + numero + ", estatus=" + estatus + ", afiliaicones="
-				+ afiliaicones + "]";
+				+ afiliaciones + "]";
 	}
 
 	@Override

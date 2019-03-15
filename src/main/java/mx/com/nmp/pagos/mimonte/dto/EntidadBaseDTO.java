@@ -1,6 +1,5 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -15,13 +14,7 @@ public class EntidadBaseDTO implements Comparable<EntidadBaseDTO> {
 
 	private Long id;
 	private String descripcion;
-	private String shortDescription;
 	private String nombre;
-	private Date createdDate;
-	private Date lastModifiedDate;
-	private String createdBy;
-	private String lastModifiedBy;
-	private Boolean estatus;
 	private Set<CuentaReqDTO> cuentas;
 	private Set<ContactoReqDTO> contactos;
 
@@ -29,69 +22,14 @@ public class EntidadBaseDTO implements Comparable<EntidadBaseDTO> {
 		super();
 	}
 
-	public EntidadBaseDTO(Long id, String descripcion, String shortDescription, String nombre, Date createdDate,
-			Date lastModifiedDate, String createdBy, String lastModifiedBy, Boolean estatus, Set<CuentaReqDTO> cuentas,
+	public EntidadBaseDTO(Long id, String descripcion, String nombre, Set<CuentaReqDTO> cuentas,
 			Set<ContactoReqDTO> contactos) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
-		this.shortDescription = shortDescription;
 		this.nombre = nombre;
-		this.createdDate = createdDate;
-		this.lastModifiedDate = lastModifiedDate;
-		this.createdBy = createdBy;
-		this.lastModifiedBy = lastModifiedBy;
-		this.estatus = estatus;
 		this.cuentas = cuentas;
 		this.contactos = contactos;
-	}
-
-	public String getShortDescription() {
-		return shortDescription;
-	}
-
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
-	}
-
-	public Boolean getEstatus() {
-		return estatus;
-	}
-
-	public void setEstatus(Boolean estatus) {
-		this.estatus = estatus;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getLastModifiedBy() {
-		return lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	public Long getId() {
@@ -136,10 +74,8 @@ public class EntidadBaseDTO implements Comparable<EntidadBaseDTO> {
 
 	@Override
 	public String toString() {
-		return "EntidadBaseDTO [id=" + id + ", descripcion=" + descripcion + ", nombre=" + nombre + ", createdDate="
-				+ createdDate + ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy
-				+ ", lastModifiedBy=" + lastModifiedBy + ", estatus=" + estatus + ", cuentas=" + cuentas
-				+ ", contactos=" + contactos + "]";
+		return "EntidadBaseDTO [id=" + id + ", descripcion=" + descripcion + ", nombre=" + nombre + ", cuentas="
+				+ cuentas + ", contactos=" + contactos + "]";
 	}
 
 	@Override

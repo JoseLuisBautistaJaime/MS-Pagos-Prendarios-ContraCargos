@@ -176,8 +176,7 @@ public class ContactosController {
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response getContacto(@PathVariable(value = "idContacto", required = true) Integer idContacto,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response getContacto(@PathVariable(value = "idContacto", required = true) Integer idContacto) {
 
 		// Dummy
 
@@ -209,8 +208,7 @@ public class ContactosController {
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response getContactos(@PathVariable(value = "idTipoContacto", required = true) Integer idTipoContacto,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response getContactos(@PathVariable(value = "idTipoContacto", required = true) Integer idTipoContacto) {
 
 		// Dummy
 

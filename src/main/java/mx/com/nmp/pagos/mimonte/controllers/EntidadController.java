@@ -1,6 +1,8 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -132,8 +135,7 @@ public class EntidadController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
 //		EntidadResponseDTO entidadResponseDTO = EntidadBuilder
 //				.buildEntidadResponseDTOFromEntidadDTO((EntidadDTO) entidadServiceImpl.findById(idEntidad));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", entidadResponseDTO);
@@ -158,11 +160,31 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@PathVariable(value = "nombre", required = true) String nombre,
-			@PathVariable(value = "estatus", required = true) Boolean estatus,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+			@PathVariable(value = "estatus", required = true) Boolean estatus) {
 //		EntidadResponseDTO entidadResponseDTO = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", entidadResponseDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummy());
+	}
+
+	/**
+	 * Hace una aliminacion fisica de la entidad especificada
+	 * 
+	 * @param idEntidad
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@DeleteMapping(value = "/catalogos/entidades/{idEntidad}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "DELETE", value = "Elimina un objeto catalogo entidad en base a su id", tags = {
+			"Entidad" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Entidad encontrada"),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response deleteById(@PathVariable(value = "idEntidad", required = true) Long idEntidad,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Eliminacion exitosa", null);
 	}
 
 	/**
@@ -171,10 +193,10 @@ public class EntidadController {
 	 * @return
 	 */
 	public static EntidadResponseDTO buildDummy() {
-		Set<AfiliacionEntDTO> afiliaciones = new HashSet<>();
+		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
 		afiliaciones.add(new AfiliacionEntDTO(1L, 12345678L, true));
 		afiliaciones.add(new AfiliacionEntDTO(2L, 44423699L, true));
-		Set<AfiliacionEntDTO> afiliaciones2 = new HashSet<>();
+		List<AfiliacionEntDTO> afiliaciones2 = new ArrayList<>();
 		afiliaciones2.add(new AfiliacionEntDTO(3L, 88345670L, true));
 		afiliaciones2.add(new AfiliacionEntDTO(4L, 33423699L, true));
 		Set<CuentaEntDTO> set = new HashSet<>();
