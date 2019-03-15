@@ -164,10 +164,10 @@ public class CodigoEstadoCuentaController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/codigos/entidad/{idEntidad}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa uno o mas objetos catalogo coigo de estado de cuenta en base a un id de su entidad asociada", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Regresa uno o mas objetos catalogo codigo de estado de cuenta en base a un id de su entidad asociada", tags = {
 			"CodigoEstadoCuenta" })
 	@ApiResponses({
-			@ApiResponse(code = 200, response = Response.class, message = "Codigo de estado de cuenta encontrado"),
+			@ApiResponse(code = 200, response = Response.class, message = "Codigod de estado de cuenta encontrados"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -203,6 +203,33 @@ public class CodigoEstadoCuentaController {
 	public Response deleteById(@PathVariable(value = "idCodigo", required = true) Long idCodigo,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Eliminacion exitosa", null);
+	}
+
+	/**
+	 * Regresa todos los catalogos de codigo estado de cuenta
+	 * 
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/catalogos/codigos", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa todos los catalogo codigo de estado", tags = {
+			"CodigoEstadoCuenta" })
+	@ApiResponses({
+			@ApiResponse(code = 200, response = Response.class, message = "Codigos de estado de cuenta encontrados"),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response findAll() {
+		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
+		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy2();
+		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO3 = buildDummy2();
+		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
+		lst.add(codigoEstadoCuentaDTO);
+		lst.add(codigoEstadoCuentaDTO2);
+		lst.add(codigoEstadoCuentaDTO3);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", lst);
 	}
 
 	/**

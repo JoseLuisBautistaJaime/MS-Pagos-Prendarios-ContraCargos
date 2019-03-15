@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -205,7 +206,7 @@ public class EntidadController {
 		Set<ContactoEntDTO> set2 = new HashSet<>();
 		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com", true));
 		set2.add(new ContactoEntDTO(2L, "Maria DB", "mari_DB@gmail.com", true));
-		EntidadResponseDTO entidadResoponseDTO = new EntidadResponseDTO(1L, "Banamex", "Banco banamex", true, set,
+		EntidadResponseDTO entidadResoponseDTO = new EntidadResponseDTO(1L, "Banamex", "Banco banamex", true, new Date(), "Bill Gates", set,
 				set2);
 		return entidadResoponseDTO;
 	}
