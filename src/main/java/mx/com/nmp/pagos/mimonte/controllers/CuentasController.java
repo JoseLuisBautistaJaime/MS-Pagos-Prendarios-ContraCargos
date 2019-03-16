@@ -1,7 +1,6 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -88,8 +87,8 @@ public class CuentasController {
 //		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(
 //				cuentaServiceImpl.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(CuentaDTOReq), createdBy));
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta guardada correctamente",
-				dummyRespDTO());
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta creada correctamente",
+				buildDummyUpdt());
 	}
 
 	/**
@@ -125,7 +124,7 @@ public class CuentasController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/catalogos/cuentas/{idcuentas}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/catalogos/cuentas/{numeroCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo cuentas en base a su id", tags = {
 			"Cuentas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontrada"),
@@ -133,7 +132,7 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findById(@PathVariable(value = "idcuentas", required = true) Long idcuentas) {
+	public Response findById(@PathVariable(value = "numeroCuenta", required = true) String numeroCuenta) {
 
 //		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(cuentaServiceImpl.findById(idcuentas));
 
@@ -167,17 +166,17 @@ public class CuentasController {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/catalogos/cuentas/{idcuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/catalogos/cuentas/{idCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Elimina el registro en base a su id", tags = { "Cuentas" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontradas"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Cuenta Eliminada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response deleteByidcuentas(@PathVariable(value = "idcuenta", required = true) Long idcuenta,
+	public Response deleteByidcuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas eliminada correctamente", null);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta eliminada correctamente", null);
 	}
 
 	/**
@@ -198,14 +197,12 @@ public class CuentasController {
 		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
 		CategoriaDTO cate = new CategoriaDTO();
 		cate.setId(123l);
-		cate.setDescripcion("Categoria Dummy");
+		cate.setDescripcion("Ventas");
 		codigo.setEstatus(true);
 		codigo.setCategoria(cate);
-		codigo.setLeyenda("Leyenda de codigo");
-		codigo.setId(1234l);
+		codigo.setCodigo("Leyenda CCFF");
+		codigo.setId(1234L);
 		codigos.add(codigo);
-		cuentasDto.setCreatedBy("Moran");
-		cuentasDto.setCreatedDate(new Date());
 		cuentasDto.setEstatus(true);
 		cuentasDto.setId(234L);
 		cuentasDto.setNumero("12345678");
@@ -232,24 +229,35 @@ public class CuentasController {
 		CuentaEntDTO cuentaEntDTO1 = new CuentaEntDTO();
 		CuentaEntDTO cuentaEntDTO2 = new CuentaEntDTO();
 		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
+		List<AfiliacionEntDTO> afiliaciones2 = new ArrayList<>();
 		AfiliacionEntDTO afiliacionDto = new AfiliacionEntDTO();
 		AfiliacionEntDTO afiliacionDto2 = new AfiliacionEntDTO();
+		AfiliacionEntDTO afiliacionDto3 = new AfiliacionEntDTO();
+		AfiliacionEntDTO afiliacionDto4 = new AfiliacionEntDTO();
 		afiliacionDto.setId(234L);
 		afiliacionDto.setNumero(12345678L);
 		afiliacionDto.setEstatus(true);
 		afiliacionDto2.setId(555234L);
 		afiliacionDto2.setNumero(4541545456L);
 		afiliacionDto2.setEstatus(true);
+		afiliacionDto3.setId(234111L);
+		afiliacionDto3.setNumero(10000978L);
+		afiliacionDto3.setEstatus(true);
+		afiliacionDto4.setId(9090904L);
+		afiliacionDto4.setNumero(112233L);
+		afiliacionDto4.setEstatus(true);
 		afiliaciones.add(afiliacionDto);
 		afiliaciones.add(afiliacionDto2);
+		afiliaciones2.add(afiliacionDto3);
+		afiliaciones2.add(afiliacionDto4);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
 		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
 		CategoriaDTO cate = new CategoriaDTO();
 		cate.setId(123l);
-		cate.setDescripcion("Categoria Dummy");
+		cate.setDescripcion("Otra Categoria");
 		codigo.setEstatus(true);
 		codigo.setCategoria(cate);
-		codigo.setLeyenda("Leyenda de codigo");
+		codigo.setCodigo("Leyenda FFFRR");
 		codigo.setId(1234l);
 		codigos.add(codigo);
 		cuentaEntDTO1.setEstatus(true);
@@ -259,7 +267,7 @@ public class CuentasController {
 		cuentaEntDTO2.setEstatus(true);
 		cuentaEntDTO2.setId(23443L);
 		cuentaEntDTO2.setNumero("1234454556");
-		cuentaEntDTO2.setAfiliaciones(afiliaciones);
+		cuentaEntDTO2.setAfiliaciones(afiliaciones2);
 		cuentasDto.add(cuentaEntDTO1);
 		cuentasDto.add(cuentaEntDTO2);
 		return cuentasDto;
@@ -274,25 +282,29 @@ public class CuentasController {
 		CuentaEntDTO cuentasDto = new CuentaEntDTO();
 		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
 		AfiliacionEntDTO afiliacionDto = new AfiliacionEntDTO();
+		AfiliacionEntDTO afiliacionDto2 = new AfiliacionEntDTO();
 		afiliacionDto.setId(234L);
 		afiliacionDto.setNumero(12345678L);
 		afiliacionDto.setEstatus(true);
+		afiliacionDto2.setId(888L);
+		afiliacionDto2.setNumero(998811L);
+		afiliacionDto2.setEstatus(true);
 		afiliaciones.add(afiliacionDto);
+		afiliaciones.add(afiliacionDto2);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
 		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
 		CategoriaDTO cate = new CategoriaDTO();
 		cate.setId(123l);
-		cate.setDescripcion("Categoria Dummy");
+		cate.setDescripcion("Otra Categoria");
 		codigo.setEstatus(true);
 		codigo.setCategoria(cate);
-		codigo.setLeyenda("Leyenda de codigo");
+		codigo.setCodigo("Leyenda GGF");
 		codigo.setId(1234l);
 		codigos.add(codigo);
 		cuentasDto.setEstatus(true);
-		cuentasDto.setId(234L);
-		cuentasDto.setNumero("12345678");
+		cuentasDto.setId(111234L);
+		cuentasDto.setNumero("12443345678");
 		cuentasDto.setAfiliaciones(afiliaciones);
-
 		return cuentasDto;
 	}
 
@@ -308,18 +320,14 @@ public class CuentasController {
 		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
 		CategoriaDTO cate = new CategoriaDTO();
 		cate.setId(123l);
-		cate.setDescripcion("Categoria Dummy");
+		cate.setDescripcion("Ventas");
 		codigo.setEstatus(true);
 		codigo.setCategoria(cate);
-		codigo.setLeyenda("Leyenda de codigo");
+		codigo.setCodigo("Leyenda CCX");
 		codigo.setId(1234l);
 		codigos.add(codigo);
-		cuentasDto.setCreatedBy("Moran");
-		cuentasDto.setCreatedDate(new Date());
 		cuentasDto.setEstatus(true);
 		cuentasDto.setId(234L);
-		cuentasDto.setLastModifiedBy("Moran");
-		cuentasDto.setLastModifiedDate(new Date());
 		cuentasDto.setNumero("12345678");
 		cuentasDto.setAfiliaciones(afiliaciones);
 
@@ -337,12 +345,8 @@ public class CuentasController {
 		CategoriaDTO cate = new CategoriaDTO();
 		cate.setId(123l);
 		cate.setDescripcion("Categoria Dummy");
-		cuentasDto.setCreatedBy("Moran");
-		cuentasDto.setCreatedDate(new Date());
 		cuentasDto.setEstatus(true);
 		cuentasDto.setId(234L);
-		cuentasDto.setLastModifiedBy("Moran");
-		cuentasDto.setLastModifiedDate(new Date());
 		cuentasDto.setNumero("12345678");
 		cuentasDto.setAfiliaciones(afiliaciones);
 		cuentas.add(cuentasDto);

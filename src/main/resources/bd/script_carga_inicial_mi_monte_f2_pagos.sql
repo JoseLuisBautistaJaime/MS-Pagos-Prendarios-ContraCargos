@@ -19,7 +19,8 @@ INSERT INTO tk_catalogo(id, descripcion_corta,descripcion, nombre_tabla, activo)
 	VALUES(1,'Afiliacion','El catalog de afiliaicones','tc_afiliacion',1),
 		(2,'Estatus Tarjeta','Catalogo de estatus de tarjeta posibles','tk_estatus_tarjeta',1),
 		(3,'Estatus Transaccion','Estatus de transacciones posibles','tk_estatus_transaccion',1),
-		(4,'Tipo Tarjeta','Catalogo de tipos de tarjetas','tk_tipo_tarjeta',1);
+		(4,'Tipo Tarjeta','Catalogo de tipos de tarjetas','tk_tipo_tarjeta',1),
+        (5,'Categoria','Categorias de codigos de estados de cuenta','tk_categoria',1);
 
 --- INSERCION INICIAL EN CATALOG DE ESTATUS DE OPERACIONES
 INSERT INTO tk_estatus_operacion(id, descripcion_corta, descripcion)

@@ -17,7 +17,7 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 	 */
 	private static final long serialVersionUID = -32478678397212959L;
 
-	private String leyenda;
+	private String codigo;
 	private Boolean status;
 	private EntidadDTO entidad;
 	private CategoriaDTO categoria;
@@ -26,29 +26,29 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 		super();
 	}
 
-	public CodigoEstadoCuentaDTO(String leyenda, Boolean status, EntidadDTO entidad, CategoriaDTO categoria) {
+	public CodigoEstadoCuentaDTO(String codigo, Boolean status, EntidadDTO entidad, CategoriaDTO categoria) {
 		super();
-		this.leyenda = leyenda;
+		this.codigo = codigo;
 		this.status = status;
 		this.categoria = categoria;
 	}
 
-	public CodigoEstadoCuentaDTO(String leyenda, Boolean status, EntidadDTO entidad, CategoriaDTO categoria, Long id,
+	public CodigoEstadoCuentaDTO(String codigo, Boolean status, EntidadDTO entidad, CategoriaDTO categoria, Long id,
 			Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy,
 			String description, String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
-		this.leyenda = leyenda;
+		this.codigo = codigo;
 		this.status = status;
 		this.entidad = entidad;
 		this.categoria = categoria;
 	}
 
-	public String getLeyenda() {
-		return leyenda;
+	public String getCodigo() {
+		return codigo;
 	}
 
-	public void setLeyenda(String leyenda) {
-		this.leyenda = leyenda;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	public EntidadDTO getEntidad() {
@@ -77,13 +77,13 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 
 	@Override
 	public String toString() {
-		return "CodigoEstadoCuentaDTO [leyenda=" + leyenda + ", status=" + status + ", entidades=" + entidad
+		return "CodigoEstadoCuentaDTO [codigo=" + codigo + ", status=" + status + ", entidades=" + entidad
 				+ ", categoria=" + categoria + "]";
 	}
 
 	@Override
 	public int compareTo(CodigoEstadoCuentaDTO o) {
-		return o.getLeyenda().compareTo(this.leyenda);
+		return o.codigo.compareTo(this.codigo);
 	}
 
 }

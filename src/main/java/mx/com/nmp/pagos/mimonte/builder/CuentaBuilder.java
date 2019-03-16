@@ -86,12 +86,8 @@ public abstract class CuentaBuilder {
 			cuentaDTO = new CuentaDTO();
 			cuentaDTO.setAfiliaciones(
 					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones()));
-			cuentaDTO.setCreatedBy(cuentaBaseDTO.getCreatedBy());
-			cuentaDTO.setCreatedDate(cuentaBaseDTO.getCreatedDate());
 			cuentaDTO.setEstatus(cuentaBaseDTO.getEstatus());
 			cuentaDTO.setId(cuentaBaseDTO.getId());
-			cuentaDTO.setLastModifiedBy(cuentaBaseDTO.getLastModifiedBy());
-			cuentaDTO.setLastModifiedDate(cuentaBaseDTO.getLastModifiedDate());
 			cuentaDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
 
 		}
@@ -111,12 +107,8 @@ public abstract class CuentaBuilder {
 			cuentaBaseDTO = new CuentaBaseDTO();
 			cuentaBaseDTO.setAfiliaciones(
 					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionDTOSet(cuentaDTO.getAfiliaciones()));
-			cuentaBaseDTO.setCreatedBy(cuentaDTO.getCreatedBy());
-			cuentaBaseDTO.setCreatedDate(cuentaDTO.getCreatedDate());
 			cuentaBaseDTO.setEstatus(cuentaDTO.getEstatus());
 			cuentaBaseDTO.setId(cuentaDTO.getId());
-			cuentaBaseDTO.setLastModifiedBy(cuentaDTO.getLastModifiedBy());
-			cuentaBaseDTO.setLastModifiedDate(cuentaDTO.getLastModifiedDate());
 			cuentaBaseDTO.setNumeroCuenta(cuentaDTO.getNumero());
 
 		}
@@ -135,12 +127,8 @@ public abstract class CuentaBuilder {
 			cuentaDTO = new CuentaDTO();
 			cuentaDTO.setAfiliaciones(
 					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
-			cuentaDTO.setCreatedBy(cuenta.getCreatedBy());
-			cuentaDTO.setCreatedDate(cuenta.getCreatedDate());
 			cuentaDTO.setEstatus(cuenta.getEstatus());
 			cuentaDTO.setId(cuenta.getId());
-			cuentaDTO.setLastModifiedBy(cuenta.getLastModifiedBy());
-			cuentaDTO.setLastModifiedDate(cuenta.getLastModifiedDate());
 			cuentaDTO.setNumero(cuenta.getNumeroCuenta());
 		}
 		return cuentaDTO;

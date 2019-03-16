@@ -4,17 +4,17 @@ public class BaseCodigoDTO implements Comparable<BaseCodigoDTO> {
 
 	private Long id;
 	private Boolean estatus;
-	private String leyenda;
+	private String codigo;
 
 	public BaseCodigoDTO() {
 		super();
 	}
 
-	public BaseCodigoDTO(Long id, Boolean estatus, String leyenda) {
+	public BaseCodigoDTO(Long id, Boolean estatus, String codigo) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
-		this.leyenda = leyenda;
+		this.codigo = codigo;
 	}
 
 	public Long getId() {
@@ -33,12 +33,12 @@ public class BaseCodigoDTO implements Comparable<BaseCodigoDTO> {
 		this.estatus = estatus;
 	}
 
-	public String getLeyenda() {
-		return leyenda;
+	public String getCodigo() {
+		return codigo;
 	}
 
-	public void setLeyenda(String leyenda) {
-		this.leyenda = leyenda;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class BaseCodigoDTO implements Comparable<BaseCodigoDTO> {
 
 	@Override
 	public String toString() {
-		return "BaseCodigoDTO [id=" + id + ", estatus=" + estatus + ", leyenda=" + leyenda + "]";
+		return "BaseCodigoDTO [id=" + id + ", estatus=" + estatus + ", codigo=" + codigo + "]";
 	}
 
 }

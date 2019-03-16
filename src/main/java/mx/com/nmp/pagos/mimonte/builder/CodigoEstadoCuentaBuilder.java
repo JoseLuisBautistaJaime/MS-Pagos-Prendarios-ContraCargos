@@ -39,7 +39,7 @@ public class CodigoEstadoCuentaBuilder {
 			codigoEstadoCuentaDTO.setCategoria(null);
 			codigoEstadoCuentaDTO.setEntidad(null);
 			codigoEstadoCuentaDTO.setId(codigoEstadoCuenta.getId());
-			codigoEstadoCuentaDTO.setLeyenda(codigoEstadoCuenta.getLeyenda());
+			codigoEstadoCuentaDTO.setCodigo(codigoEstadoCuenta.getCodigo());
 			codigoEstadoCuentaDTO.setStatus(codigoEstadoCuenta.getEstatus());
 		}
 		return codigoEstadoCuentaDTO;
@@ -60,7 +60,7 @@ public class CodigoEstadoCuentaBuilder {
 			codigoEstadoCuenta.setCategoria(null);
 			codigoEstadoCuenta.setEntidades(null);
 			codigoEstadoCuenta.setId(codigoEstadoCuentaDTO.getId());
-			codigoEstadoCuenta.setLeyenda(codigoEstadoCuentaDTO.getLeyenda());
+			codigoEstadoCuenta.setCodigo(codigoEstadoCuentaDTO.getCodigo());
 			codigoEstadoCuenta.setEstatus(codigoEstadoCuentaDTO.getStatus());
 		}
 		return codigoEstadoCuenta;
@@ -80,7 +80,7 @@ public class CodigoEstadoCuentaBuilder {
 			baseCodigoDTO = new BaseCodigoDTO();
 			baseCodigoDTO.setEstatus(codigoEstadoCuentaGenDTO.getEstatus());
 			baseCodigoDTO.setId(codigoEstadoCuentaGenDTO.getId());
-			baseCodigoDTO.setLeyenda(codigoEstadoCuentaGenDTO.getLeyenda());
+			baseCodigoDTO.setCodigo(codigoEstadoCuentaGenDTO.getCodigo());
 		}
 		return baseCodigoDTO;
 	}
@@ -111,18 +111,12 @@ public class CodigoEstadoCuentaBuilder {
 			codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO();
 			codigoEstadoCuentaDTO.setCategoria(
 					CategoriaBuilder.buildCategoriaDTOFromCategoriaReqDTO(codigoEstadoCuentaReqDTO.getCategoria()));
-			codigoEstadoCuentaDTO.setCreatedBy(codigoEstadoCuentaReqDTO.getCreatedBy());
-			codigoEstadoCuentaDTO.setCreatedDate(codigoEstadoCuentaReqDTO.getCreatedDate());
-			codigoEstadoCuentaDTO.setDescription(codigoEstadoCuentaReqDTO.getDescription());
 			codigoEstadoCuentaDTO
 					.setEntidad(EntidadBuilder.buildEntidadDTOFromEntidadReqDTO(codigoEstadoCuentaReqDTO.getEntidad()));
 			codigoEstadoCuentaDTO.setEstatus(codigoEstadoCuentaReqDTO.getEstatus());
 			codigoEstadoCuentaDTO.setId(codigoEstadoCuentaReqDTO.getId());
-			codigoEstadoCuentaDTO.setLastModifiedBy(codigoEstadoCuentaReqDTO.getLastModifiedBy());
-			codigoEstadoCuentaDTO.setLastModifiedDate(codigoEstadoCuentaReqDTO.getLastModifiedDate());
-			codigoEstadoCuentaDTO.setLeyenda(codigoEstadoCuentaReqDTO.getLeyenda());
-			codigoEstadoCuentaDTO.setShortDescription(codigoEstadoCuentaReqDTO.getShortDescription());
-			codigoEstadoCuentaDTO.setStatus(codigoEstadoCuentaReqDTO.getStatus());
+			codigoEstadoCuentaDTO.setCodigo(codigoEstadoCuentaReqDTO.getCodigo());
+			codigoEstadoCuentaDTO.setStatus(codigoEstadoCuentaReqDTO.getEstatus());
 		}
 		return codigoEstadoCuentaDTO;
 	}

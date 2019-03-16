@@ -1,7 +1,5 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
-import java.util.Date;
-
 /**
  * Nombre: CodigoEstadoCuentaReqDTO Descripcion: Clase que encapsula la
  * unformacion de un catalogo de codigo de estado de cuenta
@@ -12,103 +10,32 @@ import java.util.Date;
  */
 public class CodigoEstadoCuentaReqDTO implements Comparable<CodigoEstadoCuentaReqDTO> {
 
-	private String leyenda;
+	private String codigo;
 	private Long id;
-	private Boolean status;
+	private Boolean estatus;
 	private EntidadReqDTO entidad;
 	private CategoriaReqDTO categoria;
-	private Date createdDate;
-	private Date lastModifiedDate;
-	private String createdBy;
-	private String lastModifiedBy;
-	private Boolean estatus;
-	private String description;
-	private String shortDescription;
 
 	public CodigoEstadoCuentaReqDTO() {
 		super();
 	}
 
-	public CodigoEstadoCuentaReqDTO(String leyenda, Long id, Boolean status, EntidadReqDTO entidad,
-			CategoriaReqDTO categoria, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy,
-			Boolean estatus, String description, String shortDescription) {
+	public CodigoEstadoCuentaReqDTO(String codigo, Long id, Boolean estatus, EntidadReqDTO entidad,
+			CategoriaReqDTO categoria) {
 		super();
-		this.leyenda = leyenda;
+		this.codigo = codigo;
 		this.id = id;
-		this.status = status;
+		this.estatus = estatus;
 		this.entidad = entidad;
 		this.categoria = categoria;
-		this.createdDate = createdDate;
-		this.lastModifiedDate = lastModifiedDate;
-		this.createdBy = createdBy;
-		this.lastModifiedBy = lastModifiedBy;
-		this.estatus = estatus;
-		this.description = description;
-		this.shortDescription = shortDescription;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getCodigo() {
+		return codigo;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getShortDescription() {
-		return shortDescription;
-	}
-
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
-	}
-
-	public Boolean getEstatus() {
-		return estatus;
-	}
-
-	public void setEstatus(Boolean estatus) {
-		this.estatus = estatus;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getLastModifiedBy() {
-		return lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public String getLeyenda() {
-		return leyenda;
-	}
-
-	public void setLeyenda(String leyenda) {
-		this.leyenda = leyenda;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	public Long getId() {
@@ -119,12 +46,12 @@ public class CodigoEstadoCuentaReqDTO implements Comparable<CodigoEstadoCuentaRe
 		this.id = id;
 	}
 
-	public Boolean getStatus() {
-		return status;
+	public Boolean getEstatus() {
+		return estatus;
 	}
 
-	public void setStatus(Boolean status) {
-		this.status = status;
+	public void setEstatus(Boolean estatus) {
+		this.estatus = estatus;
 	}
 
 	public EntidadReqDTO getEntidad() {
@@ -145,10 +72,8 @@ public class CodigoEstadoCuentaReqDTO implements Comparable<CodigoEstadoCuentaRe
 
 	@Override
 	public String toString() {
-		return "CodigoEstadoCuentaReqDTO [leyenda=" + leyenda + ", id=" + id + ", status=" + status + ", entidad="
-				+ entidad + ", categoria=" + categoria + ", createdDate=" + createdDate + ", lastModifiedDate="
-				+ lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy + ", estatus="
-				+ estatus + ", description=" + description + ", shortDescription=" + shortDescription + "]";
+		return "CodigoEstadoCuentaReqDTO [codigo=" + codigo + ", id=" + id + ", status=" + estatus + ", entidad="
+				+ entidad + ", categoria=" + categoria + "]";
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,30 +14,20 @@ public class CuentaDTO {
 
 	private Long id;
 	private String numero;
-	private List<AfiliacionRespDTO> afiliaciones;
-
 	private Boolean estatus;
-	private Date createdDate;
-	private Date lastModifiedDate;
-	private String createdBy;
-	private String lastModifiedBy;
+	private List<AfiliacionRespDTO> afiliaciones;
 
 	public CuentaDTO() {
 		super();
 
 	}
 
-	public CuentaDTO(Long id, String numero, List<AfiliacionRespDTO> afiliaciones, 
-			Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
+	public CuentaDTO(Long id, String numero, List<AfiliacionRespDTO> afiliaciones, Boolean estatus) {
 		super();
 		this.id = id;
 		this.numero = numero;
 		this.afiliaciones = afiliaciones;
 		this.estatus = estatus;
-		this.createdDate = createdDate;
-		this.lastModifiedDate = lastModifiedDate;
-		this.createdBy = createdBy;
-		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	public Long getId() {
@@ -65,8 +54,6 @@ public class CuentaDTO {
 		this.afiliaciones = afiliaciones;
 	}
 
-
-
 	public Boolean getEstatus() {
 		return estatus;
 	}
@@ -75,43 +62,10 @@ public class CuentaDTO {
 		this.estatus = estatus;
 	}
 
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getLastModifiedBy() {
-		return lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
 	@Override
 	public String toString() {
-		return "CuentaDTO [id=" + id + ", numero=" + numero + ", afiliaciones=" + afiliaciones
-				+ ", estatus=" + estatus + ", createdDate=" + createdDate + ", lastModifiedDate=" + lastModifiedDate
-				+ ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy + "]";
+		return "CuentaDTO [id=" + id + ", numero=" + numero + ", afiliaciones=" + afiliaciones + ", estatus=" + estatus
+				+ "]";
 	}
 
 }

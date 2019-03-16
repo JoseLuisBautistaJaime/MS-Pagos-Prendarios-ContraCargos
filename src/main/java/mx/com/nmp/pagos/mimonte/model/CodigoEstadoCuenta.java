@@ -25,8 +25,8 @@ import javax.persistence.Table;
 @Table(name = "tc_codigo_estado_cuenta")
 public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparable<CodigoEstadoCuenta> {
 
-	@Column(name = "leyenda", nullable = false)
-	private String leyenda;
+	@Column(name = "codigo", nullable = false)
+	private String codigo;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "tr_codigo_estado_cuenta_entidad", joinColumns = {
@@ -42,30 +42,30 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 		super();
 	}
 
-	public CodigoEstadoCuenta(String codigo, String leyenda, String primerRenglon, String segundoRenglon,
+	public CodigoEstadoCuenta(String codigo, String primerRenglon, String segundoRenglon,
 			String referencia, Set<Entidad> entidades, Categoria categoria) {
 		super();
-		this.leyenda = leyenda;
+		this.codigo = codigo;
 		this.entidades = entidades;
 		this.categoria = categoria;
 	}
 
-	public CodigoEstadoCuenta(String codigo, String leyenda, String primerRenglon, String segundoRenglon,
+	public CodigoEstadoCuenta(String codigo, String primerRenglon, String segundoRenglon,
 			String referencia, Set<Entidad> entidades, Categoria categoria, Long id, Boolean estatus, Date createdDate,
 			Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
 			String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
-		this.leyenda = leyenda;
+		this.codigo = codigo;
 		this.entidades = entidades;
 		this.categoria = categoria;
 	}
 
-	public String getLeyenda() {
-		return leyenda;
+	public String getCodigo() {
+		return codigo;
 	}
 
-	public void setLeyenda(String leyenda) {
-		this.leyenda = leyenda;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	public Set<Entidad> getEntidades() {
@@ -86,12 +86,12 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 
 	@Override
 	public String toString() {
-		return "CodigoEstadoCuenta [leyenda=" + leyenda + ", entidad=" + entidades	 + ", categoria=" + categoria + "]";
+		return "CodigoEstadoCuenta [codigo=" + codigo + ", entidad=" + entidades + ", categoria=" + categoria + "]";
 	}
 
 	@Override
 	public int compareTo(CodigoEstadoCuenta o) {
-		return o.getLeyenda().compareTo(this.leyenda);
+		return o.codigo.compareTo(this.codigo);
 	}
 
 }

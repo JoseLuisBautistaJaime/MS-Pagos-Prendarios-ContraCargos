@@ -12,7 +12,7 @@ package mx.com.nmp.pagos.mimonte.dto;
 public class CodigoEstadoCuentaUpdtDTO implements Comparable<CodigoEstadoCuentaUpdtDTO> {
 
 	private Long id;
-	private String leyenda;
+	private String codigo;
 	private Boolean status;
 	private BaseEntidadDTO entidad;
 	private CategoriaDTO categoria;
@@ -21,11 +21,11 @@ public class CodigoEstadoCuentaUpdtDTO implements Comparable<CodigoEstadoCuentaU
 		super();
 	}
 
-	public CodigoEstadoCuentaUpdtDTO(Long id, String leyenda, Boolean status, BaseEntidadDTO entidad,
+	public CodigoEstadoCuentaUpdtDTO(Long id, String codigo, Boolean status, BaseEntidadDTO entidad,
 			CategoriaDTO categoria) {
 		super();
 		this.id = id;
-		this.leyenda = leyenda;
+		this.codigo = codigo;
 		this.status = status;
 		this.entidad = entidad;
 		this.categoria = categoria;
@@ -39,12 +39,12 @@ public class CodigoEstadoCuentaUpdtDTO implements Comparable<CodigoEstadoCuentaU
 		this.id = id;
 	}
 
-	public String getLeyenda() {
-		return leyenda;
+	public String getCodigo() {
+		return codigo;
 	}
 
-	public void setLeyenda(String leyenda) {
-		this.leyenda = leyenda;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	public Boolean getStatus() {
@@ -73,7 +73,7 @@ public class CodigoEstadoCuentaUpdtDTO implements Comparable<CodigoEstadoCuentaU
 
 	@Override
 	public String toString() {
-		return "CodigoEstadoCuentaUpdtDTO [id=" + id + ", leyenda=" + leyenda + ", status=" + status + ", entidad="
+		return "CodigoEstadoCuentaUpdtDTO [id=" + id + ", codigo=" + codigo + ", status=" + status + ", entidad="
 				+ entidad + ", categoria=" + categoria + "]";
 	}
 

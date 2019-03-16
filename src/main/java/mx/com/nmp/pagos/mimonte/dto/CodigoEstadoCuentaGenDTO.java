@@ -18,7 +18,7 @@ public class CodigoEstadoCuentaGenDTO extends AbstractCatalogoDTO {
 	 */
 	private static final long serialVersionUID = 4252462570216032264L;
 
-	private String leyenda;
+	private String codigo;
 	private EntidadDTO entidad;
 	private CategoriaDTO categoria;
 
@@ -26,28 +26,28 @@ public class CodigoEstadoCuentaGenDTO extends AbstractCatalogoDTO {
 		super();
 	}
 
-	public CodigoEstadoCuentaGenDTO(String leyenda, EntidadDTO entidad, CategoriaDTO categoria) {
+	public CodigoEstadoCuentaGenDTO(String codigo, EntidadDTO entidad, CategoriaDTO categoria) {
 		super();
-		this.leyenda = leyenda;
+		this.codigo = codigo;
 		this.entidad = entidad;
 		this.categoria = categoria;
 	}
 
-	public CodigoEstadoCuentaGenDTO(String leyenda, EntidadDTO entidad, CategoriaDTO categoria, Long id,
-			Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy,
-			String description, String shortDescription) {
+	public CodigoEstadoCuentaGenDTO(String codigo, EntidadDTO entidad, CategoriaDTO categoria, Long id, Boolean estatus,
+			Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
+			String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
-		this.leyenda = leyenda;
+		this.codigo = codigo;
 		this.entidad = entidad;
 		this.categoria = categoria;
 	}
 
-	public String getLeyenda() {
-		return leyenda;
+	public String getCodigo() {
+		return codigo;
 	}
 
-	public void setLeyenda(String leyenda) {
-		this.leyenda = leyenda;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	public EntidadDTO getEntidad() {
@@ -68,8 +68,7 @@ public class CodigoEstadoCuentaGenDTO extends AbstractCatalogoDTO {
 
 	@Override
 	public String toString() {
-		return "CodigoEstadoCuentaGenDTO [leyenda=" + leyenda + ", entidad=" + entidad + ", categoria=" + categoria
-				+ "]";
+		return "CodigoEstadoCuentaGenDTO [codigo=" + codigo + ", entidad=" + entidad + ", categoria=" + categoria + "]";
 	}
 
 }

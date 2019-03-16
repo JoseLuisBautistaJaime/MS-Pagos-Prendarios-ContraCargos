@@ -92,11 +92,15 @@ ADD COLUMN `id_openpay` VARCHAR(40) NULL AFTER `estatus_tarjeta_c`;
 
 -- NEW CATALOGS [catalogo_afiliacion, estatus_transaccion_c, regla_negocio, variable]
 INSERT INTO cat_catalogo(id, descripcion_corta, descripcion, nombre_tabla, activo)
-	VALUES(3, 'Afiliacion', 'Catalogo de afiliaciones', 'catalogo_afiliacion', 1),
-    (4, 'EstatusPago', 'Estatus de las transacciones o pagos', 'estatus_transaccion_c', 1),
-    (5, 'ReglaNegocio', 'Reglas de negocio', 'regla_negocio', 1),
-    (6, 'Variable', 'Variables para la aplicacion', 'variable', 1);
+	VALUES(3, 'Afiliacion', 'Catalogo de afiliaciones', 'tc_afiliacion', 1),
+    (4, 'EstatusPago', 'Estatus de las transacciones o pagos', 'tk_estatus_transaccion', 1),
+    (5, 'ReglaNegocio', 'Reglas de negocio', 'tk_regla_negocio', 1),
+    (6, 'Variable', 'Variables para la aplicacion', 'tk_variable', 1),
+    (7, 'Categoria', 'Categorias de los codigos de estado de cuenta', 'tk_categoria', 1)
+    ;
 -- NEW CATALOGS ENDS
+
+select len('Categorias de los codigos de estado de cuenta');
 
 -- INSERT DEFAULT VALUE IN STATUS TRANSACTION CATALOG
 INSERT INTO estatus_transaccion_c(id, descripcion_corta, descripcion) VALUES(1,'PRegistrado','Pago Registrado');
@@ -238,7 +242,7 @@ DROP TABLE IF EXISTS `tk_categoria` ;
 
 CREATE TABLE IF NOT EXISTS `tk_categoria` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `mombre` VARCHAR(100) NOT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -263,7 +267,6 @@ CREATE TABLE IF NOT EXISTS `tc_codigo_estado_cuenta` (
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
-  `leyenda` VARCHAR(200) NOT NULL,
   `id_categoria` BIGINT(20) NOT NULL,
   `codigo` VARCHAR(20) NULL DEFAULT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,

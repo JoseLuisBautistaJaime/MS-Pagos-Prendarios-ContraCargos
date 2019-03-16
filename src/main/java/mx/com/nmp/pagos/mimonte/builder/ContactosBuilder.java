@@ -108,7 +108,6 @@ public abstract class ContactosBuilder {
 			contactosDTO.setEmail(contactoRequestDTO.getEmail());
 			contactosDTO.setTipoContacto(TipoContactoBuilder
 					.builTipoContactoBaseDTOFromContacto(new TipoContacto(contactoRequestDTO.getTipoContacto())));
-			contactosDTO.setCreatedBy(contactoRequestDTO.getUserRequest());
 			contactosDTO.setCreatedDate(new Date());
 
 		}

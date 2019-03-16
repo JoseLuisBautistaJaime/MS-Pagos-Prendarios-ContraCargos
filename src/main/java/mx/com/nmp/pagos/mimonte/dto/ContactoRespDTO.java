@@ -16,13 +16,13 @@ public class ContactoRespDTO extends AbstractCatDTO {
 
 	private String descripcion;
 
-	private TipoContactoRespDTO tipoContactoRespDTO;
+	private TipoContactoRespDTO tipoContacto;
 
 	public ContactoRespDTO() {
 		super();
 	}
 
-	public ContactoRespDTO(String nombre, String email, String descripcion, TipoContactoRespDTO tipoContactoRespDTO,
+	public ContactoRespDTO(String nombre, String email, String descripcion, TipoContactoRespDTO tipoContacto,
 			Long id, Boolean estatus) {
 		super(id, estatus);
 	}
@@ -51,18 +51,18 @@ public class ContactoRespDTO extends AbstractCatDTO {
 		this.descripcion = descripcion;
 	}
 
-	public TipoContactoRespDTO getTipoContactoRespDTO() {
-		return tipoContactoRespDTO;
+	public TipoContactoRespDTO getTipoContacto() {
+		return tipoContacto;
 	}
 
-	public void setTipoContactoResDTO(TipoContactoRespDTO tipoContactoRespDTO) {
-		this.tipoContactoRespDTO = tipoContactoRespDTO;
+	public void setTipoContactoResDTO(TipoContactoRespDTO tipoContacto) {
+		this.tipoContacto = tipoContacto;
 	}
 
 	@Override
 	public String toString() {
 		return "ContactoRespDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion
-				+ ", TipoContactoRespDTO=" + tipoContactoRespDTO + ", id=" + id + ", estatus=" + estatus + "]";
+				+ ", TipoContactoRespDTO=" + tipoContacto + ", id=" + id + ", estatus=" + estatus + "]";
 	}
 
 }

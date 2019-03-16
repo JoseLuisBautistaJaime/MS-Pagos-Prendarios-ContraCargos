@@ -67,7 +67,7 @@ DROP TABLE IF EXISTS `tk_categoria` ;
 
 CREATE TABLE IF NOT EXISTS `tk_categoria` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `mombre` VARCHAR(100) NOT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -93,7 +93,6 @@ CREATE TABLE IF NOT EXISTS `tc_codigo_estado_cuenta` (
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
-  `leyenda` VARCHAR(200) NOT NULL,
   `id_categoria` BIGINT(20) NOT NULL,
   `codigo` VARCHAR(20) NULL DEFAULT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,

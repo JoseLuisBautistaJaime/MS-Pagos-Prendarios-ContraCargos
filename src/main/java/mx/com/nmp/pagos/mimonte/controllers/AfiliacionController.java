@@ -28,6 +28,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespPostDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.AfiliacionServiceImpl;
@@ -73,14 +74,14 @@ public class AfiliacionController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/catalogos/afiliacion", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/catalogos/afiliaciones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Crea un nuevo catalogo entidad.", tags = { "Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Entidad creada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody AfiliacionDTO afiliacionDTOReq,
+	public Response save(@RequestBody AfiliacionReqDTO afiliacionDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.save(afiliacionDTOReq, createdBy);
@@ -97,14 +98,14 @@ public class AfiliacionController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/catalogos/afiliacion", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/catalogos/afiliaciones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Actualiza un catalogo afiliacion.", tags = { "Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion actualizada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@RequestBody AfiliacionDTO afiliacionDTOReq,
+	public Response update(@RequestBody AfiliacionReqDTO afiliacionDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.update(afiliacionDTOReq, createdBy);
@@ -121,7 +122,7 @@ public class AfiliacionController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/catalogos/afiliacion/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/catalogos/afiliaciones/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo afiliacion en base a su id", tags = {
 			"Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontrada"),
@@ -146,7 +147,7 @@ public class AfiliacionController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/catalogos/afiliacion/cuenta/{idCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/catalogos/afiliaciones/cuenta/{idCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo entidad en base a su id", tags = {
 			"Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontradas"),
@@ -164,7 +165,7 @@ public class AfiliacionController {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/catalogos/afiliacion/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/catalogos/afiliaciones/{numeroAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Eliminacion logica del registro en base a su id", tags = {
 			"Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontradas"),
@@ -172,13 +173,31 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response deleteByidAfiliacion(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion,
+	public Response deleteByidAfiliacion(@PathVariable(value = "numeroAfiliacion", required = true) Long numeroAfiliacion,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion eliminada correctamente",
 				null);
 	}
 
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/catalogos/afiliaciones", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa todos los objeto catalogo afiliacion", tags = {
+			"Afiliacion" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliaciones encontradas"),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response findAll() {
+
+//		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.findById(idAfiliacion);
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliaciones recuperadas correctamente",
+				buildDummyLst());
+	}
+	
 	/**
 	 * Crea un objeto de respuesta dummy
 	 * 
@@ -190,6 +209,21 @@ public class AfiliacionController {
 		afiliacionDto.setId(234L);
 		afiliacionDto.setNumero(12345678L);
 		return afiliacionDto;
+	}
+	
+	public static List<AfiliacionRespPostDTO> buildDummyLst() {
+		List<AfiliacionRespPostDTO> lst = new ArrayList<>();
+		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
+		afiliacionDto.setEstatus(true);
+		afiliacionDto.setId(234L);
+		afiliacionDto.setNumero(12345678L);
+		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
+		afiliacionDto2.setEstatus(true);
+		afiliacionDto2.setId(234L);
+		afiliacionDto2.setNumero(12345678L);
+		lst.add(afiliacionDto);
+		lst.add(afiliacionDto2);
+		return lst;
 	}
 
 	/**
@@ -242,6 +276,7 @@ public class AfiliacionController {
 		afiliaciones.add(afiliacionDto);
 		afiliacionDto2.setId(6789L);
 		afiliacionDto2.setNumero(987654L);
+		afiliacionDto2.setEstatus(true);
 		afiliaciones.add(afiliacionDto2);
 		return afiliaciones;
 	}
