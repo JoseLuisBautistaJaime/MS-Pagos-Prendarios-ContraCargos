@@ -350,7 +350,8 @@ public class ContactosController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getNombreEmailContacto(@RequestParam(name = "nombre", required = false) String nombre,
-			@RequestParam(name = "email", required = false) String email) {
+			@RequestParam(name = "email", required = false) String email,
+			@PathVariable(name = "idTipoContacto", required = true) Long idTipoContacto) {
 
 		// Dummy
 		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
@@ -363,7 +364,7 @@ public class ContactosController {
 		contactoResponseDTO.setId(1L);
 		contactoResponseDTO.setNombre("micontacto");
 		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
-		
+
 		ContactoRespDTO contactoResponseDTO2 = new ContactoRespDTO();
 		contactoResponseDTO2.setEmail("keepgoing@banorte.com");
 		contactoResponseDTO2.setDescripcion("Banco Banorte");
@@ -371,14 +372,13 @@ public class ContactosController {
 		contactoResponseDTO2.setId(2L);
 		contactoResponseDTO2.setNombre("Banorte");
 		contactoResponseDTO2.setTipoContactoResDTO(tipoContactoRespDTO);
-		
+
 		List<ContactoRespDTO> lst = new ArrayList<>();
 		lst.add(contactoResponseDTO);
 		lst.add(contactoResponseDTO2);
 		// End Dummy
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-				lst);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
 
 	}
 

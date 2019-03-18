@@ -205,7 +205,7 @@ public class EntidadController {
 		set.add(new CuentaEntDTO(2L, "999456770", true, afiliaciones2));
 		Set<ContactoEntDTO> set2 = new HashSet<>();
 		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com", true));
-		set2.add(new ContactoEntDTO(2L, "Maria DB", "mari_DB@gmail.com", true));
+		set2.add(new ContactoEntDTO(2L, "Maria Fernandez", "mari_fer@gmail.com", true));
 		EntidadResponseDTO entidadResoponseDTO = new EntidadResponseDTO(1L, "Banamex", "Banco banamex", true,
 				new Date(), "Bill Gates", set, set2);
 		return entidadResoponseDTO;
@@ -224,7 +224,7 @@ public class EntidadController {
 		set.add(new CuentaEntDTO(2L, "999456770", true, afiliaciones2));
 		Set<ContactoEntDTO> set2 = new HashSet<>();
 		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com", true));
-		set2.add(new ContactoEntDTO(2L, "Maria DB", "mari_DB@gmail.com", true));
+		set2.add(new ContactoEntDTO(2L, "Maria Fernandez", "mari_fer@gmail.com", true));
 		EntidadResponseDTO entidadResoponseDTO = new EntidadResponseDTO(1L, "Bancomer", "Banco Bancomer", true,
 				new Date(), "Steve P Jobs", set, set2);
 

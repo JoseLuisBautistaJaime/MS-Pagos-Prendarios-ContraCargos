@@ -215,8 +215,8 @@ public class AfiliacionController {
 		List<AfiliacionRespPostDTO> lst = new ArrayList<>();
 		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
 		afiliacionDto.setEstatus(true);
-		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setId(9987L);
+		afiliacionDto.setNumero(990088L);
 		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
 		afiliacionDto2.setEstatus(true);
 		afiliacionDto2.setId(234L);
