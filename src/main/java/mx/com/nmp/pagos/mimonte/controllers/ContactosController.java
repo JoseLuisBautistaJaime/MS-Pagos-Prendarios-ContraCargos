@@ -342,7 +342,7 @@ public class ContactosController {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/catalogos/contactos/filtro/{idTipoContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/catalogos/contactos/consultas/{idTipoContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Regresa la información de los contactos registrados con respecto al parámetro del nombre y del email.", tags = {
 			"Contactos" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),

@@ -152,7 +152,7 @@ public class EntidadController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/catalogos/entidades/consulta", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/catalogos/entidades/consultas", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo entidad en base a su id", tags = {
 			"Entidad" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Entidades encontradas"),
