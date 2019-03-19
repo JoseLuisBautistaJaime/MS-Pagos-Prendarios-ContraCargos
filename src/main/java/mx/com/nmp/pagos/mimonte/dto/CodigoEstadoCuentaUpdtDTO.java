@@ -13,7 +13,7 @@ public class CodigoEstadoCuentaUpdtDTO implements Comparable<CodigoEstadoCuentaU
 
 	private Long id;
 	private String codigo;
-	private Boolean status;
+	private Boolean estatus;
 	private BaseEntidadDTO entidad;
 	private CategoriaDTO categoria;
 
@@ -21,12 +21,12 @@ public class CodigoEstadoCuentaUpdtDTO implements Comparable<CodigoEstadoCuentaU
 		super();
 	}
 
-	public CodigoEstadoCuentaUpdtDTO(Long id, String codigo, Boolean status, BaseEntidadDTO entidad,
+	public CodigoEstadoCuentaUpdtDTO(Long id, String codigo, Boolean estatus, BaseEntidadDTO entidad,
 			CategoriaDTO categoria) {
 		super();
 		this.id = id;
 		this.codigo = codigo;
-		this.status = status;
+		this.estatus = estatus;
 		this.entidad = entidad;
 		this.categoria = categoria;
 	}
@@ -47,12 +47,12 @@ public class CodigoEstadoCuentaUpdtDTO implements Comparable<CodigoEstadoCuentaU
 		this.codigo = codigo;
 	}
 
-	public Boolean getStatus() {
-		return status;
+	public Boolean getEstatus() {
+		return estatus;
 	}
 
-	public void setStatus(Boolean status) {
-		this.status = status;
+	public void setEstatus(Boolean estatus) {
+		this.estatus = estatus;
 	}
 
 	public BaseEntidadDTO getEntidad() {
@@ -73,7 +73,7 @@ public class CodigoEstadoCuentaUpdtDTO implements Comparable<CodigoEstadoCuentaU
 
 	@Override
 	public String toString() {
-		return "CodigoEstadoCuentaUpdtDTO [id=" + id + ", codigo=" + codigo + ", status=" + status + ", entidad="
+		return "CodigoEstadoCuentaUpdtDTO [id=" + id + ", codigo=" + codigo + ", estatus=" + estatus + ", entidad="
 				+ entidad + ", categoria=" + categoria + "]";
 	}
 
