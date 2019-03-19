@@ -165,15 +165,15 @@ public class AfiliacionController {
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/catalogos/afiliaciones/{numeroAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/catalogos/afiliaciones/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Eliminacion logica del registro en base a su id", tags = {
 			"Afiliacion" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontradas"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion eliminada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response deleteByidAfiliacion(@PathVariable(value = "numeroAfiliacion", required = true) Long numeroAfiliacion,
+	public Response deleteByidAfiliacion(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion eliminada correctamente",
