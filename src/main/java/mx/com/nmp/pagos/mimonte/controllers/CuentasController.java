@@ -180,6 +180,28 @@ public class CuentasController {
 	}
 
 	/**
+	 * Regresa una lista con todas las cuentas
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/catalogos/cuentas", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa todos los catalogo Cuenta", tags = { "Cuentas" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontradas"),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response findByCuentaAll() {
+
+//		List<CuentaDTO> cuentaDTOList = cuentaServiceImpl.findByEntidadId(idEntidad);
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuentas recuperadas correctamente",
+				buildDummyUpdtLst());
+	}
+	
+	
+	/**
 	 * Crea un objeto de respuesta dummy
 	 * 
 	 * @return
