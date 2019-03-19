@@ -67,7 +67,7 @@ public class AfiliacionController {
 	private AfiliacionServiceImpl afiliacionServiceImpl;
 
 	/**
-	 * Guarda un nuevo catalogo Entidad
+	 * Guarda un nuevo catalogo Afiliacion
 	 * 
 	 * @param pagoRequestDTO
 	 * @return
@@ -75,8 +75,8 @@ public class AfiliacionController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/catalogos/afiliaciones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Crea un nuevo catalogo entidad.", tags = { "Afiliacion" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Entidad creada"),
+	@ApiOperation(httpMethod = "POST", value = "Crea un nuevo catalogo Afiliacion.", tags = { "Afiliacion" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion creada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -86,12 +86,12 @@ public class AfiliacionController {
 
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.save(afiliacionDTOReq, createdBy);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad guardada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion guardada correctamente",
 				buildDummyPost());
 	}
 
 	/**
-	 * Actualiza un catalogo Entidad
+	 * Actualiza un catalogo Afiliacion
 	 * 
 	 * @param AfiliacionDTO
 	 * @return
@@ -110,36 +110,36 @@ public class AfiliacionController {
 
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.update(afiliacionDTOReq, createdBy);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad actualizada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion actualizada correctamente",
 				buildDummyPost());
 	}
 
 	/**
-	 * Obtiene un catalogo entidad por su id
+	 * Obtiene un catalogo afiliacion por su id
 	 * 
 	 * @param idAfiliacion
 	 * @return
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/catalogos/afiliaciones/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo afiliacion en base a su id", tags = {
+	@GetMapping(value = "/catalogos/afiliaciones/{numeroAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo afiliacion en base a su numero", tags = {
 			"Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontrada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findById(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion) {
+	public Response findById(@PathVariable(value = "numeroAfiliacion", required = true) Long numeroAfiliacion) {
 
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.findById(idAfiliacion);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Entidad recuperada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
 				buildDummyPost());
 	}
 
 	/**
-	 * Obtiene uno o mas catalogos de entidad por su nombre y estatus
+	 * Obtiene uno o mas catalogos de afiliacion por su nombre y estatus
 	 * 
 	 * @param nombre
 	 * @param estatus
@@ -148,7 +148,7 @@ public class AfiliacionController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/afiliaciones/cuenta/{idCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo entidad en base a su id", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo afiliacion en base a su id", tags = {
 			"Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
