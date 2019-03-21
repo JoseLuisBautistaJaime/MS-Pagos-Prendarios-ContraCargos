@@ -80,7 +80,6 @@ public class CatalogoServiceImpl implements CatalogoService {
 		log.info("Consultando la base de datos para la tabla: {}", catalogo.getNombreTabla());
 		List<EntradaCatalogo> resultados = null;
 		try {
-			if(!"tk_categoria".equals(catalogo.getNombreTabla()))
 			resultados = jdbcTemplate.query("SELECT id, descripcion_corta, descripcion FROM " + catalogo.getNombreTabla(),
 					(rs, rowNum) -> {
 						EntradaCatalogo registro = new EntradaCatalogo();
@@ -89,15 +88,6 @@ public class CatalogoServiceImpl implements CatalogoService {
 						registro.setDescripcion(rs.getString("descripcion"));
 						return registro;
 					});
-			else
-				resultados = jdbcTemplate.query("SELECT id, short_description, description FROM " + catalogo.getNombreTabla(),
-						(rs, rowNum) -> {
-							EntradaCatalogo registro = new EntradaCatalogo();
-							registro.setId(rs.getInt("id"));
-							registro.setDescripcionCorta(rs.getString("short_description"));
-							registro.setDescripcion(rs.getString("description"));
-							return registro;
-						});
 		} catch (DataAccessException dae) {
 			log.error("Ocurrio un error al intentar obtener los registros del catalogo: {}. Mensaje de error: {}",
 					nombreCatalogo, dae.getMessage());
