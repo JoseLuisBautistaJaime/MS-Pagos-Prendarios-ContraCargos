@@ -172,7 +172,7 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByNombreAndEstatus(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
+	public Response findByEntidadId(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
 //		List<CodigoEstadoCuentaDTO> lstX = codigoEstadoCuentaServiceImpl.findByEntidades_Id(idEntidad);
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", lstX);
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
