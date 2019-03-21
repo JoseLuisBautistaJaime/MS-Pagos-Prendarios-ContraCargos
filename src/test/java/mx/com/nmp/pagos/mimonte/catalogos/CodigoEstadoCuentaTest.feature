@@ -12,7 +12,7 @@ Feature: MS Conciliacion- Codigos de estados de cuenta
 	Scenario: Actualiza un codigo de estado de cuenta
 		Given path 'mimonte/catalogos/codigos'
 		And header requestUser = 'ismael'
-		And request {"codigo":"string","estatus":true,"id":0,"categoria":{"id":0},"entidad":{"id":0}}
+		And request {"codigo":"CCXR","estatus":true,"id":1,"categoria":{"id":1},"entidad":{"id":1}}
 		When method PUT
 		Then status 200
 
