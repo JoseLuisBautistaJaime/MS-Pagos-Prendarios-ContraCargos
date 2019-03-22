@@ -14,10 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * Nombre: CodigoEstadoCuenta Descripcion: Clase que encapsula la informacion de
- * una entidad de catalogo de tipo CodigoEstadoCuenta
+ * @name CodigoEstadoCuenta
+ * @description Clase que encapsula la informacion de una entidad de catalogo de
+ *              tipo CodigoEstadoCuenta
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 05/03/2019 14:10 hrs.
  * @version 0.1
  */
@@ -42,16 +43,16 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 		super();
 	}
 
-	public CodigoEstadoCuenta(String codigo, String primerRenglon, String segundoRenglon,
-			String referencia, Set<Entidad> entidades, Categoria categoria) {
+	public CodigoEstadoCuenta(String codigo, String primerRenglon, String segundoRenglon, String referencia,
+			Set<Entidad> entidades, Categoria categoria) {
 		super();
 		this.codigo = codigo;
 		this.entidades = entidades;
 		this.categoria = categoria;
 	}
 
-	public CodigoEstadoCuenta(String codigo, String primerRenglon, String segundoRenglon,
-			String referencia, Set<Entidad> entidades, Categoria categoria, Long id, Boolean estatus, Date createdDate,
+	public CodigoEstadoCuenta(String codigo, String primerRenglon, String segundoRenglon, String referencia,
+			Set<Entidad> entidades, Categoria categoria, Long id, Boolean estatus, Date createdDate,
 			Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
 			String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);

@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.services.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -74,6 +76,18 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	public EntidadResponseDTO findByNombreAndEstatus(final String nombre, final Boolean estatus) {
 		return EntidadBuilder
 				.buildEntidadResponseDTOFromEntidad(entidadRepository.findByNombreAndEstatus(nombre, estatus));
+	}
+
+	@Override
+	public List<? extends AbstractCatalogoDTO> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T extends AbstractCatalogoDTO> T deleteById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

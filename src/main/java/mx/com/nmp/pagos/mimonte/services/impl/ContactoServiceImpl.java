@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.services.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,18 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 		return contactoRespository.findById(id).isPresent()
 				? (T) ContactosBuilder.buildContactosDTOFromContactos(contactoRespository.findById(id).get())
 				: null;
+	}
+
+	@Override
+	public List<? extends AbstractCatalogoDTO> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T extends AbstractCatalogoDTO> T deleteById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -5,13 +5,14 @@ import java.util.regex.PatternSyntaxException;
 import mx.com.nmp.pagos.mimonte.constans.RegexConstants;
 
 /**
- * Nombre: ValidadorGenerico Descripcion: Clase abstracta que contiene metodos
- * estaticos para relaizar validaciones genericas sobre diversos tipos de
- * objetos, principalmente evalua cadenas de caracteres y patrones qu se desea
- * existan en estas
+ * @name ValidadorGenerico
+ * @description Clase abstracta que contiene metodos estaticos para relaizar
+ *              validaciones genericas sobre diversos tipos de objetos,
+ *              principalmente evalua cadenas de caracteres y patrones qu se
+ *              desea existan en estas
  *
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 07/03/2019 16:42 hrs.
  * @version 0.1
  */

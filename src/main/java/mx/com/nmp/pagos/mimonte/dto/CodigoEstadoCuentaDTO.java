@@ -1,12 +1,14 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
- * Nombre: CodigoEstadoCuentaDTO Descripcion: Clase que encapsula la informacion
- * de un catalogo de codigo de estado de cuenta
+ * @name CodigoEstadoCuentaDTO
+ * @description Clase que encapsula la informacion de un catalogo de codigo de
+ *              estado de cuenta
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 05/03/2019 14:07 hrs.
  * @version 0.1
  */
@@ -18,29 +20,35 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 	private static final long serialVersionUID = -32478678397212959L;
 
 	private String codigo;
-	private Boolean status;
-	private EntidadDTO entidad;
+	private Set<EntidadDTO> entidades;
 	private CategoriaDTO categoria;
 
 	public CodigoEstadoCuentaDTO() {
 		super();
 	}
 
-	public CodigoEstadoCuentaDTO(String codigo, Boolean status, EntidadDTO entidad, CategoriaDTO categoria) {
+	public CodigoEstadoCuentaDTO(String codigo, Set<EntidadDTO> entidades, CategoriaDTO categoria) {
 		super();
 		this.codigo = codigo;
-		this.status = status;
+		this.entidades = entidades;
 		this.categoria = categoria;
 	}
 
-	public CodigoEstadoCuentaDTO(String codigo, Boolean status, EntidadDTO entidad, CategoriaDTO categoria, Long id,
+	public CodigoEstadoCuentaDTO(String codigo, Set<EntidadDTO> entidades, CategoriaDTO categoria, Long id,
 			Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy,
 			String description, String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.codigo = codigo;
-		this.status = status;
-		this.entidad = entidad;
+		this.entidades = entidades;
 		this.categoria = categoria;
+	}
+
+	public Set<EntidadDTO> getEntidades() {
+		return entidades;
+	}
+
+	public void setEntidades(Set<EntidadDTO> entidades) {
+		this.entidades = entidades;
 	}
 
 	public String getCodigo() {
@@ -51,14 +59,6 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 		this.codigo = codigo;
 	}
 
-	public EntidadDTO getEntidad() {
-		return entidad;
-	}
-
-	public void setEntidad(EntidadDTO entidad) {
-		this.entidad = entidad;
-	}
-
 	public CategoriaDTO getCategoria() {
 		return categoria;
 	}
@@ -67,18 +67,10 @@ public class CodigoEstadoCuentaDTO extends AbstractCatalogoDTO implements Compar
 		this.categoria = categoria;
 	}
 
-	public Boolean getStatus() {
-		return status;
-	}
-
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
-
 	@Override
 	public String toString() {
-		return "CodigoEstadoCuentaDTO [codigo=" + codigo + ", status=" + status + ", entidades=" + entidad
-				+ ", categoria=" + categoria + "]";
+		return "CodigoEstadoCuentaDTO [codigo=" + codigo + ", entidades=" + entidades + ", categoria=" + categoria
+				+ "]";
 	}
 
 	@Override

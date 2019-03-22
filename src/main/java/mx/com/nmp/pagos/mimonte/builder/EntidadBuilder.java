@@ -1,5 +1,6 @@
 package mx.com.nmp.pagos.mimonte.builder;
 
+import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadReqDTO;
@@ -140,6 +141,32 @@ public abstract class EntidadBuilder {
 
 	/**
 	 * Construye un objeto de tipo EntidadDTO a partir de un objeto de tipo
+	 * BaseEntidadDTO
+	 * 
+	 * @param baseEntidadDTO
+	 * @return
+	 */
+	public static EntidadDTO buildEntidadDTOFromBaseEntidadDTO(BaseEntidadDTO baseEntidadDTO) {
+		EntidadDTO entidadDTO = null;
+		if (null != baseEntidadDTO) {
+			entidadDTO = new EntidadDTO();
+			entidadDTO.setContactos(null);
+			entidadDTO.setCreatedBy(null);
+			entidadDTO.setCreatedDate(null);
+			entidadDTO.setCuentas(null);
+			entidadDTO.setDescription(baseEntidadDTO.getDescripcion());
+			entidadDTO.setEstatus(null);
+			entidadDTO.setId(baseEntidadDTO.getId());
+			entidadDTO.setLastModifiedBy(null);
+			entidadDTO.setLastModifiedDate(null);
+			entidadDTO.setNombre(baseEntidadDTO.getNombre());
+			entidadDTO.setShortDescription(null);
+		}
+		return entidadDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo EntidadDTO a partir de un objeto de tipo
 	 * EntidadReqDTO
 	 * 
 	 * @param entidadReqDTO
@@ -152,6 +179,24 @@ public abstract class EntidadBuilder {
 			entidadDTO.setId(entidadReqDTO.getId());
 		}
 		return entidadDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo BaseEntidadDTO a partir de un objeto de tipo
+	 * EntidadDTO
+	 * 
+	 * @param entidadDTO
+	 * @return
+	 */
+	public static BaseEntidadDTO buildBaseentidadFromEntidadDTO(EntidadDTO entidadDTO) {
+		BaseEntidadDTO baseEntidadDTO = null;
+		if (null != entidadDTO) {
+			baseEntidadDTO = new BaseEntidadDTO();
+			baseEntidadDTO.setDescripcion(entidadDTO.getDescription());
+			baseEntidadDTO.setId(entidadDTO.getId());
+			baseEntidadDTO.setNombre(entidadDTO.getNombre());
+		}
+		return baseEntidadDTO;
 	}
 
 }

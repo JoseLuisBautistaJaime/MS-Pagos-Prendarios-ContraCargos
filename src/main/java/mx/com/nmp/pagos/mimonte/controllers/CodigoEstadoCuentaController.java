@@ -1,6 +1,5 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -25,28 +24,27 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.builder.CodigoEstadoCuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaUpdtDTO;
-import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.CodigoEstadoCuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
- * Nombre: CodigoEstadoCuentaController Descripcion: Clase que expone el
- * servicio REST para las operaciones relacionadas con el catalogo de codigos de
- * estados de cuenta
- *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @name CodigoEstadoCuentaController
+ * @description Clase que expone el servicio REST para las operaciones
+ *              relacionadas con el catalogo de codigos de estado de cuenta
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 05/03/2019 13:09 hrs.
  * @version 0.1
  */
 @RestController
 @RequestMapping(value = "/mimonte")
-@Api(value = "Servicio que permite realizar operciones sobre el catalogo de codigos de estados de cuenta.", description = "REST API para realizar operaciones sobre el catalogo de codigos de estados de cuenta", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
+@Api(value = "Servicio que permite realizar operaciones sobre el catalogo de codigos de estado de cuenta.", description = "REST API para realizar operaciones sobre el catalogo de codigos de estado de cuenta", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
 		"CodigoEstadoCuenta" })
 public class CodigoEstadoCuentaController {
 
@@ -70,7 +68,7 @@ public class CodigoEstadoCuentaController {
 	private CodigoEstadoCuentaServiceImpl codigoEstadoCuentaServiceImpl;
 
 	/**
-	 * Guarda un nuevo catalogo Codigo Estado dse Cuenta
+	 * Guarda un nuevo catalogo Codigo Estado de Cuenta
 	 * 
 	 * @param pagoRequestDTO
 	 * @return
@@ -78,7 +76,7 @@ public class CodigoEstadoCuentaController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/catalogos/codigos", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Crea un nuevo catalogo de codigos de estados de cuenta.", tags = {
+	@ApiOperation(httpMethod = "POST", value = "Crea un nuevo catalogo de codigos de estado de cuenta.", tags = {
 			"CodigoEstadoCuenta" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Codigo de estado de cuenta creado"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
@@ -88,18 +86,20 @@ public class CodigoEstadoCuentaController {
 	public Response save(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
-//		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
-//				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(CodigoEstadoCuentaBuilder
-//						.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTO), createdBy));
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
+		CodigoEstadoCuentaUpdtDTO codigo = CodigoEstadoCuentaBuilder
+				.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
+						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl.save(CodigoEstadoCuentaBuilder
+								.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTO),
+								createdBy));
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+				codigo);
 
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTOResp = buildDummy2();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa",
-				codigoEstadoCuentaDTOResp);
+//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTOResp = buildDummy2();
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", codigoEstadoCuentaDTOResp);
 	}
 
 	/**
-	 * Actualiza un Codigo Estado dse Cuenta
+	 * Actualiza un Codigo Estado de Cuenta
 	 * 
 	 * @param pagoRequestDTO
 	 * @return
@@ -118,18 +118,20 @@ public class CodigoEstadoCuentaController {
 	public Response update(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 
-//		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
-//				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.save(CodigoEstadoCuentaBuilder
-//						.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTOReq), lastModifiedBy));
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
+		CodigoEstadoCuentaUpdtDTO codigo = CodigoEstadoCuentaBuilder
+				.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
+						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl.update(CodigoEstadoCuentaBuilder
+								.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTOReq),
+								lastModifiedBy));
 
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",
-				codigoEstadoCuentaDTO);
+//		CodigoEstadoCuentaUpdtDTO codigo = buildDummy2();
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
+				codigo);
 	}
 
 	/**
-	 * Regresa un Codigo Estado dse Cuenta por id
+	 * Regresa un Codigo de estado de Cuenta por id
 	 * 
 	 * @param idCodigo
 	 * @return
@@ -137,7 +139,7 @@ public class CodigoEstadoCuentaController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/codigos/{idCodigo}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo codigo de estado de cuenta en base a su id", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto de catalogo codigo de estado de cuenta en base a su id", tags = {
 			"CodigoEstadoCuenta" })
 	@ApiResponses({
 			@ApiResponse(code = 200, response = Response.class, message = "Codigo de estado de cuenta encontrado"),
@@ -147,16 +149,17 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idCodigo", required = true) Long idCodigo) {
 
-//		BaseCodigoDTO bc = CodigoEstadoCuentaBuilder.buildBaseCodigoDTOFromCodigoEstadoCuentaGenDTO(
-//				(CodigoEstadoCuentaGenDTO) codigoEstadoCuentaServiceImpl.findById(idCodigo));
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", bc);
+		CodigoEstadoCuentaUpdtDTO codigo = CodigoEstadoCuentaBuilder
+				.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
+						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl.findById(idCodigo));
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, codigo);
 
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", codigoEstadoCuentaDTO);
+//		CodigoEstadoCuentaUpdtDTO codigo = buildDummy2();
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", codigo);
 	}
 
 	/**
-	 * Regrsa uno o más objetos Codigo Estado dse Cuenta por nombre y etsatus
+	 * Regresa uno o mas objetos CodigoEstadoCuenta por id de entidad relacionada
 	 * 
 	 * @param idEntidad
 	 * @return
@@ -164,27 +167,30 @@ public class CodigoEstadoCuentaController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/codigos/entidad/{idEntidad}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa uno o mas objetos catalogo codigo de estado de cuenta en base a un id de su entidad asociada", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Regresa uno o mas objetos de catalogo codigo de estado de cuenta en base a un id de su entidad asociada a este", tags = {
 			"CodigoEstadoCuenta" })
 	@ApiResponses({
-			@ApiResponse(code = 200, response = Response.class, message = "Codigod de estado de cuenta encontrados"),
+			@ApiResponse(code = 200, response = Response.class, message = "Codigos de estado de cuenta encontrados"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByEntidadId(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
-//		List<CodigoEstadoCuentaDTO> lstX = codigoEstadoCuentaServiceImpl.findByEntidades_Id(idEntidad);
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "", lstX);
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy2();
-		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
-		lst.add(codigoEstadoCuentaDTO);
-		lst.add(codigoEstadoCuentaDTO2);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", lst);
+
+		List<CodigoEstadoCuentaDTO> lst = codigoEstadoCuentaServiceImpl.findByEntidades_Id(idEntidad);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
+
+//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
+//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy2();
+//		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
+//		lst.add(codigoEstadoCuentaDTO);
+//		lst.add(codigoEstadoCuentaDTO2);
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", lst);
 	}
 
 	/**
-	 * Hace una eliminacion logica de un catalogo de estadod e cuenta
+	 * Hace una eliminacion logica de un catalogo de estado de cuenta (pone estatus
+	 * en false)
 	 * 
 	 * @param idCodigo
 	 * @return
@@ -195,14 +201,18 @@ public class CodigoEstadoCuentaController {
 	@ApiOperation(httpMethod = "PUT", value = "Elimina un catalogo codigo de estado de cuenta.", tags = {
 			"CodigoEstadoCuenta" })
 	@ApiResponses({
-			@ApiResponse(code = 200, response = Response.class, message = "Codigo de estado de cuenta actualizado"),
+			@ApiResponse(code = 200, response = Response.class, message = "Codigo de estado de cuenta eliminado"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteById(@PathVariable(value = "idCodigo", required = true) Long idCodigo,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Eliminacion exitosa", null);
+
+		codigoEstadoCuentaServiceImpl.updateEstatus(false, idCodigo);
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
+				null);
 	}
 
 	/**
@@ -213,7 +223,7 @@ public class CodigoEstadoCuentaController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/codigos", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa todos los catalogo codigo de estado", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Regresa todos los catalogo de codigo estado de cuenta", tags = {
 			"CodigoEstadoCuenta" })
 	@ApiResponses({
 			@ApiResponse(code = 200, response = Response.class, message = "Codigos de estado de cuenta encontrados"),
@@ -222,25 +232,19 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findAll() {
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy3();
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO3 = buildDummy4();
-		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
-		lst.add(codigoEstadoCuentaDTO);
-		lst.add(codigoEstadoCuentaDTO2);
-		lst.add(codigoEstadoCuentaDTO3);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", lst);
-	}
 
-	/**
-	 * Crea un objeto de respuesta dummy
-	 * 
-	 * @return
-	 */
-	public static CodigoEstadoCuentaDTO buildDummy() {
-		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO("Leyenda 1", true,
-				new EntidadDTO("Bancomer", null, null), new CategoriaDTO(1L, "Otra Categoria"));
-		return codigoEstadoCuentaDTO;
+		@SuppressWarnings("unchecked")
+		List<CodigoEstadoCuentaDTO> lst = (List<CodigoEstadoCuentaDTO>) codigoEstadoCuentaServiceImpl.findAll();
+
+//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
+//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy3();
+//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO3 = buildDummy4();
+//		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
+//		lst.add(codigoEstadoCuentaDTO);
+//		lst.add(codigoEstadoCuentaDTO2);
+//		lst.add(codigoEstadoCuentaDTO3);
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
 	}
 
 	/**

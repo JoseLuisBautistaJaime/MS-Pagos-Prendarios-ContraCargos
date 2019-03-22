@@ -1,10 +1,11 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: CodigoEstadoCuentaReqDTO Descripcion: Clase que encapsula la
- * unformacion de un catalogo de codigo de estado de cuenta
+ * @name CodigoEstadoCuentaReqDTO
+ * @description Clase que encapsula la informacion de un catalogo de codigo de
+ *              estado de cuenta
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 14/03/2019 14:53 hrs.
  * @version 0.1
  */

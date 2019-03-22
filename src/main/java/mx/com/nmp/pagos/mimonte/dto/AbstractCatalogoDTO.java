@@ -3,10 +3,11 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.Date;
 
 /**
- * Nombre: AbstractCatalogoDTO Descripcion: Clase abstracta que que encapsula la
- * informacion basica de una catalogo administrable y sirve para
+ * @name AbstractCatalogoDTO
+ * @descriptipon Clase abstracta que que encapsula la informacion basica de una
+ *               catalogo administrable
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 05/03/2019 19:51 hrs.
  * @version 0.1
  */

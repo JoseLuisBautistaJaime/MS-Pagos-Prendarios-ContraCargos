@@ -27,22 +27,22 @@ public final class CatalogConstants {
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String CONT_MSG_SUCCESS = "Consulta Existosa.";
+	public static final String CONT_MSG_SUCCESS = "Consulta Exitosa.";
 
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String CONT_MSG_SUCCESS_SAVE = "Alta Existosa.";
+	public static final String CONT_MSG_SUCCESS_SAVE = "Alta Exitosa.";
 
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String CONT_MSG_SUCCESS_UPDATE = "Actualización Existosa.";
+	public static final String CONT_MSG_SUCCESS_UPDATE = "Actualización Exitosa.";
 
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String CONT_MSG_SUCCESS_DELETE = "Baja Existosa.";
+	public static final String CONT_MSG_SUCCESS_DELETE = "Baja Exitosa.";
 
 	/**
 	 * El nombre del header donde se especificara el nombre de usuario qque realiza

@@ -1,10 +1,13 @@
 package mx.com.nmp.pagos.mimonte.services;
 
+import java.util.List;
+
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 
 /**
- * Nombre: CatalogoAdmService Descripcion: Interface que define las operaciones
- * para la interaccion con objetos de tipo Catalogos administrables
+ * @name CatalogoAdmService
+ * @description Interface que define las operaciones para la interaccion con
+ *              objetos de tipo Catalogos administrables
  *
  * @author Ismael Flores Aguilar iaguilar@quarksoft.net
  * @creationDate 04/03/2019 11:00 hrs.
@@ -38,5 +41,20 @@ public interface CatalogoAdmService<E> {
 	 * @return
 	 */
 	public <T extends AbstractCatalogoDTO> T findById(Long id);
+
+	/**
+	 * Regresa todos los catalogos de un tipo especifico
+	 * 
+	 * @return
+	 */
+	public List<? extends AbstractCatalogoDTO> findAll();
+
+	/**
+	 * Elimina un catalogo por id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public <T extends AbstractCatalogoDTO> T deleteById(Long id);
 
 }
