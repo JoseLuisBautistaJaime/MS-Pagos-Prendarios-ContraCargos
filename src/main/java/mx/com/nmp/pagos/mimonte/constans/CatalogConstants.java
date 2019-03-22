@@ -51,6 +51,11 @@ public final class CatalogConstants {
 	public static final String REQUEST_USER_HEADER = "requestUser";
 
 	/**
+	 * Mensaje que es mostrado en cuando se lanza un error de validacion
+	 */
+	public static final String CATALOG_VALIDATION_ERROR = "Ocurrio un error de validacion";
+
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */

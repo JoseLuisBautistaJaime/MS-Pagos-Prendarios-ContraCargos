@@ -31,8 +31,10 @@ import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaUpdtDTO;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.services.impl.CodigoEstadoCuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 
 /**
  * @name CodigoEstadoCuentaController
@@ -85,7 +87,8 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-
+		if (!ValidadorCatalogo.validateCodigoEstadoCuentaSave(codigoEstadoCuentaDTO))
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		CodigoEstadoCuentaUpdtDTO codigo = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
 						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl.save(CodigoEstadoCuentaBuilder
@@ -117,7 +120,8 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-
+		if (!ValidadorCatalogo.validateCodigoEstadoCuentaUpdate(codigoEstadoCuentaDTOReq))
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		CodigoEstadoCuentaUpdtDTO codigo = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
 						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl.update(CodigoEstadoCuentaBuilder
