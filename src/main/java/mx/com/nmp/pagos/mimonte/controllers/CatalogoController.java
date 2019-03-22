@@ -80,35 +80,6 @@ public class CatalogoController {
     }
 
     /**
-     * Metodo que expone la operacion de servicio para recuperar los
-     * registros de un catalogo que cumplan con el filtro especificado.
-     *
-     * @param nombre Nombre del catalogo a consultar.
-     * @param filtro Filtro que se aplicara para la busqueda del catalogo
-     * @param parametros Valores requeridos para el filtro
-     *
-     * @return Response Objeto con la informacion obtenida.
-     */
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/v1/catalogo/{nombre}",
-            params = {"f", "p"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(httpMethod ="GET",
-            value = "Regresa la informacion de un catalogo que cumpla con el filtro especificado", tags = { "Catalogos" })
-    @ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
-            @ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
-            @ApiResponse(code = 404, response = Response.class, message = "No existe el catalogo especificado"),
-            @ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-    public Response get(@PathVariable(value = "nombre") String nombre,
-                        @RequestParam("f") Filtro filtro,
-                        @RequestParam("p") List<?> parametros) {
-        ValidadorCadena.notNullNorEmpty(nombre);
-        CatalogoDTO catalogoDTO = catalogoService.getRegistrosCatalogo(nombre, filtro, parametros);
-        return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), MSG_SUCCESS, catalogoDTO);
-    }
-
-
-    /**
      * Metodo que expone la operacion de servicio para recuperar los extrafilter que se encuentran registrados en el sistema.
      * @return Response Objeto con la informacion obtenida.
      */
