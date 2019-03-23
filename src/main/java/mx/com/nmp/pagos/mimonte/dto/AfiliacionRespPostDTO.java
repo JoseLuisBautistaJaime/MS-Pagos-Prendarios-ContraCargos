@@ -5,9 +5,9 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: AfiliacionRespPostDTO Descripcion: Clase que encapsula la informacion
- * perteneciente a una a filiaicon enviada como response en el alta de
- * afiliaciones.
+ * @name AfiliacionRespPostDTO
+ * @description Clase que encapsula la informacion perteneciente a una a
+ *              afiliacion enviada como response en el alta de afiliaciones.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 15/03/2018 12:58 hrs.

@@ -5,8 +5,9 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: AfiliacionReqDTO Descripcion: Clase que encapsula la informacion
- * informacion sobre una afiliacion en el requets de alta
+ * @name AfiliacionReqDTO
+ * @description Clase que encapsula la informacion sobre una afiliacion en el
+ *              requets de alta
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 14/03/2019 14:30 hrs.

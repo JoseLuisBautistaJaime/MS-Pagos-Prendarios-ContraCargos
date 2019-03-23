@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 
@@ -54,6 +55,30 @@ public abstract class ValidadorCatalogo {
 				&& (null != codigoEstadoCuentaReqUpdtDTO.getEntidad()
 						&& null != codigoEstadoCuentaReqUpdtDTO.getEntidad().getId()
 						&& (codigoEstadoCuentaReqUpdtDTO.getEntidad().getId() > 0));
+	}
+
+	/**
+	 * Valida que los atributos de la peticion de la de afiliacion no sean nulos y
+	 * sean datos validos
+	 * 
+	 * @param afiliacionReqDTO
+	 * @return
+	 */
+	public static boolean validateAfilacionSave(AfiliacionReqDTO afiliacionReqDTO) {
+		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero() && afiliacionReqDTO.getNumero() > 0);
+	}
+
+	/**
+	 * Valida que los atributos de la peticion de actualizacion de afiliacion no
+	 * sean nulos y sean datos validos
+	 * 
+	 * @param afiliacionReqDTO
+	 * @return
+	 */
+	public static boolean validateAfilacionUpdt(AfiliacionReqDTO afiliacionReqDTO) {
+		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero() && afiliacionReqDTO.getNumero() > 0
+				&& null != afiliacionReqDTO.getId() && afiliacionReqDTO.getId() > 0
+				&& null != afiliacionReqDTO.getEstatus());
 	}
 
 }

@@ -18,8 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Nombre: Afiliacion Descripcion: Entidad que representa un tipo de afiliacion
- * dentro del sistema.
+ * @name Afiliacion
+ * @description Entidad que representa un tipo de afiliacion dentro del sistema.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 12/12/2018 16:59 hrs.
@@ -32,7 +32,7 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 	@Column(name = "numero")
 	private Long numero;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tipo")
 	private TipoAutorizacion tipo;
 

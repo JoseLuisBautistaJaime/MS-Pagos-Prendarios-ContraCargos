@@ -72,6 +72,12 @@ public final class CatalogConstants {
 	public static final String CODIGO_E_C_ALREADY_EXISTS = "Ya existe un codigo con esa entidad y esa categoria";
 
 	/**
+	 * Mensaje que es mostrado cuando se intenta dar de alta una afiliacion con un
+	 * numero que ya existe
+	 */
+	public static final String NUMERO_AFILIACION_ALREADY_EXISTS = "Ya existe una afiliacion con ese numero";
+
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */

@@ -2,7 +2,6 @@ package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -29,7 +28,7 @@ public class TipoAutorizacion extends AbstractCatalogo {
 		this.afiliaciones = afiliaciones;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tipo")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tipo")
 	private Set<Afiliacion> afiliaciones;
 
 	public Set<Afiliacion> getAfiliaciones() {

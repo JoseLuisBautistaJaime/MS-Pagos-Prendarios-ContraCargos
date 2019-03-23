@@ -5,8 +5,9 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: AfiliacionRespDTO Descripcion: Clase que encapsula la informacion
- * perteneciente a un tipo de Afiliacion.
+ * @name AfiliacionRespDTO
+ * @description Clase que encapsula la informacion perteneciente a un tipo de
+ *              Afiliacion.
  *
  * @author Victor Manuel Moran
  * @creationDate 12/12/2018 16:39 hrs.
