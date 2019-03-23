@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.List;
@@ -85,9 +89,8 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	}
 
 	@Override
-	public <T extends AbstractCatalogoDTO> T deleteById(Long id) {
+	public void	 deleteById(Long id) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

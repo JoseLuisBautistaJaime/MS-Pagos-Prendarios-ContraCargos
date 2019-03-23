@@ -1,6 +1,11 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 
 /**
  * @name ValidadorCatalogo
@@ -17,45 +22,38 @@ public abstract class ValidadorCatalogo {
 
 	/**
 	 * Valida que los atributos que deben estar en el objeto de la peticion de alta
-	 * exista
+	 * exista y sean los correctos ademas
 	 * 
 	 * @param codigoEstadoCuentaReqDTO
 	 * @return
 	 */
 	public static boolean validateCodigoEstadoCuentaSave(CodigoEstadoCuentaReqDTO codigoEstadoCuentaReqDTO) {
-		if (null != codigoEstadoCuentaReqDTO) {
-			if (null == codigoEstadoCuentaReqDTO.getCodigo())
-				return false;
-			if (null == codigoEstadoCuentaReqDTO.getCategoria()
-					|| null == codigoEstadoCuentaReqDTO.getCategoria().getId())
-				return false;
-			if (null == codigoEstadoCuentaReqDTO.getEntidad() || null == codigoEstadoCuentaReqDTO.getEntidad().getId())
-				return false;
-		} else
-			return false;
-		return true;
+		return (null != codigoEstadoCuentaReqDTO) && (null != codigoEstadoCuentaReqDTO.getCodigo())
+				&& (null != codigoEstadoCuentaReqDTO.getCategoria()
+						&& null != codigoEstadoCuentaReqDTO.getCategoria().getId()
+						&& (codigoEstadoCuentaReqDTO.getCategoria().getId() > 0))
+				&& (null != codigoEstadoCuentaReqDTO.getEntidad()
+						&& null != codigoEstadoCuentaReqDTO.getEntidad().getId()
+						&& codigoEstadoCuentaReqDTO.getEntidad().getId() > 0);
 	}
 
 	/**
 	 * Valida que el todos los atributos de el objeto de la peticion de
-	 * actualizacion no sean nulos
+	 * actualizacion no sean nulos y sean los correctos ademas
 	 * 
 	 * @param codigoEstadoCuentaReqDTO
 	 * @return
 	 */
-	public static boolean validateCodigoEstadoCuentaUpdate(CodigoEstadoCuentaReqDTO codigoEstadoCuentaReqDTO) {
-		if (null != codigoEstadoCuentaReqDTO) {
-			if (null == codigoEstadoCuentaReqDTO.getCodigo() || null == codigoEstadoCuentaReqDTO.getEstatus()
-					|| null == codigoEstadoCuentaReqDTO.getId())
-				return false;
-			if (null == codigoEstadoCuentaReqDTO.getCategoria()
-					|| null == codigoEstadoCuentaReqDTO.getCategoria().getId())
-				return false;
-			if (null == codigoEstadoCuentaReqDTO.getEntidad() || null == codigoEstadoCuentaReqDTO.getEntidad().getId())
-				return false;
-		} else
-			return false;
-		return true;
+	public static boolean validateCodigoEstadoCuentaUpdate(CodigoEstadoCuentaReqUpdtDTO codigoEstadoCuentaReqUpdtDTO) {
+		return (null != codigoEstadoCuentaReqUpdtDTO)
+				&& (null != codigoEstadoCuentaReqUpdtDTO.getCodigo() && null != codigoEstadoCuentaReqUpdtDTO.getId()
+						&& (codigoEstadoCuentaReqUpdtDTO.getId() > 0))
+				&& (null != codigoEstadoCuentaReqUpdtDTO.getCategoria()
+						&& null != codigoEstadoCuentaReqUpdtDTO.getCategoria().getId()
+						&& (codigoEstadoCuentaReqUpdtDTO.getCategoria().getId() > 0))
+				&& (null != codigoEstadoCuentaReqUpdtDTO.getEntidad()
+						&& null != codigoEstadoCuentaReqUpdtDTO.getEntidad().getId()
+						&& (codigoEstadoCuentaReqUpdtDTO.getEntidad().getId() > 0));
 	}
 
 }

@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
@@ -83,7 +87,7 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody AfiliacionReqDTO afiliacionDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-
+		
 //		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.save(afiliacionDTOReq, createdBy);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion guardada correctamente",
@@ -132,7 +136,7 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "numeroAfiliacion", required = true) Long numeroAfiliacion) {
 
-//		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.findById(idAfiliacion);
+		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.findById(numeroAfiliacion);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
 				buildDummyPost());
@@ -148,7 +152,7 @@ public class AfiliacionController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/afiliaciones/cuenta/{idCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo afiliacion en base a su id", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo afiliacion en base a el id de cuenta con la que mantiene relacion", tags = {
 			"Afiliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Afiliacion encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
@@ -157,7 +161,7 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta) {
 
-//		AfiliacionDTO afiliacionDTO = afiliacionServiceImpl.findByCuentasId(idCuenta);
+		AfiliacionDTO afiliacionDTO = afiliacionServiceImpl.findByCuentasId(idCuenta);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
 				buildDummyList());
@@ -176,6 +180,8 @@ public class AfiliacionController {
 	public Response deleteByidAfiliacion(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
+		
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion eliminada correctamente",
 				null);
 	}
@@ -192,7 +198,7 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findAll() {
 
-//		AfiliacionDTO AfiliacionDTO = afiliacionServiceImpl.findById(idAfiliacion);
+//		List<AfiliacionDTO> AfiliacionDTOList = afiliacionServiceImpl.findAll();
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliaciones recuperadas correctamente",
 				buildDummyLst());

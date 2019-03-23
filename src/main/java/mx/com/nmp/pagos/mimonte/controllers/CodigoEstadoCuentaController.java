@@ -1,5 +1,10 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.controllers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -7,8 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +37,7 @@ import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaUpdtDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.services.impl.CodigoEstadoCuentaServiceImpl;
@@ -91,9 +99,9 @@ public class CodigoEstadoCuentaController {
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		CodigoEstadoCuentaUpdtDTO codigo = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
-						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl.save(CodigoEstadoCuentaBuilder
-								.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTO),
-								createdBy));
+						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl
+								.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(
+										codigoEstadoCuentaDTO, new Date(), null), createdBy));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				codigo);
 
@@ -118,14 +126,15 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response update(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTOReq,
+	public Response update(@RequestBody CodigoEstadoCuentaReqUpdtDTO codigoEstadoCuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		if (!ValidadorCatalogo.validateCodigoEstadoCuentaUpdate(codigoEstadoCuentaDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		CodigoEstadoCuentaUpdtDTO codigo = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
-						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl.update(CodigoEstadoCuentaBuilder
-								.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(codigoEstadoCuentaDTOReq),
+						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl.update(
+								CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqUpdtDTO(
+										codigoEstadoCuentaDTOReq, null, new Date()),
 								lastModifiedBy));
 
 //		CodigoEstadoCuentaUpdtDTO codigo = buildDummy2();
@@ -152,10 +161,13 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idCodigo", required = true) Long idCodigo) {
-
-		CodigoEstadoCuentaUpdtDTO codigo = CodigoEstadoCuentaBuilder
-				.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
-						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl.findById(idCodigo));
+		CodigoEstadoCuentaUpdtDTO codigo = null;
+		try {
+			codigo = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
+					(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl.findById(idCodigo));
+		} catch (EmptyResultDataAccessException eex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, codigo);
 
 //		CodigoEstadoCuentaUpdtDTO codigo = buildDummy2();
@@ -181,7 +193,12 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByEntidadId(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
 
-		List<CodigoEstadoCuentaDTO> lst = codigoEstadoCuentaServiceImpl.findByEntidades_Id(idEntidad);
+		List<CodigoEstadoCuentaUpdtDTO> lst = null;
+		try {
+			lst = codigoEstadoCuentaServiceImpl.findByEntidadId(idEntidad);
+		} catch (EmptyResultDataAccessException eex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
 
 //		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
@@ -201,8 +218,8 @@ public class CodigoEstadoCuentaController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/catalogos/codigos/{idCodigo}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "PUT", value = "Elimina un catalogo codigo de estado de cuenta.", tags = {
+	@DeleteMapping(value = "/catalogos/codigos/{idCodigo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "DELETE", value = "Elimina un catalogo codigo de estado de cuenta.", tags = {
 			"CodigoEstadoCuenta" })
 	@ApiResponses({
 			@ApiResponse(code = 200, response = Response.class, message = "Codigo de estado de cuenta eliminado"),
@@ -212,9 +229,11 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteById(@PathVariable(value = "idCodigo", required = true) Long idCodigo,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-
-		codigoEstadoCuentaServiceImpl.updateEstatus(false, idCodigo);
-
+		try {
+			codigoEstadoCuentaServiceImpl.deleteById(idCodigo);
+		} catch (EmptyResultDataAccessException eex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
 	}
@@ -238,7 +257,9 @@ public class CodigoEstadoCuentaController {
 	public Response findAll() {
 
 		@SuppressWarnings("unchecked")
-		List<CodigoEstadoCuentaDTO> lst = (List<CodigoEstadoCuentaDTO>) codigoEstadoCuentaServiceImpl.findAll();
+		List<CodigoEstadoCuentaUpdtDTO> lst = CodigoEstadoCuentaBuilder
+				.buildCodigoEstadoCuentaUpdtDTOListFromCodigoEstadoCuentaDTOList(
+						(List<CodigoEstadoCuentaDTO>) codigoEstadoCuentaServiceImpl.findAll());
 
 //		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
 //		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy3();
@@ -262,12 +283,22 @@ public class CodigoEstadoCuentaController {
 		return codigoEstadoCuentaDTO;
 	}
 
+	/**
+	 * Construye un objeto dummy
+	 * 
+	 * @return
+	 */
 	public static CodigoEstadoCuentaUpdtDTO buildDummy3() {
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaUpdtDTO(1L, "GGJX", true,
 				new BaseEntidadDTO(2L, "Bancomer", "Banco Bancomer"), new CategoriaDTO(1L, "Otra"));
 		return codigoEstadoCuentaDTO;
 	}
 
+	/**
+	 * Construye un objeto dummy
+	 * 
+	 * @return
+	 */
 	public static CodigoEstadoCuentaUpdtDTO buildDummy4() {
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaUpdtDTO(1L, "Leyenada YYTTT", true,
 				new BaseEntidadDTO(3L, "Santander", "Banco Santander"), new CategoriaDTO(1L, "Otra Categoria"));

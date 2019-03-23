@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
@@ -10,13 +14,15 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Nombre: Entidad Descripcion: Clase que encapsula la informacion de una
+ * @name Entidad 
+ * @description Clase que encapsula la informacion de una
  * entidad de catalogo de tipo Entidad
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 05/03/2019 14:09 hrs.
  * @version 0.1
  */
@@ -33,11 +39,11 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	private Set<Cuenta> cuentas;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "tr_entidad_contacto", joinColumns = { @JoinColumn(name = "id_entidad") }, inverseJoinColumns = {
+	@JoinTable(name = "tr_entidad_contactos", joinColumns = { @JoinColumn(name = "id_entidad") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_contacto") })
 	private Set<Contactos> contactos;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "entidades")
+	@OneToMany(mappedBy = "entidad", cascade = CascadeType.ALL)
 	private Set<CodigoEstadoCuenta> codigoEstadoCuentaSet;
 
 	public Entidad() {
@@ -84,6 +90,14 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 
 	public void setContactos(Set<Contactos> contactos) {
 		this.contactos = contactos;
+	}
+	
+	public Set<CodigoEstadoCuenta> getCodigoEstadoCuentaSet() {
+		return codigoEstadoCuentaSet;
+	}
+
+	public void setCodigoEstadoCuentaSet(Set<CodigoEstadoCuenta> codigoEstadoCuentaSet) {
+		this.codigoEstadoCuentaSet = codigoEstadoCuentaSet;
 	}
 
 	@Override

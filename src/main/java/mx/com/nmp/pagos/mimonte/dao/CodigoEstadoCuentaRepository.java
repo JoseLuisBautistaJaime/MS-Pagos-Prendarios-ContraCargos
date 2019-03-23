@@ -1,7 +1,12 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dao;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,7 +33,7 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * @param idEntidad
 	 * @return
 	 */
-	public List<CodigoEstadoCuenta> findByEntidades_Id(final Long idEntidad);
+	public List<CodigoEstadoCuenta> findByEntidad_Id(final Long idEntidad) throws EmptyResultDataAccessException;
 
 	/**
 	 * Cambia el estatus a false de un catalogo CodigoEstadoCuenta
@@ -38,5 +43,7 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 */
 	@Query("UPDATE CodigoEstadoCuenta cec SET cec.estatus = :estatus WHERE cec.id = :idCodigo")
 	public void setEstatusWhereId(@Param("estatus") final Boolean estatus, @Param("idCodigo") final Long idCodigo);
+
+	public CodigoEstadoCuenta findByEntidadIdAndCategoriaId(final Long idEntidad, final Long idCategoria);
 
 }

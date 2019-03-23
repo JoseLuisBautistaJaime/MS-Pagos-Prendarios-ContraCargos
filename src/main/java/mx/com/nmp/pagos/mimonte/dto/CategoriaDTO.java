@@ -1,10 +1,14 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: CategoriaDTO Descripcion: Clase que encapsula la informacion de un
- * catalogo categoria
+ * @name CategoriaDTO
+ * @description Clase que encapsula la informacion de un catalogo categoria
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 05/03/2019 14:07 hrs.
  * @version 0.1
  */

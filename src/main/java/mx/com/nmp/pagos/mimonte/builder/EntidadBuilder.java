@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.builder;
 
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
@@ -8,11 +12,12 @@ import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 
 /**
- * Nombre: EntidadBuilder Descripcion: Clase de capa de builder que se encarga
- * de convertir difrentes tipos de objetos y entidades relacionadas con el
- * catalogo Entidad
+ * @name EntidadBuilder
+ * @description Clase de capa de builder que se encarga de convertir difrentes
+ *              tipos de objetos y entidades relacionadas con el catalogo
+ *              Entidad
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 06/03/2019 12:36 hrs.
  * @version 0.1
  */
@@ -42,6 +47,8 @@ public abstract class EntidadBuilder {
 			entidadDTO.setLastModifiedDate(entidad.getLastModifiedDate());
 			entidadDTO.setNombre(entidad.getNombre());
 			entidadDTO.setEstatus(entidad.getEstatus());
+			entidadDTO.setLastModifiedBy(entidad.getLastModifiedBy());
+			entidadDTO.setLastModifiedDate(entidad.getLastModifiedDate());
 		}
 		return entidadDTO;
 	}
@@ -195,6 +202,17 @@ public abstract class EntidadBuilder {
 			baseEntidadDTO.setDescripcion(entidadDTO.getDescription());
 			baseEntidadDTO.setId(entidadDTO.getId());
 			baseEntidadDTO.setNombre(entidadDTO.getNombre());
+		}
+		return baseEntidadDTO;
+	}
+
+	public static BaseEntidadDTO buildBaseentidadFromEntidad(Entidad entidad) {
+		BaseEntidadDTO baseEntidadDTO = null;
+		if (null != entidad) {
+			baseEntidadDTO = new BaseEntidadDTO();
+			baseEntidadDTO.setDescripcion(entidad.getDescription());
+			baseEntidadDTO.setId(entidad.getId());
+			baseEntidadDTO.setNombre(entidad.getNombre());
 		}
 		return baseEntidadDTO;
 	}

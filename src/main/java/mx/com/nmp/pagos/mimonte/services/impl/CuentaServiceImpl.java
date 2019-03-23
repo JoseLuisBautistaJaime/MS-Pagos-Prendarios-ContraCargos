@@ -92,9 +92,8 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	}
 
 	@Override
-	public <T extends AbstractCatalogoDTO> T deleteById(Long id) {
+	public void deleteById(Long id) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

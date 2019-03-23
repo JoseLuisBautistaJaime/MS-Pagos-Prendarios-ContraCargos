@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
 import java.util.regex.PatternSyntaxException;
@@ -8,7 +12,7 @@ import mx.com.nmp.pagos.mimonte.constans.RegexConstants;
  * @name ValidadorGenerico
  * @description Clase abstracta que contiene metodos estaticos para relaizar
  *              validaciones genericas sobre diversos tipos de objetos,
- *              principalmente evalua cadenas de caracteres y patrones qu se
+ *              principalmente evalua cadenas de caracteres y patrones que se
  *              desea existan en estas
  *
  *

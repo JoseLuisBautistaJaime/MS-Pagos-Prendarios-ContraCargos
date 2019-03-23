@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.constans;
 
 /**
@@ -54,6 +58,18 @@ public final class CatalogConstants {
 	 * Mensaje que es mostrado en cuando se lanza un error de validacion
 	 */
 	public static final String CATALOG_VALIDATION_ERROR = "Ocurrio un error de validacion";
+
+	/**
+	 * Mensaje que es mostrado cuando un id especificado como parametro ya sea para
+	 * una peticion GET o DELETE no es encontrado
+	 */
+	public static final String CATALOG_ID_NOT_FOUND = "El id ingresado no fue encontrado";
+
+	/**
+	 * Mensaje que es lanzado cuando se intenta dar de alta un codigo de estado de
+	 * cuenta con una entidad y categoria repetida
+	 */
+	public static final String CODIGO_E_C_ALREADY_EXISTS = "Ya existe un codigo con esa entidad y esa categoria";
 
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no

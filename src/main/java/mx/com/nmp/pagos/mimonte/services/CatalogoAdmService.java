@@ -1,6 +1,12 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.services;
 
 import java.util.List;
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 
@@ -39,8 +45,9 @@ public interface CatalogoAdmService<E> {
 	 * 
 	 * @param id
 	 * @return
+	 * @throws EmptyResultDataAccessException
 	 */
-	public <T extends AbstractCatalogoDTO> T findById(Long id);
+	public <T extends AbstractCatalogoDTO> T findById(Long id) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa todos los catalogos de un tipo especifico
@@ -53,8 +60,8 @@ public interface CatalogoAdmService<E> {
 	 * Elimina un catalogo por id
 	 * 
 	 * @param id
-	 * @return
+	 * @throws EmptyResultDataAccessException
 	 */
-	public <T extends AbstractCatalogoDTO> T deleteById(Long id);
+	public void deleteById(Long id) throws EmptyResultDataAccessException;
 
 }

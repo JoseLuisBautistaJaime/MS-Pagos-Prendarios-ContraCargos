@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
@@ -9,10 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 /**
- * Nombre: AbstractCatalogoAdm Descripcion: Entity abstracta que que encapsula
- * la informacion basica de una catalogo administrable y sirve para
+ * @name AbstractCatalogoAdm
+ * @description Entity abstracta que que encapsula la informacion basica de un
+ *              catalogo administrable
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 05/03/2019 19:51 hrs.
  * @version 0.1
  */
@@ -27,13 +32,13 @@ public abstract class AbstractCatalogoAdm {
 	@Column(name = "estatus")
 	protected Boolean estatus;
 
-	@Column(name = "created_date")
+	@Column(name = "created_date", updatable = false)
 	protected Date createdDate;
 
 	@Column(name = "last_modified_date")
 	protected Date lastModifiedDate;
 
-	@Column(name = "created_by")
+	@Column(name = "created_by", updatable = false)
 	protected String createdBy;
 
 	@Column(name = "last_modified_by")
