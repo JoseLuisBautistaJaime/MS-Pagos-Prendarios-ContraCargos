@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.controllers;
 
 import io.swagger.annotations.Api;
@@ -6,7 +10,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.dto.CatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.ErrorResponse;
-
+import mx.com.nmp.pagos.mimonte.model.Catalogo;
 import mx.com.nmp.pagos.mimonte.model.extrafilter.Filtro;
 import mx.com.nmp.pagos.mimonte.services.CatalogoService;
 import mx.com.nmp.pagos.mimonte.util.Response;

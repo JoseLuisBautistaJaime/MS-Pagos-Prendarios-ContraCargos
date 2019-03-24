@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
 import mx.com.nmp.pagos.mimonte.dao.CatalogoRepository;
@@ -56,12 +60,13 @@ public class CatalogoServiceImpl implements CatalogoService {
 	 */
 	@Override
 	public List<String> getCatalogosSistema() {
+		
 		log.info("Consultando registros de extrafilter del sistema...");
 		List<Catalogo> results = catalogoRepository.findAllByActivoIsTrue();
 
 		log.info("Generando lista de nombres de extrafilter encontrados...");
 		List<String> registrosCatalogos = new ArrayList<>();
-		results.forEach(item -> registrosCatalogos.add(item.getDescripcionCorta()));
+		results.forEach(item -> registrosCatalogos.add(item.getDescripcionCorta())); 
 
 		log.debug("Validando la lista de registros...");
 		if (registrosCatalogos.isEmpty()) {
@@ -74,20 +79,24 @@ public class CatalogoServiceImpl implements CatalogoService {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public CatalogoDTO getRegistrosCatalogo(String nombreCatalogo) {		Catalogo catalogo = getCatalogo(nombreCatalogo);
+	public CatalogoDTO getRegistrosCatalogo(String nombreCatalogo) {
+		Catalogo catalogo = getCatalogo(nombreCatalogo);
 
 		log.info("Consultando la base de datos para la tabla: {}", catalogo.getNombreTabla());
-		List<EntradaCatalogo> resultados = null;
+		List<EntradaCatalogo> resultados = new ArrayList<>();
 		try {
-			resultados = jdbcTemplate.query("SELECT id, descripcion_corta, descripcion FROM " + catalogo.getNombreTabla(),
-					(rs, rowNum) -> {
-						EntradaCatalogo registro = new EntradaCatalogo();
-						registro.setId(rs.getInt("id"));
-						registro.setDescripcionCorta(rs.getString("descripcion_corta"));
-						registro.setDescripcion(rs.getString("descripcion"));
-						return registro;
-					});
+			List<Object[]> listaBD = new ArrayList<>();
+			listaBD = catalogoRepository.findByDescripcion(nombreCatalogo);
+			EntradaCatalogo entradaCatalogo;
+			if (listaBD != null) {
+				for (Object[] obj : listaBD) {
+					entradaCatalogo = new EntradaCatalogo();
+					entradaCatalogo.setId(obj[0] != null ? (Integer.parseInt(obj[0].toString())) : null);
+					entradaCatalogo.setDescripcionCorta(obj[1] != null ? obj[1].toString() : null);
+					entradaCatalogo.setDescripcion(obj[2] != null ? obj[2].toString() : null);
+					resultados.add(entradaCatalogo);
+				}
+			}
 		} catch (DataAccessException dae) {
 			log.error("Ocurrio un error al intentar obtener los registros del catalogo: {}. Mensaje de error: {}",
 					nombreCatalogo, dae.getMessage());

@@ -1,10 +1,14 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.services;
 
 
+import java.util.List;
+
 import mx.com.nmp.pagos.mimonte.dto.CatalogoDTO;
 import mx.com.nmp.pagos.mimonte.model.extrafilter.Filtro;
-
-import java.util.List;
 
 /**
  * Nombre: CatalogoService
