@@ -1,4 +1,10 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.services.impl;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -74,6 +80,17 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	public EntidadResponseDTO findByNombreAndEstatus(final String nombre, final Boolean estatus) {
 		return EntidadBuilder
 				.buildEntidadResponseDTOFromEntidad(entidadRepository.findByNombreAndEstatus(nombre, estatus));
+	}
+
+	@Override
+	public List<? extends AbstractCatalogoDTO> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void	 deleteById(Long id) {
+		// TODO Auto-generated method stub
 	}
 
 }

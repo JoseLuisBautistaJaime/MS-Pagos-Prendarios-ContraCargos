@@ -1,10 +1,15 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
 
 /**
- * Nombre: AfiliacionDTO Descripcion: Clase que encapsula la informacion
- * perteneciente a un tipo de Afiliacion.
+ * @name AfiliacionDTO
+ * @description Clase que encapsula la informacion perteneciente a un tipo de
+ *              Afiliacion.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 12/12/2018 16:39 hrs.
@@ -31,7 +36,7 @@ public class AfiliacionDTO extends AbstractCatalogoDTO implements Comparable<Afi
 	}
 
 	public AfiliacionDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy, String description, String shortDescription, Long numero, TipoAutorizacionDTO tipo	) {
+			String lastModifiedBy, String description, String shortDescription, Long numero, TipoAutorizacionDTO tipo) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.numero = numero;
 		this.tipo = tipo;

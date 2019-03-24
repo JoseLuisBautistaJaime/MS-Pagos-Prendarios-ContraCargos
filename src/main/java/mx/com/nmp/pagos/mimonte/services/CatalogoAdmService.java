@@ -1,10 +1,19 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.services;
+
+import java.util.List;
+
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 
 /**
- * Nombre: CatalogoAdmService Descripcion: Interface que define las operaciones
- * para la interaccion con objetos de tipo Catalogos administrables
+ * @name CatalogoAdmService
+ * @description Interface que define las operaciones para la interaccion con
+ *              objetos de tipo Catalogos administrables
  *
  * @author Ismael Flores Aguilar iaguilar@quarksoft.net
  * @creationDate 04/03/2019 11:00 hrs.
@@ -36,7 +45,23 @@ public interface CatalogoAdmService<E> {
 	 * 
 	 * @param id
 	 * @return
+	 * @throws EmptyResultDataAccessException
 	 */
-	public <T extends AbstractCatalogoDTO> T findById(Long id);
+	public <T extends AbstractCatalogoDTO> T findById(Long id) throws EmptyResultDataAccessException;
+
+	/**
+	 * Regresa todos los catalogos de un tipo especifico
+	 * 
+	 * @return
+	 */
+	public List<? extends AbstractCatalogoDTO> findAll();
+
+	/**
+	 * Elimina un catalogo por id
+	 * 
+	 * @param id
+	 * @throws EmptyResultDataAccessException
+	 */
+	public void deleteById(Long id) throws EmptyResultDataAccessException;
 
 }

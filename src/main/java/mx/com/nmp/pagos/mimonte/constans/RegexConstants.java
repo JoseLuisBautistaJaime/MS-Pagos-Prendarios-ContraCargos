@@ -1,11 +1,16 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.constans;
 
 /**
- * Nombre: RegexConstants Descripcion: Clase que encapsula valores constantes
- * que contienen expresiones regulares usadas en la aplicacion
+ * @name RegexConstants
+ * @description Clase que encapsula valores constantes que contienen expresiones
+ *              regulares usadas en la aplicacion
  *
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 07/03/2019 16:46 hrs.
  * @version 0.1
  */

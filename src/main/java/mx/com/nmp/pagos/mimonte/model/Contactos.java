@@ -26,7 +26,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "tk_contactos")
+@Table(name = "tc_contactos")
 public class Contactos extends AbstractCatalogoAdm implements Serializable {
 
 	private static final long serialVersionUID = -2473378930460136183L;
@@ -55,7 +55,7 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable {
 	private String email;
 
 	@ManyToOne
-	@JoinColumn(name = "tipo_contacto")
+	@JoinColumn(name = "id_tipo_contacto")
 	private TipoContacto tipoContacto;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contactos")

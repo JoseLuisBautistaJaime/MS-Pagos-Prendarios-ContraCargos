@@ -1,9 +1,13 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: AfiliacionRespPostDTO Descripcion: Clase que encapsula la informacion
- * perteneciente a una a filiaicon enviada como response en el alta de
- * afiliaciones.
+ * @name AfiliacionRespPostDTO
+ * @description Clase que encapsula la informacion perteneciente a una a
+ *              afiliacion enviada como response en el alta de afiliaciones.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 15/03/2018 12:58 hrs.

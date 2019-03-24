@@ -5,32 +5,29 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * @name CodigoEstadoCuentaReqDTO
+ * @name CodigoEstadoCuentaReqUpdtDTO
  * @description Clase que encapsula la informacion de un catalogo de codigo de
  *              estado de cuenta
  *
  * @author Ismael Flores iaguilar@quarksoft.net
- * @creationDate 14/03/2019 14:53 hrs.
+ * @creationDate 22/03/2019 14:54 hrs.
  * @version 0.1
  */
-public class CodigoEstadoCuentaReqDTO implements Comparable<CodigoEstadoCuentaReqDTO> {
+public class CodigoEstadoCuentaReqUpdtDTO implements Comparable<CodigoEstadoCuentaReqUpdtDTO> {
 
 	private String codigo;
 	private Long id;
-	private Boolean estatus;
 	private EntidadReqDTO entidad;
 	private CategoriaReqDTO categoria;
 
-	public CodigoEstadoCuentaReqDTO() {
+	public CodigoEstadoCuentaReqUpdtDTO() {
 		super();
 	}
 
-	public CodigoEstadoCuentaReqDTO(String codigo, Long id, Boolean estatus, EntidadReqDTO entidad,
-			CategoriaReqDTO categoria) {
+	public CodigoEstadoCuentaReqUpdtDTO(String codigo, Long id, EntidadReqDTO entidad, CategoriaReqDTO categoria) {
 		super();
 		this.codigo = codigo;
 		this.id = id;
-		this.estatus = estatus;
 		this.entidad = entidad;
 		this.categoria = categoria;
 	}
@@ -51,14 +48,6 @@ public class CodigoEstadoCuentaReqDTO implements Comparable<CodigoEstadoCuentaRe
 		this.id = id;
 	}
 
-	public Boolean getEstatus() {
-		return estatus;
-	}
-
-	public void setEstatus(Boolean estatus) {
-		this.estatus = estatus;
-	}
-
 	public EntidadReqDTO getEntidad() {
 		return entidad;
 	}
@@ -77,12 +66,12 @@ public class CodigoEstadoCuentaReqDTO implements Comparable<CodigoEstadoCuentaRe
 
 	@Override
 	public String toString() {
-		return "CodigoEstadoCuentaReqDTO [codigo=" + codigo + ", id=" + id + ", status=" + estatus + ", entidad="
-				+ entidad + ", categoria=" + categoria + "]";
+		return "CodigoEstadoCuentaReqDTO [codigo=" + codigo + ", id=" + id + ", entidad=" + entidad + ", categoria="
+				+ categoria + "]";
 	}
 
 	@Override
-	public int compareTo(CodigoEstadoCuentaReqDTO o) {
+	public int compareTo(CodigoEstadoCuentaReqUpdtDTO o) {
 		return o.id.compareTo(this.id);
 	}
 

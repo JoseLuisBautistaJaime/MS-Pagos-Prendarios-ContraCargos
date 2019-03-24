@@ -85,4 +85,15 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 		return CuentaBuilder.buildCuentaDTOListFromCuentaDTOList(cuentaRepository.findByEntidades_Id(idEntidad));
 	}
 
+	@Override
+	public List<? extends AbstractCatalogoDTO> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		// TODO Auto-generated method stub
+	}
+
 }
