@@ -7,6 +7,9 @@ package mx.com.nmp.pagos.mimonte.util.validacion;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 
 /**
  * @name ValidadorCatalogo
@@ -79,6 +82,79 @@ public abstract class ValidadorCatalogo {
 		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero() && afiliacionReqDTO.getNumero() > 0
 				&& null != afiliacionReqDTO.getId() && afiliacionReqDTO.getId() > 0
 				&& null != afiliacionReqDTO.getEstatus());
+	}
+
+	/**
+	 * Valida que de tipo EntidadBaseDTO en el request para la alta tenga los
+	 * valores correctos
+	 * 
+	 * @param entidadBaseDTO
+	 * @return
+	 */
+	public static boolean validateEntidadBaseDTOSave(EntidadBaseDTO entidadBaseDTO) {
+		if (null == entidadBaseDTO || null == entidadBaseDTO.getNombre() || null == entidadBaseDTO.getDescripcion())
+			return false;
+		if (null != entidadBaseDTO.getContactos() && !entidadBaseDTO.getContactos().isEmpty()) {
+			for (ContactoReqDTO contactoReqDTO : entidadBaseDTO.getContactos()) {
+				if (null == contactoReqDTO.getId() || contactoReqDTO.getId() <= 0) {
+					return false;
+				}
+			}
+		} else
+			return false;
+		if (null != entidadBaseDTO.getCuentas() && !entidadBaseDTO.getCuentas().isEmpty()) {
+			for (CuentaReqDTO cuentaReqDTO : entidadBaseDTO.getCuentas()) {
+				if (null == cuentaReqDTO.getId() || cuentaReqDTO.getId() <= 0) {
+					return false;
+				}
+				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
+					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
+						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
+							return false;
+					}
+				} else
+					return false;
+			}
+		} else
+			return false;
+		return true;
+	}
+
+	/**
+	 * Valida que de tipo EntidadBaseDTO en el request para la alta tenga los
+	 * valores correctos
+	 * 
+	 * @param entidadBaseDTO
+	 * @return
+	 */
+	public static boolean validateEntidadBaseDTOUpdt(EntidadBaseDTO entidadBaseDTO) {
+		if (null == entidadBaseDTO || null == entidadBaseDTO.getNombre() || null == entidadBaseDTO.getDescripcion()
+				|| null == entidadBaseDTO.getCuentas() || null == entidadBaseDTO.getId() || entidadBaseDTO.getId() <= 0)
+			return false;
+		if (null != entidadBaseDTO.getContactos() && !entidadBaseDTO.getContactos().isEmpty()) {
+			for (ContactoReqDTO contactoReqDTO : entidadBaseDTO.getContactos()) {
+				if (null == contactoReqDTO.getId() || contactoReqDTO.getId() <= 0) {
+					return false;
+				}
+			}
+		} else
+			return false;
+		if (null != entidadBaseDTO.getCuentas() && !entidadBaseDTO.getCuentas().isEmpty()) {
+			for (CuentaReqDTO cuentaReqDTO : entidadBaseDTO.getCuentas()) {
+				if (null == cuentaReqDTO.getId() || cuentaReqDTO.getId() <= 0) {
+					return false;
+				}
+				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
+					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
+						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
+							return false;
+					}
+				} else
+					return false;
+			}
+		} else
+			return false;
+		return true;
 	}
 
 }

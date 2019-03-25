@@ -1,11 +1,28 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
+/**
+ * @name ContactoReqDTO
+ * @description Clase DTO que mapea objetos relacionados con el catalogo de
+ *              Contactos
+ *
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 25/03/2019 16:53 hrs.
+ * @version 0.1
+ */
 public class ContactoReqDTO implements Comparable<ContactoReqDTO> {
 
 	private Long id;
 	private String nombre;
 	private String email;
 	private Boolean estatus;
+
+	public ContactoReqDTO() {
+		super();
+	}
 
 	public ContactoReqDTO(Long id, String nombre, String email, Boolean estatus) {
 		super();

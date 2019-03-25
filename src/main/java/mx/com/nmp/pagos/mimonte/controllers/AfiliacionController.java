@@ -100,7 +100,7 @@ public class AfiliacionController {
 				.buildAfiliacionRespPostDTOfromAfiliacionDTO((AfiliacionDTO) afiliacionServiceImpl.save(
 						AfiliacionBuilder.buildafiliacionDTOFromAfiliacionReqDTO(afiliacionReqDTO, new Date(), null),
 						createdBy));
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion guardada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				AfiliacionDTO);
 
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion guardada correctamente",
@@ -130,7 +130,7 @@ public class AfiliacionController {
 				.buildAfiliacionRespPostDTOfromAfiliacionDTO((AfiliacionDTO) afiliacionServiceImpl.update(
 						AfiliacionBuilder.buildafiliacionDTOFromAfiliacionReqDTO(afiliacionDTOReq, null, new Date()),
 						createdBy));
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion actualizada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				AfiliacionDTO);
 
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion actualizada correctamente",
@@ -161,7 +161,7 @@ public class AfiliacionController {
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				afiliacionDTO);
 
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
@@ -193,7 +193,7 @@ public class AfiliacionController {
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				afiliacionDTO);
 
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
@@ -217,7 +217,7 @@ public class AfiliacionController {
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion eliminada correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
 	}
 
@@ -235,7 +235,7 @@ public class AfiliacionController {
 		List<AfiliacionRespPostDTO> afiliacionDTOList = AfiliacionBuilder
 				.buildAfiliacionRespPostDTOListfromAfiliacionDTOList(
 						(List<AfiliacionDTO>) afiliacionServiceImpl.findAll());
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliaciones recuperadas correctamente",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != afiliacionDTOList ? afiliacionDTOList : new ArrayList<>());
 
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliaciones recuperadas correctamente",

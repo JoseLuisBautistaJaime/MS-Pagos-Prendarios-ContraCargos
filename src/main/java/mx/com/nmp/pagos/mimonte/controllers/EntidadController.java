@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,20 +34,25 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
+import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.services.impl.EntidadServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 
 /**
- * Nombre: EntidadController Descripcion: Clase que expone el servicio REST para
- * las operaciones relacionadas con el catalogo de entidades
+ * @name EntidadController
+ * @description Clase que expone el servicio REST para las operaciones
+ *              relacionadas con el catalogo de entidades
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 05/03/2019 13:09 hrs.
  * @version 0.1
  */
@@ -71,7 +77,6 @@ public class EntidadController {
 	/**
 	 * Service para catalogo de entidades
 	 */
-//	@SuppressWarnings("unused")
 	@Autowired
 	@Qualifier("entidadServiceImpl")
 	private EntidadServiceImpl entidadServiceImpl;
@@ -93,11 +98,15 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody EntidadBaseDTO entidadDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		if (!ValidadorCatalogo.validateEntidadBaseDTOSave(entidadDTOReq))
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+		return beanFactory
+				.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+						EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadServiceImpl.save(
+								EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, new Date(), null),
+								createdBy)));
 
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa",
-//				entidadServiceImpl.save(EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq), createdBy));
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", buildDummy());
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", buildDummy());
 	}
 
 	/**
@@ -117,11 +126,14 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody EntidadBaseDTO entidadDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		if (!ValidadorCatalogo.validateEntidadBaseDTOUpdt(entidadDTOReq))
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
+				EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadServiceImpl.update(
+						EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, null, new Date()),
+						lastModifiedBy)));
 
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",
-//				entidadServiceImpl.save(EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq), lastModifiedBy));
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa", buildDummy());
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa", buildDummy());
 	}
 
 	/**
@@ -141,10 +153,17 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
-//		EntidadResponseDTO entidadResponseDTO = EntidadBuilder
-//				.buildEntidadResponseDTOFromEntidadDTO((EntidadDTO) entidadServiceImpl.findById(idEntidad));
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", entidadResponseDTO);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummy());
+		EntidadResponseDTO entidadResponseDTO = null;
+		try {
+			entidadResponseDTO = EntidadBuilder
+					.buildEntidadResponseDTOFromEntidadDTO((EntidadDTO) entidadServiceImpl.findById(idEntidad));
+		} catch (EmptyResultDataAccessException erdex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				entidadResponseDTO);
+
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummy());
 	}
 
 	/**
@@ -157,7 +176,7 @@ public class EntidadController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/entidades/consultas", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo entidad en base a su id", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo entidad en base a nombre y estatus", tags = {
 			"Entidad" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Entidades encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
@@ -166,13 +185,21 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@RequestParam(name = "nombre", required = false) String nombre,
 			@RequestParam(name = "estatus", required = false) Boolean estatus) {
-//		EntidadResponseDTO entidadResponseDTO = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", entidadResponseDTO);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummyList());
+
+		List<EntidadResponseDTO> entidadResponseDTOList = null;
+		try {
+			entidadResponseDTOList = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
+		} catch (EmptyResultDataAccessException erdex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				null != entidadResponseDTOList ? entidadResponseDTOList : new ArrayList<>());
+
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummyList());
 	}
 
 	/**
-	 * Hace una aliminacion fisica de la entidad especificada
+	 * Realiza eliimado logico de una entidad
 	 * 
 	 * @param idEntidad
 	 * @return
@@ -180,7 +207,7 @@ public class EntidadController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = "/catalogos/entidades/{idEntidad}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "PUT", value = "Elimina un objeto catalogo entidad en base a su id", tags = {
+	@ApiOperation(httpMethod = "PUT", value = "Eliminacion logica de un objeto catalogo entidad en base a su id", tags = {
 			"Entidad" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Entidad encontrada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
@@ -189,7 +216,13 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteById(@PathVariable(value = "idEntidad", required = true) Long idEntidad,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Eliminacion exitosa", null);
+		try {
+			entidadServiceImpl.updateEstatusById(false, idEntidad);
+		} catch (EmptyResultDataAccessException erdex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
+				null);
 	}
 
 	/**

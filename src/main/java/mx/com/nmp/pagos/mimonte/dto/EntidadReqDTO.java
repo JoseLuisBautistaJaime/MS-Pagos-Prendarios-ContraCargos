@@ -4,6 +4,14 @@
  */
 package mx.com.nmp.pagos.mimonte.dto;
 
+/**
+ * @name EntidadReqDTO @description Clase DTO para el catalogo Entidad que sirve
+ *       para encapsular informacion de dicho catalogo
+ *
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 06/03/2019 12:35 hrs.
+ * @version 0.1
+ */
 public class EntidadReqDTO implements Comparable<EntidadReqDTO> {
 
 	private Long id;

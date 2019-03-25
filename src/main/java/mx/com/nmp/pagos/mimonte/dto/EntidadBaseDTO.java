@@ -7,10 +7,10 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.Set;
 
 /**
- * Nombre: EntidadBaseDTO Descripcion: Clase que encapsula la unformacion de un
- * catalogo de entidad
+ * @name EntidadBaseDTO
+ * @description Clase que encapsula la unformacion de un catalogo de entidad
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 14/03/2019 14:53 hrs.
  * @version 0.1
  */

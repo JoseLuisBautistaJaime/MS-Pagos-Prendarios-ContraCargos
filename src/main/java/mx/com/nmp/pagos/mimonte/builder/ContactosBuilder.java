@@ -1,8 +1,12 @@
 package mx.com.nmp.pagos.mimonte.builder;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 
 import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
@@ -147,6 +151,155 @@ public abstract class ContactosBuilder {
 
 		return contactosDTO;
 
+	}
+
+	/**
+	 * Construye un objeto de tipo ContactoEntDTO a partir de una entity de tipo
+	 * Contactos
+	 * 
+	 * @param contacto
+	 * @return
+	 */
+	public static ContactoEntDTO buildContactoEntDTOFromContacto(Contactos contacto) {
+		ContactoEntDTO contactoEntDTO = null;
+		if (null != contacto) {
+			contactoEntDTO = new ContactoEntDTO();
+			contactoEntDTO.setEmail(contacto.getEmail());
+			contactoEntDTO.setEstatus(contacto.getEstatus());
+			contactoEntDTO.setId(contacto.getId());
+			contactoEntDTO.setNombre(contacto.getNombre());
+		}
+		return contactoEntDTO;
+	}
+
+	/**
+	 * Construye un set de objetos de tipo ContactoEntDTO a partir de un set de
+	 * entities de tipo Contactos
+	 * 
+	 * @param contactoSet
+	 * @return
+	 */
+	public static Set<ContactoEntDTO> buildContactoEntDTOSetFromContactoSet(Set<Contactos> contactoSet) {
+		Set<ContactoEntDTO> contactoEntDTOSet = null;
+		if (null != contactoSet && !contactoSet.isEmpty()) {
+			contactoEntDTOSet = new TreeSet<>();
+			for (Contactos contacto : contactoSet) {
+				contactoEntDTOSet.add(buildContactoEntDTOFromContacto(contacto));
+			}
+		}
+		return contactoEntDTOSet;
+	}
+
+	/**
+	 * Construye un objeto de tipo ContactoEntDTO a partir de un objeto de tipo
+	 * ContactoReqDTO
+	 * 
+	 * @param contactoReqDTO
+	 * @return
+	 */
+	public static ContactoEntDTO buildContactoEntDTOFromContactoReqDTO(ContactoReqDTO contactoReqDTO) {
+		ContactoEntDTO contactoEntDTO = null;
+		if (null != contactoReqDTO) {
+			contactoEntDTO = new ContactoEntDTO();
+			contactoEntDTO.setEmail(contactoReqDTO.getEmail());
+			contactoEntDTO.setEstatus(contactoReqDTO.getEstatus());
+			contactoEntDTO.setId(contactoReqDTO.getId());
+			contactoEntDTO.setNombre(contactoReqDTO.getNombre());
+		}
+		return contactoEntDTO;
+	}
+
+	/**
+	 * Construye un Set de objetos de tipo ContactoEntDTO a partir de un Set de
+	 * objetos de tipo ContactoReqDTO
+	 * 
+	 * @param contactoReqDTOSet
+	 * @return
+	 */
+	public static Set<ContactoEntDTO> buildContactoEntDTOSetFromContactoReqDTOSet(
+			Set<ContactoReqDTO> contactoReqDTOSet) {
+		Set<ContactoEntDTO> contactoEntDTOSet = null;
+		if (null != contactoReqDTOSet) {
+			contactoEntDTOSet = new TreeSet<>();
+			for (ContactoReqDTO contactoReqDTO : contactoReqDTOSet) {
+				contactoEntDTOSet.add(buildContactoEntDTOFromContactoReqDTO(contactoReqDTO));
+			}
+		}
+		return contactoEntDTOSet;
+	}
+
+	/**
+	 * Construye un entity de tipo Contactos a partir de un objeto de tipo
+	 * ContactoReqDTO
+	 * 
+	 * @param contactoReqDTO
+	 * @return
+	 */
+	public static Contactos buildContactosFromContactoReqDTO(ContactoReqDTO contactoReqDTO) {
+		Contactos contacto = null;
+		if (null != contactoReqDTO) {
+			contacto = new Contactos();
+			contacto.setEmail(contactoReqDTO.getEmail());
+			contacto.setEstatus(contactoReqDTO.getEstatus());
+			contacto.setNombre(contactoReqDTO.getNombre());
+			contacto.setId(contactoReqDTO.getId());
+		}
+		return contacto;
+	}
+
+	/**
+	 * Construye un Set de entities de tipo Contactos a partir de in Set de objetos
+	 * de tipo ContactoReqDTO
+	 * 
+	 * @param contactoReqDTOSet
+	 * @return
+	 */
+	public static Set<Contactos> buildContactosSetFromContactoReqDTOSet(Set<ContactoReqDTO> contactoReqDTOSet) {
+		Set<Contactos> contactosSet = null;
+		if (null != contactoReqDTOSet) {
+			contactosSet = new TreeSet<>();
+			for (ContactoReqDTO contactoReqDTO : contactoReqDTOSet) {
+				contactosSet.add(buildContactosFromContactoReqDTO(contactoReqDTO));
+			}
+		}
+		return contactosSet;
+	}
+
+	/**
+	 * Construye un objeto de tipo ContactoReqDTO a partir de un entity de tipo
+	 * Contactos
+	 * 
+	 * @param contacto
+	 * @return
+	 */
+	public static ContactoReqDTO buildContactoReqDTOFromContacto(Contactos contacto) {
+		ContactoReqDTO contactoReqDTO = null;
+		if (null != contacto) {
+			contactoReqDTO = new ContactoReqDTO();
+			contactoReqDTO.setEmail(contacto.getEmail());
+			contactoReqDTO.setEstatus(contacto.getEstatus());
+			contactoReqDTO.setId(contacto.getId());
+			contactoReqDTO.setNombre(contacto.getNombre());
+		}
+		return contactoReqDTO;
+	}
+
+	/**
+	 * Construye un Set de objetos de tipo ContactoReqDTO a partir de un Set de
+	 * entities de tipo Contactos
+	 * 
+	 * @param contactoSet
+	 * @return
+	 */
+	public static Set<ContactoReqDTO> buildContactoReqDTOSetFromContactoSet(Set<Contactos> contactoSet) {
+		Set<ContactoReqDTO> contactoReqDTO = null;
+		if (null != contactoSet) {
+			contactoReqDTO = new TreeSet<>();
+			for (Contactos contacto : contactoSet) {
+				contactoReqDTO.add(buildContactoReqDTOFromContacto(contacto));
+			}
+		}
+		return contactoReqDTO;
 	}
 
 }

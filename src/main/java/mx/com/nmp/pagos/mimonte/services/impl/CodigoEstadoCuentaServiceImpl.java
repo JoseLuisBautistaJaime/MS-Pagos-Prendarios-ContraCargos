@@ -46,8 +46,10 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T save(CodigoEstadoCuentaDTO e, String createdBy) {
-		CodigoEstadoCuenta codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaId(e.getEntidad().getId(),
+	public <T extends AbstractCatalogoDTO> T save(CodigoEstadoCuentaDTO e, String createdBy)
+			throws EmptyResultDataAccessException, CatalogoException {
+		CodigoEstadoCuenta codigoEC = null;
+		codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaId(e.getEntidad().getId(),
 				e.getCategoria().getId());
 		if (null == codigoEC) {
 			if (null != e)

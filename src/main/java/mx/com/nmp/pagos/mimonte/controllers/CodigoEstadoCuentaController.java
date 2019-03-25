@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -97,11 +98,18 @@ public class CodigoEstadoCuentaController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		if (!ValidadorCatalogo.validateCodigoEstadoCuentaSave(codigoEstadoCuentaDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
-		CodigoEstadoCuentaUpdtDTO codigo = CodigoEstadoCuentaBuilder
-				.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
-						(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl
-								.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(
-										codigoEstadoCuentaDTO, new Date(), null), createdBy));
+		CodigoEstadoCuentaUpdtDTO codigo = null;
+		try {
+			codigo = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
+					(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl
+							.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(
+									codigoEstadoCuentaDTO, new Date(), null), createdBy));
+		} catch (RuntimeException rex) {
+			if (rex instanceof EmptyResultDataAccessException)
+				throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			else
+				throw rex;
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				codigo);
 
@@ -199,7 +207,8 @@ public class CodigoEstadoCuentaController {
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				null != lst ? lst : new ArrayList<>());
 
 //		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
 //		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy2();
@@ -210,8 +219,7 @@ public class CodigoEstadoCuentaController {
 	}
 
 	/**
-	 * Hace una eliminacion logica de un catalogo de estado de cuenta (pone estatus
-	 * en false)
+	 * Hace una eliminacion de un codigo de estaod de cuenta
 	 * 
 	 * @param idCodigo
 	 * @return
@@ -269,7 +277,8 @@ public class CodigoEstadoCuentaController {
 //		lst.add(codigoEstadoCuentaDTO2);
 //		lst.add(codigoEstadoCuentaDTO3);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				null != lst ? lst : new ArrayList<>());
 	}
 
 	/**

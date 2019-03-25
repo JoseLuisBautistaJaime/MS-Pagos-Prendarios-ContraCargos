@@ -4,6 +4,10 @@
  */
 package mx.com.nmp.pagos.mimonte.builder;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
@@ -13,7 +17,7 @@ import mx.com.nmp.pagos.mimonte.model.Entidad;
 
 /**
  * @name EntidadBuilder
- * @description Clase de capa de builder que se encarga de convertir difrentes
+ * @description Clase de capa builder que se encarga de convertir difrentes
  *              tipos de objetos y entidades relacionadas con el catalogo
  *              Entidad
  *
@@ -37,10 +41,10 @@ public abstract class EntidadBuilder {
 		EntidadDTO entidadDTO = null;
 		if (null != entidad) {
 			entidadDTO = new EntidadDTO();
-			entidadDTO.setContactos(null);
+			entidadDTO.setContactos(ContactosBuilder.buildContactoReqDTOSetFromContactoSet(entidad.getContactos()));
 			entidadDTO.setCreatedBy(entidad.getCreatedBy());
 			entidadDTO.setCreatedDate(entidad.getCreatedDate());
-			entidadDTO.setCuentas(null);
+			entidadDTO.setCuentas(CuentaBuilder.buildCuentaReqDTOSetFromCuentaSet(entidad.getCuentas()));
 			entidadDTO.setDescription(entidad.getDescription());
 			entidadDTO.setShortDescription(entidad.getShortDescription());
 			entidadDTO.setId(entidad.getId());
@@ -64,14 +68,15 @@ public abstract class EntidadBuilder {
 		Entidad entidad = null;
 		if (null != entidadDTO) {
 			entidad = new Entidad();
-			entidad.setContactos(null);
+			entidad.setContactos(ContactosBuilder.buildContactosSetFromContactoReqDTOSet(entidadDTO.getContactos()));
 			entidad.setCreatedBy(entidadDTO.getCreatedBy());
 			entidad.setCreatedDate(entidadDTO.getCreatedDate());
-			entidad.setCuentas(null);
+			entidad.setCuentas(CuentaBuilder.buildCuentaSetFromCuentaReqDTOSet(entidadDTO.getCuentas()));
 			entidad.setDescription(entidadDTO.getDescription());
 			entidad.setShortDescription(entidadDTO.getShortDescription());
 			entidad.setId(entidadDTO.getId());
 			entidad.setLastModifiedDate(entidadDTO.getLastModifiedDate());
+			entidad.setLastModifiedBy(entidadDTO.getLastModifiedBy());
 			entidad.setNombre(entidadDTO.getNombre());
 			entidad.setEstatus(entidadDTO.getEstatus());
 		}
@@ -89,12 +94,15 @@ public abstract class EntidadBuilder {
 		EntidadResponseDTO entidadResponseDTO = null;
 		if (null != entidad) {
 			entidadResponseDTO = new EntidadResponseDTO();
-			entidadResponseDTO.setContactos(null);
-			entidadResponseDTO.setCuentas(null);
+			entidadResponseDTO
+					.setContactos(ContactosBuilder.buildContactoEntDTOSetFromContactoSet(entidad.getContactos()));
+			entidadResponseDTO.setCuentas(CuentaBuilder.buildCuentaEntDTOSetFromCuentaSet(entidad.getCuentas()));
 			entidadResponseDTO.setDescripcion(entidad.getDescription());
 			entidadResponseDTO.setId(entidad.getId());
 			entidadResponseDTO.setNombre(entidad.getNombre());
 			entidadResponseDTO.setEstatus(entidad.getEstatus());
+			entidadResponseDTO.setCreadoPor(entidad.getCreatedBy());
+			entidadResponseDTO.setFechaCreacion(entidad.getCreatedDate());
 		}
 		return entidadResponseDTO;
 	}
@@ -110,12 +118,16 @@ public abstract class EntidadBuilder {
 		EntidadResponseDTO entidadResponseDTO = null;
 		if (null != entidadDTO) {
 			entidadResponseDTO = new EntidadResponseDTO();
-			entidadResponseDTO.setContactos(null);
-			entidadResponseDTO.setCuentas(null);
+			entidadResponseDTO.setContactos(
+					ContactosBuilder.buildContactoEntDTOSetFromContactoReqDTOSet(entidadDTO.getContactos()));
+			entidadResponseDTO
+					.setCuentas(CuentaBuilder.buildCuentaEntDTOSetFromCuentaReqDTOSet(entidadDTO.getCuentas()));
 			entidadResponseDTO.setDescripcion(entidadDTO.getDescription());
 			entidadResponseDTO.setId(entidadDTO.getId());
 			entidadResponseDTO.setNombre(entidadDTO.getNombre());
 			entidadResponseDTO.setEstatus(entidadDTO.getEstatus());
+			entidadResponseDTO.setFechaCreacion(entidadDTO.getCreatedDate());
+			entidadResponseDTO.setCreadoPor(entidadDTO.getCreatedBy());
 		}
 		return entidadResponseDTO;
 	}
@@ -127,21 +139,19 @@ public abstract class EntidadBuilder {
 	 * @param entidadBaseDTO
 	 * @return
 	 */
-	public static EntidadDTO buildEntidadDTOFromEntidadBaseDTO(EntidadBaseDTO entidadBaseDTO) {
+	public static EntidadDTO buildEntidadDTOFromEntidadBaseDTO(EntidadBaseDTO entidadBaseDTO, Date createdDate,
+			Date lastModifiedDate) {
 		EntidadDTO entidadDTO = null;
 		if (null != entidadBaseDTO) {
 			entidadDTO = new EntidadDTO();
 			entidadDTO.setContactos(entidadBaseDTO.getContactos());
-			entidadDTO.setCreatedBy(null);
-			entidadDTO.setCreatedDate(null);
+			entidadDTO.setCreatedDate(createdDate);
 			entidadDTO.setCuentas(entidadBaseDTO.getCuentas());
 			entidadDTO.setDescription(entidadBaseDTO.getDescripcion());
-			entidadDTO.setEstatus(null);
+			entidadDTO.setEstatus(true);
 			entidadDTO.setId(entidadBaseDTO.getId());
-			entidadDTO.setLastModifiedBy(null);
-			entidadDTO.setLastModifiedDate(null);
+			entidadDTO.setLastModifiedDate(lastModifiedDate);
 			entidadDTO.setNombre(entidadBaseDTO.getNombre());
-			entidadDTO.setShortDescription(null);
 		}
 		return entidadDTO;
 	}
@@ -206,6 +216,13 @@ public abstract class EntidadBuilder {
 		return baseEntidadDTO;
 	}
 
+	/**
+	 * Construye un objeto de tipo BaseEntidadDTO a partir de un objeto de tipo
+	 * Entidad
+	 * 
+	 * @param entidad
+	 * @return
+	 */
 	public static BaseEntidadDTO buildBaseentidadFromEntidad(Entidad entidad) {
 		BaseEntidadDTO baseEntidadDTO = null;
 		if (null != entidad) {
@@ -215,6 +232,61 @@ public abstract class EntidadBuilder {
 			baseEntidadDTO.setNombre(entidad.getNombre());
 		}
 		return baseEntidadDTO;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo EntidadDTO a partir de una lista de
+	 * entities de tipo Entidad
+	 * 
+	 * @param entidadList
+	 * @return
+	 */
+	public static List<EntidadDTO> buildEntidadDTOListFromEntidadList(List<Entidad> entidadList) {
+		List<EntidadDTO> enitdadDTOList = null;
+		if (null != entidadList) {
+			enitdadDTOList = new ArrayList<>();
+			for (Entidad entidad : entidadList) {
+				enitdadDTOList.add(buildEntidadDTOFromEntidad(entidad));
+			}
+		}
+		return enitdadDTOList;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo EntidadResponseDTO a partir de una
+	 * lista de objetos de tipo Entidad
+	 * 
+	 * @param entidadList
+	 * @return
+	 */
+	public static List<EntidadResponseDTO> buildEntidadResponseDTOListFromEntidadList(List<Entidad> entidadList) {
+		List<EntidadResponseDTO> enitdadResponseDTOList = null;
+		if (null != entidadList) {
+			enitdadResponseDTOList = new ArrayList<>();
+			for (Entidad entidad : entidadList) {
+				enitdadResponseDTOList.add(buildEntidadResponseDTOFromEntidad(entidad));
+			}
+		}
+		return enitdadResponseDTOList;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo EntidadResponseDTO a partir de una
+	 * lista de objetos de tipo EntidadDTO
+	 * 
+	 * @param entidadDTOList
+	 * @return
+	 */
+	public static List<EntidadResponseDTO> buildEntidadResponseDTOListFromEntidadDTOList(
+			List<EntidadDTO> entidadDTOList) {
+		List<EntidadResponseDTO> entidadResponseDTOList = null;
+		if (null != entidadDTOList) {
+			entidadResponseDTOList = new ArrayList<>();
+			for (EntidadDTO entidadDTO : entidadDTOList) {
+				entidadResponseDTOList.add(buildEntidadResponseDTOFromEntidadDTO(entidadDTO));
+			}
+		}
+		return entidadResponseDTOList;
 	}
 
 }

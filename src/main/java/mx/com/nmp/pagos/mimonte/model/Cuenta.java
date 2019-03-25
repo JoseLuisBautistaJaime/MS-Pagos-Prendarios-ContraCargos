@@ -36,7 +36,7 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 			@JoinColumn(name = "id_afiliacion") })
 	private Set<Afiliacion> afiliaciones;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cuentas")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "cuentas")
 	private Set<Entidad> entidades;
 
 	public Cuenta() {

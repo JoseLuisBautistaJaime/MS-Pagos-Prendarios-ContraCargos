@@ -78,6 +78,24 @@ public final class CatalogConstants {
 	public static final String NUMERO_AFILIACION_ALREADY_EXISTS = "Ya existe una afiliacion con ese numero";
 
 	/**
+	 * Mensaje que es mostrado cuando se genera un error inesperado durante una
+	 * operacion con un objeto catalogo
+	 */
+	public static final String UNKNOWN_ERROR = "Ocurrio un error inesperado";
+
+	/**
+	 * Mensaje que es mostrado cuando se intenta ingresr un campo que contiene
+	 * caracteres epeciales
+	 */
+	public static final String SPECIAL_CHARACTERS_WERE_FOUND = "El campo no puede contener caracteres especiales";
+
+	/**
+	 * Mensaje que es mostrado cuando no se encuentran reglas para el filtro de
+	 * busqueda especificado
+	 */
+	public static final String NO_FILTER_DEFINITION_WAS_FOUND = "No existe una definicion para el filtro especificado";
+
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */

@@ -8,10 +8,11 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * Nombre: EntidadResponseDTO Descripcion: Clase que encapsula la unformacion de
- * un catalogo de entidad y es exclusiva para un tipo de response
+ * @name EntidadResponseDTO
+ * @description Clase que encapsula la informacion de un catalogo de entidad y
+ *              es exclusiva para un tipo de response especifico
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 05/03/2019 14:06 hrs.
  * @version 0.1
  */

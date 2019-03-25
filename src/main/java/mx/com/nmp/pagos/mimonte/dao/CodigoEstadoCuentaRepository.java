@@ -44,6 +44,15 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	@Query("UPDATE CodigoEstadoCuenta cec SET cec.estatus = :estatus WHERE cec.id = :idCodigo")
 	public void setEstatusWhereId(@Param("estatus") final Boolean estatus, @Param("idCodigo") final Long idCodigo);
 
-	public CodigoEstadoCuenta findByEntidadIdAndCategoriaId(final Long idEntidad, final Long idCategoria);
+	/**
+	 * Regresa un codigo de estado de cuenta por id de entidad e id categoria
+	 * 
+	 * @param idEntidad
+	 * @param idCategoria
+	 * @return
+	 * @throws EmptyResultDataAccessException
+	 */
+	public CodigoEstadoCuenta findByEntidadIdAndCategoriaId(final Long idEntidad, final Long idCategoria)
+			throws EmptyResultDataAccessException;
 
 }

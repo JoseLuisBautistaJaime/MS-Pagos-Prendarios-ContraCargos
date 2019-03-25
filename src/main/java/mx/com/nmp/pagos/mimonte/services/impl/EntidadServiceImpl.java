@@ -8,19 +8,24 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
+import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
 /**
- * Nombre: EntidadServiceImpl Descripcion: Clase de capa de servicio para el
- * catalogo de entidades que sirve para realizar operaciones de logica de
- * negocios para el catalogo de entidades
+ * @name EntidadServiceImpl
+ * @description Clase de capa de servicio para el catalogo de entidades que
+ *              sirve para realizar operaciones de logica de negocios para el
+ *              catalogo de entidades
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 06/03/2019 12:33 hrs.
@@ -65,7 +70,7 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T findById(Long id) {
+	public <T extends AbstractCatalogoDTO> T findById(Long id) throws EmptyResultDataAccessException {
 		return (T) EntidadBuilder.buildEntidadDTOFromEntidad(
 				entidadRepository.findById(id).isPresent() ? entidadRepository.findById(id).get() : null);
 	}
@@ -76,21 +81,63 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	 * @param nombre
 	 * @param estatus
 	 * @return
+	 * @throws EmptyResultDataAccessException
 	 */
-	public EntidadResponseDTO findByNombreAndEstatus(final String nombre, final Boolean estatus) {
+	public List<EntidadResponseDTO> findByNombreAndEstatus(final String nombre, final Boolean estatus)
+			throws EmptyResultDataAccessException {
 		return EntidadBuilder
-				.buildEntidadResponseDTOFromEntidad(entidadRepository.findByNombreAndEstatus(nombre, estatus));
+				.buildEntidadResponseDTOListFromEntidadList(entidadRepository.findByNombreAndEstatus(nombre, estatus));
 	}
 
+	/**
+	 * Encuentra todas las entidades
+	 */
 	@Override
 	public List<? extends AbstractCatalogoDTO> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return (List<EntidadDTO>) EntidadBuilder
+				.buildEntidadDTOListFromEntidadList((List<Entidad>) entidadRepository.findAll());
 	}
 
+	/**
+	 * Elimina una entidad por id
+	 */
 	@Override
-	public void	 deleteById(Long id) {
-		// TODO Auto-generated method stub
+	public void deleteById(Long id) throws EmptyResultDataAccessException {
+		entidadRepository.deleteById(id);
+	}
+
+	/**
+	 * Actualiza el estatus de un catalogo Entidad por id
+	 * 
+	 * @param estatus
+	 * @param id
+	 * @throws EmptyResultDataAccessException
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void updateEstatusById(final Boolean estatus, final Long id) throws EmptyResultDataAccessException {
+		entidadRepository.setEstatusById(estatus, id);
+	}
+
+	/**
+	 * Regresa una lista de entidades por estatus
+	 * 
+	 * @param estatus
+	 * @return
+	 * @throws EmptyResultDataAccessException
+	 */
+	public List<EntidadResponseDTO> findByEstatus(final Boolean estatus) throws EmptyResultDataAccessException {
+		return EntidadBuilder.buildEntidadResponseDTOListFromEntidadList(entidadRepository.findByEstatus(estatus));
+	}
+
+	/**
+	 * Regresa una lista de entidades por nombre
+	 * 
+	 * @param nombre
+	 * @return
+	 * @throws EmptyResultDataAccessException
+	 */
+	public List<EntidadResponseDTO> findByNombre(final String nombre) throws EmptyResultDataAccessException {
+		return EntidadBuilder.buildEntidadResponseDTOListFromEntidadList(entidadRepository.findByNombre(nombre));
 	}
 
 }

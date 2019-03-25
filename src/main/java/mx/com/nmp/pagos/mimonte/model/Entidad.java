@@ -18,9 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * @name Entidad 
- * @description Clase que encapsula la informacion de una
- * entidad de catalogo de tipo Entidad
+ * @name Entidad
+ * @description Clase que encapsula la informacion de una entidad de catalogo de
+ *              tipo Entidad
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 05/03/2019 14:09 hrs.
@@ -33,14 +33,16 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "tr_entidad_cuenta", joinColumns = { @JoinColumn(name = "id_entidad") }, inverseJoinColumns = {
-			@JoinColumn(name = "id_cuenta") })
+	@ManyToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
+	@JoinTable(name = "tr_entidad_cuenta", joinColumns = {
+			@JoinColumn(name = "id_entidad", referencedColumnName = "id") }, inverseJoinColumns = {
+					@JoinColumn(name = "id_cuenta", referencedColumnName = "id") })
 	private Set<Cuenta> cuentas;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "tr_entidad_contactos", joinColumns = { @JoinColumn(name = "id_entidad") }, inverseJoinColumns = {
-			@JoinColumn(name = "id_contacto") })
+	@ManyToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
+	@JoinTable(name = "tr_entidad_contactos", joinColumns = {
+			@JoinColumn(name = "id_entidad", referencedColumnName = "id") }, inverseJoinColumns = {
+					@JoinColumn(name = "id_contacto", referencedColumnName = "id") })
 	private Set<Contactos> contactos;
 
 	@OneToMany(mappedBy = "entidad", cascade = CascadeType.ALL)
@@ -91,7 +93,7 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	public void setContactos(Set<Contactos> contactos) {
 		this.contactos = contactos;
 	}
-	
+
 	public Set<CodigoEstadoCuenta> getCodigoEstadoCuentaSet() {
 		return codigoEstadoCuentaSet;
 	}

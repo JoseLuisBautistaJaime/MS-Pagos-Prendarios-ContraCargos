@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,7 +22,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tc_contactos")
-public class Contactos extends AbstractCatalogoAdm implements Serializable {
+public class Contactos extends AbstractCatalogoAdm implements Serializable, Comparable<Contactos> {
 
 	private static final long serialVersionUID = -2473378930460136183L;
 
@@ -54,7 +53,7 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable {
 	@JoinColumn(name = "id_tipo_contacto")
 	private TipoContacto tipoContacto;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contactos")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "contactos")
 	private Set<Entidad> entidades;
 
 	public String getNombre() {
@@ -124,6 +123,11 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable {
 	@Override
 	public String toString() {
 		return "Contactos [nombre=" + nombre + ", email=" + email + ", tipoContacto=" + tipoContacto + "]";
+	}
+
+	@Override
+	public int compareTo(Contactos o) {
+		return o.nombre.compareTo(this.nombre);
 	}
 
 }
