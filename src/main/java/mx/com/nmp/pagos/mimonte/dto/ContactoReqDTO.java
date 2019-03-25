@@ -5,12 +5,11 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * @name ContactoReqDTO
- * @description Clase DTO que mapea objetos relacionados con el catalogo de
- *              Contactos
+
+ * Nombre: ContactoReqDTO: Clase que encapsula la informacion
+ * perteneciente a un contacto.
  *
- * @author Ismael Flores iaguilar@quarksoft.net
- * @creationDate 25/03/2019 16:53 hrs.
+ * @author José Rodriguez jgrodriguez@quarksoft.net Fecha: 05/03/2019 14:27 hrs.
  * @version 0.1
  */
 public class ContactoReqDTO implements Comparable<ContactoReqDTO> {
