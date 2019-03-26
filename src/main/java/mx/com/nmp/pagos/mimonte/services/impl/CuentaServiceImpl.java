@@ -1,23 +1,31 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
-import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
 /**
- * Nombre: CuentaServiceImpl Descripcion: Clase que implementa los metodos de
- * operaciones basicas sobre el catalogo de cuentas
+ * @name CuentaServiceImpl
+ * @description Clase que implementa los metodos de operaciones basicas sobre el
+ *              catalogo de cuentas
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
+ * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 13/03/2019 20:18 hrs.
  * @version 0.1
  */
@@ -69,7 +77,7 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T findById(Long id) {
+	public <T extends AbstractCatalogoDTO> T findById(Long id) throws EmptyResultDataAccessException {
 		return (T) CuentaBuilder.buildCuentaBaseDTOFromCuenta(
 				cuentaRepository.findById(id).isPresent() ? cuentaRepository.findById(id).get() : null);
 	}
@@ -80,20 +88,46 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 * 
 	 * @param idEntidad
 	 * @return
+	 * @throws EmptyResultDataAccessException
 	 */
-	public List<CuentaDTO> findByEntidadId(final Long idEntidad) {
-		return CuentaBuilder.buildCuentaDTOListFromCuentaDTOList(cuentaRepository.findByEntidades_Id(idEntidad));
+	public List<CuentaEntDTO> findByEntidadId(final Long idEntidad) throws EmptyResultDataAccessException {
+		return CuentaBuilder.buildCuentaEntDTOListFromCuentaList(cuentaRepository.findByEntidades_Id(idEntidad));
 	}
 
 	@Override
 	public List<? extends AbstractCatalogoDTO> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return CuentaBuilder.buildCuentaBaseDTOListFromCuentaList(cuentaRepository.findAll());
 	}
 
+	/**
+	 * Elimina una cuenta por id
+	 */
 	@Override
-	public void deleteById(Long id) {
-		// TODO Auto-generated method stub
+	public void deleteById(Long id) throws EmptyResultDataAccessException {
+		cuentaRepository.deleteById(id);
+	}
+
+	/**
+	 * Rergresa una cuenta por numero
+	 * 
+	 * @param numeroCuenta
+	 * @return
+	 * @throws EmptyResultDataAccessException
+	 */
+	public CuentaEntDTO findByNumeroCuenta(final String numeroCuenta) throws EmptyResultDataAccessException {
+		return CuentaBuilder.buildCuentaEntDTOFromCuenta(cuentaRepository.findByNumeroCuenta(numeroCuenta));
+	}
+
+	/**
+	 * Actualiza el estatus de una cuenta a false (inactivo)
+	 * 
+	 * @param estatus
+	 * @param id
+	 * @throws EmptyResultDataAccessException
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void updateEstatusById(final Boolean estatus, final Long id) throws EmptyResultDataAccessException {
+		cuentaRepository.updateEstatusById(estatus, id);
 	}
 
 }

@@ -35,6 +35,13 @@ public class AfiliacionDTO extends AbstractCatalogoDTO implements Comparable<Afi
 		this.tipo = tipo;
 	}
 
+	public AfiliacionDTO(Long id, Long numero, TipoAutorizacionDTO tipo) {
+		super();
+		this.id = id;
+		this.numero = numero;
+		this.tipo = tipo;
+	}
+	
 	public AfiliacionDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
 			String lastModifiedBy, String description, String shortDescription, Long numero, TipoAutorizacionDTO tipo) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
@@ -65,7 +72,7 @@ public class AfiliacionDTO extends AbstractCatalogoDTO implements Comparable<Afi
 
 	@Override
 	public int compareTo(AfiliacionDTO o) {
-		return o.numero.compareTo(this.numero);
+		return o.id.compareTo(this.id);
 	}
 
 }

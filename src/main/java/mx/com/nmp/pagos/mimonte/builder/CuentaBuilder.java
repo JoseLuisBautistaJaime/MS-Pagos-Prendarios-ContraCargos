@@ -1,6 +1,11 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.builder;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,8 +17,8 @@ import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 
 /**
- * Nombre: CuentaBuilder Descripcion: Clase que construye objetos relacionados
- * con Cuenta
+ * @name CuentaBuilder
+ * @description Clase que construye objetos relacionados con Cuenta
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 13/03/2019 20:27 hrs.
@@ -62,8 +67,8 @@ public abstract class CuentaBuilder {
 		CuentaBaseDTO cuentaBaseDTO = null;
 		if (null != cuenta) {
 			cuentaBaseDTO = new CuentaBaseDTO();
-			cuentaBaseDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionSet(cuenta.getAfiliaciones()));
+			cuentaBaseDTO.setAfiliaciones(null != cuenta.getAfiliaciones() ?
+					AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionSet(cuenta.getAfiliaciones()): new TreeSet<>());
 			cuentaBaseDTO.setCreatedBy(cuenta.getCreatedBy());
 			cuentaBaseDTO.setCreatedDate(cuenta.getCreatedDate());
 			cuentaBaseDTO.setDescription(cuenta.getDescription());
@@ -105,7 +110,8 @@ public abstract class CuentaBuilder {
 	 * @param cuentaDTO
 	 * @return
 	 */
-	public static CuentaBaseDTO buildCuentaBaseDTOFromCuentaDTO(CuentaDTO cuentaDTO) {
+	public static CuentaBaseDTO buildCuentaBaseDTOFromCuentaDTO(CuentaDTO cuentaDTO, Date createdDate,
+			Date lastModifiedDate) {
 		CuentaBaseDTO cuentaBaseDTO = null;
 		if (null != cuentaDTO) {
 			cuentaBaseDTO = new CuentaBaseDTO();
@@ -114,7 +120,8 @@ public abstract class CuentaBuilder {
 			cuentaBaseDTO.setEstatus(cuentaDTO.getEstatus());
 			cuentaBaseDTO.setId(cuentaDTO.getId());
 			cuentaBaseDTO.setNumeroCuenta(cuentaDTO.getNumero());
-
+			cuentaBaseDTO.setCreatedDate(createdDate);
+			cuentaBaseDTO.setLastModifiedDate(lastModifiedDate);
 		}
 		return cuentaBaseDTO;
 	}
@@ -269,18 +276,32 @@ public abstract class CuentaBuilder {
 		return cuentaReqDTOSet;
 	}
 
-	public static Cuenta buildCuentaFromCuentaReqDTO (CuentaReqDTO cuentaReqDTO) {
+	/**
+	 * Construye un objeto Cuenta a partir de un objeto de tipo CuentaReqDTO
+	 * 
+	 * @param cuentaReqDTO
+	 * @return
+	 */
+	public static Cuenta buildCuentaFromCuentaReqDTO(CuentaReqDTO cuentaReqDTO) {
 		Cuenta cuenta = null;
-		if(null != cuentaReqDTO) {
+		if (null != cuentaReqDTO) {
 			cuenta = new Cuenta();
-			cuenta.setAfiliaciones(AfiliacionBuilder.buildAfiliacionSetFromAfiliacionReqDTOList(cuentaReqDTO.getAfiliaciones()));
+			cuenta.setAfiliaciones(
+					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionReqDTOList(cuentaReqDTO.getAfiliaciones()));
 			cuenta.setId(cuentaReqDTO.getId());
 			cuenta.setEstatus(cuentaReqDTO.getEstatus());
 			cuenta.setNumeroCuenta(cuentaReqDTO.getNumero());
 		}
 		return cuenta;
 	}
-	
+
+	/**
+	 * Construye un Set de entities de tipo Cuenta a partir de un Set de objetos de
+	 * tipo CuentaReqDTO
+	 * 
+	 * @param cuentaReqDTOSet
+	 * @return
+	 */
 	public static Set<Cuenta> buildCuentaSetFromCuentaReqDTOSet(Set<CuentaReqDTO> cuentaReqDTOSet) {
 		Set<Cuenta> cuentaSet = null;
 		if (null != cuentaReqDTOSet && !cuentaReqDTOSet.isEmpty()) {
@@ -290,6 +311,100 @@ public abstract class CuentaBuilder {
 			}
 		}
 		return cuentaSet;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo CuentaBaseDTO a partir de una lista de
+	 * entities de tipo Cuenta
+	 * 
+	 * @param cuentaList
+	 * @return
+	 */
+	public static List<CuentaBaseDTO> buildCuentaBaseDTOListFromCuentaList(List<Cuenta> cuentaList) {
+		List<CuentaBaseDTO> cuentaBaseDTOList = null;
+		if (null != cuentaList) {
+			cuentaBaseDTOList = new ArrayList<>();
+			for (Cuenta cuenta : cuentaList) {
+				cuentaBaseDTOList.add(buildCuentaBaseDTOFromCuenta(cuenta));
+			}
+		}
+		return cuentaBaseDTOList;
+	}
+
+	/**
+	 * Construye un objeto de tipo CuentaEntDTO a partir de un objeto de tipo
+	 * CuentaDTO
+	 * 
+	 * @param cuentaDTO
+	 * @return
+	 */
+	public static CuentaEntDTO buildCuentaEntDTOFromCuentaDTO(CuentaDTO cuentaDTO) {
+		CuentaEntDTO cuentaEntDTO = null;
+		if (null != cuentaDTO) {
+			cuentaEntDTO = new CuentaEntDTO();
+			cuentaEntDTO.setAfiliaciones(
+					AfiliacionBuilder.buildAfiliacionEntDTOListFromAfiliacionRespDTOList(cuentaDTO.getAfiliaciones()));
+			cuentaEntDTO.setEstatus(cuentaDTO.getEstatus());
+			cuentaEntDTO.setId(cuentaDTO.getId());
+			cuentaEntDTO.setNumero(cuentaDTO.getNumero());
+		}
+		return cuentaEntDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo CuentaEntDTO a partir de un objeto de tipo
+	 * CuentaBaseDTO
+	 * 
+	 * @param cuentaBaseDTO
+	 * @return
+	 */
+	public static CuentaEntDTO buildCuentaEntDTOFromCuentaBaseDTO(CuentaBaseDTO cuentaBaseDTO) {
+		CuentaEntDTO cuentaEntDTO = null;
+		if (null != cuentaBaseDTO) {
+			cuentaEntDTO = new CuentaEntDTO();
+			cuentaEntDTO.setAfiliaciones(
+					AfiliacionBuilder.buildAfiliacionEntDTOListFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones()));
+			cuentaEntDTO.setEstatus(cuentaBaseDTO.getEstatus());
+			cuentaEntDTO.setId(cuentaBaseDTO.getId());
+			cuentaEntDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
+		}
+		return cuentaEntDTO;
+	}
+
+	/**
+	 * Contruye una lista de objetos de tipo CuentaEntDTO a partir de una lista de
+	 * entities de tipo Cuenta
+	 * 
+	 * @param cuentaList
+	 * @return
+	 */
+	public static List<CuentaEntDTO> buildCuentaEntDTOListFromCuentaList(List<Cuenta> cuentaList) {
+		List<CuentaEntDTO> cuentaEntDTOList = null;
+		if (null != cuentaList) {
+			cuentaEntDTOList = new ArrayList<>();
+			for (Cuenta cuenta : cuentaList) {
+				cuentaEntDTOList.add(buildCuentaEntDTOFromCuenta(cuenta));
+			}
+		}
+		return cuentaEntDTOList;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo CuentaEntDTO a aprtir de una lista de
+	 * objetos de tipo CuentaBaseDTO
+	 * 
+	 * @param cuentaBaseDTOList
+	 * @return
+	 */
+	public static List<CuentaEntDTO> buildCuentaEntDTOListFromCuentaBaseDTOList(List<CuentaBaseDTO> cuentaBaseDTOList) {
+		List<CuentaEntDTO> cuentaEntDTOList = null;
+		if (null != cuentaBaseDTOList) {
+			cuentaEntDTOList = new ArrayList<>();
+			for (CuentaBaseDTO cuentaBaseDTO : cuentaBaseDTOList) {
+				cuentaEntDTOList.add(buildCuentaEntDTOFromCuentaBaseDTO(cuentaBaseDTO));
+			}
+		}
+		return cuentaEntDTOList;
 	}
 
 }

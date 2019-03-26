@@ -1,6 +1,11 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,20 +31,24 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaRespDTO;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.services.impl.CuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
- * Nombre: cuentasController Descripcion: Clase que expone el servicio REST para
- * las operaciones relacionadas con el catalogo de cuentas
+ * @name cuentasController
+ * @description Clase que expone el servicio REST para las operaciones
+ *              relacionadas con el catalogo de cuentas
  *
  * @author Victor Manuel Moran Hernandez
  * @creationDate 12/03/2019 12:22 hrs.
@@ -84,11 +94,13 @@ public class CuentasController {
 	public Response save(@RequestBody CuentaDTO CuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
-//		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(
-//				cuentaServiceImpl.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(CuentaDTOReq), createdBy));
+		CuentaEntDTO cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
+				.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(CuentaDTOReq, new Date(), null), createdBy));
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+				cuentaEntDTO);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta creada correctamente",
-				buildDummyUpdt());
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta creada correctamente",
+//				buildDummyUpdt());
 	}
 
 	/**
@@ -109,11 +121,13 @@ public class CuentasController {
 	public Response update(@RequestBody CuentaDTO cuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 
-//		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(
-//				cuentaServiceImpl.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq), lastModifiedBy));
+		CuentaEntDTO cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
+				.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
+				cuentaEntDTO);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta actualizada correctamente",
-				buildDummyUpdt());
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta actualizada correctamente",
+//				buildDummyUpdt());
 	}
 
 	/**
@@ -132,12 +146,18 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findById(@PathVariable(value = "numeroCuenta", required = true) String numeroCuenta) {
+	public Response findByNumeroCuenta(@PathVariable(value = "numeroCuenta", required = true) String numeroCuenta) {
+		CuentaEntDTO cuentaEntDTO = null;
+		try {
+			cuentaEntDTO = cuentaServiceImpl.findByNumeroCuenta(numeroCuenta);
+		} catch (EmptyResultDataAccessException erdaex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				cuentaEntDTO);
 
-//		CuentaDTO cuentaDTO = CuentaBuilder.buildCuentaDTOFromCuentaBaseDTO(cuentaServiceImpl.findById(idcuentas));
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta recuperada correctamente",
-				buildDummyUpdt());
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta recuperada correctamente",
+//				buildDummyUpdt());
 	}
 
 	/**
@@ -158,10 +178,17 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByCuenta(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
 
-//		List<CuentaDTO> cuentaDTOList = cuentaServiceImpl.findByEntidadId(idEntidad);
+		List<CuentaEntDTO> cuentaEntDTOList = null;
+		try {
+			cuentaEntDTOList = cuentaServiceImpl.findByEntidadId(idEntidad);
+		} catch (EmptyResultDataAccessException erdaex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				cuentaEntDTOList);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas recuperadas correctamente",
-				buildDummyUpdtLst());
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas recuperadas correctamente",
+//				buildDummyUpdtLst());
 	}
 
 	@ResponseBody
@@ -176,11 +203,19 @@ public class CuentasController {
 	public Response deleteByidcuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta eliminada correctamente", null);
+		try {
+			cuentaServiceImpl.updateEstatusById(false, idCuenta);
+		} catch (EmptyResultDataAccessException erdaex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
+				null);
 	}
 
 	/**
 	 * Regresa una lista con todas las cuentas
+	 * 
 	 * @return
 	 */
 	@ResponseBody
@@ -192,15 +227,14 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByCuentaAll() {
-
-//		List<CuentaDTO> cuentaDTOList = cuentaServiceImpl.findByEntidadId(idEntidad);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuentas recuperadas correctamente",
-				buildDummyUpdtLst());
+	public Response findAll() {
+		@SuppressWarnings("unchecked")
+		List<CuentaEntDTO> cuentaEntDTOList = CuentaBuilder
+				.buildCuentaEntDTOListFromCuentaBaseDTOList((List<CuentaBaseDTO>) cuentaServiceImpl.findAll());
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
+				null != cuentaEntDTOList ? cuentaEntDTOList : new ArrayList<>());
 	}
-	
-	
+
 	/**
 	 * Crea un objeto de respuesta dummy
 	 * 

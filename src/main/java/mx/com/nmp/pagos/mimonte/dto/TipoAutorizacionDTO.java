@@ -1,14 +1,15 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: TipoAutorizacionDTO Descripcion: Clase que encapsula la informacion
- * perteneciente a un tipo de autorizacion de un catalogo de afiliacion.
+ * @name TipoAutorizacionDTO
+ * @description Clase que encapsula la informacion perteneciente a un tipo de
+ *              autorizacion de un catalogo de afiliacion.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @Fecha 01/02/2019 11:58 hrs.
  * @version 0.1
  */
-public class TipoAutorizacionDTO {
+public class TipoAutorizacionDTO implements Comparable<TipoAutorizacionDTO> {
 
 	public Integer getId() {
 		return id;
@@ -42,6 +43,11 @@ public class TipoAutorizacionDTO {
 	@Override
 	public String toString() {
 		return "TipoAutorizacionDTO [id=" + id + ", descripcion=" + descripcion;
+	}
+
+	@Override
+	public int compareTo(TipoAutorizacionDTO o) {
+		return o.id.compareTo(this.id);
 	}
 
 }

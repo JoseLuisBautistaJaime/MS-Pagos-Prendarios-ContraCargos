@@ -186,8 +186,11 @@ public class AfiliacionBuilder {
 		Set<AfiliacionDTO> afiliacionRespDTOSet = null;
 		if (null != afiliacionDTOList) {
 			afiliacionRespDTOSet = new TreeSet<>();
-			for (AfiliacionRespDTO AfiliacionRespDTO : afiliacionDTOList)
-				afiliacionRespDTOSet.add(new AfiliacionDTO(AfiliacionRespDTO.getId(), null));
+			for (AfiliacionRespDTO afiliacionRespDTO : afiliacionDTOList) {
+				AfiliacionDTO afiliacionDTO = new AfiliacionDTO();
+				afiliacionDTO.setId(afiliacionRespDTO.getId());
+				afiliacionRespDTOSet.add(afiliacionDTO);	
+			}
 		}
 		return afiliacionRespDTOSet;
 	}
@@ -418,6 +421,80 @@ public class AfiliacionBuilder {
 			}
 		}
 		return afiliacion;
+	}
+
+	/**
+	 * Construye un objeto de tipo AfiliacionEntDTO a partir de un pbjeto de tipo
+	 * AfiliacionRespDTO
+	 * 
+	 * @param afiliacionRespDTO
+	 * @return
+	 */
+	public static AfiliacionEntDTO buildAfiliacionEntDTOFromAfiliacionRespDTO(AfiliacionRespDTO afiliacionRespDTO) {
+		AfiliacionEntDTO afiliacionEntDTO = null;
+		if (null != afiliacionRespDTO) {
+			afiliacionEntDTO = new AfiliacionEntDTO();
+			afiliacionEntDTO.setId(afiliacionRespDTO.getId());
+			afiliacionEntDTO.setNumero(afiliacionRespDTO.getNumero());
+			afiliacionEntDTO.setEstatus(true);
+		}
+		return afiliacionEntDTO;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo AfiliacionEntDTO a partir de una lista
+	 * de objetos de tipo AfiliacionRespDTO
+	 * 
+	 * @param afiliacionRespDTOList
+	 * @return
+	 */
+	public static List<AfiliacionEntDTO> buildAfiliacionEntDTOListFromAfiliacionRespDTOList(
+			List<AfiliacionRespDTO> afiliacionRespDTOList) {
+		List<AfiliacionEntDTO> afiliacionEntDTO = null;
+		if (null != afiliacionRespDTOList) {
+			afiliacionEntDTO = new ArrayList<>();
+			for (AfiliacionRespDTO afiliacionRespDTO : afiliacionRespDTOList) {
+				afiliacionEntDTO.add(buildAfiliacionEntDTOFromAfiliacionRespDTO(afiliacionRespDTO));
+			}
+		}
+		return afiliacionEntDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo AfiliacionEntDTO a partir de un objeto de tipo
+	 * AfiliacionDTO
+	 * 
+	 * @param afiliacionDTO
+	 * @return
+	 */
+	public static AfiliacionEntDTO buildAfiliacionEntDTOFromAfiliacionDTO(AfiliacionDTO afiliacionDTO) {
+		AfiliacionEntDTO afiliacionEntDTO = null;
+		if (null != afiliacionDTO) {
+			afiliacionEntDTO = new AfiliacionEntDTO();
+			afiliacionEntDTO.setEstatus(afiliacionDTO.getEstatus());
+			afiliacionEntDTO.setId(afiliacionDTO.getId());
+			afiliacionEntDTO.setNumero(afiliacionDTO.getNumero());
+		}
+		return afiliacionEntDTO;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo AfiliacionEntDTO a partir de un Set de
+	 * objetos de tipo AfiliacionDTO
+	 * 
+	 * @param afiliacionDTOSet
+	 * @return
+	 */
+	public static List<AfiliacionEntDTO> buildAfiliacionEntDTOListFromAfiliacionDTOSet(
+			Set<AfiliacionDTO> afiliacionDTOSet) {
+		List<AfiliacionEntDTO> afiliacionEntDTOSet = null;
+		if (null != afiliacionDTOSet) {
+			afiliacionEntDTOSet = new ArrayList<>();
+			for (AfiliacionDTO afiliacionDTO : afiliacionDTOSet) {
+				afiliacionEntDTOSet.add(buildAfiliacionEntDTOFromAfiliacionDTO(afiliacionDTO));
+			}
+		}
+		return afiliacionEntDTOSet;
 	}
 
 }

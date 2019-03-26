@@ -1,11 +1,15 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
 import java.util.Set;
 
 /**
- * Nombre: CuentaBaseDTO Descripcion: Clase que encapsula la informacion de un
- * objeto cuenta base
+ * @name CuentaBaseDTO
+ * @description Clase que encapsula la informacion de un objeto cuenta base
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 13/03/2019 20:22 hrs.

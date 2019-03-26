@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
@@ -13,7 +17,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 /**
- * Nombre: Cuenta Descripcion: Clase que encapsula la informacion de una Cuenta
+ * @name Cuenta
+ * @description Clase que encapsula la informacion de una Cuenta
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 13/03/2019 20:22 hrs.
@@ -31,9 +36,9 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 	@Column(name = "numero_cuenta", nullable = false)
 	private String numeroCuenta;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "tr_cuenta_afiliacion", joinColumns = { @JoinColumn(name = "id_cuenta") }, inverseJoinColumns = {
-			@JoinColumn(name = "id_afiliacion") })
+	@ManyToMany(cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+	@JoinTable(name = "tr_cuenta_afiliacion", joinColumns = { @JoinColumn(name = "id_cuenta", referencedColumnName = "id") }, inverseJoinColumns = {
+			@JoinColumn(name = "id_afiliacion", referencedColumnName = "id") })
 	private Set<Afiliacion> afiliaciones;
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "cuentas")

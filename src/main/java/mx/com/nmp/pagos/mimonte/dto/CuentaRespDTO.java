@@ -1,8 +1,13 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * Nombre: CuentaRespDTO Descripcion: Clase que encapsula la informacion de un
- * objeto cuenta de respuesta en alta de cuentas
+ * @name CuentaRespDTO
+ * @description Clase que encapsula la informacion de un objeto cuenta de
+ *              respuesta en alta de cuentas
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 15/03/2019 13:21 hrs.

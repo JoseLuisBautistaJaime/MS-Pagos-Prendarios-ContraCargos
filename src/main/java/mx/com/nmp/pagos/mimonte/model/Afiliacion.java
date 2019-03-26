@@ -39,13 +39,11 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "afiliacion")
 	private Set<ReglaNegocio> reglas;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "afiliaciones")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "afiliaciones")
 	private Set<Cuenta> cuentas;
 
 	public Afiliacion() {
-		/**
-		 * empty constructor
-		 */
+		super();
 	}
 
 	public Afiliacion(Set<ReglaNegocio> reglas, TipoAutorizacion tipo) {
@@ -126,7 +124,7 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 
 	@Override
 	public int compareTo(Afiliacion o) {
-		return o.numero.compareTo(this.numero);
+		return o.id.compareTo(this.id);
 	}
 
 }

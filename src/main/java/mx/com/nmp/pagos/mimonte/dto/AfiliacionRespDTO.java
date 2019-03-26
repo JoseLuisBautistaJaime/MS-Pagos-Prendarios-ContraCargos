@@ -13,7 +13,7 @@ package mx.com.nmp.pagos.mimonte.dto;
  * @creationDate 12/12/2018 16:39 hrs.
  * @version 0.1
  */
-public class AfiliacionRespDTO {
+public class AfiliacionRespDTO implements Comparable<AfiliacionRespDTO> {
 
 	private Long id;
 	private Long numero;
@@ -48,6 +48,11 @@ public class AfiliacionRespDTO {
 	@Override
 	public String toString() {
 		return "AfiliacionRespDTO [id=" + id + ", numero=" + "]";
+	}
+
+	@Override
+	public int compareTo(AfiliacionRespDTO o) {
+		return o.id.compareTo(this.id);
 	}
 
 }
