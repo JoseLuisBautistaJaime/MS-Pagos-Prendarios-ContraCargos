@@ -231,7 +231,7 @@ public class CuentasController {
 		@SuppressWarnings("unchecked")
 		List<CuentaEntDTO> cuentaEntDTOList = CuentaBuilder
 				.buildCuentaEntDTOListFromCuentaBaseDTOList((List<CuentaBaseDTO>) cuentaServiceImpl.findAll());
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != cuentaEntDTOList ? cuentaEntDTOList : new ArrayList<>());
 	}
 

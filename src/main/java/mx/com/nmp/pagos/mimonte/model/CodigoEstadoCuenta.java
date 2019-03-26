@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,7 +34,7 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 	@JoinColumn(name = "id_entidad")
 	private Entidad entidad;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
 

@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -85,8 +86,9 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	public AfiliacionDTO findByCuentasId(final Long idCuenta) throws EmptyResultDataAccessException {
-		return AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(afiliacionRepository.findByCuentas_Id(idCuenta));
+	public Set<AfiliacionDTO> findByCuentasId(final Long idCuenta) throws EmptyResultDataAccessException {
+		return AfiliacionBuilder
+				.buildAfiliacionDTOSetFromAfiliacionSet(afiliacionRepository.findByCuentas_Id(idCuenta));
 	}
 
 	/**

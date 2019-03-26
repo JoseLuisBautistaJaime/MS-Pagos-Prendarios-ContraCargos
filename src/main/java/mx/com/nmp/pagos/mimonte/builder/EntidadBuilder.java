@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.builder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeSet;
 
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
@@ -118,10 +119,12 @@ public abstract class EntidadBuilder {
 		EntidadResponseDTO entidadResponseDTO = null;
 		if (null != entidadDTO) {
 			entidadResponseDTO = new EntidadResponseDTO();
-			entidadResponseDTO.setContactos(
-					ContactosBuilder.buildContactoEntDTOSetFromContactoReqDTOSet(entidadDTO.getContactos()));
-			entidadResponseDTO
-					.setCuentas(CuentaBuilder.buildCuentaEntDTOSetFromCuentaReqDTOSet(entidadDTO.getCuentas()));
+			entidadResponseDTO.setContactos(null != entidadDTO.getContactos() && !entidadDTO.getContactos().isEmpty()
+					? ContactosBuilder.buildContactoEntDTOSetFromContactoReqDTOSet(entidadDTO.getContactos())
+					: new TreeSet<>());
+			entidadResponseDTO.setCuentas(null != entidadDTO.getCuentas() && !entidadDTO.getCuentas().isEmpty()
+					? CuentaBuilder.buildCuentaEntDTOSetFromCuentaReqDTOSet(entidadDTO.getCuentas())
+					: new TreeSet<>());
 			entidadResponseDTO.setDescripcion(entidadDTO.getDescription());
 			entidadResponseDTO.setId(entidadDTO.getId());
 			entidadResponseDTO.setNombre(entidadDTO.getNombre());

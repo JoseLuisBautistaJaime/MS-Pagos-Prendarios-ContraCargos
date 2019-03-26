@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,10 +15,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
+import mx.com.nmp.pagos.mimonte.dao.AfiliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
+import mx.com.nmp.pagos.mimonte.model.Afiliacion;
+import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
 /**
@@ -40,6 +44,13 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	private CuentaRepository cuentaRepository;
 
 	/**
+	 * Repository de Afiliacion
+	 */
+	@Autowired
+	@Qualifier("afiliacionRepository")
+	private AfiliacionRepository afiliacionRepository;
+
+	/**
 	 * Guarda una cuenta
 	 * 
 	 * @param e
@@ -50,8 +61,10 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	public <T extends AbstractCatalogoDTO> T save(CuentaBaseDTO e, String createdBy) {
 		if (null != e)
 			e.setCreatedBy(createdBy);
-		return (T) CuentaBuilder
-				.buildCuentaBaseDTOFromCuenta(cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e)));
+		Cuenta cuenta = cuentaRepository.saveAndFlush(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e));
+		Set<Afiliacion> afiliaciones = afiliacionRepository.findByCuentas_Id(cuenta.getId());
+		cuenta.setAfiliaciones(afiliaciones);
+		return (T) CuentaBuilder.buildCuentaBaseDTOFromCuenta(cuenta);	
 	}
 
 	/**

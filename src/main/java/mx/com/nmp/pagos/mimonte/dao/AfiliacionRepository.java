@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dao;
 
+import java.util.Set;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -23,13 +25,13 @@ import mx.com.nmp.pagos.mimonte.model.Afiliacion;
 public interface AfiliacionRepository extends JpaRepository<Afiliacion, Long> {
 
 	/**
-	 * Regresa una afiliacion en base a el id de su cuenta asociada
+	 * Regresa una lista de afiliaciones en base a el id de su cuenta asociada
 	 * 
 	 * @param idCuenta
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	public Afiliacion findByCuentas_Id(final Long idCuenta) throws EmptyResultDataAccessException;
+	public Set<Afiliacion> findByCuentas_Id(final Long idCuenta) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa una afiliacion por numero

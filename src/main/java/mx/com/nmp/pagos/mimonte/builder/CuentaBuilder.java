@@ -46,7 +46,7 @@ public abstract class CuentaBuilder {
 			cuenta.setCreatedBy(cuentaBaseDTO.getCreatedBy());
 			cuenta.setCreatedDate(cuentaBaseDTO.getCreatedDate());
 			cuenta.setDescription(cuentaBaseDTO.getDescription());
-			cuenta.setEstatus(cuentaBaseDTO.getEstatus());
+			cuenta.setEstatus(null != cuentaBaseDTO.getEstatus() ? cuentaBaseDTO.getEstatus() : true);
 			cuenta.setId(cuentaBaseDTO.getId());
 			cuenta.setLastModifiedBy(cuentaBaseDTO.getLastModifiedBy());
 			cuenta.setLastModifiedDate(cuentaBaseDTO.getLastModifiedDate());

@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.CodigoEstadoCuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.dao.CategoriaRepository;
 import mx.com.nmp.pagos.mimonte.dao.CodigoEstadoCuentaRepository;
+import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaUpdtDTO;
@@ -42,6 +44,20 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	private CodigoEstadoCuentaRepository codigoEstadoCuentaRepository;
 
 	/**
+	 * Repository del catalogo Entidad
+	 */
+	@Autowired
+	@Qualifier("entidadRepository")
+	private EntidadRepository entidadRepository;
+
+	/**
+	 * Repository del catalogo Categoria
+	 */
+	@Autowired
+	@Qualifier("categoriaRepository")
+	private CategoriaRepository categoriaRepository;
+
+	/**
 	 * Guarda un nuevo catalogo CodigoEstadoCuenta
 	 */
 	@SuppressWarnings("unchecked")
@@ -57,6 +73,13 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 			CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
 			CodigoEstadoCuenta ent = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTO(e);
 			codigoEstadoCuentaRepository.saveAndFlush(ent);
+			codigoEstadoCuentaRepository.flush();
+			ent.setEntidad(entidadRepository.findById(ent.getEntidad().getId()).isPresent()
+					? entidadRepository.findById(ent.getEntidad().getId()).get()
+					: null);
+			ent.setCategoria(categoriaRepository.findById(ent.getCategoria().getId()).isPresent()
+					? categoriaRepository.findById(ent.getCategoria().getId()).get()
+					: null);
 			codigoEstadoCuentaDTO = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(ent);
 			return (T) codigoEstadoCuentaDTO;
 		} else

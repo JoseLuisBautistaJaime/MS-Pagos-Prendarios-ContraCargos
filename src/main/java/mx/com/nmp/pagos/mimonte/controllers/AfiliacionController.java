@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.controllers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,15 +187,15 @@ public class AfiliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta) {
-		AfiliacionRespPostDTO afiliacionDTO = null;
+		Set<AfiliacionRespPostDTO> afiliacionDTOSet = null;
 		try {
-			afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
-					(AfiliacionDTO) afiliacionServiceImpl.findByCuentasId(idCuenta));
+			afiliacionDTOSet = AfiliacionBuilder.buildAfiliacionRespPostDTOSetfromAfiliacionDTOSet(
+					(Set<AfiliacionDTO>) afiliacionServiceImpl.findByCuentasId(idCuenta));
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-				afiliacionDTO);
+				afiliacionDTOSet);
 
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Afiliacion recuperada correctamente",
 //				buildDummyList());

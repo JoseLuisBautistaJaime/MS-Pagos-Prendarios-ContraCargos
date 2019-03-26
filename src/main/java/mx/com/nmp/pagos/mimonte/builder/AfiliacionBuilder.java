@@ -189,7 +189,7 @@ public class AfiliacionBuilder {
 			for (AfiliacionRespDTO afiliacionRespDTO : afiliacionDTOList) {
 				AfiliacionDTO afiliacionDTO = new AfiliacionDTO();
 				afiliacionDTO.setId(afiliacionRespDTO.getId());
-				afiliacionRespDTOSet.add(afiliacionDTO);	
+				afiliacionRespDTOSet.add(afiliacionDTO);
 			}
 		}
 		return afiliacionRespDTOSet;
@@ -495,6 +495,25 @@ public class AfiliacionBuilder {
 			}
 		}
 		return afiliacionEntDTOSet;
+	}
+
+	/**
+	 * Construye un Set de objetos de tipo AfiliacionRespPostDTO a partir de un Set
+	 * de objetos de tipo AfiliacionDTO
+	 * 
+	 * @param afiliacionDTOSet
+	 * @return
+	 */
+	public static Set<AfiliacionRespPostDTO> buildAfiliacionRespPostDTOSetfromAfiliacionDTOSet(
+			Set<AfiliacionDTO> afiliacionDTOSet) {
+		Set<AfiliacionRespPostDTO> afiliacionRespPostDTO = null;
+		if (null != afiliacionDTOSet) {
+			afiliacionRespPostDTO = new TreeSet<>();
+			for (AfiliacionDTO afiliacionDTO : afiliacionDTOSet) {
+				afiliacionRespPostDTO.add(buildAfiliacionRespPostDTOfromAfiliacionDTO(afiliacionDTO));
+			}
+		}
+		return afiliacionRespPostDTO;
 	}
 
 }
