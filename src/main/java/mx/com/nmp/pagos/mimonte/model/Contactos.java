@@ -131,7 +131,7 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable, Comp
 
 	@Override
 	public int compareTo(Contactos o) {
-		return o.nombre.compareTo(this.nombre);
+		return o.id.compareTo(this.id);
 	}
 
 }

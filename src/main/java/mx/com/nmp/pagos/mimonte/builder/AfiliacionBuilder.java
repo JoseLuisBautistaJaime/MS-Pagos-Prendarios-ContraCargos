@@ -67,7 +67,7 @@ public class AfiliacionBuilder {
 	 * @param afiliacionDTO
 	 * @return
 	 */
-	public static Afiliacion buildAfiliacionFromAfiliacionDTO(AfiliacionDTO afiliacionDTO) {
+	public static Afiliacion buildAfiliacionFromAfiliacionDTO(AfiliacionDTO afiliacionDTO, String lastModifiedBy, Date lastModifiedDate) {
 		Afiliacion afiliacion = null;
 		if (null != afiliacionDTO) {
 			afiliacion = new Afiliacion();
@@ -77,8 +77,8 @@ public class AfiliacionBuilder {
 					.setTipo(TipoAutorizacionBuilder.buildTipoAfilaicionFromTipoAfiliacionDTO(afiliacionDTO.getTipo()));
 			afiliacion.setCreatedBy(afiliacionDTO.getCreatedBy());
 			afiliacion.setCreatedDate(afiliacionDTO.getCreatedDate());
-			afiliacion.setLastModifiedBy(afiliacionDTO.getLastModifiedBy());
-			afiliacion.setLastModifiedDate(afiliacionDTO.getLastModifiedDate());
+			afiliacion.setLastModifiedBy(null != afiliacionDTO.getLastModifiedBy() ? afiliacionDTO.getLastModifiedBy() : lastModifiedBy);
+			afiliacion.setLastModifiedDate(null != afiliacionDTO.getLastModifiedDate() ? afiliacionDTO.getLastModifiedDate() : lastModifiedDate);
 			afiliacion.setEstatus(null != afiliacionDTO.getEstatus() ? afiliacionDTO.getEstatus() : true);
 			// Por default se agrega el tipo de autorizacion 1 ue es Ninguno
 			TipoAutorizacion tipoAutorizacion = new TipoAutorizacion();
@@ -113,12 +113,12 @@ public class AfiliacionBuilder {
 	 * @param afiliacionDTOSet
 	 * @return
 	 */
-	public static Set<Afiliacion> buildAfiliacionSetFromAfiliacionDTOSet(Set<AfiliacionDTO> afiliacionDTOSet) {
+	public static Set<Afiliacion> buildAfiliacionSetFromAfiliacionDTOSet(Set<AfiliacionDTO> afiliacionDTOSet, String lastModifiedBy, Date lastModifiedDate) {
 		Set<Afiliacion> afiliacionSet = null;
 		if (null != afiliacionDTOSet && !afiliacionDTOSet.isEmpty()) {
 			afiliacionSet = new TreeSet<>();
 			for (AfiliacionDTO afiliacionDTO : afiliacionDTOSet) {
-				afiliacionSet.add(buildAfiliacionFromAfiliacionDTO(afiliacionDTO));
+				afiliacionSet.add(buildAfiliacionFromAfiliacionDTO(afiliacionDTO, lastModifiedBy, lastModifiedDate));
 			}
 		}
 		return afiliacionSet;
@@ -390,13 +390,15 @@ public class AfiliacionBuilder {
 	 * @param afiliacionReqDTO
 	 * @return
 	 */
-	public static Afiliacion buildAfiliacionFromAfiliacionReqDTO(AfiliacionReqDTO afiliacionReqDTO) {
+	public static Afiliacion buildAfiliacionFromAfiliacionReqDTO(AfiliacionReqDTO afiliacionReqDTO, String lastModifiedBy, Date lastModifiedDate) {
 		Afiliacion afiliacion = null;
 		if (null != afiliacionReqDTO) {
 			afiliacion = new Afiliacion();
 			afiliacion.setEstatus(afiliacionReqDTO.getEstatus());
 			afiliacion.setId(afiliacionReqDTO.getId());
 			afiliacion.setNumero(afiliacionReqDTO.getNumero());
+			afiliacion.setLastModifiedBy(lastModifiedBy);
+			afiliacion.setLastModifiedDate(lastModifiedDate);
 			// Aqui se agrega or default 1 que significa ningun tipo de autoirzacion
 			TipoAutorizacion auth = new TipoAutorizacion();
 			auth.setId(1);
@@ -413,12 +415,12 @@ public class AfiliacionBuilder {
 	 * @return
 	 */
 	public static Set<Afiliacion> buildAfiliacionSetFromAfiliacionReqDTOList(
-			List<AfiliacionReqDTO> afiliacionReqDTOList) {
+			List<AfiliacionReqDTO> afiliacionReqDTOList, String lastModifiedBy, Date lastModifiedDate) {
 		Set<Afiliacion> afiliacion = null;
 		if (null != afiliacionReqDTOList && !afiliacionReqDTOList.isEmpty()) {
 			afiliacion = new TreeSet<>();
 			for (AfiliacionReqDTO afiliacionReqDTO : afiliacionReqDTOList) {
-				afiliacion.add(buildAfiliacionFromAfiliacionReqDTO(afiliacionReqDTO));
+				afiliacion.add(buildAfiliacionFromAfiliacionReqDTO(afiliacionReqDTO, lastModifiedBy, lastModifiedDate));
 			}
 		}
 		return afiliacion;

@@ -69,10 +69,10 @@ public abstract class EntidadBuilder {
 		Entidad entidad = null;
 		if (null != entidadDTO) {
 			entidad = new Entidad();
-			entidad.setContactos(ContactosBuilder.buildContactosSetFromContactoReqDTOSet(entidadDTO.getContactos()));
+			entidad.setContactos(ContactosBuilder.buildContactosSetFromContactoReqDTOSet(entidadDTO.getContactos(), entidadDTO.getLastModifiedBy(), entidadDTO.getLastModifiedDate()));
 			entidad.setCreatedBy(entidadDTO.getCreatedBy());
 			entidad.setCreatedDate(entidadDTO.getCreatedDate());
-			entidad.setCuentas(CuentaBuilder.buildCuentaSetFromCuentaReqDTOSet(entidadDTO.getCuentas()));
+			entidad.setCuentas(CuentaBuilder.buildCuentaSetFromCuentaReqDTOSet(entidadDTO.getCuentas(), entidadDTO.getLastModifiedBy(), entidadDTO.getLastModifiedDate()));
 			entidad.setDescription(entidadDTO.getDescription());
 			entidad.setShortDescription(entidadDTO.getShortDescription());
 			entidad.setId(entidadDTO.getId());

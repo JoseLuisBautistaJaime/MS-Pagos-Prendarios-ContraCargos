@@ -42,7 +42,7 @@ public abstract class CuentaBuilder {
 		if (null != cuentaBaseDTO) {
 			cuenta = new Cuenta();
 			cuenta.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones(), cuentaBaseDTO.getLastModifiedBy(), cuentaBaseDTO.getLastModifiedDate()));
 			cuenta.setCreatedBy(cuentaBaseDTO.getCreatedBy());
 			cuenta.setCreatedDate(cuentaBaseDTO.getCreatedDate());
 			cuenta.setDescription(cuentaBaseDTO.getDescription());
@@ -282,15 +282,17 @@ public abstract class CuentaBuilder {
 	 * @param cuentaReqDTO
 	 * @return
 	 */
-	public static Cuenta buildCuentaFromCuentaReqDTO(CuentaReqDTO cuentaReqDTO) {
+	public static Cuenta buildCuentaFromCuentaReqDTO(CuentaReqDTO cuentaReqDTO, String lastModifiedBy, Date lastModifiedDate) {
 		Cuenta cuenta = null;
 		if (null != cuentaReqDTO) {
 			cuenta = new Cuenta();
 			cuenta.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionReqDTOList(cuentaReqDTO.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionReqDTOList(cuentaReqDTO.getAfiliaciones(), lastModifiedBy, lastModifiedDate));
 			cuenta.setId(cuentaReqDTO.getId());
 			cuenta.setEstatus(cuentaReqDTO.getEstatus());
 			cuenta.setNumeroCuenta(cuentaReqDTO.getNumero());
+			cuenta.setLastModifiedBy(lastModifiedBy);
+			cuenta.setLastModifiedDate(lastModifiedDate);
 		}
 		return cuenta;
 	}
@@ -302,12 +304,12 @@ public abstract class CuentaBuilder {
 	 * @param cuentaReqDTOSet
 	 * @return
 	 */
-	public static Set<Cuenta> buildCuentaSetFromCuentaReqDTOSet(Set<CuentaReqDTO> cuentaReqDTOSet) {
+	public static Set<Cuenta> buildCuentaSetFromCuentaReqDTOSet(Set<CuentaReqDTO> cuentaReqDTOSet, String lastModifiedBy, Date lastModifiedDate) {
 		Set<Cuenta> cuentaSet = null;
 		if (null != cuentaReqDTOSet && !cuentaReqDTOSet.isEmpty()) {
 			cuentaSet = new TreeSet<>();
 			for (CuentaReqDTO cuentaReqDTO : cuentaReqDTOSet) {
-				cuentaSet.add(buildCuentaFromCuentaReqDTO(cuentaReqDTO));
+				cuentaSet.add(buildCuentaFromCuentaReqDTO(cuentaReqDTO, lastModifiedBy, lastModifiedDate));
 			}
 		}
 		return cuentaSet;

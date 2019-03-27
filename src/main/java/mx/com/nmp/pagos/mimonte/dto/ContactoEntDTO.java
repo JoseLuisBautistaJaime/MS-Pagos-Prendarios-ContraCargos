@@ -66,7 +66,7 @@ public class ContactoEntDTO implements Comparable<ContactoEntDTO> {
 
 	@Override
 	public int compareTo(ContactoEntDTO o) {
-		return o.getNombre().compareTo(this.nombre);
+		return o.id.compareTo(this.id);
 	}
 
 }

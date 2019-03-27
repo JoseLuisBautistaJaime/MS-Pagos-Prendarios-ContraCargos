@@ -53,7 +53,7 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 		if (null != e)
 			e.setCreatedBy(createdBy);
 		return (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(
-				afiliacionRepository.save(AfiliacionBuilder.buildAfiliacionFromAfiliacionDTO(e)));
+				afiliacionRepository.save(AfiliacionBuilder.buildAfiliacionFromAfiliacionDTO(e, null, null)));
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
 		return (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(
-				afiliacionRepository.save(AfiliacionBuilder.buildAfiliacionFromAfiliacionDTO(e)));
+				afiliacionRepository.save(AfiliacionBuilder.buildAfiliacionFromAfiliacionDTO(e, null, null)));
 	}
 
 	/**

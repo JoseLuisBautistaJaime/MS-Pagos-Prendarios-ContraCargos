@@ -239,7 +239,7 @@ public abstract class ContactosBuilder {
 	 * @param contactoReqDTO
 	 * @return
 	 */
-	public static Contactos buildContactosFromContactoReqDTO(ContactoReqDTO contactoReqDTO) {
+	public static Contactos buildContactosFromContactoReqDTO(ContactoReqDTO contactoReqDTO, String lastModifiedBy, Date lastModifiedDate) {
 		Contactos contacto = null;
 		if (null != contactoReqDTO) {
 			contacto = new Contactos();
@@ -247,6 +247,8 @@ public abstract class ContactosBuilder {
 			contacto.setEstatus(contactoReqDTO.getEstatus());
 			contacto.setNombre(contactoReqDTO.getNombre());
 			contacto.setId(contactoReqDTO.getId());
+			contacto.setLastModifiedBy(lastModifiedBy);
+			contacto.setLastModifiedDate(lastModifiedDate);
 		}
 		return contacto;
 	}
@@ -258,12 +260,12 @@ public abstract class ContactosBuilder {
 	 * @param contactoReqDTOSet
 	 * @return
 	 */
-	public static Set<Contactos> buildContactosSetFromContactoReqDTOSet(Set<ContactoReqDTO> contactoReqDTOSet) {
+	public static Set<Contactos> buildContactosSetFromContactoReqDTOSet(Set<ContactoReqDTO> contactoReqDTOSet, String lastModifiedBy, Date lastModifiedDate) {
 		Set<Contactos> contactosSet = null;
 		if (null != contactoReqDTOSet) {
 			contactosSet = new TreeSet<>();
 			for (ContactoReqDTO contactoReqDTO : contactoReqDTOSet) {
-				contactosSet.add(buildContactosFromContactoReqDTO(contactoReqDTO));
+				contactosSet.add(buildContactosFromContactoReqDTO(contactoReqDTO, lastModifiedBy, lastModifiedDate));
 			}
 		}
 		return contactosSet;
