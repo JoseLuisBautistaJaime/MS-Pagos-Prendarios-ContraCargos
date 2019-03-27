@@ -56,15 +56,16 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 * @param e
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.REQUIRED)
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T save(CuentaBaseDTO e, String createdBy) {
 		if (null != e)
 			e.setCreatedBy(createdBy);
-		Cuenta cuenta = cuentaRepository.saveAndFlush(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e));
+		Cuenta cuenta = cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e));
 		Set<Afiliacion> afiliaciones = afiliacionRepository.findByCuentas_Id(cuenta.getId());
 		cuenta.setAfiliaciones(afiliaciones);
-		return (T) CuentaBuilder.buildCuentaBaseDTOFromCuenta(cuenta);	
+		return (T) CuentaBuilder.buildCuentaBaseDTOFromCuenta(cuenta);
 	}
 
 	/**

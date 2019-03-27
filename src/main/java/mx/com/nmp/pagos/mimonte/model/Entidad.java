@@ -33,13 +33,13 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
 
-	@ManyToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = { CascadeType.REMOVE, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
 	@JoinTable(name = "tr_entidad_cuenta", joinColumns = {
 			@JoinColumn(name = "id_entidad", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_cuenta", referencedColumnName = "id") })
 	private Set<Cuenta> cuentas;
 
-	@ManyToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = { CascadeType.REMOVE, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
 	@JoinTable(name = "tr_entidad_contactos", joinColumns = {
 			@JoinColumn(name = "id_entidad", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_contacto", referencedColumnName = "id") })

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.CodigoEstadoCuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
@@ -60,6 +62,7 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	/**
 	 * Guarda un nuevo catalogo CodigoEstadoCuenta
 	 */
+	@Transactional(propagation = Propagation.REQUIRED)
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T save(CodigoEstadoCuentaDTO e, String createdBy)
@@ -72,8 +75,7 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 				e.setCreatedBy(createdBy);
 			CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
 			CodigoEstadoCuenta ent = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTO(e);
-			codigoEstadoCuentaRepository.saveAndFlush(ent);
-			codigoEstadoCuentaRepository.flush();
+			codigoEstadoCuentaRepository.save(ent);
 			ent.setEntidad(entidadRepository.findById(ent.getEntidad().getId()).isPresent()
 					? entidadRepository.findById(ent.getEntidad().getId()).get()
 					: null);
@@ -97,7 +99,7 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
 		CodigoEstadoCuenta ent = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTOUpdt(e);
 		codigoEstadoCuentaDTO = CodigoEstadoCuentaBuilder
-				.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(codigoEstadoCuentaRepository.saveAndFlush(ent));
+				.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(codigoEstadoCuentaRepository.save(ent));
 		return (T) codigoEstadoCuentaDTO;
 	}
 

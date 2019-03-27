@@ -189,6 +189,7 @@ public class AfiliacionBuilder {
 			for (AfiliacionRespDTO afiliacionRespDTO : afiliacionDTOList) {
 				AfiliacionDTO afiliacionDTO = new AfiliacionDTO();
 				afiliacionDTO.setId(afiliacionRespDTO.getId());
+				afiliacionDTO.setNumero(afiliacionRespDTO.getNumero());
 				afiliacionRespDTOSet.add(afiliacionDTO);
 			}
 		}
