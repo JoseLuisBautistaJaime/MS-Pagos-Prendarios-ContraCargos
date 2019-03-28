@@ -132,6 +132,13 @@ public class CodigoEstadoCuentaBuilder {
 		return codigoEstadoCuentaDTOList;
 	}
 
+	/**
+	 * Construye una lista de objetos de tipo CodigoEstadoCuentaUpdtDTO a partir de
+	 * una lista de objetos de tipo CodigoEstadoCuenta
+	 * 
+	 * @param codigoEstadoCuentaList
+	 * @return
+	 */
 	public static List<CodigoEstadoCuentaUpdtDTO> buildCodigoEstadoCuentaUpdtDTOListFromCodigoEstadoCuentaList(
 			List<CodigoEstadoCuenta> codigoEstadoCuentaList) {
 		List<CodigoEstadoCuentaUpdtDTO> codigoEstadoCuentaUpdtDTO = null;
@@ -144,6 +151,13 @@ public class CodigoEstadoCuentaBuilder {
 		return codigoEstadoCuentaUpdtDTO;
 	}
 
+	/**
+	 * Construye una lista de objetos de tipo CodigoEstadoCuentaUpdtDTO a partir de
+	 * una lista de objetos de tipo CodigoEstadoCuentaDTO
+	 * 
+	 * @param codigoEstadoCuentaDTOList
+	 * @return
+	 */
 	public static List<CodigoEstadoCuentaUpdtDTO> buildCodigoEstadoCuentaUpdtDTOListFromCodigoEstadoCuentaDTOList(
 			List<CodigoEstadoCuentaDTO> codigoEstadoCuentaDTOList) {
 		List<CodigoEstadoCuentaUpdtDTO> codigoEstadoCuentaUpdtDTO = null;
@@ -230,6 +244,13 @@ public class CodigoEstadoCuentaBuilder {
 		return codigoEstadoCuentaUpdtDTO;
 	}
 
+	/**
+	 * Construye un objeto de tipo CodigoEstadoCuentaUpdtDTO a partir de un objeto
+	 * de tipo CodigoEstadoCuenta
+	 * 
+	 * @param codigoEstadoCuenta
+	 * @return
+	 */
 	public static CodigoEstadoCuentaUpdtDTO buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuenta(
 			CodigoEstadoCuenta codigoEstadoCuenta) {
 		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaUpdtDTO = null;

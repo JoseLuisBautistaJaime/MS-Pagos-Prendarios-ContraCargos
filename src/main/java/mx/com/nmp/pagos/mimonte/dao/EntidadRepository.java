@@ -16,9 +16,9 @@ import org.springframework.stereotype.Repository;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 
 /**
- * @name EntidadRepository @description Interface de capa DAO que sirve para
- *       realizar operaciones de base de datos relacionadas con el catalogo
- *       Entidad
+ * @name EntidadRepository
+ * @description Interface de capa DAO que sirve para realizar operaciones de
+ *              base de datos relacionadas con el catalogo Entidad
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 06/03/2019 12:35 hrs.

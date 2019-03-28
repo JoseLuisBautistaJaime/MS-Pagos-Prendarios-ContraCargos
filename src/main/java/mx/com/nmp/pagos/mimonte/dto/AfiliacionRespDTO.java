@@ -20,7 +20,6 @@ public class AfiliacionRespDTO implements Comparable<AfiliacionRespDTO> {
 
 	public AfiliacionRespDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public AfiliacionRespDTO(Long id, Long numero) {
