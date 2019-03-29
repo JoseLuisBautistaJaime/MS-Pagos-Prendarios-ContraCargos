@@ -100,11 +100,14 @@ public class EntidadController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		if (!ValidadorCatalogo.validateEntidadBaseDTOSave(entidadDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
-		return beanFactory
-				.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-						EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadServiceImpl.save(
-								EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, new Date(), null),
-								createdBy)));
+		EntidadResponseDTO entidadResponseDTO = null;
+		EntidadDTO entidadDTO = null;
+		EntidadDTO entidadDTOResp = null;
+		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, new Date(), null);
+		entidadDTOResp = entidadServiceImpl.save(entidadDTO, createdBy);
+		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+				entidadResponseDTO);
 
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", buildDummy());
 	}
@@ -128,10 +131,14 @@ public class EntidadController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		if (!ValidadorCatalogo.validateEntidadBaseDTOUpdt(entidadDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+		EntidadDTO entidadDTO = null;
+		EntidadResponseDTO entidadResponseDTO = null;
+		EntidadDTO entidadDTOResp = null;
+		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, null, new Date());
+		entidadDTOResp = entidadServiceImpl.update(entidadDTO, lastModifiedBy);
+		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
-				EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadServiceImpl.update(
-						EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, null, new Date()),
-						lastModifiedBy)));
+				entidadResponseDTO);
 
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa", buildDummy());
 	}
@@ -154,9 +161,10 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
 		EntidadResponseDTO entidadResponseDTO = null;
+		EntidadDTO entidadDTO = null;
 		try {
-			entidadResponseDTO = EntidadBuilder
-					.buildEntidadResponseDTOFromEntidadDTO((EntidadDTO) entidadServiceImpl.findById(idEntidad));
+			entidadDTO = (EntidadDTO) entidadServiceImpl.findById(idEntidad);
+			entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTO);
 		} catch (EmptyResultDataAccessException erdex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}

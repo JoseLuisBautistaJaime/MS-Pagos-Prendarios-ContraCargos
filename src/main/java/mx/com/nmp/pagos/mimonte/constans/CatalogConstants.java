@@ -66,6 +66,12 @@ public final class CatalogConstants {
 	public static final String CATALOG_ID_NOT_FOUND = "El id ingresado no fue encontrado";
 
 	/**
+	 * Mensaje que es mostrado cuando un nombre especificado como parametro ya sea para
+	 * una peticion no es encontrado
+	 */
+	public static final String CATALOG_NOMBRE_NOT_FOUND = "El id ingresado no fue encontrado";
+	
+	/**
 	 * Mensaje que es lanzado cuando se intenta dar de alta un codigo de estado de
 	 * cuenta con una entidad y categoria repetida
 	 */
@@ -94,6 +100,12 @@ public final class CatalogConstants {
 	 * busqueda especificado
 	 */
 	public static final String NO_FILTER_DEFINITION_WAS_FOUND = "No existe una definicion para el filtro especificado";
+
+	/**
+	 * Mensaje que es mostrado cuando se intenta insertar una entidad con un nombre
+	 * que ya existe
+	 */
+	public static final String ENTIDAD_NOMBRE_ALREADY_EXISTS = "Ya existe una entidad con ese nombre";
 
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no

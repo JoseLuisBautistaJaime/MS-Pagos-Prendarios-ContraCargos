@@ -4,7 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.builder;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -239,7 +241,8 @@ public abstract class ContactosBuilder {
 	 * @param contactoReqDTO
 	 * @return
 	 */
-	public static Contactos buildContactosFromContactoReqDTO(ContactoReqDTO contactoReqDTO, String lastModifiedBy, Date lastModifiedDate) {
+	public static Contactos buildContactosFromContactoReqDTO(ContactoReqDTO contactoReqDTO, String lastModifiedBy,
+			Date lastModifiedDate) {
 		Contactos contacto = null;
 		if (null != contactoReqDTO) {
 			contacto = new Contactos();
@@ -260,7 +263,8 @@ public abstract class ContactosBuilder {
 	 * @param contactoReqDTOSet
 	 * @return
 	 */
-	public static Set<Contactos> buildContactosSetFromContactoReqDTOSet(Set<ContactoReqDTO> contactoReqDTOSet, String lastModifiedBy, Date lastModifiedDate) {
+	public static Set<Contactos> buildContactosSetFromContactoReqDTOSet(Set<ContactoReqDTO> contactoReqDTOSet,
+			String lastModifiedBy, Date lastModifiedDate) {
 		Set<Contactos> contactosSet = null;
 		if (null != contactoReqDTOSet) {
 			contactosSet = new TreeSet<>();
@@ -306,6 +310,41 @@ public abstract class ContactosBuilder {
 			}
 		}
 		return contactoReqDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo ContactoBaseDTO a partir de un entity de tipo
+	 * Contactos (solo setea el id)
+	 * 
+	 * @param contacto
+	 * @return
+	 */
+	public static ContactoBaseDTO buildContactoBaseDTOFromContactosOnlyIds(Contactos contacto) {
+		ContactoBaseDTO contactoBaseDTO = null;
+		if (null != contacto) {
+			contactoBaseDTO = new ContactoBaseDTO();
+			contactoBaseDTO.setId(contacto.getId());
+		}
+		return contactoBaseDTO;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo ContactoBaseDTO a partir de una lista
+	 * de entities de tipo Contactos (solo setea los ids)
+	 * 
+	 * @param contactosList
+	 * @return
+	 */
+	public static final List<ContactoBaseDTO> buildContactoBaseDTOListFromContactosListOnlyIds(
+			List<Contactos> contactosList) {
+		List<ContactoBaseDTO> contactoBaseDTOList = null;
+		if (null != contactosList && !contactosList.isEmpty()) {
+			contactoBaseDTOList = new ArrayList<>();
+			for (Contactos contactos : contactosList) {
+				contactoBaseDTOList.add(buildContactoBaseDTOFromContactosOnlyIds(contactos));
+			}
+		}
+		return contactoBaseDTOList;
 	}
 
 }
