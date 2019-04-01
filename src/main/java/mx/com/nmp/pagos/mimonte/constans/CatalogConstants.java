@@ -108,6 +108,16 @@ public final class CatalogConstants {
 	public static final String ENTIDAD_NOMBRE_ALREADY_EXISTS = "Ya existe una entidad con ese nombre";
 
 	/**
+	 * Mensaje que es mostrado cuando uno o mas ids de catalogo de cuentas que se intentan ingresar no existen
+	 */
+	public static final String ID_CUENTA_DOES_NOT_EXISTS = "Uno o mas ids de cuenta no existen";
+	
+	/**
+	 * Mensaje que es mostrado cuando uno o mas ids de catalogo de contactos que se intentan ingresar no existen
+	 */
+	public static final String ID_CONTACTO_DOES_NOT_EXISTS = "Uno o mas ids de cuenta no existen";
+	
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */
