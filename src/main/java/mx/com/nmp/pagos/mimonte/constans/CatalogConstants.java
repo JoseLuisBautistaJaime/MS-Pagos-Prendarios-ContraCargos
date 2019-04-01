@@ -100,6 +100,24 @@ public final class CatalogConstants {
 	 * busqueda especificado
 	 */
 	public static final String NO_FILTER_DEFINITION_WAS_FOUND = "No existe una definicion para el filtro especificado";
+	
+	/**
+	 * Mensaje que es mostrado cuando parametro ya sea para
+	 * una peticion GET o DELETE no es encontrado
+	 */
+	public static final String CATALOG_ID_AND_NAME_AND_EMAIL_NOT_FOUND = "No hay registros para los parametros ingresados.";
+	
+	/**
+	 * Mensaje que es mostrado cuando parametro ya sea para
+	 * una peticion GET o DELETE no es encontrado
+	 */
+	public static final String CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT = "No es el formato correcto para el correo electronico.";
+	
+	public static final String CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_EXISTS = "El correo electronico que desea guardar ya existe.";
+	
+	public static final String CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_NOT_EXISTS = "El correo electronico que desea guardar no existe.";
+	
+	public static final String CATALOG_THE_ID_TO_UPDATE_DOES_NOT_EXIST = "El id a actualizar no existe.";
 
 	/**
 	 * Mensaje que es mostrado cuando se intenta insertar una entidad con un nombre

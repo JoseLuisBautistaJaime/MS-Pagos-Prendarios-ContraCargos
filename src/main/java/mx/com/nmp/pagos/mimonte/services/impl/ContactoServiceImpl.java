@@ -4,15 +4,24 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
+import mx.com.nmp.pagos.mimonte.dao.TipoContactoRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
 /**
@@ -28,41 +37,98 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 	@Autowired
 	private ContactoRespository contactoRespository;
 
+	@Autowired
+	private TipoContactoRepository tipoContactoRepository;
+
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional
 	public <T extends AbstractCatalogoDTO> T save(ContactoBaseDTO e, String createdBy) {
+		if(!validaEmailExistente(e))
+			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_EXISTS);
 		if (null != e)
 			e.setCreatedBy(createdBy);
+		
 		return (T) ContactosBuilder.buildContactosDTOFromContactos(
 				contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTO(e)));
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T update(ContactoBaseDTO e, String lastModifiedBy) {
+		if(!validaEmailExistente(e))
+			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_NOT_EXISTS);
 		if (null != e)
-			e.setCreatedBy(lastModifiedBy);
-		return (T) ContactosBuilder.buildContactosDTOFromContactos(
-				contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTO(e)));
+			e.setLastModifiedBy(lastModifiedBy);
+		
+		
+		 Contactos contacto = contactoRespository.findById(e.getId()).isPresent()?contactoRespository.findById(e.getId()).get():null;
+		
+		if(contacto == null) {
+			
+			throw new CatalogoException(CatalogConstants.CATALOG_THE_ID_TO_UPDATE_DOES_NOT_EXIST);
+					
+		}else
+		
+			return (T) ContactosBuilder.buildContactosDTOFromContactos(
+					contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTOupdt(e)));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T findById(Long id) {
 		return contactoRespository.findById(id).isPresent()
-				? (T) ContactosBuilder.buildContactosDTOFromContactos(contactoRespository.findById(id).get())
+				? (T) ContactosBuilder.buildContactoRespDTOFromContactos(contactoRespository.findById(id).get())
 				: null;
 	}
 
 	@Override
 	public List<? extends AbstractCatalogoDTO> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ContactoRespDTO> lst = null;
+		lst = ContactosBuilder.buildContactoRespDTOListFromContactosList(contactoRespository.findAll());
+		return null != lst ? lst : new ArrayList<>();
 	}
 
 	@Override
-	public void deleteById(Long id) {
-		// TODO Auto-generated method stub
+	public void deleteById(Long id) throws EmptyResultDataAccessException {
+		contactoRespository.deleteById(id);
 	}
 
+	public List<ContactoRespDTO> findByIdTipoContacto(Long idTipoContacto) throws EmptyResultDataAccessException {
+		List<ContactoRespDTO> lst = null;
+		lst = ContactosBuilder
+				.buildContactoRespDTOListFromContactosList(contactoRespository.findByIdTipoContacto(idTipoContacto));
+		return null != lst ? lst : new ArrayList<>();
+	}
+
+	public List<ContactoRespDTO> findByIdTipoContactoAndNombreAndEmail(Long idTipoContacto, String nombre, String email)
+			throws EmptyResultDataAccessException {
+		List<ContactoRespDTO> lst = null;
+		lst = ContactosBuilder.buildContactoRespDTOListFromContactosList(
+				contactoRespository.findByIdTipoContactoOrNombreOrEmail(idTipoContacto, nombre, email));
+		return null != lst ? lst : new ArrayList<>();
+	}
+
+	public boolean validaEmailExistente(ContactoBaseDTO e) {
+		Contactos validaEmail = contactoRespository.findByEmail(e.getEmail());
+		if (e.getId() == null && null != validaEmail) {
+			if (!e.getEmail().equals(validaEmail.getEmail()))
+				return true;
+			else
+				return false;
+		} else {
+			if (null != validaEmail && e.getId() == validaEmail.getId())
+				return true;
+			else if (null != validaEmail && e.getId() != validaEmail.getId()
+					&& !e.getEmail().equals(validaEmail.getEmail()))
+				return true;
+			else if (null != validaEmail && e.getId() != validaEmail.getId()
+					&& e.getEmail().equals(validaEmail.getEmail()))
+				return false;
+			else
+				return true;
+		}
+
+	}
 }
