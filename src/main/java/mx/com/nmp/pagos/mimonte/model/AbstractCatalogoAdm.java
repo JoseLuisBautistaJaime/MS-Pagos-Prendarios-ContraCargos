@@ -22,7 +22,7 @@ import javax.persistence.MappedSuperclass;
  * @version 0.1
  */
 @MappedSuperclass
-public abstract class AbstractCatalogoAdm {
+public abstract class AbstractCatalogoAdm extends Updatable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,18 +31,6 @@ public abstract class AbstractCatalogoAdm {
 
 	@Column(name = "estatus")
 	protected Boolean estatus;
-
-	@Column(name = "created_date", updatable = false)
-	protected Date createdDate;
-
-	@Column(name = "last_modified_date")
-	protected Date lastModifiedDate;
-
-	@Column(name = "created_by", updatable = false)
-	protected String createdBy;
-
-	@Column(name = "last_modified_by")
-	protected String lastModifiedBy;
 
 	@Column(name = "description")
 	protected String description;
@@ -81,38 +69,6 @@ public abstract class AbstractCatalogoAdm {
 
 	public void setEstatus(Boolean estatus) {
 		this.estatus = estatus;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getLastModifiedBy() {
-		return lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	public String getDescription() {
