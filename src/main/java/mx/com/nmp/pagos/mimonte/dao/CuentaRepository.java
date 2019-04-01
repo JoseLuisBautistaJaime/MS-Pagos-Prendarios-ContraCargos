@@ -34,7 +34,7 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	@Query("SELECT cta FROM Cuenta cta JOIN Entidad ent WHERE ent.id = :idEntidad AND cta.estatus = true and ent.estatus = true")
+	@Query("SELECT cta FROM Cuenta cta INNER JOIN cta.entidades ent WHERE ent.id = :idEntidad AND cta.estatus = true and ent.estatus = true")
 	public List<Cuenta> findByEntidades_Id(@Param("idEntidad") final Long idEntidad)
 			throws EmptyResultDataAccessException;
 

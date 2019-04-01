@@ -114,13 +114,14 @@ public abstract class ValidadorCatalogo {
 				if (null == cuentaReqDTO.getId() || cuentaReqDTO.getId() <= 0) {
 					return false;
 				}
-				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
-					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
-							return false;
-					}
-				} else
-					return false;
+				// Afiliacion catalog is no used
+//				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
+//					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
+//						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
+//							return false;
+//					}
+//				} else
+//					return false;
 			}
 		} else
 			return false;
@@ -151,13 +152,14 @@ public abstract class ValidadorCatalogo {
 				if (null == cuentaReqDTO.getId() || cuentaReqDTO.getId() <= 0) {
 					return false;
 				}
-				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
-					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
-							return false;
-					}
-				} else
-					return false;
+				// Afiliacion catalog is not used
+//				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
+//					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
+//						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
+//							return false;
+//					}
+//				} else
+//					return false;
 			}
 		} else
 			return false;
