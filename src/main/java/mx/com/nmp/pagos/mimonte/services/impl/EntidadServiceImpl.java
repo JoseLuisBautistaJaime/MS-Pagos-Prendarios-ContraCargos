@@ -13,13 +13,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
+import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
 import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
+import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.model.Contactos;
+import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
-import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
+import mx.com.nmp.pagos.mimonte.services.EntidadService;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 
 /**
  * @name EntidadServiceImpl
@@ -32,7 +41,7 @@ import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
  * @version 0.1
  */
 @Service("entidadServiceImpl")
-public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
+public class EntidadServiceImpl implements EntidadService {
 
 	/**
 	 * Repository del catalogo Entidad
@@ -42,15 +51,54 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	private EntidadRepository entidadRepository;
 
 	/**
+	 * Repository del catalogo Cuenta
+	 */
+	@Autowired
+	@Qualifier("cuentaRepository")
+	private CuentaRepository cuentaRepository;
+
+	/**
+	 * Repository del catalogo Contacto
+	 */
+	@Autowired
+	@Qualifier("contactoRespository")
+	private ContactoRespository contactoRespository;
+
+	/**
 	 * Guarda una entidad
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T save(EntidadDTO e, String createdBy) {
+		List<Entidad> entidades = null;
+		// Se valida que el nombre de la entidad no exista
+		try {
+			entidades = entidadRepository.findByNombre(e.getNombre());
+		} catch (EmptyResultDataAccessException erdaex) {
+			// No action required here, application continues normally
+		}
+		// Se valida que los id's de las cuentas existan
+		List<Cuenta> cuentaList = cuentaRepository.findAll();
+		if (!ValidadorCatalogo.validateCuentasExists(e.getCuentas(),
+				CuentaBuilder.buildCuentaBaseDTOListFromCuentaList(cuentaList)))
+			throw new CatalogoException("");
+		// Se valida que los id's de los contactos existan
+		List<Contactos> contactosList = contactoRespository.findAll();
+		if (!ValidadorCatalogo.validateContactosExists(e.getContactos(),
+				ContactosBuilder.buildContactoBaseDTOListFromContactosListOnlyIds(contactosList)))
+			throw new CatalogoException("");
+
+		if (null == entidades || !entidades.isEmpty())
+			throw new CatalogoException(CatalogConstants.ENTIDAD_NOMBRE_ALREADY_EXISTS);
 		if (null != e)
 			e.setCreatedBy(createdBy);
-		return (T) EntidadBuilder
-				.buildEntidadDTOFromEntidad(entidadRepository.save(EntidadBuilder.buildEntidadFromEntidadDTO(e)));
+		Entidad entidad = null;
+		Entidad entidadResp = null;
+		EntidadDTO entidadDTO = null;
+		entidad = EntidadBuilder.buildEntidadFromEntidadDTO(e);
+		entidadResp = entidadRepository.save(entidad);
+		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp);
+		return (T) entidadDTO;
 	}
 
 	/**
@@ -61,8 +109,13 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e, String lastModifiedBy) {
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
-		return (T) EntidadBuilder
-				.buildEntidadDTOFromEntidad(entidadRepository.save(EntidadBuilder.buildEntidadFromEntidadDTO(e)));
+		Entidad entidad = null;
+		Entidad entidadResp = null;
+		EntidadDTO entidadDTO = null;
+		entidad = EntidadBuilder.buildEntidadFromEntidadDTO(e);
+		entidadResp = entidadRepository.save(entidad);
+		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp);
+		return (T) entidadDTO;
 	}
 
 	/**
@@ -71,8 +124,11 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T findById(Long id) throws EmptyResultDataAccessException {
-		return (T) EntidadBuilder.buildEntidadDTOFromEntidad(
-				entidadRepository.findById(id).isPresent() ? entidadRepository.findById(id).get() : null);
+		Entidad entidadResp = null;
+		EntidadDTO entidadDTO = null;
+		entidadResp = entidadRepository.findById(id).isPresent() ? entidadRepository.findById(id).get() : null;
+		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp);
+		return (T) entidadDTO;
 	}
 
 	/**
@@ -83,10 +139,14 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
+	@Override
 	public List<EntidadResponseDTO> findByNombreAndEstatus(final String nombre, final Boolean estatus)
 			throws EmptyResultDataAccessException {
-		return EntidadBuilder
-				.buildEntidadResponseDTOListFromEntidadList(entidadRepository.findByNombreAndEstatus(nombre, estatus));
+		List<Entidad> entidadList = null;
+		List<EntidadResponseDTO> entidadResponseDTOList = null;
+		entidadList = entidadRepository.findByNombreAndEstatus(nombre, estatus);
+		entidadResponseDTOList = EntidadBuilder.buildEntidadResponseDTOListFromEntidadList(entidadList);
+		return entidadResponseDTOList;
 	}
 
 	/**
@@ -94,8 +154,11 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	 */
 	@Override
 	public List<? extends AbstractCatalogoDTO> findAll() {
-		return (List<EntidadDTO>) EntidadBuilder
-				.buildEntidadDTOListFromEntidadList((List<Entidad>) entidadRepository.findAll());
+		List<Entidad> entidadList = null;
+		List<EntidadDTO> entidadDTOList = null;
+		entidadList = (List<Entidad>) entidadRepository.findAll();
+		entidadDTOList = EntidadBuilder.buildEntidadDTOListFromEntidadList(entidadList);
+		return (List<EntidadDTO>) entidadDTOList;
 	}
 
 	/**
@@ -113,31 +176,10 @@ public class EntidadServiceImpl implements CatalogoAdmService<EntidadDTO> {
 	 * @param id
 	 * @throws EmptyResultDataAccessException
 	 */
+	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateEstatusById(final Boolean estatus, final Long id) throws EmptyResultDataAccessException {
 		entidadRepository.setEstatusById(estatus, id);
-	}
-
-	/**
-	 * Regresa una lista de entidades por estatus
-	 * 
-	 * @param estatus
-	 * @return
-	 * @throws EmptyResultDataAccessException
-	 */
-	public List<EntidadResponseDTO> findByEstatus(final Boolean estatus) throws EmptyResultDataAccessException {
-		return EntidadBuilder.buildEntidadResponseDTOListFromEntidadList(entidadRepository.findByEstatus(estatus));
-	}
-
-	/**
-	 * Regresa una lista de entidades por nombre
-	 * 
-	 * @param nombre
-	 * @return
-	 * @throws EmptyResultDataAccessException
-	 */
-	public List<EntidadResponseDTO> findByNombre(final String nombre) throws EmptyResultDataAccessException {
-		return EntidadBuilder.buildEntidadResponseDTOListFromEntidadList(entidadRepository.findByNombre(nombre));
 	}
 
 }

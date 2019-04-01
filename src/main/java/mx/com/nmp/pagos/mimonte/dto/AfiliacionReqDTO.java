@@ -61,7 +61,7 @@ public class AfiliacionReqDTO implements Comparable<AfiliacionReqDTO> {
 
 	@Override
 	public int compareTo(AfiliacionReqDTO o) {
-		return o.numero.compareTo(this.numero);
+		return o.id.compareTo(this.id);
 	}
 
 }

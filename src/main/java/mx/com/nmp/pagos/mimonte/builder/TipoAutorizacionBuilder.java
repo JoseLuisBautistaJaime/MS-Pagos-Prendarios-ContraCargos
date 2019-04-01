@@ -1,9 +1,14 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.builder;
 
 import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.model.TipoAutorizacion;
 
 /**
+ * @name TipoAutorizacionBuilder
  * @description Builder para la entidad Tipo de afiliacion
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 31/01/2019 16:49 hrs.

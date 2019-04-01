@@ -4,11 +4,20 @@
  */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTO;
+<<<<<<< HEAD
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
+=======
+import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
+>>>>>>> c2ca6a9c48ae01270f0a3f5a9b1bf7d0a1588195
 import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 
@@ -181,6 +190,63 @@ public abstract class ValidadorCatalogo {
 				return false;
 		} else
 			return false;
+		return true;
+	}
+
+	/**
+	 * Valida si los ids de un Set de objetos de tipo CuentaReqDTO estan contenidos
+	 * en una lista de objetos de tipo CuentaBaseDTO
+	 * 
+	 * @param cuentasOrigen
+	 * @param cuentasTarget
+	 * @return
+	 */
+	public static boolean validateCuentasExists(Set<CuentaReqDTO> cuentasOrigen, List<CuentaBaseDTO> cuentasTarget) {
+		List<Long> list = null;
+		if (null == cuentasOrigen || !cuentasOrigen.isEmpty())
+			return true;
+		else {
+			list = new ArrayList<>();
+			for (CuentaReqDTO cuentaReqDTO : cuentasOrigen)
+				list.add(cuentaReqDTO.getId());
+		}
+		if (null != cuentasTarget && !cuentasTarget.isEmpty()) {
+			for (CuentaBaseDTO cuentaBaseDTO : cuentasTarget) {
+				if (!list.contains(cuentaBaseDTO.getId())) {
+					return false;
+				}
+			}
+		} else
+			return true;
+		return true;
+	}
+
+	/**
+	 * Valida si los ids de una lista de objetos de tipo ContactoReqDTO estan
+	 * contenidos en unalista de objetos de tipo ContactoBaseDTO
+	 * 
+	 * @param contactosOrigen
+	 * @param contactosTarget
+	 * @return
+	 */
+	public static boolean validateContactosExists(Set<ContactoReqDTO> contactosOrigen,
+			List<ContactoBaseDTO> contactosTarget) {
+		List<Long> list = null;
+		if (null == contactosOrigen || !contactosOrigen.isEmpty())
+			return true;
+		else {
+			list = new ArrayList<>();
+			for (ContactoReqDTO contactoReqDTO : contactosOrigen)
+				list.add(contactoReqDTO.getId());
+		}
+		if (null != contactosTarget && !contactosTarget.isEmpty()) {
+			for (ContactoBaseDTO contactoBaseDTO : contactosTarget) {
+				if (!list.contains(contactoBaseDTO.getId())) {
+					return false;
+				}
+			}
+		} else
+			return true;
 		return true;
 	}
 

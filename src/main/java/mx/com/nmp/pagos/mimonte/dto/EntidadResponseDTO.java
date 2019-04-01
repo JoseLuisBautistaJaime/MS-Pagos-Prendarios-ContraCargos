@@ -24,6 +24,8 @@ public class EntidadResponseDTO implements Comparable<EntidadResponseDTO> {
 	private Boolean estatus;
 	private Date fechaCreacion;
 	private String creadoPor;
+	private Date fechaUltimaModificacion;
+	private String ultimoUsuarioModificador;
 	private Set<CuentaEntDTO> cuentas;
 	private Set<ContactoEntDTO> contactos;
 
@@ -108,6 +110,22 @@ public class EntidadResponseDTO implements Comparable<EntidadResponseDTO> {
 		this.contactos = contactos;
 	}
 
+	public Date getFechaUltimaModificacion() {
+		return fechaUltimaModificacion;
+	}
+
+	public void setFechaUltimaModificacion(Date fechaUltimaModificacion) {
+		this.fechaUltimaModificacion = fechaUltimaModificacion;
+	}
+
+	public String getUltimoUsuarioModificador() {
+		return ultimoUsuarioModificador;
+	}
+
+	public void setUltimoUsuarioModificador(String ultimoUsuarioModificador) {
+		this.ultimoUsuarioModificador = ultimoUsuarioModificador;
+	}
+
 	@Override
 	public int compareTo(EntidadResponseDTO arg0) {
 		return arg0.getNombre().compareTo(this.nombre);
@@ -116,7 +134,9 @@ public class EntidadResponseDTO implements Comparable<EntidadResponseDTO> {
 	@Override
 	public String toString() {
 		return "EntidadResponseDTO [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", estatus="
-				+ estatus + ", cuentas=" + cuentas + ", contactos=" + contactos + "]";
+				+ estatus + ", fechaCreacion=" + fechaCreacion + ", creadoPor=" + creadoPor
+				+ ", fechaUltimaModificacion=" + fechaUltimaModificacion + ", ultimoUsuarioModificador="
+				+ ultimoUsuarioModificador + ", cuentas=" + cuentas + ", contactos=" + contactos + "]";
 	}
 
 }

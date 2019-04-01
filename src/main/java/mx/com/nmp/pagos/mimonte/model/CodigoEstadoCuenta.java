@@ -34,7 +34,7 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 	@JoinColumn(name = "id_entidad")
 	private Entidad entidad;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
 

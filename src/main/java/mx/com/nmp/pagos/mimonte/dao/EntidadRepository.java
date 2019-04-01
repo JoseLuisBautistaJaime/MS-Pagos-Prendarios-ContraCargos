@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,9 +17,9 @@ import org.springframework.stereotype.Repository;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 
 /**
- * @name EntidadRepository @description Interface de capa DAO que sirve para
- *       realizar operaciones de base de datos relacionadas con el catalogo
- *       Entidad
+ * @name EntidadRepository
+ * @description Interface de capa DAO que sirve para realizar operaciones de
+ *              base de datos relacionadas con el catalogo Entidad
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 06/03/2019 12:35 hrs.
@@ -55,7 +56,8 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	public List<Entidad> findByNombre(final String nombre) throws EmptyResultDataAccessException;
+	@Query("SELECT ent FROM Entidad ent WHERE ent.nombre = :nombre AND ent.estatus = true")
+	public List<Entidad> findByNombre(@Param("nombre") final String nombre) throws EmptyResultDataAccessException;
 
 	/**
 	 * Actualiza el estatus de un catalogo entidad por su id
@@ -68,5 +70,11 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	@Query("UPDATE Entidad ent set ent.estatus = :estatus WHERE ent.id = :id")
 	public void setEstatusById(@Param("estatus") final Boolean estatus, @Param("id") final Long id)
 			throws EmptyResultDataAccessException;
+
+	/**
+	 * Regresa una entidad por id
+	 */
+	@Query("SELECT ent FROM Entidad ent WHERE ent.id = :id AND ent.estatus = true")
+	public Optional<Entidad> findById(@Param("id") final Long id);
 
 }

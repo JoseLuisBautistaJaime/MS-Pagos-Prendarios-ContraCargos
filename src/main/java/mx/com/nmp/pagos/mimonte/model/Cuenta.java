@@ -95,7 +95,7 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 
 	@Override
 	public int compareTo(Cuenta arg0) {
-		return arg0.getId().compareTo(this.getId());
+		return arg0.id.compareTo(this.id);
 	}
 
 }

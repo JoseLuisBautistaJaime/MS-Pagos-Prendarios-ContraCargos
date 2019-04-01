@@ -108,6 +108,9 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 		return CuentaBuilder.buildCuentaEntDTOListFromCuentaList(cuentaRepository.findByEntidades_Id(idEntidad));
 	}
 
+	/**
+	 * Regresa todas las cuentas
+	 */
 	@Override
 	public List<? extends AbstractCatalogoDTO> findAll() {
 		return CuentaBuilder.buildCuentaBaseDTOListFromCuentaList(cuentaRepository.findAll());

@@ -74,7 +74,7 @@ public class CuentaReqDTO implements Comparable<CuentaReqDTO> {
 
 	@Override
 	public int compareTo(CuentaReqDTO o) {
-		return o.numero.compareTo(this.numero);
+		return o.id.compareTo(this.id);
 	}
 
 }
