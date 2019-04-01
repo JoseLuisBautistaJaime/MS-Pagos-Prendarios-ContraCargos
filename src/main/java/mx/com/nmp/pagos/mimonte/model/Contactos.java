@@ -53,7 +53,7 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable, Comp
 	@Column(name = "email")
 	private String email;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_tipo_contacto")
 	private TipoContacto tipoContacto;
 

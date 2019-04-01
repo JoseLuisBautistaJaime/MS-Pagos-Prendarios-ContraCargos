@@ -1,6 +1,11 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.builder;
 
 import mx.com.nmp.pagos.mimonte.dto.TipoContactoDTO;
+import mx.com.nmp.pagos.mimonte.dto.TipoContactoReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 
@@ -14,16 +19,23 @@ import mx.com.nmp.pagos.mimonte.model.TipoContacto;
  */
 public abstract class TipoContactoBuilder {
 
+	/**
+	 * 
+	 */
 	private TipoContactoBuilder() {
 		super();
 	}
 
+	/**
+	 * Construye una entidad de tipo TipoContacto a partir de un objeto de tipo
+	 * TipoContactoDTO
+	 * 
+	 * @param tipoContactoDTO
+	 * @return tipoContacto
+	 */
 	public static TipoContacto builTipoContactoFromContactoBaseDTO(TipoContactoDTO tipoContactoDTO) {
-
 		TipoContacto tipoContacto = null;
-
 		if (tipoContactoDTO != null) {
-
 			tipoContacto = new TipoContacto();
 			tipoContacto.setId(tipoContactoDTO.getId());
 			tipoContacto.setDescription(tipoContactoDTO.getDescription());
@@ -33,17 +45,19 @@ public abstract class TipoContactoBuilder {
 			tipoContacto.setCreatedDate(tipoContactoDTO.getCreatedDate());
 			tipoContacto.setLastModifiedBy(tipoContactoDTO.getLastModifiedBy());
 		}
-
 		return tipoContacto;
-
 	}
 
+	/**
+	 * Construye un objeto de tipo TipoContactoDTO a partir de una entidad de tipo
+	 * TipoContacto
+	 * 
+	 * @param tipoContacto
+	 * @return tipoContactoDTO
+	 */
 	public static TipoContactoDTO builTipoContactoBaseDTOFromContacto(TipoContacto tipoContacto) {
-
 		TipoContactoDTO tipoContactoDTO = null;
-
 		if (tipoContacto != null) {
-
 			tipoContactoDTO = new TipoContactoDTO();
 			tipoContactoDTO.setId(tipoContacto.getId());
 			tipoContactoDTO.setDescription(tipoContacto.getDescription());
@@ -53,24 +67,91 @@ public abstract class TipoContactoBuilder {
 			tipoContactoDTO.setCreatedDate(tipoContacto.getCreatedDate());
 			tipoContactoDTO.setLastModifiedBy(tipoContacto.getLastModifiedBy());
 		}
-
 		return tipoContactoDTO;
-
 	}
 
+	/**
+	 * Construye un objeto de tipo TipoContactoDTO a partir de una entidad de tipo
+	 * TipoContacto
+	 * 
+	 * @param tipoContacto
+	 * @return tipoContactoResDTO
+	 */
+	public static TipoContactoDTO buildTipoContactoResDTOFromTipoContacto(TipoContacto tipoContacto) {
+		TipoContactoDTO tipoContactoResDTO = null;
+		if (tipoContacto != null) {
+			tipoContactoResDTO = new TipoContactoDTO();
+			tipoContactoResDTO.setId(tipoContacto.getId());
+			tipoContactoResDTO.setDescription(tipoContacto.getDescription());
+		}
+		return tipoContactoResDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo TipoContactoRespDTO a partir de un objeto de tipo
+	 * TipoContactoDTO
+	 * 
+	 * @param tipoContactoDTO
+	 * @return tipoContactoRespDTO
+	 */
 	public static TipoContactoRespDTO builTipoTipoContactoRespDTOFromTipoContactoDTO(TipoContactoDTO tipoContactoDTO) {
-
 		TipoContactoRespDTO tipoContactoRespDTO = null;
-
 		if (tipoContactoDTO != null) {
-
 			tipoContactoRespDTO = new TipoContactoRespDTO();
-			tipoContactoRespDTO.setDescripcion(tipoContactoDTO.getDescription());
+			tipoContactoRespDTO.setDescription(tipoContactoDTO.getDescription());
 			tipoContactoRespDTO.setId(tipoContactoDTO.getId());
 		}
-
 		return tipoContactoRespDTO;
+	}
 
+	/**
+	 * Construye un objeto de tipo TipoContactoRespDTO a partir de una entidad de
+	 * tipo TipoContacto
+	 * 
+	 * @param tipoContacto
+	 * @return tipoContactoRespDTO
+	 */
+	public static TipoContactoRespDTO buildTipoContactoRespDTOFormTipoContacto(TipoContacto tipoContacto) {
+		TipoContactoRespDTO tipoContactoRespDTO = null;
+		if (tipoContacto != null) {
+			tipoContactoRespDTO = new TipoContactoRespDTO();
+			tipoContactoRespDTO.setId(tipoContacto.getId());
+			tipoContactoRespDTO.setDescription(tipoContacto.getDescription());
+		}
+		return tipoContactoRespDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo TipoContactoDTO a partir de un objeto de tipo
+	 * TipoContactoRespDTO
+	 * 
+	 * @param tipoContactoRespDTO
+	 * @return tipoContacto
+	 */
+	public static TipoContactoDTO buildTipoContactoDTOFromTipoContactoRespDTO(TipoContactoRespDTO tipoContactoRespDTO) {
+		TipoContactoDTO tipoContacto = null;
+		if (tipoContactoRespDTO != null) {
+			tipoContacto = new TipoContactoDTO();
+			tipoContacto.setId(tipoContactoRespDTO.getId());
+			tipoContacto.setDescription(tipoContactoRespDTO.getDescription());
+		}
+		return tipoContacto;
+	}
+
+	/**
+	 * Construye un objeto de tipo TipoContactoDTO a partir de un objeto de tipo
+	 * TipoContactoReqDTO
+	 * 
+	 * @param tipoContactoReqDTO
+	 * @return tipoContactoDTO
+	 */
+	public static TipoContactoDTO buildTipoContactoDTOFromTipoContactoReqDTO(TipoContactoReqDTO tipoContactoReqDTO) {
+		TipoContactoDTO tipoContactoDTO = null;
+		if (tipoContactoReqDTO != null) {
+			tipoContactoDTO = new TipoContactoDTO();
+			tipoContactoDTO.setId(tipoContactoReqDTO.getId());
+		}
+		return tipoContactoDTO;
 	}
 
 }

@@ -5,14 +5,17 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,12 +32,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
-import mx.com.nmp.pagos.mimonte.dto.TipoContactoRespDTO;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.services.impl.ContactoServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorGenerico;
 
 /**
  * Nombre: CatalogoController Descripcion: Controllador que expone los servicios
@@ -79,33 +85,17 @@ public class ContactosController {
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response add(@RequestBody ContactoReqUpdateDTO contacto,
+	public Response saveContacto(@RequestBody ContactoReqUpdateDTO contacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-
-		// ContactoRespDTO tipoContactoRespDTOReal =
-		// (ContactoRespDTO)ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(
-		// contactoServiceImpl.save(ContactosBuilder.buildContactoBaseDTOFromContactoRequestDTO(contacto),
-		// createdBy));
-
-		// Dummy
-
-		TipoContactoRespDTO tipoContacto = new TipoContactoRespDTO();
-		tipoContacto.setDescripcion("contacto");
-		tipoContacto.setId(1L);
-
-		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
-		contactoResponseDTO.setEmail("miemail@email.com");
-		contactoResponseDTO.setDescripcion("contacto");
-		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1234L);
-		contactoResponseDTO.setNombre("micontacto");
-		contactoResponseDTO.setTipoContactoResDTO(tipoContacto);
-
+		if(!ValidadorCatalogo.validaContactoReqSaveDTO(contacto))
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+		if(!ValidadorGenerico.validateEmail(contacto.getEmail()))
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-				contactoResponseDTO);
-
-		// End Dummy
-
+				(ContactoRespDTO) ContactosBuilder
+				.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.save(
+						ContactosBuilder.buildContactoRespDTOFromContactoReqUpdateDTO(contacto, new Date(), null),
+						createdBy)));
 	}
 
 	@ResponseBody
@@ -119,54 +109,34 @@ public class ContactosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response updateContacto(@RequestBody ContactoReqUpdateDTO contacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-		// Dummy
-
-		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
-		tipoContactoRespDTO.setDescripcion("contacto");
-		tipoContactoRespDTO.setId(1L);
-
-		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
-		contactoResponseDTO.setEmail("miemail@email.com");
-		contactoResponseDTO.setDescripcion("contacto");
-		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1234L);
-		contactoResponseDTO.setNombre("micontacto");
-		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
-				contactoResponseDTO);
-
-		// End Dummy
-
+		if(!ValidadorCatalogo.validaContactoReqUpdateDTO(contacto))
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+		if(!ValidadorGenerico.validateEmail(contacto.getEmail()))
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+				(ContactoRespDTO) ContactosBuilder
+				.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.update(
+						ContactosBuilder.buildContactoRespDTOFromContactoReqUpdateDTO(contacto, new Date(), null),
+						lastModifiedBy)));
 	}
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/catalogos/contactos/{idContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "PUT", value = "Elimina un contacto.", tags = { "Contactos" })
+	@DeleteMapping(value = "/catalogos/contactos/{idContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "DELETE", value = "Elimina un contacto.", tags = { "Contactos" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response updateEstatus(@PathVariable("idContacto") Long idContacto,
+	public Response DeleteContacto(@PathVariable("idContacto") Long idContacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-		// Dummy
-
-		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
-		tipoContactoRespDTO.setDescripcion("contacto");
-		tipoContactoRespDTO.setId(1L);
-
-		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
-		contactoResponseDTO.setEmail("miemail@email.com");
-		contactoResponseDTO.setDescripcion("contacto");
-		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1234L);
-		contactoResponseDTO.setNombre("micontacto");
-		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Eliminacion correcta", null);
-
-		// End Dummy
-
+		try {
+			contactoServiceImpl.deleteById(idContacto);
+		} catch (EmptyResultDataAccessException eex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
+				null);
 	}
 
 	@ResponseBody
@@ -179,26 +149,14 @@ public class ContactosController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getIdContacto(@PathVariable(value = "idContacto", required = true) Long idContacto) {
-
-		// Dummy
-
-		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
-		tipoContactoRespDTO.setDescripcion("contacto");
-		tipoContactoRespDTO.setId(1L);
-
-		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
-		contactoResponseDTO.setEmail("miemail@email.com");
-		contactoResponseDTO.setDescripcion("contacto");
-		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1234L);
-		contactoResponseDTO.setNombre("micontacto");
-		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
-
-		// End Dummy
-
+		ContactoRespDTO contactoRespDTO = null;
+		try {
+			contactoRespDTO = contactoServiceImpl.findById(idContacto);
+		} catch (EmptyResultDataAccessException eex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-				contactoResponseDTO);
-
+				contactoRespDTO);
 	}
 
 	@ResponseBody
@@ -211,138 +169,15 @@ public class ContactosController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getIdTipoContacto(@PathVariable(value = "idTipoContacto", required = true) Long idTipoContacto) {
-
-		// Dummy
-
-		List<ContactoRespDTO> contactosRespList = new ArrayList<ContactoRespDTO>();
-
-		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
-		tipoContactoRespDTO.setDescripcion("contacto midas");
-		tipoContactoRespDTO.setId(1L);
-		tipoContactoRespDTO.setDescripcion("contacto midas");
-		tipoContactoRespDTO.setId(1L);
-		tipoContactoRespDTO.setDescripcion("contacto midas");
-		tipoContactoRespDTO.setId(1L);
-
-		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
-		contactoResponseDTO.setEmail("miemail@email.com");
-		contactoResponseDTO.setDescripcion("Contacto General");
-		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1L);
-		contactoResponseDTO.setNombre("micontacto");
-		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
-
-		ContactoRespDTO contactoResponseDTO2 = new ContactoRespDTO();
-		contactoResponseDTO2.setEmail("mojito@gmail.com");
-		contactoResponseDTO2.setDescripcion("Contacto principal");
-		contactoResponseDTO2.setEstatus(true);
-		contactoResponseDTO2.setId(2L);
-		contactoResponseDTO2.setNombre("Mario Juan Perez");
-		contactoResponseDTO2.setTipoContactoResDTO(tipoContactoRespDTO);
-
-		ContactoRespDTO contactoResponseDTO3 = new ContactoRespDTO();
-		contactoResponseDTO3.setEmail("josua@citibanamex.com");
-		contactoResponseDTO3.setDescripcion("Contacto Asesor");
-		contactoResponseDTO3.setEstatus(true);
-		contactoResponseDTO3.setId(3L);
-		contactoResponseDTO3.setNombre("Josua Jacob Torres");
-		contactoResponseDTO3.setTipoContactoResDTO(tipoContactoRespDTO);
-
-		contactosRespList.add(contactoResponseDTO);
-		contactosRespList.add(contactoResponseDTO2);
-		contactosRespList.add(contactoResponseDTO3);
-
-		// End Dummy
-
+		List<ContactoRespDTO> lst = null;
+		try {
+			lst = contactoServiceImpl.findByIdTipoContacto(idTipoContacto);
+		} catch (EmptyResultDataAccessException eex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-				contactosRespList);
-
+				null != lst ? lst : new ArrayList<>());
 	}
-
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	@GetMapping(value = "/catalogos/contactos/atributo2/{nombre}", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@ApiOperation(httpMethod = "GET", value = "Regresa la información de los contactos registrados con respecto al parámetro del nombre.", tags = {
-//			"Contactos" })
-//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
-//			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
-//			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
-//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-//	public Response getNombreContacto(@PathVariable(value = "nombre", required = true) String nombre) {
-//
-//		// Dummy
-//
-//		List<ContactoRespDTO> contactosRespList = new ArrayList<ContactoRespDTO>();
-//
-//		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
-//		tipoContactoRespDTO.setDescripcion("contacto");
-//		tipoContactoRespDTO.setId(1L);
-//
-//		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
-//		contactoResponseDTO.setEmail("miemail@email.com");
-//		contactoResponseDTO.setDescripcion("contacto");
-//		contactoResponseDTO.setEstatus(true);
-//		contactoResponseDTO.setId(1L);
-//		contactoResponseDTO.setNombre("micontacto");
-//		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
-//
-//		ContactoRespDTO contactoResponseDTO2 = new ContactoRespDTO();
-//		contactoResponseDTO2.setEmail("mojito@gmail.com");
-//		contactoResponseDTO2.setDescripcion("Contacto principal");
-//		contactoResponseDTO2.setEstatus(true);
-//		contactoResponseDTO2.setId(2L);
-//		contactoResponseDTO2.setNombre("Mario Juan Perez");
-//		contactoResponseDTO2.setTipoContactoResDTO(tipoContactoRespDTO);
-//
-//		ContactoRespDTO contactoResponseDTO3 = new ContactoRespDTO();
-//		contactoResponseDTO3.setEmail("josua@citibanamex.com");
-//		contactoResponseDTO3.setDescripcion("Contacto Asesor");
-//		contactoResponseDTO3.setEstatus(true);
-//		contactoResponseDTO3.setId(3L);
-//		contactoResponseDTO3.setNombre("Josua Jacob Torres");
-//
-//		contactosRespList.add(contactoResponseDTO);
-//		contactosRespList.add(contactoResponseDTO2);
-//		contactosRespList.add(contactoResponseDTO3);
-//
-//		// End Dummy
-//
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-//				contactosRespList);
-//
-//	}
-
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	@GetMapping(value = "/catalogos/contactos/atributo/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@ApiOperation(httpMethod = "GET", value = "Regresa la información de los contactos registrados con respecto al parámetro del email.", tags = {
-//			"Contactos" })
-//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
-//			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
-//			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
-//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-//	public Response getEmailContacto(@PathVariable(value = "email", required = true) String email) {
-//
-//		// Dummy
-//
-//		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
-//		tipoContactoRespDTO.setDescripcion("contacto");
-//		tipoContactoRespDTO.setId(1L);
-//
-//		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
-//		contactoResponseDTO.setEmail("miemail@email.com");
-//		contactoResponseDTO.setDescripcion("contacto");
-//		contactoResponseDTO.setEstatus(true);
-//		contactoResponseDTO.setId(1L);
-//		contactoResponseDTO.setNombre("micontacto");
-//		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
-//
-//		// End Dummy
-//
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-//				contactoResponseDTO);
-//
-//	}
 
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
@@ -356,34 +191,14 @@ public class ContactosController {
 	public Response getNombreEmailContacto(@RequestParam(name = "nombre", required = false) String nombre,
 			@RequestParam(name = "email", required = false) String email,
 			@PathVariable(name = "idTipoContacto", required = true) Long idTipoContacto) {
-
-		// Dummy
-		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
-		tipoContactoRespDTO.setDescripcion("contacto");
-		tipoContactoRespDTO.setId(1L);
-		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
-		contactoResponseDTO.setEmail("miemail@email.com");
-		contactoResponseDTO.setDescripcion("contacto");
-		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1L);
-		contactoResponseDTO.setNombre("micontacto");
-		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
-
-		ContactoRespDTO contactoResponseDTO2 = new ContactoRespDTO();
-		contactoResponseDTO2.setEmail("keepgoing@banorte.com");
-		contactoResponseDTO2.setDescripcion("Banco Banorte");
-		contactoResponseDTO2.setEstatus(true);
-		contactoResponseDTO2.setId(2L);
-		contactoResponseDTO2.setNombre("Banorte");
-		contactoResponseDTO2.setTipoContactoResDTO(tipoContactoRespDTO);
-
-		List<ContactoRespDTO> lst = new ArrayList<>();
-		lst.add(contactoResponseDTO);
-		lst.add(contactoResponseDTO2);
-		// End Dummy
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
-
+		List<ContactoRespDTO> lst = null;
+		try {
+			lst = contactoServiceImpl.findByIdTipoContactoAndNombreAndEmail(idTipoContacto, nombre, email);
+		} catch (EmptyResultDataAccessException eex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_AND_NAME_AND_EMAIL_NOT_FOUND);
+		}
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+				null != lst ? lst : new ArrayList<>());
 	}
 
 	@ResponseBody
@@ -396,47 +211,12 @@ public class ContactosController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getAll() {
-		// Dummy
-
-		List<ContactoRespDTO> contactosRespList = new ArrayList<ContactoRespDTO>();
-
-		TipoContactoRespDTO tipoContactoRespDTO = new TipoContactoRespDTO();
-		tipoContactoRespDTO.setDescripcion("contacto");
-		tipoContactoRespDTO.setId(1L);
-
-		ContactoRespDTO contactoResponseDTO = new ContactoRespDTO();
-		contactoResponseDTO.setEmail("miemail@email.com");
-		contactoResponseDTO.setDescripcion("contacto");
-		contactoResponseDTO.setEstatus(true);
-		contactoResponseDTO.setId(1L);
-		contactoResponseDTO.setNombre("micontacto");
-		contactoResponseDTO.setTipoContactoResDTO(tipoContactoRespDTO);
-
-		ContactoRespDTO contactoResponseDTO2 = new ContactoRespDTO();
-		contactoResponseDTO2.setEmail("mojito@gmail.com");
-		contactoResponseDTO2.setDescripcion("Contacto principal");
-		contactoResponseDTO2.setEstatus(true);
-		contactoResponseDTO2.setId(2L);
-		contactoResponseDTO2.setNombre("Mario Juan Perez");
-		contactoResponseDTO2.setTipoContactoResDTO(tipoContactoRespDTO);
-
-		ContactoRespDTO contactoResponseDTO3 = new ContactoRespDTO();
-		contactoResponseDTO3.setEmail("josua@citibanamex.com");
-		contactoResponseDTO3.setDescripcion("Contacto Asesor");
-		contactoResponseDTO3.setEstatus(true);
-		contactoResponseDTO3.setId(3L);
-		contactoResponseDTO3.setNombre("Josua Jacob Torres");
-		contactoResponseDTO3.setTipoContactoResDTO(tipoContactoRespDTO);
-
-		contactosRespList.add(contactoResponseDTO);
-		contactosRespList.add(contactoResponseDTO2);
-		contactosRespList.add(contactoResponseDTO3);
-
-		// End Dummy
+		@SuppressWarnings("unchecked")
+		List<ContactoRespDTO> lst = ContactosBuilder
+				.buildContactoBaseDTOListFromContactoRespDTOList((List<ContactoRespDTO>) contactoServiceImpl.findAll());
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-				contactosRespList);
-
+				null != lst ? lst : new ArrayList<>());
 	}
 
 }

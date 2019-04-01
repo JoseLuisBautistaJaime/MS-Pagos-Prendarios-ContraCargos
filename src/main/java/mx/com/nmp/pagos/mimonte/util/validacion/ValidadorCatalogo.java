@@ -8,6 +8,7 @@ import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 
@@ -152,6 +153,32 @@ public abstract class ValidadorCatalogo {
 				} else
 					return false;
 			}
+		} else
+			return false;
+		return true;
+	}
+	
+	public static boolean validaContactoReqSaveDTO(ContactoReqUpdateDTO contactoReqUpdateDTO) {
+		if(contactoReqUpdateDTO == null || contactoReqUpdateDTO.getDescripcion() == null || contactoReqUpdateDTO.getEmail() == null ||
+				contactoReqUpdateDTO.getNombre() == null || contactoReqUpdateDTO.getTipoContacto() == null)
+			return false;
+		if(contactoReqUpdateDTO.getTipoContacto() != null ) {
+			if(contactoReqUpdateDTO.getTipoContacto() == null || contactoReqUpdateDTO.getTipoContacto().getId() <=0)
+				return false;
+		} else
+			return false;
+		return true;
+	}
+	
+	public static boolean validaContactoReqUpdateDTO(ContactoReqUpdateDTO contactoReqUpdateDTO) {
+		if(contactoReqUpdateDTO == null || contactoReqUpdateDTO.getEstatus() == null || 
+				contactoReqUpdateDTO.getDescripcion() == null || contactoReqUpdateDTO.getEmail() == null ||
+				contactoReqUpdateDTO.getId() <= 0 || contactoReqUpdateDTO.getNombre() == null || 
+				contactoReqUpdateDTO.getTipoContacto() == null)
+			return false;
+		if(contactoReqUpdateDTO.getTipoContacto() != null ) {
+			if(contactoReqUpdateDTO.getTipoContacto() == null || contactoReqUpdateDTO.getTipoContacto().getId() <=0)
+				return false;
 		} else
 			return false;
 		return true;

@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.util.Date;
+
 /**
  * Nombre: ContactoRespDTO Descripcion: Clase que encapsula la informacion
  * perteneciente a los contactos.
@@ -12,25 +14,30 @@ package mx.com.nmp.pagos.mimonte.dto;
  * @creationDate 06/03/2019 16:06 hrs.
  * @version 0.1
  */
-public class ContactoRespDTO extends AbstractCatDTO {
+public class ContactoRespDTO extends AbstractCatalogoDTO {
+	
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 4019940557415143754L;
 
 	private String nombre;
-
 	private String email;
-
-	private String descripcion;
-
 	private TipoContactoRespDTO tipoContacto;
 
 	public ContactoRespDTO() {
 		super();
 	}
 
-	public ContactoRespDTO(String nombre, String email, String descripcion, TipoContactoRespDTO tipoContacto,
-			Long id, Boolean estatus) {
-		super(id, estatus);
+	public ContactoRespDTO(String nombre, String email, TipoContactoRespDTO tipoContacto, 
+			Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
+			String shortDescription) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
+		this.nombre = nombre;
+		this.email = email;
+		this.tipoContacto = tipoContacto;
 	}
-
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -47,14 +54,6 @@ public class ContactoRespDTO extends AbstractCatDTO {
 		this.email = email;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
 	public TipoContactoRespDTO getTipoContacto() {
 		return tipoContacto;
 	}
@@ -65,8 +64,8 @@ public class ContactoRespDTO extends AbstractCatDTO {
 
 	@Override
 	public String toString() {
-		return "ContactoRespDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion
-				+ ", TipoContactoRespDTO=" + tipoContacto + ", id=" + id + ", estatus=" + estatus + "]";
+		return "ContactoRespDTO [nombre=" + nombre + ", email=" + email
+				+ ", TipoContactoRespDTO=" + tipoContacto + "]";
 	}
 
 }
