@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -53,12 +54,15 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * 
 	 * @param estatus
 	 * @param id
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
 	 * @throws EmptyResultDataAccessException
 	 */
 	@Modifying
-	@Query("UPDATE Cuenta cta SET cta.estatus = :estatus WHERE cta.id = :id")
-	public void updateEstatusById(@Param("estatus") final Boolean estatus, @Param("id") final Long id)
-			throws EmptyResultDataAccessException;
+	@Query("UPDATE Cuenta cta SET cta.estatus = :estatus, cta.lastModifiedBy = :lastModifiedBy, cta.lastModifiedDate = :lastModifiedDate WHERE cta.id = :id")
+	public void updateEstatusById(@Param("estatus") final Boolean estatus, @Param("id") final Long id,
+			@Param("lastModifiedBy") final String lastModifiedBy,
+			@Param("lastModifiedDate") final Date lastModifiedDate) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regesa todas las cuentas

@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @name AbstractCatalogoAdm
@@ -35,6 +37,7 @@ public abstract class AbstractCatalogoAdm {
 	@Column(name = "created_date", updatable = false)
 	protected Date createdDate;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "last_modified_date")
 	protected Date lastModifiedDate;
 

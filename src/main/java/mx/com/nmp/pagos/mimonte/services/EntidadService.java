@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -39,8 +40,11 @@ public interface EntidadService extends CatalogoAdmService<EntidadDTO> {
 	 * 
 	 * @param estatus
 	 * @param id
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
 	 * @throws EmptyResultDataAccessException
 	 */
-	public void updateEstatusById(final Boolean estatus, final Long id) throws EmptyResultDataAccessException;
+	public void updateEstatusById(final Boolean estatus, final Long id, String lastModifiedBy, Date lastModifiedDate)
+			throws EmptyResultDataAccessException;
 
 }
