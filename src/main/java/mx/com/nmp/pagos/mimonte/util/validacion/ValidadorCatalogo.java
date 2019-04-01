@@ -13,11 +13,8 @@ import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTO;
-<<<<<<< HEAD
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
-=======
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
->>>>>>> c2ca6a9c48ae01270f0a3f5a9b1bf7d0a1588195
 import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 

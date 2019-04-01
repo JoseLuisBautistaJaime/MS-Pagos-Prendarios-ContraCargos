@@ -365,7 +365,6 @@ public abstract class ContactosBuilder {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Construye un objeto de tipo List<ContactoRespDTO> a partir de un objeto de
 	 * tipo List<ContactoRespDTO>
 	 * 
@@ -402,8 +401,13 @@ public abstract class ContactosBuilder {
 			contactoBaseDTO.setDescription(contactoRespDTO.getDescription());
 			contactoBaseDTO.setTipoContacto(
 					TipoContactoBuilder.buildTipoContactoDTOFromTipoContactoRespDTO(contactoRespDTO.getTipoContacto()));
-=======
-	 * Construye un objeto de tipo ContactoBaseDTO a partir de un entity de tipo
+			
+		}
+		return contactoBaseDTO;
+	}
+	 
+	/**
+	 *  Construye un objeto de tipo ContactoBaseDTO a partir de un entity de tipo
 	 * Contactos (solo setea el id)
 	 * 
 	 * @param contacto
@@ -414,13 +418,11 @@ public abstract class ContactosBuilder {
 		if (null != contacto) {
 			contactoBaseDTO = new ContactoBaseDTO();
 			contactoBaseDTO.setId(contacto.getId());
->>>>>>> c2ca6a9c48ae01270f0a3f5a9b1bf7d0a1588195
 		}
 		return contactoBaseDTO;
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Construye un objeto de tipo List<ContactoRespDTO> a partir de un entity de
 	 * tipo List<Contactos>
 	 * 
@@ -459,7 +461,8 @@ public abstract class ContactosBuilder {
 		}
 		return contactoRespDTO;
 	}
-=======
+	 
+	/**
 	 * Construye una lista de objetos de tipo ContactoBaseDTO a partir de una lista
 	 * de entities de tipo Contactos (solo setea los ids)
 	 * 
@@ -477,6 +480,4 @@ public abstract class ContactosBuilder {
 		}
 		return contactoBaseDTOList;
 	}
-
->>>>>>> c2ca6a9c48ae01270f0a3f5a9b1bf7d0a1588195
 }
