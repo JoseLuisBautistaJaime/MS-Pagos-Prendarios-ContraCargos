@@ -35,8 +35,8 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	@Query("SELECT cta FROM Cuenta cta INNER JOIN cta.entidades ent WHERE ent.id = :idEntidad AND cta.estatus = true and ent.estatus = true")
-	public List<Cuenta> findByEntidades_Id(@Param("idEntidad") final Long idEntidad)
+//	@Query("SELECT cta FROM Cuenta cta INNER JOIN cta.entidades ent WHERE ent.id = :idEntidad AND cta.estatus = true and ent.estatus = true")
+	public List<Cuenta> findByEntidades_Id(/*@Param("idEntidad")*/ final Long idEntidad)
 			throws EmptyResultDataAccessException;
 
 	/**
@@ -46,8 +46,8 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	@Query("SELECT cta FROM Cuenta cta WHERE cta.numeroCuenta = :numero AND cta.estatus = true")
-	public Cuenta findByNumeroCuenta(@Param("numero") final String numero) throws EmptyResultDataAccessException;
+//	@Query("SELECT cta FROM Cuenta cta WHERE cta.numeroCuenta = :numero AND cta.estatus = true")
+	public Cuenta findByNumeroCuenta(/*@Param("numero")*/ final String numero) throws EmptyResultDataAccessException;
 
 	/**
 	 * Actualiza el estatus de una cuenta a false (inactivo)
@@ -67,7 +67,7 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	/**
 	 * Regesa todas las cuentas
 	 */
-	@Query("SELECT cta FROM Cuenta cta WHERE cta.estatus = true")
-	public List<Cuenta> findAll();
+//	@Query("SELECT cta FROM Cuenta cta WHERE cta.estatus = true")
+	public List<Cuenta> findAllOrderBycreatedDateDesc();
 
 }

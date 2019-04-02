@@ -44,6 +44,7 @@ import mx.com.nmp.pagos.mimonte.dto.CuentaRespDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.services.impl.CuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 
 /**
  * @name cuentasController
@@ -91,11 +92,17 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody CuentaDTO CuentaDTOReq,
+	public Response save(@RequestBody CuentaDTO cuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-
-		CuentaEntDTO cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
-				.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(CuentaDTOReq, new Date(), null), createdBy));
+		if (ValidadorCatalogo.validateCuentaSave(cuentaDTOReq))
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+		CuentaEntDTO cuentaEntDTO = null;
+		try {
+			cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
+					.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, new Date(), null), createdBy));
+		} catch (CatalogoException cex) {
+			throw cex;
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				cuentaEntDTO);
 
@@ -120,7 +127,8 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CuentaDTO cuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-
+		if (ValidadorCatalogo.validateCuentaUpdate(cuentaDTOReq))
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		CuentaEntDTO cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
 				.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,

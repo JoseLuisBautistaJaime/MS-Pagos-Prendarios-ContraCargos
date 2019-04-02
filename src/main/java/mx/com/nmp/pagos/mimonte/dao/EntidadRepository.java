@@ -57,7 +57,7 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	@Query("SELECT ent FROM Entidad ent WHERE ent.nombre = :nombre AND ent.estatus = true")
+//	@Query("SELECT ent FROM Entidad ent WHERE ent.nombre = :nombre AND ent.estatus = true")
 	public List<Entidad> findByNombre(@Param("nombre") final String nombre) throws EmptyResultDataAccessException;
 
 	/**
@@ -78,7 +78,7 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	/**
 	 * Regresa una entidad por id
 	 */
-	@Query("SELECT ent FROM Entidad ent WHERE ent.id = :id AND ent.estatus = true")
+//	@Query("SELECT ent FROM Entidad ent WHERE ent.id = :id AND ent.estatus = true")
 	public Optional<Entidad> findById(@Param("id") final Long id);
 
 	/**

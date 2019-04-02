@@ -16,6 +16,7 @@ import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 
@@ -166,24 +167,26 @@ public abstract class ValidadorCatalogo {
 			return false;
 		return true;
 	}
-	
+
 	/**
-	 *  Valida que un objeto de tipo ContactoRequestDTO no este nulo o vacio.
+	 * Valida que un objeto de tipo ContactoRequestDTO no este nulo o vacio.
+	 * 
 	 * @param contactoRequestDTO
 	 * @return
 	 */
 	public static boolean validaContactoReqSaveDTO(ContactoRequestDTO contactoRequestDTO) {
-		if(contactoRequestDTO == null || contactoRequestDTO.getDescripcion() == null || contactoRequestDTO.getEmail() == null ||
-				contactoRequestDTO.getNombre() == null || contactoRequestDTO.getTipoContacto() == null)
+		if (contactoRequestDTO == null || contactoRequestDTO.getDescripcion() == null
+				|| contactoRequestDTO.getEmail() == null || contactoRequestDTO.getNombre() == null
+				|| contactoRequestDTO.getTipoContacto() == null)
 			return false;
-		if(contactoRequestDTO.getTipoContacto() != null ) {
-			if(contactoRequestDTO.getTipoContacto() == null || contactoRequestDTO.getTipoContacto().getId() <=0)
+		if (contactoRequestDTO.getTipoContacto() != null) {
+			if (contactoRequestDTO.getTipoContacto() == null || contactoRequestDTO.getTipoContacto().getId() <= 0)
 				return false;
 		} else
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * Valida que un objeto de tipo ContactoReqUpdateDTO no este nulo o vacio.
 	 * 
@@ -191,13 +194,12 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validaContactoReqUpdateDTO(ContactoReqUpdateDTO contactoReqUpdateDTO) {
-		if(contactoReqUpdateDTO == null ||
-				contactoReqUpdateDTO.getDescripcion() == null || contactoReqUpdateDTO.getEmail() == null ||
-				contactoReqUpdateDTO.getId() <= 0 || contactoReqUpdateDTO.getNombre() == null || 
-				contactoReqUpdateDTO.getTipoContacto() == null)
+		if (contactoReqUpdateDTO == null || contactoReqUpdateDTO.getDescripcion() == null
+				|| contactoReqUpdateDTO.getEmail() == null || contactoReqUpdateDTO.getId() <= 0
+				|| contactoReqUpdateDTO.getNombre() == null || contactoReqUpdateDTO.getTipoContacto() == null)
 			return false;
-		if(contactoReqUpdateDTO.getTipoContacto() != null ) {
-			if(contactoReqUpdateDTO.getTipoContacto() == null || contactoReqUpdateDTO.getTipoContacto().getId() <=0)
+		if (contactoReqUpdateDTO.getTipoContacto() != null) {
+			if (contactoReqUpdateDTO.getTipoContacto() == null || contactoReqUpdateDTO.getTipoContacto().getId() <= 0)
 				return false;
 		} else
 			return false;
@@ -259,6 +261,28 @@ public abstract class ValidadorCatalogo {
 		} else
 			return true;
 		return true;
+	}
+
+	/**
+	 * Valida si un objeto Cuenta contiene atributos validos y completos para ser
+	 * guardado
+	 * 
+	 * @param cuentaDTO
+	 * @return
+	 */
+	public static boolean validateCuentaSave(CuentaDTO cuentaDTO) {
+		return (null != cuentaDTO.getNumero() && null != cuentaDTO.getNumero());
+	}
+
+	/**
+	 * Valida si un objeto Cuenta contiene atributos validos y completos para ser
+	 * actualizado
+	 * 
+	 * @param cuentaDTO
+	 * @return
+	 */
+	public static boolean validateCuentaUpdate(CuentaDTO cuentaDTO) {
+		return (null != cuentaDTO.getNumero() && null != cuentaDTO.getNumero() && null != cuentaDTO.getId());
 	}
 
 }

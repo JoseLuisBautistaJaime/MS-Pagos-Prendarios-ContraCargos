@@ -152,6 +152,12 @@ public final class CatalogConstants {
 	public static final String CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST = "El id de tipo contacto no existe.";
 
 	/**
+	 * Mensaje que es mostrado cuando se desea crear una cuenta con un numero que ya
+	 * existe
+	 */
+	public static final String NUMERO_CUENTA_ALREADY_EXISTS = "El numero de cuenta que desea agregar ya existe";
+
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */
