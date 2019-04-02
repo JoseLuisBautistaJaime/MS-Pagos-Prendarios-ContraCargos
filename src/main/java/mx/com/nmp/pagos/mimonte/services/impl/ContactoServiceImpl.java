@@ -6,7 +6,6 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,6 +21,7 @@ import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
+import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
 /**
@@ -34,12 +34,14 @@ import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 @Service("contactoServiceImpl")
 public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> {
 
+	
 	@Autowired
 	private ContactoRespository contactoRespository;
 
 	@Autowired
 	private TipoContactoRepository tipoContactoRepository;
 
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
@@ -48,6 +50,9 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_EXISTS);
 		if (null != e)
 			e.setCreatedBy(createdBy);
+		
+		if(validaTipoContacto(e))
+			throw new CatalogoException(CatalogConstants.CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST);
 		
 		return (T) ContactosBuilder.buildContactosDTOFromContactos(
 				contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTO(e)));
@@ -61,17 +66,14 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_NOT_EXISTS);
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
-		
-		
-		 Contactos contacto = contactoRespository.findById(e.getId()).isPresent()?contactoRespository.findById(e.getId()).get():null;
-		
-		if(contacto == null) {
-			
+	
+		if(validaContacto(e)) 
 			throw new CatalogoException(CatalogConstants.CATALOG_THE_ID_TO_UPDATE_DOES_NOT_EXIST);
-					
-		}else
 		
-			return (T) ContactosBuilder.buildContactosDTOFromContactos(
+		if(validaTipoContacto(e))
+			throw new CatalogoException(CatalogConstants.CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST);
+		
+		return (T) ContactosBuilder.buildContactosDTOFromContactos(
 					contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTOupdt(e)));
 	}
 
@@ -95,6 +97,13 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 		contactoRespository.deleteById(id);
 	}
 
+	/**
+	 * Metodo que obtiene los registros en base al parametro idTipoContacto.
+	 * 
+	 * @param idTipoContacto
+	 * @return
+	 * @throws EmptyResultDataAccessException
+	 */
 	public List<ContactoRespDTO> findByIdTipoContacto(Long idTipoContacto) throws EmptyResultDataAccessException {
 		List<ContactoRespDTO> lst = null;
 		lst = ContactosBuilder
@@ -102,6 +111,15 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 		return null != lst ? lst : new ArrayList<>();
 	}
 
+	/**
+	 * Metodo que obtiene registros en base a los parametros idTipoContacto, nombre y email.
+	 * 
+	 * @param idTipoContacto
+	 * @param nombre
+	 * @param email
+	 * @return
+	 * @throws EmptyResultDataAccessException
+	 */
 	public List<ContactoRespDTO> findByIdTipoContactoAndNombreAndEmail(Long idTipoContacto, String nombre, String email)
 			throws EmptyResultDataAccessException {
 		List<ContactoRespDTO> lst = null;
@@ -110,6 +128,12 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 		return null != lst ? lst : new ArrayList<>();
 	}
 
+	/**
+	 * Metodo que valida el email existe o no para agregar o actualizar los registros de los contactos.
+	 * 
+	 * @param e
+	 * @return
+	 */
 	public boolean validaEmailExistente(ContactoBaseDTO e) {
 		Contactos validaEmail = contactoRespository.findByEmail(e.getEmail());
 		if (e.getId() == null && null != validaEmail) {
@@ -130,5 +154,32 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 				return true;
 		}
 
+	}
+	
+	/**
+	 * Metodo que valida si existe un idTipoContacto.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public boolean validaTipoContacto(ContactoBaseDTO e){
+		TipoContacto tipoContacto = tipoContactoRepository.findById(e.getTipoContacto().getId()).isPresent() ? tipoContactoRepository.findById(e.getTipoContacto().getId()).get() : null ;
+		if(tipoContacto == null)
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Metodo que valida si existe un idContacto.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public boolean validaContacto(ContactoBaseDTO e) {
+		Contactos contacto = contactoRespository.findById(e.getId()).isPresent()?contactoRespository.findById(e.getId()).get():null;
+		if(contacto == null)
+			return true;
+		return false;
+		
 	}
 }

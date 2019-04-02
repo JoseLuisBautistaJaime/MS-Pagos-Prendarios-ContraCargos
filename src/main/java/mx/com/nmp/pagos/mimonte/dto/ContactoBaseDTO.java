@@ -9,6 +9,12 @@ import java.util.Set;
 
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 
+/**
+ * Nombre: ContactoBaseDTO Descripcion: DTO que encapsula la información de los contactos.
+ *
+ * @author José Rodríguez jgrodriguez@quarksoft.net
+ * @version 0.1
+ */
 public class ContactoBaseDTO extends AbstractCatalogoDTO implements Comparable<ContactoBaseDTO> {
 
 	/**

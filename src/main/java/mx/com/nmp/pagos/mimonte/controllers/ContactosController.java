@@ -35,6 +35,7 @@ import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.services.impl.ContactoServiceImpl;
@@ -85,7 +86,7 @@ public class ContactosController {
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveContacto(@RequestBody ContactoReqUpdateDTO contacto,
+	public Response saveContacto(@RequestBody ContactoRequestDTO contacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		if(!ValidadorCatalogo.validaContactoReqSaveDTO(contacto))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
@@ -94,7 +95,7 @@ public class ContactosController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				(ContactoRespDTO) ContactosBuilder
 				.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.save(
-						ContactosBuilder.buildContactoRespDTOFromContactoReqUpdateDTO(contacto, new Date(), null),
+						ContactosBuilder.buildContactoBaseDTOFromContactoRequestDTO(contacto, new Date(), null),
 						createdBy)));
 	}
 
@@ -113,7 +114,7 @@ public class ContactosController {
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		if(!ValidadorGenerico.validateEmail(contacto.getEmail()))
 			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				(ContactoRespDTO) ContactosBuilder
 				.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.update(
 						ContactosBuilder.buildContactoRespDTOFromContactoReqUpdateDTO(contacto, new Date(), null),
@@ -128,8 +129,7 @@ public class ContactosController {
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response DeleteContacto(@PathVariable("idContacto") Long idContacto,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+	public Response DeleteContacto(@PathVariable("idContacto") Long idContacto) {
 		try {
 			contactoServiceImpl.deleteById(idContacto);
 		} catch (EmptyResultDataAccessException eex) {

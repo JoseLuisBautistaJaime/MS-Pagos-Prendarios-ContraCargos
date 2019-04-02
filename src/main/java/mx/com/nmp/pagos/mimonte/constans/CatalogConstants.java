@@ -113,10 +113,19 @@ public final class CatalogConstants {
 	 */
 	public static final String CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT = "No es el formato correcto para el correo electronico.";
 	
+	/**
+	 * Mensaje que es mostrado si el correo electronico existe.
+	 */
 	public static final String CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_EXISTS = "El correo electronico que desea guardar ya existe.";
 	
-	public static final String CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_NOT_EXISTS = "El correo electronico que desea guardar no existe.";
+	/**
+	 * Mensaje que es mostrado si el correo electronico a actualizar ya existe.
+	 */
+	public static final String CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_NOT_EXISTS = "El correo electronico que desea actualizar ya existe.";
 	
+	/**
+	 * Mensaje que es mostrado si el id a actualizar no existe.
+	 */
 	public static final String CATALOG_THE_ID_TO_UPDATE_DOES_NOT_EXIST = "El id a actualizar no existe.";
 
 	/**
@@ -134,6 +143,11 @@ public final class CatalogConstants {
 	 * Mensaje que es mostrado cuando uno o mas ids de catalogo de contactos que se intentan ingresar no existen
 	 */
 	public static final String ID_CONTACTO_DOES_NOT_EXISTS = "Uno o mas ids de cuenta no existen";
+	
+	/**
+	 * Mensaje que es mostrado si el idTipoContacto no existe.
+	 */
+	public static final String CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST = "El id de tipo contacto no existe.";
 	
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no

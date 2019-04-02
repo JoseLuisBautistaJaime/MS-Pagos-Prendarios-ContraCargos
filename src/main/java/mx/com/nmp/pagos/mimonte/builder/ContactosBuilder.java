@@ -17,7 +17,6 @@ import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
-import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 
 /**
  * Nombre: ContactosBuilder Descripcion: Clase de capa de builder que se encarga
@@ -143,26 +142,6 @@ public abstract class ContactosBuilder {
 
 	/**
 	 * Construye un objeto de tipo ContactoBaseDTO a partir de un objeto de tipo
-	 * ContactoRequestDTO
-	 * 
-	 * @param contactoRequestDTO
-	 * @return contactosDTO
-	 */
-	public static ContactoBaseDTO buildContactoBaseDTOFromContactoRequestDTO(ContactoRequestDTO contactoRequestDTO) {
-		ContactoBaseDTO contactosDTO = null;
-		if (contactoRequestDTO != null) {
-			contactosDTO = new ContactoBaseDTO();
-			contactosDTO.setNombre(contactoRequestDTO.getNombre());
-			contactosDTO.setEmail(contactoRequestDTO.getEmail());
-			contactosDTO.setTipoContacto(TipoContactoBuilder
-					.builTipoContactoBaseDTOFromContacto(new TipoContacto(contactoRequestDTO.getTipoContacto())));
-			contactosDTO.setCreatedDate(new Date());
-		}
-		return contactosDTO;
-	}
-
-	/**
-	 * Construye un objeto de tipo ContactoBaseDTO a partir de un objeto de tipo
 	 * ContactoReqUpdateDTO
 	 * 
 	 * @param contactoReqUpdateDTO
@@ -178,7 +157,6 @@ public abstract class ContactosBuilder {
 			contactoRespDTO.setCreatedDate(createdDate);
 			contactoRespDTO.setDescription(contactoReqUpdateDTO.getDescripcion());
 			contactoRespDTO.setEmail(contactoReqUpdateDTO.getEmail());
-			contactoRespDTO.setEstatus(contactoReqUpdateDTO.getEstatus());
 			contactoRespDTO.setId(contactoReqUpdateDTO.getId());
 			contactoRespDTO.setLastModifiedDate(lastModifiedDate);
 			contactoRespDTO.setNombre(contactoReqUpdateDTO.getNombre());
@@ -480,4 +458,30 @@ public abstract class ContactosBuilder {
 		}
 		return contactoBaseDTOList;
 	}
+	
+	/**
+	 * Construye un objeto de tipo ContactoBaseDTO a partir de un objeto de tipo ContactoRequestDTO.
+	 * 
+	 * @param contactoRequestDTO
+	 * @param createdDate
+	 * @param lastModifiedDate
+	 * @return contactoBaseDTO
+	 */
+	public static ContactoBaseDTO buildContactoBaseDTOFromContactoRequestDTO(
+			ContactoRequestDTO contactoRequestDTO, Date createdDate, Date lastModifiedDate) {
+		ContactoBaseDTO contactoBaseDTO = null;
+		if (contactoRequestDTO != null) {
+			contactoBaseDTO = new ContactoBaseDTO();
+			contactoBaseDTO.setCreatedDate(createdDate);
+			contactoBaseDTO.setDescription(contactoRequestDTO.getDescripcion());
+			contactoBaseDTO.setEmail(contactoRequestDTO.getEmail());
+			contactoBaseDTO.setLastModifiedDate(lastModifiedDate);
+			contactoBaseDTO.setNombre(contactoRequestDTO.getNombre());
+			contactoBaseDTO.setTipoContacto(TipoContactoBuilder
+					.buildTipoContactoDTOFromTipoContactoReqDTO(contactoRequestDTO.getTipoContacto()));
+		}
+
+		return contactoBaseDTO ;
+	}
+	
 }
