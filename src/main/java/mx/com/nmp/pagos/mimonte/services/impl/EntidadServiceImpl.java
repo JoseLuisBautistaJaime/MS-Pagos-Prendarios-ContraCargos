@@ -90,7 +90,7 @@ public class EntidadServiceImpl implements EntidadService {
 			throw new CatalogoException(CatalogConstants.ID_CONTACTO_DOES_NOT_EXISTS);
 
 		if (null == entidades || !entidades.isEmpty())
-			throw new CatalogoException(CatalogConstants.ENTIDAD_NOMBRE_ALREADY_EXISTS);
+			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS);
 		if (null != e)
 			e.setCreatedBy(createdBy);
 		Entidad entidad = null;
