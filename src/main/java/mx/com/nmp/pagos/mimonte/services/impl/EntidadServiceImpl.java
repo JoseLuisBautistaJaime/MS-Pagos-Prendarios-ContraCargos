@@ -74,7 +74,7 @@ public class EntidadServiceImpl implements EntidadService {
 		List<Entidad> entidades = null;
 		// Se valida que el nombre de la entidad no exista
 		try {
-			entidades = entidadRepository.findByNombre(e.getNombre());
+			entidades = entidadRepository.findByNombreAndDescription(e.getNombre(), e.getDescription());
 		} catch (EmptyResultDataAccessException erdaex) {
 			// No action required here, application continues normally
 		}
@@ -175,8 +175,8 @@ public class EntidadServiceImpl implements EntidadService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void updateEstatusById(final Boolean estatus, final Long id, final String lastModifiedBy, final Date lastModifiedDate)
-			throws EmptyResultDataAccessException {
+	public void updateEstatusById(final Boolean estatus, final Long id, final String lastModifiedBy,
+			final Date lastModifiedDate) throws EmptyResultDataAccessException {
 		entidadRepository.setEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
 	}
 

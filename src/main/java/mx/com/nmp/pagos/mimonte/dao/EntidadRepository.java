@@ -81,4 +81,13 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	@Query("SELECT ent FROM Entidad ent WHERE ent.id = :id AND ent.estatus = true")
 	public Optional<Entidad> findById(@Param("id") final Long id);
 
+	/**
+	 * Regresa una lista de entidades por atributo nombre y description
+	 * 
+	 * @param nombre
+	 * @param description
+	 * @return
+	 */
+	public List<Entidad> findByNombreAndDescription(final String nombre, final String description);
+
 }
