@@ -9,6 +9,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
  * @version 1.0
  * @created 31-Mar-2019 6:34:07 PM
  */
-public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTransito, Long> {
+public interface MovimientoTransitoRepository /*extends JpaRepository<MovimientoTransito, Long>*/ {
 
 }

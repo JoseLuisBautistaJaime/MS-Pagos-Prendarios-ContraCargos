@@ -9,6 +9,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
  * @version 1.0
  * @created 31-Mar-2019 6:34:10 PM
  */
-public interface ComisionesRepository extends JpaRepository<MovimientoComision, Long> {
+public interface ComisionesRepository /*extends JpaRepository<MovimientoComision, Long> */{
 
 }

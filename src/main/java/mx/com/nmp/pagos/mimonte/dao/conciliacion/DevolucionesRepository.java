@@ -9,7 +9,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
  * @version 1.0
  * @created 31-Mar-2019 6:34:05 PM
  */
-public interface DevolucionesRepository extends JpaRepository<MovimientoDevolucion, Long> {
+public interface DevolucionesRepository /*extends JpaRepository<MovimientoDevolucion, Long>*/ {
 
 
 }

@@ -1,7 +1,12 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.model;
 
 /**
- * Nombre: BaseEntidad Descripcion: Clase que encapsula la informacion de una
+ * @name BaseEntidad 
+ * @description Clase que encapsula la informacion de una
  * entidad de catalogo de tipo BaseEntidad
  *
  * @author Ismael Flores iaguilar@qaurksoft.net

@@ -9,6 +9,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
  * @version 1.0
  * @created 31-Mar-2019 6:34:01 PM
  */
-public interface MovimientosMidasRepository extends PagingAndSortingRepository<MovimientoMidas, Long> {
+public interface MovimientosMidasRepository /*extends PagingAndSortingRepository<MovimientoMidas, Long> */{
 
 }

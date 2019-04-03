@@ -8,7 +8,8 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * Nombre: EntidadDTO Descripcion: Clase que encapsula la unformacion de un
+ * @name EntidadDTO 
+ * @description Clase que encapsula la informacion de un
  * catalogo de entidad
  *
  * @author Ismael Flores iaguilar@qaurksoft.net

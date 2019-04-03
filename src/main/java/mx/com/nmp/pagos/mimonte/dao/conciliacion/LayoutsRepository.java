@@ -9,6 +9,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
  * @version 1.0
  * @created 31-Mar-2019 6:34:11 PM
  */
-public interface LayoutsRepository extends JpaRepository<Layout, Long> {
+public interface LayoutsRepository /*extends JpaRepository<Layout, Long>*/ {
 
 }
