@@ -201,10 +201,10 @@ public class CuentasController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteByidcuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 
 		try {
-			cuentaServiceImpl.updateEstatusById(false, idCuenta);
+			cuentaServiceImpl.updateEstatusById(false, idCuenta, lastModifiedBy, new Date());
 		} catch (EmptyResultDataAccessException erdaex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}

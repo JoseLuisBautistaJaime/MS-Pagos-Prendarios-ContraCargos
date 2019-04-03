@@ -13,47 +13,33 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class ContactoReqUpdateDTO {
 
-	private Integer id;
-
-	private Boolean estatus;
-
+	private Long id;
 	private String nombre;
-
 	private String email;
-
 	private String descripcion;
-
 	private TipoContactoReqDTO tipoContacto;
 
 	public ContactoReqUpdateDTO() {
 		super();
 	}
 
-	public ContactoReqUpdateDTO(Integer id, Boolean estatus, String nombre, String email, String descripcion,
+	public ContactoReqUpdateDTO(Long id,
+			String nombre, String email, String descripcion,
 			TipoContactoReqDTO tipoContacto) {
 		super();
 		this.id = id;
-		this.estatus = estatus;
 		this.nombre = nombre;
 		this.email = email;
 		this.descripcion = descripcion;
 		this.tipoContacto = tipoContacto;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Boolean getEstatus() {
-		return estatus;
-	}
-
-	public void setEstatus(Boolean estatus) {
-		this.estatus = estatus;
 	}
 
 	public String getNombre() {
@@ -90,8 +76,8 @@ public class ContactoReqUpdateDTO {
 
 	@Override
 	public String toString() {
-		return "ContactoReqUpdateDTO [id=" + id + ", estatus=" + estatus + ", nombre=" + nombre + ", email=" + email
+		return "ContactoReqUpdateDTO [id=" + id + ""
+				+ ", nombre=" + nombre + ", email=" + email
 				+ ", descripcion=" + descripcion + ", tipoContactoReqDTO=" + tipoContacto + "]";
 	}
-
 }

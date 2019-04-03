@@ -34,7 +34,7 @@ public interface AfiliacionRepository extends JpaRepository<Afiliacion, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	@Query("SELECT af FROM Afiliacion af JOIN Cuenta cta WHERE af.estatus = true AND cta.estatus = true AND cta.id = :idCuenta")
+	@Query("SELECT af FROM Afiliacion af INNER JOIN af.cuentas cta WHERE af.estatus = true AND cta.estatus = true AND cta.id = :idCuenta")
 	public Set<Afiliacion> findByCuentas_Id(@Param("idCuenta") final Long idCuenta)
 			throws EmptyResultDataAccessException;
 

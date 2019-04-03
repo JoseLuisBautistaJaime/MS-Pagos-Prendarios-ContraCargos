@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,12 +65,15 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	 * 
 	 * @param estatus
 	 * @param id
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
 	 * @throws EmptyResultDataAccessException
 	 */
 	@Modifying
-	@Query("UPDATE Entidad ent set ent.estatus = :estatus WHERE ent.id = :id")
-	public void setEstatusById(@Param("estatus") final Boolean estatus, @Param("id") final Long id)
-			throws EmptyResultDataAccessException;
+	@Query("UPDATE Entidad ent set ent.estatus = :estatus, ent.lastModifiedBy = :lastModifiedBy, ent.lastModifiedDate = :lastModifiedDate WHERE ent.id = :id")
+	public void setEstatusById(@Param("estatus") final Boolean estatus, @Param("id") final Long id,
+			@Param("lastModifiedBy") final String lastModifiedBy,
+			@Param("lastModifiedDate") final Date lastModifiedDate) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa una entidad por id

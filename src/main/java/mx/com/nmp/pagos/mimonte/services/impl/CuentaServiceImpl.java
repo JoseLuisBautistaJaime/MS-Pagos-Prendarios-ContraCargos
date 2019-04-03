@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -140,11 +141,14 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 * 
 	 * @param estatus
 	 * @param id
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
 	 * @throws EmptyResultDataAccessException
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void updateEstatusById(final Boolean estatus, final Long id) throws EmptyResultDataAccessException {
-		cuentaRepository.updateEstatusById(estatus, id);
+	public void updateEstatusById(final Boolean estatus, final Long id, final String lastModifiedBy,
+			Date lastModifiedDate) throws EmptyResultDataAccessException {
+		cuentaRepository.updateEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
 	}
 
 }

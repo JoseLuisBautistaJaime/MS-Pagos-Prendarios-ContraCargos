@@ -1,4 +1,9 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
+
 /**
  * Nombre: TipoContactoReqDTO Descripcion: Clase que encapsula la informacion perteneciente a un contacto.
  *
@@ -7,22 +12,22 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class TipoContactoReqDTO {
 	
-	private Integer id;
+	private Long id;
 	
 	public TipoContactoReqDTO() {
 		super();
 	}
 
-	public TipoContactoReqDTO(Integer id) {
+	public TipoContactoReqDTO(Long id) {
 		super();
 		this.id = id;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

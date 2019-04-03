@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
@@ -11,17 +15,16 @@ package mx.com.nmp.pagos.mimonte.dto;
 public class TipoContactoRespDTO {
 
 	private Long id;
-
-	private String descripcion;
+	private String description;
 
 	public TipoContactoRespDTO() {
 		super();
 	}
 
-	public TipoContactoRespDTO(Long id, String descripcion) {
+	public TipoContactoRespDTO(Long id, String description) {
 		super();
 		this.id = id;
-		this.descripcion = descripcion;
+		this.description = description;
 	}
 
 	public Long getId() {
@@ -32,17 +35,17 @@ public class TipoContactoRespDTO {
 		this.id = id;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Override
 	public String toString() {
-		return "TipoContactoRespDTO [id=" + id + ", descripcion=" + descripcion + "]";
+		return "TipoContactoRespDTO [id=" + id + ", description=" + description + "]";
 	}
 
 }

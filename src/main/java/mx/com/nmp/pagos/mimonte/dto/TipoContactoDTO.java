@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
 import java.util.Date;
@@ -10,7 +14,7 @@ import java.util.Date;
  * @creationDate 05/03/2019 14:48 hrs.
  * @version 0.1
  */
-public class TipoContactoDTO extends AbstractCatalogoDTO {
+public class TipoContactoDTO extends AbstractCatalogoDTO implements Comparable<TipoContactoDTO> {
 
 	/**
 	 * Serial id
@@ -37,6 +41,11 @@ public class TipoContactoDTO extends AbstractCatalogoDTO {
 		return "TipoContactoDTO [id=" + id + ", estatus=" + estatus + ", createdDate=" + createdDate
 				+ ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy="
 				+ lastModifiedBy + "]";
+	}
+
+	@Override
+	public int compareTo(TipoContactoDTO o) {
+		return o.id.compareTo(this.id);
 	}
 
 }

@@ -13,40 +13,21 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class ContactoRequestDTO {
 
-	private String nombre;
-
-	private String email;
-
 	private String descripcion;
-
-	private Long tipoContacto;
-
+	private String email;
+	private String nombre;
+	private TipoContactoReqDTO tipoContacto;
+	
 	public ContactoRequestDTO() {
 		super();
 	}
 
-	public ContactoRequestDTO(String nombre, String email, String descripcion, Long tipoContacto) {
+	public ContactoRequestDTO(String descripcion, String email, String nombre, TipoContactoReqDTO tipoContacto) {
 		super();
-		this.nombre = nombre;
-		this.email = email;
 		this.descripcion = descripcion;
-		this.tipoContacto = tipoContacto;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
 		this.email = email;
+		this.nombre = nombre;
+		this.tipoContacto = tipoContacto;
 	}
 
 	public String getDescripcion() {
@@ -57,26 +38,33 @@ public class ContactoRequestDTO {
 		this.descripcion = descripcion;
 	}
 
-	public Long getTipoContacto() {
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public TipoContactoReqDTO getTipoContacto() {
 		return tipoContacto;
 	}
 
-	public void setTipoContacto(Long tipoContacto) {
+	public void setTipoContacto(TipoContactoReqDTO tipoContacto) {
 		this.tipoContacto = tipoContacto;
 	}
 
 	@Override
 	public String toString() {
-		return "ContactoRequestDTO [nombre=" + nombre + ", email=" + email + ", descripcion=" + descripcion
+		return "ContactoRequestDTO [descripcion=" + descripcion + ", email=" + email + ", nombre=" + nombre
 				+ ", tipoContacto=" + tipoContacto + "]";
 	}
-
-//	public String getCreatedBy() {
-//		return createdBy;
-//	}
-//
-//	public void setCreatedBy(String createdBy) {
-//		this.createdBy = createdBy;
-//	}
-
 }

@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @name AbstractCatalogoAdm
@@ -31,6 +33,19 @@ public abstract class AbstractCatalogoAdm extends Updatable {
 
 	@Column(name = "estatus")
 	protected Boolean estatus;
+
+	@Column(name = "created_date", updatable = false)
+	protected Date createdDate;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_modified_date")
+	protected Date lastModifiedDate;
+
+	@Column(name = "created_by", updatable = false)
+	protected String createdBy;
+
+	@Column(name = "last_modified_by")
+	protected String lastModifiedBy;
 
 	@Column(name = "description")
 	protected String description;

@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,12 +82,12 @@ public class EntidadServiceImpl implements EntidadService {
 		List<Cuenta> cuentaList = cuentaRepository.findAll();
 		if (!ValidadorCatalogo.validateCuentasExists(e.getCuentas(),
 				CuentaBuilder.buildCuentaBaseDTOListFromCuentaList(cuentaList)))
-			throw new CatalogoException("");
+			throw new CatalogoException(CatalogConstants.ID_CUENTA_DOES_NOT_EXISTS);
 		// Se valida que los id's de los contactos existan
 		List<Contactos> contactosList = contactoRespository.findAll();
 		if (!ValidadorCatalogo.validateContactosExists(e.getContactos(),
 				ContactosBuilder.buildContactoBaseDTOListFromContactosListOnlyIds(contactosList)))
-			throw new CatalogoException("");
+			throw new CatalogoException(CatalogConstants.ID_CONTACTO_DOES_NOT_EXISTS);
 
 		if (null == entidades || !entidades.isEmpty())
 			throw new CatalogoException(CatalogConstants.ENTIDAD_NOMBRE_ALREADY_EXISTS);
@@ -171,15 +172,12 @@ public class EntidadServiceImpl implements EntidadService {
 
 	/**
 	 * Actualiza el estatus de un catalogo Entidad por id
-	 * 
-	 * @param estatus
-	 * @param id
-	 * @throws EmptyResultDataAccessException
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void updateEstatusById(final Boolean estatus, final Long id) throws EmptyResultDataAccessException {
-		entidadRepository.setEstatusById(estatus, id);
+	public void updateEstatusById(final Boolean estatus, final Long id, final String lastModifiedBy, final Date lastModifiedDate)
+			throws EmptyResultDataAccessException {
+		entidadRepository.setEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
 	}
 
 }

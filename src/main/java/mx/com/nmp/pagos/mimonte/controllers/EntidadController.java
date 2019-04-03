@@ -108,7 +108,6 @@ public class EntidadController {
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				entidadResponseDTO);
-
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", buildDummy());
 	}
 
@@ -225,7 +224,7 @@ public class EntidadController {
 	public Response deleteById(@PathVariable(value = "idEntidad", required = true) Long idEntidad,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		try {
-			entidadServiceImpl.updateEstatusById(false, idEntidad);
+			entidadServiceImpl.updateEstatusById(false, idEntidad, lastModifiedBy, new Date());
 		} catch (EmptyResultDataAccessException erdex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}

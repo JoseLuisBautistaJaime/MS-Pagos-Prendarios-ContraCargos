@@ -20,16 +20,12 @@ public class ContactoResponseDTO extends AbstractCatalogoDTO {
 	 * Serial id
 	 */
 	private static final long serialVersionUID = 1L;
-
 	private String nombre;
-
 	private String email;
-
 	private TipoContactoDTO tipoContacto;
 
 	public ContactoResponseDTO() {
 		super();
-
 	}
 
 	public ContactoResponseDTO(String nombre, String email, TipoContactoDTO tipoContacto) {
@@ -79,5 +75,4 @@ public class ContactoResponseDTO extends AbstractCatalogoDTO {
 				+ ", id=" + id + ", estatus=" + estatus + ", createdDate=" + createdDate + ", lastModifiedDate="
 				+ lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy + "]";
 	}
-
 }
