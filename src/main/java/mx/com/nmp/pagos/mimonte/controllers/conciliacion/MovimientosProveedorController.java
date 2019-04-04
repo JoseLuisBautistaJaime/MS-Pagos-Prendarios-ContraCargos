@@ -79,7 +79,7 @@ public class MovimientosProveedorController {
 	@PostMapping(value = "/movimientos/proveedor/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite consultar los movimientos del proveedor transaccional. (Open Pay)", tags = {
 			"Movimientos Proveedor" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta exitosa"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -88,7 +88,7 @@ public class MovimientosProveedorController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		MovimientoTransaccionalDTO movimientoTransaccionalDTO = null;
 		movimientoTransaccionalDTO = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				movimientoTransaccionalDTO);
 	}
 
@@ -113,7 +113,7 @@ public class MovimientosProveedorController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		MovimientoProcesosNocturnosDTO movimientoProcesosNocturnosDTO = null;
 		movimientoProcesosNocturnosDTO = buildDummy2();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				movimientoProcesosNocturnosDTO);
 	}
 

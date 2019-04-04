@@ -88,7 +88,7 @@ public class MovimientosEstadoCuentaController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;
 		movimientosEstadoCuentaDTO = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				movimientosEstadoCuentaDTO);
 	}
 

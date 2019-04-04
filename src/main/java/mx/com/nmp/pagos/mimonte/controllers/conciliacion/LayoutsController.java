@@ -93,7 +93,7 @@ public class LayoutsController {
 			@PathVariable(value = "tipoLayout", required = true) String tipoLayout,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		LayoutDTO layoutDTO = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				layoutDTO);
 	}
 
@@ -131,10 +131,10 @@ public class LayoutsController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@DeleteMapping(value = "/layouts/{folio}/{idLayout}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(value = "/layouts/{folio}/{idLayout}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "DELETE", value = "Permite eliminar layouts para Pagos, Comisiones y Devoluciones", tags = {
 			"Layouts" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta exitosa"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Baja exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -143,7 +143,7 @@ public class LayoutsController {
 			@PathVariable(name = "idLayout", required = true) Long idLayout,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		// No dummy required in this endpoint
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				new String(""));
 	}
 

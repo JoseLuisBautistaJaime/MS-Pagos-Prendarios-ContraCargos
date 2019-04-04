@@ -75,7 +75,7 @@ public class ReportesController {
 	public Response save(@RequestBody ReporteRequestDTO reporteRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		ReportePagosLibresDTO reportePagosLibresDTO = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				reportePagosLibresDTO);
 	}
 

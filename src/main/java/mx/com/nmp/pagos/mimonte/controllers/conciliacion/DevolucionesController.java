@@ -91,7 +91,7 @@ public class DevolucionesController {
 	public Response consultar(@RequestBody DevolucionDTO devolucionDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				devolucionEntidadDTOList);
 	}
 
@@ -116,7 +116,7 @@ public class DevolucionesController {
 	public Response actualizar(@RequestBody List<DevolucionUpdtDTO> devolucionUpdtDTOList,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				devolucionEntidadDTOList);
 	}
 
