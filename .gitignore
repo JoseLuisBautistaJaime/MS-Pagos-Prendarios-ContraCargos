@@ -8,3 +8,4 @@ sonar-scanner.properties
 src/main/resources/diagramas/
 src/main/resources/scripts/
 .gitignore
+.factorypath
