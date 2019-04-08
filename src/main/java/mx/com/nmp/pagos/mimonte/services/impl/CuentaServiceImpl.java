@@ -6,7 +6,6 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +22,6 @@ import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
-import mx.com.nmp.pagos.mimonte.model.Afiliacion;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
@@ -62,15 +60,15 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	@Transactional(propagation = Propagation.REQUIRED)
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T save(CuentaBaseDTO e, String createdBy)throws CatalogoException {
+	public <T extends AbstractCatalogoDTO> T save(CuentaBaseDTO e, String createdBy) throws CatalogoException {
 		Cuenta cta = cuentaRepository.findByNumeroCuenta(e.getNumeroCuenta());
-		if(null != cta)
+		if (null != cta)
 			throw new CatalogoException(CatalogConstants.NUMERO_CUENTA_ALREADY_EXISTS);
 		if (null != e)
 			e.setCreatedBy(createdBy);
 		Cuenta cuenta = cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e));
-		Set<Afiliacion> afiliaciones = afiliacionRepository.findByCuentas_Id(cuenta.getId());
-		cuenta.setAfiliaciones(afiliaciones);
+//		Set<Afiliacion> afiliaciones = afiliacionRepository.findByCuentas_Id(cuenta.getId());
+//		cuenta.setAfiliaciones(afiliaciones);
 		return (T) CuentaBuilder.buildCuentaBaseDTOFromCuenta(cuenta);
 	}
 

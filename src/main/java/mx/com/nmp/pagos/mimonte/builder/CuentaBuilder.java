@@ -41,8 +41,8 @@ public abstract class CuentaBuilder {
 		Cuenta cuenta = null;
 		if (null != cuentaBaseDTO) {
 			cuenta = new Cuenta();
-			cuenta.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones(), cuentaBaseDTO.getLastModifiedBy(), cuentaBaseDTO.getLastModifiedDate()));
+//			cuenta.setAfiliaciones(
+//					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones(), cuentaBaseDTO.getLastModifiedBy(), cuentaBaseDTO.getLastModifiedDate()));
 			cuenta.setCreatedBy(cuentaBaseDTO.getCreatedBy());
 			cuenta.setCreatedDate(cuentaBaseDTO.getCreatedDate());
 			cuenta.setDescription(cuentaBaseDTO.getDescription());
@@ -67,8 +67,8 @@ public abstract class CuentaBuilder {
 		CuentaBaseDTO cuentaBaseDTO = null;
 		if (null != cuenta) {
 			cuentaBaseDTO = new CuentaBaseDTO();
-			cuentaBaseDTO.setAfiliaciones(null != cuenta.getAfiliaciones() ?
-					AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionSet(cuenta.getAfiliaciones()): new TreeSet<>());
+//			cuentaBaseDTO.setAfiliaciones(null != cuenta.getAfiliaciones() ?
+//					AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionSet(cuenta.getAfiliaciones()): new TreeSet<>());
 			cuentaBaseDTO.setCreatedBy(cuenta.getCreatedBy());
 			cuentaBaseDTO.setCreatedDate(cuenta.getCreatedDate());
 			cuentaBaseDTO.setDescription(cuenta.getDescription());
@@ -93,8 +93,8 @@ public abstract class CuentaBuilder {
 		CuentaDTO cuentaDTO = null;
 		if (null != cuentaBaseDTO) {
 			cuentaDTO = new CuentaDTO();
-			cuentaDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones()));
+//			cuentaDTO.setAfiliaciones(
+//					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones()));
 			cuentaDTO.setEstatus(cuentaBaseDTO.getEstatus());
 			cuentaDTO.setId(cuentaBaseDTO.getId());
 			cuentaDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
@@ -115,8 +115,8 @@ public abstract class CuentaBuilder {
 		CuentaBaseDTO cuentaBaseDTO = null;
 		if (null != cuentaDTO) {
 			cuentaBaseDTO = new CuentaBaseDTO();
-			cuentaBaseDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionDTOSet(cuentaDTO.getAfiliaciones()));
+//			cuentaBaseDTO.setAfiliaciones(
+//					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionDTOSet(cuentaDTO.getAfiliaciones()));
 			cuentaBaseDTO.setEstatus(cuentaDTO.getEstatus());
 			cuentaBaseDTO.setId(cuentaDTO.getId());
 			cuentaBaseDTO.setNumeroCuenta(cuentaDTO.getNumero());
@@ -136,8 +136,8 @@ public abstract class CuentaBuilder {
 		CuentaDTO cuentaDTO = null;
 		if (null != cuenta) {
 			cuentaDTO = new CuentaDTO();
-			cuentaDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
+//			cuentaDTO.setAfiliaciones(
+//					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
 			cuentaDTO.setEstatus(cuenta.getEstatus());
 			cuentaDTO.setId(cuenta.getId());
 			cuentaDTO.setNumero(cuenta.getNumeroCuenta());
@@ -173,8 +173,8 @@ public abstract class CuentaBuilder {
 		CuentaEntDTO cuentaEntDTO = null;
 		if (null != cuenta) {
 			cuentaEntDTO = new CuentaEntDTO();
-			cuentaEntDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionEntDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
+//			cuentaEntDTO.setAfiliaciones(
+//					AfiliacionBuilder.buildAfiliacionEntDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
 			cuentaEntDTO.setEstatus(cuenta.getEstatus());
 			cuentaEntDTO.setId(cuenta.getId());
 			cuentaEntDTO.setNumero(cuenta.getNumeroCuenta());
@@ -211,8 +211,8 @@ public abstract class CuentaBuilder {
 		CuentaEntDTO cuentaEntDTO = null;
 		if (null != cuentaReqDTO) {
 			cuentaEntDTO = new CuentaEntDTO();
-			cuentaEntDTO.setAfiliaciones(AfiliacionBuilder
-					.buildAfiliacionEntDTOListFromAfiliacionReqDTOList(cuentaReqDTO.getAfiliaciones()));
+//			cuentaEntDTO.setAfiliaciones(AfiliacionBuilder
+//					.buildAfiliacionEntDTOListFromAfiliacionReqDTOList(cuentaReqDTO.getAfiliaciones()));
 			cuentaEntDTO.setEstatus(cuentaReqDTO.getEstatus());
 			cuentaEntDTO.setId(cuentaReqDTO.getId());
 			cuentaEntDTO.setNumero(cuentaReqDTO.getNumero());
@@ -249,8 +249,8 @@ public abstract class CuentaBuilder {
 		CuentaReqDTO cuentaReqDTO = null;
 		if (null != cuenta) {
 			cuentaReqDTO = new CuentaReqDTO();
-			cuentaReqDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionReqDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
+//			cuentaReqDTO.setAfiliaciones(
+//					AfiliacionBuilder.buildAfiliacionReqDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
 			cuentaReqDTO.setEstatus(cuenta.getEstatus());
 			cuentaReqDTO.setId(cuenta.getId());
 			cuentaReqDTO.setNumero(cuenta.getNumeroCuenta());
@@ -282,12 +282,13 @@ public abstract class CuentaBuilder {
 	 * @param cuentaReqDTO
 	 * @return
 	 */
-	public static Cuenta buildCuentaFromCuentaReqDTO(CuentaReqDTO cuentaReqDTO, String lastModifiedBy, Date lastModifiedDate) {
+	public static Cuenta buildCuentaFromCuentaReqDTO(CuentaReqDTO cuentaReqDTO, String lastModifiedBy,
+			Date lastModifiedDate) {
 		Cuenta cuenta = null;
 		if (null != cuentaReqDTO) {
 			cuenta = new Cuenta();
-			cuenta.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionReqDTOList(cuentaReqDTO.getAfiliaciones(), lastModifiedBy, lastModifiedDate));
+//			cuenta.setAfiliaciones(
+//					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionReqDTOList(cuentaReqDTO.getAfiliaciones(), lastModifiedBy, lastModifiedDate));
 			cuenta.setId(cuentaReqDTO.getId());
 			cuenta.setEstatus(cuentaReqDTO.getEstatus());
 			cuenta.setNumeroCuenta(cuentaReqDTO.getNumero());
@@ -304,7 +305,8 @@ public abstract class CuentaBuilder {
 	 * @param cuentaReqDTOSet
 	 * @return
 	 */
-	public static Set<Cuenta> buildCuentaSetFromCuentaReqDTOSet(Set<CuentaReqDTO> cuentaReqDTOSet, String lastModifiedBy, Date lastModifiedDate) {
+	public static Set<Cuenta> buildCuentaSetFromCuentaReqDTOSet(Set<CuentaReqDTO> cuentaReqDTOSet,
+			String lastModifiedBy, Date lastModifiedDate) {
 		Set<Cuenta> cuentaSet = null;
 		if (null != cuentaReqDTOSet && !cuentaReqDTOSet.isEmpty()) {
 			cuentaSet = new TreeSet<>();
