@@ -6,7 +6,6 @@ package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,7 +39,7 @@ public class Categoria implements Comparable<Categoria> {
 	@Column(name = "descripcion")
 	private String descripcion;
 
-	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "categoria")
 	private Set<CodigoEstadoCuenta> codigoEstadoCuentaSet;
 
 	public Categoria() {

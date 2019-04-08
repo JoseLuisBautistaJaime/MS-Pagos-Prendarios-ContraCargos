@@ -94,7 +94,7 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CuentaDTO cuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		if (ValidadorCatalogo.validateCuentaSave(cuentaDTOReq))
+		if (!ValidadorCatalogo.validateCuentaSave(cuentaDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		CuentaEntDTO cuentaEntDTO = null;
 		try {
@@ -127,7 +127,7 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CuentaDTO cuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-		if (ValidadorCatalogo.validateCuentaUpdate(cuentaDTOReq))
+		if (!ValidadorCatalogo.validateCuentaUpdate(cuentaDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		CuentaEntDTO cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
 				.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));

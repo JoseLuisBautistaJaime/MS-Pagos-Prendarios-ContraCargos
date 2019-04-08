@@ -116,7 +116,6 @@ public abstract class ValidadorCatalogo {
 				if (null == cuentaReqDTO.getId() || cuentaReqDTO.getId() <= 0) {
 					return false;
 				}
-				// Afiliacion catalog is no used
 //				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
 //					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
 //						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
@@ -154,7 +153,6 @@ public abstract class ValidadorCatalogo {
 				if (null == cuentaReqDTO.getId() || cuentaReqDTO.getId() <= 0) {
 					return false;
 				}
-				// Afiliacion catalog is not used
 //				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
 //					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
 //						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
@@ -271,7 +269,7 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validateCuentaSave(CuentaDTO cuentaDTO) {
-		return (null != cuentaDTO.getNumero() && null != cuentaDTO.getNumero());
+		return (null != cuentaDTO && null != cuentaDTO.getNumero());
 	}
 
 	/**
@@ -282,7 +280,7 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validateCuentaUpdate(CuentaDTO cuentaDTO) {
-		return (null != cuentaDTO.getNumero() && null != cuentaDTO.getNumero() && null != cuentaDTO.getId());
+		return (null != cuentaDTO && null != cuentaDTO.getNumero() && null != cuentaDTO.getId());
 	}
 
 }

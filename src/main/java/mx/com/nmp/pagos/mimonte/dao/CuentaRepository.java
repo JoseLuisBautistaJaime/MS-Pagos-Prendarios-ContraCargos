@@ -67,7 +67,7 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	/**
 	 * Regesa todas las cuentas
 	 */
-//	@Query("SELECT cta FROM Cuenta cta WHERE cta.estatus = true")
-	public List<Cuenta> findAllOrderBycreatedDateDesc();
+	@Query("SELECT cta FROM Cuenta cta ORDER BY cta.createdDate DESC")
+	public List<Cuenta> findAll();
 
 }

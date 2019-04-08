@@ -104,6 +104,8 @@ public abstract class EntidadBuilder {
 			entidadResponseDTO.setEstatus(entidad.getEstatus());
 			entidadResponseDTO.setCreadoPor(entidad.getCreatedBy());
 			entidadResponseDTO.setFechaCreacion(entidad.getCreatedDate());
+			entidadResponseDTO.setFechaUltimaModificacion(entidad.getLastModifiedDate());
+			entidadResponseDTO.setUltimoUsuarioModificador(entidad.getLastModifiedBy());
 		}
 		return entidadResponseDTO;
 	}
