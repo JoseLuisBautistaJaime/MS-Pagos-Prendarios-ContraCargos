@@ -4,8 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.dto;
 
-import java.util.List;
-
 /**
  * @name CuentaEntDTO
  * @description Clase que encapsula la informacion de una cuenta a enviar como
@@ -20,18 +18,16 @@ public class CuentaEntDTO implements Comparable<CuentaEntDTO> {
 	private Long id;
 	private String numero;
 	private Boolean estatus;
-	private List<AfiliacionEntDTO> afiliaciones;
 
 	public CuentaEntDTO() {
 		super();
 	}
 
-	public CuentaEntDTO(Long id, String numero, Boolean estatus, List<AfiliacionEntDTO> afiliaciones) {
+	public CuentaEntDTO(Long id, String numero, Boolean estatus) {
 		super();
 		this.id = id;
 		this.numero = numero;
 		this.estatus = estatus;
-		this.afiliaciones = afiliaciones;
 	}
 
 	public Long getId() {
@@ -58,12 +54,9 @@ public class CuentaEntDTO implements Comparable<CuentaEntDTO> {
 		this.estatus = estatus;
 	}
 
-	public List<AfiliacionEntDTO> getAfiliaciones() {
-		return afiliaciones;
-	}
-
-	public void setAfiliaciones(List<AfiliacionEntDTO> afiliaciones) {
-		this.afiliaciones = afiliaciones;
+	@Override
+	public String toString() {
+		return "CuentaEntDTO [id=" + id + ", numero=" + numero + ", estatus=" + estatus + "]";
 	}
 
 	@Override

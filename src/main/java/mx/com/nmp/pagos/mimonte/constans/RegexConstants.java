@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.constans;
 
+import java.util.regex.Pattern;
+
 /**
  * @name RegexConstants
  * @description Clase que encapsula valores constantes que contienen expresiones
@@ -25,7 +27,8 @@ public abstract class RegexConstants {
 	/**
 	 * Regex para direcciones de correo electronico
 	 */
-	public static final String REGEX_EMAIL = "^(.+)@(.+)$";
+	public static final Pattern REGEX_EMAIL = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
+			Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Regex para numeros telefonicos

@@ -38,9 +38,6 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "afiliacion")
 	private Set<ReglaNegocio> reglas;
 
-//	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "afiliaciones")
-//	private Set<Cuenta> cuentas;
-
 	public Afiliacion() {
 		super();
 	}
@@ -51,29 +48,26 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 		this.tipo = tipo;
 	}
 
-	public Afiliacion(TipoAutorizacion tipo, Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
+	public Afiliacion(TipoAutorizacion tipo, Set<ReglaNegocio> reglas) {
 		super();
 		this.tipo = tipo;
 		this.reglas = reglas;
-//		this.cuentas = cuentas;
 	}
 
-	public Afiliacion(Long numero, TipoAutorizacion tipo, Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
+	public Afiliacion(Long numero, TipoAutorizacion tipo, Set<ReglaNegocio> reglas) {
 		super();
 		this.numero = numero;
 		this.tipo = tipo;
 		this.reglas = reglas;
-//		this.cuentas = cuentas;
 	}
 
 	public Afiliacion(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
 			String lastModifiedBy, String description, String shortDescription, Long numero, TipoAutorizacion tipo,
-			Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
+			Set<ReglaNegocio> reglas) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.numero = numero;
 		this.tipo = tipo;
 		this.reglas = reglas;
-//		this.cuentas = cuentas;
 	}
 
 	public Long getNumero() {
@@ -107,19 +101,6 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 	public void setReglas(Set<ReglaNegocio> reglas) {
 		this.reglas = reglas;
 	}
-
-//	public Set<Cuenta> getCuentas() {
-//		return cuentas;
-//	}
-
-//	public void setCuentas(Set<Cuenta> cuentas) {
-//		this.cuentas = cuentas;
-//	}
-
-//	@Override
-//	public String toString() {
-//		return "Afiliacion [numero=" + numero + ", tipo=" + tipo + ", reglas=" + reglas + ", cuentas=" + cuentas + "]";
-//	}
 
 	@Override
 	public String toString() {

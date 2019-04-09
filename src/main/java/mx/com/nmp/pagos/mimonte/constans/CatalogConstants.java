@@ -158,6 +158,11 @@ public final class CatalogConstants {
 	public static final String NUMERO_CUENTA_ALREADY_EXISTS = "El numero de cuenta que desea agregar ya existe";
 
 	/**
+	 * Mensaje que es mostrado cuando se genera un error con un patron REGEX
+	 */
+	public static final String ERROR_WITH_REGEX_PATTERN = "Se genero un error con un patron regex";
+
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */

@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
-import mx.com.nmp.pagos.mimonte.dao.AfiliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
@@ -45,13 +44,6 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	private CuentaRepository cuentaRepository;
 
 	/**
-	 * Repository de Afiliacion
-	 */
-	@Autowired
-	@Qualifier("afiliacionRepository")
-	private AfiliacionRepository afiliacionRepository;
-
-	/**
 	 * Guarda una cuenta
 	 * 
 	 * @param e
@@ -67,8 +59,6 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 		if (null != e)
 			e.setCreatedBy(createdBy);
 		Cuenta cuenta = cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e));
-//		Set<Afiliacion> afiliaciones = afiliacionRepository.findByCuentas_Id(cuenta.getId());
-//		cuenta.setAfiliaciones(afiliaciones);
 		return (T) CuentaBuilder.buildCuentaBaseDTOFromCuenta(cuenta);
 	}
 

@@ -7,7 +7,9 @@ package mx.com.nmp.pagos.mimonte.util.validacion;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.PatternSyntaxException;
 
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
@@ -18,6 +20,7 @@ import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 
 /**
  * @name ValidadorCatalogo
@@ -69,30 +72,6 @@ public abstract class ValidadorCatalogo {
 	}
 
 	/**
-	 * Valida que los atributos de la peticion de la de afiliacion no sean nulos y
-	 * sean datos validos
-	 * 
-	 * @param afiliacionReqDTO
-	 * @return
-	 */
-//	public static boolean validateAfilacionSave(AfiliacionReqDTO afiliacionReqDTO) {
-//		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero() && afiliacionReqDTO.getNumero() > 0);
-//	}
-
-	/**
-	 * Valida que los atributos de la peticion de actualizacion de afiliacion no
-	 * sean nulos y sean datos validos
-	 * 
-	 * @param afiliacionReqDTO
-	 * @return
-	 */
-//	public static boolean validateAfilacionUpdt(AfiliacionReqDTO afiliacionReqDTO) {
-//		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero() && afiliacionReqDTO.getNumero() > 0
-//				&& null != afiliacionReqDTO.getId() && afiliacionReqDTO.getId() > 0
-//				&& null != afiliacionReqDTO.getEstatus());
-//	}
-
-	/**
 	 * Valida que de tipo EntidadBaseDTO en el request para la alta tenga los
 	 * valores correctos
 	 * 
@@ -115,13 +94,6 @@ public abstract class ValidadorCatalogo {
 				if (null == cuentaReqDTO.getId() || cuentaReqDTO.getId() <= 0) {
 					return false;
 				}
-//				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
-//					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-//						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
-//							return false;
-//					}
-//				} else
-//					return false;
 			}
 		} else
 			return false;
@@ -134,8 +106,9 @@ public abstract class ValidadorCatalogo {
 	 * 
 	 * @param entidadBaseDTO
 	 * @return
+	 * @throws PatternSyntaxException
 	 */
-	public static boolean validateEntidadBaseDTOUpdt(EntidadBaseDTO entidadBaseDTO) {
+	public static boolean validateEntidadBaseDTOUpdt(EntidadBaseDTO entidadBaseDTO) throws PatternSyntaxException {
 		if (null == entidadBaseDTO || null == entidadBaseDTO.getNombre() || null == entidadBaseDTO.getDescripcion()
 				|| null == entidadBaseDTO.getCuentas() || null == entidadBaseDTO.getId() || entidadBaseDTO.getId() <= 0)
 			return false;
@@ -143,6 +116,14 @@ public abstract class ValidadorCatalogo {
 			for (ContactoReqDTO contactoReqDTO : entidadBaseDTO.getContactos()) {
 				if (null == contactoReqDTO.getId() || contactoReqDTO.getId() <= 0) {
 					return false;
+				}
+				try {
+					if (null == contactoReqDTO.getEmail()
+							|| !ValidadorGenerico.validateEmail(contactoReqDTO.getEmail())) {
+						return false;
+					}
+				} catch (PatternSyntaxException pse) {
+					throw new CatalogoException(CatalogConstants.ERROR_WITH_REGEX_PATTERN);
 				}
 			}
 		} else
@@ -152,13 +133,6 @@ public abstract class ValidadorCatalogo {
 				if (null == cuentaReqDTO.getId() || cuentaReqDTO.getId() <= 0) {
 					return false;
 				}
-//				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
-//					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-//						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
-//							return false;
-//					}
-//				} else
-//					return false;
 			}
 		} else
 			return false;

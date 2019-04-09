@@ -34,8 +34,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.CodigoEstadoCuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
-import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
-import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
@@ -112,9 +110,6 @@ public class CodigoEstadoCuentaController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				codigo);
-
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTOResp = buildDummy2();
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", codigoEstadoCuentaDTOResp);
 	}
 
 	/**
@@ -144,9 +139,6 @@ public class CodigoEstadoCuentaController {
 								CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqUpdtDTO(
 										codigoEstadoCuentaDTOReq, null, new Date()),
 								lastModifiedBy));
-
-//		CodigoEstadoCuentaUpdtDTO codigo = buildDummy2();
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				codigo);
 	}
@@ -177,9 +169,6 @@ public class CodigoEstadoCuentaController {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, codigo);
-
-//		CodigoEstadoCuentaUpdtDTO codigo = buildDummy2();
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", codigo);
 	}
 
 	/**
@@ -200,7 +189,6 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByEntidadId(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
-
 		List<CodigoEstadoCuentaUpdtDTO> lst = null;
 		try {
 			lst = codigoEstadoCuentaServiceImpl.findByEntidadId(idEntidad);
@@ -209,13 +197,6 @@ public class CodigoEstadoCuentaController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
-
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy2();
-//		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
-//		lst.add(codigoEstadoCuentaDTO);
-//		lst.add(codigoEstadoCuentaDTO2);
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", lst);
 	}
 
 	/**
@@ -268,50 +249,8 @@ public class CodigoEstadoCuentaController {
 		List<CodigoEstadoCuentaUpdtDTO> lst = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaUpdtDTOListFromCodigoEstadoCuentaDTOList(
 						(List<CodigoEstadoCuentaDTO>) codigoEstadoCuentaServiceImpl.findAll());
-
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy3();
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO3 = buildDummy4();
-//		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
-//		lst.add(codigoEstadoCuentaDTO);
-//		lst.add(codigoEstadoCuentaDTO2);
-//		lst.add(codigoEstadoCuentaDTO3);
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
-	}
-
-	/**
-	 * Crea un objeto de respuesta dummy
-	 * 
-	 * @return
-	 */
-	public static CodigoEstadoCuentaUpdtDTO buildDummy2() {
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaUpdtDTO(1L, "Legend X", true,
-				new BaseEntidadDTO(1L, "Banamex", "Banco Banamex"), new CategoriaDTO(1L, "Ventas"));
-		return codigoEstadoCuentaDTO;
-	}
-
-	/**
-	 * Construye un objeto dummy
-	 * 
-	 * @return
-	 */
-	public static CodigoEstadoCuentaUpdtDTO buildDummy3() {
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaUpdtDTO(1L, "GGJX", true,
-				new BaseEntidadDTO(2L, "Bancomer", "Banco Bancomer"), new CategoriaDTO(1L, "Otra"));
-		return codigoEstadoCuentaDTO;
-	}
-
-	/**
-	 * Construye un objeto dummy
-	 * 
-	 * @return
-	 */
-	public static CodigoEstadoCuentaUpdtDTO buildDummy4() {
-		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = new CodigoEstadoCuentaUpdtDTO(1L, "Leyenada YYTTT", true,
-				new BaseEntidadDTO(3L, "Santander", "Banco Santander"), new CategoriaDTO(1L, "Otra Categoria"));
-		return codigoEstadoCuentaDTO;
 	}
 
 }
