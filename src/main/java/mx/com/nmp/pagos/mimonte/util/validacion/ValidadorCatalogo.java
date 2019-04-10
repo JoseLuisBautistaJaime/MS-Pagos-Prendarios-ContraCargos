@@ -147,8 +147,8 @@ public abstract class ValidadorCatalogo {
 	 */
 	public static boolean validaContactoReqSaveDTO(ContactoRequestDTO contactoRequestDTO) {
 		if (contactoRequestDTO == null || contactoRequestDTO.getDescripcion() == null
-				|| contactoRequestDTO.getEmail() == null || contactoRequestDTO.getNombre() == null
-				|| contactoRequestDTO.getTipoContacto() == null)
+				|| contactoRequestDTO.getEmail() == null || contactoRequestDTO.getNombre() == null || contactoRequestDTO.getNombre().isEmpty()
+				|| contactoRequestDTO.getTipoContacto() == null || contactoRequestDTO.getTipoContacto().getId() == null)
 			return false;
 		if (contactoRequestDTO.getTipoContacto() != null) {
 			if (contactoRequestDTO.getTipoContacto() == null || contactoRequestDTO.getTipoContacto().getId() <= 0)
@@ -167,7 +167,8 @@ public abstract class ValidadorCatalogo {
 	public static boolean validaContactoReqUpdateDTO(ContactoReqUpdateDTO contactoReqUpdateDTO) {
 		if (contactoReqUpdateDTO == null || contactoReqUpdateDTO.getDescripcion() == null
 				|| contactoReqUpdateDTO.getEmail() == null || contactoReqUpdateDTO.getId() <= 0
-				|| contactoReqUpdateDTO.getNombre() == null || contactoReqUpdateDTO.getTipoContacto() == null)
+				|| contactoReqUpdateDTO.getNombre() == null || contactoReqUpdateDTO.getNombre().isEmpty() 
+				|| contactoReqUpdateDTO.getTipoContacto() == null || contactoReqUpdateDTO.getTipoContacto().getId() == null)
 			return false;
 		if (contactoReqUpdateDTO.getTipoContacto() != null) {
 			if (contactoReqUpdateDTO.getTipoContacto() == null || contactoReqUpdateDTO.getTipoContacto().getId() <= 0)
