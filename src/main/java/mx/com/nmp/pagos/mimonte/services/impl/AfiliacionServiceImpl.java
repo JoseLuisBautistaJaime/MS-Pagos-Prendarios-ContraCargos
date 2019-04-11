@@ -13,9 +13,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.AfiliacionBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dao.AfiliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.model.Afiliacion;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
@@ -45,10 +47,10 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T save(AfiliacionDTO e, String createdBy) {
-//		Afiliacion afiliacion = null;
-//		afiliacion = afiliacionRepository.findByNumero(e.getNumero());
-//		if (null != afiliacion)
-//			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS);
+		Afiliacion afiliacion = null;
+		afiliacion = afiliacionRepository.findByNumero(e.getNumero());
+		if (null != afiliacion)
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS);
 		if (null != e)
 			e.setCreatedBy(createdBy);
 		return (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(
@@ -117,7 +119,7 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 */
 	public AfiliacionDTO findByNumero(final Long numeroAfiliacion) throws EmptyResultDataAccessException {
 		Afiliacion afiliacion = null;
-//		afiliacion = afiliacionRepository.findByNumero(numeroAfiliacion);
+		afiliacion = afiliacionRepository.findByNumero(numeroAfiliacion);
 		return AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(afiliacion);
 	}
 

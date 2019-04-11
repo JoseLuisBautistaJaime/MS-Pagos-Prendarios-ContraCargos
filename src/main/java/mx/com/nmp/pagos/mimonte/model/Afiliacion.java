@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -38,8 +39,8 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "afiliacion")
 	private Set<ReglaNegocio> reglas;
 
-//	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "afiliaciones")
-//	private Set<Cuenta> cuentas;
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "afiliaciones")
+	private Set<Cuenta> cuentas;
 
 	public Afiliacion() {
 		super();
@@ -55,7 +56,7 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 		super();
 		this.tipo = tipo;
 		this.reglas = reglas;
-//		this.cuentas = cuentas;
+		this.cuentas = cuentas;
 	}
 
 	public Afiliacion(Long numero, TipoAutorizacion tipo, Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
@@ -63,7 +64,7 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 		this.numero = numero;
 		this.tipo = tipo;
 		this.reglas = reglas;
-//		this.cuentas = cuentas;
+		this.cuentas = cuentas;
 	}
 
 	public Afiliacion(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
@@ -73,7 +74,7 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 		this.numero = numero;
 		this.tipo = tipo;
 		this.reglas = reglas;
-//		this.cuentas = cuentas;
+		this.cuentas = cuentas;
 	}
 
 	public Long getNumero() {
@@ -108,22 +109,17 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 		this.reglas = reglas;
 	}
 
-//	public Set<Cuenta> getCuentas() {
-//		return cuentas;
-//	}
+	public Set<Cuenta> getCuentas() {
+		return cuentas;
+	}
 
-//	public void setCuentas(Set<Cuenta> cuentas) {
-//		this.cuentas = cuentas;
-//	}
-
-//	@Override
-//	public String toString() {
-//		return "Afiliacion [numero=" + numero + ", tipo=" + tipo + ", reglas=" + reglas + ", cuentas=" + cuentas + "]";
-//	}
+	public void setCuentas(Set<Cuenta> cuentas) {
+		this.cuentas = cuentas;
+	}
 
 	@Override
 	public String toString() {
-		return "Afiliacion [numero=" + numero + ", tipo=" + tipo + ", reglas=" + reglas + "]";
+		return "Afiliacion [numero=" + numero + ", tipo=" + tipo + ", reglas=" + reglas + ", cuentas=" + cuentas + "]";
 	}
 
 	@Override
