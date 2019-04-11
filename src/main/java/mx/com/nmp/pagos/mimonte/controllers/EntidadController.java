@@ -133,7 +133,11 @@ public class EntidadController {
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTOResp = null;
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, null, new Date());
-		entidadDTOResp = entidadServiceImpl.update(entidadDTO, lastModifiedBy);
+		try {
+			entidadDTOResp = entidadServiceImpl.update(entidadDTO, lastModifiedBy);
+		} catch (CatalogoException ce) {
+			throw ce;
+		}
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				entidadResponseDTO);

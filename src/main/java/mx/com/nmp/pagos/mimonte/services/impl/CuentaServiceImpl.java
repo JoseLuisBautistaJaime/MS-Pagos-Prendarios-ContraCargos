@@ -70,9 +70,12 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T update(CuentaBaseDTO e, String lastModifiedBy) {
+	public <T extends AbstractCatalogoDTO> T update(CuentaBaseDTO e, String lastModifiedBy) throws CatalogoException{
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
+		Cuenta cta = cuentaRepository.findById(e.getId()).isPresent() ? cuentaRepository.findById(e.getId()).get():null;
+		if(null == cta)
+			throw new CatalogoException(CatalogConstants.ID_CUENTA_DOES_NOT_EXISTS);
 		return (T) CuentaBuilder
 				.buildCuentaBaseDTOFromCuenta(cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e)));
 	}

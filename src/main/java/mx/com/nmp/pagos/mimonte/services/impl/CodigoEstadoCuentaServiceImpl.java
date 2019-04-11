@@ -23,7 +23,9 @@ import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaUpdtDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.model.Categoria;
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
+import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
 /**
@@ -71,6 +73,16 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 		codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaId(e.getEntidad().getId(),
 				e.getCategoria().getId());
 		if (null == codigoEC) {
+			Entidad entidad = entidadRepository.findById(e.getEntidad().getId()).isPresent()
+					? entidadRepository.findById(e.getEntidad().getId()).get()
+					: null;
+			Categoria categoria = categoriaRepository.findById(e.getCategoria().getId()).isPresent()
+					? categoriaRepository.findById(e.getCategoria().getId()).get()
+					: null;
+			if (null == entidad)
+				throw new CatalogoException(CatalogConstants.NO_ENTIDAD_FOUND);
+			if (null == categoria)
+				throw new CatalogoException(CatalogConstants.NO_CATEGORIA_FOUND);
 			if (null != e)
 				e.setCreatedBy(createdBy);
 			CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
@@ -94,13 +106,29 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T update(CodigoEstadoCuentaDTO e, String lastModifiedBy) {
-		if (null != e)
-			e.setLastModifiedBy(lastModifiedBy);
-		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
-		CodigoEstadoCuenta ent = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTOUpdt(e);
-		codigoEstadoCuentaDTO = CodigoEstadoCuentaBuilder
-				.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(codigoEstadoCuentaRepository.save(ent));
-		return (T) codigoEstadoCuentaDTO;
+		CodigoEstadoCuenta codigoEC = null;
+		codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaId(e.getEntidad().getId(),
+				e.getCategoria().getId());
+		if (null == codigoEC) {
+			Entidad entidad = entidadRepository.findById(e.getEntidad().getId()).isPresent()
+					? entidadRepository.findById(e.getEntidad().getId()).get()
+					: null;
+			Categoria categoria = categoriaRepository.findById(e.getCategoria().getId()).isPresent()
+					? categoriaRepository.findById(e.getCategoria().getId()).get()
+					: null;
+			if (null == entidad)
+				throw new CatalogoException(CatalogConstants.NO_ENTIDAD_FOUND);
+			if (null == categoria)
+				throw new CatalogoException(CatalogConstants.NO_CATEGORIA_FOUND);
+			if (null != e)
+				e.setLastModifiedBy(lastModifiedBy);
+			CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
+			CodigoEstadoCuenta ent = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTOUpdt(e);
+			codigoEstadoCuentaDTO = CodigoEstadoCuentaBuilder
+					.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(codigoEstadoCuentaRepository.save(ent));
+			return (T) codigoEstadoCuentaDTO;
+		} else
+			throw new CatalogoException(CatalogConstants.CODIGO_E_C_ALREADY_EXISTS);
 	}
 
 	/**

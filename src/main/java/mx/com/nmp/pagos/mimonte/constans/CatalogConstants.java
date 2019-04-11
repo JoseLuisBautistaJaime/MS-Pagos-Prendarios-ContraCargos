@@ -144,7 +144,7 @@ public final class CatalogConstants {
 	 * Mensaje que es mostrado cuando uno o mas ids de catalogo de contactos que se
 	 * intentan ingresar no existen
 	 */
-	public static final String ID_CONTACTO_DOES_NOT_EXISTS = "Uno o mas ids de cuenta no existen";
+	public static final String ID_CONTACTO_DOES_NOT_EXISTS = "Uno o mas ids de contacto no existen";
 
 	/**
 	 * Mensaje que es mostrado si el idTipoContacto no existe.
@@ -161,6 +161,23 @@ public final class CatalogConstants {
 	 * Mensaje que es mostrado cuando se genera un error con un patron REGEX
 	 */
 	public static final String ERROR_WITH_REGEX_PATTERN = "Se genero un error con un patron regex";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error de constraints
+	 */
+	public static final String CONSTRAINT_ERROR_MESSAGE = "Uno o mas ids especificados no existen";
+
+	/**
+	 * Mensaje que es mostrado cuando se desea modificar una entidad con un id que
+	 * no existe
+	 */
+	public static final String NO_ENTIDAD_FOUND = "No existe la entidad especificada";
+
+	/**
+	 * Mensaje que es mostrado cuando se desea modificar una categoria con un id que
+	 * no existe
+	 */
+	public static final String NO_CATEGORIA_FOUND = "No existe la categoria especificada";
 
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no

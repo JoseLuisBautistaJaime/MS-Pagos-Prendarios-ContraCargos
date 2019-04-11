@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -88,7 +89,6 @@ public class EntidadServiceImpl implements EntidadService {
 		if (!ValidadorCatalogo.validateContactosExists(e.getContactos(),
 				ContactosBuilder.buildContactoBaseDTOListFromContactosListOnlyIds(contactosList)))
 			throw new CatalogoException(CatalogConstants.ID_CONTACTO_DOES_NOT_EXISTS);
-
 		if (null == entidades || !entidades.isEmpty())
 			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS);
 		if (null != e)
@@ -107,14 +107,33 @@ public class EntidadServiceImpl implements EntidadService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e, String lastModifiedBy) {
+	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e, String lastModifiedBy) throws CatalogoException {
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
 		Entidad entidad = null;
 		Entidad entidadResp = null;
 		EntidadDTO entidadDTO = null;
 		entidad = EntidadBuilder.buildEntidadFromEntidadDTO(e);
-		entidadResp = entidadRepository.save(entidad);
+		Entidad entidadTest = entidadRepository.findById(e.getId()).isPresent()
+				? entidadRepository.findById(e.getId()).get()
+				: null;
+		if (null == entidadTest)
+			throw new CatalogoException(CatalogConstants.NO_ENTIDAD_FOUND);
+		// Se valida que los id's de las cuentas existan
+		List<Cuenta> cuentaList = cuentaRepository.findAll();
+		if (!ValidadorCatalogo.validateCuentasExists(e.getCuentas(),
+				CuentaBuilder.buildCuentaBaseDTOListFromCuentaList(cuentaList)))
+			throw new CatalogoException(CatalogConstants.ID_CUENTA_DOES_NOT_EXISTS);
+		// Se valida que los id's de los contactos existan
+		List<Contactos> contactosList = contactoRespository.findAll();
+		if (!ValidadorCatalogo.validateContactosExists(e.getContactos(),
+				ContactosBuilder.buildContactoBaseDTOListFromContactosListOnlyIds(contactosList)))
+			throw new CatalogoException(CatalogConstants.ID_CONTACTO_DOES_NOT_EXISTS);
+		try {
+			entidadResp = entidadRepository.save(entidad);
+		} catch (ConstraintViolationException cve) {
+			throw new CatalogoException(CatalogConstants.CONSTRAINT_ERROR_MESSAGE);
+		}
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp);
 		return (T) entidadDTO;
 	}

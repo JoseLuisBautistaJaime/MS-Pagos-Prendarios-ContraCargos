@@ -187,16 +187,16 @@ public abstract class ValidadorCatalogo {
 	 */
 	public static boolean validateCuentasExists(Set<CuentaReqDTO> cuentasOrigen, List<CuentaBaseDTO> cuentasTarget) {
 		List<Long> list = null;
-		if (null == cuentasOrigen || !cuentasOrigen.isEmpty())
+		if (null == cuentasTarget || cuentasTarget.isEmpty())
 			return true;
 		else {
 			list = new ArrayList<>();
-			for (CuentaReqDTO cuentaReqDTO : cuentasOrigen)
-				list.add(cuentaReqDTO.getId());
+			for (CuentaBaseDTO cuentaBaseDTO : cuentasTarget)
+				list.add(cuentaBaseDTO.getId());
 		}
-		if (null != cuentasTarget && !cuentasTarget.isEmpty()) {
-			for (CuentaBaseDTO cuentaBaseDTO : cuentasTarget) {
-				if (!list.contains(cuentaBaseDTO.getId())) {
+		if (null != cuentasOrigen && !cuentasOrigen.isEmpty()) {
+			for (CuentaReqDTO cuentaReqDTO : cuentasOrigen) {
+				if (!list.contains(cuentaReqDTO.getId())) {
 					return false;
 				}
 			}
@@ -216,16 +216,16 @@ public abstract class ValidadorCatalogo {
 	public static boolean validateContactosExists(Set<ContactoReqDTO> contactosOrigen,
 			List<ContactoBaseDTO> contactosTarget) {
 		List<Long> list = null;
-		if (null == contactosOrigen || !contactosOrigen.isEmpty())
+		if (null == contactosTarget || contactosTarget.isEmpty())
 			return true;
 		else {
 			list = new ArrayList<>();
-			for (ContactoReqDTO contactoReqDTO : contactosOrigen)
-				list.add(contactoReqDTO.getId());
+			for (ContactoBaseDTO contactoBaseDTO : contactosTarget)
+				list.add(contactoBaseDTO.getId());
 		}
 		if (null != contactosTarget && !contactosTarget.isEmpty()) {
-			for (ContactoBaseDTO contactoBaseDTO : contactosTarget) {
-				if (!list.contains(contactoBaseDTO.getId())) {
+			for (ContactoReqDTO contactoReqDTO : contactosOrigen) {
+				if (!list.contains(contactoReqDTO.getId())) {
 					return false;
 				}
 			}
@@ -242,7 +242,7 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validateCuentaSave(CuentaDTO cuentaDTO) {
-		return (null != cuentaDTO && null != cuentaDTO.getNumero());
+		return (null != cuentaDTO && null != cuentaDTO.getNumero() && !cuentaDTO.getNumero().isEmpty());
 	}
 
 	/**
@@ -253,7 +253,8 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validateCuentaUpdate(CuentaDTO cuentaDTO) {
-		return (null != cuentaDTO && null != cuentaDTO.getNumero() && null != cuentaDTO.getId());
+		return (null != cuentaDTO && null != cuentaDTO.getNumero() && !cuentaDTO.getNumero().isEmpty()
+				&& null != cuentaDTO.getId());
 	}
 
 }

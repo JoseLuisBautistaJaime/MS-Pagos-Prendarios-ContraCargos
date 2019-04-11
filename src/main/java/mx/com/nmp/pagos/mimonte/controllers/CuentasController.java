@@ -121,8 +121,13 @@ public class CuentasController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		if (!ValidadorCatalogo.validateCuentaUpdate(cuentaDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
-		CuentaEntDTO cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
-				.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));
+		CuentaEntDTO cuentaEntDTO = null;
+		try {
+			cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl.update(
+					CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));
+		} catch (CatalogoException ce) {
+			throw ce;
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				cuentaEntDTO);
 	}
