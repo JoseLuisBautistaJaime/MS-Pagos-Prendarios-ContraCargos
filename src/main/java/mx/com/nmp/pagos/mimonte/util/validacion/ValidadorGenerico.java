@@ -4,7 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
-import java.util.regex.Matcher;
 import java.util.regex.PatternSyntaxException;
 
 import mx.com.nmp.pagos.mimonte.constans.RegexConstants;
@@ -38,8 +37,7 @@ public abstract class ValidadorGenerico {
 	 * @throws PatternSyntaxException
 	 */
 	public static boolean validateEmail(final String email) throws PatternSyntaxException {
-		Matcher matcher = RegexConstants.REGEX_EMAIL.matcher(email);
-        return matcher.find();
+		return null != email ? email.matches(RegexConstants.REGEX_EMAIL) : false;
 	}
 
 	/**

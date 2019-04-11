@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.util.List;
+
 /**
  * @name CuentaDTO
  * @description Clase que encapsula la informacion de un objeto cuenta
@@ -17,16 +19,18 @@ public class CuentaDTO {
 	private Long id;
 	private String numero;
 	private Boolean estatus;
+	private List<AfiliacionRespDTO> afiliaciones;
 
 	public CuentaDTO() {
 		super();
 
 	}
 
-	public CuentaDTO(Long id, String numero, Boolean estatus) {
+	public CuentaDTO(Long id, String numero, List<AfiliacionRespDTO> afiliaciones, Boolean estatus) {
 		super();
 		this.id = id;
 		this.numero = numero;
+		this.afiliaciones = afiliaciones;
 		this.estatus = estatus;
 	}
 
@@ -46,6 +50,14 @@ public class CuentaDTO {
 		this.numero = numero;
 	}
 
+	public List<AfiliacionRespDTO> getAfiliaciones() {
+		return afiliaciones;
+	}
+
+	public void setAfiliaciones(List<AfiliacionRespDTO> afiliaciones) {
+		this.afiliaciones = afiliaciones;
+	}
+
 	public Boolean getEstatus() {
 		return estatus;
 	}
@@ -56,7 +68,8 @@ public class CuentaDTO {
 
 	@Override
 	public String toString() {
-		return "CuentaDTO [id=" + id + ", numero=" + numero + ", estatus=" + estatus + "]";
+		return "CuentaDTO [id=" + id + ", numero=" + numero + ", afiliaciones=" + afiliaciones + ", estatus=" + estatus
+				+ "]";
 	}
 
 }
