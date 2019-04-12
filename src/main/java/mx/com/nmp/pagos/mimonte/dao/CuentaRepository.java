@@ -35,9 +35,7 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-//	@Query("SELECT cta FROM Cuenta cta INNER JOIN cta.entidades ent WHERE ent.id = :idEntidad AND cta.estatus = true and ent.estatus = true")
-	public List<Cuenta> findByEntidades_Id(/*@Param("idEntidad")*/ final Long idEntidad)
-			throws EmptyResultDataAccessException;
+	public List<Cuenta> findByEntidades_Id(final Long idEntidad) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa una Cuenta por numero
@@ -46,8 +44,7 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-//	@Query("SELECT cta FROM Cuenta cta WHERE cta.numeroCuenta = :numero AND cta.estatus = true")
-	public Cuenta findByNumeroCuenta(/*@Param("numero")*/ final String numero) throws EmptyResultDataAccessException;
+	public Cuenta findByNumeroCuenta(final String numero) throws EmptyResultDataAccessException;
 
 	/**
 	 * Actualiza el estatus de una cuenta a false (inactivo)

@@ -108,7 +108,6 @@ public class EntidadController {
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				entidadResponseDTO);
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", buildDummy());
 	}
 
 	/**
@@ -142,8 +141,6 @@ public class EntidadController {
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				entidadResponseDTO);
-
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa", buildDummy());
 	}
 
 	/**
@@ -173,8 +170,6 @@ public class EntidadController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				entidadResponseDTO);
-
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummy());
 	}
 
 	/**
@@ -205,8 +200,6 @@ public class EntidadController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != entidadResponseDTOList ? entidadResponseDTOList : new ArrayList<>());
-
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummyList());
 	}
 
 	/**

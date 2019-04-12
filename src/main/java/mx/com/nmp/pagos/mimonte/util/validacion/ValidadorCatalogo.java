@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
@@ -174,8 +175,9 @@ public abstract class ValidadorCatalogo {
 	 */
 	public static boolean validaContactoReqSaveDTO(ContactoRequestDTO contactoRequestDTO) {
 		if (contactoRequestDTO == null || contactoRequestDTO.getDescripcion() == null
-				|| contactoRequestDTO.getEmail() == null || contactoRequestDTO.getNombre() == null || contactoRequestDTO.getNombre().isEmpty()
-				|| contactoRequestDTO.getTipoContacto() == null || contactoRequestDTO.getTipoContacto().getId() == null)
+				|| contactoRequestDTO.getEmail() == null || contactoRequestDTO.getNombre() == null
+				|| contactoRequestDTO.getNombre().isEmpty() || contactoRequestDTO.getTipoContacto() == null
+				|| contactoRequestDTO.getTipoContacto().getId() == null)
 			return false;
 		if (contactoRequestDTO.getTipoContacto() != null) {
 			if (contactoRequestDTO.getTipoContacto() == null || contactoRequestDTO.getTipoContacto().getId() <= 0)
@@ -194,8 +196,9 @@ public abstract class ValidadorCatalogo {
 	public static boolean validaContactoReqUpdateDTO(ContactoReqUpdateDTO contactoReqUpdateDTO) {
 		if (contactoReqUpdateDTO == null || contactoReqUpdateDTO.getDescripcion() == null
 				|| contactoReqUpdateDTO.getEmail() == null || contactoReqUpdateDTO.getId() <= 0
-				|| contactoReqUpdateDTO.getNombre() == null || contactoReqUpdateDTO.getNombre().isEmpty() 
-				|| contactoReqUpdateDTO.getTipoContacto() == null || contactoReqUpdateDTO.getTipoContacto().getId() == null)
+				|| contactoReqUpdateDTO.getNombre() == null || contactoReqUpdateDTO.getNombre().isEmpty()
+				|| contactoReqUpdateDTO.getTipoContacto() == null
+				|| contactoReqUpdateDTO.getTipoContacto().getId() == null)
 			return false;
 		if (contactoReqUpdateDTO.getTipoContacto() != null) {
 			if (contactoReqUpdateDTO.getTipoContacto() == null || contactoReqUpdateDTO.getTipoContacto().getId() <= 0)
@@ -270,7 +273,8 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validateCuentaSave(CuentaDTO cuentaDTO) {
-		return (null != cuentaDTO && null != cuentaDTO.getNumero() && !cuentaDTO.getNumero().isEmpty());
+		return (null != cuentaDTO && null != cuentaDTO.getNumero() && !cuentaDTO.getNumero().isEmpty()
+				&& null != cuentaDTO.getAfiliaciones() && !cuentaDTO.getAfiliaciones().isEmpty());
 	}
 
 	/**
@@ -282,7 +286,65 @@ public abstract class ValidadorCatalogo {
 	 */
 	public static boolean validateCuentaUpdate(CuentaDTO cuentaDTO) {
 		return (null != cuentaDTO && null != cuentaDTO.getNumero() && !cuentaDTO.getNumero().isEmpty()
-				&& null != cuentaDTO.getId());
+				&& null != cuentaDTO.getId() && null != cuentaDTO.getAfiliaciones()
+				&& !cuentaDTO.getAfiliaciones().isEmpty());
+	}
+
+	/**
+	 * Regresa un valor booleano indicando si los ids de una lista de tipo
+	 * AfiliaiconDTO estan contenidos en otra lista del mismo tipo
+	 * 
+	 * @param afiliacionTarget
+	 * @param afiliacionOrigin
+	 * @return
+	 */
+	public static boolean validateAfiliacionesExists(List<AfiliacionDTO> afiliacionTarget,
+			Set<AfiliacionDTO> afiliacionOrigin) {
+		if (null == afiliacionTarget || afiliacionTarget.isEmpty())
+			return false;
+		else {
+			List<Long> lst = getIdsList(afiliacionTarget);
+			for (AfiliacionDTO afiliacionDTO : afiliacionOrigin) {
+				if (!lst.contains(afiliacionDTO.getId()))
+					return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Crea una lista de tipo Long con los ids de una lista de tipo AfiliacionDTO
+	 * 
+	 * @param afiliacionDTOList
+	 * @return
+	 */
+	public static List<Long> getIdsList(List<AfiliacionDTO> afiliacionDTOList) {
+		List<Long> lst = new ArrayList<>();
+		for (AfiliacionDTO afiliacionDTO : afiliacionDTOList) {
+			lst.add(afiliacionDTO.getId());
+		}
+		return lst;
+	}
+
+	/**
+	 * Comprueba si lso ids de una lista de tipo AfiliacionDTO estan contenidos en
+	 * una lista de ids de tipo Long
+	 * 
+	 * @param lst
+	 * @param afiliacionDTOList
+	 * @return
+	 */
+	public static boolean validateCuentasAfiliacionesExists(List<Long> lst, List<AfiliacionDTO> afiliacionDTOList) {
+		List<Long> targetLst = new ArrayList<>();
+		if (null != afiliacionDTOList && !afiliacionDTOList.isEmpty())
+			for (AfiliacionDTO afiliacionDTO : afiliacionDTOList)
+				targetLst.add(afiliacionDTO.getId());
+
+		for (Long val : lst)
+			if (!targetLst.contains(val))
+				return false;
+
+		return true;
 	}
 
 }

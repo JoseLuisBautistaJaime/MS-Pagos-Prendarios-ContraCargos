@@ -105,9 +105,6 @@ public class CuentasController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				cuentaEntDTO);
-
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta creada correctamente",
-//				buildDummyUpdt());
 	}
 
 	/**
@@ -138,9 +135,6 @@ public class CuentasController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				cuentaEntDTO);
-
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta actualizada correctamente",
-//				buildDummyUpdt());
 	}
 
 	/**
@@ -168,9 +162,6 @@ public class CuentasController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				cuentaEntDTO);
-
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Cuenta recuperada correctamente",
-//				buildDummyUpdt());
 	}
 
 	/**
@@ -199,9 +190,6 @@ public class CuentasController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				cuentaEntDTOList);
-
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "cuentas recuperadas correctamente",
-//				buildDummyUpdtLst());
 	}
 
 	@ResponseBody
@@ -221,7 +209,6 @@ public class CuentasController {
 		} catch (EmptyResultDataAccessException erdaex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
 	}

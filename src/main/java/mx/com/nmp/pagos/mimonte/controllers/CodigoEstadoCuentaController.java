@@ -112,9 +112,6 @@ public class CodigoEstadoCuentaController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				codigo);
-
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTOResp = buildDummy2();
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", codigoEstadoCuentaDTOResp);
 	}
 
 	/**
@@ -144,9 +141,6 @@ public class CodigoEstadoCuentaController {
 								CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqUpdtDTO(
 										codigoEstadoCuentaDTOReq, null, new Date()),
 								lastModifiedBy));
-
-//		CodigoEstadoCuentaUpdtDTO codigo = buildDummy2();
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				codigo);
 	}
@@ -177,9 +171,6 @@ public class CodigoEstadoCuentaController {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, codigo);
-
-//		CodigoEstadoCuentaUpdtDTO codigo = buildDummy2();
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", codigo);
 	}
 
 	/**
@@ -209,13 +200,6 @@ public class CodigoEstadoCuentaController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
-
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy2();
-//		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
-//		lst.add(codigoEstadoCuentaDTO);
-//		lst.add(codigoEstadoCuentaDTO2);
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", lst);
 	}
 
 	/**
@@ -268,15 +252,6 @@ public class CodigoEstadoCuentaController {
 		List<CodigoEstadoCuentaUpdtDTO> lst = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaUpdtDTOListFromCodigoEstadoCuentaDTOList(
 						(List<CodigoEstadoCuentaDTO>) codigoEstadoCuentaServiceImpl.findAll());
-
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy3();
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO3 = buildDummy4();
-//		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
-//		lst.add(codigoEstadoCuentaDTO);
-//		lst.add(codigoEstadoCuentaDTO2);
-//		lst.add(codigoEstadoCuentaDTO3);
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
 	}

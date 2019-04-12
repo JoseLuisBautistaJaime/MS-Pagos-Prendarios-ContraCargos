@@ -4,8 +4,10 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +17,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.builder.AfiliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
 import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.dao.AfiliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
@@ -67,6 +73,13 @@ public class EntidadServiceImpl implements EntidadService {
 	private ContactoRespository contactoRespository;
 
 	/**
+	 * Repository de Afiliacion
+	 */
+	@Autowired
+	@Qualifier("afiliacionRepository")
+	private AfiliacionRepository afiliacionRepository;
+
+	/**
 	 * Guarda una entidad
 	 */
 	@SuppressWarnings("unchecked")
@@ -84,12 +97,15 @@ public class EntidadServiceImpl implements EntidadService {
 		if (!ValidadorCatalogo.validateCuentasExists(e.getCuentas(),
 				CuentaBuilder.buildCuentaBaseDTOListFromCuentaList(cuentaList)))
 			throw new CatalogoException(CatalogConstants.ID_CUENTA_DOES_NOT_EXISTS);
+		if (!ValidadorCatalogo.validateCuentasAfiliacionesExists(getAfiliacionesCompleteFromManyCuentas(e.getCuentas()),
+				AfiliacionBuilder.buildAfiliacionDTOListFromAfiliacionList(afiliacionRepository.findAll())))
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_DOESNT_EXISTS);
 		// Se valida que los id's de los contactos existan
 		List<Contactos> contactosList = contactoRespository.findAll();
 		if (!ValidadorCatalogo.validateContactosExists(e.getContactos(),
 				ContactosBuilder.buildContactoBaseDTOListFromContactosListOnlyIds(contactosList)))
 			throw new CatalogoException(CatalogConstants.ID_CONTACTO_DOES_NOT_EXISTS);
-		if (null == entidades || !entidades.isEmpty())
+		if (null != entidades && !entidades.isEmpty())
 			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS);
 		if (null != e)
 			e.setCreatedBy(createdBy);
@@ -129,6 +145,18 @@ public class EntidadServiceImpl implements EntidadService {
 		if (!ValidadorCatalogo.validateContactosExists(e.getContactos(),
 				ContactosBuilder.buildContactoBaseDTOListFromContactosListOnlyIds(contactosList)))
 			throw new CatalogoException(CatalogConstants.ID_CONTACTO_DOES_NOT_EXISTS);
+		List<Entidad> entidades = null;
+		// Se valida que el nombre de la entidad no exista
+		try {
+			entidades = entidadRepository.findByNombreAndDescription(e.getNombre(), e.getDescription());
+		} catch (EmptyResultDataAccessException erdaex) {
+			// No action required here, application continues normally
+		}
+		if (null != entidades && !entidades.isEmpty() && entidades.get(0).getId() != e.getId())
+			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS);
+		if (!ValidadorCatalogo.validateCuentasAfiliacionesExists(getAfiliacionesCompleteFromManyCuentas(e.getCuentas()),
+				AfiliacionBuilder.buildAfiliacionDTOListFromAfiliacionList(afiliacionRepository.findAll())))
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_DOESNT_EXISTS);
 		try {
 			entidadResp = entidadRepository.save(entidad);
 		} catch (ConstraintViolationException cve) {
@@ -197,6 +225,26 @@ public class EntidadServiceImpl implements EntidadService {
 	public void updateEstatusById(final Boolean estatus, final Long id, final String lastModifiedBy,
 			final Date lastModifiedDate) throws EmptyResultDataAccessException {
 		entidadRepository.setEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
+	}
+
+	/**
+	 * Regresa una lista de ids de afiliaicion pertencientes a varias cuentas
+	 * recibidad como parametro
+	 * 
+	 * @param cuentaDTOSet
+	 * @return
+	 */
+	public static List<Long> getAfiliacionesCompleteFromManyCuentas(Set<CuentaReqDTO> cuentaReqDTOSet) {
+		List<Long> lst = null;
+		if (null != cuentaReqDTOSet && !cuentaReqDTOSet.isEmpty()) {
+			lst = new ArrayList<>();
+			for (CuentaReqDTO cuentaReqDTO : cuentaReqDTOSet)
+				if (null != cuentaReqDTO.getAfiliaciones())
+					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones())
+						if (null != afiliacionReqDTO.getId())
+							lst.add(afiliacionReqDTO.getId());
+		}
+		return lst;
 	}
 
 }

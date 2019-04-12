@@ -84,6 +84,12 @@ public final class CatalogConstants {
 	public static final String NUMERO_AFILIACION_ALREADY_EXISTS = "Ya existe una afiliacion con ese numero";
 
 	/**
+	 * Mensaje que es mostrado cuando una o mas afiliaciones que se desean ingresar
+	 * no existen
+	 */
+	public static final String NUMERO_AFILIACION_DOESNT_EXISTS = "Una o mas afiliacion que desea ingresar no existen";
+
+	/**
 	 * Mensaje que es mostrado cuando se genera un error inesperado durante una
 	 * operacion con un objeto catalogo
 	 */

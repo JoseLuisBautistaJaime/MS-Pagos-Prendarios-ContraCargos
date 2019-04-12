@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.builder.AfiliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dao.AfiliacionRepository;
@@ -22,8 +24,10 @@ import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.model.Afiliacion;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 
 /**
  * @name CuentaServiceImpl
@@ -66,9 +70,13 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 			throw new CatalogoException(CatalogConstants.NUMERO_CUENTA_ALREADY_EXISTS);
 		if (null != e)
 			e.setCreatedBy(createdBy);
+		List<Afiliacion> afiliacionesTest = afiliacionRepository.findAll();
+		if (!ValidadorCatalogo.validateAfiliacionesExists(
+				AfiliacionBuilder.buildAfiliacionDTOListFromAfiliacionList(afiliacionesTest), e.getAfiliaciones()))
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_DOESNT_EXISTS);
 		Cuenta cuenta = cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e));
-//		Set<Afiliacion> afiliaciones = afiliacionRepository.findByCuentas_Id(cuenta.getId());
-//		cuenta.setAfiliaciones(afiliaciones);
+		Set<Afiliacion> afiliaciones = afiliacionRepository.findByCuentas_Id(cuenta.getId());
+		cuenta.setAfiliaciones(afiliaciones);
 		return (T) CuentaBuilder.buildCuentaBaseDTOFromCuenta(cuenta);
 	}
 
@@ -80,12 +88,17 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T update(CuentaBaseDTO e, String lastModifiedBy) throws CatalogoException{
+	public <T extends AbstractCatalogoDTO> T update(CuentaBaseDTO e, String lastModifiedBy) throws CatalogoException {
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
-		Cuenta cta = cuentaRepository.findById(e.getId()).isPresent() ? cuentaRepository.findById(e.getId()).get():null;
-		if(null == cta)
+		Cuenta cta = cuentaRepository.findById(e.getId()).isPresent() ? cuentaRepository.findById(e.getId()).get()
+				: null;
+		if (null == cta)
 			throw new CatalogoException(CatalogConstants.ID_CUENTA_DOES_NOT_EXISTS);
+		List<Afiliacion> afiliacionesTest = afiliacionRepository.findAll();
+		if (!ValidadorCatalogo.validateAfiliacionesExists(
+				AfiliacionBuilder.buildAfiliacionDTOListFromAfiliacionList(afiliacionesTest), e.getAfiliaciones()))
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_DOESNT_EXISTS);
 		return (T) CuentaBuilder
 				.buildCuentaBaseDTOFromCuenta(cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e)));
 	}
