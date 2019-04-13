@@ -20,13 +20,17 @@ public class EntidadDTO extends AbstractConciliacionBasicaDTO implements Compara
 	private static final long serialVersionUID = 8230001730570538735L;
 	
 	private String nombre;
-	
+
 	public EntidadDTO() {
 		super();
 	}
 
-	public EntidadDTO(Long id, String descripcion, Boolean estatus, String nombre) {
+	public EntidadDTO(Integer id, String descripcion, Boolean estatus, String nombre) {
 		super(id, descripcion, estatus);
+		this.id = id;
+		this.descripcion = descripcion;
+		this.estatus = estatus;
+		this.nombre = nombre;
 	}
 
 	public String getNombre() {

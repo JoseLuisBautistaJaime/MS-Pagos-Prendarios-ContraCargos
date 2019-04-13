@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @name ComisionesRequestDTO
@@ -17,39 +18,39 @@ import java.math.BigDecimal;
  */
 public class ComisionesRequestDTO implements Comparable<ComisionesRequestDTO>{
 	
-	private Long id;
-	private String fecha;
+	private Integer id;
+	private Date fecha;
 	private BigDecimal monto;
-	private BigDecimal cargoDiversoSucursal;
+	private String descripcion;
 	private Boolean estatus;
 
 	public ComisionesRequestDTO() {
 		super();
 	}
 
-	public ComisionesRequestDTO(Long id, String fecha, BigDecimal monto, BigDecimal cargoDiversoSucursal,
+	public ComisionesRequestDTO(Integer id, Date fecha, BigDecimal monto, String descripcion,
 			Boolean estatus) {
 		super();
 		this.id = id;
 		this.fecha = fecha;
 		this.monto = monto;
-		this.cargoDiversoSucursal = cargoDiversoSucursal;
+		this.descripcion = descripcion;
 		this.estatus = estatus;
 	}
 	
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public String getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(String fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 
@@ -61,12 +62,14 @@ public class ComisionesRequestDTO implements Comparable<ComisionesRequestDTO>{
 		this.monto = monto;
 	}
 
-	public BigDecimal getCargoDiversoSucursal() {
-		return cargoDiversoSucursal;
+	
+
+	public String getDescripcion() {
+		return descripcion;
 	}
 
-	public void setCargoDiversoSucursal(BigDecimal cargoDiversoSucursal) {
-		this.cargoDiversoSucursal = cargoDiversoSucursal;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	public Boolean getEstatus() {
@@ -79,8 +82,8 @@ public class ComisionesRequestDTO implements Comparable<ComisionesRequestDTO>{
 	
 	@Override
 	public String toString() {
-		return "ComisionesRequestDTO [id=" + id + ", fecha=" + fecha + ", monto=" + monto + ", cargoDiversoSucursal="
-				+ cargoDiversoSucursal + ", estatus=" + estatus + "]";
+		return "ComisionesRequestDTO [id=" + id + ", fecha=" + fecha + ", monto=" + monto + ", descripcion="
+				+ descripcion + ", estatus=" + estatus + "]";
 	}
 
 	@Override

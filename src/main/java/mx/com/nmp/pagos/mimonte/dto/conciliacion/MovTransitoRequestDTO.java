@@ -15,24 +15,24 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class MovTransitoRequestDTO implements Comparable<MovTransitoRequestDTO> {
 
-	private Long id;
+	private Integer id;
 	private String tipo;
 
 	public MovTransitoRequestDTO() {
 		super();
 	}
 
-	public MovTransitoRequestDTO(Long id, String tipo) {
+	public MovTransitoRequestDTO(Integer id, String tipo) {
 		super();
 		this.id = id;
 		this.tipo = tipo;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

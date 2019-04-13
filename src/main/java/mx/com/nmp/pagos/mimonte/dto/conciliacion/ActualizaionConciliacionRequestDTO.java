@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.List;
+
 /**
  * @name ActualizaionConciliacionRequestDTO
  * @description Clase que encapsula el request de la información para la
@@ -15,43 +17,44 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class ActualizaionConciliacionRequestDTO implements Comparable<ActualizaionConciliacionRequestDTO> {
 
-	private Long folio;
-	private MovTransitoRequestDTO movimientosTransito;
-	private ComisionesRequestDTO comisiones;
+	private Integer folio;
+	private List<MovTransitoRequestDTO> movimientosTransito;
+	private List<ComisionesRequestDTO> comisiones;
 
 	public ActualizaionConciliacionRequestDTO() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public ActualizaionConciliacionRequestDTO(Long folio, MovTransitoRequestDTO movimientosTransito,
-			ComisionesRequestDTO comisiones) {
+	public ActualizaionConciliacionRequestDTO(Integer folio, List<MovTransitoRequestDTO> movimientosTransito,
+			List<ComisionesRequestDTO> comisiones) {
 		super();
 		this.folio = folio;
 		this.movimientosTransito = movimientosTransito;
 		this.comisiones = comisiones;
 	}
 
-	public Long getFolio() {
+	public Integer getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Long folio) {
+	public void setFolio(Integer folio) {
 		this.folio = folio;
 	}
 
-	public MovTransitoRequestDTO getMovimientosTransito() {
+	public List<MovTransitoRequestDTO> getMovimientosTransito() {
 		return movimientosTransito;
 	}
 
-	public void setMovimientosTransito(MovTransitoRequestDTO movimientosTransito) {
+	public void setMovimientosTransito(List<MovTransitoRequestDTO> movimientosTransito) {
 		this.movimientosTransito = movimientosTransito;
 	}
 
-	public ComisionesRequestDTO getComisiones() {
+	public List<ComisionesRequestDTO> getComisiones() {
 		return comisiones;
 	}
 
-	public void setComisiones(ComisionesRequestDTO comisiones) {
+	public void setComisiones(List<ComisionesRequestDTO> comisiones) {
 		this.comisiones = comisiones;
 	}
 

@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionDTO> {
 
-	private Long folio;
+	private Integer folio;
 	private EstatusConciliacionDTO estatus;
 	private Date createdDate;
 	private String createdBy;
@@ -21,15 +21,15 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 	private String lastModifiedBy;
 	private EntidadDTO entidad;
 	private CuentaDTO cuenta;
-	private Long numeroMovimientos;
+	private Integer numeroMovimientos;
 
 	public ConsultaConciliacionDTO() {
 		super();
 	}
 
-	public ConsultaConciliacionDTO(Long folio, EstatusConciliacionDTO estatus, Date createdDate, String createdBy,
+	public ConsultaConciliacionDTO(Integer folio, EstatusConciliacionDTO estatus, Date createdDate, String createdBy,
 			Date lastModifiedDate, String lastModifiedBy, EntidadDTO entidad, CuentaDTO cuenta,
-			Long numeroMovimientos) {
+			Integer numeroMovimientos) {
 		super();
 		this.folio = folio;
 		this.estatus = estatus;
@@ -42,11 +42,11 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 		this.numeroMovimientos = numeroMovimientos;
 	}
 
-	public Long getFolio() {
+	public Integer getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Long folio) {
+	public void setFolio(Integer folio) {
 		this.folio = folio;
 	}
 
@@ -106,11 +106,11 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 		this.cuenta = cuenta;
 	}
 
-	public Long getNumeroMovimientos() {
+	public Integer getNumeroMovimientos() {
 		return numeroMovimientos;
 	}
 
-	public void setNumeroMovimientos(Long numeroMovimientos) {
+	public void setNumeroMovimientos(Integer numeroMovimientos) {
 		this.numeroMovimientos = numeroMovimientos;
 	}
 

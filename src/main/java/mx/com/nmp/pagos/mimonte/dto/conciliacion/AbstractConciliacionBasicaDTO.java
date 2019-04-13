@@ -21,7 +21,7 @@ public abstract class AbstractConciliacionBasicaDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = -5798158867093327399L;
 	
-	protected Long id;
+	protected Integer id;
 	protected String descripcion;
 	protected Boolean estatus;
 	
@@ -29,18 +29,18 @@ public abstract class AbstractConciliacionBasicaDTO implements Serializable{
 		super();
 	}
 
-	public AbstractConciliacionBasicaDTO(Long id, String descripcion, Boolean estatus) {
+	public AbstractConciliacionBasicaDTO(Integer id, String descripcion, Boolean estatus) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
 		this.estatus = estatus;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

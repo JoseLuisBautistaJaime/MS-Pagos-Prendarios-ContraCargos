@@ -18,7 +18,7 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	 */
 	private static final long serialVersionUID = 1838609195762330516L;
 
-	private Long Folio;
+	private Integer folio;
 	private EstatusConciliacionDTO estatus;
 	private EntidadDTO entidad;
 	private CuentaDTO cuenta;
@@ -38,12 +38,12 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 	}
 
-	public ConciliacionDTO(Long folio, EstatusConciliacionDTO estatus, EntidadDTO entidad, CuentaDTO cuenta,
+	public ConciliacionDTO(Integer folio, EstatusConciliacionDTO estatus, EntidadDTO entidad, CuentaDTO cuenta,
 			ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
 			GlobalDTO global, DevolucionConDTO devoluciones, MovTransitoDTO movimientosTransito, ComisionesDTO comisiones, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
-		Folio = folio;
+		this.folio = folio;
 		this.estatus = estatus;
 		this.entidad = entidad;
 		this.cuenta = cuenta;
@@ -56,12 +56,12 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 		this.comisiones = comisiones;
 	}
 
-	public Long getFolio() {
-		return Folio;
+	public Integer getFolio() {
+		return folio;
 	}
 
-	public void setFolio(Long folio) {
-		Folio = folio;
+	public void setFolio(Integer folio) {
+		this.folio = folio;
 	}
 
 	public EstatusConciliacionDTO getEstatus() {
@@ -146,7 +146,7 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 
 	@Override
 	public String toString() {
-		return "ConciliacionDTO [Folio=" + Folio + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta="
+		return "ConciliacionDTO [folio=" + folio + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta="
 				+ cuenta + ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
 				+ reporteProveedorTransaccional + ", reporteEstadoCuenta=" + reporteEstadoCuenta + ", global=" + global
 				+ ", devoluciones=" + devoluciones + ", movimientosTransito=" + movimientosTransito + ", comisiones="

@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.Date;
+
 /**
  * @name MovimientosDTO
  * @description Clase que encapsula el request de MovimientosDTO para la
@@ -16,13 +18,13 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 public class MovimientosDTO implements Comparable<MovimientosDTO> {
 
 	private Long id;
-	private String fecha;
+	private Date fecha;
 
 	public MovimientosDTO() {
 		super();
 	}
 
-	public MovimientosDTO(Long id, String fecha) {
+	public MovimientosDTO(Long id, Date fecha) {
 		super();
 		this.id = id;
 		this.fecha = fecha;
@@ -36,11 +38,11 @@ public class MovimientosDTO implements Comparable<MovimientosDTO> {
 		this.id = id;
 	}
 
-	public String getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(String fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 

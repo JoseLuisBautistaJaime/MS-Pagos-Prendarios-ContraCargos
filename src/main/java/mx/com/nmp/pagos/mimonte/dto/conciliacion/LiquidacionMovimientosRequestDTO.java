@@ -4,43 +4,45 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.List;
+
 /**
  * @name LiquidacionMovimientosRequestDTO
- * @description Clase que encapsula el request de LiquidacionMovimientosRequestDTO para la
- *              conciliación.
+ * @description Clase que encapsula el request de
+ *              LiquidacionMovimientosRequestDTO para la conciliación.
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net
  * @creationDate 03/04/2019 16:05 hrs.
  * @version 0.1
  */
-public class LiquidacionMovimientosRequestDTO implements Comparable<LiquidacionMovimientosRequestDTO>{
-	
-	private Long folio;
-	private MovimientosDTO movimientos;
+public class LiquidacionMovimientosRequestDTO implements Comparable<LiquidacionMovimientosRequestDTO> {
+
+	private Integer folio;
+	private List<MovimientosDTO> movimientos;
 
 	public LiquidacionMovimientosRequestDTO() {
 		super();
 	}
 
-	public LiquidacionMovimientosRequestDTO(Long folio, MovimientosDTO movimientos) {
+	public LiquidacionMovimientosRequestDTO(Integer folio, List<MovimientosDTO> movimientos) {
 		super();
 		this.folio = folio;
 		this.movimientos = movimientos;
 	}
 
-	public Long getFolio() {
+	public Integer getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Long folio) {
+	public void setFolio(Integer folio) {
 		this.folio = folio;
 	}
 
-	public MovimientosDTO getMovimientos() {
+	public List<MovimientosDTO> getMovimientos() {
 		return movimientos;
 	}
 
-	public void setMovimientos(MovimientosDTO movimientos) {
+	public void setMovimientos(List<MovimientosDTO> movimientos) {
 		this.movimientos = movimientos;
 	}
 

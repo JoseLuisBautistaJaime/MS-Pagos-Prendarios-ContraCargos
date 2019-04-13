@@ -25,7 +25,7 @@ public class EstatusConciliacionDTO extends AbstractConciliacionBasicaDTO
 		super();
 	}
 
-	public EstatusConciliacionDTO(Long id, String descripcion, Boolean estatus) {
+	public EstatusConciliacionDTO(Integer id, String descripcion, Boolean estatus) {
 		super(id, descripcion, estatus);
 	}
 

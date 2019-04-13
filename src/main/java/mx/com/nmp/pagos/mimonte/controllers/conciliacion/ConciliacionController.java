@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
-import mx.com.nmp.pagos.mimonte.controllers.EntidadController;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaIdPsRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
@@ -43,7 +43,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMidasProveedorRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesMovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusConciliacionDTO;
@@ -151,8 +150,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaFolio(@PathVariable(value = "folio", required = true) Long folio, 
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response consultaFolio(@PathVariable(value = "folio", required = true) Integer folio) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
 				buildConsultaFolioDummy());
@@ -177,8 +175,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consulta(
-			@RequestBody ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+			@RequestBody ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
 				buildConsultaConciliacionDummy());
@@ -194,7 +191,7 @@ public class ConciliacionController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/conciliacion/", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/conciliacion", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Se encarga de guardar los cambios realizados en la conciliacion para las secciones de movimientos en transito.", tags = {
 			"Conciliación" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Entidad encontrada"),
@@ -202,7 +199,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response actualizaConciliacion(@RequestBody ActualizaionConciliacionRequestDTO ActualizaionConciliacionRequestDTO,
+	public Response actualizaConciliacion(@RequestBody ActualizaionConciliacionRequestDTO actualizaionConciliacionRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String LastModifiedBy) {
 		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa",
@@ -226,7 +223,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response enviaConcicliacion(@PathVariable(value = "folio", required = true) Long folio,
+	public Response enviaConcicliacion(@PathVariable(value = "folio", required = true) Integer folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Conciliacion Enviada de forma Exitosa.", null);
@@ -249,8 +246,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Long folio, 
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Integer folio) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
 				buildConsultaTransitoFolioDummy());
@@ -266,7 +262,7 @@ public class ConciliacionController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/conciliacion/solicitarpagos/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/conciliacion/solicitarpagos", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite realizar la solicitud de pagos no reflejados en Midas de los movimientos que se encuentran en tránsito.", tags = {
 			"Conciliación" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Solicitud Pago Exitosa."),
@@ -289,7 +285,7 @@ public class ConciliacionController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/conciliacion/marcardevoluciones/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/conciliacion/marcardevoluciones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Marca las transacciones seleccionadas de movimientos en tránsito a movimientos de devolución para cuando los pagos solicitados no fueron realizados.", tags = {
 			"Conciliación" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Marcar como Devolucion Exitosa."),
@@ -320,8 +316,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaMovimientosDevolucion(@PathVariable(value = "folio", required = true) Long folio, 
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+	public Response consultaMovimientosDevolucion(@PathVariable(value = "folio", required = true) Integer folio) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Devoluciones Exitosa.",
 				buildMarcarDevolucionesDummy());
@@ -337,7 +332,7 @@ public class ConciliacionController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/devoluciones/solicitar/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/conciliacion/devoluciones/solicitar/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "El estatus de la transacción de devolución cambiará de Pendiente a Solicitada.", tags = {
 			"Conciliación" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Solicitud Devolucion Exitosa."),
@@ -360,7 +355,7 @@ public class ConciliacionController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/devoluciones/liquidar/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/conciliacion/devoluciones/liquidar", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Realiza la liquidación de los movimientos seleccionados; se debe especificar la fecha de liquidación para cada uno de los movimientos.", tags = {
 			"Conciliación" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Solicitud Liquidacion Exitosa."),
@@ -373,34 +368,58 @@ public class ConciliacionController {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Liquidacion Exitosa.", buildLiquidacionMovimientosDummy());
 	}
+	
+	/**
+	 * Servicio callback que será usado para actualizar el id del registro de las plantillas que será devuelto por PeopleSoft. 
+	 * 
+	 * @param actualizaIdPsRequestDTO
+	 * @param LastModifiedBy
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PutMapping(value = "/conciliacion/actualizarPS", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "PUT", value = "Servicio callback que será usado para actualizar el id del registro de las plantillas que será devuelto por PeopleSoft.", tags = {
+			"Conciliación" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Identificador PS actualizado en la conciliación."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response actualizaIdPs(@RequestBody ActualizaIdPsRequestDTO actualizaIdPsRequestDTO,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String LastModifiedBy) {
+		
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Identificador PS actualizado en la conciliación.",
+				null);
+	}
 
 	public static ConciliacionDTO buildDummy() {
-		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1L, "En proceso", true);
+		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1, "En proceso", true);
 		EntidadDTO entidadDTO = null;
-		entidadDTO = new EntidadDTO(1L, "Banco Banamex", true, "Banamex");
-		CuentaDTO cuentaDTO = new CuentaDTO(1L, "1122131", true);
+		entidadDTO = new EntidadDTO(1, "Banco Banamex", true, "Banamex");
+		CuentaDTO cuentaDTO = new CuentaDTO(1, "1122131", true);
 		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO(new Date(),
 				new Date(), false);
 		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO(
 				new Date(), new Date(), false);
 		ReporteEstadoCuentaDTO reporteEstadoCuentaDTO = new ReporteEstadoCuentaDTO(new Date(), new Date(), false);
-		ConciliacionDTO conciliacionDTO = new ConciliacionDTO(0001L, estatusConciliacionDTO, entidadDTO, cuentaDTO,
+		ConciliacionDTO conciliacionDTO = new ConciliacionDTO(0001, estatusConciliacionDTO, entidadDTO, cuentaDTO,
 				reporteProcesosNocturnosDTO, reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, null, null, null,
-				null, new Date(), new Date(), "Sistema", null);
+				null, new Date(), new Date(), "NMP", "NMP");
 		return conciliacionDTO;
 	}
 
 	public static ConciliacionDTOList buildConsultaMidasProveedorDummy() {
 
-		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1L, "En proceso", true);
-		EntidadDTO entidadDTO = new EntidadDTO(1L, "Banco Banamex", true, "Banamex");
-		CuentaDTO cuentaDTO = new CuentaDTO(1L, "1122131", true);
+		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1, "En proceso", true);
+		EntidadDTO entidadDTO = new EntidadDTO(1, "Banco Banamex", true, "Banamex");
+		CuentaDTO cuentaDTO = new CuentaDTO(1, "1122131", true);
 		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO(new Date(),
 				new Date(), false);
 		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO(
 				new Date(), new Date(), false);
 		ReporteEstadoCuentaDTO reporteEstadoCuentaDTO = new ReporteEstadoCuentaDTO(new Date(), new Date(), false);
-		GlobalDTO globalDTO = new GlobalDTO(1L, new Date(), 300L, 250L,
+		GlobalDTO globalDTO = new GlobalDTO(1, new Date(), 300L, 250L,
 				new BigDecimal(404607.92, MathContext.DECIMAL64), new BigDecimal(404607.92, MathContext.DECIMAL64),
 				new BigDecimal(404607.92, MathContext.DECIMAL64), new BigDecimal(150.00, MathContext.DECIMAL64),
 				new BigDecimal(0.00, MathContext.DECIMAL64), new BigDecimal(0.00, MathContext.DECIMAL64));
@@ -408,16 +427,16 @@ public class ConciliacionController {
 		
 		List<DevolucionConDTO> devolucionDTOList = new ArrayList<>();
 		
-		DevolucionConDTO devolucionDTO = new DevolucionConDTO(1L, new Date(), estatusDevolucionDTO,
+		DevolucionConDTO devolucionDTO = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO,
 				new BigDecimal(150.00, MathContext.DECIMAL64), "Visa", "4152xxxxxxxx9531", "Juana Garcia Garcia",
-				"859363", 3L);
+				"859363", 3);
 		
 	devolucionDTOList.add(devolucionDTO);
 		
 	List<MovTransitoDTO> movTransitoDTOlist = new ArrayList<>();
 		
-		EstatusMovTransitoDTO estatusMovTransitoDTO = new EstatusMovTransitoDTO(1L, "No identificada en midas", true);
-		MovTransitoDTO movTransitoDTO = new MovTransitoDTO(1L, estatusMovTransitoDTO, 82154722002L, null, new Date(),
+		EstatusMovTransitoDTO estatusMovTransitoDTO = new EstatusMovTransitoDTO(1, "No identificada en midas", true);
+		MovTransitoDTO movTransitoDTO = new MovTransitoDTO(1, estatusMovTransitoDTO, 821547220, null, new Date(),
 				"Pago", new BigDecimal(218.87, MathContext.DECIMAL64), "", "Mastercard", "557920xxxxxxxx8994",
 				"Mariana Rodriguez Urbano");
 		
@@ -425,7 +444,7 @@ public class ConciliacionController {
 		
 	List<ComisionesDTO> comisionesDTOList = new ArrayList<>();
 		
-		ComisionesDTO comisionesDTO = new ComisionesDTO(1L, new Date(), new Date(),
+		ComisionesDTO comisionesDTO = new ComisionesDTO(1, new Date(), new Date(),
 				new BigDecimal(1500.00, MathContext.DECIMAL64), "Cargo diverso sucursal");
 		
 	comisionesDTOList.add(comisionesDTO);
@@ -438,15 +457,15 @@ public class ConciliacionController {
 	
 	public static ConciliacionDTOList buildConsultaFolioDummy() {
 		
-		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1L, "En proceso", true);
-		EntidadDTO entidadDTO = new EntidadDTO(1L, "Banco Banamex", true, "Banamex");
-		CuentaDTO cuentaDTO = new CuentaDTO(1L, "1122131", true);
+		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1, "En proceso", true);
+		EntidadDTO entidadDTO = new EntidadDTO(1, "Banco Banamex", true, "Banamex");
+		CuentaDTO cuentaDTO = new CuentaDTO(1, "1122131", true);
 		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO(new Date(),
 				new Date(), false);
 		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO(
 				new Date(), new Date(), false);
 		ReporteEstadoCuentaDTO reporteEstadoCuentaDTO = new ReporteEstadoCuentaDTO(new Date(), new Date(), false);
-		GlobalDTO globalDTO = new GlobalDTO(1L, new Date(), 300L, 250L,
+		GlobalDTO globalDTO = new GlobalDTO(1, new Date(), 300L, 250L,
 				new BigDecimal(404607.92, MathContext.DECIMAL64), new BigDecimal(404607.92, MathContext.DECIMAL64),
 				new BigDecimal(404607.92, MathContext.DECIMAL64), new BigDecimal(150.00, MathContext.DECIMAL64),
 				new BigDecimal(0.00, MathContext.DECIMAL64), new BigDecimal(0.00, MathContext.DECIMAL64));
@@ -454,17 +473,17 @@ public class ConciliacionController {
 		
 		List<DevolucionConDTO> devolucionConDTOList = new ArrayList<>();
 		
-		DevolucionConDTO devolucionDTO = new DevolucionConDTO(1L, new Date(), estatusDevolucionDTO,
+		DevolucionConDTO devolucionDTO = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO,
 				new BigDecimal(150.00, MathContext.DECIMAL64), "Visa", "4152xxxxxxxx9531", "Juana Garcia Garcia",
-				"859363", 3L);
+				"859363", 3);
 		
 		devolucionConDTOList.add(devolucionDTO);
 		
-		EstatusMovTransitoDTO estatusMovTransitoDTO = new EstatusMovTransitoDTO(1L, "No identificada en midas", true);
+		EstatusMovTransitoDTO estatusMovTransitoDTO = new EstatusMovTransitoDTO(1, "No identificada en midas", true);
 		
 		List<MovTransitoDTO> movTransitoDTOList = new ArrayList<>();
 		
-		MovTransitoDTO movTransitoDTO = new MovTransitoDTO(1L, estatusMovTransitoDTO, 82154722002L, null, new Date(),
+		MovTransitoDTO movTransitoDTO = new MovTransitoDTO(1, estatusMovTransitoDTO, 821547220, null, new Date(),
 				"Pago", new BigDecimal(218.87, MathContext.DECIMAL64), "", "Mastercard", "557920xxxxxxxx8994",
 				"Mariana Rodriguez Urbano");
 		
@@ -472,7 +491,7 @@ public class ConciliacionController {
 		
 		List<ComisionesDTO> comisionesDTOList = new ArrayList<>();
 		
-		ComisionesDTO comisionesDTO = new ComisionesDTO(1L, new Date(), new Date(),
+		ComisionesDTO comisionesDTO = new ComisionesDTO(1, new Date(), new Date(),
 				new BigDecimal(1500.00, MathContext.DECIMAL64), "Cargo diverso sucursal");
 		
 		comisionesDTOList.add(comisionesDTO);
@@ -489,13 +508,13 @@ public class ConciliacionController {
 	public static List<ConsultaConciliacionDTO> buildConsultaConciliacionDummy() {
 		
 		List<ConsultaConciliacionDTO> consultaConciliacionDTOList = new ArrayList<>();
-		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(2L, "Finalizado", true);
-		EntidadDTO entidadDTO = new EntidadDTO(1L, "Banco Banamex", true, "Banamex");
-		CuentaDTO cuentaDTO = new CuentaDTO(1L, "1122131", true);
-		ConsultaConciliacionDTO consultaConciliacionDTO = new ConsultaConciliacionDTO(1L, estatusConciliacionDTO, new Date(), "NMP",
-				new Date(), "NMP", entidadDTO, cuentaDTO, 658L);
-		ConsultaConciliacionDTO consultaConciliacionDTO2 = new ConsultaConciliacionDTO(1L, estatusConciliacionDTO, new Date(), "NMP",
-				new Date(), "NMP", entidadDTO, cuentaDTO, 658L);
+		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(2, "Finalizado", true);
+		EntidadDTO entidadDTO = new EntidadDTO(1, "Banco Banamex", true, "Banamex");
+		CuentaDTO cuentaDTO = new CuentaDTO(1, "1122131", true);
+		ConsultaConciliacionDTO consultaConciliacionDTO = new ConsultaConciliacionDTO(1, estatusConciliacionDTO, new Date(), "NMP",
+				new Date(), "NMP", entidadDTO, cuentaDTO, 658);
+		ConsultaConciliacionDTO consultaConciliacionDTO2 = new ConsultaConciliacionDTO(1, estatusConciliacionDTO, new Date(), "NMP",
+				new Date(), "NMP", entidadDTO, cuentaDTO, 658);
 		consultaConciliacionDTOList.add(consultaConciliacionDTO);
 		consultaConciliacionDTOList.add(consultaConciliacionDTO2);
 		return consultaConciliacionDTOList;
@@ -504,8 +523,8 @@ public class ConciliacionController {
 	public static List<MovTransitoDTO> buildConsultaTransitoFolioDummy() {
 		
 		List<MovTransitoDTO> movTransitoDTOList = new ArrayList<>();
-		EstatusMovTransitoDTO estatusMovTransitoDTO = new EstatusMovTransitoDTO(1L, "No identificada en Midas", true);
-		MovTransitoDTO movTransitoDTO = new MovTransitoDTO(1L, estatusMovTransitoDTO, 82154722002L, null, new Date(),
+		EstatusMovTransitoDTO estatusMovTransitoDTO = new EstatusMovTransitoDTO(1, "No identificada en Midas", true);
+		MovTransitoDTO movTransitoDTO = new MovTransitoDTO(1, estatusMovTransitoDTO, 821547220, null, new Date(),
 				"Pago", new BigDecimal(218.87, MathContext.DECIMAL64), "", "Mastercard", "557920xxxxxxxx8994",
 				"Mariana Rodriguez Urbano");
 		movTransitoDTOList.add(movTransitoDTO);
@@ -516,9 +535,9 @@ public class ConciliacionController {
 	public static List<DevolucionConDTO> buildMarcarDevolucionesDummy(){
 		
 		List<DevolucionConDTO> devolucionDTOlist = new ArrayList<>();
-		EstatusDevolucionDTO estatusDevolucionDTO = new EstatusDevolucionDTO(1, "Pendiente", true);
-		DevolucionConDTO devolucionDTO = new DevolucionConDTO(1L, new Date(), estatusDevolucionDTO, new BigDecimal(150.00, MathContext.DECIMAL64), 
-				"Visa",	"4152xxxxxxxx9531", "Juana Garcia Garcia", "859363", 3L);
+		EstatusDevolucionDTO estatusDevolucionDTO = new EstatusDevolucionDTO(1, "Solicitada", true);
+		DevolucionConDTO devolucionDTO = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO, new BigDecimal(150.00, MathContext.DECIMAL64), 
+				"Visa",	"4152xxxxxxxx9531", "Juana Garcia Garcia", "859363", 3);
 		devolucionDTOlist.add(devolucionDTO);
 		return devolucionDTOlist;
 	}
@@ -527,8 +546,8 @@ public class ConciliacionController {
 		
 		 List<DevolucionesMovimientosDTO> devolucionesMovimientosDTOList = new ArrayList<>();
 		 EstatusDevolucionDTO estatusDevolucionDTO = new EstatusDevolucionDTO(3, "Liquidada", true);
-		 DevolucionesMovimientosDTO devolucionesMovimientosDTO = new DevolucionesMovimientosDTO(1L, new Date(), estatusDevolucionDTO, new BigDecimal(150.00, MathContext.DECIMAL64),
-				 "Visa", "4152xxxxxxxx9531", "Juana Garcia Garcia", "859363", 3L, new Date());
+		 DevolucionesMovimientosDTO devolucionesMovimientosDTO = new DevolucionesMovimientosDTO(1, new Date(), estatusDevolucionDTO, new BigDecimal(150.00, MathContext.DECIMAL64),
+				 "Visa", "4152xxxxxxxx9531", "Juana Garcia Garcia", "859363", 3, new Date());
 		 devolucionesMovimientosDTOList.add(devolucionesMovimientosDTO);
 		return devolucionesMovimientosDTOList;
 	}

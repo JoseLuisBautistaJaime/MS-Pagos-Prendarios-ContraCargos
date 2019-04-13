@@ -17,9 +17,9 @@ import java.util.Date;
  */
 public class MovTransitoDTO implements Comparable<MovTransitoDTO> {
 
-	private Long id;
+	private Integer id;
 	private EstatusMovTransitoDTO estatus;
-	private Long folio;
+	private Integer folio;
 	private String sucursal;
 	private Date fecha;
 	private String operacion;
@@ -33,7 +33,7 @@ public class MovTransitoDTO implements Comparable<MovTransitoDTO> {
 		super();
 	}
 
-	public MovTransitoDTO(Long id, EstatusMovTransitoDTO estatus, Long folio, String sucursal, Date fecha,
+	public MovTransitoDTO(Integer id, EstatusMovTransitoDTO estatus, Integer folio, String sucursal, Date fecha,
 			String operacion, BigDecimal monto, String tipoContrato, String esquemaTarjeta, String cuenta,
 			String titularCuenta) {
 		super();
@@ -50,11 +50,11 @@ public class MovTransitoDTO implements Comparable<MovTransitoDTO> {
 		this.titularCuenta = titularCuenta;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -66,11 +66,11 @@ public class MovTransitoDTO implements Comparable<MovTransitoDTO> {
 		this.estatus = estatus;
 	}
 
-	public Long getFolio() {
+	public Integer getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Long folio) {
+	public void setFolio(Integer folio) {
 		this.folio = folio;
 	}
 

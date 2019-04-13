@@ -14,18 +14,18 @@ import java.util.Date;
 public class ConsultaConciliacionRequestDTO {
 
 	private Long idEntidad;
-	private String folio;
-	private String fechaDesde;
-	private String fechaHasta;
-	private Long idEstatus;
+	private Integer folio;
+	private Date fechaDesde;
+	private Date fechaHasta;
+	private Integer idEstatus;
 
 	public ConsultaConciliacionRequestDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ConsultaConciliacionRequestDTO(Long idEntidad, String folio, String fechaDesde, String fechaHasta,
-			Long idEstatus) {
+	public ConsultaConciliacionRequestDTO(Long idEntidad, Integer folio, Date fechaDesde, Date fechaHasta,
+			Integer idEstatus) {
 		super();
 		this.idEntidad = idEntidad;
 		this.folio = folio;
@@ -42,35 +42,35 @@ public class ConsultaConciliacionRequestDTO {
 		this.idEntidad = idEntidad;
 	}
 
-	public String getFolio() {
+	public Integer getFolio() {
 		return folio;
 	}
 
-	public void setFolio(String folio) {
+	public void setFolio(Integer folio) {
 		this.folio = folio;
 	}
 
-	public String getFechaDesde() {
+	public Date getFechaDesde() {
 		return fechaDesde;
 	}
 
-	public void setFechaDesde(String fechaDesde) {
+	public void setFechaDesde(Date fechaDesde) {
 		this.fechaDesde = fechaDesde;
 	}
 
-	public String getFechaHasta() {
+	public Date getFechaHasta() {
 		return fechaHasta;
 	}
 
-	public void setFechaHasta(String fechaHasta) {
+	public void setFechaHasta(Date fechaHasta) {
 		this.fechaHasta = fechaHasta;
 	}
 
-	public Long getIdEstatus() {
+	public Integer getIdEstatus() {
 		return idEstatus;
 	}
 
-	public void setIdEstatus(Long idEstatus) {
+	public void setIdEstatus(Integer idEstatus) {
 		this.idEstatus = idEstatus;
 	}
 

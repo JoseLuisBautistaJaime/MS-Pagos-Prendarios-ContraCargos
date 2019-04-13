@@ -24,7 +24,7 @@ public class EstatusMovTransitoDTO extends AbstractConciliacionBasicaDTO impleme
 		super();
 	}
 
-	public EstatusMovTransitoDTO(Long id, String descripcion, Boolean estatus) {
+	public EstatusMovTransitoDTO(Integer id, String descripcion, Boolean estatus) {
 		super(id, descripcion, estatus);
 	}
 

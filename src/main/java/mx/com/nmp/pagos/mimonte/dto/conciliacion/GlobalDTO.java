@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class GlobalDTO implements Comparable<GlobalDTO> {
 
-	private Long id;
+	private Integer id;
 	private Date fechaOperacion;
 	private Long totalMovimientos;
 	private Long totalPartidas;
@@ -32,7 +32,7 @@ public class GlobalDTO implements Comparable<GlobalDTO> {
 		super();
 	}
 
-	public GlobalDTO(Long id, Date fechaOperacion, Long totalMovimientos, Long totalPartidas, BigDecimal importeMidas,
+	public GlobalDTO(Integer id, Date fechaOperacion, Long totalMovimientos, Long totalPartidas, BigDecimal importeMidas,
 			BigDecimal importeProveedor, BigDecimal importeBanco, BigDecimal importeDevoluciones,
 			BigDecimal diferenciasProveedorVsMidas, BigDecimal diferenciasProveedorVsBanco) {
 		super();
@@ -48,11 +48,11 @@ public class GlobalDTO implements Comparable<GlobalDTO> {
 		this.diferenciasProveedorVsBanco = diferenciasProveedorVsBanco;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

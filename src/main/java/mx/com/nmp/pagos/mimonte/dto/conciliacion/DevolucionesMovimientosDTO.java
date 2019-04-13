@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public class DevolucionesMovimientosDTO implements Comparable<DevolucionesMovimientosDTO>{
 	
-	private Long id;
+	private Integer id;
 	private Date fecha;
 	private EstatusDevolucionDTO estatus;
 	private BigDecimal monto;
@@ -26,15 +26,15 @@ public class DevolucionesMovimientosDTO implements Comparable<DevolucionesMovimi
 	private String identificadorCuenta;
 	private String titular;
 	private String codigoAutorizacion;
-	private Long sucursal;
+	private Integer sucursal;
 	private Date fechaLiquidacion;
 
 	public DevolucionesMovimientosDTO() {
 		super();
 	}
 
-	public DevolucionesMovimientosDTO(Long id, Date fecha, EstatusDevolucionDTO estatus, BigDecimal monto,
-			String esquemaTarjeta, String identificadorCuenta, String titular, String codigoAutorizacion, Long sucursal,
+	public DevolucionesMovimientosDTO(Integer id, Date fecha, EstatusDevolucionDTO estatus, BigDecimal monto,
+			String esquemaTarjeta, String identificadorCuenta, String titular, String codigoAutorizacion, Integer sucursal,
 			Date fechaLiquidacion) {
 		super();
 		this.id = id;
@@ -49,11 +49,11 @@ public class DevolucionesMovimientosDTO implements Comparable<DevolucionesMovimi
 		this.fechaLiquidacion = fechaLiquidacion;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -113,11 +113,11 @@ public class DevolucionesMovimientosDTO implements Comparable<DevolucionesMovimi
 		this.codigoAutorizacion = codigoAutorizacion;
 	}
 
-	public Long getSucursal() {
+	public Integer getSucursal() {
 		return sucursal;
 	}
 
-	public void setSucursal(Long sucursal) {
+	public void setSucursal(Integer sucursal) {
 		this.sucursal = sucursal;
 	}
 

@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.List;
+
 /**
  * @name SolicitarPagosRequestDTO
  * @description Clase que encapsula el request de SolicitarPagosRequestDTO para
@@ -15,32 +17,32 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class SolicitarPagosRequestDTO implements Comparable<SolicitarPagosRequestDTO> {
 
-	private Long folio;
-	private Long idMovimientos;
+	private Integer folio;
+	private List<Integer> idMovimientos;
 
 	public SolicitarPagosRequestDTO() {
 		super();
 	}
 
-	public SolicitarPagosRequestDTO(Long folio, Long idMovimientos) {
+	public SolicitarPagosRequestDTO(Integer folio, List<Integer> idMovimientos) {
 		super();
 		this.folio = folio;
 		this.idMovimientos = idMovimientos;
 	}
 
-	public Long getFolio() {
+	public Integer getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Long folio) {
+	public void setFolio(Integer folio) {
 		this.folio = folio;
 	}
 
-	public Long getIdMovimientos() {
+	public List<Integer> getIdMovimientos() {
 		return idMovimientos;
 	}
 
-	public void setIdMovimientos(Long idMovimientos) {
+	public void setIdMovimientos(List<Integer> idMovimientos) {
 		this.idMovimientos = idMovimientos;
 	}
 

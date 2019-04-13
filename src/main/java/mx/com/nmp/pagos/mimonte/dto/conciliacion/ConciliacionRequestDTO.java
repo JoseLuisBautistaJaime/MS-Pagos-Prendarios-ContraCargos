@@ -49,8 +49,10 @@ public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO
 	}
 
 	@Override
-	public int compareTo(ConciliacionRequestDTO o) {
-		return o.idEntidad.compareTo(this.idEntidad);
+	public int compareTo(ConciliacionRequestDTO arg0) {
+		return 0;
 	}
+
+	
 
 }

@@ -15,7 +15,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class CuentaDTO {
 
-	private Long id;
+	private Integer id;
 	private String numero;
 	private Boolean estatus;
 
@@ -23,18 +23,18 @@ public class CuentaDTO {
 		super();
 	}
 
-	public CuentaDTO(Long id, String numero, Boolean estatus) {
+	public CuentaDTO(Integer id, String numero, Boolean estatus) {
 		super();
 		this.id = id;
 		this.numero = numero;
 		this.estatus = estatus;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

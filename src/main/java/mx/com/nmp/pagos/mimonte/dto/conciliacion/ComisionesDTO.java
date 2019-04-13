@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class ComisionesDTO implements Comparable<ComisionesDTO> {
 
-	private Long id;
+	private Integer id;
 	private Date fecha;
 	private Date fechaCargo;
 	private BigDecimal monto;
@@ -27,7 +27,7 @@ public class ComisionesDTO implements Comparable<ComisionesDTO> {
 		super();
 	}
 
-	public ComisionesDTO(Long id, Date fecha, Date fechaCargo, BigDecimal monto, String descripcion) {
+	public ComisionesDTO(Integer id, Date fecha, Date fechaCargo, BigDecimal monto, String descripcion) {
 		super();
 		this.id = id;
 		this.fecha = fecha;
@@ -36,11 +36,11 @@ public class ComisionesDTO implements Comparable<ComisionesDTO> {
 		this.descripcion = descripcion;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
