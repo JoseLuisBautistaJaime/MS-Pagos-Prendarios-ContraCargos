@@ -114,6 +114,10 @@ public class EntidadServiceImpl implements EntidadService {
 		EntidadDTO entidadDTO = null;
 		entidad = EntidadBuilder.buildEntidadFromEntidadDTO(e);
 		entidadResp = entidadRepository.save(entidad);
+		Set<Cuenta> cuentas = cuentaRepository.findByEntidadId(entidadResp.getId());
+		Set<Contactos> contactos = contactoRespository.findByEntidades_Id(entidadResp.getId());
+		entidadResp.setCuentas(cuentas);
+		entidadResp.setContactos(contactos);
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp);
 		return (T) entidadDTO;
 	}

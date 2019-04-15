@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,6 +37,9 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * @throws EmptyResultDataAccessException
 	 */
 	public List<Cuenta> findByEntidades_Id(final Long idEntidad) throws EmptyResultDataAccessException;
+
+	@Query("SELECT DISTINCT cta FROM Cuenta cta JOIN cta.entidades ent WHERE ent.id = :idEntidad")
+	public Set<Cuenta> findByEntidadId(@Param("idEntidad") final Long idEntidad) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa una Cuenta por numero
