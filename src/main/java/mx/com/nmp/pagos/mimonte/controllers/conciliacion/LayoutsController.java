@@ -62,7 +62,7 @@ public class LayoutsController {
 	 * Instancia que imprime logs de los eventos
 	 */
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(MovimientosEstadoCuentaController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MovimientosController.class);
 
 	/**
 	 * Service para Layouts
@@ -90,8 +90,7 @@ public class LayoutsController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByFolioAndTipoLayout(@PathVariable(value = "folio", required = true) Integer folio,
-			@PathVariable(value = "tipoLayout", required = true) String tipoLayout,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+			@PathVariable(value = "tipoLayout", required = true) String tipoLayout) {
 		LayoutDTO layoutDTO = buildDummy1();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				layoutDTO);
@@ -144,7 +143,7 @@ public class LayoutsController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		// No dummy required in this endpoint
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
-				new String(""));
+				null);
 	}
 
 	/**
@@ -163,6 +162,7 @@ public class LayoutsController {
 		layoutCabeceraDTO.setDescripcion("COMISION ECOMM 14122018");
 		layoutCabeceraDTO.setFecha(new Date());
 		layoutCabeceraDTO.setUnidadNegocio("NMP01");
+		layoutCabeceraDTO.setId(1L);
 		layoutLineaDTO1.setCuenta("6402001001");
 		layoutLineaDTO1.setDepId("");
 		layoutLineaDTO1.setId(1L);
@@ -184,6 +184,7 @@ public class LayoutsController {
 		layoutDTO.setCabecera(layoutCabeceraDTO);
 		layoutDTO.setLineas(layoutLineaDTOList);
 		layoutDTO.setTipoLayout(TipoLayoutEnum.PAGOS);
+		layoutDTO.setFolio(1);
 		return layoutDTO;
 	}
 

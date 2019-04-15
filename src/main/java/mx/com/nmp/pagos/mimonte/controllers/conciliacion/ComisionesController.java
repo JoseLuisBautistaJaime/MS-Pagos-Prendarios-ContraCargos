@@ -40,7 +40,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransProyeccionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransRealDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesOperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -87,7 +86,7 @@ public class ComisionesController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/conciliacion/comisiones/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/conciliacion/comisiones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite agregar y modificar comisiones al listado de comisiones del estado de cuenta.", tags = {
 			"Comisiones" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta exitosa"),
@@ -99,7 +98,7 @@ public class ComisionesController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		// There is no dummy response, just empty response
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-				new String(""));
+				null);
 	}
 
 	/**
@@ -112,7 +111,7 @@ public class ComisionesController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@DeleteMapping(value = "/conciliacion/comisiones/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(value = "/conciliacion/comisiones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "DELETE", value = "Permite eliminar comisiones al listado de comisiones del estado de cuenta. Sólo se pueden eliminar comisiones que han sido agregadas.", tags = {
 			"Comisiones" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Eliminacion correcta"),
@@ -124,11 +123,12 @@ public class ComisionesController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		// There is no dummy response, just empty response
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
-				new String(""));
+				null);
 	}
-	
+
 	/**
-	 * Realiza la consulta de transacciones realizadas en un periodo de tiempo marcado.
+	 * Realiza la consulta de transacciones realizadas en un periodo de tiempo
+	 * marcado.
 	 * 
 	 * @param SolicitarPagosRequestDTO
 	 * @param createdBy
@@ -144,11 +144,13 @@ public class ComisionesController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response ConsultaComisionesTransacciones(@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO) {
+	public Response ConsultaComisionesTransacciones(
+			@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO) {
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Exitosa.", buildComisionesTransaccionesDummy());
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Exitosa.",
+				buildComisionesTransaccionesDummy());
 	}
-	
+
 	/**
 	 * Realiza la consulta de comisiones para la conciliacion.
 	 * 
@@ -171,7 +173,7 @@ public class ComisionesController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
 				buildConsultaComisionesDummy());
 	}
-	
+
 	public static ComisionesTransDTO buildComisionesTransaccionesDummy() {
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(
 				new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64),
@@ -191,7 +193,7 @@ public class ComisionesController {
 		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(comisionesTransProyeccionDTO);
 		return comisionesTransDTO;
 	}
-	
+
 	public static List<ComisionDTO> buildConsultaComisionesDummy() {
 		List<ComisionDTO> comisionDTOList = new ArrayList<>();
 		ComisionDTO comisionDTO = new ComisionDTO(1, new Date(), new Date(),

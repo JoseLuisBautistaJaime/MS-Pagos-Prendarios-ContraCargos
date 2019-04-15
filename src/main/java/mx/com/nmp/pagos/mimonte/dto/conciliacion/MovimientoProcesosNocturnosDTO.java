@@ -15,9 +15,11 @@ import java.util.Date;
  * @creationDate 02/04/2019 15:49 hrs.
  * @version 0.1
  */
-public class MovimientoProcesosNocturnosDTO implements Comparable<MovimientoProcesosNocturnosDTO> {
+public class MovimientoProcesosNocturnosDTO {
 
-	private Integer folio;
+	private Long id;
+	private Long folioPartida;
+	private Long transaccion;
 	private Long sucursal;
 	private Date fecha;
 	private String operacionAbr;
@@ -31,12 +33,28 @@ public class MovimientoProcesosNocturnosDTO implements Comparable<MovimientoProc
 	private Double interes;
 	private String estatus;
 
-	public Integer getFolio() {
-		return folio;
+	public Long getTransaccion() {
+		return transaccion;
 	}
 
-	public void setFolio(Integer folio) {
-		this.folio = folio;
+	public void setTransaccion(Long transaccion) {
+		this.transaccion = transaccion;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getFolioPartida() {
+		return folioPartida;
+	}
+
+	public void setFolioPartida(Long folioPartida) {
+		this.folioPartida = folioPartida;
 	}
 
 	public Long getSucursal() {
@@ -137,16 +155,12 @@ public class MovimientoProcesosNocturnosDTO implements Comparable<MovimientoProc
 
 	@Override
 	public String toString() {
-		return "MovimientoProcesosNocturnosDTO [folio=" + folio + ", sucursal=" + sucursal + ", fecha=" + fecha
-				+ ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc + ", montoOperacion="
-				+ montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc
-				+ ", numAutorizacion=" + numAutorizacion + ", capital=" + capital + ", comisiones=" + comisiones
-				+ ", interes=" + interes + ", estatus=" + estatus + "]";
-	}
-
-	@Override
-	public int compareTo(MovimientoProcesosNocturnosDTO o) {
-		return o.folio.compareTo(this.folio);
+		return "MovimientoProcesosNocturnosDTO [id=" + id + ", folioPartida=" + folioPartida + ", transaccion="
+				+ transaccion + ", sucursal=" + sucursal + ", fecha=" + fecha + ", operacionAbr=" + operacionAbr
+				+ ", operacionDesc=" + operacionDesc + ", montoOperacion=" + montoOperacion + ", tipoContratoAbr="
+				+ tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc + ", numAutorizacion=" + numAutorizacion
+				+ ", capital=" + capital + ", comisiones=" + comisiones + ", interes=" + interes + ", estatus="
+				+ estatus + "]";
 	}
 
 }
