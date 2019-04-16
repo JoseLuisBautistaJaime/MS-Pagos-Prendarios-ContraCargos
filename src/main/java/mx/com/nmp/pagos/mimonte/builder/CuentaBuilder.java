@@ -14,6 +14,8 @@ import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaSaveReqDTO;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 
 /**
@@ -122,6 +124,29 @@ public abstract class CuentaBuilder {
 			cuentaBaseDTO.setEstatus(cuentaDTO.getEstatus());
 			cuentaBaseDTO.setId(cuentaDTO.getId());
 			cuentaBaseDTO.setNumeroCuenta(cuentaDTO.getNumero());
+			cuentaBaseDTO.setCreatedDate(createdDate);
+			cuentaBaseDTO.setLastModifiedDate(lastModifiedDate);
+		}
+		return cuentaBaseDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo CuentaBaseDTO a partir de un objeto de tipo
+	 * CuentaSaveDTO
+	 * 
+	 * @param cuentaSaveDTO
+	 * @param createdDate
+	 * @param lastModifiedDate
+	 * @return
+	 */
+	public static CuentaBaseDTO buildCuentaBaseDTOFromCuentaSaveDTO(CuentaSaveDTO cuentaSaveDTO, Date createdDate,
+			Date lastModifiedDate) {
+		CuentaBaseDTO cuentaBaseDTO = null;
+		if (null != cuentaSaveDTO) {
+			cuentaBaseDTO = new CuentaBaseDTO();
+			cuentaBaseDTO.setAfiliaciones(
+					AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionSaveDTOList(cuentaSaveDTO.getAfiliaciones()));
+			cuentaBaseDTO.setNumeroCuenta(cuentaSaveDTO.getNumero());
 			cuentaBaseDTO.setCreatedDate(createdDate);
 			cuentaBaseDTO.setLastModifiedDate(lastModifiedDate);
 		}
@@ -411,6 +436,43 @@ public abstract class CuentaBuilder {
 			}
 		}
 		return cuentaEntDTOList;
+	}
+
+	/**
+	 * Construye un objeto de tipo CuentaReqDTO a partir de un objeto de tipo
+	 * CuentaSaveReqDTO
+	 * 
+	 * @param cuentaSaveReqDTO
+	 * @return
+	 */
+	public static CuentaReqDTO buildCuentaReqDTOFromCuentaSaveReqDTO(CuentaSaveReqDTO cuentaSaveReqDTO) {
+		CuentaReqDTO cuentaReqDTO = null;
+		if (null != cuentaSaveReqDTO) {
+			cuentaReqDTO = new CuentaReqDTO();
+			cuentaReqDTO.setId(cuentaSaveReqDTO.getId());
+			cuentaReqDTO.setAfiliaciones(AfiliacionBuilder
+					.buildAfiliacionReqDTOListFromAfiliacionSaveDTOList(cuentaSaveReqDTO.getAfiliaciones()));
+		}
+		return cuentaReqDTO;
+	}
+
+	/**
+	 * Construye un Set de objetos de tipo CuentaReqDTO a partir de un Set de
+	 * objetos de tipo CuentaSaveReqDTO
+	 * 
+	 * @param cuentaSaveReqDTOSet
+	 * @return
+	 */
+	public static Set<CuentaReqDTO> buildCuentaReqDTOSetFromCuentaSaveReqDTOSet(
+			Set<CuentaSaveReqDTO> cuentaSaveReqDTOSet) {
+		Set<CuentaReqDTO> cuentaReqDTOSet = null;
+		if (null != cuentaSaveReqDTOSet && !cuentaSaveReqDTOSet.isEmpty()) {
+			cuentaReqDTOSet = new TreeSet<>();
+			for (CuentaSaveReqDTO cuentaSaveReqDTO : cuentaSaveReqDTOSet) {
+				cuentaReqDTOSet.add(buildCuentaReqDTOFromCuentaSaveReqDTO(cuentaSaveReqDTO));
+			}
+		}
+		return cuentaReqDTOSet;
 	}
 
 }

@@ -32,6 +32,7 @@ import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
@@ -138,7 +139,7 @@ public class EntidadServiceImpl implements EntidadService {
 				? entidadRepository.findById(e.getId()).get()
 				: null;
 		if (null == entidadTest)
-			throw new CatalogoException(CatalogConstants.NO_ENTIDAD_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_NOT_FOUND);
 		// Se valida que los id's de las cuentas existan
 		List<Cuenta> cuentaList = cuentaRepository.findAll();
 		if (!ValidadorCatalogo.validateCuentasExists(e.getCuentas(),
@@ -179,6 +180,8 @@ public class EntidadServiceImpl implements EntidadService {
 		Entidad entidadResp = null;
 		EntidadDTO entidadDTO = null;
 		entidadResp = entidadRepository.findById(id).isPresent() ? entidadRepository.findById(id).get() : null;
+		if (null == entidadResp)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp);
 		return (T) entidadDTO;
 	}
@@ -197,6 +200,8 @@ public class EntidadServiceImpl implements EntidadService {
 		List<Entidad> entidadList = null;
 		List<EntidadResponseDTO> entidadResponseDTOList = null;
 		entidadList = entidadRepository.findByNombreAndEstatus(nombre, estatus);
+		if (null == entidadList || entidadList.isEmpty())
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		entidadResponseDTOList = EntidadBuilder.buildEntidadResponseDTOListFromEntidadList(entidadList);
 		return entidadResponseDTOList;
 	}
@@ -228,6 +233,9 @@ public class EntidadServiceImpl implements EntidadService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateEstatusById(final Boolean estatus, final Long id, final String lastModifiedBy,
 			final Date lastModifiedDate) throws EmptyResultDataAccessException {
+		Entidad entidad = entidadRepository.findById(id).isPresent() ? entidadRepository.findById(id).get() : null;
+		if (null == entidad)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		entidadRepository.setEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
 	}
 

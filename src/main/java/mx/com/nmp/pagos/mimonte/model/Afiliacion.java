@@ -30,7 +30,7 @@ import javax.persistence.Table;
 public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afiliacion> {
 
 	@Column(name = "numero")
-	private Long numero;
+	private String numero;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tipo")
@@ -59,7 +59,7 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 		this.cuentas = cuentas;
 	}
 
-	public Afiliacion(Long numero, TipoAutorizacion tipo, Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
+	public Afiliacion(String numero, TipoAutorizacion tipo, Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
 		super();
 		this.numero = numero;
 		this.tipo = tipo;
@@ -68,7 +68,7 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 	}
 
 	public Afiliacion(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy, String description, String shortDescription, Long numero, TipoAutorizacion tipo,
+			String lastModifiedBy, String description, String shortDescription, String numero, TipoAutorizacion tipo,
 			Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.numero = numero;
@@ -77,11 +77,11 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 		this.cuentas = cuentas;
 	}
 
-	public Long getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Long numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 

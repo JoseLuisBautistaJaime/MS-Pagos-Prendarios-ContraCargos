@@ -41,7 +41,7 @@ public interface AfiliacionRepository extends JpaRepository<Afiliacion, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	public Afiliacion findByNumero(final Long numeroCuenta) throws EmptyResultDataAccessException;
+	public Afiliacion findByNumero(final String numeroCuenta) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa todas las afiliaciones

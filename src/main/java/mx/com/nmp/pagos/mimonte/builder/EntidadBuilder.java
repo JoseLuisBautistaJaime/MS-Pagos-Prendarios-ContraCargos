@@ -11,6 +11,7 @@ import java.util.TreeSet;
 
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
+import mx.com.nmp.pagos.mimonte.dto.EntidadBaseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
@@ -69,10 +70,12 @@ public abstract class EntidadBuilder {
 		Entidad entidad = null;
 		if (null != entidadDTO) {
 			entidad = new Entidad();
-			entidad.setContactos(ContactosBuilder.buildContactosSetFromContactoReqDTOSet(entidadDTO.getContactos(), entidadDTO.getLastModifiedBy(), entidadDTO.getLastModifiedDate()));
+			entidad.setContactos(ContactosBuilder.buildContactosSetFromContactoReqDTOSet(entidadDTO.getContactos(),
+					entidadDTO.getLastModifiedBy(), entidadDTO.getLastModifiedDate()));
 			entidad.setCreatedBy(entidadDTO.getCreatedBy());
 			entidad.setCreatedDate(entidadDTO.getCreatedDate());
-			entidad.setCuentas(CuentaBuilder.buildCuentaSetFromCuentaReqDTOSet(entidadDTO.getCuentas(), entidadDTO.getLastModifiedBy(), entidadDTO.getLastModifiedDate()));
+			entidad.setCuentas(CuentaBuilder.buildCuentaSetFromCuentaReqDTOSet(entidadDTO.getCuentas(),
+					entidadDTO.getLastModifiedBy(), entidadDTO.getLastModifiedDate()));
 			entidad.setDescription(entidadDTO.getDescription());
 			entidad.setShortDescription(entidadDTO.getShortDescription());
 			entidad.setId(entidadDTO.getId());
@@ -159,6 +162,33 @@ public abstract class EntidadBuilder {
 			entidadDTO.setId(entidadBaseDTO.getId());
 			entidadDTO.setLastModifiedDate(lastModifiedDate);
 			entidadDTO.setNombre(entidadBaseDTO.getNombre());
+		}
+		return entidadDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo EntidadDTO a partir de un objeto de tipo
+	 * EntidadBaseSaveDTO
+	 * 
+	 * @param entidadBaseSaveDTO
+	 * @param createdDate
+	 * @param lastModifiedDate
+	 * @return
+	 */
+	public static EntidadDTO buildEntidadDTOFromEntidadBaseSaveDTO(EntidadBaseSaveDTO entidadBaseSaveDTO,
+			Date createdDate, Date lastModifiedDate) {
+		EntidadDTO entidadDTO = null;
+		if (null != entidadBaseSaveDTO) {
+			entidadDTO = new EntidadDTO();
+			entidadDTO.setContactos(ContactosBuilder
+					.buildContactoReqDTOSetFromContactoReqSaveDTOSet(entidadBaseSaveDTO.getContactos()));
+			entidadDTO.setCreatedDate(createdDate);
+			entidadDTO.setCuentas(
+					CuentaBuilder.buildCuentaReqDTOSetFromCuentaSaveReqDTOSet(entidadBaseSaveDTO.getCuentas()));
+			entidadDTO.setDescription(entidadBaseSaveDTO.getDescripcion());
+			entidadDTO.setEstatus(true);
+			entidadDTO.setLastModifiedDate(lastModifiedDate);
+			entidadDTO.setNombre(entidadBaseSaveDTO.getNombre());
 		}
 		return entidadDTO;
 	}

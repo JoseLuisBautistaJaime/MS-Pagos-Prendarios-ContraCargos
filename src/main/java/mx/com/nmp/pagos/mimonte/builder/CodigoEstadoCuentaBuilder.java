@@ -10,6 +10,7 @@ import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaUpdtDTO;
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
@@ -172,7 +173,7 @@ public class CodigoEstadoCuentaBuilder {
 	}
 
 	/**
-	 * Construye un objeto de tipo CodigoEstadoCuentaDTO a partir de un pbjeto de
+	 * Construye un objeto de tipo CodigoEstadoCuentaDTO a partir de un objeto de
 	 * tipo CodigoEstadoCuentaDTO
 	 * 
 	 * @param codigoEstadoCuentaReqDTO
@@ -192,6 +193,31 @@ public class CodigoEstadoCuentaBuilder {
 			codigoEstadoCuentaDTO.setEstatus(codigoEstadoCuentaReqDTO.getEstatus());
 			codigoEstadoCuentaDTO.setId(codigoEstadoCuentaReqDTO.getId());
 			codigoEstadoCuentaDTO.setCodigo(codigoEstadoCuentaReqDTO.getCodigo());
+		}
+		return codigoEstadoCuentaDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo CodigoEstadoCuentaDTO a partir de un objeto de
+	 * tipo CodigoEstadoCuentaReqSaveDTO
+	 * 
+	 * @param codigoEstadoCuentaReqSaveDTO
+	 * @param createdDate
+	 * @param lastModifiedDate
+	 * @return
+	 */
+	public static CodigoEstadoCuentaDTO buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqSaveDTO(
+			CodigoEstadoCuentaReqSaveDTO codigoEstadoCuentaReqSaveDTO, Date createdDate, Date lastModifiedDate) {
+		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
+		if (null != codigoEstadoCuentaReqSaveDTO) {
+			codigoEstadoCuentaDTO = new CodigoEstadoCuentaDTO();
+			codigoEstadoCuentaDTO.setCreatedDate(createdDate);
+			codigoEstadoCuentaDTO.setLastModifiedDate(lastModifiedDate);
+			codigoEstadoCuentaDTO.setCategoria(
+					CategoriaBuilder.buildCategoriaDTOFromCategoriaReqDTO(codigoEstadoCuentaReqSaveDTO.getCategoria()));
+			codigoEstadoCuentaDTO.setEntidad(
+					EntidadBuilder.buildEntidadDTOFromEntidadReqDTO(codigoEstadoCuentaReqSaveDTO.getEntidad()));
+			codigoEstadoCuentaDTO.setCodigo(codigoEstadoCuentaReqSaveDTO.getCodigo());
 		}
 		return codigoEstadoCuentaDTO;
 	}

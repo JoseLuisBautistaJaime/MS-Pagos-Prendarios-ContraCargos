@@ -24,6 +24,7 @@ import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Afiliacion;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
@@ -125,7 +126,10 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 * @throws EmptyResultDataAccessException
 	 */
 	public List<CuentaEntDTO> findByEntidadId(final Long idEntidad) throws EmptyResultDataAccessException {
-		return CuentaBuilder.buildCuentaEntDTOListFromCuentaList(cuentaRepository.findByEntidades_Id(idEntidad));
+		List<Cuenta> cuentas = cuentaRepository.findByEntidades_Id(idEntidad);
+		if (null == cuentas || cuentas.isEmpty())
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		return CuentaBuilder.buildCuentaEntDTOListFromCuentaList(cuentas);
 	}
 
 	/**
@@ -152,7 +156,10 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 * @throws EmptyResultDataAccessException
 	 */
 	public CuentaEntDTO findByNumeroCuenta(final String numeroCuenta) throws EmptyResultDataAccessException {
-		return CuentaBuilder.buildCuentaEntDTOFromCuenta(cuentaRepository.findByNumeroCuenta(numeroCuenta));
+		Cuenta cuenta = cuentaRepository.findByNumeroCuenta(numeroCuenta);
+		if (null == cuenta)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		return CuentaBuilder.buildCuentaEntDTOFromCuenta(cuenta);
 	}
 
 	/**
@@ -167,6 +174,9 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateEstatusById(final Boolean estatus, final Long id, final String lastModifiedBy,
 			Date lastModifiedDate) throws EmptyResultDataAccessException {
+		Cuenta cuenta = cuentaRepository.findById(id).isPresent() ? cuentaRepository.findById(id).get() : null;
+		if (null == cuenta)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		cuentaRepository.updateEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
 	}
 

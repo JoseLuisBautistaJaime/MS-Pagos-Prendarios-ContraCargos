@@ -41,6 +41,7 @@ import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaRespDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaSaveDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.services.impl.CuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -92,14 +93,14 @@ public class CuentasController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody CuentaDTO cuentaDTOReq,
+	public Response save(@RequestBody CuentaSaveDTO cuentaSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		if (!ValidadorCatalogo.validateCuentaSave(cuentaDTOReq))
+		if (!ValidadorCatalogo.validateCuentaSave(cuentaSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		CuentaEntDTO cuentaEntDTO = null;
 		try {
-			cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
-					.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, new Date(), null), createdBy));
+			cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl.save(
+					CuentaBuilder.buildCuentaBaseDTOFromCuentaSaveDTO(cuentaSaveDTO, new Date(), null), createdBy));
 		} catch (CatalogoException cex) {
 			throw cex;
 		}
@@ -247,7 +248,7 @@ public class CuentasController {
 		List<AfiliacionRespDTO> afiliaciones = new ArrayList<AfiliacionRespDTO>();
 		AfiliacionRespDTO afiliacionDto = new AfiliacionRespDTO();
 		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setNumero("12345678L");
 		afiliaciones.add(afiliacionDto);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
 		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
@@ -291,16 +292,16 @@ public class CuentasController {
 		AfiliacionEntDTO afiliacionDto3 = new AfiliacionEntDTO();
 		AfiliacionEntDTO afiliacionDto4 = new AfiliacionEntDTO();
 		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setNumero("12345678L");
 		afiliacionDto.setEstatus(true);
 		afiliacionDto2.setId(555234L);
-		afiliacionDto2.setNumero(4541545456L);
+		afiliacionDto2.setNumero("4541545456L");
 		afiliacionDto2.setEstatus(true);
 		afiliacionDto3.setId(234111L);
-		afiliacionDto3.setNumero(10000978L);
+		afiliacionDto3.setNumero("10000978L");
 		afiliacionDto3.setEstatus(true);
 		afiliacionDto4.setId(9090904L);
-		afiliacionDto4.setNumero(112233L);
+		afiliacionDto4.setNumero("112233L");
 		afiliacionDto4.setEstatus(true);
 		afiliaciones.add(afiliacionDto);
 		afiliaciones.add(afiliacionDto2);
@@ -340,10 +341,10 @@ public class CuentasController {
 		AfiliacionEntDTO afiliacionDto = new AfiliacionEntDTO();
 		AfiliacionEntDTO afiliacionDto2 = new AfiliacionEntDTO();
 		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setNumero("12345678L");
 		afiliacionDto.setEstatus(true);
 		afiliacionDto2.setId(888L);
-		afiliacionDto2.setNumero(998811L);
+		afiliacionDto2.setNumero("998811L");
 		afiliacionDto2.setEstatus(true);
 		afiliaciones.add(afiliacionDto);
 		afiliaciones.add(afiliacionDto2);
@@ -370,7 +371,7 @@ public class CuentasController {
 		List<AfiliacionRespDTO> afiliaciones = new ArrayList<AfiliacionRespDTO>();
 		AfiliacionRespDTO afiliacionDto = new AfiliacionRespDTO();
 		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setNumero("12345678L");
 		afiliaciones.add(afiliacionDto);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
 		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
@@ -407,7 +408,7 @@ public class CuentasController {
 		cuentasDto.setAfiliaciones(afiliaciones);
 		cuentas.add(cuentasDto);
 		afiliacionDto.setId(12345L);
-		afiliacionDto.setNumero(654321L);
+		afiliacionDto.setNumero("654321L");
 		cuentas.add(cuentasDto);
 		return cuentas;
 	}

@@ -16,20 +16,20 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class AfiliacionEntDTO implements Comparable<AfiliacionEntDTO> {
 
+	private Long id;
+	private String numero;
+	private Boolean estatus;
+
 	public AfiliacionEntDTO() {
 		super();
 	}
 
-	public AfiliacionEntDTO(Long id, Long numero, Boolean estatus) {
+	public AfiliacionEntDTO(Long id, String numero, Boolean estatus) {
 		super();
 		this.id = id;
 		this.numero = numero;
 		this.estatus = estatus;
 	}
-
-	private Long id;
-	private Long numero;
-	private Boolean estatus;
 
 	public Long getId() {
 		return id;
@@ -39,11 +39,11 @@ public class AfiliacionEntDTO implements Comparable<AfiliacionEntDTO> {
 		this.id = id;
 	}
 
-	public Long getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Long numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 

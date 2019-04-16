@@ -186,6 +186,17 @@ public final class CatalogConstants {
 	public static final String NO_CATEGORIA_FOUND = "No existe la categoria especificada";
 
 	/**
+	 * Mensaje que es mostrado cuando no se encuentra el catalogo solicitado
+	 */
+	public static final String CATALOG_NOT_FOUND = "El o los catalogo(s) solicitado(s) no fueron encontrado(s)";
+
+	/**
+	 * Mensaje que es mostrado cuando se intenta eliminar una afiliacion con una o
+	 * mas cuentas asociadas u otras claves foraneas que dependen de esta
+	 */
+	public static final String AFILIACION_HAS_CUENTAS_ASSOCIATES = "La afiliacion tiene una o mas cuentas asocidas";
+
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */

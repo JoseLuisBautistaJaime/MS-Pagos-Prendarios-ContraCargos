@@ -10,16 +10,22 @@ import java.util.Set;
 
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
-import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaSaveReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
+import mx.com.nmp.pagos.mimonte.dto.EntidadBaseSaveDTO;
 
 /**
  * @name ValidadorCatalogo
@@ -38,17 +44,17 @@ public abstract class ValidadorCatalogo {
 	 * Valida que los atributos que deben estar en el objeto de la peticion de alta
 	 * exista y sean los correctos ademas
 	 * 
-	 * @param codigoEstadoCuentaReqDTO
+	 * @param codigoEstadoCuentaReqSaveDTO
 	 * @return
 	 */
-	public static boolean validateCodigoEstadoCuentaSave(CodigoEstadoCuentaReqDTO codigoEstadoCuentaReqDTO) {
-		return (null != codigoEstadoCuentaReqDTO) && (null != codigoEstadoCuentaReqDTO.getCodigo())
-				&& (null != codigoEstadoCuentaReqDTO.getCategoria()
-						&& null != codigoEstadoCuentaReqDTO.getCategoria().getId()
-						&& (codigoEstadoCuentaReqDTO.getCategoria().getId() > 0))
-				&& (null != codigoEstadoCuentaReqDTO.getEntidad()
-						&& null != codigoEstadoCuentaReqDTO.getEntidad().getId()
-						&& codigoEstadoCuentaReqDTO.getEntidad().getId() > 0);
+	public static boolean validateCodigoEstadoCuentaSave(CodigoEstadoCuentaReqSaveDTO codigoEstadoCuentaReqSaveDTO) {
+		return (null != codigoEstadoCuentaReqSaveDTO) && (null != codigoEstadoCuentaReqSaveDTO.getCodigo())
+				&& (null != codigoEstadoCuentaReqSaveDTO.getCategoria()
+						&& null != codigoEstadoCuentaReqSaveDTO.getCategoria().getId()
+						&& (codigoEstadoCuentaReqSaveDTO.getCategoria().getId() > 0))
+				&& (null != codigoEstadoCuentaReqSaveDTO.getEntidad()
+						&& null != codigoEstadoCuentaReqSaveDTO.getEntidad().getId()
+						&& codigoEstadoCuentaReqSaveDTO.getEntidad().getId() > 0);
 	}
 
 	/**
@@ -74,11 +80,12 @@ public abstract class ValidadorCatalogo {
 	 * Valida que los atributos de la peticion de la de afiliacion no sean nulos y
 	 * sean datos validos
 	 * 
-	 * @param afiliacionReqDTO
+	 * @param afiliacionReqSaveDTO
 	 * @return
 	 */
-	public static boolean validateAfilacionSave(AfiliacionReqDTO afiliacionReqDTO) {
-		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero() && afiliacionReqDTO.getNumero() > 0);
+	public static boolean validateAfilacionSave(AfiliacionReqSaveDTO afiliacionReqSaveDTO) {
+		return (null != afiliacionReqSaveDTO && null != afiliacionReqSaveDTO.getNumero()
+				&& !afiliacionReqSaveDTO.getNumero().equals("0") && !afiliacionReqSaveDTO.getNumero().equals(""));
 	}
 
 	/**
@@ -89,37 +96,38 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validateAfilacionUpdt(AfiliacionReqDTO afiliacionReqDTO) {
-		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero() && afiliacionReqDTO.getNumero() > 0
-				&& null != afiliacionReqDTO.getId() && afiliacionReqDTO.getId() > 0
-				&& null != afiliacionReqDTO.getEstatus());
+		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero()
+				&& !afiliacionReqDTO.getNumero().equals("0") && null != afiliacionReqDTO.getId()
+				&& afiliacionReqDTO.getId() > 0 && null != afiliacionReqDTO.getEstatus());
 	}
 
 	/**
 	 * Valida que de tipo EntidadBaseDTO en el request para la alta tenga los
 	 * valores correctos
 	 * 
-	 * @param entidadBaseDTO
+	 * @param entidadBaseSaveDTO
 	 * @return
 	 */
-	public static boolean validateEntidadBaseDTOSave(EntidadBaseDTO entidadBaseDTO) {
-		if (null == entidadBaseDTO || null == entidadBaseDTO.getNombre() || null == entidadBaseDTO.getDescripcion())
+	public static boolean validateEntidadBaseDTOSave(EntidadBaseSaveDTO entidadBaseSaveDTO) {
+		if (null == entidadBaseSaveDTO || null == entidadBaseSaveDTO.getNombre()
+				|| null == entidadBaseSaveDTO.getDescripcion())
 			return false;
-		if (null != entidadBaseDTO.getContactos() && !entidadBaseDTO.getContactos().isEmpty()) {
-			for (ContactoReqDTO contactoReqDTO : entidadBaseDTO.getContactos()) {
-				if (null == contactoReqDTO.getId() || contactoReqDTO.getId() <= 0) {
+		if (null != entidadBaseSaveDTO.getContactos() && !entidadBaseSaveDTO.getContactos().isEmpty()) {
+			for (ContactoReqSaveDTO contactoReqSaveDTO : entidadBaseSaveDTO.getContactos()) {
+				if (null == contactoReqSaveDTO.getId() || contactoReqSaveDTO.getId() <= 0) {
 					return false;
 				}
 			}
 		} else
 			return false;
-		if (null != entidadBaseDTO.getCuentas() && !entidadBaseDTO.getCuentas().isEmpty()) {
-			for (CuentaReqDTO cuentaReqDTO : entidadBaseDTO.getCuentas()) {
-				if (null == cuentaReqDTO.getId() || cuentaReqDTO.getId() <= 0) {
+		if (null != entidadBaseSaveDTO.getCuentas() && !entidadBaseSaveDTO.getCuentas().isEmpty()) {
+			for (CuentaSaveReqDTO cuentaSaveReqDTO : entidadBaseSaveDTO.getCuentas()) {
+				if (null == cuentaSaveReqDTO.getId() || cuentaSaveReqDTO.getId() <= 0) {
 					return false;
 				}
-				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
-					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
+				if (null != cuentaSaveReqDTO.getAfiliaciones() && !cuentaSaveReqDTO.getAfiliaciones().isEmpty()) {
+					for (AfiliacionSaveDTO afiliacionSaveDTO : cuentaSaveReqDTO.getAfiliaciones()) {
+						if (null == afiliacionSaveDTO.getId() || afiliacionSaveDTO.getId() <= 0)
 							return false;
 					}
 				} else
@@ -174,12 +182,12 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validaContactoReqSaveDTO(ContactoRequestDTO contactoRequestDTO) {
-		if (contactoRequestDTO == null 
-				|| contactoRequestDTO.getDescripcion() == null ||  contactoRequestDTO.getDescripcion().isEmpty()
-				|| contactoRequestDTO.getEmail() == null || contactoRequestDTO.getEmail().isEmpty()
-				|| contactoRequestDTO.getNombre() == null || contactoRequestDTO.getNombre().isEmpty() 
-				|| contactoRequestDTO.getTipoContacto() == null
-				|| contactoRequestDTO.getTipoContacto().getId() == null || contactoRequestDTO.getTipoContacto().getId() <= 0)
+		if (contactoRequestDTO == null || contactoRequestDTO.getDescripcion() == null
+				|| contactoRequestDTO.getDescripcion().isEmpty() || contactoRequestDTO.getEmail() == null
+				|| contactoRequestDTO.getEmail().isEmpty() || contactoRequestDTO.getNombre() == null
+				|| contactoRequestDTO.getNombre().isEmpty() || contactoRequestDTO.getTipoContacto() == null
+				|| contactoRequestDTO.getTipoContacto().getId() == null
+				|| contactoRequestDTO.getTipoContacto().getId() <= 0)
 			return false;
 		if (contactoRequestDTO.getTipoContacto() != null) {
 			if (contactoRequestDTO.getTipoContacto() == null || contactoRequestDTO.getTipoContacto().getId() <= 0)
@@ -196,13 +204,13 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validaContactoReqUpdateDTO(ContactoReqUpdateDTO contactoReqUpdateDTO) {
-		if (contactoReqUpdateDTO == null 
-				|| contactoReqUpdateDTO.getDescripcion() == null || contactoReqUpdateDTO.getDescripcion().isEmpty()
-				|| contactoReqUpdateDTO.getEmail() == null || contactoReqUpdateDTO.getEmail().isEmpty()
-				|| contactoReqUpdateDTO.getId() == null || contactoReqUpdateDTO.getId() <= 0
-				|| contactoReqUpdateDTO.getNombre() == null || contactoReqUpdateDTO.getNombre().isEmpty()
-				|| contactoReqUpdateDTO.getTipoContacto() == null
-				|| contactoReqUpdateDTO.getTipoContacto().getId() == null || contactoReqUpdateDTO.getTipoContacto().getId() <= 0)
+		if (contactoReqUpdateDTO == null || contactoReqUpdateDTO.getDescripcion() == null
+				|| contactoReqUpdateDTO.getDescripcion().isEmpty() || contactoReqUpdateDTO.getEmail() == null
+				|| contactoReqUpdateDTO.getEmail().isEmpty() || contactoReqUpdateDTO.getId() == null
+				|| contactoReqUpdateDTO.getId() <= 0 || contactoReqUpdateDTO.getNombre() == null
+				|| contactoReqUpdateDTO.getNombre().isEmpty() || contactoReqUpdateDTO.getTipoContacto() == null
+				|| contactoReqUpdateDTO.getTipoContacto().getId() == null
+				|| contactoReqUpdateDTO.getTipoContacto().getId() <= 0)
 			return false;
 		if (contactoReqUpdateDTO.getTipoContacto() != null) {
 			if (contactoReqUpdateDTO.getTipoContacto() == null || contactoReqUpdateDTO.getTipoContacto().getId() <= 0)
@@ -273,12 +281,12 @@ public abstract class ValidadorCatalogo {
 	 * Valida si un objeto Cuenta contiene atributos validos y completos para ser
 	 * guardado
 	 * 
-	 * @param cuentaDTO
+	 * @param cuentaSaveDTO
 	 * @return
 	 */
-	public static boolean validateCuentaSave(CuentaDTO cuentaDTO) {
-		return (null != cuentaDTO && null != cuentaDTO.getNumero() && !cuentaDTO.getNumero().isEmpty()
-				&& null != cuentaDTO.getAfiliaciones() && !cuentaDTO.getAfiliaciones().isEmpty());
+	public static boolean validateCuentaSave(CuentaSaveDTO cuentaSaveDTO) {
+		return (null != cuentaSaveDTO && null != cuentaSaveDTO.getNumero() && !cuentaSaveDTO.getNumero().isEmpty()
+				&& null != cuentaSaveDTO.getAfiliaciones() && !cuentaSaveDTO.getAfiliaciones().isEmpty());
 	}
 
 	/**

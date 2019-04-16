@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,9 +39,11 @@ import mx.com.nmp.pagos.mimonte.builder.AfiliacionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespPostDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.impl.AfiliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
@@ -94,14 +97,13 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody AfiliacionReqDTO afiliacionReqDTO,
+	public Response save(@RequestBody AfiliacionReqSaveDTO afiliacionReqSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		if (!ValidadorCatalogo.validateAfilacionSave(afiliacionReqDTO))
+		if (!ValidadorCatalogo.validateAfilacionSave(afiliacionReqSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
-		AfiliacionRespPostDTO AfiliacionDTO = AfiliacionBuilder
-				.buildAfiliacionRespPostDTOfromAfiliacionDTO((AfiliacionDTO) afiliacionServiceImpl.save(
-						AfiliacionBuilder.buildafiliacionDTOFromAfiliacionReqDTO(afiliacionReqDTO, new Date(), null),
-						createdBy));
+		AfiliacionRespPostDTO AfiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
+				(AfiliacionDTO) afiliacionServiceImpl.save(AfiliacionBuilder.buildAfiliacionDTOFromAfiliacionSaveReqDTO(
+						afiliacionReqSaveDTO, new Date(), null), createdBy));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				AfiliacionDTO);
 	}
@@ -127,7 +129,7 @@ public class AfiliacionController {
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		AfiliacionRespPostDTO AfiliacionDTO = AfiliacionBuilder
 				.buildAfiliacionRespPostDTOfromAfiliacionDTO((AfiliacionDTO) afiliacionServiceImpl.update(
-						AfiliacionBuilder.buildafiliacionDTOFromAfiliacionReqDTO(afiliacionDTOReq, null, new Date()),
+						AfiliacionBuilder.buildAfiliacionDTOFromAfiliacionReqDTO(afiliacionDTOReq, null, new Date()),
 						createdBy));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				AfiliacionDTO);
@@ -149,7 +151,7 @@ public class AfiliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findById(@PathVariable(value = "numeroAfiliacion", required = true) Long numeroAfiliacion) {
+	public Response findById(@PathVariable(value = "numeroAfiliacion", required = true) String numeroAfiliacion) {
 		AfiliacionRespPostDTO afiliacionDTO = null;
 		try {
 			afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
@@ -157,6 +159,8 @@ public class AfiliacionController {
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
+		if (null == afiliacionDTO)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				afiliacionDTO);
 	}
@@ -186,6 +190,8 @@ public class AfiliacionController {
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
+		if (null == afiliacionDTOSet || afiliacionDTOSet.isEmpty())
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != afiliacionDTOSet ? afiliacionDTOSet : new TreeSet<>());
 	}
@@ -204,8 +210,13 @@ public class AfiliacionController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		try {
 			afiliacionServiceImpl.deleteById(idAfiliacion);
-		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		} catch (EmptyResultDataAccessException | DataIntegrityViolationException ex) {
+			if (ex instanceof EmptyResultDataAccessException)
+				throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			else if (ex instanceof DataIntegrityViolationException)
+				throw new CatalogoException(CatalogConstants.AFILIACION_HAS_CUENTAS_ASSOCIATES);
+			else
+				throw new CatalogoException(ex.getMessage());
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
@@ -238,7 +249,7 @@ public class AfiliacionController {
 		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
 		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setNumero("12345678");
 		return afiliacionDto;
 	}
 
@@ -247,11 +258,11 @@ public class AfiliacionController {
 		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
 		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(9987L);
-		afiliacionDto.setNumero(990088L);
+		afiliacionDto.setNumero("990088");
 		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
 		afiliacionDto2.setEstatus(true);
 		afiliacionDto2.setId(234L);
-		afiliacionDto2.setNumero(12345678L);
+		afiliacionDto2.setNumero("12345678");
 		lst.add(afiliacionDto);
 		lst.add(afiliacionDto2);
 		return lst;
@@ -272,7 +283,7 @@ public class AfiliacionController {
 		afiliacionDto.setCreatedDate(new Date());
 		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setNumero("12345678");
 		afiliacionDto.setTipo(tipo);
 
 		return afiliacionDto;
@@ -290,7 +301,7 @@ public class AfiliacionController {
 		afiliacionDto.setId(234L);
 		afiliacionDto.setLastModifiedBy("Viktor Reznov");
 		afiliacionDto.setLastModifiedDate(new Date());
-		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setNumero("12345678");
 		afiliacionDto.setTipo(tipo);
 
 		return afiliacionDto;
@@ -303,10 +314,10 @@ public class AfiliacionController {
 		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
 		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero(12345678L);
+		afiliacionDto.setNumero("12345678");
 		afiliaciones.add(afiliacionDto);
 		afiliacionDto2.setId(6789L);
-		afiliacionDto2.setNumero(987654L);
+		afiliacionDto2.setNumero("987654");
 		afiliacionDto2.setEstatus(true);
 		afiliaciones.add(afiliacionDto2);
 		return afiliaciones;

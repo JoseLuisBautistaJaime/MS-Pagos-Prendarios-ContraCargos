@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import mx.com.nmp.pagos.mimonte.dao.AfiliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Afiliacion;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
@@ -63,6 +65,11 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T update(AfiliacionDTO e, String lastModifiedBy) {
+		Afiliacion afiliacion = afiliacionRepository.findById(e.getId()).isPresent()
+				? afiliacionRepository.findById(e.getId()).get()
+				: null;
+		if (null == afiliacion)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
 		return (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(
@@ -106,7 +113,11 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 * Elimina una afiliacion por id
 	 */
 	@Override
-	public void deleteById(Long id) throws EmptyResultDataAccessException {
+	public void deleteById(Long id) throws EmptyResultDataAccessException, DataIntegrityViolationException {
+		Afiliacion afiliacion = afiliacionRepository.findById(id).isPresent() ? afiliacionRepository.findById(id).get()
+				: null;
+		if (null == afiliacion)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		afiliacionRepository.deleteById(id);
 	}
 
@@ -117,7 +128,7 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	public AfiliacionDTO findByNumero(final Long numeroAfiliacion) throws EmptyResultDataAccessException {
+	public AfiliacionDTO findByNumero(final String numeroAfiliacion) throws EmptyResultDataAccessException {
 		Afiliacion afiliacion = null;
 		afiliacion = afiliacionRepository.findByNumero(numeroAfiliacion);
 		return AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(afiliacion);

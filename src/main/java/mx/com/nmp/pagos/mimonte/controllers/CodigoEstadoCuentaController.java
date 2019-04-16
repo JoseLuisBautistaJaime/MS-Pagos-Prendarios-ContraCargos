@@ -37,7 +37,7 @@ import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
-import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaUpdtDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
@@ -94,16 +94,16 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTO,
+	public Response save(@RequestBody CodigoEstadoCuentaReqSaveDTO codigoEstadoCuentaReqSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		if (!ValidadorCatalogo.validateCodigoEstadoCuentaSave(codigoEstadoCuentaDTO))
+		if (!ValidadorCatalogo.validateCodigoEstadoCuentaSave(codigoEstadoCuentaReqSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		CodigoEstadoCuentaUpdtDTO codigo = null;
 		try {
 			codigo = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
 					(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl
-							.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(
-									codigoEstadoCuentaDTO, new Date(), null), createdBy));
+							.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqSaveDTO(
+									codigoEstadoCuentaReqSaveDTO, new Date(), null), createdBy));
 		} catch (RuntimeException rex) {
 			if (rex instanceof EmptyResultDataAccessException)
 				throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);

@@ -40,6 +40,7 @@ import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
+import mx.com.nmp.pagos.mimonte.dto.EntidadBaseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
@@ -96,14 +97,14 @@ public class EntidadController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody EntidadBaseDTO entidadDTOReq,
+	public Response save(@RequestBody EntidadBaseSaveDTO entidadBaseSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		if (!ValidadorCatalogo.validateEntidadBaseDTOSave(entidadDTOReq))
+		if (!ValidadorCatalogo.validateEntidadBaseDTOSave(entidadBaseSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTO = null;
 		EntidadDTO entidadDTOResp = null;
-		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, new Date(), null);
+		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseSaveDTO(entidadBaseSaveDTO, new Date(), null);
 		entidadDTOResp = entidadServiceImpl.save(entidadDTO, createdBy);
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
@@ -191,7 +192,6 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@RequestParam(name = "nombre", required = false) String nombre,
 			@RequestParam(name = "estatus", required = false) Boolean estatus) {
-
 		List<EntidadResponseDTO> entidadResponseDTOList = null;
 		try {
 			entidadResponseDTOList = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
@@ -236,11 +236,11 @@ public class EntidadController {
 	 */
 	public static EntidadResponseDTO buildDummy() {
 		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
-		afiliaciones.add(new AfiliacionEntDTO(1L, 12345678L, true));
-		afiliaciones.add(new AfiliacionEntDTO(2L, 44423699L, true));
+		afiliaciones.add(new AfiliacionEntDTO(1L, "12345678L", true));
+		afiliaciones.add(new AfiliacionEntDTO(2L, "44423699L", true));
 		List<AfiliacionEntDTO> afiliaciones2 = new ArrayList<>();
-		afiliaciones2.add(new AfiliacionEntDTO(3L, 88345670L, true));
-		afiliaciones2.add(new AfiliacionEntDTO(4L, 33423699L, true));
+		afiliaciones2.add(new AfiliacionEntDTO(3L, "88345670L", true));
+		afiliaciones2.add(new AfiliacionEntDTO(4L, "33423699L", true));
 		Set<CuentaEntDTO> set = new HashSet<>();
 		set.add(new CuentaEntDTO(1L, "123456789", true, afiliaciones));
 		set.add(new CuentaEntDTO(2L, "999456770", true, afiliaciones2));
@@ -255,11 +255,11 @@ public class EntidadController {
 	public static List<EntidadResponseDTO> buildDummyList() {
 		List<EntidadResponseDTO> lst = new ArrayList<>();
 		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
-		afiliaciones.add(new AfiliacionEntDTO(1L, 12345678L, true));
-		afiliaciones.add(new AfiliacionEntDTO(2L, 44423699L, true));
+		afiliaciones.add(new AfiliacionEntDTO(1L, "12345678L", true));
+		afiliaciones.add(new AfiliacionEntDTO(2L, "44423699L", true));
 		List<AfiliacionEntDTO> afiliaciones2 = new ArrayList<>();
-		afiliaciones2.add(new AfiliacionEntDTO(3L, 88345670L, true));
-		afiliaciones2.add(new AfiliacionEntDTO(4L, 33423699L, true));
+		afiliaciones2.add(new AfiliacionEntDTO(3L, "88345670L", true));
+		afiliaciones2.add(new AfiliacionEntDTO(4L, "33423699L", true));
 		Set<CuentaEntDTO> set = new HashSet<>();
 		set.add(new CuentaEntDTO(1L, "123456789", true, afiliaciones));
 		set.add(new CuentaEntDTO(2L, "999456770", true, afiliaciones2));
@@ -270,11 +270,11 @@ public class EntidadController {
 				new Date(), "Steve P Jobs", set, set2);
 
 		List<AfiliacionEntDTO> afiliaciones3 = new ArrayList<>();
-		afiliaciones3.add(new AfiliacionEntDTO(5L, 127897897678L, true));
-		afiliaciones3.add(new AfiliacionEntDTO(6L, 2244789999L, true));
+		afiliaciones3.add(new AfiliacionEntDTO(5L, "127897897678L", true));
+		afiliaciones3.add(new AfiliacionEntDTO(6L, "2244789999L", true));
 		List<AfiliacionEntDTO> afiliaciones4 = new ArrayList<>();
-		afiliaciones4.add(new AfiliacionEntDTO(7L, 99000L, true));
-		afiliaciones4.add(new AfiliacionEntDTO(8L, 9011221L, true));
+		afiliaciones4.add(new AfiliacionEntDTO(7L, "99000L", true));
+		afiliaciones4.add(new AfiliacionEntDTO(8L, "9011221L", true));
 		Set<CuentaEntDTO> set3 = new HashSet<>();
 		set3.add(new CuentaEntDTO(3L, "8999777", true, afiliaciones3));
 		set3.add(new CuentaEntDTO(4L, "900087111", true, afiliaciones4));

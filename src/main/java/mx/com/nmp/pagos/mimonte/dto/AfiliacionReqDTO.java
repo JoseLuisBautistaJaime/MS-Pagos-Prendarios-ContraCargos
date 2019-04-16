@@ -16,14 +16,14 @@ package mx.com.nmp.pagos.mimonte.dto;
 public class AfiliacionReqDTO implements Comparable<AfiliacionReqDTO> {
 
 	private Long id;
-	private Long numero;
+	private String numero;
 	private Boolean estatus;
 
 	public AfiliacionReqDTO() {
 		super();
 	}
 
-	public AfiliacionReqDTO(Long id, Long numero, Boolean estatus) {
+	public AfiliacionReqDTO(Long id, String numero, Boolean estatus) {
 		super();
 		this.id = id;
 		this.numero = numero;
@@ -38,11 +38,11 @@ public class AfiliacionReqDTO implements Comparable<AfiliacionReqDTO> {
 		this.id = id;
 	}
 
-	public Long getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Long numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 

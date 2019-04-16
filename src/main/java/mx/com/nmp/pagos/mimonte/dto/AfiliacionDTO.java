@@ -22,38 +22,39 @@ public class AfiliacionDTO extends AbstractCatalogoDTO implements Comparable<Afi
 	 */
 	private static final long serialVersionUID = 3894335366665620579L;
 
-	private Long numero;
+	private String numero;
 	private TipoAutorizacionDTO tipo;
 
 	public AfiliacionDTO() {
 		super();
 	}
 
-	public AfiliacionDTO(Long numero, TipoAutorizacionDTO tipo) {
+	public AfiliacionDTO(String numero, TipoAutorizacionDTO tipo) {
 		super();
 		this.numero = numero;
 		this.tipo = tipo;
 	}
 
-	public AfiliacionDTO(Long id, Long numero, TipoAutorizacionDTO tipo) {
+	public AfiliacionDTO(Long id, String numero, TipoAutorizacionDTO tipo) {
 		super();
 		this.id = id;
 		this.numero = numero;
 		this.tipo = tipo;
 	}
-	
+
 	public AfiliacionDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy, String description, String shortDescription, Long numero, TipoAutorizacionDTO tipo) {
+			String lastModifiedBy, String description, String shortDescription, String numero,
+			TipoAutorizacionDTO tipo) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.numero = numero;
 		this.tipo = tipo;
 	}
 
-	public Long getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Long numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 
