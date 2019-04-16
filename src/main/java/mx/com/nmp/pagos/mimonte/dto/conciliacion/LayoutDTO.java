@@ -18,7 +18,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
  */
 public class LayoutDTO implements Comparable<LayoutDTO> {
 
-	private Long id;
+	private Integer folio;
 	private TipoLayoutEnum tipoLayout;
 	private LayoutCabeceraDTO cabecera;
 	private List<LayoutLineaDTO> lineas;
@@ -27,20 +27,21 @@ public class LayoutDTO implements Comparable<LayoutDTO> {
 		super();
 	}
 
-	public LayoutDTO(Long id, TipoLayoutEnum tipoLayout, LayoutCabeceraDTO cabecera, List<LayoutLineaDTO> lineas) {
+	public LayoutDTO(Integer folio, TipoLayoutEnum tipoLayout, LayoutCabeceraDTO cabecera,
+			List<LayoutLineaDTO> lineas) {
 		super();
-		this.id = id;
+		this.folio = folio;
 		this.tipoLayout = tipoLayout;
 		this.cabecera = cabecera;
 		this.lineas = lineas;
 	}
 
-	public Long getId() {
-		return id;
+	public Integer getFolio() {
+		return folio;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setFolio(Integer folio) {
+		this.folio = folio;
 	}
 
 	public TipoLayoutEnum getTipoLayout() {
@@ -69,13 +70,13 @@ public class LayoutDTO implements Comparable<LayoutDTO> {
 
 	@Override
 	public String toString() {
-		return "LayoutDTO [id=" + id + ", tipoLayout=" + tipoLayout + ", cabecera=" + cabecera + ", lineas=" + lineas
-				+ "]";
+		return "LayoutDTO [folio=" + folio + ", tipoLayout=" + tipoLayout + ", cabecera=" + cabecera + ", lineas="
+				+ lineas + "]";
 	}
 
 	@Override
 	public int compareTo(LayoutDTO o) {
-		return o.id.compareTo(this.id);
+		return o.folio.compareTo(this.folio);
 	}
 
 }
