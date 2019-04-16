@@ -174,10 +174,12 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validaContactoReqSaveDTO(ContactoRequestDTO contactoRequestDTO) {
-		if (contactoRequestDTO == null || contactoRequestDTO.getDescripcion() == null
-				|| contactoRequestDTO.getEmail() == null || contactoRequestDTO.getNombre() == null
-				|| contactoRequestDTO.getNombre().isEmpty() || contactoRequestDTO.getTipoContacto() == null
-				|| contactoRequestDTO.getTipoContacto().getId() == null)
+		if (contactoRequestDTO == null 
+				|| contactoRequestDTO.getDescripcion() == null ||  contactoRequestDTO.getDescripcion().isEmpty()
+				|| contactoRequestDTO.getEmail() == null || contactoRequestDTO.getEmail().isEmpty()
+				|| contactoRequestDTO.getNombre() == null || contactoRequestDTO.getNombre().isEmpty() 
+				|| contactoRequestDTO.getTipoContacto() == null
+				|| contactoRequestDTO.getTipoContacto().getId() == null || contactoRequestDTO.getTipoContacto().getId() <= 0)
 			return false;
 		if (contactoRequestDTO.getTipoContacto() != null) {
 			if (contactoRequestDTO.getTipoContacto() == null || contactoRequestDTO.getTipoContacto().getId() <= 0)
@@ -194,11 +196,13 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validaContactoReqUpdateDTO(ContactoReqUpdateDTO contactoReqUpdateDTO) {
-		if (contactoReqUpdateDTO == null || contactoReqUpdateDTO.getDescripcion() == null
-				|| contactoReqUpdateDTO.getEmail() == null || contactoReqUpdateDTO.getId() <= 0
+		if (contactoReqUpdateDTO == null 
+				|| contactoReqUpdateDTO.getDescripcion() == null || contactoReqUpdateDTO.getDescripcion().isEmpty()
+				|| contactoReqUpdateDTO.getEmail() == null || contactoReqUpdateDTO.getEmail().isEmpty()
+				|| contactoReqUpdateDTO.getId() == null || contactoReqUpdateDTO.getId() <= 0
 				|| contactoReqUpdateDTO.getNombre() == null || contactoReqUpdateDTO.getNombre().isEmpty()
 				|| contactoReqUpdateDTO.getTipoContacto() == null
-				|| contactoReqUpdateDTO.getTipoContacto().getId() == null)
+				|| contactoReqUpdateDTO.getTipoContacto().getId() == null || contactoReqUpdateDTO.getTipoContacto().getId() <= 0)
 			return false;
 		if (contactoReqUpdateDTO.getTipoContacto() != null) {
 			if (contactoReqUpdateDTO.getTipoContacto() == null || contactoReqUpdateDTO.getTipoContacto().getId() <= 0)
