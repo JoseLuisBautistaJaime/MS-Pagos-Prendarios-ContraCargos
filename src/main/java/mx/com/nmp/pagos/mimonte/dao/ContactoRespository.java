@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.dao;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -55,5 +56,11 @@ public interface ContactoRespository extends JpaRepository<Contactos, Long> {
 	
 	public Optional<Contactos> findById(final Long idContacto);
 		
-
+	/**
+	 * Regresa un set de contactos por id de entidad
+	 * @param idEntidad
+	 * @return
+	 */
+	public Set<Contactos> findByEntidades_Id(final Long idEntidad);
+	
 }

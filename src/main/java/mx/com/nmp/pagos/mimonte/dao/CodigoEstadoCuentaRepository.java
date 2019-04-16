@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -34,9 +33,7 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * @param idEntidad
 	 * @return
 	 */
-	@Query("SELECT c FROM CodigoEstadoCuenta c WHERE c.entidad.id = :idEntidad AND c.estatus = true")
-	public List<CodigoEstadoCuenta> findByEntidad_Id(@Param("idEntidad") final Long idEntidad)
-			throws EmptyResultDataAccessException;
+	public List<CodigoEstadoCuenta> findByEntidad_Id(final Long idEntidad) throws EmptyResultDataAccessException;
 
 	/**
 	 * Cambia el estatus a false de un catalogo CodigoEstadoCuenta
@@ -44,7 +41,6 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * @param estatus
 	 * @param idCodigo
 	 */
-	@Query("UPDATE CodigoEstadoCuenta cec SET cec.estatus = :estatus WHERE cec.id = :idCodigo")
 	public void setEstatusWhereId(@Param("estatus") final Boolean estatus, @Param("idCodigo") final Long idCodigo);
 
 	/**
@@ -55,21 +51,18 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	@Query("SELECT c FROM CodigoEstadoCuenta c WHERE c.entidad.id = :idEntidad AND c.categoria.id = :idCategoria AND c.entidad.estatus = true")
-	public CodigoEstadoCuenta findByEntidadIdAndCategoriaId(@Param("idEntidad") final Long idEntidad, @Param("idCategoria") final Long idCategoria)
+	public CodigoEstadoCuenta findByEntidadIdAndCategoriaId(final Long idEntidad, final Long idCategoria)
 			throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa un codigo de estado de cuenta por id
 	 */
-	@Query("SELECT c FROM CodigoEstadoCuenta c WHERE c.id = :id AND c.estatus = true")
-	public Optional<CodigoEstadoCuenta> findById(@Param("id") final Long id);
+	public Optional<CodigoEstadoCuenta> findById(final Long id);
 
 	/**
 	 * Regresa todos los codigos de estado de cuenta
 	 * 
 	 * @return
 	 */
-	@Query("SELECT c FROM CodigoEstadoCuenta c WHERE c.estatus = true")
-	public List<CodigoEstadoCuenta> finAll();
+	public List<CodigoEstadoCuenta> findAll();
 }
