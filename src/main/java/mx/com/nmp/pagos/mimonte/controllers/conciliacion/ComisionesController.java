@@ -160,7 +160,7 @@ public class ComisionesController {
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/comisiones/consulta/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Realiza la consulta de comisiones para la conciliacion.", tags = {
-			"Conciliación" })
+			"Comisiones" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
@@ -186,9 +186,8 @@ public class ComisionesController {
 		comisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		comisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		ComisionesTransProyeccionDTO comisionesTransProyeccionDTO = new ComisionesTransProyeccionDTO(
-				comisionesTransaccionesOperacionDTOList, new BigDecimal(33.00, MathContext.DECIMAL64),
-				comisionesTransRealDTO);
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(comisionesTransProyeccionDTO);
+				comisionesTransaccionesOperacionDTOList, new BigDecimal(33.00, MathContext.DECIMAL64));
+		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(comisionesTransProyeccionDTO, comisionesTransRealDTO);
 		return comisionesTransDTO;
 	}
 	

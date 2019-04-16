@@ -15,14 +15,16 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 public class ComisionesTransDTO implements Comparable<ComisionesTransDTO> {
 
 	private ComisionesTransProyeccionDTO proyeccion;
+	private ComisionesTransRealDTO real;
 
 	public ComisionesTransDTO() {
 		super();
 	}
 
-	public ComisionesTransDTO(ComisionesTransProyeccionDTO proyeccion) {
+	public ComisionesTransDTO(ComisionesTransProyeccionDTO proyeccion, ComisionesTransRealDTO real) {
 		super();
 		this.proyeccion = proyeccion;
+		this.real = real;
 	}
 
 	public ComisionesTransProyeccionDTO getProyeccion() {
@@ -33,9 +35,17 @@ public class ComisionesTransDTO implements Comparable<ComisionesTransDTO> {
 		this.proyeccion = proyeccion;
 	}
 
+	public ComisionesTransRealDTO getReal() {
+		return real;
+	}
+
+	public void setReal(ComisionesTransRealDTO real) {
+		this.real = real;
+	}
+
 	@Override
 	public String toString() {
-		return "ComisionesTransDTO [proyeccion=" + proyeccion + "]";
+		return "ComisionesTransDTO [proyeccion=" + proyeccion + "real=" + real + "]";
 	}
 
 	@Override

@@ -21,18 +21,15 @@ public class ComisionesTransProyeccionDTO implements Comparable<ComisionesTransP
 
 	private BigDecimal totalOperaciones;
 
-	private ComisionesTransRealDTO real;
-
 	public ComisionesTransProyeccionDTO() {
 		super();
 	}
 
 	public ComisionesTransProyeccionDTO(List<ComisionesTransaccionesOperacionDTO> operaciones,
-			BigDecimal totalOperaciones, ComisionesTransRealDTO real) {
+			BigDecimal totalOperaciones) {
 		super();
 		this.operaciones = operaciones;
 		this.totalOperaciones = totalOperaciones;
-		this.real = real;
 	}
 
 	public List<ComisionesTransaccionesOperacionDTO> getOperaciones() {
@@ -51,18 +48,10 @@ public class ComisionesTransProyeccionDTO implements Comparable<ComisionesTransP
 		this.totalOperaciones = totalOperaciones;
 	}
 
-	public ComisionesTransRealDTO getReal() {
-		return real;
-	}
-
-	public void setReal(ComisionesTransRealDTO real) {
-		this.real = real;
-	}
-
 	@Override
 	public String toString() {
 		return "ComisionesTransProyeccionDTO [operaciones=" + operaciones + ", totalOperaciones=" + totalOperaciones
-				+ ", real=" + real + "]";
+				+ "]";
 	}
 
 	@Override
