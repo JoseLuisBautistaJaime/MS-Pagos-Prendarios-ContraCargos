@@ -89,7 +89,7 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 */
 	public Set<AfiliacionDTO> findByCuentasId(final Long idCuenta) throws EmptyResultDataAccessException {
 		Set<Afiliacion> afiliaciones = null;
-//		afiliaciones = afiliacionRepository.findByCuentas_Id(idCuenta);
+		afiliaciones = afiliacionRepository.findByCuentas_Id(idCuenta);
 		return AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionSet(afiliaciones);
 	}
 
