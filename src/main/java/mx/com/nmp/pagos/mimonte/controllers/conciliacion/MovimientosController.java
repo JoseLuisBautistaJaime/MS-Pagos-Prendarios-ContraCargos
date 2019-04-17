@@ -109,7 +109,7 @@ public class MovimientosController {
 	@PostMapping(value = "/movimientos/proveedor/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite consultar los movimientos del proveedor transaccional. (Open Pay)", tags = {
 			"Movimientos Proveedor" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta movimientos exitosa."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -117,7 +117,7 @@ public class MovimientosController {
 	public Response findMovimientosProvedor(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
 		movimientoTransaccionalListDTO = buildDummyX1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
 				movimientoTransaccionalListDTO);
 	}
 
@@ -141,7 +141,7 @@ public class MovimientosController {
 	public Response findMovimientosNocturnos(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
 		movimientoProcesosNocturnosListDTO = buildDummyX2();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
 				movimientoProcesosNocturnosListDTO);
 	}
 

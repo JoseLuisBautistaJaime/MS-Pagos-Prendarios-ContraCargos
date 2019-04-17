@@ -108,7 +108,7 @@ public class LayoutsController {
 	@PostMapping(value = "/layouts/{folio}/{tipoLayout}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite agregar layouts para Pagos, Comisiones y Devoluciones.", tags = {
 			"Layouts" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta exitosa"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Layouts agregados con éxito."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -116,7 +116,7 @@ public class LayoutsController {
 	public Response saveLayout(@RequestBody LayoutSaveDTO layoutSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		LayoutDTO layoutDTO = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layouts agregados con éxito.",
 				layoutDTO);
 	}
 
@@ -133,7 +133,7 @@ public class LayoutsController {
 	@DeleteMapping(value = "/layouts/{folio}/{idLayout}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "DELETE", value = "Permite eliminar layouts para Pagos, Comisiones y Devoluciones", tags = {
 			"Layouts" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Baja exitosa"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Layout eliminado con éxito."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -142,7 +142,7 @@ public class LayoutsController {
 			@PathVariable(name = "idLayout", required = true) Long idLayout,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		// No dummy required in this endpoint
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layout eliminado con éxito.",
 				null);
 	}
 

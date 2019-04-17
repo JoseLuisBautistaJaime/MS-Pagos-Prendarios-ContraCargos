@@ -17,7 +17,6 @@ import java.util.Date;
  */
 public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 
-	private Long id;
 	private Integer folio;
 	private Date fechaOperacion;
 	private Date fechaCargo;
@@ -28,23 +27,13 @@ public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 		super();
 	}
 
-	public ComisionSaveDTO(Long id, Integer folio, Date fechaOperacion, Date fechaCargo, Double monto,
-			String descripcion) {
+	public ComisionSaveDTO(Integer folio, Date fechaOperacion, Date fechaCargo, Double monto, String descripcion) {
 		super();
-		this.id = id;
 		this.folio = folio;
 		this.fechaOperacion = fechaOperacion;
 		this.fechaCargo = fechaCargo;
 		this.monto = monto;
 		this.descripcion = descripcion;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public Integer getFolio() {
@@ -89,13 +78,14 @@ public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 
 	@Override
 	public String toString() {
-		return "ComisionSaveDTO [id=" + id + ", folio=" + folio + ", fechaOperacion=" + fechaOperacion + ", fechaCargo="
-				+ fechaCargo + ", monto=" + monto + ", descripcion=" + descripcion + "]";
+		return "ComisionSaveDTO [folio=" + folio + ", fechaOperacion=" + fechaOperacion + ", fechaCargo=" + fechaCargo
+				+ ", monto=" + monto + ", descripcion=" + descripcion + "]";
 	}
 
 	@Override
 	public int compareTo(ComisionSaveDTO o) {
-		return o.id.compareTo(this.id);
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
