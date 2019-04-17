@@ -25,19 +25,26 @@ public class ContactoRespDTO extends AbstractCatalogoDTO {
 	private String email;
 	private TipoContactoRespDTO tipoContacto;
 
+	
+	
 	public ContactoRespDTO() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public ContactoRespDTO(String nombre, String email, TipoContactoRespDTO tipoContacto, 
-			Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
-			String shortDescription) {
+	public ContactoRespDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy, String description, String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
+		// TODO Auto-generated constructor stub
+	}
+
+	public ContactoRespDTO(String nombre, String email, TipoContactoRespDTO tipoContacto) {
+		super();
 		this.nombre = nombre;
 		this.email = email;
 		this.tipoContacto = tipoContacto;
 	}
-	
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -64,8 +71,12 @@ public class ContactoRespDTO extends AbstractCatalogoDTO {
 
 	@Override
 	public String toString() {
-		return "ContactoRespDTO [nombre=" + nombre + ", email=" + email
-				+ ", TipoContactoRespDTO=" + tipoContacto + "]";
+		return "ContactoRespDTO [nombre=" + nombre + ", email=" + email + ", tipoContacto=" + tipoContacto + ", id="
+				+ id + ", estatus=" + estatus + ", createdDate=" + createdDate + ", lastModifiedDate="
+				+ lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy
+				+ ", description=" + description + ", shortDescription=" + shortDescription + "]";
 	}
+
+	
 
 }

@@ -111,6 +111,7 @@ public abstract class ContactosBuilder {
 			contactosDTO.setCreatedDate(contactos.getCreatedDate());
 			contactosDTO.setLastModifiedBy(contactos.getLastModifiedBy());
 			contactosDTO.setLastModifiedDate(contactos.getLastModifiedDate());
+			contactosDTO.setEstatus(contactos.getEstatus());
 		}
 		return contactosDTO;
 	}
@@ -164,6 +165,11 @@ public abstract class ContactosBuilder {
 			contactoRespDTO.setNombre(contactoReqUpdateDTO.getNombre());
 			contactoRespDTO.setTipoContacto(TipoContactoBuilder
 					.buildTipoContactoDTOFromTipoContactoReqDTO(contactoReqUpdateDTO.getTipoContacto()));
+//			contactoRespDTO.setCreatedBy(createdBy);
+			contactoRespDTO.setCreatedDate(createdDate);
+//			contactoRespDTO.setLastModifiedBy(lastModifiedBy);
+			contactoRespDTO.setLastModifiedDate(lastModifiedDate);
+//			contactoRespDTO.setEstatus(contactoReqUpdateDTO.get);
 		}
 
 		return contactoRespDTO;
@@ -180,13 +186,17 @@ public abstract class ContactosBuilder {
 		ContactoRespDTO contactosDTO = null;
 		if (contactoBaseDTO != null) {
 			contactosDTO = new ContactoRespDTO();
-			contactosDTO.setEstatus(contactoBaseDTO.getEstatus());
+			contactosDTO.setEstatus(true);
 			contactosDTO.setNombre(contactoBaseDTO.getNombre());
 			contactosDTO.setEmail(contactoBaseDTO.getEmail());
 			contactosDTO.setDescription(contactoBaseDTO.getDescription());
 			contactosDTO.setId(contactoBaseDTO.getId());
 			contactosDTO.setTipoContactoResDTO(TipoContactoBuilder
 					.builTipoTipoContactoRespDTOFromTipoContactoDTO(contactoBaseDTO.getTipoContacto()));
+			contactosDTO.setCreatedDate(contactoBaseDTO.getCreatedDate());
+			contactosDTO.setLastModifiedDate(contactoBaseDTO.getLastModifiedDate());
+			contactosDTO.setCreatedBy(contactoBaseDTO.getCreatedBy());
+			contactosDTO.setLastModifiedBy(contactoBaseDTO.getLastModifiedBy());
 		}
 		return contactosDTO;
 	}
@@ -284,6 +294,9 @@ public abstract class ContactosBuilder {
 			contacto.setId(contactoReqDTO.getId());
 			contacto.setLastModifiedBy(lastModifiedBy);
 			contacto.setLastModifiedDate(lastModifiedDate);
+//			contacto.setCreatedBy(createdBy);
+//			contacto.setCreatedDate(createdDate);
+			
 		}
 		return contacto;
 	}
@@ -381,6 +394,10 @@ public abstract class ContactosBuilder {
 			contactoBaseDTO.setDescription(contactoRespDTO.getDescription());
 			contactoBaseDTO.setTipoContacto(
 					TipoContactoBuilder.buildTipoContactoDTOFromTipoContactoRespDTO(contactoRespDTO.getTipoContacto()));
+			contactoBaseDTO.setCreatedBy(contactoRespDTO.getCreatedBy());
+			contactoBaseDTO.setCreatedDate(contactoRespDTO.getCreatedDate());
+			contactoBaseDTO.setLastModifiedBy(contactoRespDTO.getLastModifiedBy());
+			contactoBaseDTO.setLastModifiedDate(contactoRespDTO.getLastModifiedDate());
 
 		}
 		return contactoBaseDTO;
@@ -438,6 +455,10 @@ public abstract class ContactosBuilder {
 			contactoRespDTO.setDescription(contactos.getDescription());
 			contactoRespDTO.setTipoContactoResDTO(
 					TipoContactoBuilder.buildTipoContactoRespDTOFormTipoContacto(contactos.getTipoContacto()));
+			contactoRespDTO.setCreatedBy(contactos.getCreatedBy());
+			contactoRespDTO.setCreatedDate(contactos.getCreatedDate());
+			contactoRespDTO.setLastModifiedBy(contactos.getLastModifiedBy());
+			contactoRespDTO.setLastModifiedDate(contactos.getLastModifiedDate());
 		}
 		return contactoRespDTO;
 	}
@@ -475,6 +496,7 @@ public abstract class ContactosBuilder {
 		ContactoBaseDTO contactoBaseDTO = null;
 		if (contactoRequestDTO != null) {
 			contactoBaseDTO = new ContactoBaseDTO();
+			contactoBaseDTO.setEstatus(true);
 			contactoBaseDTO.setCreatedDate(createdDate);
 			contactoBaseDTO.setDescription(contactoRequestDTO.getDescripcion());
 			contactoBaseDTO.setEmail(contactoRequestDTO.getEmail());
@@ -482,6 +504,8 @@ public abstract class ContactosBuilder {
 			contactoBaseDTO.setNombre(contactoRequestDTO.getNombre());
 			contactoBaseDTO.setTipoContacto(TipoContactoBuilder
 					.buildTipoContactoDTOFromTipoContactoReqDTO(contactoRequestDTO.getTipoContacto()));
+//			contactoBaseDTO.setCreatedBy(contactoRequestDTO.get);
+//			contactoBaseDTO.setLastModifiedBy(lastModifiedBy);
 		}
 
 		return contactoBaseDTO;
