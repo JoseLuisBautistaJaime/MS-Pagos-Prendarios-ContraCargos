@@ -78,6 +78,12 @@ public final class CatalogConstants {
 	public static final String CODIGO_E_C_ALREADY_EXISTS = "Ya existe un codigo con esa entidad y esa categoria";
 
 	/**
+	 * Mensaje que es lanzado cuando se intenta actualizar un codigo de estado de
+	 * cuenta que no existe
+	 */
+	public static final String CODIGO_E_C_DOESNT_EXISTS = "El codigo que desea actualizar no existe";
+
+	/**
 	 * Mensaje que es mostrado cuando se intenta dar de alta una afiliacion con un
 	 * numero que ya existe
 	 */
@@ -206,6 +212,12 @@ public final class CatalogConstants {
 	 * cuenta-afiliacion que no existe en el catalogo
 	 */
 	public static final String CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS = "No existe una o mas asocianes cuenta-afiliacion";
+
+	/**
+	 * Mensaje que es mostrado cuando se desea eliminar un contacto que esta
+	 * asociado a una entidad
+	 */
+	public static final String CONTCATO_HAS_ENTIDADES_ASSOCIATED = "El contacto esta asociado a una entidad";
 
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no

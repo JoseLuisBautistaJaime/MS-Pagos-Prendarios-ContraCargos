@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
+import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dao.TipoContactoRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
@@ -22,6 +24,7 @@ import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
+import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
@@ -38,6 +41,13 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 	
 	@Autowired
 	private ContactoRespository contactoRespository;
+	
+	/**
+	 * Repository de catalogo Entidad
+	 */
+	@Autowired
+	@Qualifier("entidadRepository")
+	private EntidadRepository entidadRepository;
 
 	@Autowired
 	private TipoContactoRepository tipoContactoRepository;
@@ -98,6 +108,9 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 		Contactos contactos = contactoRespository.findById(id).isPresent() ? contactoRespository.findById(id).get()	: null;
 		if(contactos == null)
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		List<Entidad> entidades = entidadRepository.findByContactos_Id(id);
+		if(null != entidades && !entidades.isEmpty())
+			throw new CatalogoException(CatalogConstants.CONTCATO_HAS_ENTIDADES_ASSOCIATED);
 		contactoRespository.deleteById(id);
 	}
 

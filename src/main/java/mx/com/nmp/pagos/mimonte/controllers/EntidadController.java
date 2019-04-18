@@ -139,6 +139,18 @@ public class EntidadController {
 		} catch (CatalogoException ce) {
 			throw ce;
 		}
+		// SETEO DE USUARIO Y FECHA CREACION YA QUE NO SE HACE EL FETCH AL GUARDAR NI
+		// DENTRO DEL METODO DE GUARDADO NI TAMPOCO OBTENIENDO LA ENTIDAD COMPLETEA
+		// DESDE
+		// ESTA CAPA NI EXISTE LA POSIBILIDAD DE IMPLEMENTAR REFRESH POR LA INTERFAZ
+		// JpaRepository (POSIBLEMENTE UN BUG DE SPRING DATA REPOSITORY)
+		String usr = entidadServiceImpl.findCreatedByByEntidadId(entidadDTOResp.getId());
+		Date fec = entidadServiceImpl.findCreatedDateByEntidadId(entidadDTOResp.getId());
+		if (null != usr && null != fec) {
+			entidadDTOResp.setCreatedBy(usr);
+			entidadDTOResp.setCreatedDate(fec);
+		}
+		// FIN DE SETEO DE USUARIO Y FECHA CREACION
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				entidadResponseDTO);

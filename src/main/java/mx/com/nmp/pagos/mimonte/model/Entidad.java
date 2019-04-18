@@ -40,8 +40,8 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
 	@JoinTable(name = "tr_entidad_contactos", joinColumns = {
-			@JoinColumn(name = "id_entidad", referencedColumnName = "id") }, inverseJoinColumns = {
-					@JoinColumn(name = "id_contacto", referencedColumnName = "id") })
+			@JoinColumn(name = "id_entidad", referencedColumnName = "id", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "id_contacto", referencedColumnName = "id", nullable = false, updatable = false) })
 	private Set<Contactos> contactos;
 
 	@OneToMany(mappedBy = "entidad")

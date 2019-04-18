@@ -85,4 +85,12 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	 */
 	public List<Entidad> findByNombreAndDescription(final String nombre, final String description);
 
+	/**
+	 * Regresa una lista de entidades por un id de contacto
+	 * 
+	 * @param idContacto
+	 * @return
+	 */
+	public List<Entidad> findByContactos_Id(final Long idContacto);
+
 }

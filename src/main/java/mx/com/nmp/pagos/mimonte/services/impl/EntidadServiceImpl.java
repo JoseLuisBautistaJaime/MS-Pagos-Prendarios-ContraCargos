@@ -98,6 +98,14 @@ public class EntidadServiceImpl implements EntidadService {
 	@Qualifier("afiliacionRepository")
 	private AfiliacionRepository afiliacionRepository;
 
+	public String findCreatedByByEntidadId(final Long idEntidad) {
+		return cuentaRepository.findCreatedByByEntidadId(idEntidad);
+	}
+	
+	public Date findCreatedDateByEntidadId(final Long idEntidad) {
+		return cuentaRepository.findCreatedDateByEntidadId(idEntidad);
+	}
+	
 	/**
 	 * Guarda una entidad
 	 */
@@ -302,6 +310,7 @@ public class EntidadServiceImpl implements EntidadService {
 		}
 
 		// INICIA COMPROBACION DE CUENTAS A ELIMINAR
+		
 		List<EntidadCuentaAfiliacion> entidadCuentaAfiliacionExt = entidadCuentaAfiliacionRepository
 				.findByEntidad_Id(entidadResp.getId());
 		long[][] ids = new long[entidadCuentaAfiliacionExt.size()][3];
@@ -339,7 +348,6 @@ public class EntidadServiceImpl implements EntidadService {
 			}
 		}
 		// FINALIZA COMPROBACION DE CUENTAS A ELIMINAR
-
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp);
 		Set<CuentaReqDTO> cuentaReqDTOSet = null;
 		cuentaReqDTOSet = EntidadCuentaAfiliacionBuilder.buildCuentaReqDTOSetFromEntidadCuentaAfiliacionDTOList(lst2);

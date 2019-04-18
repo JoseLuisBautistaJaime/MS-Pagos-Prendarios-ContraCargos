@@ -11,6 +11,7 @@ import java.util.Set;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
@@ -156,7 +157,7 @@ public abstract class ValidadorCatalogo {
 			return false;
 		if (null != entidadBaseDTO.getContactos() && !entidadBaseDTO.getContactos().isEmpty()) {
 			for (ContactoReqDTO contactoReqDTO : entidadBaseDTO.getContactos()) {
-				if (null == contactoReqDTO.getId() || contactoReqDTO.getId() <= 0 || null == contactoReqDTO.getEmail()
+				if (null == contactoReqDTO.getId()  || null == contactoReqDTO.getEmail()
 						|| contactoReqDTO.getEmail().equals("") || null == contactoReqDTO.getNombre()
 						|| contactoReqDTO.getNombre().equals("")
 						|| !ValidadorGenerico.validateEmail(contactoReqDTO.getEmail())) {
@@ -323,8 +324,16 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validateCuentaSave(CuentaSaveDTO cuentaSaveDTO) {
-		return (null != cuentaSaveDTO && null != cuentaSaveDTO.getNumero() && !cuentaSaveDTO.getNumero().isEmpty()
-				&& null != cuentaSaveDTO.getAfiliaciones() && !cuentaSaveDTO.getAfiliaciones().isEmpty());
+		if (null != cuentaSaveDTO && null != cuentaSaveDTO.getNumero() && !cuentaSaveDTO.getNumero().isEmpty()
+				&& null != cuentaSaveDTO.getAfiliaciones() && !cuentaSaveDTO.getAfiliaciones().isEmpty()) {
+			for (AfiliacionSaveDTO afiliacionSaveDTO : cuentaSaveDTO.getAfiliaciones()) {
+				if (null == afiliacionSaveDTO.getId()) {
+					return false;
+				}
+			}
+		} else
+			return false;
+		return true;
 	}
 
 	/**
@@ -335,9 +344,18 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validateCuentaUpdate(CuentaDTO cuentaDTO) {
-		return (null != cuentaDTO && null != cuentaDTO.getNumero() && !cuentaDTO.getNumero().isEmpty()
+		if (null != cuentaDTO && null != cuentaDTO.getNumero() && !cuentaDTO.getNumero().isEmpty()
 				&& null != cuentaDTO.getId() && null != cuentaDTO.getAfiliaciones()
-				&& !cuentaDTO.getAfiliaciones().isEmpty());
+				&& !cuentaDTO.getAfiliaciones().isEmpty()) {
+			for (AfiliacionRespDTO afiliacionRespDTO : cuentaDTO.getAfiliaciones()) {
+				if (null == afiliacionRespDTO.getId() || null == afiliacionRespDTO.getNumero()
+						|| afiliacionRespDTO.getNumero().equals("")) {
+					return false;
+				}
+			}
+		} else
+			return false;
+		return true;
 	}
 
 	/**
