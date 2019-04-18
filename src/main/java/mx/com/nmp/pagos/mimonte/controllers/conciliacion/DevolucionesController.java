@@ -31,6 +31,7 @@ import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
@@ -83,15 +84,14 @@ public class DevolucionesController {
 	@PostMapping(value = "/devoluciones/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Realiza la administración de devoluciones a nivel entidad - Consulta de devoluciones para todas las entidades bancarias.", tags = {
 			"Devoluciones" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta Devoluciones Exitosa."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultar(@RequestBody DevolucionDTO devolucionDTO,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+	public Response consultar(@RequestBody DevolucionRequestDTO devolucionDTO) {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Devoluciones Exitosa.",
 				devolucionEntidadDTOList);
 	}
 
@@ -108,7 +108,7 @@ public class DevolucionesController {
 	@PutMapping(value = "/devoluciones/actualizacion", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Realiza la administración de devoluciones a nivel entidad - Actualización de la fecha y liquidación para las devoluciones.", tags = {
 			"Devoluciones" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Actualizacion exitosa"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Actualización Devoluciones Exitosa."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -116,7 +116,7 @@ public class DevolucionesController {
 	public Response actualizar(@RequestBody List<DevolucionUpdtDTO> devolucionUpdtDTOList,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualización Devoluciones Exitosa.",
 				devolucionEntidadDTOList);
 	}
 
@@ -133,7 +133,7 @@ public class DevolucionesController {
 	@PostMapping(value = "/devoluciones/solicitar", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Realiza la administración de devoluciones a nivel entidad - Enviar solicitud de devoluciones.", tags = {
 			"Devoluciones" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Actualizacion exitosa"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Solicitud Devoluciones Exitosa."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -141,7 +141,7 @@ public class DevolucionesController {
 	public Response solicitar(@RequestBody DevolucionesIdsMovimientosDTO devolucionesIdsMovimientosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Devoluciones Exitosa.",
 				devolucionEntidadDTOList);
 	}
 
@@ -154,6 +154,7 @@ public class DevolucionesController {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOListList = new ArrayList<>();
 		DevolucionEntidadDTO devolucionEntidadDTO = new DevolucionEntidadDTO();
 		devolucionEntidadDTO.setId(1L);
+		devolucionEntidadDTO.setCuenta(640200100);
 		devolucionEntidadDTO.setEntidad(new BaseEntidadDTO(1L, "Banco 1", "Banco 1"));
 		devolucionEntidadDTO.setFecha(new Date());
 		devolucionEntidadDTO.setEstatus(new EstatusDevolucionDTO(2, "Solicitada", true));

@@ -18,19 +18,28 @@ import java.util.List;
  */
 public class MovimientoTransaccionalListDTO {
 
+	private Integer total;
 	private List<MovimientoTransaccionalDTO> movimientos;
-	private BigDecimal total;
+	
 
 	public MovimientoTransaccionalListDTO() {
 		super();
 	}
 
-	public MovimientoTransaccionalListDTO(List<MovimientoTransaccionalDTO> movimientos, BigDecimal total) {
+	public MovimientoTransaccionalListDTO(Integer total, List<MovimientoTransaccionalDTO> movimientos) {
 		super();
-		this.movimientos = movimientos;
 		this.total = total;
+		this.movimientos = movimientos;
 	}
 
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+	
 	public List<MovimientoTransaccionalDTO> getMovimientos() {
 		return movimientos;
 	}
@@ -39,17 +48,9 @@ public class MovimientoTransaccionalListDTO {
 		this.movimientos = movimientos;
 	}
 
-	public BigDecimal getTotal() {
-		return total;
-	}
-
-	public void setTotal(BigDecimal total) {
-		this.total = total;
-	}
-
 	@Override
 	public String toString() {
-		return "MovimientoTransaccionalListDTO [movimientos=" + movimientos + ", total=" + total + "]";
+		return "MovimientoTransaccionalListDTO [total=" + total + ", movimientos=" + movimientos + " ]";
 	}
 
 }

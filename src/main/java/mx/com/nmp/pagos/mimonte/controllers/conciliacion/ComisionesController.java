@@ -35,6 +35,7 @@ import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDeleteDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionSaveResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransProyeccionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransRealDTO;
@@ -86,7 +87,7 @@ public class ComisionesController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/conciliacion/comisiones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/comisiones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite agregar y modificar comisiones al listado de comisiones del estado de cuenta.", tags = {
 			"Comisiones" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta exitosa"),
@@ -97,8 +98,8 @@ public class ComisionesController {
 	public Response save(@RequestBody ComisionSaveDTO comisionSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		// There is no dummy response, just empty response
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-				null);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta Exitosa.",
+				builComisionSaveResponseDTODummy());
 	}
 
 	/**
@@ -111,7 +112,7 @@ public class ComisionesController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@DeleteMapping(value = "/conciliacion/comisiones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(value = "/comisiones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "DELETE", value = "Permite eliminar comisiones al listado de comisiones del estado de cuenta. Sólo se pueden eliminar comisiones que han sido agregadas.", tags = {
 			"Comisiones" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Eliminacion correcta"),
@@ -203,5 +204,10 @@ public class ComisionesController {
 		comisionDTOList.add(comisionDTO2);
 		return comisionDTOList;
 
+	}
+	
+	public static ComisionSaveResponseDTO builComisionSaveResponseDTODummy() {
+		ComisionSaveResponseDTO comisionSaveDTO = new ComisionSaveResponseDTO(1, 1, new Date(), new Date(), 100.00, "Cargo diverso comision", true);
+		return comisionSaveDTO;
 	}
 }

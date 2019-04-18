@@ -33,8 +33,10 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoIDDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
@@ -50,7 +52,7 @@ import mx.com.nmp.pagos.mimonte.util.Response;
 @RestController
 @RequestMapping(value = "/mimonte")
 @Api(value = "", description = "REST API para Movimientos de estados de cuenta", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
-		"MoviminetosEstadoCuenta" })
+		"Movimientos" })
 public class MovimientosController {
 
 	/**
@@ -84,8 +86,8 @@ public class MovimientosController {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/movimientos/estadocuenta/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite consultar los movimientos del estado de cuenta.", tags = {
-			"MoviminetosEstadoCuenta" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
+			"Movimientos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta movimientos exitosa."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -93,7 +95,7 @@ public class MovimientosController {
 	public Response save(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;
 		movimientosEstadoCuentaDTO = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
 				movimientosEstadoCuentaDTO);
 	}
 
@@ -108,7 +110,7 @@ public class MovimientosController {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/movimientos/proveedor/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite consultar los movimientos del proveedor transaccional. (Open Pay)", tags = {
-			"Movimientos Proveedor" })
+			"Movimientos" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta movimientos exitosa."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
@@ -132,7 +134,7 @@ public class MovimientosController {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/movimientos/nocturnos/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite consultar los movimientos del resultado de los procesos nocturnos.", tags = {
-			"Movimientos Proveedor" })
+			"Movimientos" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
@@ -157,13 +159,13 @@ public class MovimientosController {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/movimientos/proveedor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite dar de alta movimientos que provienen del Proveedor Transaccional (Open Pay).", tags = {
-			"Movimientos Proveedor" })
+			"Movimientos" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalDTO movimientoTransaccionalDTO,
+	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalRequestDTO movimientoTransaccionalDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		MovimientoIDDTO movimientoIDDTO = null;
 		movimientoIDDTO = buildDummyX3();
@@ -182,13 +184,13 @@ public class MovimientosController {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/movimientos/nocturnos", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite dar de alta movimientos resultado de los Procesos Nocturnos.", tags = {
-			"Movimientos Proveedor" })
+			"Movimientos" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosDTO movimientoProcesosNocturnosDTO,
+	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosResponseDTO movimientoProcesosNocturnosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		MovimientoIDDTO movimientoIDDTO = null;
 		movimientoIDDTO = buildDummyX3();
@@ -233,7 +235,7 @@ public class MovimientosController {
 		movimientoTransaccionalDTO.setT3dsECI("");
 		movimientoTransaccionalDTO.setTipoTransaccion("Pago");
 		movimientoTransaccionalDTO.setTitularCuenta("Eduardo Lopez Lopez");
-		movimientoTransaccionalListDTO.setTotal(new BigDecimal("406.45"));
+		movimientoTransaccionalListDTO.setTotal(406);
 		List<MovimientoTransaccionalDTO> lst = new ArrayList<>();
 		lst.add(movimientoTransaccionalDTO);
 		movimientoTransaccionalListDTO.setMovimientos(lst);
@@ -248,7 +250,9 @@ public class MovimientosController {
 	public static MovimientoProcesosNocturnosListDTO buildDummyX2() {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
 		MovimientoProcesosNocturnosDTO movimientoProcesosNocturnosDTO = new MovimientoProcesosNocturnosDTO();
-		movimientoProcesosNocturnosDTO.setCapital(400.12);
+		movimientoProcesosNocturnosDTO.setId(1L);
+		movimientoProcesosNocturnosDTO.setTransaccion(1L);
+		movimientoProcesosNocturnosDTO.setCapitalActual(400.12);
 		movimientoProcesosNocturnosDTO.setComisiones(10.23);
 		movimientoProcesosNocturnosDTO.setEstatus("Exitoso");
 		movimientoProcesosNocturnosDTO.setFecha(new Date());
@@ -261,7 +265,7 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setSucursal(12L);
 		movimientoProcesosNocturnosDTO.setTipoContratoAbr("PL");
 		movimientoProcesosNocturnosDTO.setTipoContratoDesc("Pagos Libres");
-		movimientoProcesosNocturnosListDTO.setTotal(new BigDecimal("400.12"));
+		movimientoProcesosNocturnosListDTO.setTotal(400);
 		List<MovimientoProcesosNocturnosDTO> lst = new ArrayList<>();
 		lst.add(movimientoProcesosNocturnosDTO);
 		movimientoProcesosNocturnosListDTO.setMovimientos(lst);

@@ -11,13 +11,12 @@ import java.util.Date;
  * @description Clase que encapsula la informacion relacionada con una peticion
  *              de alta de movimientos nocturnos
  *
- * @author Ismael Flores iaguilar@quarksoft.net
+ * @author José Rodríguez jgrodriguez@quarksoft.net
  * @creationDate 02/04/2019 15:49 hrs.
  * @version 0.1
  */
-public class MovimientoProcesosNocturnosDTO {
-
-	private Long id;
+public class MovimientoProcesosNocturnosResponseDTO implements Comparable<MovimientoProcesosNocturnosResponseDTO>{
+	
 	private Long folioPartida;
 	private Long transaccion;
 	private Long sucursal;
@@ -33,28 +32,20 @@ public class MovimientoProcesosNocturnosDTO {
 	private Double interes;
 	private String estatus;
 
-	public Long getTransaccion() {
-		return transaccion;
-	}
-
-	public void setTransaccion(Long transaccion) {
-		this.transaccion = transaccion;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Long getFolioPartida() {
 		return folioPartida;
 	}
 
 	public void setFolioPartida(Long folioPartida) {
 		this.folioPartida = folioPartida;
+	}
+
+	public Long getTransaccion() {
+		return transaccion;
+	}
+
+	public void setTransaccion(Long transaccion) {
+		this.transaccion = transaccion;
 	}
 
 	public Long getSucursal() {
@@ -155,12 +146,17 @@ public class MovimientoProcesosNocturnosDTO {
 
 	@Override
 	public String toString() {
-		return "MovimientoProcesosNocturnosDTO [id=" + id + ", folioPartida=" + folioPartida + ", transaccion="
-				+ transaccion + ", sucursal=" + sucursal + ", fecha=" + fecha + ", operacionAbr=" + operacionAbr
-				+ ", operacionDesc=" + operacionDesc + ", montoOperacion=" + montoOperacion + ", tipoContratoAbr="
-				+ tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc + ", numAutorizacion=" + numAutorizacion
-				+ ", capitalActual=" + capitalActual + ", comisiones=" + comisiones + ", interes=" + interes + ", estatus="
-				+ estatus + "]";
+		return "MovimientoProcesosNocturnosResponseDTO [folioPartida=" + folioPartida + ", transaccion=" + transaccion
+				+ ", sucursal=" + sucursal + ", fecha=" + fecha + ", operacionAbr=" + operacionAbr + ", operacionDesc="
+				+ operacionDesc + ", montoOperacion=" + montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr
+				+ ", tipoContratoDesc=" + tipoContratoDesc + ", numAutorizacion=" + numAutorizacion + ", capitalActual="
+				+ capitalActual + ", comisiones=" + comisiones + ", interes=" + interes + ", estatus=" + estatus + "]";
+	}
+
+	@Override
+	public int compareTo(MovimientoProcesosNocturnosResponseDTO o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

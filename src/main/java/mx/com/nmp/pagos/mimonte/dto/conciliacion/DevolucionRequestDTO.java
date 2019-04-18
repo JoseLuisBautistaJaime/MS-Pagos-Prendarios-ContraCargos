@@ -7,17 +7,15 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 import java.util.Date;
 
 /**
- * @name LayoutDTO
- * @description Clase que encapsula la informacion de un objeto Devolucion de
- *              alta
+ * @name DevolucionRequestDTO
+ * @description Clase que encapsula la informacion de un objeto Devolucion.
  *
- * @author Jorge Galvez jgalvez@quarksoft.net
- * @creationDate 31/03/2019 18:33:53 hrs.
+ * @author José Rodríguez jgrodríguez@quarksoft.net
+ * @creationDate 17/04/2019 18:47:53 hrs.
  * @version 0.1
  */
-public class DevolucionDTO implements Comparable<DevolucionDTO> {
-
-	private Long id;
+public class DevolucionRequestDTO implements Comparable<DevolucionRequestDTO>{
+	
 	private Long idEntidad;
 	private Integer estatus;
 	private Date fechaDesde;
@@ -25,14 +23,16 @@ public class DevolucionDTO implements Comparable<DevolucionDTO> {
 	private Integer sucursal;
 	private Integer cuenta;
 
-	public DevolucionDTO() {
+	
+	public DevolucionRequestDTO() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public DevolucionDTO(Long id, Long idEntidad, Integer estatus, Date fechaDesde, Date fechaHasta, Integer sucursal,
+
+	public DevolucionRequestDTO(Long idEntidad, Integer estatus, Date fechaDesde, Date fechaHasta, Integer sucursal,
 			Integer cuenta) {
 		super();
-		this.id = id;
 		this.idEntidad = idEntidad;
 		this.estatus = estatus;
 		this.fechaDesde = fechaDesde;
@@ -41,71 +41,78 @@ public class DevolucionDTO implements Comparable<DevolucionDTO> {
 		this.cuenta = cuenta;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public Long getIdEntidad() {
 		return idEntidad;
 	}
 
+
 	public void setIdEntidad(Long idEntidad) {
 		this.idEntidad = idEntidad;
 	}
+
 
 	public Integer getEstatus() {
 		return estatus;
 	}
 
+
 	public void setEstatus(Integer estatus) {
 		this.estatus = estatus;
 	}
+
 
 	public Date getFechaDesde() {
 		return fechaDesde;
 	}
 
+
 	public void setFechaDesde(Date fechaDesde) {
 		this.fechaDesde = fechaDesde;
 	}
+
 
 	public Date getFechaHasta() {
 		return fechaHasta;
 	}
 
+
 	public void setFechaHasta(Date fechaHasta) {
 		this.fechaHasta = fechaHasta;
 	}
+
 
 	public Integer getSucursal() {
 		return sucursal;
 	}
 
+
 	public void setSucursal(Integer sucursal) {
 		this.sucursal = sucursal;
 	}
+
 
 	public Integer getCuenta() {
 		return cuenta;
 	}
 
+
 	public void setCuenta(Integer cuenta) {
 		this.cuenta = cuenta;
 	}
 
-	@Override
-	public String toString() {
-		return "DevolucionDTO [id=" + id + ", idEntidad=" + idEntidad + ", estatus=" + estatus + ", fechaDesde="
-				+ fechaDesde + ", fechaHasta=" + fechaHasta + ", sucursal=" + sucursal + ", cuenta=" + cuenta + "]";
-	}
 
 	@Override
-	public int compareTo(DevolucionDTO o) {
-		return o.id.compareTo(this.id);
+	public String toString() {
+		return "DevolucionRequestDTO [idEntidad=" + idEntidad + ", estatus=" + estatus + ", fechaDesde=" + fechaDesde
+				+ ", fechaHasta=" + fechaHasta + ", sucursal=" + sucursal + ", cuenta=" + cuenta + "]";
+	}
+
+
+	@Override
+	public int compareTo(DevolucionRequestDTO o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

@@ -18,24 +18,24 @@ import java.util.List;
  */
 public class MovimientoProcesosNocturnosListDTO {
 
-	private BigDecimal total;
+	private Integer total;
 	private List<MovimientoProcesosNocturnosDTO> movimientos;
 
 	public MovimientoProcesosNocturnosListDTO() {
 		super();
 	}
 
-	public MovimientoProcesosNocturnosListDTO(BigDecimal total, List<MovimientoProcesosNocturnosDTO> movimientos) {
+	public MovimientoProcesosNocturnosListDTO(Integer total, List<MovimientoProcesosNocturnosDTO> movimientos) {
 		super();
 		this.total = total;
 		this.movimientos = movimientos;
 	}
 
-	public BigDecimal getTotal() {
+	public Integer getTotal() {
 		return total;
 	}
 
-	public void setTotal(BigDecimal total) {
+	public void setTotal(Integer total) {
 		this.total = total;
 	}
 

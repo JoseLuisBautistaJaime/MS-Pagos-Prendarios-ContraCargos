@@ -4,7 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +76,7 @@ public class ReportesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody ReporteRequestDTO reporteRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		ReportePagosLibresDTO reportePagosLibresDTO = buildDummy1();
+		List<ReportePagosLibresDTO> reportePagosLibresDTO = buildDummy1();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				reportePagosLibresDTO);
 	}
@@ -84,7 +86,9 @@ public class ReportesController {
 	 * 
 	 * @return
 	 */
-	public static ReportePagosLibresDTO buildDummy1() {
+	public static List<ReportePagosLibresDTO> buildDummy1() {
+		
+		List<ReportePagosLibresDTO> reportePagosLibresDTOList = new ArrayList<>();
 		ReportePagosLibresDTO reportePagosLibresDTO = new ReportePagosLibresDTO();
 		reportePagosLibresDTO.setCanal("Portal NMP");
 		reportePagosLibresDTO.setFecha(new Date());
@@ -93,6 +97,11 @@ public class ReportesController {
 		reportePagosLibresDTO.setPartida("12345678");
 		reportePagosLibresDTO.setSucursal(1);
 		reportePagosLibresDTO.setTipoProducto("Clasico");
-		return reportePagosLibresDTO;
+		
+		reportePagosLibresDTOList.add(reportePagosLibresDTO);
+		
+		return reportePagosLibresDTOList;
+		
+		
 	}
 }

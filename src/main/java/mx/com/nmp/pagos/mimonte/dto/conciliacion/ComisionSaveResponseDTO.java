@@ -2,33 +2,36 @@
  * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
  * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
  */
-package mx.com.nmp.pagos.mimonte.dto;
+package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.Date;
 
 /**
- * @name ComisionSaveDTO
+ * @name ComisionSaveResponseDTO
  * @description Clase que encapsula la informacion de de una peticion para alta
  *              de Comision
  *
- * @author Ismael Flores iaguilar@quarksoft.net
- * @creationDate 02/04/2019 14:09 hrs.
+ * @author José Rodríguez jgrodriguez@quarksoft.net
+ * @creationDate 17/04/2019 17:32 hrs.
  * @version 0.1
  */
-public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
-
+public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseDTO>{
+	
 	private Integer folio;
 	private Integer id;
 	private Date fechaOperacion;
 	private Date fechaCargo;
 	private Double monto;
 	private String descripcion;
-
-	public ComisionSaveDTO() {
+	private Boolean nuevaComision;
+	
+	public ComisionSaveResponseDTO() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public ComisionSaveDTO(Integer folio, Integer id, Date fechaOperacion, Date fechaCargo, Double monto, String descripcion) {
+	public ComisionSaveResponseDTO(Integer folio, Integer id, Date fechaOperacion, Date fechaCargo, Double monto,
+			String descripcion, Boolean nuevaComision) {
 		super();
 		this.folio = folio;
 		this.id = id;
@@ -36,14 +39,7 @@ public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 		this.fechaCargo = fechaCargo;
 		this.monto = monto;
 		this.descripcion = descripcion;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
+		this.nuevaComision = nuevaComision;
 	}
 
 	public Integer getFolio() {
@@ -52,6 +48,14 @@ public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 
 	public void setFolio(Integer folio) {
 		this.folio = folio;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Date getFechaOperacion() {
@@ -86,14 +90,23 @@ public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 		this.descripcion = descripcion;
 	}
 
-	@Override
-	public String toString() {
-		return "ComisionSaveDTO [id=" + id + ", folio=" + folio + ", fechaOperacion=" + fechaOperacion + ", fechaCargo=" + fechaCargo
-				+ ", monto=" + monto + ", descripcion=" + descripcion + "]";
+	public Boolean getNuevaComision() {
+		return nuevaComision;
+	}
+
+	public void setNuevaComision(Boolean nuevaComision) {
+		this.nuevaComision = nuevaComision;
 	}
 
 	@Override
-	public int compareTo(ComisionSaveDTO o) {
+	public String toString() {
+		return "ComisionSaveResponseDTO [folio=" + folio + ", id=" + id + ", fechaOperacion=" + fechaOperacion
+				+ ", fechaCargo=" + fechaCargo + ", monto=" + monto + ", descripcion=" + descripcion
+				+ ", nuevaComision=" + nuevaComision + "]";
+	}
+
+	@Override
+	public int compareTo(ComisionSaveResponseDTO o) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
