@@ -20,6 +20,7 @@ import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
@@ -94,6 +95,9 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 
 	@Override
 	public void deleteById(Long id) throws EmptyResultDataAccessException {
+		Contactos contactos = contactoRespository.findById(id).isPresent() ? contactoRespository.findById(id).get()	: null;
+		if(contactos == null)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		contactoRespository.deleteById(id);
 	}
 
