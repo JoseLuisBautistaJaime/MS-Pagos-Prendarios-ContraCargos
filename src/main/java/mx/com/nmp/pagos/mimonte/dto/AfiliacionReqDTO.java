@@ -60,6 +60,11 @@ public class AfiliacionReqDTO implements Comparable<AfiliacionReqDTO> {
 	}
 
 	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
+	@Override
 	public int compareTo(AfiliacionReqDTO o) {
 		return o.id.compareTo(this.id);
 	}

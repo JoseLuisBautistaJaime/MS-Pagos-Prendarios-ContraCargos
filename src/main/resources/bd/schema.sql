@@ -491,4 +491,67 @@ ALTER TABLE tr_entidad_cuenta ADD PRIMARY KEY (id_entidad, id_cuenta);
 -- SE MODIFICA TIPO DE DATO DE NUMERO DE AFILIACION DE NUMERICO A ALFANUMERICO --
 ALTER TABLE tc_afiliacion CHANGE numero numero VARCHAR(100);
 
+-- ELIMINACION DE TABLA TC_ENTIDA_CUENTA POR CAMBIO DE LOGICA DE FUNCIONAMIENTO DE CATALOGO ENTIDAD --
+TRUNCATE TABLE tr_entidad_cuenta;
+DROP TABLE tr_entidad_cuenta;
 
+-- CREACION DE NUEVA TABLA DE ASOCIACION ENTIDAD-CUENTA-AFILIACION --
+
+-- -----------------------------------------------------
+-- Table`tc_entidad_cuenta_afiliacion`
+-- -----------------------------------------------------
+
+DROP TABLE IF EXISTS`tc_entidad_cuenta_afiliacion` ;
+
+CREATE TABLE IF NOT EXISTS`tc_entidad_cuenta_afiliacion` (
+  `id_entidad` BIGINT(20) NOT NULL,
+  `id_cuenta` BIGINT(20) NOT NULL,
+  `id_afiliacion` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`id_entidad`, `id_cuenta`, `id_afiliacion`),
+  INDEX `idx_eca1_entidad` (`id_entidad` ASC),
+  INDEX `idx_eca1_cuenta` (`id_cuenta` ASC),
+  INDEX `idx_eca1_afiliacion` (`id_afiliacion` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = latin1;
+
+
+-- INSERCION INICIAL DE TIPOS DE CONTACTOS --
+
+INSERT INTO `compose`.`tk_tipo_contacto`
+(`id`,
+`estatus`,
+`description`,
+`created_by`,
+`created_date`,
+`last_modified_by`,
+`last_modified_date`,
+`short_description`)
+VALUES
+(1,
+true,
+'Contacto Midas',
+'Ismael',
+now(),
+null,
+null,
+'Contacto Midas');
+
+INSERT INTO `compose`.`tk_tipo_contacto`
+(`id`,
+`estatus`,
+`description`,
+`created_by`,
+`created_date`,
+`last_modified_by`,
+`last_modified_date`,
+`short_description`)
+VALUES
+(2,
+true,
+'Contacto Entidad',
+'Ismael',
+now(),
+null,
+null,
+'Contacto Ent');

@@ -16,7 +16,7 @@ import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTO;
-import mx.com.nmp.pagos.mimonte.dto.ContactoReqSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoReqSaveNewDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
@@ -110,11 +110,15 @@ public abstract class ValidadorCatalogo {
 	 */
 	public static boolean validateEntidadBaseDTOSave(EntidadBaseSaveDTO entidadBaseSaveDTO) {
 		if (null == entidadBaseSaveDTO || null == entidadBaseSaveDTO.getNombre()
-				|| null == entidadBaseSaveDTO.getDescripcion())
+				|| entidadBaseSaveDTO.getNombre().equals("") || null == entidadBaseSaveDTO.getDescripcion()
+				|| entidadBaseSaveDTO.getDescripcion().equals(""))
 			return false;
 		if (null != entidadBaseSaveDTO.getContactos() && !entidadBaseSaveDTO.getContactos().isEmpty()) {
-			for (ContactoReqSaveDTO contactoReqSaveDTO : entidadBaseSaveDTO.getContactos()) {
-				if (null == contactoReqSaveDTO.getId() || contactoReqSaveDTO.getId() <= 0) {
+			for (ContactoReqSaveNewDTO contactoReqSaveNewDTO : entidadBaseSaveDTO.getContactos()) {
+				if (null == contactoReqSaveNewDTO.getEmail() || contactoReqSaveNewDTO.getEmail().equals("")
+						|| null == contactoReqSaveNewDTO.getEstatus() || null == contactoReqSaveNewDTO.getNombre()
+						|| contactoReqSaveNewDTO.getNombre().equals("")
+						|| !ValidadorGenerico.validateEmail2(contactoReqSaveNewDTO.getEmail())) {
 					return false;
 				}
 			}
@@ -146,25 +150,29 @@ public abstract class ValidadorCatalogo {
 	 * @return
 	 */
 	public static boolean validateEntidadBaseDTOUpdt(EntidadBaseDTO entidadBaseDTO) {
-		if (null == entidadBaseDTO || null == entidadBaseDTO.getNombre() || null == entidadBaseDTO.getDescripcion()
+		if (null == entidadBaseDTO || null == entidadBaseDTO.getNombre() || entidadBaseDTO.getNombre().equals("")
+				|| null == entidadBaseDTO.getDescripcion() || entidadBaseDTO.getDescripcion().equals("")
 				|| null == entidadBaseDTO.getCuentas() || null == entidadBaseDTO.getId() || entidadBaseDTO.getId() <= 0)
 			return false;
 		if (null != entidadBaseDTO.getContactos() && !entidadBaseDTO.getContactos().isEmpty()) {
 			for (ContactoReqDTO contactoReqDTO : entidadBaseDTO.getContactos()) {
-				if (null == contactoReqDTO.getId() || contactoReqDTO.getId() <= 0) {
+				if (null == contactoReqDTO.getId() || contactoReqDTO.getId() <= 0 || null == contactoReqDTO.getEmail()
+						|| contactoReqDTO.getEmail().equals("") || null == contactoReqDTO.getNombre()
+						|| contactoReqDTO.getNombre().equals("")
+						|| !ValidadorGenerico.validateEmail(contactoReqDTO.getEmail())) {
 					return false;
 				}
 			}
 		} else
 			return false;
 		if (null != entidadBaseDTO.getCuentas() && !entidadBaseDTO.getCuentas().isEmpty()) {
-			for (CuentaReqDTO cuentaReqDTO : entidadBaseDTO.getCuentas()) {
-				if (null == cuentaReqDTO.getId() || cuentaReqDTO.getId() <= 0) {
+			for (CuentaSaveReqDTO cuentaSaveReqDTO : entidadBaseDTO.getCuentas()) {
+				if (null == cuentaSaveReqDTO.getId() || cuentaSaveReqDTO.getId() <= 0) {
 					return false;
 				}
-				if (null != cuentaReqDTO.getAfiliaciones() && !cuentaReqDTO.getAfiliaciones().isEmpty()) {
-					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-						if (null == afiliacionReqDTO.getId() || afiliacionReqDTO.getId() <= 0)
+				if (null != cuentaSaveReqDTO.getAfiliaciones() && !cuentaSaveReqDTO.getAfiliaciones().isEmpty()) {
+					for (AfiliacionSaveDTO afiliacionSaveDTO : cuentaSaveReqDTO.getAfiliaciones()) {
+						if (null == afiliacionSaveDTO.getId() || afiliacionSaveDTO.getId() <= 0)
 							return false;
 					}
 				} else
@@ -275,6 +283,36 @@ public abstract class ValidadorCatalogo {
 		} else
 			return true;
 		return true;
+	}
+
+	/**
+	 * Regresa una lista con los contactos que son nuevos
+	 * 
+	 * @param contactosOrigen
+	 * @param contactosTarget
+	 * @return
+	 */
+	public static List<Long> validateContactosExists2(Set<ContactoReqDTO> contactosOrigen,
+			List<ContactoBaseDTO> contactosTarget) {
+		List<Long> contactoReqDTOList = null;
+		List<Long> list = null;
+		if (null == contactosTarget || contactosTarget.isEmpty())
+			return null;
+		else {
+			list = new ArrayList<>();
+			for (ContactoBaseDTO contactoBaseDTO : contactosTarget)
+				list.add(contactoBaseDTO.getId());
+		}
+		if (null != contactosTarget && !contactosTarget.isEmpty()) {
+			contactoReqDTOList = new ArrayList<>();
+			for (ContactoReqDTO contactoReqDTO : contactosOrigen) {
+				if (!list.contains(contactoReqDTO.getId())) {
+					contactoReqDTOList.add(contactoReqDTO.getId());
+				}
+			}
+		} else
+			return null;
+		return contactoReqDTOList;
 	}
 
 	/**

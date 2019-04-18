@@ -73,6 +73,11 @@ public class CuentaReqDTO implements Comparable<CuentaReqDTO> {
 	}
 
 	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
+	@Override
 	public int compareTo(CuentaReqDTO o) {
 		return o.id.compareTo(this.id);
 	}

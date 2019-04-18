@@ -154,4 +154,27 @@ public abstract class TipoContactoBuilder {
 		return tipoContactoDTO;
 	}
 
+	/**
+	 * Construye un objeto de tipo TipoContactoDTO a partir de una entidad de tipo
+	 * TipoContacto
+	 * 
+	 * @param tipoContacto
+	 * @return
+	 */
+	public static TipoContactoDTO buildTipoContactoDTOFromTipoContacto(TipoContacto tipoContacto) {
+		TipoContactoDTO tipoContactoDTO = null;
+		if (null != tipoContacto) {
+			tipoContactoDTO = new TipoContactoDTO();
+			tipoContactoDTO.setCreatedBy(tipoContacto.getCreatedBy());
+			tipoContactoDTO.setCreatedDate(tipoContacto.getCreatedDate());
+			tipoContactoDTO.setDescription(tipoContacto.getDescription());
+			tipoContactoDTO.setEstatus(tipoContacto.getEstatus());
+			tipoContactoDTO.setId(tipoContacto.getId());
+			tipoContactoDTO.setLastModifiedBy(tipoContacto.getLastModifiedBy());
+			tipoContactoDTO.setLastModifiedDate(tipoContacto.getLastModifiedDate());
+			tipoContactoDTO.setShortDescription(tipoContacto.getShortDescription());
+		}
+		return tipoContactoDTO;
+	}
+
 }

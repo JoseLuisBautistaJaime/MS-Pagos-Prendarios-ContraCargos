@@ -14,10 +14,12 @@ import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoReqSaveNewDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
+import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 
 /**
  * Nombre: ContactosBuilder Descripcion: Clase de capa de builder que se encarga
@@ -267,41 +269,98 @@ public abstract class ContactosBuilder {
 	}
 
 	/**
-	 * Construye un entity de tipo Contactos a partir de un objeto de tipo
+	 * * Construye un entity de tipo Contactos a partir de un objeto de tipo
 	 * ContactoReqDTO
 	 * 
 	 * @param contactoReqDTO
-	 * @return contacto
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
+	 * @param idTipoContacto
+	 * @return
 	 */
 	public static Contactos buildContactosFromContactoReqDTO(ContactoReqDTO contactoReqDTO, String lastModifiedBy,
-			Date lastModifiedDate) {
+			Date lastModifiedDate, Long idTipoContacto) {
 		Contactos contacto = null;
 		if (null != contactoReqDTO) {
 			contacto = new Contactos();
 			contacto.setEmail(contactoReqDTO.getEmail());
-			contacto.setEstatus(contactoReqDTO.getEstatus());
+			contacto.setEstatus(null != contactoReqDTO.getEstatus() ? contactoReqDTO.getEstatus() : true);
 			contacto.setNombre(contactoReqDTO.getNombre());
 			contacto.setId(contactoReqDTO.getId());
 			contacto.setLastModifiedBy(lastModifiedBy);
 			contacto.setLastModifiedDate(lastModifiedDate);
+			contacto.setTipoContacto(new TipoContacto(idTipoContacto));
 		}
 		return contacto;
 	}
 
 	/**
-	 * Construye un Set de entities de tipo Contactos a partir de in Set de objetos
-	 * de tipo ContactoReqDTO
+	 * Construye un entity de tipo Contactos a partir de un objeto de tipo
+	 * ContactoReqDTO
+	 * 
+	 * @param contactoReqDTO
+	 * @param createdBy
+	 * @param createdDate
+	 * @param idTipoContacto
+	 * @return
+	 */
+	public static Contactos buildContactosFromContactoReqDTONEW(ContactoReqDTO contactoReqDTO, String createdBy,
+			Date createdDate, Long idTipoContacto) {
+		Contactos contacto = null;
+		if (null != contactoReqDTO) {
+			contacto = new Contactos();
+			contacto.setEmail(contactoReqDTO.getEmail());
+			contacto.setEstatus(null != contactoReqDTO.getEstatus() ? contactoReqDTO.getEstatus() : true);
+			contacto.setNombre(contactoReqDTO.getNombre());
+			contacto.setId(contactoReqDTO.getId());
+			contacto.setCreatedBy(createdBy);
+			contacto.setCreatedDate(createdDate);
+			contacto.setTipoContacto(new TipoContacto(idTipoContacto));
+		}
+		return contacto;
+	}
+
+	/**
+	 * * Construye un Set de entities de tipo Contactos a partir de in Set de
+	 * objetos de tipo ContactoReqDTO
 	 * 
 	 * @param contactoReqDTOSet
-	 * @return contactosSet
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
+	 * @param idTipoContacto
+	 * @return
 	 */
 	public static Set<Contactos> buildContactosSetFromContactoReqDTOSet(Set<ContactoReqDTO> contactoReqDTOSet,
-			String lastModifiedBy, Date lastModifiedDate) {
+			String lastModifiedBy, Date lastModifiedDate, Long idTipoContacto) {
 		Set<Contactos> contactosSet = null;
 		if (null != contactoReqDTOSet) {
 			contactosSet = new TreeSet<>();
 			for (ContactoReqDTO contactoReqDTO : contactoReqDTOSet) {
-				contactosSet.add(buildContactosFromContactoReqDTO(contactoReqDTO, lastModifiedBy, lastModifiedDate));
+				contactosSet.add(buildContactosFromContactoReqDTO(contactoReqDTO, lastModifiedBy, lastModifiedDate,
+						idTipoContacto));
+			}
+		}
+		return contactosSet;
+	}
+
+	/**
+	 * Construye un Set de entities de tipo Contactos a partir de un Set de objetos
+	 * de tipo ContactoReqDTO
+	 * 
+	 * @param contactoReqDTOSet
+	 * @param createdBy
+	 * @param createdDate
+	 * @param idTipoContacto
+	 * @return
+	 */
+	public static Set<Contactos> buildContactosSetFromContactoReqDTOSetNew(Set<ContactoReqDTO> contactoReqDTOSet,
+			String createdBy, Date createdDate, Long idTipoContacto) {
+		Set<Contactos> contactosSet = null;
+		if (null != contactoReqDTOSet) {
+			contactosSet = new TreeSet<>();
+			for (ContactoReqDTO contactoReqDTO : contactoReqDTOSet) {
+				contactosSet.add(
+						buildContactosFromContactoReqDTONEW(contactoReqDTO, createdBy, createdDate, idTipoContacto));
 			}
 		}
 		return contactosSet;
@@ -504,6 +563,25 @@ public abstract class ContactosBuilder {
 	}
 
 	/**
+	 * Construye un objeto de tipo ContactoReqDTO a partir de un objeto de tipo
+	 * ContactoReqSaveNewDTO
+	 * 
+	 * @param contactoReqSaveNewDTO
+	 * @return
+	 */
+	public static ContactoReqDTO buildContactoReqDTOFromContactoReqSaveNewDTO(
+			ContactoReqSaveNewDTO contactoReqSaveNewDTO) {
+		ContactoReqDTO contactoReqDTO = null;
+		if (null != contactoReqSaveNewDTO) {
+			contactoReqDTO = new ContactoReqDTO();
+			contactoReqDTO.setEmail(contactoReqSaveNewDTO.getEmail());
+			contactoReqDTO.setEstatus(contactoReqSaveNewDTO.getEstatus());
+			contactoReqDTO.setNombre(contactoReqSaveNewDTO.getNombre());
+		}
+		return contactoReqDTO;
+	}
+
+	/**
 	 * Cinstruye un Set de objetos de tipo ContactoReqDTO a partir de un Set de
 	 * objetos de tipo ContactoReqSaveDTO
 	 * 
@@ -517,6 +595,25 @@ public abstract class ContactosBuilder {
 			contactoReqDTOSet = new TreeSet<>();
 			for (ContactoReqSaveDTO contactoReqSaveDTO : contactoReqSaveDTOSet) {
 				contactoReqDTOSet.add(buildContactoReqDTOFromContactoReqSaveDTO(contactoReqSaveDTO));
+			}
+		}
+		return contactoReqDTOSet;
+	}
+
+	/**
+	 * Construye un Set de objetos de tipo ContactoReqDTO a partir de un Set de
+	 * objetos de tipo ContactoReqSaveNewDTO
+	 * 
+	 * @param contactoReqSaveNewDTOSet
+	 * @return
+	 */
+	public static Set<ContactoReqDTO> buildContactoReqDTOSetFromContactoReqSaveNewDTOSet(
+			Set<ContactoReqSaveNewDTO> contactoReqSaveNewDTOSet) {
+		Set<ContactoReqDTO> contactoReqDTOSet = null;
+		if (null != contactoReqSaveNewDTOSet && !contactoReqSaveNewDTOSet.isEmpty()) {
+			contactoReqDTOSet = new TreeSet<>();
+			for (ContactoReqSaveNewDTO contactoReqSaveNewDTO : contactoReqSaveNewDTOSet) {
+				contactoReqDTOSet.add(buildContactoReqDTOFromContactoReqSaveNewDTO(contactoReqSaveNewDTO));
 			}
 		}
 		return contactoReqDTOSet;

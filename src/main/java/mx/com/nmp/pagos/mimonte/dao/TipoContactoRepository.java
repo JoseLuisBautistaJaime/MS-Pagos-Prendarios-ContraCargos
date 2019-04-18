@@ -21,4 +21,12 @@ import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 @Repository
 public interface TipoContactoRepository extends JpaRepository<TipoContacto, Long> {
 
+	/**
+	 * Regresa un id de tipo de contacto por nombre
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public TipoContacto findByDescription(final String name);
+
 }

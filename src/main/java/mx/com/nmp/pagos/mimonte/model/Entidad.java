@@ -38,13 +38,7 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
 
-	@ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
-	@JoinTable(name = "tr_entidad_cuenta", joinColumns = {
-			@JoinColumn(name = "id_entidad", referencedColumnName = "id") }, inverseJoinColumns = {
-					@JoinColumn(name = "id_cuenta", referencedColumnName = "id") })
-	private Set<Cuenta> cuentas;
-
-	@ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
 	@JoinTable(name = "tr_entidad_contactos", joinColumns = {
 			@JoinColumn(name = "id_entidad", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_contacto", referencedColumnName = "id") })
@@ -53,15 +47,22 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	@OneToMany(mappedBy = "entidad")
 	private Set<CodigoEstadoCuenta> codigoEstadoCuentaSet;
 
+	@OneToMany(mappedBy = "entidad", fetch = FetchType.LAZY)
+	private Set<EntidadCuentaAfiliacion> EntidadCuentaAfiliacionSet;
+
 	public Entidad() {
 		super();
+	}
+
+	public Entidad(Long id) {
+		super();
+		this.id = id;
 	}
 
 	public Entidad(String nombre, Set<Cuenta> cuentas, Set<Contactos> contactos,
 			Set<CodigoEstadoCuenta> codigoEstadoCuentaSet) {
 		super();
 		this.nombre = nombre;
-		this.cuentas = cuentas;
 		this.contactos = contactos;
 	}
 
@@ -71,7 +72,6 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 			String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.nombre = nombre;
-		this.cuentas = cuentas;
 		this.contactos = contactos;
 	}
 
@@ -81,14 +81,6 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-
-	public Set<Cuenta> getCuentas() {
-		return cuentas;
-	}
-
-	public void setCuentas(Set<Cuenta> cuentas) {
-		this.cuentas = cuentas;
 	}
 
 	public Set<Contactos> getContactos() {
@@ -107,14 +99,17 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 		this.codigoEstadoCuentaSet = codigoEstadoCuentaSet;
 	}
 
-	@Override
-	public int compareTo(Entidad o) {
-		return o.getNombre().compareTo(this.nombre);
+	public Set<EntidadCuentaAfiliacion> getEntidadCuentaAfiliacionSet() {
+		return EntidadCuentaAfiliacionSet;
+	}
+
+	public void setEntidadCuentaAfiliacionSet(Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet) {
+		EntidadCuentaAfiliacionSet = entidadCuentaAfiliacionSet;
 	}
 
 	@Override
-	public String toString() {
-		return "Entidad [nombre=" + nombre + "cuentas=" + cuentas + ", contactos=" + contactos + "]";
+	public int compareTo(Entidad o) {
+		return o.getNombre().compareTo(this.nombre);
 	}
 
 }

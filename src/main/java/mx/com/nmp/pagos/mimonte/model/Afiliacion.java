@@ -42,8 +42,16 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "afiliaciones")
 	private Set<Cuenta> cuentas;
 
+	@OneToMany(mappedBy = "afiliacion", fetch = FetchType.LAZY)
+	private Set<EntidadCuentaAfiliacion> EntidadCuentaAfiliacionSet;
+
 	public Afiliacion() {
 		super();
+	}
+
+	public Afiliacion(Long id) {
+		super();
+		this.id = id;
 	}
 
 	public Afiliacion(Set<ReglaNegocio> reglas, TipoAutorizacion tipo) {
@@ -115,6 +123,14 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 
 	public void setCuentas(Set<Cuenta> cuentas) {
 		this.cuentas = cuentas;
+	}
+
+	public Set<EntidadCuentaAfiliacion> getEntidadCuentaAfiliacionSet() {
+		return EntidadCuentaAfiliacionSet;
+	}
+
+	public void setEntidadCuentaAfiliacionSet(Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet) {
+		EntidadCuentaAfiliacionSet = entidadCuentaAfiliacionSet;
 	}
 
 	@Override

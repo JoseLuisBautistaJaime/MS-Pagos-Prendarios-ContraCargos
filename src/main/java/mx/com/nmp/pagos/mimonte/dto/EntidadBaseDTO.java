@@ -19,14 +19,14 @@ public class EntidadBaseDTO implements Comparable<EntidadBaseDTO> {
 	private Long id;
 	private String descripcion;
 	private String nombre;
-	private Set<CuentaReqDTO> cuentas;
+	private Set<CuentaSaveReqDTO> cuentas;
 	private Set<ContactoReqDTO> contactos;
 
 	public EntidadBaseDTO() {
 		super();
 	}
 
-	public EntidadBaseDTO(Long id, String descripcion, String nombre, Set<CuentaReqDTO> cuentas,
+	public EntidadBaseDTO(Long id, String descripcion, String nombre, Set<CuentaSaveReqDTO> cuentas,
 			Set<ContactoReqDTO> contactos) {
 		super();
 		this.id = id;
@@ -60,11 +60,11 @@ public class EntidadBaseDTO implements Comparable<EntidadBaseDTO> {
 		this.nombre = nombre;
 	}
 
-	public Set<CuentaReqDTO> getCuentas() {
+	public Set<CuentaSaveReqDTO> getCuentas() {
 		return cuentas;
 	}
 
-	public void setCuentas(Set<CuentaReqDTO> cuentas) {
+	public void setCuentas(Set<CuentaSaveReqDTO> cuentas) {
 		this.cuentas = cuentas;
 	}
 

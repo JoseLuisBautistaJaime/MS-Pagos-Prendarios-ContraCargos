@@ -10,7 +10,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema compose
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `compose` ;
+DROP SCHEMA IF EXISTS `compose`;
 
 -- -----------------------------------------------------
 -- Schema compose
@@ -19,11 +19,11 @@ CREATE SCHEMA IF NOT EXISTS `compose` DEFAULT CHARACTER SET latin1 ;
 USE `compose` ;
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_tipo_afiliacion`
+-- Table `tk_tipo_afiliacion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_tipo_afiliacion` ;
+DROP TABLE IF EXISTS `tk_tipo_afiliacion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_tipo_afiliacion` (
+CREATE TABLE IF NOT EXISTS `tk_tipo_afiliacion` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
@@ -34,12 +34,13 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tc_afiliacion`
+-- Table `tc_afiliacion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tc_afiliacion` ;
+DROP TABLE IF EXISTS `tc_afiliacion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tc_afiliacion` (
+CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `numero` VARCHAR(100) NULL DEFAULT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   `tipo` INT(11) NOT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
@@ -48,24 +49,23 @@ CREATE TABLE IF NOT EXISTS `compose`.`tc_afiliacion` (
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
-  `numero` BIGINT(20) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `ca_fk_idx` (`id` ASC),
   INDEX `´ctr_tipo_afiliacion_afi1´` (`tipo` ASC),
   CONSTRAINT `´ctr_tipo_afiliacion_afi1´`
     FOREIGN KEY (`tipo`)
-    REFERENCES `compose`.`tk_tipo_afiliacion` (`id`))
+    REFERENCES `tk_tipo_afiliacion` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 16
+AUTO_INCREMENT = 19
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_categoria`
+-- Table `tk_categoria`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_categoria` ;
+DROP TABLE IF EXISTS `tk_categoria` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_categoria` (
+CREATE TABLE IF NOT EXISTS `tk_categoria` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(100) NULL DEFAULT NULL,
   `descripcion` VARCHAR(150) NULL DEFAULT NULL,
@@ -83,65 +83,65 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tc_entidad`
+-- Table `tc_entidad`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tc_entidad` ;
+DROP TABLE IF EXISTS `tc_entidad` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tc_entidad` (
+CREATE TABLE IF NOT EXISTS `tc_entidad` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(100) NOT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
-  `nombre` VARCHAR(100) NOT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_entidad` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 37
+AUTO_INCREMENT = 138
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tc_codigo_estado_cuenta`
+-- Table `tc_codigo_estado_cuenta`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tc_codigo_estado_cuenta` ;
+DROP TABLE IF EXISTS `tc_codigo_estado_cuenta` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tc_codigo_estado_cuenta` (
+CREATE TABLE IF NOT EXISTS `tc_codigo_estado_cuenta` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `codigo` VARCHAR(20) NULL DEFAULT NULL,
+  `id_categoria` BIGINT(20) NOT NULL,
+  `id_entidad` BIGINT(20) NOT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
-  `id_categoria` BIGINT(20) NOT NULL,
-  `codigo` VARCHAR(20) NULL DEFAULT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
-  `id_entidad` BIGINT(20) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_codigo_estado_cuenta` (`id` ASC),
   INDEX `idx_categoria` (`id_categoria` ASC),
   INDEX `ctr_fk_id_entidad5` (`id_entidad` ASC),
   CONSTRAINT `ctr_fk_categoria`
     FOREIGN KEY (`id_categoria`)
-    REFERENCES `compose`.`tk_categoria` (`id`),
+    REFERENCES `tk_categoria` (`id`),
   CONSTRAINT `ctr_fk_id_entidad5`
     FOREIGN KEY (`id_entidad`)
-    REFERENCES `compose`.`tc_entidad` (`id`))
+    REFERENCES `tc_entidad` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 70
+AUTO_INCREMENT = 72
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_tipo_contacto`
+-- Table `tk_tipo_contacto`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_tipo_contacto` ;
+DROP TABLE IF EXISTS `tk_tipo_contacto` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_tipo_contacto` (
+CREATE TABLE IF NOT EXISTS `tk_tipo_contacto` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `estatus` BIT(1) NOT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
@@ -152,22 +152,22 @@ CREATE TABLE IF NOT EXISTS `compose`.`tk_tipo_contacto` (
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tc_contactos`
+-- Table `tc_contactos`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tc_contactos` ;
+DROP TABLE IF EXISTS `tc_contactos` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tc_contactos` (
+CREATE TABLE IF NOT EXISTS `tc_contactos` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `estatus` BIT(1) NOT NULL,
   `nombre` VARCHAR(100) NOT NULL,
   `email` VARCHAR(50) NOT NULL,
-  `description` VARCHAR(150) NULL DEFAULT NULL,
   `id_tipo_contacto` BIGINT(20) NULL DEFAULT NULL,
+  `estatus` BIT(1) NOT NULL,
+  `description` VARCHAR(150) NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NOT NULL,
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
@@ -177,40 +177,57 @@ CREATE TABLE IF NOT EXISTS `compose`.`tc_contactos` (
   INDEX `id_tipo_contacto_fk_idx` (`id_tipo_contacto` ASC),
   CONSTRAINT `id_tipo_contacto_fk`
     FOREIGN KEY (`id_tipo_contacto`)
-    REFERENCES `compose`.`tk_tipo_contacto` (`id`))
+    REFERENCES `tk_tipo_contacto` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 8
+AUTO_INCREMENT = 38
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tc_cuenta`
+-- Table `tc_cuenta`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tc_cuenta` ;
+DROP TABLE IF EXISTS `tc_cuenta` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tc_cuenta` (
+CREATE TABLE IF NOT EXISTS `tc_cuenta` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `numero_cuenta` VARCHAR(50) NULL DEFAULT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
-  `numero_cuenta` VARCHAR(50) NULL DEFAULT NULL,
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_cuenta` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 27
+AUTO_INCREMENT = 30
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_cliente`
+-- Table `tc_entidad_cuenta_afiliacion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_cliente` ;
+DROP TABLE IF EXISTS `tc_entidad_cuenta_afiliacion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_cliente` (
+CREATE TABLE IF NOT EXISTS `tc_entidad_cuenta_afiliacion` (
+  `id_entidad` BIGINT(20) NOT NULL,
+  `id_cuenta` BIGINT(20) NOT NULL,
+  `id_afiliacion` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`id_entidad`, `id_cuenta`, `id_afiliacion`),
+  INDEX `idx_eca1_entidad` (`id_entidad` ASC),
+  INDEX `idx_eca1_cuenta` (`id_cuenta` ASC),
+  INDEX `idx_eca1_afiliacion` (`id_afiliacion` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `tk_cliente`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tk_cliente` ;
+
+CREATE TABLE IF NOT EXISTS `tk_cliente` (
   `id_cliente` BIGINT(20) UNSIGNED NOT NULL,
   `nombre_titular` VARCHAR(100) NULL DEFAULT NULL,
   `fecha_alta` DATETIME NOT NULL,
@@ -220,11 +237,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_estatus_tarjeta`
+-- Table `tk_estatus_tarjeta`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_estatus_tarjeta` ;
+DROP TABLE IF EXISTS `tk_estatus_tarjeta` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_estatus_tarjeta` (
+CREATE TABLE IF NOT EXISTS `tk_estatus_tarjeta` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
@@ -235,11 +252,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_tipo_tarjeta`
+-- Table `tk_tipo_tarjeta`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_tipo_tarjeta` ;
+DROP TABLE IF EXISTS `tk_tipo_tarjeta` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_tipo_tarjeta` (
+CREATE TABLE IF NOT EXISTS `tk_tipo_tarjeta` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
@@ -250,11 +267,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tc_tarjetas`
+-- Table `tc_tarjetas`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tc_tarjetas` ;
+DROP TABLE IF EXISTS `tc_tarjetas` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tc_tarjetas` (
+CREATE TABLE IF NOT EXISTS `tc_tarjetas` (
   `id_openpay` VARCHAR(40) NOT NULL,
   `ultimos_digitos` VARCHAR(4) NULL DEFAULT NULL,
   `alias` VARCHAR(100) NULL DEFAULT NULL,
@@ -270,23 +287,23 @@ CREATE TABLE IF NOT EXISTS `compose`.`tc_tarjetas` (
   INDEX `cliente_tarjeta_fk` (`id_cliente` ASC),
   CONSTRAINT `cliente_tarjeta_fk`
     FOREIGN KEY (`id_cliente`)
-    REFERENCES `compose`.`tk_cliente` (`id_cliente`),
+    REFERENCES `tk_cliente` (`id_cliente`),
   CONSTRAINT `estatus_tarjeta_fk`
     FOREIGN KEY (`id_estatus_tarjeta`)
-    REFERENCES `compose`.`tk_estatus_tarjeta` (`id`),
+    REFERENCES `tk_estatus_tarjeta` (`id`),
   CONSTRAINT `tipo_tarjeta_tarjeta_fk`
     FOREIGN KEY (`id_tipo_tarjeta`)
-    REFERENCES `compose`.`tk_tipo_tarjeta` (`id`))
+    REFERENCES `tk_tipo_tarjeta` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_catalogo`
+-- Table `tk_catalogo`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_catalogo` ;
+DROP TABLE IF EXISTS `tk_catalogo` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_catalogo` (
+CREATE TABLE IF NOT EXISTS `tk_catalogo` (
   `id` SMALLINT(6) NOT NULL,
   `descripcion_corta` VARCHAR(50) NULL DEFAULT NULL,
   `descripcion` VARCHAR(50) NULL DEFAULT NULL,
@@ -298,11 +315,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_estatus_conciliacion`
+-- Table `tk_estatus_conciliacion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_estatus_conciliacion` ;
+DROP TABLE IF EXISTS `tk_estatus_conciliacion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_estatus_conciliacion` (
+CREATE TABLE IF NOT EXISTS `tk_estatus_conciliacion` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(100) NOT NULL,
   `descripcion` VARCHAR(150) NULL DEFAULT NULL,
@@ -319,11 +336,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_estatus_devoluciones`
+-- Table `tk_estatus_devoluciones`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_estatus_devoluciones` ;
+DROP TABLE IF EXISTS `tk_estatus_devoluciones` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_estatus_devoluciones` (
+CREATE TABLE IF NOT EXISTS `tk_estatus_devoluciones` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(100) NOT NULL,
   `descripcion` VARCHAR(150) NULL DEFAULT NULL,
@@ -340,11 +357,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_estatus_movimientos_en_tránsito`
+-- Table `tk_estatus_movimientos_en_tránsito`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_estatus_movimientos_en_tránsito` ;
+DROP TABLE IF EXISTS `tk_estatus_movimientos_en_tránsito` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_estatus_movimientos_en_tránsito` (
+CREATE TABLE IF NOT EXISTS `tk_estatus_movimientos_en_tránsito` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(100) NOT NULL,
   `descripcion` VARCHAR(150) NULL DEFAULT NULL,
@@ -361,11 +378,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_estatus_operacion`
+-- Table `tk_estatus_operacion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_estatus_operacion` ;
+DROP TABLE IF EXISTS `tk_estatus_operacion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_estatus_operacion` (
+CREATE TABLE IF NOT EXISTS `tk_estatus_operacion` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
@@ -376,11 +393,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_estatus_transaccion`
+-- Table `tk_estatus_transaccion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_estatus_transaccion` ;
+DROP TABLE IF EXISTS `tk_estatus_transaccion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_estatus_transaccion` (
+CREATE TABLE IF NOT EXISTS `tk_estatus_transaccion` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(100) NULL DEFAULT NULL,
@@ -391,11 +408,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_regla_negocio`
+-- Table `tk_regla_negocio`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_regla_negocio` ;
+DROP TABLE IF EXISTS `tk_regla_negocio` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_regla_negocio` (
+CREATE TABLE IF NOT EXISTS `tk_regla_negocio` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(50) NOT NULL,
   `descripcion` VARCHAR(100) NOT NULL,
@@ -406,18 +423,18 @@ CREATE TABLE IF NOT EXISTS `compose`.`tk_regla_negocio` (
   INDEX `ca_fk` (`id_afiliacion` ASC),
   CONSTRAINT `ctr_afiliacion_fk1`
     FOREIGN KEY (`id_afiliacion`)
-    REFERENCES `compose`.`tc_afiliacion` (`id`))
+    REFERENCES `tc_afiliacion` (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tk_variable`
+-- Table `tk_variable`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tk_variable` ;
+DROP TABLE IF EXISTS `tk_variable` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tk_variable` (
+CREATE TABLE IF NOT EXISTS `tk_variable` (
   `id_variable` INT(11) NOT NULL,
   `clave` VARCHAR(100) NOT NULL,
   `valor` VARCHAR(100) NOT NULL,
@@ -428,11 +445,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_conciliacion`
+-- Table `to_conciliacion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_conciliacion` ;
+DROP TABLE IF EXISTS `to_conciliacion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_conciliacion` (
+CREATE TABLE IF NOT EXISTS `to_conciliacion` (
   `id` INT(11) NOT NULL,
   `estatus` INT(11) NOT NULL,
   `entidad` INT(11) NOT NULL,
@@ -448,11 +465,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_global`
+-- Table `to_global`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_global` ;
+DROP TABLE IF EXISTS `to_global` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_global` (
+CREATE TABLE IF NOT EXISTS `to_global` (
   `id` INT(11) NOT NULL,
   `id_conciliacion` INT(11) NOT NULL,
   `fecha` DATE NOT NULL,
@@ -469,17 +486,17 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_global` (
   UNIQUE INDEX `UQ_to_global_conciliacion` (`id_conciliacion` ASC),
   CONSTRAINT `FK_to_global_to_conciliacion`
     FOREIGN KEY (`id_conciliacion`)
-    REFERENCES `compose`.`to_conciliacion` (`id`))
+    REFERENCES `to_conciliacion` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_layout`
+-- Table `to_layout`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_layout` ;
+DROP TABLE IF EXISTS `to_layout` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_layout` (
+CREATE TABLE IF NOT EXISTS `to_layout` (
   `id` INT(11) NOT NULL,
   `id_conciliacion` INT(11) NOT NULL,
   `tipo` VARCHAR(20) NOT NULL,
@@ -487,17 +504,17 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_layout` (
   INDEX `FK_to_layout_to_conciliacion` (`id_conciliacion` ASC),
   CONSTRAINT `FK_to_layout_to_conciliacion`
     FOREIGN KEY (`id_conciliacion`)
-    REFERENCES `compose`.`to_conciliacion` (`id`))
+    REFERENCES `to_conciliacion` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_layout_header`
+-- Table `to_layout_header`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_layout_header` ;
+DROP TABLE IF EXISTS `to_layout_header` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_layout_header` (
+CREATE TABLE IF NOT EXISTS `to_layout_header` (
   `id` INT(11) NOT NULL,
   `id_layout` INT(11) NOT NULL,
   `cabecera` VARCHAR(10) NOT NULL,
@@ -515,17 +532,17 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_layout_header` (
   INDEX `FK_to_layout_header_to_layout` (`id_layout` ASC),
   CONSTRAINT `FK_to_layout_header_to_layout`
     FOREIGN KEY (`id_layout`)
-    REFERENCES `compose`.`to_layout` (`id`))
+    REFERENCES `to_layout` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_layout_linea`
+-- Table `to_layout_linea`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_layout_linea` ;
+DROP TABLE IF EXISTS `to_layout_linea` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_layout_linea` (
+CREATE TABLE IF NOT EXISTS `to_layout_linea` (
   `id` INT(11) NOT NULL,
   `id_layout` INT(11) NOT NULL,
   `linea` VARCHAR(10) NOT NULL,
@@ -543,17 +560,17 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_layout_linea` (
   INDEX `FK_to_layout_linea_to_layout` (`id_layout` ASC),
   CONSTRAINT `FK_to_layout_linea_to_layout`
     FOREIGN KEY (`id_layout`)
-    REFERENCES `compose`.`to_layout` (`id`))
+    REFERENCES `to_layout` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_movimiento_conciliacion`
+-- Table `to_movimiento_conciliacion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_movimiento_conciliacion` ;
+DROP TABLE IF EXISTS `to_movimiento_conciliacion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_conciliacion` (
+CREATE TABLE IF NOT EXISTS `to_movimiento_conciliacion` (
   `id` INT(11) NOT NULL,
   `conciliacion` INT(11) NOT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
@@ -565,17 +582,17 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_conciliacion` (
   INDEX `FK_to_movimiento_conciliacion_to_conciliacion` (`conciliacion` ASC),
   CONSTRAINT `FK_to_movimiento_conciliacion_to_conciliacion`
     FOREIGN KEY (`conciliacion`)
-    REFERENCES `compose`.`to_conciliacion` (`id`))
+    REFERENCES `to_conciliacion` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_movimiento_comision`
+-- Table `to_movimiento_comision`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_movimiento_comision` ;
+DROP TABLE IF EXISTS `to_movimiento_comision` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_comision` (
+CREATE TABLE IF NOT EXISTS `to_movimiento_comision` (
   `id` INT(11) NOT NULL,
   `fecha_operacion` DATE NULL DEFAULT NULL,
   `fecha_cargo` DATE NULL DEFAULT NULL,
@@ -584,17 +601,17 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_comision` (
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_comisiones_to_movimiento_conciliacion`
     FOREIGN KEY (`id`)
-    REFERENCES `compose`.`to_movimiento_conciliacion` (`id`))
+    REFERENCES `to_movimiento_conciliacion` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_movimiento_devolucion`
+-- Table `to_movimiento_devolucion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_movimiento_devolucion` ;
+DROP TABLE IF EXISTS `to_movimiento_devolucion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_devolucion` (
+CREATE TABLE IF NOT EXISTS `to_movimiento_devolucion` (
   `id` INT(11) NOT NULL,
   `estatus` INT(11) NOT NULL,
   `fecha` DATE NOT NULL,
@@ -607,17 +624,17 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_devolucion` (
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_to_movimiento_devolucion_to_movimiento_conciliacion`
     FOREIGN KEY (`id`)
-    REFERENCES `compose`.`to_movimiento_conciliacion` (`id`))
+    REFERENCES `to_movimiento_conciliacion` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_reporte`
+-- Table `to_reporte`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_reporte` ;
+DROP TABLE IF EXISTS `to_reporte` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_reporte` (
+CREATE TABLE IF NOT EXISTS `to_reporte` (
   `id` INT(11) NOT NULL,
   `id_conciliacion` INT(11) NOT NULL,
   `tipo` VARCHAR(45) NOT NULL,
@@ -632,17 +649,17 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_reporte` (
   INDEX `FK_to_carga_reporte_to_conciliacion` (`id_conciliacion` ASC),
   CONSTRAINT `FK_to_carga_reporte_to_conciliacion`
     FOREIGN KEY (`id_conciliacion`)
-    REFERENCES `compose`.`to_conciliacion` (`id`))
+    REFERENCES `to_conciliacion` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_movimiento_estado_cuenta`
+-- Table `to_movimiento_estado_cuenta`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_movimiento_estado_cuenta` ;
+DROP TABLE IF EXISTS `to_movimiento_estado_cuenta` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_estado_cuenta` (
+CREATE TABLE IF NOT EXISTS `to_movimiento_estado_cuenta` (
   `id` INT(11) NOT NULL,
   `id_reporte` INT(11) NOT NULL,
   `fecha` DATE NOT NULL,
@@ -654,17 +671,17 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_estado_cuenta` (
   INDEX `FK_to_movimiento_estado_cuenta_to_reporte` (`id_reporte` ASC),
   CONSTRAINT `FK_to_movimiento_estado_cuenta_to_reporte`
     FOREIGN KEY (`id_reporte`)
-    REFERENCES `compose`.`to_reporte` (`id`))
+    REFERENCES `to_reporte` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_movimiento_midas`
+-- Table `to_movimiento_midas`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_movimiento_midas` ;
+DROP TABLE IF EXISTS `to_movimiento_midas` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_midas` (
+CREATE TABLE IF NOT EXISTS `to_movimiento_midas` (
   `id` INT(11) NOT NULL,
   `id_reporte` INT(11) NOT NULL,
   `folio` INT(11) NULL DEFAULT NULL,
@@ -683,33 +700,33 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_midas` (
   INDEX `FK_to_movimiento_midas_to_reporte` (`id_reporte` ASC),
   CONSTRAINT `FK_to_movimiento_midas_to_reporte`
     FOREIGN KEY (`id_reporte`)
-    REFERENCES `compose`.`to_reporte` (`id`))
+    REFERENCES `to_reporte` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_movimiento_pago`
+-- Table `to_movimiento_pago`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_movimiento_pago` ;
+DROP TABLE IF EXISTS `to_movimiento_pago` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_pago` (
+CREATE TABLE IF NOT EXISTS `to_movimiento_pago` (
   `id` INT(11) NOT NULL,
   `estatus` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_to_movimiento_pago_to_movimiento_conciliacion`
     FOREIGN KEY (`id`)
-    REFERENCES `compose`.`to_movimiento_conciliacion` (`id`))
+    REFERENCES `to_movimiento_conciliacion` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_movimiento_proveedor`
+-- Table `to_movimiento_proveedor`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_movimiento_proveedor` ;
+DROP TABLE IF EXISTS `to_movimiento_proveedor` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_proveedor` (
+CREATE TABLE IF NOT EXISTS `to_movimiento_proveedor` (
   `id` INT(11) NOT NULL,
   `reporte` INT(11) NOT NULL,
   `id_comerciante` VARCHAR(45) NULL DEFAULT NULL,
@@ -746,11 +763,11 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_movimiento_transito`
+-- Table `to_movimiento_transito`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_movimiento_transito` ;
+DROP TABLE IF EXISTS `to_movimiento_transito` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_transito` (
+CREATE TABLE IF NOT EXISTS `to_movimiento_transito` (
   `id` INT(11) NOT NULL,
   `estatus` INT(11) NOT NULL,
   `folio` INT(11) NULL DEFAULT NULL,
@@ -765,17 +782,17 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_movimiento_transito` (
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_to_movimiento_transito_to_movimiento_conciliacion`
     FOREIGN KEY (`id`)
-    REFERENCES `compose`.`to_movimiento_conciliacion` (`id`))
+    REFERENCES `to_movimiento_conciliacion` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`to_pagos`
+-- Table `to_pagos`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`to_pagos` ;
+DROP TABLE IF EXISTS `to_pagos` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`to_pagos` (
+CREATE TABLE IF NOT EXISTS `to_pagos` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_cliente` BIGINT(20) UNSIGNED NOT NULL,
   `fecha_transaccion` DATETIME NULL DEFAULT NULL,
@@ -800,41 +817,41 @@ CREATE TABLE IF NOT EXISTS `compose`.`to_pagos` (
   INDEX `idx_id_operacion` (`id_operacion` ASC),
   CONSTRAINT `esatus_transaccion_fk`
     FOREIGN KEY (`id_estatus_transaccion`)
-    REFERENCES `compose`.`tk_estatus_transaccion` (`id`),
+    REFERENCES `tk_estatus_transaccion` (`id`),
   CONSTRAINT `fk_cliente_id`
     FOREIGN KEY (`id_cliente`)
-    REFERENCES `compose`.`tk_cliente` (`id_cliente`))
+    REFERENCES `tk_cliente` (`id_cliente`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 61
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tr_cliente_regla_negocio`
+-- Table `tr_cliente_regla_negocio`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tr_cliente_regla_negocio` ;
+DROP TABLE IF EXISTS `tr_cliente_regla_negocio` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tr_cliente_regla_negocio` (
+CREATE TABLE IF NOT EXISTS `tr_cliente_regla_negocio` (
   `id_cliente` BIGINT(20) UNSIGNED NOT NULL,
   `id_regla_negocio` INT(11) NOT NULL,
   INDEX `ic_fk` (`id_cliente` ASC),
   INDEX `irn_fk` (`id_regla_negocio` ASC),
   CONSTRAINT `ic_fk`
     FOREIGN KEY (`id_cliente`)
-    REFERENCES `compose`.`cliente` (`id_cliente`),
+    REFERENCES `cliente` (`id_cliente`),
   CONSTRAINT `irn_fk`
     FOREIGN KEY (`id_regla_negocio`)
-    REFERENCES `compose`.`regla_negocio` (`id`))
+    REFERENCES `regla_negocio` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tr_cuenta_afiliacion`
+-- Table `tr_cuenta_afiliacion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tr_cuenta_afiliacion` ;
+DROP TABLE IF EXISTS `tr_cuenta_afiliacion` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tr_cuenta_afiliacion` (
+CREATE TABLE IF NOT EXISTS `tr_cuenta_afiliacion` (
   `id_cuenta` BIGINT(20) NOT NULL,
   `id_afiliacion` BIGINT(20) NOT NULL,
   PRIMARY KEY (`id_cuenta`, `id_afiliacion`),
@@ -842,20 +859,20 @@ CREATE TABLE IF NOT EXISTS `compose`.`tr_cuenta_afiliacion` (
   INDEX `idx_afiliacion` (`id_afiliacion` ASC),
   CONSTRAINT `ctr_fk_afiliacion_tr1`
     FOREIGN KEY (`id_afiliacion`)
-    REFERENCES `compose`.`tc_afiliacion` (`id`),
+    REFERENCES `tc_afiliacion` (`id`),
   CONSTRAINT `ctr_fk_cuenta_tr1`
     FOREIGN KEY (`id_cuenta`)
-    REFERENCES `compose`.`tc_cuenta` (`id`))
+    REFERENCES `tc_cuenta` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tr_entidad_contactos`
+-- Table `tr_entidad_contactos`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tr_entidad_contactos` ;
+DROP TABLE IF EXISTS `tr_entidad_contactos` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tr_entidad_contactos` (
+CREATE TABLE IF NOT EXISTS `tr_entidad_contactos` (
   `id_entidad` BIGINT(20) NOT NULL,
   `id_contacto` BIGINT(20) NOT NULL,
   PRIMARY KEY (`id_entidad`, `id_contacto`),
@@ -863,51 +880,30 @@ CREATE TABLE IF NOT EXISTS `compose`.`tr_entidad_contactos` (
   INDEX `idx_contacto` (`id_contacto` ASC),
   CONSTRAINT `ctr_fk_contacto_tr1`
     FOREIGN KEY (`id_contacto`)
-    REFERENCES `compose`.`tc_contactos` (`id`),
+    REFERENCES `tc_contactos` (`id`),
   CONSTRAINT `ctr_fk_entidad_tr2`
     FOREIGN KEY (`id_entidad`)
-    REFERENCES `compose`.`tc_entidad` (`id`))
+    REFERENCES `tc_entidad` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `compose`.`tr_entidad_cuenta`
+-- Table `tr_regla_negocio_variable`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tr_entidad_cuenta` ;
+DROP TABLE IF EXISTS `tr_regla_negocio_variable` ;
 
-CREATE TABLE IF NOT EXISTS `compose`.`tr_entidad_cuenta` (
-  `id_entidad` BIGINT(20) NOT NULL,
-  `id_cuenta` BIGINT(20) NOT NULL,
-  PRIMARY KEY (`id_entidad`, `id_cuenta`),
-  INDEX `idx_entidad` (`id_entidad` ASC),
-  INDEX `idx_cuenta` (`id_cuenta` ASC),
-  CONSTRAINT `ctr_fk_cuenta_tr2`
-    FOREIGN KEY (`id_cuenta`)
-    REFERENCES `compose`.`tc_cuenta` (`id`),
-  CONSTRAINT `ctr_fk_entidad_tr1`
-    FOREIGN KEY (`id_entidad`)
-    REFERENCES `compose`.`tc_entidad` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
--- Table `compose`.`tr_regla_negocio_variable`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `compose`.`tr_regla_negocio_variable` ;
-
-CREATE TABLE IF NOT EXISTS `compose`.`tr_regla_negocio_variable` (
+CREATE TABLE IF NOT EXISTS `tr_regla_negocio_variable` (
   `id_regla_negocio` INT(11) NOT NULL,
   `id_variable` INT(11) NOT NULL,
   INDEX `id_fk` (`id_regla_negocio` ASC),
   INDEX `idv_fk` (`id_variable` ASC),
   CONSTRAINT `id_fk`
     FOREIGN KEY (`id_regla_negocio`)
-    REFERENCES `compose`.`tk_regla_negocio` (`id`),
+    REFERENCES `tk_regla_negocio` (`id`),
   CONSTRAINT `idv_fk`
     FOREIGN KEY (`id_variable`)
-    REFERENCES `compose`.`tk_variable` (`id_variable`))
+    REFERENCES `tk_variable` (`id_variable`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 

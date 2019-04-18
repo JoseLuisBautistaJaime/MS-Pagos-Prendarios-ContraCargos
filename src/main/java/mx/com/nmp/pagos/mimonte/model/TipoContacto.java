@@ -27,7 +27,7 @@ public class TipoContacto extends AbstractCatalogoAdm implements Serializable, C
 
 	private static final long serialVersionUID = 7033742691736781185L;
 	
-	@OneToMany(mappedBy = "tipoContacto", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "tipoContacto", fetch = FetchType.LAZY)
 	private Set<Contactos> contactos;
 
 	public TipoContacto() {

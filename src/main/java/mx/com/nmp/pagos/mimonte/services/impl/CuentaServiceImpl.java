@@ -126,7 +126,7 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 * @throws EmptyResultDataAccessException
 	 */
 	public List<CuentaEntDTO> findByEntidadId(final Long idEntidad) throws EmptyResultDataAccessException {
-		List<Cuenta> cuentas = cuentaRepository.findByEntidades_Id(idEntidad);
+		List<Cuenta> cuentas = cuentaRepository.qGetByEntidadId(idEntidad);
 		if (null == cuentas || cuentas.isEmpty())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		return CuentaBuilder.buildCuentaEntDTOListFromCuentaList(cuentas);

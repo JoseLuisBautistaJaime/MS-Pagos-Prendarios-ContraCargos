@@ -46,7 +46,6 @@ public abstract class EntidadBuilder {
 			entidadDTO.setContactos(ContactosBuilder.buildContactoReqDTOSetFromContactoSet(entidad.getContactos()));
 			entidadDTO.setCreatedBy(entidad.getCreatedBy());
 			entidadDTO.setCreatedDate(entidad.getCreatedDate());
-			entidadDTO.setCuentas(CuentaBuilder.buildCuentaReqDTOSetFromCuentaSet(entidad.getCuentas()));
 			entidadDTO.setDescription(entidad.getDescription());
 			entidadDTO.setShortDescription(entidad.getShortDescription());
 			entidadDTO.setId(entidad.getId());
@@ -64,18 +63,43 @@ public abstract class EntidadBuilder {
 	 * EntidadDTO
 	 * 
 	 * @param entidadDTO
+	 * @param idTipoContacto
 	 * @return
 	 */
-	public static Entidad buildEntidadFromEntidadDTO(EntidadDTO entidadDTO) {
+	public static Entidad buildEntidadFromEntidadDTO(EntidadDTO entidadDTO, Long idTipoContacto) {
 		Entidad entidad = null;
 		if (null != entidadDTO) {
 			entidad = new Entidad();
 			entidad.setContactos(ContactosBuilder.buildContactosSetFromContactoReqDTOSet(entidadDTO.getContactos(),
-					entidadDTO.getLastModifiedBy(), entidadDTO.getLastModifiedDate()));
+					entidadDTO.getLastModifiedBy(), entidadDTO.getLastModifiedDate(), idTipoContacto));
 			entidad.setCreatedBy(entidadDTO.getCreatedBy());
 			entidad.setCreatedDate(entidadDTO.getCreatedDate());
-			entidad.setCuentas(CuentaBuilder.buildCuentaSetFromCuentaReqDTOSet(entidadDTO.getCuentas(),
-					entidadDTO.getLastModifiedBy(), entidadDTO.getLastModifiedDate()));
+			entidad.setDescription(entidadDTO.getDescription());
+			entidad.setShortDescription(entidadDTO.getShortDescription());
+			entidad.setId(entidadDTO.getId());
+			entidad.setLastModifiedDate(entidadDTO.getLastModifiedDate());
+			entidad.setLastModifiedBy(entidadDTO.getLastModifiedBy());
+			entidad.setNombre(entidadDTO.getNombre());
+			entidad.setEstatus(entidadDTO.getEstatus());
+		}
+		return entidad;
+	}
+
+	/**
+	 * Construye un entity de tipo Entidad a partir de un objeto de tipo EntidadDTO
+	 * 
+	 * @param entidadDTO
+	 * @param idTipoContacto
+	 * @return
+	 */
+	public static Entidad buildEntidadFromEntidadDTONEW(EntidadDTO entidadDTO, Long idTipoContacto) {
+		Entidad entidad = null;
+		if (null != entidadDTO) {
+			entidad = new Entidad();
+			entidad.setContactos(ContactosBuilder.buildContactosSetFromContactoReqDTOSetNew(entidadDTO.getContactos(),
+					entidadDTO.getCreatedBy(), entidadDTO.getCreatedDate(), idTipoContacto));
+			entidad.setCreatedBy(entidadDTO.getCreatedBy());
+			entidad.setCreatedDate(entidadDTO.getCreatedDate());
 			entidad.setDescription(entidadDTO.getDescription());
 			entidad.setShortDescription(entidadDTO.getShortDescription());
 			entidad.setId(entidadDTO.getId());
@@ -100,7 +124,6 @@ public abstract class EntidadBuilder {
 			entidadResponseDTO = new EntidadResponseDTO();
 			entidadResponseDTO
 					.setContactos(ContactosBuilder.buildContactoEntDTOSetFromContactoSet(entidad.getContactos()));
-			entidadResponseDTO.setCuentas(CuentaBuilder.buildCuentaEntDTOSetFromCuentaSet(entidad.getCuentas()));
 			entidadResponseDTO.setDescripcion(entidad.getDescription());
 			entidadResponseDTO.setId(entidad.getId());
 			entidadResponseDTO.setNombre(entidad.getNombre());
@@ -156,7 +179,8 @@ public abstract class EntidadBuilder {
 			entidadDTO = new EntidadDTO();
 			entidadDTO.setContactos(entidadBaseDTO.getContactos());
 			entidadDTO.setCreatedDate(createdDate);
-			entidadDTO.setCuentas(entidadBaseDTO.getCuentas());
+			entidadDTO
+					.setCuentas(CuentaBuilder.buildCuentaReqDTOSetFromCuentaSaveReqDTOSet(entidadBaseDTO.getCuentas()));
 			entidadDTO.setDescription(entidadBaseDTO.getDescripcion());
 			entidadDTO.setEstatus(true);
 			entidadDTO.setId(entidadBaseDTO.getId());
@@ -181,7 +205,7 @@ public abstract class EntidadBuilder {
 		if (null != entidadBaseSaveDTO) {
 			entidadDTO = new EntidadDTO();
 			entidadDTO.setContactos(ContactosBuilder
-					.buildContactoReqDTOSetFromContactoReqSaveDTOSet(entidadBaseSaveDTO.getContactos()));
+					.buildContactoReqDTOSetFromContactoReqSaveNewDTOSet(entidadBaseSaveDTO.getContactos()));
 			entidadDTO.setCreatedDate(createdDate);
 			entidadDTO.setCuentas(
 					CuentaBuilder.buildCuentaReqDTOSetFromCuentaSaveReqDTOSet(entidadBaseSaveDTO.getCuentas()));

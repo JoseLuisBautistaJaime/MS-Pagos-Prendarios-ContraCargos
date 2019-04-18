@@ -197,6 +197,17 @@ public final class CatalogConstants {
 	public static final String AFILIACION_HAS_CUENTAS_ASSOCIATES = "La afiliacion tiene una o mas cuentas asocidas";
 
 	/**
+	 * Constante con el nombre del tipo de contacto de entidad
+	 */
+	public static final String ENTIDAD_TIPO_CONTACTO_NAME = "Contacto Entidad";
+
+	/**
+	 * Mensaje que es mostrado cuando se desea ingresar una relacion
+	 * cuenta-afiliacion que no existe en el catalogo
+	 */
+	public static final String CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS = "No existe una o mas asocianes cuenta-afiliacion";
+
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */

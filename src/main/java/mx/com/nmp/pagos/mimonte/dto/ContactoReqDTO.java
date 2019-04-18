@@ -70,7 +70,7 @@ public class ContactoReqDTO implements Comparable<ContactoReqDTO> {
 
 	@Override
 	public int compareTo(ContactoReqDTO o) {
-		return o.id.compareTo(this.id);
+		return o.nombre.compareTo(this.nombre);
 	}
 
 }

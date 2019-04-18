@@ -14,6 +14,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -26,6 +29,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tc_cuenta")
+@NamedQueries(value = {
+		@NamedQuery(name = "Cuenta.qGetByEntidadId", query = "SELECT cta FROM Cuenta cta WHERE cta.id IN(SELECT eca.cuenta.id FROM EntidadCuentaAfiliacion eca WHERE eca.entidad.id = :idEntidad)") })
 public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, java.io.Serializable {
 
 	/**
@@ -42,11 +47,16 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 					@JoinColumn(name = "id_afiliacion", referencedColumnName = "id") })
 	private Set<Afiliacion> afiliaciones;
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "cuentas")
-	private Set<Entidad> entidades;
+	@OneToMany(mappedBy = "cuenta", fetch = FetchType.LAZY)
+	private Set<EntidadCuentaAfiliacion> EntidadCuentaAfiliacionSet;
 
 	public Cuenta() {
 		super();
+	}
+
+	public Cuenta(Long id) {
+		super();
+		this.id = id;
 	}
 
 	public Cuenta(String numeroCuenta, Set<Afiliacion> afiliaciones) {
@@ -61,14 +71,6 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.numeroCuenta = numeroCuenta;
 		this.afiliaciones = afiliaciones;
-	}
-
-	public Set<Entidad> getEntidades() {
-		return entidades;
-	}
-
-	public void setEntidades(Set<Entidad> entidades) {
-		this.entidades = entidades;
 	}
 
 	public String getNumeroCuenta() {
@@ -87,10 +89,12 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 		this.afiliaciones = afiliaciones;
 	}
 
-	@Override
-	public String toString() {
-		return "Cuenta [numeroCuenta=" + numeroCuenta + ", afiliaciones=" + afiliaciones + ", entidades=" + entidades
-				+ "]";
+	public Set<EntidadCuentaAfiliacion> getEntidadCuentaAfiliacionSet() {
+		return EntidadCuentaAfiliacionSet;
+	}
+
+	public void setEntidadCuentaAfiliacionSet(Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet) {
+		EntidadCuentaAfiliacionSet = entidadCuentaAfiliacionSet;
 	}
 
 	@Override
