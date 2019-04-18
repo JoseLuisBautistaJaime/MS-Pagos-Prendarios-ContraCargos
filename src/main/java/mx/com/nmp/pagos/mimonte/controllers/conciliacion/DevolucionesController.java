@@ -154,7 +154,6 @@ public class DevolucionesController {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOListList = new ArrayList<>();
 		DevolucionEntidadDTO devolucionEntidadDTO = new DevolucionEntidadDTO();
 		devolucionEntidadDTO.setId(1L);
-		devolucionEntidadDTO.setCuenta(640200100);
 		devolucionEntidadDTO.setEntidad(new BaseEntidadDTO(1L, "Banco 1", "Banco 1"));
 		devolucionEntidadDTO.setFecha(new Date());
 		devolucionEntidadDTO.setEstatus(new EstatusDevolucionDTO(2, "Solicitada", true));

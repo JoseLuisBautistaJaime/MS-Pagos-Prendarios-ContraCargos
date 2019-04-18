@@ -24,10 +24,9 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 	private Date fecha;
 	private EstatusDevolucionDTO estatus;
 	private Integer sucursal;
-	private Integer cuenta;
+	private String identificadorCuenta;
 	private Double monto;
 	private String esquemaTarjeta;
-	private String identificadorCuenta;
 	private String titular;
 	private String codigoAutorizacion;
 	private Date fechaLiquidacion;
@@ -37,7 +36,7 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 	}
 
 	public DevolucionEntidadDTO(Long id, BaseEntidadDTO entidad, Date fecha, EstatusDevolucionDTO estatus,
-			Integer sucursal, Integer cuenta, Double monto, String esquemaTarjeta, String identificadorCuenta,
+			Integer sucursal, String identificadorCuenta, Double monto, String esquemaTarjeta, 
 			String titular, String codigoAutorizacion, Date fechaLiquidacion) {
 		super();
 		this.id = id;
@@ -45,10 +44,9 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 		this.fecha = fecha;
 		this.estatus = estatus;
 		this.sucursal = sucursal;
-		this.cuenta = cuenta;
+		this.identificadorCuenta = identificadorCuenta;
 		this.monto = monto;
 		this.esquemaTarjeta = esquemaTarjeta;
-		this.identificadorCuenta = identificadorCuenta;
 		this.titular = titular;
 		this.codigoAutorizacion = codigoAutorizacion;
 		this.fechaLiquidacion = fechaLiquidacion;
@@ -90,16 +88,16 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 		return sucursal;
 	}
 
+	public String getIdentificadorCuenta() {
+		return identificadorCuenta;
+	}
+
+	public void setIdentificadorCuenta(String identificadorCuenta) {
+		this.identificadorCuenta = identificadorCuenta;
+	}
+	
 	public void setSucursal(Integer sucursal) {
 		this.sucursal = sucursal;
-	}
-
-	public Integer getCuenta() {
-		return cuenta;
-	}
-
-	public void setCuenta(Integer cuenta) {
-		this.cuenta = cuenta;
 	}
 
 	public Double getMonto() {
@@ -116,14 +114,6 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 
 	public void setEsquemaTarjeta(String esquemaTarjeta) {
 		this.esquemaTarjeta = esquemaTarjeta;
-	}
-
-	public String getIdentificadorCuenta() {
-		return identificadorCuenta;
-	}
-
-	public void setIdentificadorCuenta(String identificadorCuenta) {
-		this.identificadorCuenta = identificadorCuenta;
 	}
 
 	public String getTitular() {
@@ -153,9 +143,9 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 	@Override
 	public String toString() {
 		return "DevolucionEntidadDTO [id=" + id + ", entidad=" + entidad + ", fecha=" + fecha + ", estatus=" + estatus
-				+ ", sucursal=" + sucursal + ", cuenta=" + cuenta + ", monto=" + monto + ", esquemaTarjeta="
-				+ esquemaTarjeta + ", identificadorCuenta=" + identificadorCuenta + ", titular=" + titular
-				+ ", codigoAutorizacion=" + codigoAutorizacion + ", fechaLiquidacion=" + fechaLiquidacion + "]";
+				+ ", sucursal=" + sucursal + ", identificadorCuenta=" + identificadorCuenta + ", monto=" + monto
+				+ ", esquemaTarjeta=" + esquemaTarjeta + ", titular=" + titular + ", codigoAutorizacion="
+				+ codigoAutorizacion + ", fechaLiquidacion=" + fechaLiquidacion + "]";
 	}
 
 	@Override

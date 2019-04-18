@@ -23,14 +23,14 @@ public class DevolucionDTO implements Comparable<DevolucionDTO> {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private Integer sucursal;
-	private Integer cuenta;
+	private String identificadorCuenta;
 
 	public DevolucionDTO() {
 		super();
 	}
 
 	public DevolucionDTO(Long id, Long idEntidad, Integer estatus, Date fechaDesde, Date fechaHasta, Integer sucursal,
-			Integer cuenta) {
+			String identificadorCuenta) {
 		super();
 		this.id = id;
 		this.idEntidad = idEntidad;
@@ -38,7 +38,7 @@ public class DevolucionDTO implements Comparable<DevolucionDTO> {
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = fechaHasta;
 		this.sucursal = sucursal;
-		this.cuenta = cuenta;
+		this.identificadorCuenta = identificadorCuenta;
 	}
 
 	public Long getId() {
@@ -89,18 +89,19 @@ public class DevolucionDTO implements Comparable<DevolucionDTO> {
 		this.sucursal = sucursal;
 	}
 
-	public Integer getCuenta() {
-		return cuenta;
+	public String getIdentificadorCuenta() {
+		return identificadorCuenta;
 	}
 
-	public void setCuenta(Integer cuenta) {
-		this.cuenta = cuenta;
+	public void setIdentificadorCuenta(String identificadorCuenta) {
+		this.identificadorCuenta = identificadorCuenta;
 	}
 
 	@Override
 	public String toString() {
 		return "DevolucionDTO [id=" + id + ", idEntidad=" + idEntidad + ", estatus=" + estatus + ", fechaDesde="
-				+ fechaDesde + ", fechaHasta=" + fechaHasta + ", sucursal=" + sucursal + ", cuenta=" + cuenta + "]";
+				+ fechaDesde + ", fechaHasta=" + fechaHasta + ", sucursal=" + sucursal + ", identificadorCuenta="
+				+ identificadorCuenta + "]";
 	}
 
 	@Override

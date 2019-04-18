@@ -51,7 +51,7 @@ import mx.com.nmp.pagos.mimonte.util.Response;
  */
 @RestController
 @RequestMapping(value = "/mimonte")
-@Api(value = "", description = "REST API para Movimientos de estados de cuenta", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
+@Api(value = "", description = "REST API para Movimientos", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
 		"Movimientos" })
 public class MovimientosController {
 

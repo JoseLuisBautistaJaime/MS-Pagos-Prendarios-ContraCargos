@@ -21,15 +21,15 @@ public class ReporteRequestDTO implements Comparable<ReporteRequestDTO> {
 	private Date fechaHasta;
 	private String producto;
 	private Integer operacion;
-	private List<String> sucursal;
-	private String partida;
+	private List<Integer> sucursal;
+	private Long partida;
 
 	public ReporteRequestDTO() {
 		super();
 	}
 
 	public ReporteRequestDTO(Date fechaDesde, Date fechaHasta, String producto, Integer operacion,
-			List<String> sucursal, String partida) {
+			List<Integer> sucursal, Long partida) {
 		super();
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = fechaHasta;
@@ -71,19 +71,19 @@ public class ReporteRequestDTO implements Comparable<ReporteRequestDTO> {
 		this.operacion = operacion;
 	}
 
-	public List<String> getSucursal() {
+	public List<Integer> getSucursal() {
 		return sucursal;
 	}
 
-	public void setSucursal(List<String> sucursal) {
+	public void setSucursal(List<Integer> sucursal) {
 		this.sucursal = sucursal;
 	}
 
-	public String getPartida() {
+	public Long getPartida() {
 		return partida;
 	}
 
-	public void setPartida(String partida) {
+	public void setPartida(Long partida) {
 		this.partida = partida;
 	}
 

@@ -19,7 +19,7 @@ public class ReportePagosLibresDTO implements Comparable<ReportePagosLibresDTO> 
 
 	private Date fecha;
 	private String canal;
-	private String partida;
+	private Long partida;
 	private String tipoProducto;
 	private String operacion;
 	private Integer sucursal;
@@ -29,7 +29,7 @@ public class ReportePagosLibresDTO implements Comparable<ReportePagosLibresDTO> 
 		super();
 	}
 
-	public ReportePagosLibresDTO(Date fecha, String canal, String partida, String tipoProducto, String operacion,
+	public ReportePagosLibresDTO(Date fecha, String canal, Long partida, String tipoProducto, String operacion,
 			Integer sucursal, Double monto) {
 		super();
 		this.fecha = fecha;
@@ -57,11 +57,11 @@ public class ReportePagosLibresDTO implements Comparable<ReportePagosLibresDTO> 
 		this.canal = canal;
 	}
 
-	public String getPartida() {
+	public Long getPartida() {
 		return partida;
 	}
 
-	public void setPartida(String partida) {
+	public void setPartida(Long partida) {
 		this.partida = partida;
 	}
 
@@ -97,11 +97,7 @@ public class ReportePagosLibresDTO implements Comparable<ReportePagosLibresDTO> 
 		this.monto = monto;
 	}
 
-	@Override
-	public String toString() {
-		return "ReportePagosLibresDTO [fecha=" + fecha + ", canal=" + canal + ", partida=" + partida + ", tipoProducto="
-				+ tipoProducto + ", operacion=" + operacion + ", sucursal=" + sucursal + ", monto=" + monto + "]";
-	}
+	
 
 	@Override
 	public int compareTo(ReportePagosLibresDTO o) {

@@ -94,7 +94,7 @@ public class ReportesController {
 		reportePagosLibresDTO.setFecha(new Date());
 		reportePagosLibresDTO.setMonto(17000.00);
 		reportePagosLibresDTO.setOperacion("Cobro Desempenio en Linea");
-		reportePagosLibresDTO.setPartida("12345678");
+		reportePagosLibresDTO.setPartida(12345678L);
 		reportePagosLibresDTO.setSucursal(1);
 		reportePagosLibresDTO.setTipoProducto("Clasico");
 		
