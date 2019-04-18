@@ -38,6 +38,7 @@ import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaByNumeroDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaRespDTO;
@@ -146,18 +147,21 @@ public class CuentasController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/catalogos/cuentas/{numeroCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo cuentas en base a su id", tags = {
+	@PutMapping(value = "/catalogos/cuentas/{numeroCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "PUT", value = "Regresa un objeto catalogo cuentas en base a su id", tags = {
 			"Cuentas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontrada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByNumeroCuenta(@PathVariable(value = "numeroCuenta", required = true) String numeroCuenta) {
+	public Response findByNumeroCuenta(@RequestBody CuentaByNumeroDTO numeroCuenta) {
 		CuentaEntDTO cuentaEntDTO = null;
 		try {
-			cuentaEntDTO = cuentaServiceImpl.findByNumeroCuenta(numeroCuenta);
+			if (null != numeroCuenta && null != numeroCuenta.getNumero() && !numeroCuenta.getNumero().isEmpty())
+				cuentaEntDTO = cuentaServiceImpl.findByNumeroCuenta(numeroCuenta.getNumero());
+			else
+				throw new CatalogoException(CatalogConstants.CATALOG_NOT_FOUND);
 		} catch (EmptyResultDataAccessException erdaex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
