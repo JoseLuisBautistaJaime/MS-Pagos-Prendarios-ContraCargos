@@ -97,7 +97,7 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 		if (null == cta)
 			throw new CatalogoException(CatalogConstants.ID_CUENTA_DOES_NOT_EXISTS);
 		Cuenta ctaByNum = cuentaRepository.findByNumeroCuenta(e.getNumeroCuenta());
-		if (null != ctaByNum)
+		if (null != ctaByNum && null != ctaByNum.getId() && null != e.getId() && !ctaByNum.getId().equals(e.getId()))
 			throw new CatalogoException(CatalogConstants.NUMERO_CUENTA_ALREADY_EXISTS);
 		List<Afiliacion> afiliacionesTest = afiliacionRepository.findAll();
 		if (!ValidadorCatalogo.validateAfiliacionesExists(

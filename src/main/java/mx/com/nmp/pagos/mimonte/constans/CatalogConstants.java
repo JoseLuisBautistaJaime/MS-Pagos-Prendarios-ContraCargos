@@ -76,6 +76,12 @@ public final class CatalogConstants {
 	 * cuenta con una entidad y categoria repetida
 	 */
 	public static final String CODIGO_E_C_ALREADY_EXISTS = "Ya existe un codigo con esa entidad y esa categoria";
+	
+	/**
+	 * Mensaje que es lanzado cuando se intenta dar de alta un codigo de estado de
+	 * cuenta con una entidad, categoria y codigo repetido
+	 */
+	public static final String CODIGO_ALREADY_EXISTS = "Ya existe un codigo con esas caracteristicas";
 
 	/**
 	 * Mensaje que es lanzado cuando se intenta actualizar un codigo de estado de

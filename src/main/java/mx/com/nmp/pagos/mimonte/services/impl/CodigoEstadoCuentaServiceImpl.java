@@ -71,8 +71,8 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	public <T extends AbstractCatalogoDTO> T save(CodigoEstadoCuentaDTO e, String createdBy)
 			throws EmptyResultDataAccessException, CatalogoException {
 		CodigoEstadoCuenta codigoEC = null;
-		codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaId(e.getEntidad().getId(),
-				e.getCategoria().getId());
+		codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaIdAndCodigo(e.getEntidad().getId(),
+				e.getCategoria().getId(), e.getCodigo());
 		if (null == codigoEC) {
 			Entidad entidad = entidadRepository.findById(e.getEntidad().getId()).isPresent()
 					? entidadRepository.findById(e.getEntidad().getId()).get()
@@ -98,7 +98,7 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 			codigoEstadoCuentaDTO = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(ent);
 			return (T) codigoEstadoCuentaDTO;
 		} else
-			throw new CatalogoException(CatalogConstants.CODIGO_E_C_ALREADY_EXISTS);
+			throw new CatalogoException(CatalogConstants.CODIGO_ALREADY_EXISTS);
 	}
 
 	/**
@@ -122,6 +122,11 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 				: null;
 		if (null == codigoEstadoCuenta)
 			throw new CatalogoException(CatalogConstants.CODIGO_E_C_DOESNT_EXISTS);
+		CodigoEstadoCuenta codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaIdAndCodigo(e.getEntidad().getId(),
+				e.getCategoria().getId(), e.getCodigo());
+		if(null != codigoEC && !codigoEC.getId().equals(e.getId())) {
+			throw new CatalogoException(CatalogConstants.CODIGO_ALREADY_EXISTS);
+		}
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;

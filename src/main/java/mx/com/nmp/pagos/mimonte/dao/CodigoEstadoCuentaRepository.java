@@ -48,11 +48,12 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * 
 	 * @param idEntidad
 	 * @param idCategoria
+	 * @param codigo
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	public CodigoEstadoCuenta findByEntidadIdAndCategoriaId(final Long idEntidad, final Long idCategoria)
-			throws EmptyResultDataAccessException;
+	public CodigoEstadoCuenta findByEntidadIdAndCategoriaIdAndCodigo(final Long idEntidad, final Long idCategoria,
+			final String codigo) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa un codigo de estado de cuenta por id
