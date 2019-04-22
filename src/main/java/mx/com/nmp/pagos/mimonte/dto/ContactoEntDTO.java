@@ -18,18 +18,18 @@ public class ContactoEntDTO implements Comparable<ContactoEntDTO> {
 	private Long id;
 	private String nombre;
 	private String email;
-	private Boolean estatus;
+//	private Boolean estatus;
 
 	public ContactoEntDTO() {
 		super();
 	}
 
-	public ContactoEntDTO(Long id, String nombre, String email, Boolean estatus) {
+	public ContactoEntDTO(Long id, String nombre, String email/* , Boolean estatus */) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.email = email;
-		this.estatus = estatus;
+//		this.estatus = estatus;
 	}
 
 	public Long getId() {
@@ -56,17 +56,18 @@ public class ContactoEntDTO implements Comparable<ContactoEntDTO> {
 		this.email = email;
 	}
 
-	public Boolean getEstatus() {
-		return estatus;
-	}
+//	public Boolean getEstatus() {
+//		return estatus;
+//	}
 
-	public void setEstatus(Boolean estatus) {
-		this.estatus = estatus;
-	}
+//	public void setEstatus(Boolean estatus) {
+//		this.estatus = estatus;
+//	}
 
 	@Override
 	public String toString() {
-		return "ContactoEntDTO [id=" + id + ", nombre=" + nombre + ", email=" + email + ", estatus=" + estatus + "]";
+		return "ContactoEntDTO [id=" + id + ", nombre=" + nombre + ", email=" + email
+				+ /* ", estatus=" + estatus + */"]";
 	}
 
 	@Override

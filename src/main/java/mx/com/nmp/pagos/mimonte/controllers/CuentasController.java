@@ -34,11 +34,10 @@ import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
-import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqNN;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
-import mx.com.nmp.pagos.mimonte.dto.CuentaByNumeroDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaRespDTO;
@@ -140,30 +139,64 @@ public class CuentasController {
 	}
 
 	/**
-	 * Obtiene un catalogo Cuenta por su id
+	 * Obtiene un catalogo Cuenta por su numero de cuenta
 	 * 
 	 * @param idcuentas
 	 * @return
 	 */
+//	@ResponseBody
+//	@ResponseStatus(HttpStatus.OK)
+//	@PutMapping(value = "/catalogos/cuentas/consulta", produces = MediaType.APPLICATION_JSON_VALUE)
+//	@ApiOperation(httpMethod = "PUT", value = "Regresa un objeto catalogo cuentas en base a su id", tags = {
+//			"Cuentas" })
+//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontrada"),
+//			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+//			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+//			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+//	public Response findByNumeroCuenta(@RequestBody CuentaByNumeroDTO numeroCuenta) {
+//		CuentaEntDTO cuentaEntDTO = null;
+//		try {
+//			if (null != numeroCuenta && null != numeroCuenta.getNumero() && !numeroCuenta.getNumero().isEmpty())
+//				cuentaEntDTO = cuentaServiceImpl.findByNumeroCuenta(numeroCuenta.getNumero());
+//			else
+//				throw new CatalogoException(CatalogConstants.CATALOG_NOT_FOUND);
+//		} catch (EmptyResultDataAccessException erdaex) {
+//			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+//		} catch (javax.persistence.NonUniqueResultException nuex) {
+//			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION);
+//		}
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
+//				cuentaEntDTO);
+//	}
+
+	/**
+	 * Obtiene un catalogo Cuenta por su numero de cuenta
+	 * 
+	 * @param numeroCuenta
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/catalogos/cuentas/{numeroCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "PUT", value = "Regresa un objeto catalogo cuentas en base a su id", tags = {
+	@GetMapping(value = "/catalogos/cuentas/{numeroCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Regresa un objeto catalogo cuentas en base a su id", tags = {
 			"Cuentas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontrada"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findByNumeroCuenta(@RequestBody CuentaByNumeroDTO numeroCuenta) {
+	public Response findByNumeroCuenta(@PathVariable String numeroCuenta) {
 		CuentaEntDTO cuentaEntDTO = null;
 		try {
-			if (null != numeroCuenta && null != numeroCuenta.getNumero() && !numeroCuenta.getNumero().isEmpty())
-				cuentaEntDTO = cuentaServiceImpl.findByNumeroCuenta(numeroCuenta.getNumero());
+			if (null != numeroCuenta && !numeroCuenta.equals(""))
+				cuentaEntDTO = cuentaServiceImpl.findByNumeroCuenta(numeroCuenta);
 			else
 				throw new CatalogoException(CatalogConstants.CATALOG_NOT_FOUND);
 		} catch (EmptyResultDataAccessException erdaex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		} catch (javax.persistence.NonUniqueResultException nuex) {
+			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				cuentaEntDTO);
@@ -249,10 +282,10 @@ public class CuentasController {
 	public static CuentaDTO buildDummyNew() {
 
 		CuentaDTO cuentasDto = new CuentaDTO();
-		List<AfiliacionRespDTO> afiliaciones = new ArrayList<AfiliacionRespDTO>();
-		AfiliacionRespDTO afiliacionDto = new AfiliacionRespDTO();
+		List<AfiliacionReqNN> afiliaciones = new ArrayList<AfiliacionReqNN>();
+		AfiliacionReqNN afiliacionDto = new AfiliacionReqNN();
 		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero("12345678L");
+//		afiliacionDto.setNumero("12345678L");
 		afiliaciones.add(afiliacionDto);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
 		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
@@ -266,7 +299,7 @@ public class CuentasController {
 		codigos.add(codigo);
 		cuentasDto.setEstatus(true);
 		cuentasDto.setId(234L);
-		cuentasDto.setNumero("12345678");
+//		cuentasDto.setNumero("12345678");
 		cuentasDto.setAfiliaciones(afiliaciones);
 
 		return cuentasDto;
@@ -297,16 +330,16 @@ public class CuentasController {
 		AfiliacionEntDTO afiliacionDto4 = new AfiliacionEntDTO();
 		afiliacionDto.setId(234L);
 		afiliacionDto.setNumero("12345678L");
-		afiliacionDto.setEstatus(true);
+//		afiliacionDto.setEstatus(true);
 		afiliacionDto2.setId(555234L);
 		afiliacionDto2.setNumero("4541545456L");
-		afiliacionDto2.setEstatus(true);
+//		afiliacionDto2.setEstatus(true);
 		afiliacionDto3.setId(234111L);
 		afiliacionDto3.setNumero("10000978L");
-		afiliacionDto3.setEstatus(true);
+//		afiliacionDto3.setEstatus(true);
 		afiliacionDto4.setId(9090904L);
 		afiliacionDto4.setNumero("112233L");
-		afiliacionDto4.setEstatus(true);
+//		afiliacionDto4.setEstatus(true);
 		afiliaciones.add(afiliacionDto);
 		afiliaciones.add(afiliacionDto2);
 		afiliaciones2.add(afiliacionDto3);
@@ -346,10 +379,10 @@ public class CuentasController {
 		AfiliacionEntDTO afiliacionDto2 = new AfiliacionEntDTO();
 		afiliacionDto.setId(234L);
 		afiliacionDto.setNumero("12345678L");
-		afiliacionDto.setEstatus(true);
+//		afiliacionDto.setEstatus(true);
 		afiliacionDto2.setId(888L);
 		afiliacionDto2.setNumero("998811L");
-		afiliacionDto2.setEstatus(true);
+//		afiliacionDto2.setEstatus(true);
 		afiliaciones.add(afiliacionDto);
 		afiliaciones.add(afiliacionDto2);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
@@ -372,10 +405,10 @@ public class CuentasController {
 	public static CuentaDTO buildDummy() {
 
 		CuentaDTO cuentasDto = new CuentaDTO();
-		List<AfiliacionRespDTO> afiliaciones = new ArrayList<AfiliacionRespDTO>();
-		AfiliacionRespDTO afiliacionDto = new AfiliacionRespDTO();
+		List<AfiliacionReqNN> afiliaciones = new ArrayList<AfiliacionReqNN>();
+		AfiliacionReqNN afiliacionDto = new AfiliacionReqNN();
 		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero("12345678L");
+//		afiliacionDto.setNumero("12345678L");
 		afiliaciones.add(afiliacionDto);
 		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
 		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
@@ -389,7 +422,7 @@ public class CuentasController {
 		codigos.add(codigo);
 		cuentasDto.setEstatus(true);
 		cuentasDto.setId(234L);
-		cuentasDto.setNumero("12345678");
+//		cuentasDto.setNumero("12345678");
 		cuentasDto.setAfiliaciones(afiliaciones);
 
 		return cuentasDto;
@@ -399,8 +432,8 @@ public class CuentasController {
 
 		List<CuentaDTO> cuentas = new ArrayList<CuentaDTO>();
 		CuentaDTO cuentasDto = new CuentaDTO();
-		List<AfiliacionRespDTO> afiliaciones = new ArrayList<AfiliacionRespDTO>();
-		AfiliacionRespDTO afiliacionDto = new AfiliacionRespDTO();
+		List<AfiliacionReqNN> afiliaciones = new ArrayList<AfiliacionReqNN>();
+		AfiliacionReqNN afiliacionDto = new AfiliacionReqNN();
 		afiliacionDto.setId(234L);
 		afiliaciones.add(afiliacionDto);
 		CategoriaDTO cate = new CategoriaDTO();
@@ -408,11 +441,11 @@ public class CuentasController {
 		cate.setDescripcion("Categoria Dummy");
 		cuentasDto.setEstatus(true);
 		cuentasDto.setId(234L);
-		cuentasDto.setNumero("12345678");
+//		cuentasDto.setNumero("12345678");
 		cuentasDto.setAfiliaciones(afiliaciones);
 		cuentas.add(cuentasDto);
 		afiliacionDto.setId(12345L);
-		afiliacionDto.setNumero("654321L");
+//		afiliacionDto.setNumero("654321L");
 		cuentas.add(cuentasDto);
 		return cuentas;
 	}

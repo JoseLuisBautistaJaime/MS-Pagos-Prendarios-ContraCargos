@@ -98,10 +98,10 @@ public abstract class CuentaBuilder {
 		if (null != cuentaBaseDTO) {
 			cuentaDTO = new CuentaDTO();
 			cuentaDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionReqNNListFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones()));
 			cuentaDTO.setEstatus(cuentaBaseDTO.getEstatus());
 			cuentaDTO.setId(cuentaBaseDTO.getId());
-			cuentaDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
+//			cuentaDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
 
 		}
 		return cuentaDTO;
@@ -120,7 +120,7 @@ public abstract class CuentaBuilder {
 		if (null != cuentaDTO) {
 			cuentaBaseDTO = new CuentaBaseDTO();
 			cuentaBaseDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionDTOSet(cuentaDTO.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionReqNNList(cuentaDTO.getAfiliaciones()));
 			cuentaBaseDTO.setEstatus(cuentaDTO.getEstatus());
 			cuentaBaseDTO.setId(cuentaDTO.getId());
 			cuentaBaseDTO.setNumeroCuenta(cuentaDTO.getNumero());
@@ -164,10 +164,10 @@ public abstract class CuentaBuilder {
 		if (null != cuenta) {
 			cuentaDTO = new CuentaDTO();
 			cuentaDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionReqNNListFromAfiliacionSet(cuenta.getAfiliaciones()));
 			cuentaDTO.setEstatus(cuenta.getEstatus());
 			cuentaDTO.setId(cuenta.getId());
-			cuentaDTO.setNumero(cuenta.getNumeroCuenta());
+//			cuentaDTO.setNumero(cuenta.getNumeroCuenta());
 		}
 		return cuentaDTO;
 	}
@@ -374,10 +374,10 @@ public abstract class CuentaBuilder {
 		if (null != cuentaDTO) {
 			cuentaEntDTO = new CuentaEntDTO();
 			cuentaEntDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionEntDTOListFromAfiliacionRespDTOList(cuentaDTO.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionEntDTOListFromAfiliacionReqNNList(cuentaDTO.getAfiliaciones()));
 			cuentaEntDTO.setEstatus(cuentaDTO.getEstatus());
 			cuentaEntDTO.setId(cuentaDTO.getId());
-			cuentaEntDTO.setNumero(cuentaDTO.getNumero());
+//			cuentaEntDTO.setNumero(cuentaDTO.getNumero());
 		}
 		return cuentaEntDTO;
 	}

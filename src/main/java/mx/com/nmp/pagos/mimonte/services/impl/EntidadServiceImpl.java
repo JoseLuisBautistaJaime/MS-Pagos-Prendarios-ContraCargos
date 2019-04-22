@@ -101,11 +101,11 @@ public class EntidadServiceImpl implements EntidadService {
 	public String findCreatedByByEntidadId(final Long idEntidad) {
 		return cuentaRepository.findCreatedByByEntidadId(idEntidad);
 	}
-	
+
 	public Date findCreatedDateByEntidadId(final Long idEntidad) {
 		return cuentaRepository.findCreatedDateByEntidadId(idEntidad);
 	}
-	
+
 	/**
 	 * Guarda una entidad
 	 */
@@ -124,17 +124,21 @@ public class EntidadServiceImpl implements EntidadService {
 		List<Cuenta> cuentasComp = cuentaRepository.findAll();
 		int c = 0;
 		int c2 = 0;
-		for (Cuenta cuentaI : cuentasComp) {
-			for (Afiliacion afiliacionI : cuentaI.getAfiliaciones()) {
-				for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
-					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-						if (cuentaI.getId().equals(cuentaReqDTO.getId())
-								&& afiliacionI.getId().equals(afiliacionReqDTO.getId())) {
-							c++;
+		if (null != cuentasComp && !cuentasComp.isEmpty()) {
+			for (Cuenta cuentaI : cuentasComp) {
+				for (Afiliacion afiliacionI : cuentaI.getAfiliaciones()) {
+					for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
+						for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
+							if (cuentaI.getId().equals(cuentaReqDTO.getId())
+									&& afiliacionI.getId().equals(afiliacionReqDTO.getId())) {
+								c++;
+							}
 						}
 					}
 				}
 			}
+		} else {
+			throw new CatalogoException(CatalogConstants.THERE_ARE_NO_ACCOUNTS);
 		}
 		for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
 			c2 += cuentaReqDTO.getAfiliaciones().size();
@@ -192,6 +196,7 @@ public class EntidadServiceImpl implements EntidadService {
 				}
 			}
 		}
+		contactoRespository.deleteWithNoAccountAssociation(tipoContacto.getId());
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp);
 		Set<CuentaReqDTO> cuentaReqDTOSet = null;
 		cuentaReqDTOSet = EntidadCuentaAfiliacionBuilder.buildCuentaReqDTOSetFromEntidadCuentaAfiliacionDTOList(lst2);
@@ -247,17 +252,21 @@ public class EntidadServiceImpl implements EntidadService {
 			List<Cuenta> cuentasComp = cuentaRepository.findAll();
 			int c = 0;
 			int c2 = 0;
-			for (Cuenta cuentaI : cuentasComp) {
-				for (Afiliacion afiliacionI : cuentaI.getAfiliaciones()) {
-					for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
-						for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-							if (cuentaI.getId().equals(cuentaReqDTO.getId())
-									&& afiliacionI.getId().equals(afiliacionReqDTO.getId())) {
-								c++;
+			if (null != cuentasComp && !cuentasComp.isEmpty()) {
+				for (Cuenta cuentaI : cuentasComp) {
+					for (Afiliacion afiliacionI : cuentaI.getAfiliaciones()) {
+						for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
+							for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
+								if (cuentaI.getId().equals(cuentaReqDTO.getId())
+										&& afiliacionI.getId().equals(afiliacionReqDTO.getId())) {
+									c++;
+								}
 							}
 						}
 					}
 				}
+			} else {
+				throw new CatalogoException(CatalogConstants.THERE_ARE_NO_ACCOUNTS);
 			}
 			for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
 				c2 += cuentaReqDTO.getAfiliaciones().size();
@@ -310,7 +319,7 @@ public class EntidadServiceImpl implements EntidadService {
 		}
 
 		// INICIA COMPROBACION DE CUENTAS A ELIMINAR
-		
+
 		List<EntidadCuentaAfiliacion> entidadCuentaAfiliacionExt = entidadCuentaAfiliacionRepository
 				.findByEntidad_Id(entidadResp.getId());
 		long[][] ids = new long[entidadCuentaAfiliacionExt.size()][3];
@@ -348,6 +357,7 @@ public class EntidadServiceImpl implements EntidadService {
 			}
 		}
 		// FINALIZA COMPROBACION DE CUENTAS A ELIMINAR
+		contactoRespository.deleteWithNoAccountAssociation(tipoContacto.getId());
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp);
 		Set<CuentaReqDTO> cuentaReqDTOSet = null;
 		cuentaReqDTOSet = EntidadCuentaAfiliacionBuilder.buildCuentaReqDTOSetFromEntidadCuentaAfiliacionDTOList(lst2);

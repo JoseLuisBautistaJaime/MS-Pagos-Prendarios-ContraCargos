@@ -18,17 +18,17 @@ public class AfiliacionEntDTO implements Comparable<AfiliacionEntDTO> {
 
 	private Long id;
 	private String numero;
-	private Boolean estatus;
+//	private Boolean estatus;
 
 	public AfiliacionEntDTO() {
 		super();
 	}
 
-	public AfiliacionEntDTO(Long id, String numero, Boolean estatus) {
+	public AfiliacionEntDTO(Long id, String numero/*, Boolean estatus*/) {
 		super();
 		this.id = id;
 		this.numero = numero;
-		this.estatus = estatus;
+//		this.estatus = estatus;
 	}
 
 	public Long getId() {
@@ -47,13 +47,13 @@ public class AfiliacionEntDTO implements Comparable<AfiliacionEntDTO> {
 		this.numero = numero;
 	}
 
-	public Boolean getEstatus() {
-		return estatus;
-	}
+//	public Boolean getEstatus() {
+//		return estatus;
+//	}
 
-	public void setEstatus(Boolean estatus) {
-		this.estatus = estatus;
-	}
+//	public void setEstatus(Boolean estatus) {
+//		this.estatus = estatus;
+//	}
 
 	@Override
 	public int compareTo(AfiliacionEntDTO o) {
@@ -62,7 +62,7 @@ public class AfiliacionEntDTO implements Comparable<AfiliacionEntDTO> {
 
 	@Override
 	public String toString() {
-		return "AfiliacionEntDTO [id=" + id + ", numero=" + numero + ", estatus=" + estatus + "]";
+		return "AfiliacionEntDTO [id=" + id + ", numero=" + numero + /*", estatus=" + estatus +*/ "]";
 	}
 
 }

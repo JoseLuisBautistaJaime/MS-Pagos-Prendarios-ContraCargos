@@ -220,6 +220,17 @@ public final class CatalogConstants {
 	public static final String CONTCATO_HAS_ENTIDADES_ASSOCIATED = "El contacto esta asociado a una entidad";
 
 	/**
+	 * Mensaje que es mostrado cuando se genera un error de tipo no resultado unico
+	 * para conulta
+	 */
+	public static final String DB_INCONSISTENCY_EXCEPTION = "Ha ocurrido un error de inconsistencia de datos";
+
+	/**
+	 * Mensaje que es mostrado cuando no se encuentran cuentas en el catalogo
+	 */
+	public static final String THERE_ARE_NO_ACCOUNTS = "No existen cuentas en el catalogo";
+
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */

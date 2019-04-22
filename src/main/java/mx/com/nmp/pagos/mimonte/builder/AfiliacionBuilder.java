@@ -13,6 +13,7 @@ import java.util.TreeSet;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqNN;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespPostDTO;
@@ -253,7 +254,8 @@ public class AfiliacionBuilder {
 		AfiliacionDTO afiliacionDTO = null;
 		if (null != afiliacionReqDTO) {
 			afiliacionDTO = new AfiliacionDTO();
-			afiliacionDTO.setEstatus(afiliacionReqDTO.getEstatus());
+//			afiliacionDTO.setEstatus(afiliacionReqDTO.getEstatus());
+			afiliacionDTO.setEstatus(true);
 			afiliacionDTO.setId(afiliacionReqDTO.getId());
 			afiliacionDTO.setNumero(afiliacionReqDTO.getNumero());
 			afiliacionDTO.setCreatedDate(createdDate);
@@ -294,7 +296,7 @@ public class AfiliacionBuilder {
 		AfiliacionRespPostDTO afiliacionRespPostDTO = null;
 		if (null != afiliacionDTO) {
 			afiliacionRespPostDTO = new AfiliacionRespPostDTO();
-			afiliacionRespPostDTO.setEstatus(afiliacionDTO.getEstatus());
+//			afiliacionRespPostDTO.setEstatus(afiliacionDTO.getEstatus());
 			afiliacionRespPostDTO.setId(afiliacionDTO.getId());
 			afiliacionRespPostDTO.setNumero(afiliacionDTO.getNumero());
 		}
@@ -349,7 +351,7 @@ public class AfiliacionBuilder {
 		AfiliacionEntDTO afiliacionEntDTO = null;
 		if (null != afiliacion) {
 			afiliacionEntDTO = new AfiliacionEntDTO();
-			afiliacionEntDTO.setEstatus(afiliacion.getEstatus());
+//			afiliacionEntDTO.setEstatus(afiliacion.getEstatus());
 			afiliacionEntDTO.setId(afiliacion.getId());
 			afiliacionEntDTO.setNumero(afiliacion.getNumero());
 		}
@@ -385,7 +387,7 @@ public class AfiliacionBuilder {
 		AfiliacionEntDTO afiliacionEntDTO = null;
 		if (null != afiliacionReqDTO) {
 			afiliacionEntDTO = new AfiliacionEntDTO();
-			afiliacionEntDTO.setEstatus(afiliacionReqDTO.getEstatus());
+//			afiliacionEntDTO.setEstatus(afiliacionReqDTO.getEstatus());
 			afiliacionEntDTO.setId(afiliacionReqDTO.getId());
 			afiliacionEntDTO.setNumero(afiliacionReqDTO.getNumero());
 		}
@@ -422,7 +424,7 @@ public class AfiliacionBuilder {
 		AfiliacionReqDTO afiliacionReqDTO = null;
 		if (null != afiliacion) {
 			afiliacionReqDTO = new AfiliacionReqDTO();
-			afiliacionReqDTO.setEstatus(afiliacion.getEstatus());
+//			afiliacionReqDTO.setEstatus(afiliacion.getEstatus());
 			afiliacionReqDTO.setId(afiliacion.getId());
 			afiliacionReqDTO.setNumero(afiliacion.getNumero());
 		}
@@ -459,7 +461,8 @@ public class AfiliacionBuilder {
 		Afiliacion afiliacion = null;
 		if (null != afiliacionReqDTO) {
 			afiliacion = new Afiliacion();
-			afiliacion.setEstatus(afiliacionReqDTO.getEstatus());
+//			afiliacion.setEstatus(afiliacionReqDTO.getEstatus());
+			afiliacion.setEstatus(true);
 			afiliacion.setId(afiliacionReqDTO.getId());
 			afiliacion.setNumero(afiliacionReqDTO.getNumero());
 			afiliacion.setLastModifiedBy(lastModifiedBy);
@@ -504,7 +507,7 @@ public class AfiliacionBuilder {
 			afiliacionEntDTO = new AfiliacionEntDTO();
 			afiliacionEntDTO.setId(afiliacionRespDTO.getId());
 			afiliacionEntDTO.setNumero(afiliacionRespDTO.getNumero());
-			afiliacionEntDTO.setEstatus(true);
+//			afiliacionEntDTO.setEstatus(true);
 		}
 		return afiliacionEntDTO;
 	}
@@ -539,7 +542,7 @@ public class AfiliacionBuilder {
 		AfiliacionEntDTO afiliacionEntDTO = null;
 		if (null != afiliacionDTO) {
 			afiliacionEntDTO = new AfiliacionEntDTO();
-			afiliacionEntDTO.setEstatus(afiliacionDTO.getEstatus());
+//			afiliacionEntDTO.setEstatus(afiliacionDTO.getEstatus());
 			afiliacionEntDTO.setId(afiliacionDTO.getId());
 			afiliacionEntDTO.setNumero(afiliacionDTO.getNumero());
 		}
@@ -652,6 +655,145 @@ public class AfiliacionBuilder {
 			}
 		}
 		return afiliacionReqDTOList;
+	}
+
+	/**
+	 * Construye un objeto de tipo AfiliacionDTO a partir de un objeto de tipo
+	 * AfiliacionDTO
+	 * 
+	 * @param afiliacionDTO
+	 * @return
+	 */
+	public static AfiliacionReqNN buildAfiliacionReqNNFromAfiliacionDTO(AfiliacionDTO afiliacionDTO) {
+		AfiliacionReqNN afiliacionReqNN = null;
+		if (null != afiliacionDTO) {
+			afiliacionReqNN = new AfiliacionReqNN();
+			afiliacionReqNN.setId(afiliacionReqNN.getId());
+		}
+		return afiliacionReqNN;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo AfiliacionDTO a partir de un Set de
+	 * objetos de tipo AfiliacionDTO
+	 * 
+	 * @param afiliacionDTOSet
+	 * @return
+	 */
+	public static List<AfiliacionReqNN> buildAfiliacionReqNNListFromAfiliacionDTOSet(
+			Set<AfiliacionDTO> afiliacionDTOSet) {
+		List<AfiliacionReqNN> afiliacionReqNNList = null;
+		if (null != afiliacionDTOSet) {
+			afiliacionReqNNList = new ArrayList<>();
+			for (AfiliacionDTO afiliacionDTO : afiliacionDTOSet) {
+				afiliacionReqNNList.add(buildAfiliacionReqNNFromAfiliacionDTO(afiliacionDTO));
+			}
+		}
+		return afiliacionReqNNList;
+	}
+
+	/**
+	 * Construye un objeto de tipo AfiliacionDTO a partir de un objeto de tipo
+	 * AfiliacionReqNN
+	 * 
+	 * @param afiliacionReqNN
+	 * @return
+	 */
+	public static AfiliacionDTO buildAfiliacionDTOFromAfiliacionReqNN(AfiliacionReqNN afiliacionReqNN) {
+		AfiliacionDTO afiliacionDTO = null;
+		if (null != afiliacionReqNN) {
+			afiliacionDTO = new AfiliacionDTO();
+			afiliacionDTO.setId(afiliacionReqNN.getId());
+		}
+		return afiliacionDTO;
+	}
+
+	/**
+	 * Construye un Set de objetos de tipo AfiliacionDTO a partir de una lista de
+	 * objetos de tipo AfiliacionReqNN
+	 * 
+	 * @param afiliacionReqNNList
+	 * @return
+	 */
+	public static Set<AfiliacionDTO> buildAfiliacionDTOSetFromAfiliacionReqNNList(
+			List<AfiliacionReqNN> afiliacionReqNNList) {
+		Set<AfiliacionDTO> afiliacionDTO = null;
+		if (null != afiliacionReqNNList) {
+			afiliacionDTO = new TreeSet<>();
+			for (AfiliacionReqNN afiliacionReqNN : afiliacionReqNNList) {
+				afiliacionDTO.add(buildAfiliacionDTOFromAfiliacionReqNN(afiliacionReqNN));
+			}
+		}
+		return afiliacionDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo AfiliacionReqNN a partir de un objeto de tipo
+	 * Afiliacion
+	 * 
+	 * @param afiliacion
+	 * @return
+	 */
+	public static AfiliacionReqNN buildAfiliacionReqNNFromAfiliacion(Afiliacion afiliacion) {
+		AfiliacionReqNN afiliacionReqNN = null;
+		if (null != afiliacion) {
+			afiliacionReqNN = new AfiliacionReqNN();
+			afiliacionReqNN.setId(afiliacion.getId());
+		}
+		return afiliacionReqNN;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo AfiliacionReqNN a partir de un Set de
+	 * objetos de tipo Afiliacion
+	 * 
+	 * @param afiliacionSet
+	 * @return
+	 */
+	public static List<AfiliacionReqNN> buildAfiliacionReqNNListFromAfiliacionSet(Set<Afiliacion> afiliacionSet) {
+		List<AfiliacionReqNN> afiliacionReqNNDTO = null;
+		if (null != afiliacionSet) {
+			afiliacionReqNNDTO = new ArrayList<>();
+			for (Afiliacion afiliacion : afiliacionSet) {
+				afiliacionReqNNDTO.add(buildAfiliacionReqNNFromAfiliacion(afiliacion));
+			}
+		}
+		return afiliacionReqNNDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo AfiliacionEntDTO a partir de un objeto de tipo
+	 * AfiliacionReqNN
+	 * 
+	 * @param afiliacionReqNN
+	 * @return
+	 */
+	public static AfiliacionEntDTO buildAfiliacionEntDTOFromAfiliacionReqNN(AfiliacionReqNN afiliacionReqNN) {
+		AfiliacionEntDTO afiliacionEntDTO = null;
+		if (null != afiliacionReqNN) {
+			afiliacionEntDTO = new AfiliacionEntDTO();
+			afiliacionEntDTO.setId(afiliacionReqNN.getId());
+		}
+		return afiliacionEntDTO;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo AfiliacionEntDTO a partir de una lista
+	 * de objetos de tipo AfiliacionReqNN
+	 * 
+	 * @param afiliacionReqNNList
+	 * @return
+	 */
+	public static List<AfiliacionEntDTO> buildAfiliacionEntDTOListFromAfiliacionReqNNList(
+			List<AfiliacionReqNN> afiliacionReqNNList) {
+		List<AfiliacionEntDTO> afiliacionEntDTOList = null;
+		if (null != afiliacionReqNNList) {
+			afiliacionEntDTOList = new ArrayList<>();
+			for (AfiliacionReqNN afiliacionReqNN : afiliacionReqNNList) {
+				afiliacionEntDTOList.add(buildAfiliacionEntDTOFromAfiliacionReqNN(afiliacionReqNN));
+			}
+		}
+		return afiliacionEntDTOList;
 	}
 
 }

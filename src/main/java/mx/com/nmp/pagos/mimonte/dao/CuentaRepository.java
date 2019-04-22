@@ -27,13 +27,13 @@ import mx.com.nmp.pagos.mimonte.model.Cuenta;
  */
 @Repository("cuentaRepository")
 public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
-	
+
 	@Query("SELECT ent.createdBy FROM Entidad ent WHERE ent.id = :idEntidad")
 	public String findCreatedByByEntidadId(@Param("idEntidad") Long idEntidad);
-	
+
 	@Query("SELECT ent.createdDate FROM Entidad ent WHERE ent.id = :idEntidad")
 	public Date findCreatedDateByEntidadId(@Param("idEntidad") Long idEntidad);
-	
+
 	/**
 	 * Encuentra una o mas cuentas por el id de la entidad asociada a ella(s)
 	 * 
@@ -49,8 +49,10 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * @param numero
 	 * @return
 	 * @throws EmptyResultDataAccessException
+	 * @throws                                javax.persistence.NonUniqueResultException
 	 */
-	public Cuenta findByNumeroCuenta(final String numero) throws EmptyResultDataAccessException;
+	public Cuenta findByNumeroCuenta(final String numero)
+			throws EmptyResultDataAccessException, javax.persistence.NonUniqueResultException;
 
 	/**
 	 * Actualiza el estatus de una cuenta a false (inactivo)

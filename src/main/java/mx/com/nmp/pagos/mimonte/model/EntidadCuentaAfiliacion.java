@@ -24,7 +24,7 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "tc_entidad_cuenta_afiliacion")
+@Table(name = "tr_entidad_cuenta_afiliacion")
 @IdClass(ECACompositeKey.class)
 @NamedQueries(value = @NamedQuery(name = "EntidadCuentaAfiliacion.dropEntidadCuentaAfiliacioneRelationship", query = "DELETE FROM EntidadCuentaAfiliacion eca WHERE eca.entidad.id = :idEntidad AND eca.cuenta.id = :idCuenta AND eca.afiliacion.id = :idAfiliacion"))
 public class EntidadCuentaAfiliacion implements Comparable<EntidadCuentaAfiliacion> {

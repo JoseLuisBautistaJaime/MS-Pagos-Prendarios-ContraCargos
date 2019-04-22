@@ -41,7 +41,7 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 	@Column(name = "numero_cuenta", nullable = false)
 	private String numeroCuenta;
 
-	@ManyToMany(cascade = { CascadeType.REMOVE, CascadeType.MERGE }, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
 	@JoinTable(name = "tr_cuenta_afiliacion", joinColumns = {
 			@JoinColumn(name = "id_cuenta", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_afiliacion", referencedColumnName = "id") })

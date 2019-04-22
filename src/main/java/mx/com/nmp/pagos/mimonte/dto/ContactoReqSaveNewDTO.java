@@ -17,17 +17,17 @@ public class ContactoReqSaveNewDTO implements Comparable<ContactoReqSaveNewDTO> 
 
 	private String nombre;
 	private String email;
-	private Boolean estatus;
+//	private Boolean estatus;
 
 	public ContactoReqSaveNewDTO() {
 		super();
 	}
 
-	public ContactoReqSaveNewDTO(String nombre, String email, Boolean estatus) {
+	public ContactoReqSaveNewDTO(String nombre, String email/*, Boolean estatus*/) {
 		super();
 		this.nombre = nombre;
 		this.email = email;
-		this.estatus = estatus;
+//		this.estatus = estatus;
 	}
 
 	public String getNombre() {
@@ -46,13 +46,13 @@ public class ContactoReqSaveNewDTO implements Comparable<ContactoReqSaveNewDTO> 
 		this.email = email;
 	}
 
-	public Boolean getEstatus() {
-		return estatus;
-	}
+//	public Boolean getEstatus() {
+//		return estatus;
+//	}
 
-	public void setEstatus(Boolean estatus) {
-		this.estatus = estatus;
-	}
+//	public void setEstatus(Boolean estatus) {
+//		this.estatus = estatus;
+//	}
 
 	@Override
 	public int compareTo(ContactoReqSaveNewDTO o) {

@@ -70,6 +70,10 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 				: null;
 		if (null == afiliacion)
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		Afiliacion afiliacionByNum = null;
+		afiliacionByNum = afiliacionRepository.findByNumero(e.getNumero());
+		if (null != afiliacionByNum)
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS);
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
 		return (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(
@@ -127,8 +131,10 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 * @param numeroAfiliacion
 	 * @return
 	 * @throws EmptyResultDataAccessException
+	 * @throws                                javax.persistence.NonUniqueResultException
 	 */
-	public AfiliacionDTO findByNumero(final String numeroAfiliacion) throws EmptyResultDataAccessException {
+	public AfiliacionDTO findByNumero(final String numeroAfiliacion)
+			throws EmptyResultDataAccessException, javax.persistence.NonUniqueResultException {
 		Afiliacion afiliacion = null;
 		afiliacion = afiliacionRepository.findByNumero(numeroAfiliacion);
 		return AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(afiliacion);

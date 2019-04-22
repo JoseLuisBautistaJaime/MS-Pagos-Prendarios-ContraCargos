@@ -158,6 +158,8 @@ public class AfiliacionController {
 					(AfiliacionDTO) afiliacionServiceImpl.findByNumero(numeroAfiliacion));
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		} catch (javax.persistence.NonUniqueResultException nuex) {
+			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION);
 		}
 		if (null == afiliacionDTO)
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
@@ -247,7 +249,7 @@ public class AfiliacionController {
 	 */
 	public static AfiliacionRespPostDTO buildDummyPost() {
 		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
-		afiliacionDto.setEstatus(true);
+//		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(234L);
 		afiliacionDto.setNumero("12345678");
 		return afiliacionDto;
@@ -256,11 +258,11 @@ public class AfiliacionController {
 	public static List<AfiliacionRespPostDTO> buildDummyLst() {
 		List<AfiliacionRespPostDTO> lst = new ArrayList<>();
 		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
-		afiliacionDto.setEstatus(true);
+//		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(9987L);
 		afiliacionDto.setNumero("990088");
 		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
-		afiliacionDto2.setEstatus(true);
+//		afiliacionDto2.setEstatus(true);
 		afiliacionDto2.setId(234L);
 		afiliacionDto2.setNumero("12345678");
 		lst.add(afiliacionDto);
@@ -312,13 +314,13 @@ public class AfiliacionController {
 		List<AfiliacionRespPostDTO> afiliaciones = new ArrayList<>();
 		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
 		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
-		afiliacionDto.setEstatus(true);
+//		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(234L);
 		afiliacionDto.setNumero("12345678");
 		afiliaciones.add(afiliacionDto);
 		afiliacionDto2.setId(6789L);
 		afiliacionDto2.setNumero("987654");
-		afiliacionDto2.setEstatus(true);
+//		afiliacionDto2.setEstatus(true);
 		afiliaciones.add(afiliacionDto2);
 		return afiliaciones;
 	}

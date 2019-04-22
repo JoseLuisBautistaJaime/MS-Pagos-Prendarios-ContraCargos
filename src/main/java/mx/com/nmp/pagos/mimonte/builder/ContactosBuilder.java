@@ -13,6 +13,7 @@ import java.util.TreeSet;
 import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTONE;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqSaveNewDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
@@ -215,7 +216,7 @@ public abstract class ContactosBuilder {
 		if (null != contacto) {
 			contactoEntDTO = new ContactoEntDTO();
 			contactoEntDTO.setEmail(contacto.getEmail());
-			contactoEntDTO.setEstatus(contacto.getEstatus());
+//			contactoEntDTO.setEstatus(contacto.getEstatus());
 			contactoEntDTO.setId(contacto.getId());
 			contactoEntDTO.setNombre(contacto.getNombre());
 		}
@@ -252,7 +253,7 @@ public abstract class ContactosBuilder {
 		if (null != contactoReqDTO) {
 			contactoEntDTO = new ContactoEntDTO();
 			contactoEntDTO.setEmail(contactoReqDTO.getEmail());
-			contactoEntDTO.setEstatus(contactoReqDTO.getEstatus());
+//			contactoEntDTO.setEstatus(contactoReqDTO.getEstatus());
 			contactoEntDTO.setId(contactoReqDTO.getId());
 			contactoEntDTO.setNombre(contactoReqDTO.getNombre());
 		}
@@ -598,7 +599,7 @@ public abstract class ContactosBuilder {
 		if (null != contactoReqSaveNewDTO) {
 			contactoReqDTO = new ContactoReqDTO();
 			contactoReqDTO.setEmail(contactoReqSaveNewDTO.getEmail());
-			contactoReqDTO.setEstatus(contactoReqSaveNewDTO.getEstatus());
+			contactoReqDTO.setEstatus(/* contactoReqSaveNewDTO.getEstatus() */true);
 			contactoReqDTO.setNombre(contactoReqSaveNewDTO.getNombre());
 		}
 		return contactoReqDTO;
@@ -637,6 +638,43 @@ public abstract class ContactosBuilder {
 			contactoReqDTOSet = new TreeSet<>();
 			for (ContactoReqSaveNewDTO contactoReqSaveNewDTO : contactoReqSaveNewDTOSet) {
 				contactoReqDTOSet.add(buildContactoReqDTOFromContactoReqSaveNewDTO(contactoReqSaveNewDTO));
+			}
+		}
+		return contactoReqDTOSet;
+	}
+
+	/**
+	 * Construye un objeto de tipo ContactoReqDTO a partir de un objeto de tipo
+	 * ContactoReqDTONE
+	 * 
+	 * @param contactoReqDTONE
+	 * @return
+	 */
+	public static ContactoReqDTO buildContactoReqDTOFromContactoReqDTONE(ContactoReqDTONE contactoReqDTONE) {
+		ContactoReqDTO contactoReqDTO = null;
+		if (null != contactoReqDTONE) {
+			contactoReqDTO = new ContactoReqDTO();
+			contactoReqDTO.setEmail(contactoReqDTONE.getEmail());
+			contactoReqDTO.setId(contactoReqDTONE.getId());
+			contactoReqDTO.setNombre(contactoReqDTONE.getNombre());
+		}
+		return contactoReqDTO;
+	}
+
+	/**
+	 * Construye un Set de objetos de tipo ContactoReqDTO a partir de un Set de
+	 * objetos de tipo ContactoReqDTONE
+	 * 
+	 * @param contactoReqDTONESet
+	 * @return
+	 */
+	public static Set<ContactoReqDTO> buildContactoReqDTOSetFromContactoReqDTONESet(
+			Set<ContactoReqDTONE> contactoReqDTONESet) {
+		Set<ContactoReqDTO> contactoReqDTOSet = null;
+		if (null != contactoReqDTONESet) {
+			contactoReqDTOSet = new TreeSet<>();
+			for (ContactoReqDTONE contactoReqDTONE : contactoReqDTONESet) {
+				contactoReqDTOSet.add(buildContactoReqDTOFromContactoReqDTONE(contactoReqDTONE));
 			}
 		}
 		return contactoReqDTOSet;

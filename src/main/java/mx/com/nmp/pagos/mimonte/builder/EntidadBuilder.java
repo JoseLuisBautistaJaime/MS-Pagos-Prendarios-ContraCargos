@@ -177,7 +177,8 @@ public abstract class EntidadBuilder {
 		EntidadDTO entidadDTO = null;
 		if (null != entidadBaseDTO) {
 			entidadDTO = new EntidadDTO();
-			entidadDTO.setContactos(entidadBaseDTO.getContactos());
+			entidadDTO.setContactos(
+					ContactosBuilder.buildContactoReqDTOSetFromContactoReqDTONESet(entidadBaseDTO.getContactos()));
 			entidadDTO.setCreatedDate(createdDate);
 			entidadDTO
 					.setCuentas(CuentaBuilder.buildCuentaReqDTOSetFromCuentaSaveReqDTOSet(entidadBaseDTO.getCuentas()));

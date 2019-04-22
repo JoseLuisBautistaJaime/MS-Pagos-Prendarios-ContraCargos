@@ -91,7 +91,7 @@ public class ContactosController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		if(!ValidadorCatalogo.validaContactoReqSaveDTO(contacto))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
-		if(!ValidadorGenerico.validateEmail(contacto.getEmail()))
+		if(!ValidadorGenerico.validateEmail2(contacto.getEmail()))
 			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				(ContactoRespDTO) ContactosBuilder
@@ -115,7 +115,7 @@ public class ContactosController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		if(!ValidadorCatalogo.validaContactoReqUpdateDTO(contacto))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
-		if(!ValidadorGenerico.validateEmail(contacto.getEmail()))
+		if(!ValidadorGenerico.validateEmail2(contacto.getEmail()))
 			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				(ContactoRespDTO) ContactosBuilder
@@ -197,7 +197,7 @@ public class ContactosController {
 			@RequestParam(name = "email", required = false) String email,
 			@PathVariable(name = "idTipoContacto", required = true) Long idTipoContacto) {
 		if(email != null) {
-			if(!ValidadorGenerico.validateEmail(email))
+			if(!ValidadorGenerico.validateEmail2(email))
 				throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
 		}
 		List<ContactoRespDTO> lst = null;

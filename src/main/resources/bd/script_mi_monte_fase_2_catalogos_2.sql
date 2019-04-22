@@ -10,7 +10,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema compose
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `compose`;
+DROP SCHEMA IF EXISTS `compose` ;
 
 -- -----------------------------------------------------
 -- Schema compose
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `tk_tipo_afiliacion` (
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 7
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -40,7 +40,6 @@ DROP TABLE IF EXISTS `tc_afiliacion` ;
 
 CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `numero` VARCHAR(100) NULL DEFAULT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   `tipo` INT(11) NOT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
@@ -49,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
+  `numero` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `ca_fk_idx` (`id` ASC),
   INDEX `´ctr_tipo_afiliacion_afi1´` (`tipo` ASC),
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
     FOREIGN KEY (`tipo`)
     REFERENCES `tk_tipo_afiliacion` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 19
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `tk_categoria` (
   PRIMARY KEY (`id`),
   INDEX `idx_categoria` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 12
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -89,18 +89,18 @@ DROP TABLE IF EXISTS `tc_entidad` ;
 
 CREATE TABLE IF NOT EXISTS `tc_entidad` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(100) NOT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_entidad` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 138
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -111,16 +111,16 @@ DROP TABLE IF EXISTS `tc_codigo_estado_cuenta` ;
 
 CREATE TABLE IF NOT EXISTS `tc_codigo_estado_cuenta` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `codigo` VARCHAR(20) NULL DEFAULT NULL,
-  `id_categoria` BIGINT(20) NOT NULL,
-  `id_entidad` BIGINT(20) NOT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `id_categoria` BIGINT(20) NOT NULL,
+  `codigo` VARCHAR(20) NULL DEFAULT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
+  `id_entidad` BIGINT(20) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_codigo_estado_cuenta` (`id` ASC),
   INDEX `idx_categoria` (`id_categoria` ASC),
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `tc_codigo_estado_cuenta` (
     FOREIGN KEY (`id_entidad`)
     REFERENCES `tc_entidad` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 72
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `tk_tipo_contacto` (
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -163,11 +163,11 @@ DROP TABLE IF EXISTS `tc_contactos` ;
 
 CREATE TABLE IF NOT EXISTS `tc_contactos` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `estatus` BIT(1) NOT NULL,
   `nombre` VARCHAR(100) NOT NULL,
   `email` VARCHAR(50) NOT NULL,
-  `id_tipo_contacto` BIGINT(20) NULL DEFAULT NULL,
-  `estatus` BIT(1) NOT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
+  `id_tipo_contacto` BIGINT(20) NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NOT NULL,
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
@@ -179,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `tc_contactos` (
     FOREIGN KEY (`id_tipo_contacto`)
     REFERENCES `tk_tipo_contacto` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 38
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -190,35 +190,18 @@ DROP TABLE IF EXISTS `tc_cuenta` ;
 
 CREATE TABLE IF NOT EXISTS `tc_cuenta` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `numero_cuenta` VARCHAR(50) NULL DEFAULT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `numero_cuenta` VARCHAR(50) NULL DEFAULT NULL,
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_cuenta` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 30
-DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
--- Table `tc_entidad_cuenta_afiliacion`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `tc_entidad_cuenta_afiliacion` ;
-
-CREATE TABLE IF NOT EXISTS `tc_entidad_cuenta_afiliacion` (
-  `id_entidad` BIGINT(20) NOT NULL,
-  `id_cuenta` BIGINT(20) NOT NULL,
-  `id_afiliacion` BIGINT(20) NOT NULL,
-  PRIMARY KEY (`id_entidad`, `id_cuenta`, `id_afiliacion`),
-  INDEX `idx_eca1_entidad` (`id_entidad` ASC),
-  INDEX `idx_eca1_cuenta` (`id_cuenta` ASC),
-  INDEX `idx_eca1_afiliacion` (`id_afiliacion` ASC))
-ENGINE = InnoDB
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -247,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `tk_estatus_tarjeta` (
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -262,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `tk_tipo_tarjeta` (
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -331,7 +314,7 @@ CREATE TABLE IF NOT EXISTS `tk_estatus_conciliacion` (
   `descripcion_corta` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -352,7 +335,7 @@ CREATE TABLE IF NOT EXISTS `tk_estatus_devoluciones` (
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -373,7 +356,7 @@ CREATE TABLE IF NOT EXISTS `tk_estatus_movimientos_en_tránsito` (
   `descripcion_corta` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -388,7 +371,7 @@ CREATE TABLE IF NOT EXISTS `tk_estatus_operacion` (
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -403,7 +386,7 @@ CREATE TABLE IF NOT EXISTS `tk_estatus_transaccion` (
   `descripcion` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -425,7 +408,7 @@ CREATE TABLE IF NOT EXISTS `tk_regla_negocio` (
     FOREIGN KEY (`id_afiliacion`)
     REFERENCES `tc_afiliacion` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -822,7 +805,7 @@ CREATE TABLE IF NOT EXISTS `to_pagos` (
     FOREIGN KEY (`id_cliente`)
     REFERENCES `tk_cliente` (`id_cliente`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 61
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -884,6 +867,23 @@ CREATE TABLE IF NOT EXISTS `tr_entidad_contactos` (
   CONSTRAINT `ctr_fk_entidad_tr2`
     FOREIGN KEY (`id_entidad`)
     REFERENCES `tc_entidad` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `tr_entidad_cuenta_afiliacion`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tr_entidad_cuenta_afiliacion` ;
+
+CREATE TABLE IF NOT EXISTS `tr_entidad_cuenta_afiliacion` (
+  `id_entidad` BIGINT(20) NOT NULL,
+  `id_cuenta` BIGINT(20) NOT NULL,
+  `id_afiliacion` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`id_entidad`, `id_cuenta`, `id_afiliacion`),
+  INDEX `idx_eca1_entidad` (`id_entidad` ASC),
+  INDEX `idx_eca1_cuenta` (`id_cuenta` ASC),
+  INDEX `idx_eca1_afiliacion` (`id_afiliacion` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
