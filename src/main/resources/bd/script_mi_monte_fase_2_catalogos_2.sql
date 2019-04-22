@@ -15,7 +15,7 @@ DROP SCHEMA IF EXISTS `compose` ;
 -- -----------------------------------------------------
 -- Schema compose
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `compose` DEFAULT CHARACTER SET latin1 ;
+CREATE SCHEMA IF NOT EXISTS `compose` DEFAULT CHARACTER SET latin1 ;	
 USE `compose` ;
 
 -- -----------------------------------------------------
@@ -163,11 +163,11 @@ DROP TABLE IF EXISTS `tc_contactos` ;
 
 CREATE TABLE IF NOT EXISTS `tc_contactos` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `estatus` BIT(1) NOT NULL,
+  `id_tipo_contacto` BIGINT(20) NULL DEFAULT NULL,
   `nombre` VARCHAR(100) NOT NULL,
   `email` VARCHAR(50) NOT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
-  `id_tipo_contacto` BIGINT(20) NULL DEFAULT NULL,
+  `estatus` BIT(1) NOT NULL,
   `created_by` VARCHAR(100) NOT NULL,
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
