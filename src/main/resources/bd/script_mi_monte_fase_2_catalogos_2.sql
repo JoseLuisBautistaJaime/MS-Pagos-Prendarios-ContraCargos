@@ -40,8 +40,8 @@ DROP TABLE IF EXISTS `tc_afiliacion` ;
 
 CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `description` VARCHAR(150) NULL DEFAULT NULL,
   `numero` VARCHAR(100) NULL DEFAULT NULL,
+  `description` VARCHAR(150) NULL DEFAULT NULL,
   `tipo` INT(11) NOT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -111,11 +111,11 @@ DROP TABLE IF EXISTS `tc_codigo_estado_cuenta` ;
 
 CREATE TABLE IF NOT EXISTS `tc_codigo_estado_cuenta` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `codigo` VARCHAR(20) NULL DEFAULT NULL,
   `id_categoria` BIGINT(20) NOT NULL,
   `id_entidad` BIGINT(20) NOT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
+  `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
@@ -190,8 +190,8 @@ DROP TABLE IF EXISTS `tc_cuenta` ;
 
 CREATE TABLE IF NOT EXISTS `tc_cuenta` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `numero_cuenta` VARCHAR(50) NULL DEFAULT NULL,
+  `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,

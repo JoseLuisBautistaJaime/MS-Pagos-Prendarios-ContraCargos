@@ -173,7 +173,7 @@ public final class CatalogConstants {
 	 * Mensaje que es mostrado cuando se desea crear una cuenta con un numero que ya
 	 * existe
 	 */
-	public static final String NUMERO_CUENTA_ALREADY_EXISTS = "El numero de cuenta que desea agregar ya existe";
+	public static final String NUMERO_CUENTA_ALREADY_EXISTS = "Ya existe una cuenta con ese numero";
 
 	/**
 	 * Mensaje que es mostrado cuando se genera un error con un patron REGEX
