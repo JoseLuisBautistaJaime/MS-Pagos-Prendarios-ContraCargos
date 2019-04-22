@@ -41,6 +41,32 @@ public abstract class ValidadorGenerico {
 	}
 
 	/**
+	 * Evalua si un patron de email es valido
+	 * 
+	 * @param email
+	 * @return
+	 * @throws PatternSyntaxException
+	 */
+	public static boolean validateEmail2(final String email) throws PatternSyntaxException {
+		if (null == email || email.equals(""))
+			return false;
+		if (email.contains("@@") || email.contains(".."))
+			return false;
+		else {
+			String[] arr = email.split("@");
+			if (arr.length != 2) {
+				return false;
+			} else {
+				String[] arr2 = arr[1].split("\\.");
+				if (arr2.length != 2) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Evalua si un numero telfonico es correcto en base a un patron y regresa un
 	 * valor booleano indicando el resultado
 	 * 

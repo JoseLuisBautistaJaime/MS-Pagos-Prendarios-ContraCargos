@@ -16,18 +16,18 @@ package mx.com.nmp.pagos.mimonte.dto;
 public class AfiliacionReqDTO implements Comparable<AfiliacionReqDTO> {
 
 	private Long id;
-	private Long numero;
-	private Boolean estatus;
+	private String numero;
+//	private Boolean estatus;
 
 	public AfiliacionReqDTO() {
 		super();
 	}
 
-	public AfiliacionReqDTO(Long id, Long numero, Boolean estatus) {
+	public AfiliacionReqDTO(Long id, String numero/*, Boolean estatus*/) {
 		super();
 		this.id = id;
 		this.numero = numero;
-		this.estatus = estatus;
+//		this.estatus = estatus;
 	}
 
 	public Long getId() {
@@ -38,27 +38,32 @@ public class AfiliacionReqDTO implements Comparable<AfiliacionReqDTO> {
 		this.id = id;
 	}
 
-	public Long getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Long numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 
-	public Boolean getEstatus() {
-		return estatus;
-	}
+//	public Boolean getEstatus() {
+//		return estatus;
+//	}
 
-	public void setEstatus(Boolean estatus) {
-		this.estatus = estatus;
-	}
+//	public void setEstatus(Boolean estatus) {
+//		this.estatus = estatus;
+//	}
 
 	@Override
 	public String toString() {
-		return "AfiliacionReqDTO [id=" + id + ", numero=" + numero + ", estatus=" + estatus + "]";
+		return "AfiliacionReqDTO [id=" + id + ", numero=" + numero + /*", estatus=" + estatus +*/ "]";
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
 	@Override
 	public int compareTo(AfiliacionReqDTO o) {
 		return o.id.compareTo(this.id);

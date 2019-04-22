@@ -37,10 +37,11 @@ import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
-import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaUpdtDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.impl.CodigoEstadoCuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
@@ -94,16 +95,16 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody CodigoEstadoCuentaReqDTO codigoEstadoCuentaDTO,
+	public Response save(@RequestBody CodigoEstadoCuentaReqSaveDTO codigoEstadoCuentaReqSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		if (!ValidadorCatalogo.validateCodigoEstadoCuentaSave(codigoEstadoCuentaDTO))
+		if (!ValidadorCatalogo.validateCodigoEstadoCuentaSave(codigoEstadoCuentaReqSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		CodigoEstadoCuentaUpdtDTO codigo = null;
 		try {
 			codigo = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(
 					(CodigoEstadoCuentaDTO) codigoEstadoCuentaServiceImpl
-							.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(
-									codigoEstadoCuentaDTO, new Date(), null), createdBy));
+							.save(CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqSaveDTO(
+									codigoEstadoCuentaReqSaveDTO, new Date(), null), createdBy));
 		} catch (RuntimeException rex) {
 			if (rex instanceof EmptyResultDataAccessException)
 				throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
@@ -112,9 +113,6 @@ public class CodigoEstadoCuentaController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				codigo);
-
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTOResp = buildDummy2();
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", codigoEstadoCuentaDTOResp);
 	}
 
 	/**
@@ -144,9 +142,6 @@ public class CodigoEstadoCuentaController {
 								CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqUpdtDTO(
 										codigoEstadoCuentaDTOReq, null, new Date()),
 								lastModifiedBy));
-
-//		CodigoEstadoCuentaUpdtDTO codigo = buildDummy2();
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				codigo);
 	}
@@ -177,9 +172,6 @@ public class CodigoEstadoCuentaController {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, codigo);
-
-//		CodigoEstadoCuentaUpdtDTO codigo = buildDummy2();
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", codigo);
 	}
 
 	/**
@@ -209,13 +201,6 @@ public class CodigoEstadoCuentaController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
-
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy2();
-//		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
-//		lst.add(codigoEstadoCuentaDTO);
-//		lst.add(codigoEstadoCuentaDTO2);
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", lst);
 	}
 
 	/**
@@ -240,7 +225,7 @@ public class CodigoEstadoCuentaController {
 		try {
 			codigoEstadoCuentaServiceImpl.deleteById(idCodigo);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
@@ -268,15 +253,6 @@ public class CodigoEstadoCuentaController {
 		List<CodigoEstadoCuentaUpdtDTO> lst = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaUpdtDTOListFromCodigoEstadoCuentaDTOList(
 						(List<CodigoEstadoCuentaDTO>) codigoEstadoCuentaServiceImpl.findAll());
-
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO = buildDummy2();
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO2 = buildDummy3();
-//		CodigoEstadoCuentaUpdtDTO codigoEstadoCuentaDTO3 = buildDummy4();
-//		List<CodigoEstadoCuentaUpdtDTO> lst = new ArrayList<>();
-//		lst.add(codigoEstadoCuentaDTO);
-//		lst.add(codigoEstadoCuentaDTO2);
-//		lst.add(codigoEstadoCuentaDTO3);
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
 	}

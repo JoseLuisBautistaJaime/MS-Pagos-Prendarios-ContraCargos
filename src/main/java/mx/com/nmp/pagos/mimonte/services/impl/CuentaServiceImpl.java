@@ -15,15 +15,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.builder.AfiliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dao.AfiliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Afiliacion;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 
 /**
  * @name CuentaServiceImpl
@@ -60,9 +65,16 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	@Transactional(propagation = Propagation.REQUIRED)
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T save(CuentaBaseDTO e, String createdBy) {
+	public <T extends AbstractCatalogoDTO> T save(CuentaBaseDTO e, String createdBy) throws CatalogoException {
+		Cuenta cta = cuentaRepository.findByNumeroCuenta(e.getNumeroCuenta());
+		if (null != cta)
+			throw new CatalogoException(CatalogConstants.NUMERO_CUENTA_ALREADY_EXISTS);
 		if (null != e)
 			e.setCreatedBy(createdBy);
+		List<Afiliacion> afiliacionesTest = afiliacionRepository.findAll();
+		if (!ValidadorCatalogo.validateAfiliacionesExists(
+				AfiliacionBuilder.buildAfiliacionDTOListFromAfiliacionList(afiliacionesTest), e.getAfiliaciones()))
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_DOESNT_EXISTS);
 		Cuenta cuenta = cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e));
 		Set<Afiliacion> afiliaciones = afiliacionRepository.findByCuentas_Id(cuenta.getId());
 		cuenta.setAfiliaciones(afiliaciones);
@@ -77,9 +89,20 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractCatalogoDTO> T update(CuentaBaseDTO e, String lastModifiedBy) {
+	public <T extends AbstractCatalogoDTO> T update(CuentaBaseDTO e, String lastModifiedBy) throws CatalogoException {
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
+		Cuenta cta = cuentaRepository.findById(e.getId()).isPresent() ? cuentaRepository.findById(e.getId()).get()
+				: null;
+		if (null == cta)
+			throw new CatalogoException(CatalogConstants.ID_CUENTA_DOES_NOT_EXISTS);
+		Cuenta ctaByNum = cuentaRepository.findByNumeroCuenta(e.getNumeroCuenta());
+		if (null != ctaByNum && null != ctaByNum.getId() && null != e.getId() && !ctaByNum.getId().equals(e.getId()))
+			throw new CatalogoException(CatalogConstants.NUMERO_CUENTA_ALREADY_EXISTS);
+		List<Afiliacion> afiliacionesTest = afiliacionRepository.findAll();
+		if (!ValidadorCatalogo.validateAfiliacionesExists(
+				AfiliacionBuilder.buildAfiliacionDTOListFromAfiliacionList(afiliacionesTest), e.getAfiliaciones()))
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_DOESNT_EXISTS);
 		return (T) CuentaBuilder
 				.buildCuentaBaseDTOFromCuenta(cuentaRepository.save(CuentaBuilder.buildCuentaFromCuentaBaseDTO(e)));
 	}
@@ -106,7 +129,10 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 * @throws EmptyResultDataAccessException
 	 */
 	public List<CuentaEntDTO> findByEntidadId(final Long idEntidad) throws EmptyResultDataAccessException {
-		return CuentaBuilder.buildCuentaEntDTOListFromCuentaList(cuentaRepository.findByEntidades_Id(idEntidad));
+		List<Cuenta> cuentas = cuentaRepository.qGetByEntidadId(idEntidad);
+		if (null == cuentas || cuentas.isEmpty())
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		return CuentaBuilder.buildCuentaEntDTOListFromCuentaList(cuentas);
 	}
 
 	/**
@@ -131,9 +157,14 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	 * @param numeroCuenta
 	 * @return
 	 * @throws EmptyResultDataAccessException
+	 * @throws                                javax.persistence.NonUniqueResultException
 	 */
-	public CuentaEntDTO findByNumeroCuenta(final String numeroCuenta) throws EmptyResultDataAccessException {
-		return CuentaBuilder.buildCuentaEntDTOFromCuenta(cuentaRepository.findByNumeroCuenta(numeroCuenta));
+	public CuentaEntDTO findByNumeroCuenta(final String numeroCuenta)
+			throws EmptyResultDataAccessException, javax.persistence.NonUniqueResultException {
+		Cuenta cuenta = cuentaRepository.findByNumeroCuenta(numeroCuenta);
+		if (null == cuenta)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		return CuentaBuilder.buildCuentaEntDTOFromCuenta(cuenta);
 	}
 
 	/**
@@ -148,6 +179,9 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateEstatusById(final Boolean estatus, final Long id, final String lastModifiedBy,
 			Date lastModifiedDate) throws EmptyResultDataAccessException {
+		Cuenta cuenta = cuentaRepository.findById(id).isPresent() ? cuentaRepository.findById(id).get() : null;
+		if (null == cuenta)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		cuentaRepository.updateEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
 	}
 

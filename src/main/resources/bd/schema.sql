@@ -487,6 +487,132 @@ ALTER TABLE tr_entidad_contactos ADD PRIMARY KEY (id_entidad, id_contacto);
 ALTER TABLE tr_entidad_cuenta ADD PRIMARY KEY (id_entidad, id_cuenta);
 -- FINALIZA CREACION DE PRIMARY KEYS PARA TABLAS RELACIONALES --
 
+
+-- SE MODIFICA TIPO DE DATO DE NUMERO DE AFILIACION DE NUMERICO A ALFANUMERICO --
+ALTER TABLE tc_afiliacion CHANGE numero numero VARCHAR(100);
+
+-- ELIMINACION DE TABLA TC_ENTIDA_CUENTA POR CAMBIO DE LOGICA DE FUNCIONAMIENTO DE CATALOGO ENTIDAD --
+TRUNCATE TABLE tr_entidad_cuenta;
+DROP TABLE tr_entidad_cuenta;
+
+-- CREACION DE NUEVA TABLA DE ASOCIACION ENTIDAD-CUENTA-AFILIACION --
+
+-- -----------------------------------------------------
+-- Table`tc_entidad_cuenta_afiliacion`
+-- -----------------------------------------------------
+
+DROP TABLE IF EXISTS`tc_entidad_cuenta_afiliacion` ;
+
+CREATE TABLE IF NOT EXISTS`tc_entidad_cuenta_afiliacion` (
+  `id_entidad` BIGINT(20) NOT NULL,
+  `id_cuenta` BIGINT(20) NOT NULL,
+  `id_afiliacion` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`id_entidad`, `id_cuenta`, `id_afiliacion`),
+  INDEX `idx_eca1_entidad` (`id_entidad` ASC),
+  INDEX `idx_eca1_cuenta` (`id_cuenta` ASC),
+  INDEX `idx_eca1_afiliacion` (`id_afiliacion` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = latin1;
+
+
+-- INSERCION INICIAL DE TIPOS DE CONTACTOS --
+
+INSERT INTO `compose`.`tk_tipo_contacto`
+(`id`,
+`estatus`,
+`description`,
+`created_by`,
+`created_date`,
+`last_modified_by`,
+`last_modified_date`,
+`short_description`)
+VALUES
+(1,
+true,
+'Contacto Midas',
+'Ismael',
+now(),
+null,
+null,
+'Contacto Midas');
+
+INSERT INTO `compose`.`tk_tipo_contacto`
+(`id`,
+`estatus`,
+`description`,
+`created_by`,
+`created_date`,
+`last_modified_by`,
+`last_modified_date`,
+`short_description`)
+VALUES
+(2,
+true,
+'Contacto Entidad',
+'Ismael',
+now(),
+null,
+null,
+'Contacto Ent');
+
+-- RENOMBRADO DE TABLA tc_entidad_cuenta_afiliacion --
+ALTER TABLE tc_entidad_cuenta_afiliacion RENAME TO tr_entidad_cuenta_afiliacion;
+
+-- INSERCION DE TIPOS DE AFILIACION --
+INSERT INTO `compose`.`tk_tipo_afiliacion`
+(`id`,
+`descripcion_corta`,
+`descripcion`)
+VALUES
+(1,
+'Ninguno',
+'Ningun tipo de afiliacion'),
+(2,
+'3DSecure',
+'3DSecure');
+
+-- INSERCION DE CATEGORIAS DUMMIES --
+
+INSERT INTO `compose`.`tk_categoria`
+(`id`,
+`nombre`,
+`descripcion`,
+`estatus`,
+`created_date`,
+`last_modified_date`,
+`created_by`,
+`last_modified_by`,
+`descripcion_corta`)
+VALUES
+(1,
+'Ventas',
+'Categoria Ventas',
+true,
+now(),
+null,
+'Quarksoft',
+null,
+'Cat Vtas'),
+(2,
+'Comisiones',
+'Categoria Comisiones',
+true,
+now(),
+null,
+'Quarksoft',
+null,
+'Cat Com'),
+(3,
+'Otra',
+'Otra Categoria',
+true,
+now(),
+null,
+'Quarksoft',
+null,
+'Otra Cat');
+
 -- INICIA CREACION DE OBJETOS PARA MODULO CONCILIACION -
 -- [2019-04-04 09:58:20] --
 

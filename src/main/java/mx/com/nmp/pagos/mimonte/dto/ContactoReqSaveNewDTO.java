@@ -5,39 +5,29 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
 /**
- * @name CuentaEntDTO
- * @description Clase que encapsula la informacion de una contacto a enviar como
- *              respuesta dentro del objeto Entidad
+ * @name ContactoReqSaveNewDTO
+ * @description Clase que encapsula la informacion perteneciente a un contacto
+ *              para alta desde servicio de entidad
  *
- * @author Ismael Flores iaguilar@qaurksoft.net
- * @creationDate 07/03/2019 10:340 hrs.
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 18/04/2019 00:24 hrs.
  * @version 0.1
  */
-public class ContactoEntDTO implements Comparable<ContactoEntDTO> {
+public class ContactoReqSaveNewDTO implements Comparable<ContactoReqSaveNewDTO> {
 
-	private Long id;
 	private String nombre;
 	private String email;
 //	private Boolean estatus;
 
-	public ContactoEntDTO() {
+	public ContactoReqSaveNewDTO() {
 		super();
 	}
 
-	public ContactoEntDTO(Long id, String nombre, String email/* , Boolean estatus */) {
+	public ContactoReqSaveNewDTO(String nombre, String email/*, Boolean estatus*/) {
 		super();
-		this.id = id;
 		this.nombre = nombre;
 		this.email = email;
 //		this.estatus = estatus;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getNombre() {
@@ -65,14 +55,7 @@ public class ContactoEntDTO implements Comparable<ContactoEntDTO> {
 //	}
 
 	@Override
-	public String toString() {
-		return "ContactoEntDTO [id=" + id + ", nombre=" + nombre + ", email=" + email
-				+ /* ", estatus=" + estatus + */"]";
-	}
-
-	@Override
-	public int compareTo(ContactoEntDTO o) {
+	public int compareTo(ContactoReqSaveNewDTO o) {
 		return o.nombre.compareTo(this.nombre);
 	}
-
 }

@@ -91,7 +91,7 @@ public class ContactoBaseDTO extends AbstractCatalogoDTO implements Comparable<C
 
 	@Override
 	public int compareTo(ContactoBaseDTO o) {
-		return o.id.compareTo(this.id);
+		return o.nombre.compareTo(this.nombre);
 	}
 
 }

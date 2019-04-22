@@ -9,8 +9,6 @@ import java.util.Set;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.Afiliacion;
@@ -34,9 +32,7 @@ public interface AfiliacionRepository extends JpaRepository<Afiliacion, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	@Query("SELECT af FROM Afiliacion af INNER JOIN af.cuentas cta WHERE af.estatus = true AND cta.estatus = true AND cta.id = :idCuenta")
-	public Set<Afiliacion> findByCuentas_Id(@Param("idCuenta") final Long idCuenta)
-			throws EmptyResultDataAccessException;
+	public Set<Afiliacion> findByCuentas_Id(final Long idCuenta) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa una afiliacion por numero
@@ -44,15 +40,14 @@ public interface AfiliacionRepository extends JpaRepository<Afiliacion, Long> {
 	 * @param numeroCuenta
 	 * @return
 	 * @throws EmptyResultDataAccessException
+	 * @throws                                javax.persistence.NonUniqueResultException
 	 */
-	@Query("SELECT af FROM Afiliacion af WHERE af.numero = :numeroCuenta and af.estatus = true")
-	public Afiliacion findByNumero(@Param("numeroCuenta") final Long numeroCuenta)
-			throws EmptyResultDataAccessException;
+	public Afiliacion findByNumero(final String numeroCuenta)
+			throws EmptyResultDataAccessException, javax.persistence.NonUniqueResultException;
 
 	/**
 	 * Regresa todas las afiliaciones
 	 */
-	@Query("SELECT af FROM Afiliacion af WHERE af.estatus = true")
 	public List<Afiliacion> findAll();
 
 }

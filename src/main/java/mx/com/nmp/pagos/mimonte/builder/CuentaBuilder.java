@@ -14,6 +14,8 @@ import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.CuentaSaveReqDTO;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 
 /**
@@ -42,7 +44,8 @@ public abstract class CuentaBuilder {
 		if (null != cuentaBaseDTO) {
 			cuenta = new Cuenta();
 			cuenta.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones(), cuentaBaseDTO.getLastModifiedBy(), cuentaBaseDTO.getLastModifiedDate()));
+					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones(),
+							cuentaBaseDTO.getLastModifiedBy(), cuentaBaseDTO.getLastModifiedDate()));
 			cuenta.setCreatedBy(cuentaBaseDTO.getCreatedBy());
 			cuenta.setCreatedDate(cuentaBaseDTO.getCreatedDate());
 			cuenta.setDescription(cuentaBaseDTO.getDescription());
@@ -67,8 +70,9 @@ public abstract class CuentaBuilder {
 		CuentaBaseDTO cuentaBaseDTO = null;
 		if (null != cuenta) {
 			cuentaBaseDTO = new CuentaBaseDTO();
-			cuentaBaseDTO.setAfiliaciones(null != cuenta.getAfiliaciones() ?
-					AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionSet(cuenta.getAfiliaciones()): new TreeSet<>());
+			cuentaBaseDTO.setAfiliaciones(null != cuenta.getAfiliaciones()
+					? AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionSet(cuenta.getAfiliaciones())
+					: new TreeSet<>());
 			cuentaBaseDTO.setCreatedBy(cuenta.getCreatedBy());
 			cuentaBaseDTO.setCreatedDate(cuenta.getCreatedDate());
 			cuentaBaseDTO.setDescription(cuenta.getDescription());
@@ -94,10 +98,10 @@ public abstract class CuentaBuilder {
 		if (null != cuentaBaseDTO) {
 			cuentaDTO = new CuentaDTO();
 			cuentaDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionReqNNListFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones()));
 			cuentaDTO.setEstatus(cuentaBaseDTO.getEstatus());
 			cuentaDTO.setId(cuentaBaseDTO.getId());
-			cuentaDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
+//			cuentaDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
 
 		}
 		return cuentaDTO;
@@ -116,10 +120,33 @@ public abstract class CuentaBuilder {
 		if (null != cuentaDTO) {
 			cuentaBaseDTO = new CuentaBaseDTO();
 			cuentaBaseDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionDTOSet(cuentaDTO.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionReqNNList(cuentaDTO.getAfiliaciones()));
 			cuentaBaseDTO.setEstatus(cuentaDTO.getEstatus());
 			cuentaBaseDTO.setId(cuentaDTO.getId());
 			cuentaBaseDTO.setNumeroCuenta(cuentaDTO.getNumero());
+			cuentaBaseDTO.setCreatedDate(createdDate);
+			cuentaBaseDTO.setLastModifiedDate(lastModifiedDate);
+		}
+		return cuentaBaseDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo CuentaBaseDTO a partir de un objeto de tipo
+	 * CuentaSaveDTO
+	 * 
+	 * @param cuentaSaveDTO
+	 * @param createdDate
+	 * @param lastModifiedDate
+	 * @return
+	 */
+	public static CuentaBaseDTO buildCuentaBaseDTOFromCuentaSaveDTO(CuentaSaveDTO cuentaSaveDTO, Date createdDate,
+			Date lastModifiedDate) {
+		CuentaBaseDTO cuentaBaseDTO = null;
+		if (null != cuentaSaveDTO) {
+			cuentaBaseDTO = new CuentaBaseDTO();
+			cuentaBaseDTO.setAfiliaciones(
+					AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionSaveDTOList(cuentaSaveDTO.getAfiliaciones()));
+			cuentaBaseDTO.setNumeroCuenta(cuentaSaveDTO.getNumero());
 			cuentaBaseDTO.setCreatedDate(createdDate);
 			cuentaBaseDTO.setLastModifiedDate(lastModifiedDate);
 		}
@@ -137,10 +164,10 @@ public abstract class CuentaBuilder {
 		if (null != cuenta) {
 			cuentaDTO = new CuentaDTO();
 			cuentaDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionRespDTOListFromAfiliacionSet(cuenta.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionReqNNListFromAfiliacionSet(cuenta.getAfiliaciones()));
 			cuentaDTO.setEstatus(cuenta.getEstatus());
 			cuentaDTO.setId(cuenta.getId());
-			cuentaDTO.setNumero(cuenta.getNumeroCuenta());
+//			cuentaDTO.setNumero(cuenta.getNumeroCuenta());
 		}
 		return cuentaDTO;
 	}
@@ -282,12 +309,13 @@ public abstract class CuentaBuilder {
 	 * @param cuentaReqDTO
 	 * @return
 	 */
-	public static Cuenta buildCuentaFromCuentaReqDTO(CuentaReqDTO cuentaReqDTO, String lastModifiedBy, Date lastModifiedDate) {
+	public static Cuenta buildCuentaFromCuentaReqDTO(CuentaReqDTO cuentaReqDTO, String lastModifiedBy,
+			Date lastModifiedDate) {
 		Cuenta cuenta = null;
 		if (null != cuentaReqDTO) {
 			cuenta = new Cuenta();
-			cuenta.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionSetFromAfiliacionReqDTOList(cuentaReqDTO.getAfiliaciones(), lastModifiedBy, lastModifiedDate));
+			cuenta.setAfiliaciones(AfiliacionBuilder.buildAfiliacionSetFromAfiliacionReqDTOList(
+					cuentaReqDTO.getAfiliaciones(), lastModifiedBy, lastModifiedDate));
 			cuenta.setId(cuentaReqDTO.getId());
 			cuenta.setEstatus(cuentaReqDTO.getEstatus());
 			cuenta.setNumeroCuenta(cuentaReqDTO.getNumero());
@@ -304,7 +332,8 @@ public abstract class CuentaBuilder {
 	 * @param cuentaReqDTOSet
 	 * @return
 	 */
-	public static Set<Cuenta> buildCuentaSetFromCuentaReqDTOSet(Set<CuentaReqDTO> cuentaReqDTOSet, String lastModifiedBy, Date lastModifiedDate) {
+	public static Set<Cuenta> buildCuentaSetFromCuentaReqDTOSet(Set<CuentaReqDTO> cuentaReqDTOSet,
+			String lastModifiedBy, Date lastModifiedDate) {
 		Set<Cuenta> cuentaSet = null;
 		if (null != cuentaReqDTOSet && !cuentaReqDTOSet.isEmpty()) {
 			cuentaSet = new TreeSet<>();
@@ -345,10 +374,10 @@ public abstract class CuentaBuilder {
 		if (null != cuentaDTO) {
 			cuentaEntDTO = new CuentaEntDTO();
 			cuentaEntDTO.setAfiliaciones(
-					AfiliacionBuilder.buildAfiliacionEntDTOListFromAfiliacionRespDTOList(cuentaDTO.getAfiliaciones()));
+					AfiliacionBuilder.buildAfiliacionEntDTOListFromAfiliacionReqNNList(cuentaDTO.getAfiliaciones()));
 			cuentaEntDTO.setEstatus(cuentaDTO.getEstatus());
 			cuentaEntDTO.setId(cuentaDTO.getId());
-			cuentaEntDTO.setNumero(cuentaDTO.getNumero());
+//			cuentaEntDTO.setNumero(cuentaDTO.getNumero());
 		}
 		return cuentaEntDTO;
 	}
@@ -407,6 +436,43 @@ public abstract class CuentaBuilder {
 			}
 		}
 		return cuentaEntDTOList;
+	}
+
+	/**
+	 * Construye un objeto de tipo CuentaReqDTO a partir de un objeto de tipo
+	 * CuentaSaveReqDTO
+	 * 
+	 * @param cuentaSaveReqDTO
+	 * @return
+	 */
+	public static CuentaReqDTO buildCuentaReqDTOFromCuentaSaveReqDTO(CuentaSaveReqDTO cuentaSaveReqDTO) {
+		CuentaReqDTO cuentaReqDTO = null;
+		if (null != cuentaSaveReqDTO) {
+			cuentaReqDTO = new CuentaReqDTO();
+			cuentaReqDTO.setId(cuentaSaveReqDTO.getId());
+			cuentaReqDTO.setAfiliaciones(AfiliacionBuilder
+					.buildAfiliacionReqDTOListFromAfiliacionSaveDTOList(cuentaSaveReqDTO.getAfiliaciones()));
+		}
+		return cuentaReqDTO;
+	}
+
+	/**
+	 * Construye un Set de objetos de tipo CuentaReqDTO a partir de un Set de
+	 * objetos de tipo CuentaSaveReqDTO
+	 * 
+	 * @param cuentaSaveReqDTOSet
+	 * @return
+	 */
+	public static Set<CuentaReqDTO> buildCuentaReqDTOSetFromCuentaSaveReqDTOSet(
+			Set<CuentaSaveReqDTO> cuentaSaveReqDTOSet) {
+		Set<CuentaReqDTO> cuentaReqDTOSet = null;
+		if (null != cuentaSaveReqDTOSet && !cuentaSaveReqDTOSet.isEmpty()) {
+			cuentaReqDTOSet = new TreeSet<>();
+			for (CuentaSaveReqDTO cuentaSaveReqDTO : cuentaSaveReqDTOSet) {
+				cuentaReqDTOSet.add(buildCuentaReqDTOFromCuentaSaveReqDTO(cuentaSaveReqDTO));
+			}
+		}
+		return cuentaReqDTOSet;
 	}
 
 }

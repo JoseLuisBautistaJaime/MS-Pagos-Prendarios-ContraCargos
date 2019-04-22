@@ -11,7 +11,6 @@ import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -37,9 +36,8 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	@Query("SELECT ent FROM Entidad ent WHERE (:nombre IS NULL OR ent.nombre = :nombre) AND (:estatus IS NULL OR ent.estatus = :estatus)")
-	public List<Entidad> findByNombreAndEstatus(final String nombre, final Boolean estatus)
-			throws EmptyResultDataAccessException;
+	public List<Entidad> findByNombreAndEstatus(@Param("nombre") final String nombre,
+			@Param("estatus") final Boolean estatus) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa una lista de entidades por estatus
@@ -57,8 +55,7 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	@Query("SELECT ent FROM Entidad ent WHERE ent.nombre = :nombre AND ent.estatus = true")
-	public List<Entidad> findByNombre(@Param("nombre") final String nombre) throws EmptyResultDataAccessException;
+	public List<Entidad> findByNombre(final String nombre) throws EmptyResultDataAccessException;
 
 	/**
 	 * Actualiza el estatus de un catalogo entidad por su id
@@ -70,7 +67,6 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	 * @throws EmptyResultDataAccessException
 	 */
 	@Modifying
-	@Query("UPDATE Entidad ent set ent.estatus = :estatus, ent.lastModifiedBy = :lastModifiedBy, ent.lastModifiedDate = :lastModifiedDate WHERE ent.id = :id")
 	public void setEstatusById(@Param("estatus") final Boolean estatus, @Param("id") final Long id,
 			@Param("lastModifiedBy") final String lastModifiedBy,
 			@Param("lastModifiedDate") final Date lastModifiedDate) throws EmptyResultDataAccessException;
@@ -78,7 +74,23 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	/**
 	 * Regresa una entidad por id
 	 */
-	@Query("SELECT ent FROM Entidad ent WHERE ent.id = :id AND ent.estatus = true")
-	public Optional<Entidad> findById(@Param("id") final Long id);
+	public Optional<Entidad> findById(final Long id);
+
+	/**
+	 * Regresa una lista de entidades por atributo nombre y description
+	 * 
+	 * @param nombre
+	 * @param description
+	 * @return
+	 */
+	public List<Entidad> findByNombreAndDescription(final String nombre, final String description);
+
+	/**
+	 * Regresa una lista de entidades por un id de contacto
+	 * 
+	 * @param idContacto
+	 * @return
+	 */
+	public List<Entidad> findByContactos_Id(final Long idContacto);
 
 }

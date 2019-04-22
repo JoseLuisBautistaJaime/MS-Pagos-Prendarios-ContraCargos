@@ -31,8 +31,11 @@ public abstract class AbstractCatalogoDTO implements java.io.Serializable {
 	protected String description;
 	protected String shortDescription;
 
+	
+
 	public AbstractCatalogoDTO() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public AbstractCatalogoDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,

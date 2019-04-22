@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.builder;
 import mx.com.nmp.pagos.mimonte.dto.TipoContactoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoContactoReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoContactoRespDTO;
+import mx.com.nmp.pagos.mimonte.dto.TipoContactoResponseDTO;
 import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 
 /**
@@ -98,8 +99,8 @@ public abstract class TipoContactoBuilder {
 		TipoContactoRespDTO tipoContactoRespDTO = null;
 		if (tipoContactoDTO != null) {
 			tipoContactoRespDTO = new TipoContactoRespDTO();
-			tipoContactoRespDTO.setDescription(tipoContactoDTO.getDescription());
 			tipoContactoRespDTO.setId(tipoContactoDTO.getId());
+			tipoContactoRespDTO.setDescription(tipoContactoDTO.getDescription());
 		}
 		return tipoContactoRespDTO;
 	}
@@ -150,6 +151,46 @@ public abstract class TipoContactoBuilder {
 		if (tipoContactoReqDTO != null) {
 			tipoContactoDTO = new TipoContactoDTO();
 			tipoContactoDTO.setId(tipoContactoReqDTO.getId());
+		}
+		return tipoContactoDTO;
+	}
+	
+	/**
+	 * Construye un objeto de tipo TipoContactoDTO a partir de un objeto de tipo
+	 * TipoContactoReqDTO
+	 * 
+	 * @param tipoContactoReqDTO
+	 * @return tipoContactoDTO
+	 */
+	public static TipoContactoDTO buildTipoContactoDTOFromTipoContactoResponseDTO(TipoContactoDTO tipoContactoDTO2) {
+		TipoContactoDTO tipoContactoDTO = null;
+		if (tipoContactoDTO2 != null) {
+			tipoContactoDTO = new TipoContactoDTO();
+			tipoContactoDTO.setId(tipoContactoDTO2.getId());
+			tipoContactoDTO.setDescription(tipoContactoDTO2.getDescription());
+		}
+		return tipoContactoDTO;
+	}
+
+	/**
+	 * Construye un objeto de tipo TipoContactoDTO a partir de una entidad de tipo
+	 * TipoContacto
+	 * 
+	 * @param tipoContacto
+	 * @return
+	 */
+	public static TipoContactoDTO buildTipoContactoDTOFromTipoContacto(TipoContacto tipoContacto) {
+		TipoContactoDTO tipoContactoDTO = null;
+		if (null != tipoContacto) {
+			tipoContactoDTO = new TipoContactoDTO();
+			tipoContactoDTO.setCreatedBy(tipoContacto.getCreatedBy());
+			tipoContactoDTO.setCreatedDate(tipoContacto.getCreatedDate());
+			tipoContactoDTO.setDescription(tipoContacto.getDescription());
+			tipoContactoDTO.setEstatus(tipoContacto.getEstatus());
+			tipoContactoDTO.setId(tipoContacto.getId());
+			tipoContactoDTO.setLastModifiedBy(tipoContacto.getLastModifiedBy());
+			tipoContactoDTO.setLastModifiedDate(tipoContacto.getLastModifiedDate());
+			tipoContactoDTO.setShortDescription(tipoContacto.getShortDescription());
 		}
 		return tipoContactoDTO;
 	}

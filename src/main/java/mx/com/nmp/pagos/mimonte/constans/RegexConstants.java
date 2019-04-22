@@ -25,8 +25,7 @@ public abstract class RegexConstants {
 	/**
 	 * Regex para direcciones de correo electronico
 	 */
-	public static final String REGEX_EMAIL = "^(.+)@(.+)$";
-
+	public static final String REGEX_EMAIL = "^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@" + "[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$";
 	/**
 	 * Regex para numeros telefonicos
 	 */

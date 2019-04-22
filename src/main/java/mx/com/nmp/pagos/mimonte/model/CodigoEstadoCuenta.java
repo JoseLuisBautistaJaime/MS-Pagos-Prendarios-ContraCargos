@@ -6,12 +6,13 @@ package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -25,6 +26,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tc_codigo_estado_cuenta")
+@NamedQueries(value = {
+		@NamedQuery(name = "CodigoEstadoCuenta.setEstatusWhereId", query = "UPDATE CodigoEstadoCuenta cec SET cec.estatus = :estatus WHERE cec.id = :idCodigo") })
 public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparable<CodigoEstadoCuenta> {
 
 	@Column(name = "codigo", nullable = false)
@@ -34,7 +37,7 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 	@JoinColumn(name = "id_entidad")
 	private Entidad entidad;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
 

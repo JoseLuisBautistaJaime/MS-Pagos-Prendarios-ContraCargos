@@ -19,14 +19,14 @@ public class CuentaDTO {
 	private Long id;
 	private String numero;
 	private Boolean estatus;
-	private List<AfiliacionRespDTO> afiliaciones;
+	private List<AfiliacionReqNN> afiliaciones;
 
 	public CuentaDTO() {
 		super();
 
 	}
 
-	public CuentaDTO(Long id, String numero, List<AfiliacionRespDTO> afiliaciones, Boolean estatus) {
+	public CuentaDTO(Long id, String numero, List<AfiliacionReqNN> afiliaciones, Boolean estatus) {
 		super();
 		this.id = id;
 		this.numero = numero;
@@ -50,11 +50,11 @@ public class CuentaDTO {
 		this.numero = numero;
 	}
 
-	public List<AfiliacionRespDTO> getAfiliaciones() {
+	public List<AfiliacionReqNN> getAfiliaciones() {
 		return afiliaciones;
 	}
 
-	public void setAfiliaciones(List<AfiliacionRespDTO> afiliaciones) {
+	public void setAfiliaciones(List<AfiliacionReqNN> afiliaciones) {
 		this.afiliaciones = afiliaciones;
 	}
 

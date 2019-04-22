@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -131,7 +132,7 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable, Comp
 
 	@Override
 	public int compareTo(Contactos o) {
-		return o.id.compareTo(this.id);
+		return o.nombre.compareTo(this.nombre);
 	}
 
 }

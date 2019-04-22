@@ -28,6 +28,12 @@ import mx.com.nmp.pagos.mimonte.model.Cuenta;
 @Repository("cuentaRepository")
 public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 
+	@Query("SELECT ent.createdBy FROM Entidad ent WHERE ent.id = :idEntidad")
+	public String findCreatedByByEntidadId(@Param("idEntidad") Long idEntidad);
+
+	@Query("SELECT ent.createdDate FROM Entidad ent WHERE ent.id = :idEntidad")
+	public Date findCreatedDateByEntidadId(@Param("idEntidad") Long idEntidad);
+
 	/**
 	 * Encuentra una o mas cuentas por el id de la entidad asociada a ella(s)
 	 * 
@@ -35,9 +41,7 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	@Query("SELECT cta FROM Cuenta cta INNER JOIN cta.entidades ent WHERE ent.id = :idEntidad AND cta.estatus = true and ent.estatus = true")
-	public List<Cuenta> findByEntidades_Id(@Param("idEntidad") final Long idEntidad)
-			throws EmptyResultDataAccessException;
+	public List<Cuenta> qGetByEntidadId(@Param("idEntidad") final Long idEntidad) throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa una Cuenta por numero
@@ -45,9 +49,10 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * @param numero
 	 * @return
 	 * @throws EmptyResultDataAccessException
+	 * @throws                                javax.persistence.NonUniqueResultException
 	 */
-	@Query("SELECT cta FROM Cuenta cta WHERE cta.numeroCuenta = :numero AND cta.estatus = true")
-	public Cuenta findByNumeroCuenta(@Param("numero") final String numero) throws EmptyResultDataAccessException;
+	public Cuenta findByNumeroCuenta(final String numero)
+			throws EmptyResultDataAccessException, javax.persistence.NonUniqueResultException;
 
 	/**
 	 * Actualiza el estatus de una cuenta a false (inactivo)
@@ -67,7 +72,7 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	/**
 	 * Regesa todas las cuentas
 	 */
-	@Query("SELECT cta FROM Cuenta cta WHERE cta.estatus = true")
+	@Query("SELECT cta FROM Cuenta cta ORDER BY cta.createdDate DESC")
 	public List<Cuenta> findAll();
 
 }

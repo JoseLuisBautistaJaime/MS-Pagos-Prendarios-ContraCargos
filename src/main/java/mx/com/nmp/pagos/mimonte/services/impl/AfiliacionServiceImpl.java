@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import mx.com.nmp.pagos.mimonte.dao.AfiliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Afiliacion;
 import mx.com.nmp.pagos.mimonte.services.CatalogoAdmService;
 
@@ -47,7 +49,8 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T save(AfiliacionDTO e, String createdBy) {
-		Afiliacion afiliacion = afiliacionRepository.findByNumero(e.getNumero());
+		Afiliacion afiliacion = null;
+		afiliacion = afiliacionRepository.findByNumero(e.getNumero());
 		if (null != afiliacion)
 			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS);
 		if (null != e)
@@ -62,6 +65,15 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T update(AfiliacionDTO e, String lastModifiedBy) {
+		Afiliacion afiliacion = afiliacionRepository.findById(e.getId()).isPresent()
+				? afiliacionRepository.findById(e.getId()).get()
+				: null;
+		if (null == afiliacion)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		Afiliacion afiliacionByNum = null;
+		afiliacionByNum = afiliacionRepository.findByNumero(e.getNumero());
+		if (null != afiliacionByNum)
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS);
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
 		return (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(
@@ -87,8 +99,9 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 * @throws EmptyResultDataAccessException
 	 */
 	public Set<AfiliacionDTO> findByCuentasId(final Long idCuenta) throws EmptyResultDataAccessException {
-		return AfiliacionBuilder
-				.buildAfiliacionDTOSetFromAfiliacionSet(afiliacionRepository.findByCuentas_Id(idCuenta));
+		Set<Afiliacion> afiliaciones = null;
+		afiliaciones = afiliacionRepository.findByCuentas_Id(idCuenta);
+		return AfiliacionBuilder.buildAfiliacionDTOSetFromAfiliacionSet(afiliaciones);
 	}
 
 	/**
@@ -104,7 +117,11 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 * Elimina una afiliacion por id
 	 */
 	@Override
-	public void deleteById(Long id) throws EmptyResultDataAccessException {
+	public void deleteById(Long id) throws EmptyResultDataAccessException, DataIntegrityViolationException {
+		Afiliacion afiliacion = afiliacionRepository.findById(id).isPresent() ? afiliacionRepository.findById(id).get()
+				: null;
+		if (null == afiliacion)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		afiliacionRepository.deleteById(id);
 	}
 
@@ -114,9 +131,13 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 * @param numeroAfiliacion
 	 * @return
 	 * @throws EmptyResultDataAccessException
+	 * @throws                                javax.persistence.NonUniqueResultException
 	 */
-	public AfiliacionDTO findByNumero(final Long numeroAfiliacion) throws EmptyResultDataAccessException {
-		return AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(afiliacionRepository.findByNumero(numeroAfiliacion));
+	public AfiliacionDTO findByNumero(final String numeroAfiliacion)
+			throws EmptyResultDataAccessException, javax.persistence.NonUniqueResultException {
+		Afiliacion afiliacion = null;
+		afiliacion = afiliacionRepository.findByNumero(numeroAfiliacion);
+		return AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(afiliacion);
 	}
 
 }

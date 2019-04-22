@@ -6,8 +6,10 @@ package mx.com.nmp.pagos.mimonte.dao;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -44,16 +46,32 @@ public interface ContactoRespository extends JpaRepository<Contactos, Long> {
 	 * @return List<Contactos>
 	 */
 	@Query("FROM Contactos c WHERE (:idTipoContacto IS NULL OR c.tipoContacto.id = :idTipoContacto) AND "
-			+ "(:nombre IS NULL OR c.nombre = :nombre) AND "
-			+ "(:email IS NULL OR c.email = :email)")
+			+ "(:nombre IS NULL OR c.nombre = :nombre) AND " + "(:email IS NULL OR c.email = :email)")
 	public List<Contactos> findByIdTipoContactoOrNombreOrEmail(@Param("idTipoContacto") final Long idTipoContacto,
 			@Param("nombre") final String nombre, @Param("email") final String email);
-	
+
 	@Query("SELECT c FROM Contactos c WHERE c.email = :email")
 	public Contactos findByEmail(@Param("email") final String email);
-	
-	
+
 	public Optional<Contactos> findById(final Long idContacto);
-		
+
+	/**
+	 * Regresa un set de contactos por id de entidad
+	 * 
+	 * @param idEntidad
+	 * @return
+	 */
+	public Set<Contactos> findByEntidades_Id(final Long idEntidad);
+
+	/**
+	 * Elimina los contactos de tipo Entidad que no estan asociados a ninguna
+	 * entidad
+	 * 
+	 * @param idTipoContacto
+	 * @return
+	 */
+	@Modifying
+	@Query(nativeQuery = true, value = "DELETE FROM tc_contactos WHERE id NOT IN(SELECT DISTINCT cto.id FROM (SELECT * FROM tc_contactos) cto INNER JOIN tr_entidad_contactos eco ON cto.id = eco.id_contacto) AND id_tipo_contacto = :idTipoContacto")
+	public void deleteWithNoAccountAssociation(@Param("idTipoContacto") final Long idTipoContacto);
 
 }

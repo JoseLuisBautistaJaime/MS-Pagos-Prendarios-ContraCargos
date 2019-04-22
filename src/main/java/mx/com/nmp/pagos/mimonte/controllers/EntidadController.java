@@ -40,6 +40,7 @@ import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
+import mx.com.nmp.pagos.mimonte.dto.EntidadBaseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadResponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
@@ -96,19 +97,18 @@ public class EntidadController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody EntidadBaseDTO entidadDTOReq,
+	public Response save(@RequestBody EntidadBaseSaveDTO entidadBaseSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		if (!ValidadorCatalogo.validateEntidadBaseDTOSave(entidadDTOReq))
+		if (!ValidadorCatalogo.validateEntidadBaseDTOSave(entidadBaseSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTO = null;
 		EntidadDTO entidadDTOResp = null;
-		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, new Date(), null);
+		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseSaveDTO(entidadBaseSaveDTO, new Date(), null);
 		entidadDTOResp = entidadServiceImpl.save(entidadDTO, createdBy);
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				entidadResponseDTO);
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", buildDummy());
 	}
 
 	/**
@@ -134,12 +134,26 @@ public class EntidadController {
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTOResp = null;
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, null, new Date());
-		entidadDTOResp = entidadServiceImpl.update(entidadDTO, lastModifiedBy);
+		try {
+			entidadDTOResp = entidadServiceImpl.update(entidadDTO, lastModifiedBy);
+		} catch (CatalogoException ce) {
+			throw ce;
+		}
+		// SETEO DE USUARIO Y FECHA CREACION YA QUE NO SE HACE EL FETCH AL GUARDAR NI
+		// DENTRO DEL METODO DE GUARDADO NI TAMPOCO OBTENIENDO LA ENTIDAD COMPLETEA
+		// DESDE
+		// ESTA CAPA NI EXISTE LA POSIBILIDAD DE IMPLEMENTAR REFRESH POR LA INTERFAZ
+		// JpaRepository (POSIBLEMENTE UN BUG DE SPRING DATA REPOSITORY)
+		String usr = entidadServiceImpl.findCreatedByByEntidadId(entidadDTOResp.getId());
+		Date fec = entidadServiceImpl.findCreatedDateByEntidadId(entidadDTOResp.getId());
+		if (null != usr && null != fec) {
+			entidadDTOResp.setCreatedBy(usr);
+			entidadDTOResp.setCreatedDate(fec);
+		}
+		// FIN DE SETEO DE USUARIO Y FECHA CREACION
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				entidadResponseDTO);
-
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa", buildDummy());
 	}
 
 	/**
@@ -169,8 +183,6 @@ public class EntidadController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				entidadResponseDTO);
-
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummy());
 	}
 
 	/**
@@ -192,7 +204,6 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@RequestParam(name = "nombre", required = false) String nombre,
 			@RequestParam(name = "estatus", required = false) Boolean estatus) {
-
 		List<EntidadResponseDTO> entidadResponseDTOList = null;
 		try {
 			entidadResponseDTOList = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
@@ -201,8 +212,6 @@ public class EntidadController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != entidadResponseDTOList ? entidadResponseDTOList : new ArrayList<>());
-
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa", buildDummyList());
 	}
 
 	/**
@@ -239,17 +248,17 @@ public class EntidadController {
 	 */
 	public static EntidadResponseDTO buildDummy() {
 		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
-		afiliaciones.add(new AfiliacionEntDTO(1L, 12345678L, true));
-		afiliaciones.add(new AfiliacionEntDTO(2L, 44423699L, true));
+		afiliaciones.add(new AfiliacionEntDTO(1L, "12345678L"));
+		afiliaciones.add(new AfiliacionEntDTO(2L, "44423699L"));
 		List<AfiliacionEntDTO> afiliaciones2 = new ArrayList<>();
-		afiliaciones2.add(new AfiliacionEntDTO(3L, 88345670L, true));
-		afiliaciones2.add(new AfiliacionEntDTO(4L, 33423699L, true));
+		afiliaciones2.add(new AfiliacionEntDTO(3L, "88345670L"));
+		afiliaciones2.add(new AfiliacionEntDTO(4L, "33423699L"));
 		Set<CuentaEntDTO> set = new HashSet<>();
 		set.add(new CuentaEntDTO(1L, "123456789", true, afiliaciones));
 		set.add(new CuentaEntDTO(2L, "999456770", true, afiliaciones2));
 		Set<ContactoEntDTO> set2 = new HashSet<>();
-		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com", true));
-		set2.add(new ContactoEntDTO(2L, "Maria Fernandez", "mari_fer@gmail.com", true));
+		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com"));
+		set2.add(new ContactoEntDTO(2L, "Maria Fernandez", "mari_fer@gmail.com"));
 		EntidadResponseDTO entidadResoponseDTO = new EntidadResponseDTO(1L, "Banamex", "Banco banamex", true,
 				new Date(), "Bill Gates", set, set2);
 		return entidadResoponseDTO;
@@ -258,32 +267,32 @@ public class EntidadController {
 	public static List<EntidadResponseDTO> buildDummyList() {
 		List<EntidadResponseDTO> lst = new ArrayList<>();
 		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
-		afiliaciones.add(new AfiliacionEntDTO(1L, 12345678L, true));
-		afiliaciones.add(new AfiliacionEntDTO(2L, 44423699L, true));
+		afiliaciones.add(new AfiliacionEntDTO(1L, "12345678L"));
+		afiliaciones.add(new AfiliacionEntDTO(2L, "44423699L"));
 		List<AfiliacionEntDTO> afiliaciones2 = new ArrayList<>();
-		afiliaciones2.add(new AfiliacionEntDTO(3L, 88345670L, true));
-		afiliaciones2.add(new AfiliacionEntDTO(4L, 33423699L, true));
+		afiliaciones2.add(new AfiliacionEntDTO(3L, "88345670L"));
+		afiliaciones2.add(new AfiliacionEntDTO(4L, "33423699L"));
 		Set<CuentaEntDTO> set = new HashSet<>();
 		set.add(new CuentaEntDTO(1L, "123456789", true, afiliaciones));
 		set.add(new CuentaEntDTO(2L, "999456770", true, afiliaciones2));
 		Set<ContactoEntDTO> set2 = new HashSet<>();
-		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com", true));
-		set2.add(new ContactoEntDTO(2L, "Maria Fernandez", "mari_fer@gmail.com", true));
+		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com"));
+		set2.add(new ContactoEntDTO(2L, "Maria Fernandez", "mari_fer@gmail.com"));
 		EntidadResponseDTO entidadResoponseDTO = new EntidadResponseDTO(1L, "Bancomer", "Banco Bancomer", true,
 				new Date(), "Steve P Jobs", set, set2);
 
 		List<AfiliacionEntDTO> afiliaciones3 = new ArrayList<>();
-		afiliaciones3.add(new AfiliacionEntDTO(5L, 127897897678L, true));
-		afiliaciones3.add(new AfiliacionEntDTO(6L, 2244789999L, true));
+		afiliaciones3.add(new AfiliacionEntDTO(5L, "127897897678L"));
+		afiliaciones3.add(new AfiliacionEntDTO(6L, "2244789999L"));
 		List<AfiliacionEntDTO> afiliaciones4 = new ArrayList<>();
-		afiliaciones4.add(new AfiliacionEntDTO(7L, 99000L, true));
-		afiliaciones4.add(new AfiliacionEntDTO(8L, 9011221L, true));
+		afiliaciones4.add(new AfiliacionEntDTO(7L, "99000L"));
+		afiliaciones4.add(new AfiliacionEntDTO(8L, "9011221L"));
 		Set<CuentaEntDTO> set3 = new HashSet<>();
 		set3.add(new CuentaEntDTO(3L, "8999777", true, afiliaciones3));
 		set3.add(new CuentaEntDTO(4L, "900087111", true, afiliaciones4));
 		Set<ContactoEntDTO> set4 = new HashSet<>();
-		set4.add(new ContactoEntDTO(5L, "Jesus Saavedra", "@bank.com", true));
-		set4.add(new ContactoEntDTO(6L, "Maria Isabel Duran", "duran@banco.com", true));
+		set4.add(new ContactoEntDTO(5L, "Jesus Saavedra", "@bank.com"));
+		set4.add(new ContactoEntDTO(6L, "Maria Isabel Duran", "duran@banco.com"));
 		EntidadResponseDTO entidadResoponseDTO2 = new EntidadResponseDTO(1L, "Bancomer", "Banco Bancomer", true,
 				new Date(), "Steve P Jobs", set3, set4);
 		lst.add(entidadResoponseDTO);

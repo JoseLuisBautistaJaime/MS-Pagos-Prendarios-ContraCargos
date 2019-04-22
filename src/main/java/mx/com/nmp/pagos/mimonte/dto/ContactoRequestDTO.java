@@ -13,6 +13,7 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class ContactoRequestDTO {
 
+	
 	private String descripcion;
 	private String email;
 	private String nombre;
@@ -61,6 +62,8 @@ public class ContactoRequestDTO {
 	public void setTipoContacto(TipoContactoReqDTO tipoContacto) {
 		this.tipoContacto = tipoContacto;
 	}
+
+	
 
 	@Override
 	public String toString() {

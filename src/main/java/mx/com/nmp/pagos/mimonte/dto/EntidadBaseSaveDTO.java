@@ -7,41 +7,31 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.Set;
 
 /**
- * @name EntidadBaseDTO
+ * @name EntidadBaseSaveDTO
  * @description Clase que encapsula la unformacion de un catalogo de entidad
  *
  * @author Ismael Flores iaguilar@quarksoft.net
- * @creationDate 14/03/2019 14:53 hrs.
+ * @creationDate 16/04/2019 12:19 hrs.
  * @version 0.1
  */
-public class EntidadBaseDTO implements Comparable<EntidadBaseDTO> {
+public class EntidadBaseSaveDTO implements Comparable<EntidadBaseSaveDTO> {
 
-	private Long id;
 	private String descripcion;
 	private String nombre;
 	private Set<CuentaSaveReqDTO> cuentas;
-	private Set<ContactoReqDTONE> contactos;
+	private Set<ContactoReqSaveNewDTO> contactos;
 
-	public EntidadBaseDTO() {
+	public EntidadBaseSaveDTO() {
 		super();
 	}
 
-	public EntidadBaseDTO(Long id, String descripcion, String nombre, Set<CuentaSaveReqDTO> cuentas,
-			Set<ContactoReqDTONE> contactos) {
+	public EntidadBaseSaveDTO(String descripcion, String nombre, Set<CuentaSaveReqDTO> cuentas,
+			Set<ContactoReqSaveNewDTO> contactos) {
 		super();
-		this.id = id;
 		this.descripcion = descripcion;
 		this.nombre = nombre;
 		this.cuentas = cuentas;
 		this.contactos = contactos;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getDescripcion() {
@@ -68,22 +58,22 @@ public class EntidadBaseDTO implements Comparable<EntidadBaseDTO> {
 		this.cuentas = cuentas;
 	}
 
-	public Set<ContactoReqDTONE> getContactos() {
+	public Set<ContactoReqSaveNewDTO> getContactos() {
 		return contactos;
 	}
 
-	public void setContactos(Set<ContactoReqDTONE> contactos) {
+	public void setContactos(Set<ContactoReqSaveNewDTO> contactos) {
 		this.contactos = contactos;
 	}
 
 	@Override
 	public String toString() {
-		return "EntidadBaseDTO [id=" + id + ", descripcion=" + descripcion + ", nombre=" + nombre + ", cuentas="
-				+ cuentas + ", contactos=" + contactos + "]";
+		return "EntidadBaseSaveDTO [descripcion=" + descripcion + ", nombre=" + nombre + ", cuentas=" + cuentas
+				+ ", contactos=" + contactos + "]";
 	}
 
 	@Override
-	public int compareTo(EntidadBaseDTO o) {
+	public int compareTo(EntidadBaseSaveDTO o) {
 		return o.nombre.compareTo(this.nombre);
 	}
 

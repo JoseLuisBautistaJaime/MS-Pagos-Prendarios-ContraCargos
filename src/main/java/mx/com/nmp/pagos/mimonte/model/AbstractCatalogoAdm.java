@@ -34,6 +34,7 @@ public abstract class AbstractCatalogoAdm extends Updatable {
 	@Column(name = "estatus")
 	protected Boolean estatus;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_date", updatable = false)
 	protected Date createdDate;
 
