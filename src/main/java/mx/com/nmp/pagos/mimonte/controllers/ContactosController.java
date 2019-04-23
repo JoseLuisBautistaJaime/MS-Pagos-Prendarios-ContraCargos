@@ -180,6 +180,8 @@ public class ContactosController {
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
+		if(lst == null || lst.isEmpty())
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
 	}
@@ -206,6 +208,8 @@ public class ContactosController {
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_AND_NAME_AND_EMAIL_NOT_FOUND);
 		}
+		if(lst == null|| lst.isEmpty())
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
 	}
