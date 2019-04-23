@@ -8,13 +8,17 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @MappedSuperclass
 public abstract class Updatable {
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_date", updatable = false)
 	protected Date createdDate;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "last_modified_date")
 	protected Date lastModifiedDate;
 
