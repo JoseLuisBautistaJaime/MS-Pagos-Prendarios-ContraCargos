@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
@@ -34,14 +33,6 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * @return
 	 */
 	public List<CodigoEstadoCuenta> findByEntidad_Id(final Long idEntidad) throws EmptyResultDataAccessException;
-
-	/**
-	 * Cambia el estatus a false de un catalogo CodigoEstadoCuenta
-	 * 
-	 * @param estatus
-	 * @param idCodigo
-	 */
-	public void setEstatusWhereId(@Param("estatus") final Boolean estatus, @Param("idCodigo") final Long idCodigo);
 
 	/**
 	 * Regresa un codigo de estado de cuenta por id de entidad e id categoria
