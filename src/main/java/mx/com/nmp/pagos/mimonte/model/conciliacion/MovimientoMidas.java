@@ -30,7 +30,7 @@ public class MovimientoMidas {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
+	@Column(name = "id", nullable = false, insertable = false, updatable = false, unique = true)
 	private Long id;
 
 	@Column(name = "id_reporte", nullable = false)
@@ -75,7 +75,7 @@ public class MovimientoMidas {
 	private BigDecimal interes;
 
 	@Size(max = ConciliacionConstants.ENTITY_VALIDATION_SIZE_VALUE_10, message = ConciliacionConstants.ENTITY_VALIDATION_SIZE_MESSAGE_10)
-	@Column(name = "id", nullable = true)
+	@Column(name = "estatus", nullable = true)
 	private String estatus;
 
 	public Long getId() {

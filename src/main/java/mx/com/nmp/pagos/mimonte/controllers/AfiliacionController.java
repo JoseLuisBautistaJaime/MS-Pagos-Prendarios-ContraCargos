@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,11 +100,11 @@ public class AfiliacionController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		if (!ValidadorCatalogo.validateAfilacionSave(afiliacionReqSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
-		AfiliacionRespPostDTO AfiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
+		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
 				(AfiliacionDTO) afiliacionServiceImpl.save(AfiliacionBuilder.buildAfiliacionDTOFromAfiliacionSaveReqDTO(
 						afiliacionReqSaveDTO, new Date(), null), createdBy));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-				AfiliacionDTO);
+				afiliacionDTO);
 	}
 
 	/**
@@ -127,12 +126,12 @@ public class AfiliacionController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		if (!ValidadorCatalogo.validateAfilacionUpdt(afiliacionDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
-		AfiliacionRespPostDTO AfiliacionDTO = AfiliacionBuilder
+		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder
 				.buildAfiliacionRespPostDTOfromAfiliacionDTO((AfiliacionDTO) afiliacionServiceImpl.update(
 						AfiliacionBuilder.buildAfiliacionDTOFromAfiliacionReqDTO(afiliacionDTOReq, null, new Date()),
 						createdBy));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
-				AfiliacionDTO);
+				afiliacionDTO);
 	}
 
 	/**
@@ -195,7 +194,7 @@ public class AfiliacionController {
 		if (null == afiliacionDTOSet || afiliacionDTOSet.isEmpty())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-				null != afiliacionDTOSet ? afiliacionDTOSet : new TreeSet<>());
+				afiliacionDTOSet);
 	}
 
 	@ResponseBody
@@ -249,7 +248,6 @@ public class AfiliacionController {
 	 */
 	public static AfiliacionRespPostDTO buildDummyPost() {
 		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
-//		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(234L);
 		afiliacionDto.setNumero("12345678");
 		return afiliacionDto;
@@ -258,11 +256,9 @@ public class AfiliacionController {
 	public static List<AfiliacionRespPostDTO> buildDummyLst() {
 		List<AfiliacionRespPostDTO> lst = new ArrayList<>();
 		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
-//		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(9987L);
 		afiliacionDto.setNumero("990088");
 		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
-//		afiliacionDto2.setEstatus(true);
 		afiliacionDto2.setId(234L);
 		afiliacionDto2.setNumero("12345678");
 		lst.add(afiliacionDto);
@@ -314,13 +310,11 @@ public class AfiliacionController {
 		List<AfiliacionRespPostDTO> afiliaciones = new ArrayList<>();
 		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
 		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
-//		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(234L);
 		afiliacionDto.setNumero("12345678");
 		afiliaciones.add(afiliacionDto);
 		afiliacionDto2.setId(6789L);
 		afiliacionDto2.setNumero("987654");
-//		afiliacionDto2.setEstatus(true);
 		afiliaciones.add(afiliacionDto2);
 		return afiliaciones;
 	}

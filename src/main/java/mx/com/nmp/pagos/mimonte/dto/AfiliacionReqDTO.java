@@ -17,17 +17,15 @@ public class AfiliacionReqDTO implements Comparable<AfiliacionReqDTO> {
 
 	private Long id;
 	private String numero;
-//	private Boolean estatus;
 
 	public AfiliacionReqDTO() {
 		super();
 	}
 
-	public AfiliacionReqDTO(Long id, String numero/*, Boolean estatus*/) {
+	public AfiliacionReqDTO(Long id, String numero) {
 		super();
 		this.id = id;
 		this.numero = numero;
-//		this.estatus = estatus;
 	}
 
 	public Long getId() {
@@ -46,24 +44,16 @@ public class AfiliacionReqDTO implements Comparable<AfiliacionReqDTO> {
 		this.numero = numero;
 	}
 
-//	public Boolean getEstatus() {
-//		return estatus;
-//	}
-
-//	public void setEstatus(Boolean estatus) {
-//		this.estatus = estatus;
-//	}
-
 	@Override
 	public String toString() {
-		return "AfiliacionReqDTO [id=" + id + ", numero=" + numero + /*", estatus=" + estatus +*/ "]";
+		return "AfiliacionReqDTO [id=" + id + ", numero=" + numero + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		return super.hashCode();
 	}
-	
+
 	@Override
 	public int compareTo(AfiliacionReqDTO o) {
 		return o.id.compareTo(this.id);

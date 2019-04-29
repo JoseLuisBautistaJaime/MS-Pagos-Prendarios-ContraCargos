@@ -9,7 +9,12 @@ package mx.com.nmp.pagos.mimonte.dto;
  * @Fecha 01/02/2019 11:58 hrs.
  * @version 0.1
  */
-public class TipoAutorizacionDTO implements Comparable<TipoAutorizacionDTO> {
+public class TipoAutorizacionDTO implements Comparable<TipoAutorizacionDTO>, java.io.Serializable {
+
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public Integer getId() {
 		return id;

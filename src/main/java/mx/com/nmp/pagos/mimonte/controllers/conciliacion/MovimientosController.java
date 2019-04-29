@@ -4,7 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -190,7 +189,8 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosResponseDTO movimientoProcesosNocturnosDTO,
+	public Response saveMovimientosNocturnos(
+			@RequestBody MovimientoProcesosNocturnosResponseDTO movimientoProcesosNocturnosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		MovimientoIDDTO movimientoIDDTO = null;
 		movimientoIDDTO = buildDummyX3();

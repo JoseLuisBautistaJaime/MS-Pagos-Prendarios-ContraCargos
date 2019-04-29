@@ -4,7 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**

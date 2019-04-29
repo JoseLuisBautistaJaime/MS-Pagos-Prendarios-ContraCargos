@@ -33,7 +33,7 @@ public class MovimientoProveedor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
+	@Column(name = "id", nullable = false, insertable = false, updatable = false, unique = true)
 	private Long id;
 
 	@Column(name = "reporte", nullable = false)

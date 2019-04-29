@@ -4,7 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -20,7 +19,6 @@ public class MovimientoTransaccionalListDTO {
 
 	private Integer total;
 	private List<MovimientoTransaccionalDTO> movimientos;
-	
 
 	public MovimientoTransaccionalListDTO() {
 		super();
@@ -39,7 +37,7 @@ public class MovimientoTransaccionalListDTO {
 	public void setTotal(Integer total) {
 		this.total = total;
 	}
-	
+
 	public List<MovimientoTransaccionalDTO> getMovimientos() {
 		return movimientos;
 	}

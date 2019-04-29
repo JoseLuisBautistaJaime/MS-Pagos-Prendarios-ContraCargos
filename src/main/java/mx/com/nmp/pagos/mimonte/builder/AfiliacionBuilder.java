@@ -254,7 +254,6 @@ public class AfiliacionBuilder {
 		AfiliacionDTO afiliacionDTO = null;
 		if (null != afiliacionReqDTO) {
 			afiliacionDTO = new AfiliacionDTO();
-//			afiliacionDTO.setEstatus(afiliacionReqDTO.getEstatus());
 			afiliacionDTO.setEstatus(true);
 			afiliacionDTO.setId(afiliacionReqDTO.getId());
 			afiliacionDTO.setNumero(afiliacionReqDTO.getNumero());
@@ -296,7 +295,6 @@ public class AfiliacionBuilder {
 		AfiliacionRespPostDTO afiliacionRespPostDTO = null;
 		if (null != afiliacionDTO) {
 			afiliacionRespPostDTO = new AfiliacionRespPostDTO();
-//			afiliacionRespPostDTO.setEstatus(afiliacionDTO.getEstatus());
 			afiliacionRespPostDTO.setId(afiliacionDTO.getId());
 			afiliacionRespPostDTO.setNumero(afiliacionDTO.getNumero());
 		}
@@ -351,7 +349,6 @@ public class AfiliacionBuilder {
 		AfiliacionEntDTO afiliacionEntDTO = null;
 		if (null != afiliacion) {
 			afiliacionEntDTO = new AfiliacionEntDTO();
-//			afiliacionEntDTO.setEstatus(afiliacion.getEstatus());
 			afiliacionEntDTO.setId(afiliacion.getId());
 			afiliacionEntDTO.setNumero(afiliacion.getNumero());
 		}
@@ -387,7 +384,6 @@ public class AfiliacionBuilder {
 		AfiliacionEntDTO afiliacionEntDTO = null;
 		if (null != afiliacionReqDTO) {
 			afiliacionEntDTO = new AfiliacionEntDTO();
-//			afiliacionEntDTO.setEstatus(afiliacionReqDTO.getEstatus());
 			afiliacionEntDTO.setId(afiliacionReqDTO.getId());
 			afiliacionEntDTO.setNumero(afiliacionReqDTO.getNumero());
 		}
@@ -424,7 +420,6 @@ public class AfiliacionBuilder {
 		AfiliacionReqDTO afiliacionReqDTO = null;
 		if (null != afiliacion) {
 			afiliacionReqDTO = new AfiliacionReqDTO();
-//			afiliacionReqDTO.setEstatus(afiliacion.getEstatus());
 			afiliacionReqDTO.setId(afiliacion.getId());
 			afiliacionReqDTO.setNumero(afiliacion.getNumero());
 		}
@@ -461,7 +456,6 @@ public class AfiliacionBuilder {
 		Afiliacion afiliacion = null;
 		if (null != afiliacionReqDTO) {
 			afiliacion = new Afiliacion();
-//			afiliacion.setEstatus(afiliacionReqDTO.getEstatus());
 			afiliacion.setEstatus(true);
 			afiliacion.setId(afiliacionReqDTO.getId());
 			afiliacion.setNumero(afiliacionReqDTO.getNumero());
@@ -507,7 +501,6 @@ public class AfiliacionBuilder {
 			afiliacionEntDTO = new AfiliacionEntDTO();
 			afiliacionEntDTO.setId(afiliacionRespDTO.getId());
 			afiliacionEntDTO.setNumero(afiliacionRespDTO.getNumero());
-//			afiliacionEntDTO.setEstatus(true);
 		}
 		return afiliacionEntDTO;
 	}
@@ -542,7 +535,6 @@ public class AfiliacionBuilder {
 		AfiliacionEntDTO afiliacionEntDTO = null;
 		if (null != afiliacionDTO) {
 			afiliacionEntDTO = new AfiliacionEntDTO();
-//			afiliacionEntDTO.setEstatus(afiliacionDTO.getEstatus());
 			afiliacionEntDTO.setId(afiliacionDTO.getId());
 			afiliacionEntDTO.setNumero(afiliacionDTO.getNumero());
 		}
@@ -612,14 +604,14 @@ public class AfiliacionBuilder {
 	 */
 	public static Set<AfiliacionDTO> buildAfiliacionDTOSetFromAfiliacionSaveDTOList(
 			List<AfiliacionSaveDTO> afiliacionSaveDTOList) {
-		Set<AfiliacionDTO> AfiliacionDTOSet = null;
+		Set<AfiliacionDTO> afiliacionDTOSet = null;
 		if (null != afiliacionSaveDTOList && !afiliacionSaveDTOList.isEmpty()) {
-			AfiliacionDTOSet = new TreeSet<>();
+			afiliacionDTOSet = new TreeSet<>();
 			for (AfiliacionSaveDTO afiliacionSaveDTO : afiliacionSaveDTOList) {
-				AfiliacionDTOSet.add(buildAfiliacionDTOFromAfiliacionSaveDTO(afiliacionSaveDTO));
+				afiliacionDTOSet.add(buildAfiliacionDTOFromAfiliacionSaveDTO(afiliacionSaveDTO));
 			}
 		}
-		return AfiliacionDTOSet;
+		return afiliacionDTOSet;
 	}
 
 	/**
