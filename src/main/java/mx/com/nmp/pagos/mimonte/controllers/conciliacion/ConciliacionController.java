@@ -106,31 +106,31 @@ public class ConciliacionController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", buildDummy());
 	}
 
-	/**
-	 * Se encarga de consultar los movimientos generados por procesos nocturnos (MIDAS) y por el proveedor transaccional.
-	 * 
-	 * 
-	 * @param consultaMidasProveedorRequestDTO
-	 * @param createdBy
-	 * @return
-	 */
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/conciliacion/consulta/midasyproveedor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Consulta los movimientos generados por procesos nocturnos.", tags = {
-			"Conciliación" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
-			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaMidasProveedor(
-			@RequestBody ConsultaMidasProveedorRequestDTO consultaMidasProveedorRequestDTO,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
-				buildConsultaMidasProveedorDummy());
-	}
+//	/**
+//	 * Se encarga de consultar los movimientos generados por procesos nocturnos (MIDAS) y por el proveedor transaccional.
+//	 * 
+//	 * 
+//	 * @param consultaMidasProveedorRequestDTO
+//	 * @param createdBy
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@ResponseStatus(HttpStatus.OK)
+//	@PostMapping(value = "/conciliacion/consulta/midasyproveedor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//	@ApiOperation(httpMethod = "POST", value = "Consulta los movimientos generados por procesos nocturnos.", tags = {
+//			"Conciliación" })
+//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
+//			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+//			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+//			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+//	public Response consultaMidasProveedor(
+//			@RequestBody ConsultaMidasProveedorRequestDTO consultaMidasProveedorRequestDTO,
+//			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+//
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
+//				buildConsultaMidasProveedorDummy());
+//	}
 	
 	
 	/**
@@ -392,6 +392,29 @@ public class ConciliacionController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Identificador PS actualizado en la conciliación.",
 				null);
 	}
+	
+	/**
+	 * Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transaccional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.
+	 * 
+	 * @param folio
+	 * @param createdBy
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/conciliacion/generar/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transaccional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.", tags = {
+			"Conciliación" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Se inicia proceso de conciliacion."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response ConsultaGenerarFolio(@PathVariable(value = "folio", required = true) Integer folio) {
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Se inicia proceso de conciliacion.",
+				null);
+	}
 
 	public static ConciliacionDTO buildDummy() {
 		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1, "En proceso", true);
@@ -403,9 +426,14 @@ public class ConciliacionController {
 		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO(
 				new Date(), new Date(), false);
 		ReporteEstadoCuentaDTO reporteEstadoCuentaDTO = new ReporteEstadoCuentaDTO(new Date(), new Date(), false);
+		
 		ConciliacionDTO conciliacionDTO = new ConciliacionDTO(0001, estatusConciliacionDTO, entidadDTO, cuentaDTO,
-				reporteProcesosNocturnosDTO, reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, null, null, null,
+				null, null, null, null, null, null,
 				null, new Date(), new Date(), "NMP", "NMP");
+		
+//		ConciliacionDTO conciliacionDTO = new ConciliacionDTO(0001, estatusConciliacionDTO, entidadDTO, cuentaDTO,
+//				reporteProcesosNocturnosDTO, reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, null, null, null,
+//				null, new Date(), new Date(), "NMP", "NMP");
 		return conciliacionDTO;
 	}
 
@@ -513,8 +541,8 @@ public class ConciliacionController {
 		CuentaDTO cuentaDTO = new CuentaDTO(1, "1122131", true);
 		ConsultaConciliacionDTO consultaConciliacionDTO = new ConsultaConciliacionDTO(1, estatusConciliacionDTO, new Date(), "NMP",
 				new Date(), "NMP", entidadDTO, cuentaDTO, 658);
-		ConsultaConciliacionDTO consultaConciliacionDTO2 = new ConsultaConciliacionDTO(1, estatusConciliacionDTO, new Date(), "NMP",
-				new Date(), "NMP", entidadDTO, cuentaDTO, 658);
+		ConsultaConciliacionDTO consultaConciliacionDTO2 = new ConsultaConciliacionDTO(2, estatusConciliacionDTO, new Date(), "NMP",
+				new Date(), "NMP", entidadDTO, cuentaDTO, 372);
 		consultaConciliacionDTOList.add(consultaConciliacionDTO);
 		consultaConciliacionDTOList.add(consultaConciliacionDTO2);
 		return consultaConciliacionDTOList;
