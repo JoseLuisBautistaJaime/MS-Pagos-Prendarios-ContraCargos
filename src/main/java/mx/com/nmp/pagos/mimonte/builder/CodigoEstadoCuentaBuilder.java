@@ -264,7 +264,6 @@ public class CodigoEstadoCuentaBuilder {
 			codigoEstadoCuentaUpdtDTO.setCodigo(codigoEstadoCuentaDTO.getCodigo());
 			codigoEstadoCuentaUpdtDTO
 					.setEntidad(EntidadBuilder.buildBaseentidadFromEntidadDTO(codigoEstadoCuentaDTO.getEntidad()));
-//			codigoEstadoCuentaUpdtDTO.setEstatus(codigoEstadoCuentaDTO.getEstatus());
 			codigoEstadoCuentaUpdtDTO.setId(codigoEstadoCuentaDTO.getId());
 		}
 		return codigoEstadoCuentaUpdtDTO;
@@ -287,7 +286,6 @@ public class CodigoEstadoCuentaBuilder {
 			codigoEstadoCuentaUpdtDTO.setCodigo(codigoEstadoCuenta.getCodigo());
 			codigoEstadoCuentaUpdtDTO
 					.setEntidad(EntidadBuilder.buildBaseentidadFromEntidad(codigoEstadoCuenta.getEntidad()));
-//			codigoEstadoCuentaUpdtDTO.setEstatus(codigoEstadoCuenta.getEstatus());
 			codigoEstadoCuentaUpdtDTO.setId(codigoEstadoCuenta.getId());
 		}
 		return codigoEstadoCuentaUpdtDTO;

@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -35,6 +38,13 @@ public class MovimientoMidas {
 
 	@Column(name = "id_reporte", nullable = false)
 	private Long idReporte;
+
+	@Column(name = "transaccion", nullable = false)
+	private Long transaccion;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha", nullable = false)
+	private Date fecha;
 
 	@Column(name = "folio", nullable = true)
 	private Long folio;
@@ -188,6 +198,22 @@ public class MovimientoMidas {
 
 	public void setEstatus(String estatus) {
 		this.estatus = estatus;
+	}
+	
+	public Long getTransaccion() {
+		return transaccion;
+	}
+
+	public void setTransaccion(Long transaccion) {
+		this.transaccion = transaccion;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
 	}
 
 	@Override

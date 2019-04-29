@@ -190,14 +190,4 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 		codigoEstadoCuentaRepository.deleteById(id);
 	}
 
-	/**
-	 * Actualiza el estatus de un catalogo CodigoEstadoCuenta a false (inactivo)
-	 * 
-	 * @param estatus
-	 * @param idCodigo
-	 */
-	public void updateEstatus(final Boolean estatus, final Long idCodigo) {
-		codigoEstadoCuentaRepository.setEstatusWhereId(estatus, idCodigo);
-	}
-
 }
