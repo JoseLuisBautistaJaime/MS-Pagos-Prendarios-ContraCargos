@@ -132,8 +132,8 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientosProvedor(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
-		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+//		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
+//			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		movimientoTransaccionalListDTO = buildDummyX1();
 //		Integer total = movimientosProveedorService
 //				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
