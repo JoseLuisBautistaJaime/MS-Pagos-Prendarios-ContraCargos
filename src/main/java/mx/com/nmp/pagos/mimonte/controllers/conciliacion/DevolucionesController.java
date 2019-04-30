@@ -139,7 +139,7 @@ public class DevolucionesController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response solicitar(@RequestBody FolioRequestDTO folioRequestDTO,
+	public Response solicitar(@RequestBody DevolucionesIdsMovimientosDTO devolucionesIdsMovimientosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Devoluciones Exitosa.",

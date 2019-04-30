@@ -53,6 +53,12 @@ public final class CatalogConstants {
 	 * la operacion
 	 */
 	public static final String REQUEST_USER_HEADER = "requestUser";
+	
+	/**
+	 * El nombre del header donde se especificara el nombre de usuario qque realiza
+	 * la operacion
+	 */
+	public static final String REQUEST_HEADER_URL = "urlCallBack";
 
 	/**
 	 * Mensaje que es mostrado en cuando se lanza un error de validacion

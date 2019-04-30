@@ -48,6 +48,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusMovTransitoDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.GlobalDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
@@ -340,7 +341,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response devoluciones(@RequestBody SolicitarPagosRequestDTO solicitarPagosRequestDTO,
+	public Response devoluciones(@RequestBody FolioRequestDTO folioRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Devolucion Exitosa.", buildMarcarDevolucionesDummy());
@@ -410,7 +411,9 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response ConsultaGenerarFolio(@PathVariable(value = "folio", required = true) Integer folio) {
+	public Response ConsultaGenerarFolio(@PathVariable(value = "folio", required = true) Integer folio,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser,
+			@RequestHeader(CatalogConstants.REQUEST_HEADER_URL) String urlCallBack) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Se inicia proceso de conciliacion.",
 				null);
