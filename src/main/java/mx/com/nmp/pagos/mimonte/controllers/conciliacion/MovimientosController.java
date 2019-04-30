@@ -213,8 +213,8 @@ public class MovimientosController {
 		MovimientoIDDTO movimientoIDDTO = null;
 		movimientoIDDTO = buildDummyX3();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-//				movimientoIDDTO
-				null);
+//			movimientoIDDTO
+			null);
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class MovimientosController {
 //		movimientoIDDTO = buildDummyX3();
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-				movimientoIDDTO);
+				null);
 	}
 
 	/**
