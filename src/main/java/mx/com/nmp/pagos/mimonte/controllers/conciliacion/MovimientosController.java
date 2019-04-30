@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,13 +32,15 @@ import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoIDDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosProveedorService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -67,11 +71,18 @@ public class MovimientosController {
 	private static final Logger LOG = LoggerFactory.getLogger(MovimientosController.class);
 
 	/**
-	 * Service para MovimientosEstadoCuenta
+	 * Service de movimientos midas
 	 */
-//	@Autowired
-//	@Qualifier("movimientosEstadoCuentaService")
-//	private MovimientosEstadoCuentaService movimientosEstadoCuentaService;
+	@Autowired
+	@Qualifier("movimientosMidasService")
+	private MovimientosMidasService movimientosMidasService;
+
+	/**
+	 * Service de movimientos proveedor
+	 */
+	@Autowired
+	@Qualifier("movimientosProveedorService")
+	private MovimientosProveedorService movimientosProveedorService;
 
 	/**
 	 * Consulta movimientos estado de cuneta por filtros de objeto
@@ -141,7 +152,12 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientosNocturnos(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
-		movimientoProcesosNocturnosListDTO = buildDummyX2();
+		// movimientoProcesosNocturnosListDTO = buildDummyX2();
+		movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
+		movimientoProcesosNocturnosListDTO
+				.setTotal(movimientosMidasService.countByConciliacion((long) commonConciliacionRequestDTO.getFolio()));
+		movimientoProcesosNocturnosListDTO
+				.setMovimientos(movimientosMidasService.findByFolio(commonConciliacionRequestDTO));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
 				movimientoProcesosNocturnosListDTO);
 	}
@@ -249,16 +265,16 @@ public class MovimientosController {
 	 */
 	public static MovimientoProcesosNocturnosListDTO buildDummyX2() {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
-		MovimientoProcesosNocturnosDTO movimientoProcesosNocturnosDTO = new MovimientoProcesosNocturnosDTO();
+		MovimientoMidasDTO movimientoProcesosNocturnosDTO = new MovimientoMidasDTO();
 		movimientoProcesosNocturnosDTO.setId(1L);
 		movimientoProcesosNocturnosDTO.setTransaccion(1L);
-		movimientoProcesosNocturnosDTO.setCapitalActual(400.12);
-		movimientoProcesosNocturnosDTO.setComisiones(10.23);
+		movimientoProcesosNocturnosDTO.setCapitalActual(new BigDecimal("400.12"));
+		movimientoProcesosNocturnosDTO.setComisiones(new BigDecimal("10.23"));
 		movimientoProcesosNocturnosDTO.setEstatus("Exitoso");
 		movimientoProcesosNocturnosDTO.setFecha(new Date());
 		movimientoProcesosNocturnosDTO.setFolioPartida(12345L);
-		movimientoProcesosNocturnosDTO.setInteres(24.52);
-		movimientoProcesosNocturnosDTO.setMontoOperacion(123.45);
+		movimientoProcesosNocturnosDTO.setInteres(new BigDecimal("24.52"));
+		movimientoProcesosNocturnosDTO.setMontoOperacion(new BigDecimal("123.45"));
 		movimientoProcesosNocturnosDTO.setNumAutorizacion("12345");
 		movimientoProcesosNocturnosDTO.setOperacionAbr("APL");
 		movimientoProcesosNocturnosDTO.setOperacionDesc("Abonos Pagos-Libres");
@@ -266,7 +282,7 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setTipoContratoAbr("PL");
 		movimientoProcesosNocturnosDTO.setTipoContratoDesc("Pagos Libres");
 		movimientoProcesosNocturnosListDTO.setTotal(400);
-		List<MovimientoProcesosNocturnosDTO> lst = new ArrayList<>();
+		List<MovimientoMidasDTO> lst = new ArrayList<>();
 		lst.add(movimientoProcesosNocturnosDTO);
 		movimientoProcesosNocturnosListDTO.setMovimientos(lst);
 		return movimientoProcesosNocturnosListDTO;

@@ -18,13 +18,13 @@ import java.util.List;
 public class MovimientoProcesosNocturnosListDTO {
 
 	private Integer total;
-	private List<MovimientoProcesosNocturnosDTO> movimientos;
+	private List<MovimientoMidasDTO> movimientos;
 
 	public MovimientoProcesosNocturnosListDTO() {
 		super();
 	}
 
-	public MovimientoProcesosNocturnosListDTO(Integer total, List<MovimientoProcesosNocturnosDTO> movimientos) {
+	public MovimientoProcesosNocturnosListDTO(Integer total, List<MovimientoMidasDTO> movimientos) {
 		super();
 		this.total = total;
 		this.movimientos = movimientos;
@@ -38,11 +38,11 @@ public class MovimientoProcesosNocturnosListDTO {
 		this.total = total;
 	}
 
-	public List<MovimientoProcesosNocturnosDTO> getMovimientos() {
+	public List<MovimientoMidasDTO> getMovimientos() {
 		return movimientos;
 	}
 
-	public void setMovimientos(List<MovimientoProcesosNocturnosDTO> movimientos) {
+	public void setMovimientos(List<MovimientoMidasDTO> movimientos) {
 		this.movimientos = movimientos;
 	}
 
