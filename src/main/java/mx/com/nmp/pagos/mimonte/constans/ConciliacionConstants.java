@@ -41,4 +41,29 @@ public final class ConciliacionConstants {
 	 */
 	public static final String ENTITY_VALIDATION_SIZE_MESSAGE_45 = "Debe ingresar maximo 45 caracteres";
 
+	/**
+	 * Mensaje que es mostrado cuando se realiza una consulta de manera exitosa
+	 */
+	public static final String MSG_SUCCESSFUL_MOVIMIENTOS_QUERY = "Consulta movimientos exitosa.";
+
+	public static final class Validation {
+
+		private Validation() {
+			super();
+		}
+
+		/**
+		 * Mensaje que es mostrado cuando no se encuentra informacion para los
+		 * parametros de busqueda ingresados
+		 */
+		public static final String NO_INFORMATION_FOUND = "No se encontro informacion para los parametros ingresados";
+
+		/**
+		 * Mensaje que es mostrado cuando se genera un error de validacion de parametros
+		 * de entrada
+		 */
+		public static final String VALIDATION_PARAM_ERROR = "Se genero un error de validacion";
+
+	}
+
 }

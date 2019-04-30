@@ -17,6 +17,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.ErrorResponse;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.exception.PartidaNotFoundException;
 import mx.com.nmp.pagos.mimonte.exception.ResultadoNotFoundException;
@@ -70,6 +72,7 @@ public class PagosMiMonteRestControllerAdvice {
             PartidaNotFoundException.class,
             SesionNotFoundException.class,
             CatalogoNotFoundException.class,
+            InformationNotFoundException.class,
             ResultadoNotFoundException.class
     })
     public Response manejarExcepcionNotFound(RuntimeException e) {
@@ -90,7 +93,8 @@ public class PagosMiMonteRestControllerAdvice {
             IllegalArgumentException.class,
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class,
-            UnsatisfiedServletRequestParameterException.class
+            UnsatisfiedServletRequestParameterException.class,
+            ConciliacionException.class
     })
     public Response manejarExcepcionBadRequest(Exception e) {
         return resolverCodigo(e, HttpStatus.BAD_REQUEST);

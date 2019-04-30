@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,15 +31,16 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
  */
 @Entity
 @Table(name = "to_movimiento_midas")
-public class MovimientoMidas {
+public class MovimientoMidas implements Comparable<MovimientoMidas> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, insertable = false, updatable = false, unique = true)
 	private Long id;
 
-	@Column(name = "id_reporte", nullable = false)
-	private Long idReporte;
+	@ManyToOne
+	@JoinColumn(name = "id_reporte", nullable = false)
+	private Reporte reporte;
 
 	@Column(name = "transaccion", nullable = false)
 	private Long transaccion;
@@ -96,12 +99,12 @@ public class MovimientoMidas {
 		this.id = id;
 	}
 
-	public Long getIdReporte() {
-		return idReporte;
+	public Reporte getReporte() {
+		return reporte;
 	}
 
-	public void setIdReporte(Long idReporte) {
-		this.idReporte = idReporte;
+	public void setReporte(Reporte reporte) {
+		this.reporte = reporte;
 	}
 
 	public Long getSucursal() {
@@ -199,7 +202,7 @@ public class MovimientoMidas {
 	public void setEstatus(String estatus) {
 		this.estatus = estatus;
 	}
-	
+
 	public Long getTransaccion() {
 		return transaccion;
 	}
@@ -218,11 +221,16 @@ public class MovimientoMidas {
 
 	@Override
 	public String toString() {
-		return "MovimientoMidas [id=" + id + ", idReporte=" + idReporte + ", sucursal=" + sucursal + ", folio=" + folio
+		return "MovimientoMidas [id=" + id + ", idReporte=" + reporte + ", sucursal=" + sucursal + ", folio=" + folio
 				+ ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc + ", monto=" + monto
 				+ ", tipoContratoAbr=" + tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc
 				+ ", numAutorizacion=" + numAutorizacion + ", capital=" + capital + ", comisiones=" + comisiones
 				+ ", interes=" + interes + ", estatus=" + estatus + "]";
+	}
+
+	@Override
+	public int compareTo(MovimientoMidas o) {
+		return o.id.compareTo(this.id);
 	}
 
 }

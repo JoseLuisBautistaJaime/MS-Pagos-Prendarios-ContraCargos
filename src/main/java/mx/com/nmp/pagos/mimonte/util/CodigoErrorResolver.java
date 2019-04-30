@@ -3,6 +3,9 @@ package mx.com.nmp.pagos.mimonte.util;
 
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
+
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
@@ -33,6 +36,8 @@ public class CodigoErrorResolver {
                 new AbstractMap.SimpleEntry<>(IllegalArgumentException.class, CodigoError.NMP_PMIMONTE_0001),
                 new AbstractMap.SimpleEntry<>(MethodArgumentTypeMismatchException.class, CodigoError.NMP_PMIMONTE_0001),
                 new AbstractMap.SimpleEntry<>(CatalogoNotFoundException.class, CodigoError.NMP_PMIMONTE_0005),
+                new AbstractMap.SimpleEntry<>(InformationNotFoundException.class, CodigoError.NMP_PMIMONTE_0009),
+                new AbstractMap.SimpleEntry<>(ConciliacionException.class, CodigoError.NMP_PMIMONTE_0008),
                 new AbstractMap.SimpleEntry<>(HttpMessageNotReadableException.class, CodigoError.NMP_PMIMONTE_0006),
                 new AbstractMap.SimpleEntry<>(MethodArgumentNotValidException.class, CodigoError.NMP_PMIMONTE_0007),
                 new AbstractMap.SimpleEntry<>(UnsatisfiedServletRequestParameterException.class, CodigoError.NMP_PMIMONTE_0008)
