@@ -18,13 +18,13 @@ import java.util.List;
 public class MovimientoTransaccionalListDTO {
 
 	private Integer total;
-	private List<MovimientoTransaccionalDTO> movimientos;
+	private List<MovimientoProveedorDTO> movimientos;
 
 	public MovimientoTransaccionalListDTO() {
 		super();
 	}
 
-	public MovimientoTransaccionalListDTO(Integer total, List<MovimientoTransaccionalDTO> movimientos) {
+	public MovimientoTransaccionalListDTO(Integer total, List<MovimientoProveedorDTO> movimientos) {
 		super();
 		this.total = total;
 		this.movimientos = movimientos;
@@ -38,11 +38,11 @@ public class MovimientoTransaccionalListDTO {
 		this.total = total;
 	}
 
-	public List<MovimientoTransaccionalDTO> getMovimientos() {
+	public List<MovimientoProveedorDTO> getMovimientos() {
 		return movimientos;
 	}
 
-	public void setMovimientos(List<MovimientoTransaccionalDTO> movimientos) {
+	public void setMovimientos(List<MovimientoProveedorDTO> movimientos) {
 		this.movimientos = movimientos;
 	}
 

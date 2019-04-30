@@ -29,21 +29,23 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoIDDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosResponseDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosProveedorService;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
 /**
  * @name MovimientosController
@@ -130,8 +132,22 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientosProvedor(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
-		movimientoTransaccionalListDTO = buildDummyX1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
+		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+//		movimientoTransaccionalListDTO = buildDummyX1();
+		Integer total = movimientosProveedorService
+				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		if (null != total) {
+			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
+			movimientoTransaccionalListDTO.setTotal(total);
+			movimientoTransaccionalListDTO
+					.setMovimientos(movimientosProveedorService.findByFolio(commonConciliacionRequestDTO));
+		} else
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		if (null == movimientoTransaccionalListDTO.getTotal() || null == movimientoTransaccionalListDTO.getMovimientos()
+				|| movimientoTransaccionalListDTO.getMovimientos().isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY,
 				movimientoTransaccionalListDTO);
 	}
 
@@ -155,12 +171,21 @@ public class MovimientosController {
 	public Response findMovimientosNocturnos(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
 		// movimientoProcesosNocturnosListDTO = buildDummyX2();
-		movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
-		movimientoProcesosNocturnosListDTO
-				.setTotal(movimientosMidasService.countByConciliacion((long) commonConciliacionRequestDTO.getFolio()));
-		movimientoProcesosNocturnosListDTO
-				.setMovimientos(movimientosMidasService.findByFolio(commonConciliacionRequestDTO));
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
+		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		Integer total = movimientosMidasService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		if (null != total) {
+			movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
+			movimientoProcesosNocturnosListDTO.setTotal(total);
+			movimientoProcesosNocturnosListDTO
+					.setMovimientos(movimientosMidasService.findByFolio(commonConciliacionRequestDTO));
+		} else
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		if (null == movimientoProcesosNocturnosListDTO.getTotal()
+				|| null == movimientoProcesosNocturnosListDTO.getMovimientos()
+				|| movimientoProcesosNocturnosListDTO.getMovimientos().isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY,
 				movimientoProcesosNocturnosListDTO);
 	}
 
@@ -182,7 +207,8 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalListRequestDTO movimientoTransaccionalDTO,
+	public Response saveMovimientosProvedor(
+			@RequestBody MovimientoTransaccionalListRequestDTO movimientoTransaccionalDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		MovimientoIDDTO movimientoIDDTO = null;
 		movimientoIDDTO = buildDummyX3();
@@ -210,7 +236,7 @@ public class MovimientosController {
 	public Response saveMovimientosNocturnos(
 			@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		MovimientoIDDTO movimientoIDDTO = null;
+//		MovimientoIDDTO movimientoIDDTO = null;
 //		movimientoIDDTO = buildDummyX3();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
@@ -223,7 +249,7 @@ public class MovimientosController {
 	 */
 	public static MovimientoTransaccionalListDTO buildDummyX1() {
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
-		MovimientoTransaccionalDTO movimientoTransaccionalDTO = new MovimientoTransaccionalDTO();
+		MovimientoProveedorDTO movimientoTransaccionalDTO = new MovimientoProveedorDTO();
 		movimientoTransaccionalDTO.setCodigoAutorizacion("67032");
 		movimientoTransaccionalDTO.setCodigoPuertaEnlace("Aprobado");
 		movimientoTransaccionalDTO.setCodigoRespuesta("0");
@@ -238,7 +264,7 @@ public class MovimientosController {
 		movimientoTransaccionalDTO.setIdTransaccion("1");
 		movimientoTransaccionalDTO.setMetodoPago("Tarjeta");
 		movimientoTransaccionalDTO.setMoneda("MXN");
-		movimientoTransaccionalDTO.setMonto(406.45);
+		movimientoTransaccionalDTO.setMonto(new BigDecimal("406.45"));
 		movimientoTransaccionalDTO.setNumeroLotePago("20181001");
 		movimientoTransaccionalDTO.setOrigenTransaccion("Internet");
 		movimientoTransaccionalDTO.setReciboTransaccion("827412214425");
@@ -254,7 +280,7 @@ public class MovimientosController {
 		movimientoTransaccionalDTO.setTipoTransaccion("Pago");
 		movimientoTransaccionalDTO.setTitularCuenta("Eduardo Lopez Lopez");
 		movimientoTransaccionalListDTO.setTotal(406);
-		List<MovimientoTransaccionalDTO> lst = new ArrayList<>();
+		List<MovimientoProveedorDTO> lst = new ArrayList<>();
 		lst.add(movimientoTransaccionalDTO);
 		movimientoTransaccionalListDTO.setMovimientos(lst);
 		return movimientoTransaccionalListDTO;

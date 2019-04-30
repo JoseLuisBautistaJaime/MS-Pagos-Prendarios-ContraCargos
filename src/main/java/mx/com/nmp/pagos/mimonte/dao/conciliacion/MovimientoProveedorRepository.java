@@ -4,6 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +22,22 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
  */
 @Repository("movimientoProveedorRepository")
 public interface MovimientoProveedorRepository extends PagingAndSortingRepository<MovimientoProveedor, Long> {
+
+	/**
+	 * Regresa los movimientos midas por id de conciliacion
+	 * 
+	 * @param conciliacionId
+	 * @param pageable
+	 * @return
+	 */
+	public List<MovimientoProveedor> findByReporteConciliacionId(final Long conciliacionId, Pageable pageable);
+
+	/**
+	 * Regresa el total de registros midas por id de conciliacion
+	 * 
+	 * @param conciliacionId
+	 * @return
+	 */
+	public Integer countByReporteConciliacionId(final Long conciliacionId);
+
 }

@@ -60,7 +60,10 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	private Date fechaHasta;
 
 	@OneToMany(mappedBy = "reporte", targetEntity = MovimientoMidas.class)
-	private Set<MovimientoMidas> movimientos;
+	private Set<MovimientoMidas> movimientosMidas;
+
+	@OneToMany(mappedBy = "reporte", targetEntity = MovimientoProveedor.class)
+	private Set<MovimientoProveedor> movimientosProveedor;
 
 	public Reporte() {
 		super();
@@ -114,12 +117,20 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 		this.fechaHasta = fechaHasta;
 	}
 
-	public Set<MovimientoMidas> getMovimientos() {
-		return movimientos;
+	public Set<MovimientoMidas> getMovimientosMidas() {
+		return movimientosMidas;
 	}
 
-	public void setMovimientos(Set<MovimientoMidas> movimientos) {
-		this.movimientos = movimientos;
+	public void setMovimientosMidas(Set<MovimientoMidas> movimientosMidas) {
+		this.movimientosMidas = movimientosMidas;
+	}
+
+	public Set<MovimientoProveedor> getMovimientosProveedor() {
+		return movimientosProveedor;
+	}
+
+	public void setMovimientosProveedor(Set<MovimientoProveedor> movimientosProveedor) {
+		this.movimientosProveedor = movimientosProveedor;
 	}
 
 	public void setId(Long id) {
@@ -128,9 +139,9 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 
 	@Override
 	public String toString() {
-		return "Reporte [id=" + id + ", idConciliacion=" + conciliacion + ", tipo=" + tipo + ", disponible="
-				+ disponible + ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + ", movimientos="
-				+ movimientos + "]";
+		return "Reporte [id=" + id + ", conciliacion=" + conciliacion + ", tipo=" + tipo + ", disponible=" + disponible
+				+ ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + ", movimientosMidas=" + movimientosMidas
+				+ ", movimientosProveedor=" + movimientosProveedor + "]";
 	}
 
 	@Override

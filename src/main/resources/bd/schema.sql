@@ -893,3 +893,16 @@ ALTER TABLE to_global CHANGE conciliacion id_conciliacion INT(11) NOT NULL;
 -- [2019-04-29 17:57:24] --
 ALTER TABLE to_movimiento_midas ADD COLUMN transaccion BIGINT(20);
 ALTER TABLE to_movimiento_midas ADD COLUMN fecha DATETIME;
+
+-- SE REALIZA RENOMBRADO DE COLUMNA reporte EN TABLA to_movimiento_proveedor para ajustar a estandar de noombrado --
+-- y se agrega clave foranea que apunte a el id de la tabla to_reporte --
+-- [2019-04-30 11:45:19] --
+ALTER TABLE to_movimiento_proveedor change reporte id_reporte INT(11);
+ALTER TABLE to_movimiento_proveedor ADD CONSTRAINT `fk_tmp_tr_1` FOREIGN KEY (`id_reporte`) REFERENCES `to_reporte` (`id`);
+
+-- SE REALIZA CORRECCION DE NOMBRADO EN CAMPO created_date DE TABLA to_reporte y to_conciliacion --
+-- [2019-04-30 12:24:57] --
+ALTER TABLE to_reporte CHANGE create_date created_date DATETIME NULL DEFAULT NULL;
+ALTER TABLE to_conciliacion CHANGE create_date created_date DATETIME NULL DEFAULT NULL;
+
+

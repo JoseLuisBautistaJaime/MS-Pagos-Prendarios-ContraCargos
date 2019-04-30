@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 
 /**
  * @name MovimientosBuilder
@@ -71,5 +73,69 @@ public abstract class MovimientosBuilder {
 				movimientoMidasDTOList.add(buildMovimientoMidasDTOFromMovimientoMidas(movimientoMidas));
 		}
 		return movimientoMidasDTOList;
+	}
+
+	/**
+	 * Construye un objeto de tipo MovimientoProveedorDTO a partir de un objeto de
+	 * tipo MovimientoProveedor
+	 * 
+	 * @param movimientoProveedor
+	 * @return
+	 */
+	public static MovimientoProveedorDTO buildMovimientoProveedorDTOFromMovimientoProveedor(
+			MovimientoProveedor movimientoProveedor) {
+		MovimientoProveedorDTO movimientoProveedorDTO = null;
+		if (null != movimientoProveedor) {
+			movimientoProveedorDTO = new MovimientoProveedorDTO();
+			movimientoProveedorDTO.setCodigoAutorizacion(movimientoProveedor.getCodigoAutorizacion());
+			movimientoProveedorDTO.setCodigoPuertaEnlace(movimientoProveedor.getCodigoPuertaEnlace());
+			movimientoProveedorDTO.setCodigoRespuesta(movimientoProveedor.getCodigoRespuesta());
+			movimientoProveedorDTO.setEntidadGestora(movimientoProveedor.getEntidadGestora());
+			movimientoProveedorDTO.setEsquemaTarjeta(movimientoProveedor.getEsquemaTarjeta());
+			movimientoProveedorDTO.setFecha(movimientoProveedor.getFecha());
+			movimientoProveedorDTO.setId(movimientoProveedor.getId());
+			movimientoProveedorDTO.setIdComerciante(movimientoProveedor.getIdComerciante());
+			movimientoProveedorDTO.setIdentificadorBanco(movimientoProveedor.getIdentificadorBanco());
+			movimientoProveedorDTO.setIdentificadorCuenta(movimientoProveedor.getIdentificadorCuenta());
+			movimientoProveedorDTO.setIdPedido(movimientoProveedor.getIdPedido());
+			movimientoProveedorDTO.setIdTransaccion(movimientoProveedor.getIdTransaccion());
+			movimientoProveedorDTO.setMetodoPago(movimientoProveedor.getMetodoPago());
+			movimientoProveedorDTO.setMoneda(movimientoProveedor.getMoneda());
+			movimientoProveedorDTO.setMonto(movimientoProveedor.getMonto());
+			movimientoProveedorDTO.setNumeroLotePago(movimientoProveedor.getNumeroLotePago());
+			movimientoProveedorDTO.setOrigenTransaccion(movimientoProveedor.getOrigenTransaccion());
+			movimientoProveedorDTO.setReciboTransaccion(movimientoProveedor.getReciboTransaccion());
+			movimientoProveedorDTO.setRecomendacionRiesgo(movimientoProveedor.getRecomendacionRiesgo());
+			movimientoProveedorDTO.setReferenciaPedido(movimientoProveedor.getReferenciaPedido());
+			movimientoProveedorDTO.setReferenciaTransaccion(movimientoProveedor.getReferenciaTransaccion());
+			movimientoProveedorDTO.setRespuesta3DS(movimientoProveedor.getRespuesta3ds());
+			movimientoProveedorDTO.setRespuestaAVS(movimientoProveedor.getRespuestaAvs());
+			movimientoProveedorDTO.setRespuestaCSC(movimientoProveedor.getRespuestaCsc());
+			movimientoProveedorDTO.setResultado(movimientoProveedor.getResultado());
+			movimientoProveedorDTO.setResultadoRevisionRiesgo(movimientoProveedor.getResultadoRevisionRiesgo());
+			movimientoProveedorDTO.setT3dsECI(movimientoProveedor.getRespuesta3ds());
+			movimientoProveedorDTO.setTipoTransaccion(movimientoProveedor.getTipoTransaccion());
+			movimientoProveedorDTO.setTitularCuenta(movimientoProveedor.getTitularCuenta());
+		}
+		return movimientoProveedorDTO;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo MovimientoProveedorDTO a partir de una
+	 * lista de objetos de tipo MovimientoProveedor
+	 * 
+	 * @param movimientoProveedorList
+	 * @return
+	 */
+	public static List<MovimientoProveedorDTO> buildMovimientoProveedorDTOListFromMovimientoProveedorList(
+			List<MovimientoProveedor> movimientoProveedorList) {
+		List<MovimientoProveedorDTO> movimientoProveedorDTO = null;
+		if (null != movimientoProveedorList) {
+			movimientoProveedorDTO = new ArrayList<>();
+			for (MovimientoProveedor movimientoProveedor : movimientoProveedorList) {
+				movimientoProveedorDTO.add(buildMovimientoProveedorDTOFromMovimientoProveedor(movimientoProveedor));
+			}
+		}
+		return movimientoProveedorDTO;
 	}
 }

@@ -23,6 +23,21 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 @Repository("movimientosMidasRepository")
 public interface MovimientosMidasRepository extends PagingAndSortingRepository<MovimientoMidas, Long> {
 
-	public List<MovimientoMidas> findByReporteConciliacion_Id(final Long conciliacionId, Pageable pageable);
+	/**
+	 * Regresa los movimientos midas por id de conciliacion
+	 * 
+	 * @param conciliacionId
+	 * @param pageable
+	 * @return
+	 */
+	public List<MovimientoMidas> findByReporteConciliacionId(final Long conciliacionId, Pageable pageable);
+
+	/**
+	 * Regresa el total de registros midas por id de conciliacion
+	 * 
+	 * @param conciliacionId
+	 * @return
+	 */
+	public Integer countByReporteConciliacionId(final Long conciliacionId);
 
 }

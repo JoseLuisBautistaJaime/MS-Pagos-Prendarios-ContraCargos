@@ -7,8 +7,15 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovimientosProveedorRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorBatchDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
@@ -23,6 +30,13 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
  */
 @Service("movimientosProveedorService")
 public class MovimientosProveedorService {
+
+	/**
+	 * repository de movimientos proveedor
+	 */
+	@Autowired
+	@Qualifier("movimientoProveedorRepository")
+	private MovimientoProveedorRepository movimientoProveedorRepository;
 
 	public MovimientosProveedorService() {
 		super();
@@ -66,12 +80,8 @@ public class MovimientosProveedorService {
 		return null;
 	}
 
-	/**
-	 * 
-	 * @param criterios
-	 */
-	public Integer count(ConsultaMovimientosProveedorRequestDTO criterios) {
-		return 0;
+	public Integer countByConciliacionId(final Long idConciliacion) {
+		return movimientoProveedorRepository.countByReporteConciliacionId(idConciliacion);
 	}
 
 	/**
@@ -80,6 +90,22 @@ public class MovimientosProveedorService {
 	 */
 	public void saveBatch(List<MovimientoProveedorBatchDTO> lista) {
 
+	}
+
+	/**
+	 * Regresa una lista de los movimientos de provedor paginados y por un folio de
+	 * conciliacion especifico
+	 * 
+	 * @param commonConciliacionRequestDTO
+	 * @return
+	 */
+	public List<MovimientoProveedorDTO> findByFolio(final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+		@SuppressWarnings("deprecation")
+		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
+				commonConciliacionRequestDTO.getResultados());
+		return MovimientosBuilder
+				.buildMovimientoProveedorDTOListFromMovimientoProveedorList(movimientoProveedorRepository
+						.findByReporteConciliacionId((long) commonConciliacionRequestDTO.getFolio(), pageable));
 	}
 
 }

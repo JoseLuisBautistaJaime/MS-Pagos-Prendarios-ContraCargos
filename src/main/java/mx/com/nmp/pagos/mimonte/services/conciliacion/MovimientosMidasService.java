@@ -31,6 +31,9 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 @Service("movimientosMidasService")
 public class MovimientosMidasService {
 
+	/**
+	 * Repository de movimientos midas
+	 */
 	@Autowired
 	@Qualifier("movimientosMidasRepository")
 	private MovimientosMidasRepository movimientosMidasRepository;
@@ -49,11 +52,13 @@ public class MovimientosMidasService {
 	}
 
 	/**
+	 * Regresa el total de registros de movimientos midas por id de conciliacion
 	 * 
 	 * @param idConciliacion
+	 * @return
 	 */
-	public Integer countByConciliacion(Long idConciliacion) {
-		return 0;
+	public Integer countByConciliacionId(final Long idConciliacion) {
+		return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion);
 	}
 
 	/**
@@ -96,7 +101,7 @@ public class MovimientosMidasService {
 		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
 				commonConciliacionRequestDTO.getResultados());
 		return MovimientosBuilder.buildMovimientoMidasDTOListFromMovimientoMidasList(movimientosMidasRepository
-				.findByReporteConciliacion_Id((long) commonConciliacionRequestDTO.getFolio(), pageable));
+				.findByReporteConciliacionId((long) commonConciliacionRequestDTO.getFolio(), pageable));
 	}
 
 	/**

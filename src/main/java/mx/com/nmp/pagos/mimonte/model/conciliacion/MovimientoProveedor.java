@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,8 +38,9 @@ public class MovimientoProveedor {
 	@Column(name = "id", nullable = false, insertable = false, updatable = false, unique = true)
 	private Long id;
 
-	@Column(name = "reporte", nullable = false)
-	private Long idReporte;
+	@ManyToOne
+	@JoinColumn(name = "id_reporte", nullable = false)
+	private Reporte reporte;
 
 	@Size(max = ConciliacionConstants.ENTITY_VALIDATION_SIZE_VALUE_45, message = ConciliacionConstants.ENTITY_VALIDATION_SIZE_MESSAGE_45)
 	@Column(name = "id_comerciante", nullable = true)
@@ -162,12 +165,12 @@ public class MovimientoProveedor {
 		this.id = id;
 	}
 
-	public Long getIdReporte() {
-		return idReporte;
+	public Reporte getReporte() {
+		return reporte;
 	}
 
-	public void setIdReporte(Long idReporte) {
-		this.idReporte = idReporte;
+	public void setReporte(Reporte reporte) {
+		this.reporte = reporte;
 	}
 
 	public String getIdComerciante() {
@@ -396,7 +399,7 @@ public class MovimientoProveedor {
 
 	@Override
 	public String toString() {
-		return "MovimientoProveedor [id=" + id + ", idReporte=" + idReporte + ", idComerciante=" + idComerciante
+		return "MovimientoProveedor [id=" + id + ", idReporte=" + reporte + ", idComerciante=" + idComerciante
 				+ ", idPedido=" + idPedido + ", referenciaPedido=" + referenciaPedido + ", idTransaccion="
 				+ idTransaccion + ", referenciaTransaccion=" + referenciaTransaccion + ", entidadGestora="
 				+ entidadGestora + ", fecha=" + fecha + ", metodoPago=" + metodoPago + ", tipoTransaccion="

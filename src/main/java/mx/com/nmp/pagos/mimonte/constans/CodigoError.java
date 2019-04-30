@@ -15,6 +15,7 @@ public enum CodigoError {
     NMP_PMIMONTE_0001("Los parametros no son correctos", TipoError.CLIENTE, SeveridadError.BAJA),
     NMP_PMIMONTE_0004("El resultado que desea consultar no existe", TipoError.CLIENTE, SeveridadError.MEDIA),
     NMP_PMIMONTE_0005("No existen registros para el catalogo especificado", TipoError.CLIENTE, SeveridadError.MEDIA),
+    NMP_PMIMONTE_0009("No existen informacion para mostrar", TipoError.CLIENTE, SeveridadError.BAJA),
     NMP_PMIMONTE_0006("Cuerpo de la peticion vacio o ocurrio un error al leerla",
             TipoError.CLIENTE, SeveridadError.MEDIA),
     NMP_PMIMONTE_0007("Los valores de las propiedades del cuerpo de la petición no son correctos",
