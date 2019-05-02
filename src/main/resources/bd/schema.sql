@@ -905,4 +905,7 @@ ALTER TABLE to_movimiento_proveedor ADD CONSTRAINT `fk_tmp_tr_1` FOREIGN KEY (`i
 ALTER TABLE to_reporte CHANGE create_date created_date DATETIME NULL DEFAULT NULL;
 ALTER TABLE to_conciliacion CHANGE create_date created_date DATETIME NULL DEFAULT NULL;
 
-
+-- SE CAMBIAN IDENTIFICADORES DE TABLAS: to_movimiento_midas y to_movimiento_proveedor PARA QUE SEAN AUTOINCREMENTALES --
+-- [2019-05-02 10:14:14] --
+ALTER TABLE to_movimiento_midas CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE to_movimiento_proveedor CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;

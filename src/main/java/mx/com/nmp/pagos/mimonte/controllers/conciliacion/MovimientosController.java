@@ -132,23 +132,23 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientosProvedor(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
-//		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
-//			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		movimientoTransaccionalListDTO = buildDummyX1();
-//		Integer total = movimientosProveedorService
-//				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
-//		if (null != total) {
-//			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
-//			movimientoTransaccionalListDTO.setTotal(total);
-//			movimientoTransaccionalListDTO
-//					.setMovimientos(movimientosProveedorService.findByFolio(commonConciliacionRequestDTO));
-//		} else
-//			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-//		if (null == movimientoTransaccionalListDTO.getTotal() || null == movimientoTransaccionalListDTO.getMovimientos()
-//				|| movimientoTransaccionalListDTO.getMovimientos().isEmpty())
-//			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY,
-				movimientoTransaccionalListDTO);
+		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+//		movimientoTransaccionalListDTO = buildDummyX1();
+		Integer total = movimientosProveedorService
+				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		if (null != total) {
+			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
+			movimientoTransaccionalListDTO.setTotal(total);
+			movimientoTransaccionalListDTO
+					.setMovimientos(movimientosProveedorService.findByFolio(commonConciliacionRequestDTO));
+		} else
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		if (null == movimientoTransaccionalListDTO.getTotal() || null == movimientoTransaccionalListDTO.getMovimientos()
+				|| movimientoTransaccionalListDTO.getMovimientos().isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoTransaccionalListDTO);
 	}
 
 	/**
@@ -170,23 +170,23 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientosNocturnos(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
-		 movimientoProcesosNocturnosListDTO = buildDummyX2();
-//		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
-//			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-//		Integer total = movimientosMidasService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
-//		if (null != total) {
-//			movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
-//			movimientoProcesosNocturnosListDTO.setTotal(total);
-//			movimientoProcesosNocturnosListDTO
-//					.setMovimientos(movimientosMidasService.findByFolio(commonConciliacionRequestDTO));
-//		} else
-//			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-//		if (null == movimientoProcesosNocturnosListDTO.getTotal()
-//				|| null == movimientoProcesosNocturnosListDTO.getMovimientos()
-//				|| movimientoProcesosNocturnosListDTO.getMovimientos().isEmpty())
-//			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY,
-				movimientoProcesosNocturnosListDTO);
+//		 movimientoProcesosNocturnosListDTO = buildDummyX2();
+		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		Integer total = movimientosMidasService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		if (null != total) {
+			movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
+			movimientoProcesosNocturnosListDTO.setTotal(total);
+			movimientoProcesosNocturnosListDTO
+					.setMovimientos(movimientosMidasService.findByFolio(commonConciliacionRequestDTO));
+		} else
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		if (null == movimientoProcesosNocturnosListDTO.getTotal()
+				|| null == movimientoProcesosNocturnosListDTO.getMovimientos()
+				|| movimientoProcesosNocturnosListDTO.getMovimientos().isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoProcesosNocturnosListDTO);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class MovimientosController {
 		movimientoIDDTO = buildDummyX3();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 //			movimientoIDDTO
-			null);
+				null);
 	}
 
 	/**
@@ -239,7 +239,7 @@ public class MovimientosController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 
 		MovimientoIDDTO movimientoIDDTO = null;
-	movimientoIDDTO = buildDummyX3();
+		movimientoIDDTO = buildDummyX3();
 
 //		MovimientoIDDTO movimientoIDDTO = null;
 //		movimientoIDDTO = buildDummyX3();
