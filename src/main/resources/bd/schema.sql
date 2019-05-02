@@ -909,3 +909,9 @@ ALTER TABLE to_conciliacion CHANGE create_date created_date DATETIME NULL DEFAUL
 -- [2019-05-02 10:14:14] --
 ALTER TABLE to_movimiento_midas CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE to_movimiento_proveedor CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
+
+
+-- SE AGREGAN COLUMNAS estado_transaccion y canal a tabla to_movimiento_midas --
+-- [2019-05-02 17:37:10] --
+ALTER TABLE to_movimiento_midas ADD COLUMN estado_transaccion VARCHAR(100) NULL DEFAULT NULL;
+ALTER TABLE to_movimiento_midas ADD COLUMN canal VARCHAR(50) NULL DEFAULT NULL;

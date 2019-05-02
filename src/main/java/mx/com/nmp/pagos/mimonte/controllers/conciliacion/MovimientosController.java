@@ -210,10 +210,9 @@ public class MovimientosController {
 	public Response saveMovimientosProvedor(
 			@RequestBody MovimientoTransaccionalListRequestDTO movimientoTransaccionalDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		MovimientoIDDTO movimientoIDDTO = null;
-		movimientoIDDTO = buildDummyX3();
+//		MovimientoIDDTO movimientoIDDTO = null;
+//		movimientoIDDTO = buildDummyX3();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-//			movimientoIDDTO
 				null);
 	}
 
@@ -237,13 +236,8 @@ public class MovimientosController {
 	public Response saveMovimientosNocturnos(
 			@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-
-		MovimientoIDDTO movimientoIDDTO = null;
-		movimientoIDDTO = buildDummyX3();
-
 //		MovimientoIDDTO movimientoIDDTO = null;
 //		movimientoIDDTO = buildDummyX3();
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 	}
@@ -312,9 +306,11 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setNumAutorizacion("12345");
 		movimientoProcesosNocturnosDTO.setOperacionAbr("APL");
 		movimientoProcesosNocturnosDTO.setOperacionDesc("Abonos Pagos-Libres");
-		movimientoProcesosNocturnosDTO.setSucursal(12L);
+		movimientoProcesosNocturnosDTO.setSucursal(12);
 		movimientoProcesosNocturnosDTO.setTipoContratoAbr("PL");
 		movimientoProcesosNocturnosDTO.setTipoContratoDesc("Pagos Libres");
+		movimientoProcesosNocturnosDTO.setEstadoTransaccion("Activo");
+		movimientoProcesosNocturnosDTO.setCanal("Mobile");
 		movimientoProcesosNocturnosListDTO.setTotal(400);
 		List<MovimientoMidasDTO> lst = new ArrayList<>();
 		lst.add(movimientoProcesosNocturnosDTO);
