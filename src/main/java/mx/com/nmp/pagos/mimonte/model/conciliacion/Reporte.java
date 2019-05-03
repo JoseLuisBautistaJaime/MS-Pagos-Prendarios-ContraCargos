@@ -5,7 +5,6 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -59,11 +57,11 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	@Column(name = "fecha_hasta", nullable = false)
 	private Date fechaHasta;
 
-	@OneToMany(mappedBy = "reporte", targetEntity = MovimientoMidas.class)
-	private Set<MovimientoMidas> movimientosMidas;
-
-	@OneToMany(mappedBy = "reporte", targetEntity = MovimientoProveedor.class)
-	private Set<MovimientoProveedor> movimientosProveedor;
+//	@OneToMany(mappedBy = "reporte", targetEntity = MovimientoMidas.class)
+//	private Set<MovimientoMidas> movimientosMidas;
+//
+//	@OneToMany(mappedBy = "reporte", targetEntity = MovimientoProveedor.class)
+//	private Set<MovimientoProveedor> movimientosProveedor;
 
 	public Reporte() {
 		super();
@@ -117,31 +115,37 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 		this.fechaHasta = fechaHasta;
 	}
 
-	public Set<MovimientoMidas> getMovimientosMidas() {
-		return movimientosMidas;
-	}
+//	public Set<MovimientoMidas> getMovimientosMidas() {
+//		return movimientosMidas;
+//	}
 
-	public void setMovimientosMidas(Set<MovimientoMidas> movimientosMidas) {
-		this.movimientosMidas = movimientosMidas;
-	}
+//	public void setMovimientosMidas(Set<MovimientoMidas> movimientosMidas) {
+//		this.movimientosMidas = movimientosMidas;
+//	}
 
-	public Set<MovimientoProveedor> getMovimientosProveedor() {
-		return movimientosProveedor;
-	}
+//	public Set<MovimientoProveedor> getMovimientosProveedor() {
+//		return movimientosProveedor;
+//	}
 
-	public void setMovimientosProveedor(Set<MovimientoProveedor> movimientosProveedor) {
-		this.movimientosProveedor = movimientosProveedor;
-	}
+//	public void setMovimientosProveedor(Set<MovimientoProveedor> movimientosProveedor) {
+//		this.movimientosProveedor = movimientosProveedor;
+//	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+//	@Override
+//	public String toString() {
+//		return "Reporte [id=" + id + ", conciliacion=" + conciliacion + ", tipo=" + tipo + ", disponible=" + disponible
+//				+ ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + ", movimientosMidas=" + movimientosMidas
+//				+ ", movimientosProveedor=" + movimientosProveedor + "]";
+//	}
+
 	@Override
 	public String toString() {
 		return "Reporte [id=" + id + ", conciliacion=" + conciliacion + ", tipo=" + tipo + ", disponible=" + disponible
-				+ ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + ", movimientosMidas=" + movimientosMidas
-				+ ", movimientosProveedor=" + movimientosProveedor + "]";
+				+ ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + "]";
 	}
 
 	@Override
@@ -158,8 +162,8 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 		result = prime * result + ((fechaDesde == null) ? 0 : fechaDesde.hashCode());
 		result = prime * result + ((fechaHasta == null) ? 0 : fechaHasta.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((movimientosMidas == null) ? 0 : movimientosMidas.hashCode());
-		result = prime * result + ((movimientosProveedor == null) ? 0 : movimientosProveedor.hashCode());
+//		result = prime * result + ((movimientosMidas == null) ? 0 : movimientosMidas.hashCode());
+//		result = prime * result + ((movimientosProveedor == null) ? 0 : movimientosProveedor.hashCode());
 		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
 		return result;
 	}
@@ -198,16 +202,16 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (movimientosMidas == null) {
-			if (other.movimientosMidas != null)
-				return false;
-		} else if (!movimientosMidas.equals(other.movimientosMidas))
-			return false;
-		if (movimientosProveedor == null) {
-			if (other.movimientosProveedor != null)
-				return false;
-		} else if (!movimientosProveedor.equals(other.movimientosProveedor))
-			return false;
+//		if (movimientosMidas == null) {
+//			if (other.movimientosMidas != null)
+//				return false;
+//		} else if (!movimientosMidas.equals(other.movimientosMidas))
+//			return false;
+//		if (movimientosProveedor == null) {
+//			if (other.movimientosProveedor != null)
+//				return false;
+//		} else if (!movimientosProveedor.equals(other.movimientosProveedor))
+//			return false;
 		if (tipo == null) {
 			if (other.tipo != null)
 				return false;

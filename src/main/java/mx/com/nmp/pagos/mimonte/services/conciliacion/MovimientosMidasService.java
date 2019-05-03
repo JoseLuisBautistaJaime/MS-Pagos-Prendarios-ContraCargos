@@ -57,7 +57,7 @@ public class MovimientosMidasService {
 	 * @param idConciliacion
 	 * @return
 	 */
-	public Integer countByConciliacionId(final Long idConciliacion) {
+	public Long countByConciliacionId(final Long idConciliacion) {
 		return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion);
 	}
 

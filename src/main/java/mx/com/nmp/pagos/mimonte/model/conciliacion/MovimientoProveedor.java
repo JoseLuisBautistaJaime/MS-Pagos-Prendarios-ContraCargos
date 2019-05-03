@@ -12,8 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,9 +36,10 @@ public class MovimientoProveedor {
 	@Column(name = "id", nullable = false, insertable = false, updatable = false, unique = true)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "id_reporte", nullable = false)
-	private Reporte reporte;
+//	@ManyToOne
+//	@JoinColumn(name = "id_reporte", nullable = false)
+	@Column(name = "id_reporte", nullable = false)
+	private Long reporte;
 
 	@Size(max = ConciliacionConstants.ENTITY_VALIDATION_SIZE_VALUE_45, message = ConciliacionConstants.ENTITY_VALIDATION_SIZE_MESSAGE_45)
 	@Column(name = "id_comerciante", nullable = true)
@@ -165,11 +164,11 @@ public class MovimientoProveedor {
 		this.id = id;
 	}
 
-	public Reporte getReporte() {
+	public Long getReporte() {
 		return reporte;
 	}
 
-	public void setReporte(Reporte reporte) {
+	public void setReporte(Long reporte) {
 		this.reporte = reporte;
 	}
 

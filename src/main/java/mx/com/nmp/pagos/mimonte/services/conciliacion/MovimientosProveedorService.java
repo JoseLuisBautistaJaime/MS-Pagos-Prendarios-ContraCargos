@@ -80,7 +80,7 @@ public class MovimientosProveedorService {
 		return null;
 	}
 
-	public Integer countByConciliacionId(final Long idConciliacion) {
+	public Long countByConciliacionId(final Long idConciliacion) {
 		return movimientoProveedorRepository.countByReporteConciliacionId(idConciliacion);
 	}
 

@@ -12,8 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,9 +36,10 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 	@Column(name = "id", nullable = false, insertable = false, updatable = false, unique = true)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "id_reporte", nullable = false)
-	private Reporte reporte;
+//	@ManyToOne
+//	@JoinColumn(name = "id_reporte", nullable = false)
+	@Column(name = "id_reporte", nullable = false)
+	private Long reporte;
 
 	@Column(name = "transaccion", nullable = false)
 	private Long transaccion;
@@ -105,11 +104,11 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 		this.id = id;
 	}
 
-	public Reporte getReporte() {
+	public Long getReporte() {
 		return reporte;
 	}
 
-	public void setReporte(Reporte reporte) {
+	public void setReporte(Long reporte) {
 		this.reporte = reporte;
 	}
 

@@ -135,8 +135,7 @@ public class MovimientosController {
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 //		movimientoTransaccionalListDTO = buildDummyX1();
-		Integer total = movimientosProveedorService
-				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		Long total = movimientosProveedorService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
 		if (null != total) {
 			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
 			movimientoTransaccionalListDTO.setTotal(total);
@@ -173,7 +172,7 @@ public class MovimientosController {
 //		 movimientoProcesosNocturnosListDTO = buildDummyX2();
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		Integer total = movimientosMidasService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		Long total = movimientosMidasService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
 		if (null != total) {
 			movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
 			movimientoProcesosNocturnosListDTO.setTotal(total);
@@ -279,7 +278,7 @@ public class MovimientosController {
 		movimientoTransaccionalDTO.setT3dsECI("");
 		movimientoTransaccionalDTO.setTipoTransaccion("Pago");
 		movimientoTransaccionalDTO.setTitularCuenta("Eduardo Lopez Lopez");
-		movimientoTransaccionalListDTO.setTotal(406);
+		movimientoTransaccionalListDTO.setTotal(406L);
 		List<MovimientoProveedorDTO> lst = new ArrayList<>();
 		lst.add(movimientoTransaccionalDTO);
 		movimientoTransaccionalListDTO.setMovimientos(lst);
@@ -311,7 +310,7 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setTipoContratoDesc("Pagos Libres");
 		movimientoProcesosNocturnosDTO.setEstadoTransaccion("Activo");
 		movimientoProcesosNocturnosDTO.setCanal("Mobile");
-		movimientoProcesosNocturnosListDTO.setTotal(400);
+		movimientoProcesosNocturnosListDTO.setTotal(400L);
 		List<MovimientoMidasDTO> lst = new ArrayList<>();
 		lst.add(movimientoProcesosNocturnosDTO);
 		movimientoProcesosNocturnosListDTO.setMovimientos(lst);
