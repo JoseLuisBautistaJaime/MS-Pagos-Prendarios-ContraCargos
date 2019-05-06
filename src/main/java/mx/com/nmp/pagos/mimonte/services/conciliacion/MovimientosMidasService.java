@@ -19,7 +19,7 @@ import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovimientosMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasBatchDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
@@ -72,10 +72,11 @@ public class MovimientosMidasService {
 	 * Regresa el total de registros de movimientos midas por id de conciliacion
 	 * 
 	 * @param idConciliacion
+	 * @param estatus
 	 * @return
 	 */
-	public Long countByConciliacionId(final Long idConciliacion) {
-		return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion);
+	public Long countByConciliacionId(final Long idConciliacion, final String estatus) {
+		return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion, estatus);
 	}
 
 	/**
@@ -113,12 +114,14 @@ public class MovimientosMidasService {
 	 * @param commonConciliacionRequestDTO
 	 * @return
 	 */
-	public List<MovimientoMidasDTO> findByFolio(final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+	public List<MovimientoMidasDTO> findByFolio(
+			final CommonConciliacionEstatusRequestDTO commonConciliacionRequestDTO) {
 		@SuppressWarnings("deprecation")
 		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
 				commonConciliacionRequestDTO.getResultados());
-		return MovimientosBuilder.buildMovimientoMidasDTOListFromMovimientoMidasList(movimientosMidasRepository
-				.findByReporteConciliacionId((long) commonConciliacionRequestDTO.getFolio(), pageable));
+		return MovimientosBuilder.buildMovimientoMidasDTOListFromMovimientoMidasList(
+				movimientosMidasRepository.findByReporteConciliacionId((long) commonConciliacionRequestDTO.getFolio(),
+						commonConciliacionRequestDTO.getEstatus(), pageable));
 	}
 
 	/**

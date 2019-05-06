@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
@@ -18,6 +19,22 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequ
  * @version 0.1
  */
 public interface ValidadorConciliacion {
+
+	/**
+	 * Valida que los parametros de entrada de un objeto
+	 * CommonConciliacionEstatusRequestDTO sean correctos
+	 * 
+	 * @param commonConciliacionRequestDTO
+	 * @return
+	 */
+	public static boolean validateCommonConciliacionEstatusRequestDTO(
+			final CommonConciliacionEstatusRequestDTO commonConciliacionRequestDTO) {
+		return (null != commonConciliacionRequestDTO && null != commonConciliacionRequestDTO.getFolio()
+				&& null != commonConciliacionRequestDTO.getPagina()
+				&& null != commonConciliacionRequestDTO.getResultados() && commonConciliacionRequestDTO.getFolio() > 0
+				&& commonConciliacionRequestDTO.getResultados() > 0 && commonConciliacionRequestDTO.getPagina() >= 0
+				&& null != commonConciliacionRequestDTO.getEstatus());
+	}
 
 	/**
 	 * Valida que los parametros de entrada de un objeto
