@@ -32,7 +32,7 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 	private BigDecimal comisiones;
 	private BigDecimal interes;
 	private String estatus;
-	private String canal;
+	private String idConsumidor;
 
 	public Long getId() {
 		return id;
@@ -162,12 +162,12 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 		this.estadoTransaccion = estadoTransaccion;
 	}
 
-	public String getCanal() {
-		return canal;
+	public String getIdConsumidor() {
+		return idConsumidor;
 	}
 
-	public void setCanal(String canal) {
-		this.canal = canal;
+	public void setIdConsumidor(String idConsumidor) {
+		this.idConsumidor = idConsumidor;
 	}
 
 	@Override
@@ -177,7 +177,7 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 				+ ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc + ", montoOperacion="
 				+ montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc
 				+ ", numAutorizacion=" + numAutorizacion + ", capitalActual=" + capitalActual + ", comisiones="
-				+ comisiones + ", interes=" + interes + ", estatus=" + estatus + ", canal=" + canal + "]";
+				+ comisiones + ", interes=" + interes + ", estatus=" + estatus + ", idConsumidor=" + idConsumidor + "]";
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((canal == null) ? 0 : canal.hashCode());
+		result = prime * result + ((idConsumidor == null) ? 0 : idConsumidor.hashCode());
 		result = prime * result + ((capitalActual == null) ? 0 : capitalActual.hashCode());
 		result = prime * result + ((comisiones == null) ? 0 : comisiones.hashCode());
 		result = prime * result + ((estadoTransaccion == null) ? 0 : estadoTransaccion.hashCode());
@@ -218,10 +218,10 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 		if (getClass() != obj.getClass())
 			return false;
 		MovimientoMidasDTO other = (MovimientoMidasDTO) obj;
-		if (canal == null) {
-			if (other.canal != null)
+		if (idConsumidor == null) {
+			if (other.idConsumidor != null)
 				return false;
-		} else if (!canal.equals(other.canal))
+		} else if (!idConsumidor.equals(other.idConsumidor))
 			return false;
 		if (capitalActual == null) {
 			if (other.capitalActual != null)
@@ -305,5 +305,5 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 			return false;
 		return true;
 	}
-	
+
 }

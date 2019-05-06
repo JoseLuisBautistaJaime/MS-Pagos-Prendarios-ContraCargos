@@ -42,6 +42,12 @@ public final class ConciliacionConstants {
 	public static final String ENTITY_VALIDATION_SIZE_MESSAGE_45 = "Debe ingresar maximo 45 caracteres";
 
 	/**
+	 * Mensaje que es mostrado si se genera un error en la creacion del objeto
+	 * reporte en BD
+	 */
+	public static final String REPORT_GENERATION_ERROR_MESSAGE = "Se ha generado un error durante la generacion del reporte";
+
+	/**
 	 * Mensaje que es mostrado cuando se realiza una consulta de manera exitosa
 	 */
 	public static final String MSG_SUCCESSFUL_MOVIMIENTOS_QUERY = "Consulta movimientos exitosa.";

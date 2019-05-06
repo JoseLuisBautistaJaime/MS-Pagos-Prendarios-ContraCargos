@@ -27,6 +27,15 @@ import mx.com.nmp.pagos.mimonte.model.Updatable;
 @Table(name = "to_conciliacion")
 public class Conciliacion extends Updatable {
 
+	public Conciliacion() {
+		super();
+	}
+
+	public Conciliacion(Long id) {
+		super();
+		this.id = id;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")

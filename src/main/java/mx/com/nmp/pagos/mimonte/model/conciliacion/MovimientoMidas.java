@@ -36,8 +36,6 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 	@Column(name = "id", nullable = false, insertable = false, updatable = false, unique = true)
 	private Long id;
 
-//	@ManyToOne
-//	@JoinColumn(name = "id_reporte", nullable = false)
 	@Column(name = "id_reporte", nullable = false)
 	private Long reporte;
 
@@ -93,8 +91,8 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 	@Column(name = "estatus", nullable = true)
 	private String estatus;
 
-	@Column(name = "canal")
-	private String canal;
+	@Column(name = "id_consumidor")
+	private String idConsumidor;
 
 	public Long getId() {
 		return id;
@@ -232,12 +230,12 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 		this.estadoTransaccion = estadoTransaccion;
 	}
 
-	public String getCanal() {
-		return canal;
+	public String getIdConsumidor() {
+		return idConsumidor;
 	}
 
-	public void setCanal(String canal) {
-		this.canal = canal;
+	public void setIdConsumidor(String idConsumidor) {
+		this.idConsumidor = idConsumidor;
 	}
 
 	@Override
@@ -247,7 +245,7 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 				+ sucursal + ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc + ", monto=" + monto
 				+ ", tipoContratoAbr=" + tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc
 				+ ", numAutorizacion=" + numAutorizacion + ", capital=" + capital + ", comisiones=" + comisiones
-				+ ", interes=" + interes + ", estatus=" + estatus + ", canal=" + canal + "]";
+				+ ", interes=" + interes + ", estatus=" + estatus + ", idConsumidor=" + idConsumidor + "]";
 	}
 
 	@Override
@@ -259,7 +257,7 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((canal == null) ? 0 : canal.hashCode());
+		result = prime * result + ((idConsumidor == null) ? 0 : idConsumidor.hashCode());
 		result = prime * result + ((capital == null) ? 0 : capital.hashCode());
 		result = prime * result + ((comisiones == null) ? 0 : comisiones.hashCode());
 		result = prime * result + ((estadoTransaccion == null) ? 0 : estadoTransaccion.hashCode());
@@ -289,10 +287,10 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 		if (getClass() != obj.getClass())
 			return false;
 		MovimientoMidas other = (MovimientoMidas) obj;
-		if (canal == null) {
-			if (other.canal != null)
+		if (idConsumidor == null) {
+			if (other.idConsumidor != null)
 				return false;
-		} else if (!canal.equals(other.canal))
+		} else if (!idConsumidor.equals(other.idConsumidor))
 			return false;
 		if (capital == null) {
 			if (other.capital != null)

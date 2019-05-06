@@ -915,3 +915,55 @@ ALTER TABLE to_movimiento_proveedor CHANGE id id INT(11) NOT NULL AUTO_INCREMENT
 -- [2019-05-02 17:37:10] --
 ALTER TABLE to_movimiento_midas ADD COLUMN estado_transaccion VARCHAR(100) NULL DEFAULT NULL;
 ALTER TABLE to_movimiento_midas ADD COLUMN canal VARCHAR(50) NULL DEFAULT NULL;
+
+-- SE CAMBIA LA ESTRUCTURA DE LA TABLA to_movimiento proveedor --
+-- [2019-05-06 13:38:45] --
+TRUNCATE to_movimiento_proveedor;
+DROP TABLE IF EXISTS to_movimiento_proveedor;
+
+CREATE TABLE `to_movimiento_proveedor` (
+  `id` VARCHAR(100),
+  `id_reporte` int(11) NOT NULL,
+  `authorization` VARCHAR(50) NOT NULL,
+  `operation_type` VARCHAR(50) NOT NULL,
+  `method` VARCHAR(50) NOT NULL,
+  `transaction_type` VARCHAR(50) NOT NULL,
+  `status` VARCHAR(50) NOT NULL,
+  `conciliated` BIT NOT NULL DEFAULT FALSE,
+  `creation_date` DATETIME NOT NULL,
+  `operation_date` DATETIME NOT NULL,
+  `description` VARCHAR(50) NOT NULL,
+  `error_message` VARCHAR(50) NOT NULL,
+  `order_id` VARCHAR(50) NOT NULL,
+  `customer_id` VARCHAR(50) NOT NULL,
+  `error_code` VARCHAR(50) NOT NULL,
+  `currency` VARCHAR(50) NOT NULL,
+  `amount` DECIMAL(16,4) NOT NULL,
+  `payment_method_type` VARCHAR(50) NOT NULL,
+  `payment_method_url` VARCHAR(50) NOT NULL,
+  `card_id` VARCHAR(50) NOT NULL,
+  `card_type` VARCHAR(50) NOT NULL,
+  `card_brand` VARCHAR(50) NOT NULL,
+  `card_address` VARCHAR(50) NOT NULL,
+  `card_number` VARCHAR(50) NOT NULL,
+  `card_holder_name` VARCHAR(50) NOT NULL,
+  `card_expiration_year` VARCHAR(50) NOT NULL,
+  `card_expiration_month` VARCHAR(50) NOT NULL,
+  `card_allows_charges` BIT NOT NULL,
+  `card_allows_payouts` BIT NOT NULL,
+  `card_creation_date` DATETIME NOT NULL,
+  `card_bank_name` VARCHAR(50) NOT NULL,
+  `card_bank_code` VARCHAR(50) NOT NULL,
+  `card_customer_id` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_to_movimiento_midas_to_reporte1` (`id_reporte`),
+  CONSTRAINT `fk_to_movimiento_midas_to_reporte1` FOREIGN KEY (`id_reporte`) REFERENCES `to_reporte` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+
+-- SE ACTUALIZA ID DE TABLA to_reporte A AUTO_INCREMENTAL
+-- [2019-05-06 14:47:11] --
+SET FOREIGN_KEY_CHECKS=0;
+ALTER TABLE to_reporte CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
+SET FOREIGN_KEY_CHECKS=1;
+

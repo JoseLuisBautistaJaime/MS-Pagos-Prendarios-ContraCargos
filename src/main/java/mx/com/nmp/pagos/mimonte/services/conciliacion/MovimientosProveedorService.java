@@ -12,13 +12,23 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovimientosProveedorRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorBatchDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
+import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * @name MovimientosProveedorService
@@ -37,6 +47,13 @@ public class MovimientosProveedorService {
 	@Autowired
 	@Qualifier("movimientoProveedorRepository")
 	private MovimientoProveedorRepository movimientoProveedorRepository;
+
+	/**
+	 * Repository de Reporte
+	 */
+	@Autowired
+	@Qualifier("reporteRepository")
+	private ReporteRepository reporteRepository;
 
 	public MovimientosProveedorService() {
 		super();
@@ -93,6 +110,32 @@ public class MovimientosProveedorService {
 	}
 
 	/**
+	 * Guarda una lista de entidades de tipo MovimientoProveedor
+	 * 
+	 * @param movimientoTransaccionalListRequestDTO
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void save(MovimientoTransaccionalListRequestDTO movimientoTransaccionalListRequestDTO,
+			final String userRequest) {
+		Reporte reporte = buildReporte(movimientoTransaccionalListRequestDTO.getFolio(),
+				movimientoTransaccionalListRequestDTO.getFechaDesde(),
+				movimientoTransaccionalListRequestDTO.getFechaHasta(), userRequest);
+		if (null == reporte)
+			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+		try {
+			reporte = reporteRepository.save(reporte);
+			if (0 == reporte.getId())
+				throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+			List<MovimientoProveedor> movimientoProveedorList = MovimientosBuilder
+					.buildMovimientoProveedorListFromMovimientoTransaccionalListRequestDTO(
+							movimientoTransaccionalListRequestDTO, reporte.getId());
+			movimientoProveedorRepository.saveAll(movimientoProveedorList);
+		} catch (Exception ex) {
+			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+		}
+	}
+
+	/**
 	 * Regresa una lista de los movimientos de provedor paginados y por un folio de
 	 * conciliacion especifico
 	 * 
@@ -106,6 +149,34 @@ public class MovimientosProveedorService {
 		return MovimientosBuilder
 				.buildMovimientoProveedorDTOListFromMovimientoProveedorList(movimientoProveedorRepository
 						.findByReporteConciliacionId((long) commonConciliacionRequestDTO.getFolio(), pageable));
+	}
+
+	/**
+	 * Construye un objeto de tipo reporte para ser persistido durante el registro
+	 * de movimientos de proveedor transaccional
+	 * 
+	 * @param folio
+	 * @param fechaDesde
+	 * @param fechaHasta
+	 * @param userRequest
+	 * @return
+	 */
+	public static Reporte buildReporte(final Integer folio, final Date fechaDesde, final Date fechaHasta,
+			final String userRequest) {
+		Reporte reporte = new Reporte();
+		if (null == folio || null == fechaDesde || null == fechaHasta || null == userRequest)
+			return null;
+		reporte.setConciliacion(new Conciliacion((long) folio));
+		reporte.setCreatedBy(userRequest);
+		reporte.setCreatedDate(new Date());
+		reporte.setDisponible(true);
+		reporte.setFechaDesde(fechaDesde);
+		reporte.setFechaHasta(fechaHasta);
+		reporte.setId(0);
+		reporte.setLastModifiedBy(null);
+		reporte.setLastModifiedDate(null);
+		reporte.setTipo(TipoReporteEnum.PROVEEDOR.name());
+		return reporte;
 	}
 
 }

@@ -18,283 +18,177 @@ import java.util.Date;
  */
 public class MovimientoProveedorDTO implements Comparable<MovimientoProveedorDTO> {
 
-	private Long id;
-	private String idComerciante;
-	private String idPedido;
-	private String referenciaPedido;
-	private String idTransaccion;
-	private String referenciaTransaccion;
-	private String entidadGestora;
-	private Date fecha;
-	private String metodoPago;
-	private String tipoTransaccion;
-	private BigDecimal monto;
-	private String moneda;
-	private String resultado;
-	private String codigoPuertaEnlace;
-	private String esquemaTarjeta;
-	private String identificadorCuenta;
-	private String identificadorBanco;
-	private String titularCuenta;
-	private String codigoAutorizacion;
-	private String codigoRespuesta;
-	private String numeroLotePago;
-	private String origenTransaccion;
-	private String recomendacionRiesgo;
-	private String resultadoRevisionRiesgo;
-	private String respuestaAVS;
-	private String respuestaCSC;
-	private String respuesta3DS;
-	private String t3dsECI;
-	private String reciboTransaccion;
+	private String id;
+	private String authorization;
+	private String operationType;
+	private String method;
+	private String transactionType;
+	private String status;
+	private Boolean conciliated;
+	private Date creationDate;
+	private Date operationDate;
+	private String description;
+	private String errorMessage;
+	private String orderId;
+	private String customerId;
+	private String errorCode;
+	private String currency;
+	private BigDecimal amount;
+	private MetodoPagoMovimientosProveedorDTO paymentMethod;
+	private TarjetaMovimientosProveedorDTO card;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public String getIdComerciante() {
-		return idComerciante;
+	public String getAuthorization() {
+		return authorization;
 	}
 
-	public void setIdComerciante(String idComerciante) {
-		this.idComerciante = idComerciante;
+	public void setAuthorization(String authorization) {
+		this.authorization = authorization;
 	}
 
-	public String getIdPedido() {
-		return idPedido;
+	public String getOperationType() {
+		return operationType;
 	}
 
-	public void setIdPedido(String idPedido) {
-		this.idPedido = idPedido;
+	public void setOperationType(String operationType) {
+		this.operationType = operationType;
 	}
 
-	public String getReferenciaPedido() {
-		return referenciaPedido;
+	public String getMethod() {
+		return method;
 	}
 
-	public void setReferenciaPedido(String referenciaPedido) {
-		this.referenciaPedido = referenciaPedido;
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
-	public String getIdTransaccion() {
-		return idTransaccion;
+	public String getTransactionType() {
+		return transactionType;
 	}
 
-	public void setIdTransaccion(String idTransaccion) {
-		this.idTransaccion = idTransaccion;
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
 	}
 
-	public String getReferenciaTransaccion() {
-		return referenciaTransaccion;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setReferenciaTransaccion(String referenciaTransaccion) {
-		this.referenciaTransaccion = referenciaTransaccion;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
-	public String getEntidadGestora() {
-		return entidadGestora;
+	public Boolean getConciliated() {
+		return conciliated;
 	}
 
-	public void setEntidadGestora(String entidadGestora) {
-		this.entidadGestora = entidadGestora;
+	public void setConciliated(Boolean conciliated) {
+		this.conciliated = conciliated;
 	}
 
-	public Date getFecha() {
-		return fecha;
+	public Date getCreationDate() {
+		return creationDate;
 	}
 
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
-	public String getMetodoPago() {
-		return metodoPago;
+	public Date getOperationDate() {
+		return operationDate;
 	}
 
-	public void setMetodoPago(String metodoPago) {
-		this.metodoPago = metodoPago;
+	public void setOperationDate(Date operationDate) {
+		this.operationDate = operationDate;
 	}
 
-	public String getTipoTransaccion() {
-		return tipoTransaccion;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setTipoTransaccion(String tipoTransaccion) {
-		this.tipoTransaccion = tipoTransaccion;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public BigDecimal getMonto() {
-		return monto;
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 
-	public void setMonto(BigDecimal monto) {
-		this.monto = monto;
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
-	public String getMoneda() {
-		return moneda;
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setMoneda(String moneda) {
-		this.moneda = moneda;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
-	public String getResultado() {
-		return resultado;
+	public String getCustomerId() {
+		return customerId;
 	}
 
-	public void setResultado(String resultado) {
-		this.resultado = resultado;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 
-	public String getCodigoPuertaEnlace() {
-		return codigoPuertaEnlace;
+	public String getErrorCode() {
+		return errorCode;
 	}
 
-	public void setCodigoPuertaEnlace(String codigoPuertaEnlace) {
-		this.codigoPuertaEnlace = codigoPuertaEnlace;
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
 	}
 
-	public String getEsquemaTarjeta() {
-		return esquemaTarjeta;
+	public String getCurrency() {
+		return currency;
 	}
 
-	public void setEsquemaTarjeta(String esquemaTarjeta) {
-		this.esquemaTarjeta = esquemaTarjeta;
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
-	public String getIdentificadorCuenta() {
-		return identificadorCuenta;
+	public BigDecimal getAmount() {
+		return amount;
 	}
 
-	public void setIdentificadorCuenta(String identificadorCuenta) {
-		this.identificadorCuenta = identificadorCuenta;
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
 
-	public String getIdentificadorBanco() {
-		return identificadorBanco;
+	public MetodoPagoMovimientosProveedorDTO getPaymentMethod() {
+		return paymentMethod;
 	}
 
-	public void setIdentificadorBanco(String identificadorBanco) {
-		this.identificadorBanco = identificadorBanco;
+	public void setPaymentMethod(MetodoPagoMovimientosProveedorDTO paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
-	public String getTitularCuenta() {
-		return titularCuenta;
+	public TarjetaMovimientosProveedorDTO getCard() {
+		return card;
 	}
 
-	public void setTitularCuenta(String titularCuenta) {
-		this.titularCuenta = titularCuenta;
-	}
-
-	public String getCodigoAutorizacion() {
-		return codigoAutorizacion;
-	}
-
-	public void setCodigoAutorizacion(String codigoAutorizacion) {
-		this.codigoAutorizacion = codigoAutorizacion;
-	}
-
-	public String getCodigoRespuesta() {
-		return codigoRespuesta;
-	}
-
-	public void setCodigoRespuesta(String codigoRespuesta) {
-		this.codigoRespuesta = codigoRespuesta;
-	}
-
-	public String getNumeroLotePago() {
-		return numeroLotePago;
-	}
-
-	public void setNumeroLotePago(String numeroLotePago) {
-		this.numeroLotePago = numeroLotePago;
-	}
-
-	public String getOrigenTransaccion() {
-		return origenTransaccion;
-	}
-
-	public void setOrigenTransaccion(String origenTransaccion) {
-		this.origenTransaccion = origenTransaccion;
-	}
-
-	public String getRecomendacionRiesgo() {
-		return recomendacionRiesgo;
-	}
-
-	public void setRecomendacionRiesgo(String recomendacionRiesgo) {
-		this.recomendacionRiesgo = recomendacionRiesgo;
-	}
-
-	public String getResultadoRevisionRiesgo() {
-		return resultadoRevisionRiesgo;
-	}
-
-	public void setResultadoRevisionRiesgo(String resultadoRevisionRiesgo) {
-		this.resultadoRevisionRiesgo = resultadoRevisionRiesgo;
-	}
-
-	public String getRespuestaAVS() {
-		return respuestaAVS;
-	}
-
-	public void setRespuestaAVS(String respuestaAVS) {
-		this.respuestaAVS = respuestaAVS;
-	}
-
-	public String getRespuestaCSC() {
-		return respuestaCSC;
-	}
-
-	public void setRespuestaCSC(String respuestaCSC) {
-		this.respuestaCSC = respuestaCSC;
-	}
-
-	public String getRespuesta3DS() {
-		return respuesta3DS;
-	}
-
-	public void setRespuesta3DS(String respuesta3ds) {
-		respuesta3DS = respuesta3ds;
-	}
-
-	public String getT3dsECI() {
-		return t3dsECI;
-	}
-
-	public void setT3dsECI(String t3dsECI) {
-		this.t3dsECI = t3dsECI;
-	}
-
-	public String getReciboTransaccion() {
-		return reciboTransaccion;
-	}
-
-	public void setReciboTransaccion(String reciboTransaccion) {
-		this.reciboTransaccion = reciboTransaccion;
+	public void setCard(TarjetaMovimientosProveedorDTO card) {
+		this.card = card;
 	}
 
 	@Override
 	public String toString() {
-		return "MovimientoProveedorDTO [id=" + id + ", idComerciante=" + idComerciante + ", idPedido=" + idPedido
-				+ ", referenciaPedido=" + referenciaPedido + ", idTransaccion=" + idTransaccion
-				+ ", referenciaTransaccion=" + referenciaTransaccion + ", entidadGestora=" + entidadGestora + ", fecha="
-				+ fecha + ", metodoPago=" + metodoPago + ", tipoTransaccion=" + tipoTransaccion + ", monto=" + monto
-				+ ", moneda=" + moneda + ", resultado=" + resultado + ", codigoPuertaEnlace=" + codigoPuertaEnlace
-				+ ", esquemaTarjeta=" + esquemaTarjeta + ", identificadorCuenta=" + identificadorCuenta
-				+ ", identificadorBanco=" + identificadorBanco + ", titularCuenta=" + titularCuenta
-				+ ", codigoAutorizacion=" + codigoAutorizacion + ", codigoRespuesta=" + codigoRespuesta
-				+ ", numeroLotePago=" + numeroLotePago + ", origenTransaccion=" + origenTransaccion
-				+ ", recomendacionRiesgo=" + recomendacionRiesgo + ", resultadoRevisionRiesgo="
-				+ resultadoRevisionRiesgo + ", respuestaAVS=" + respuestaAVS + ", respuestaCSC=" + respuestaCSC
-				+ ", respuesta3DS=" + respuesta3DS + ", t3dsECI=" + t3dsECI + ", reciboTransaccion=" + reciboTransaccion
-				+ "]";
+		return "MovimientoProveedorDTO [id=" + id + ", authorization=" + authorization + ", operationType="
+				+ operationType + ", method=" + method + ", transactionType=" + transactionType + ", status=" + status
+				+ ", conciliated=" + conciliated + ", creationDate=" + creationDate + ", operationDate=" + operationDate
+				+ ", description=" + description + ", errorMessage=" + errorMessage + ", orderId=" + orderId
+				+ ", customerId=" + customerId + ", errorCode=" + errorCode + ", currency=" + currency + ", amount="
+				+ amount + ", paymentMethod=" + paymentMethod + ", card=" + card + "]";
 	}
 
 	@Override

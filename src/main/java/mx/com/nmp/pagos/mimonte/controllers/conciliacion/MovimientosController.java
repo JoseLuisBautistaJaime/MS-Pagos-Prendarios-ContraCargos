@@ -36,7 +36,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoIDDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
@@ -206,11 +205,13 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveMovimientosProvedor(
-			@RequestBody MovimientoTransaccionalListRequestDTO movimientoTransaccionalDTO,
+	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalListRequestDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 //		MovimientoIDDTO movimientoIDDTO = null;
 //		movimientoIDDTO = buildDummyX3();
+		if (!ValidadorConciliacion.validateMovimientoTransaccionalListRequestDTO(movimientos))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		movimientosProveedorService.save(movimientos, userRequest);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 	}
@@ -232,11 +233,13 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveMovimientosNocturnos(
-			@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosDTO,
+	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 //		MovimientoIDDTO movimientoIDDTO = null;
 //		movimientoIDDTO = buildDummyX3();
+		if (!ValidadorConciliacion.validateMovimientoProcesosNocturnosListResponseDTO(movimientos))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		movimientosMidasService.save(movimientos, userRequest);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 	}
@@ -246,44 +249,45 @@ public class MovimientosController {
 	 * 
 	 * @return
 	 */
-	public static MovimientoTransaccionalListDTO buildDummyX1() {
-		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
-		MovimientoProveedorDTO movimientoTransaccionalDTO = new MovimientoProveedorDTO();
-		movimientoTransaccionalDTO.setCodigoAutorizacion("67032");
-		movimientoTransaccionalDTO.setCodigoPuertaEnlace("Aprobado");
-		movimientoTransaccionalDTO.setCodigoRespuesta("0");
-		movimientoTransaccionalDTO.setEntidadGestora("EGLOBAL");
-		movimientoTransaccionalDTO.setEsquemaTarjeta("Visa");
-		movimientoTransaccionalDTO.setFecha(new Date());
-		movimientoTransaccionalDTO.setId(1L);
-		movimientoTransaccionalDTO.setIdComerciante("1063488");
-		movimientoTransaccionalDTO.setIdentificadorBanco("");
-		movimientoTransaccionalDTO.setIdentificadorCuenta("481515xxxxxx6567");
-		movimientoTransaccionalDTO.setIdPedido("6ae26139-6b12-4050-8c2b-2de6319487b3");
-		movimientoTransaccionalDTO.setIdTransaccion("1");
-		movimientoTransaccionalDTO.setMetodoPago("Tarjeta");
-		movimientoTransaccionalDTO.setMoneda("MXN");
-		movimientoTransaccionalDTO.setMonto(new BigDecimal("406.45"));
-		movimientoTransaccionalDTO.setNumeroLotePago("20181001");
-		movimientoTransaccionalDTO.setOrigenTransaccion("Internet");
-		movimientoTransaccionalDTO.setReciboTransaccion("827412214425");
-		movimientoTransaccionalDTO.setRecomendacionRiesgo("");
-		movimientoTransaccionalDTO.setReferenciaPedido("148341390002");
-		movimientoTransaccionalDTO.setReferenciaTransaccion("");
-		movimientoTransaccionalDTO.setRespuesta3DS("");
-		movimientoTransaccionalDTO.setRespuestaAVS("");
-		movimientoTransaccionalDTO.setRespuestaCSC("");
-		movimientoTransaccionalDTO.setResultado("Exito");
-		movimientoTransaccionalDTO.setResultadoRevisionRiesgo("");
-		movimientoTransaccionalDTO.setT3dsECI("");
-		movimientoTransaccionalDTO.setTipoTransaccion("Pago");
-		movimientoTransaccionalDTO.setTitularCuenta("Eduardo Lopez Lopez");
-		movimientoTransaccionalListDTO.setTotal(406L);
-		List<MovimientoProveedorDTO> lst = new ArrayList<>();
-		lst.add(movimientoTransaccionalDTO);
-		movimientoTransaccionalListDTO.setMovimientos(lst);
-		return movimientoTransaccionalListDTO;
-	}
+	// Old dummy, not used any more
+//	public static MovimientoTransaccionalListDTO buildDummyX1() {
+//		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
+//		MovimientoProveedorDTO movimientoTransaccionalDTO = new MovimientoProveedorDTO();
+//		movimientoTransaccionalDTO.setCodigoAutorizacion("67032");
+//		movimientoTransaccionalDTO.setCodigoPuertaEnlace("Aprobado");
+//		movimientoTransaccionalDTO.setCodigoRespuesta("0");
+//		movimientoTransaccionalDTO.setEntidadGestora("EGLOBAL");
+//		movimientoTransaccionalDTO.setEsquemaTarjeta("Visa");
+//		movimientoTransaccionalDTO.setFecha(new Date());
+//		movimientoTransaccionalDTO.setId(1L);
+//		movimientoTransaccionalDTO.setIdComerciante("1063488");
+//		movimientoTransaccionalDTO.setIdentificadorBanco("");
+//		movimientoTransaccionalDTO.setIdentificadorCuenta("481515xxxxxx6567");
+//		movimientoTransaccionalDTO.setIdPedido("6ae26139-6b12-4050-8c2b-2de6319487b3");
+//		movimientoTransaccionalDTO.setIdTransaccion("1");
+//		movimientoTransaccionalDTO.setMetodoPago("Tarjeta");
+//		movimientoTransaccionalDTO.setMoneda("MXN");
+//		movimientoTransaccionalDTO.setMonto(new BigDecimal("406.45"));
+//		movimientoTransaccionalDTO.setNumeroLotePago("20181001");
+//		movimientoTransaccionalDTO.setOrigenTransaccion("Internet");
+//		movimientoTransaccionalDTO.setReciboTransaccion("827412214425");
+//		movimientoTransaccionalDTO.setRecomendacionRiesgo("");
+//		movimientoTransaccionalDTO.setReferenciaPedido("148341390002");
+//		movimientoTransaccionalDTO.setReferenciaTransaccion("");
+//		movimientoTransaccionalDTO.setRespuesta3DS("");
+//		movimientoTransaccionalDTO.setRespuestaAVS("");
+//		movimientoTransaccionalDTO.setRespuestaCSC("");
+//		movimientoTransaccionalDTO.setResultado("Exito");
+//		movimientoTransaccionalDTO.setResultadoRevisionRiesgo("");
+//		movimientoTransaccionalDTO.setT3dsECI("");
+//		movimientoTransaccionalDTO.setTipoTransaccion("Pago");
+//		movimientoTransaccionalDTO.setTitularCuenta("Eduardo Lopez Lopez");
+//		movimientoTransaccionalListDTO.setTotal(406L);
+//		List<MovimientoProveedorDTO> lst = new ArrayList<>();
+//		lst.add(movimientoTransaccionalDTO);
+//		movimientoTransaccionalListDTO.setMovimientos(lst);
+//		return movimientoTransaccionalListDTO;
+//	}
 
 	/**
 	 * Construye una respuesta dummy
@@ -309,7 +313,7 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setTipoContratoAbr("PL");
 		movimientoProcesosNocturnosDTO.setTipoContratoDesc("Pagos Libres");
 		movimientoProcesosNocturnosDTO.setEstadoTransaccion("Activo");
-		movimientoProcesosNocturnosDTO.setCanal("Mobile");
+		movimientoProcesosNocturnosDTO.setIdConsumidor("Mobile");
 		movimientoProcesosNocturnosListDTO.setTotal(400L);
 		List<MovimientoMidasDTO> lst = new ArrayList<>();
 		lst.add(movimientoProcesosNocturnosDTO);

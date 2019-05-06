@@ -12,13 +12,23 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovimientosMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasBatchDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
+import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * @name MovimientosMidasService
@@ -37,6 +47,13 @@ public class MovimientosMidasService {
 	@Autowired
 	@Qualifier("movimientosMidasRepository")
 	private MovimientosMidasRepository movimientosMidasRepository;
+
+	/**
+	 * Repository de Reporte
+	 */
+	@Autowired
+	@Qualifier("reporteRepository")
+	private ReporteRepository reporteRepository;
 
 	public MovimientosMidasService() {
 		super();
@@ -110,6 +127,60 @@ public class MovimientosMidasService {
 	 */
 	public void saveBatch(List<MovimientoMidasBatchDTO> lista) {
 
+	}
+
+	/**
+	 * Guarda una lista de movimientos de midas
+	 * 
+	 * @param movimientoProcesosNocturnosDTOList
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void save(MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosDTOList,
+			String userRequest) {
+		Reporte reporte = buildReporte(movimientoProcesosNocturnosDTOList.getFolio(),
+				movimientoProcesosNocturnosDTOList.getFechaDesde(), movimientoProcesosNocturnosDTOList.getFechaHasta(),
+				userRequest);
+		if (null == reporte)
+			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+		try {
+			reporte = reporteRepository.save(reporte);
+			if (0 == reporte.getId())
+				throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+			List<MovimientoMidas> movimientoMidasList = MovimientosBuilder
+					.buildMovimientoMidasListFromMovimientoProcesosNocturnosListResponseDTO(
+							movimientoProcesosNocturnosDTOList, reporte.getId());
+			movimientosMidasRepository.saveAll(movimientoMidasList);
+		} catch (Exception ex) {
+			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+		}
+	}
+
+	/**
+	 * Construye un objeto de tipo reporte para ser persistido durante el registro
+	 * de movimientos de proveedor transaccional
+	 * 
+	 * @param folio
+	 * @param fechaDesde
+	 * @param fechaHasta
+	 * @param userRequest
+	 * @return
+	 */
+	public static Reporte buildReporte(final Integer folio, final Date fechaDesde, final Date fechaHasta,
+			final String userRequest) {
+		Reporte reporte = new Reporte();
+		if (null == folio || null == fechaDesde || null == fechaHasta || null == userRequest)
+			return null;
+		reporte.setConciliacion(new Conciliacion((long) folio));
+		reporte.setCreatedBy(userRequest);
+		reporte.setCreatedDate(new Date());
+		reporte.setDisponible(true);
+		reporte.setFechaDesde(fechaDesde);
+		reporte.setFechaHasta(fechaHasta);
+		reporte.setId(0);
+		reporte.setLastModifiedBy(null);
+		reporte.setLastModifiedDate(null);
+		reporte.setTipo(TipoReporteEnum.PROVEEDOR.name());
+		return reporte;
 	}
 
 }
