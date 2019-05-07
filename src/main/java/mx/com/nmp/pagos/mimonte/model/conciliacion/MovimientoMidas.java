@@ -93,6 +93,27 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 
 	@Column(name = "id_consumidor")
 	private String idConsumidor;
+	
+	@Column(name = "codigo_error", nullable = true)
+	private String codigoError;
+	
+	@Column(name = "mensaje_error", nullable = true)
+	private String mensajeError;
+	
+	@Column(name = "id_tarjeta", nullable = true)
+	private String idTarjeta;
+	
+	@Column(name = "marca_tarjeta", nullable = true)
+	private String marcaTarjeta;
+	
+	@Column(name = "tipo_tarjeta", nullable = true)
+	private String tipoTarjeta;
+	
+	@Column(name = "tarjeta", nullable = true)
+	private String tarjeta;
+	
+	@Column(name = "moneda_pago", nullable = true)
+	private String monedaPago;
 
 	public Long getId() {
 		return id;

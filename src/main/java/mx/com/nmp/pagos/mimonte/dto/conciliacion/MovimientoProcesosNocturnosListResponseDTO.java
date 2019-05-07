@@ -22,13 +22,13 @@ public class MovimientoProcesosNocturnosListResponseDTO
 	private Integer folio;
 	private Date fechaDesde;
 	private Date fechaHasta;
-	private List<MovimientoMidasDTO> movimientos;
+	private List<MovimientoMidasRequestDTO> movimientos;
 
 	public MovimientoProcesosNocturnosListResponseDTO() {
 		super();
 	}
 
-	public MovimientoProcesosNocturnosListResponseDTO(Integer folio, List<MovimientoMidasDTO> movimientos) {
+	public MovimientoProcesosNocturnosListResponseDTO(Integer folio, List<MovimientoMidasRequestDTO> movimientos) {
 		super();
 		this.folio = folio;
 		this.movimientos = movimientos;
@@ -42,11 +42,11 @@ public class MovimientoProcesosNocturnosListResponseDTO
 		this.folio = folio;
 	}
 
-	public List<MovimientoMidasDTO> getMovimientos() {
+	public List<MovimientoMidasRequestDTO> getMovimientos() {
 		return movimientos;
 	}
 
-	public void setMovimientos(List<MovimientoMidasDTO> movimientos) {
+	public void setMovimientos(List<MovimientoMidasRequestDTO> movimientos) {
 		this.movimientos = movimientos;
 	}
 

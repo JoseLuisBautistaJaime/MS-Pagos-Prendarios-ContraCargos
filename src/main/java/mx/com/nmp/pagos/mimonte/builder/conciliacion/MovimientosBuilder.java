@@ -9,6 +9,7 @@ import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
@@ -166,15 +167,15 @@ public abstract class MovimientosBuilder {
 	}
 
 	/**
-	 * Cinstruye un entity de tipo MovimientoMidas a partir de un objeto de tipo
-	 * MovimientoMidasDTO
+	 * Construye un entity de tipo MovimientoMidas a partir de un objeto de tipo
+	 * MovimientoMidasRequestDTO
 	 * 
 	 * @param movimientoMidasDTO
 	 * @param idReporte
 	 * @return
 	 */
-	public static MovimientoMidas buildMovimientoMidasFromMovimientoMidasDTO(MovimientoMidasDTO movimientoMidasDTO,
-			final Long idReporte) {
+	public static MovimientoMidas buildMovimientoMidasFromMovimientoMidasDTO(
+			MovimientoMidasRequestDTO movimientoMidasDTO, final Long idReporte) {
 		MovimientoMidas movimientoMidas = new MovimientoMidas();
 		movimientoMidas.setId(null);
 		movimientoMidas.setReporte(idReporte);
@@ -213,8 +214,10 @@ public abstract class MovimientosBuilder {
 				&& null != movimientoProcesosNocturnosListResponseDTO.getMovimientos()
 				&& !movimientoProcesosNocturnosListResponseDTO.getMovimientos().isEmpty()) {
 			movimientoMidasList = new ArrayList<>();
-			for (MovimientoMidasDTO movimientoMidasDTO : movimientoProcesosNocturnosListResponseDTO.getMovimientos()) {
-				movimientoMidasList.add(buildMovimientoMidasFromMovimientoMidasDTO(movimientoMidasDTO, idReporte));
+			for (MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO
+					.getMovimientos()) {
+				movimientoMidasList
+						.add(buildMovimientoMidasFromMovimientoMidasDTO(movimientoMidasRequestDTO, idReporte));
 			}
 		}
 		return movimientoMidasList;

@@ -6,7 +6,7 @@ package mx.com.nmp.pagos.mimonte.util.validacion;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
@@ -64,15 +64,29 @@ public interface ValidadorConciliacion {
 				&& null != movimientoProcesosNocturnosListResponseDTO.getFolio()
 				&& null != movimientoProcesosNocturnosListResponseDTO.getMovimientos()
 				&& !movimientoProcesosNocturnosListResponseDTO.getMovimientos().isEmpty()) {
-			for (MovimientoMidasDTO movimientoMidasDTO : movimientoProcesosNocturnosListResponseDTO.getMovimientos())
-				if (null == movimientoMidasDTO.getCapitalActual() || null == movimientoMidasDTO.getComisiones()
-						|| null == movimientoMidasDTO.getFolioPartida() || null == movimientoMidasDTO.getInteres()
-						|| null == movimientoMidasDTO.getMontoOperacion() || null == movimientoMidasDTO.getSucursal()
-						|| null == movimientoMidasDTO.getTransaccion() || null == movimientoMidasDTO.getEstatus()
-						|| null == movimientoMidasDTO.getFecha() || null == movimientoMidasDTO.getNumAutorizacion()
-						|| null == movimientoMidasDTO.getOperacionAbr() || null == movimientoMidasDTO.getOperacionDesc()
-						|| null == movimientoMidasDTO.getTipoContratoAbr()
-						|| null == movimientoMidasDTO.getTipoContratoDesc())
+			for (MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO
+					.getMovimientos())
+				if (null == movimientoMidasRequestDTO.getCapitalActual()
+						|| null == movimientoMidasRequestDTO.getComisiones()
+						|| null == movimientoMidasRequestDTO.getFolioPartida()
+						|| null == movimientoMidasRequestDTO.getInteres()
+						|| null == movimientoMidasRequestDTO.getMontoOperacion()
+						|| null == movimientoMidasRequestDTO.getSucursal()
+						|| null == movimientoMidasRequestDTO.getTransaccion()
+						|| null == movimientoMidasRequestDTO.getEstatus()
+						|| null == movimientoMidasRequestDTO.getFecha()
+						|| null == movimientoMidasRequestDTO.getNumAutorizacion()
+						|| null == movimientoMidasRequestDTO.getOperacionAbr()
+						|| null == movimientoMidasRequestDTO.getOperacionDesc()
+						|| null == movimientoMidasRequestDTO.getTipoContratoAbr()
+						|| null == movimientoMidasRequestDTO.getTipoContratoDesc()
+						|| null == movimientoMidasRequestDTO.getCodigoError()
+						|| null == movimientoMidasRequestDTO.getMensajeError()
+						|| null == movimientoMidasRequestDTO.getIdTarjeta()
+						|| null == movimientoMidasRequestDTO.getMarcaTarjeta()
+						|| null == movimientoMidasRequestDTO.getTipoTarjeta()
+						|| null == movimientoMidasRequestDTO.getTarjeta()
+						|| null == movimientoMidasRequestDTO.getMonedaPago())
 					return false;
 		} else
 			return false;
