@@ -67,7 +67,7 @@ public interface ValidadorConciliacion {
 				&& null != movimientoProcesosNocturnosListResponseDTO.getFechaDesde()
 				&& null != movimientoProcesosNocturnosListResponseDTO.getFechaHasta()) {
 			for (MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO
-					.getMovimientos())
+					.getMovimientos()) {
 				if (null == movimientoMidasRequestDTO.getCapitalActual()
 						|| null == movimientoMidasRequestDTO.getComisiones()
 						|| null == movimientoMidasRequestDTO.getFolioPartida()
@@ -89,8 +89,11 @@ public interface ValidadorConciliacion {
 						|| null == movimientoMidasRequestDTO.getTipoTarjeta()
 						|| null == movimientoMidasRequestDTO.getTarjeta()
 						|| null == movimientoMidasRequestDTO.getMonedaPago()
-						|| null == movimientoMidasRequestDTO.getImporteTransaccion())
+						|| null == movimientoMidasRequestDTO.getImporteTransaccion()) {
 					return false;
+				}
+				movimientoMidasRequestDTO.setId(null);
+			}
 		} else
 			return false;
 		return true;
@@ -113,7 +116,8 @@ public interface ValidadorConciliacion {
 				|| null == movimientoTransaccionalListRequestDTO.getFechaHasta())
 			return false;
 		else {
-			for (MovimientoProveedorDTO movimientoProveedorDTO : movimientoTransaccionalListRequestDTO.getMovimientos())
+			for (MovimientoProveedorDTO movimientoProveedorDTO : movimientoTransaccionalListRequestDTO
+					.getMovimientos()) {
 				if (null == movimientoProveedorDTO.getAmount() || null == movimientoProveedorDTO.getAuthorization()
 						|| null == movimientoProveedorDTO.getCard()
 						|| null == movimientoProveedorDTO.getCard().getAddress()
@@ -144,9 +148,12 @@ public interface ValidadorConciliacion {
 						|| null == movimientoProveedorDTO.getOperationDate()
 						|| null == movimientoProveedorDTO.getOperationType()
 						|| null == movimientoProveedorDTO.getOrderId() || null == movimientoProveedorDTO.getStatus()
-						|| null == movimientoProveedorDTO.getTransactionType())
+						|| null == movimientoProveedorDTO.getTransactionType()
+						|| null == movimientoProveedorDTO.getIdMovimiento()) {
 					return false;
-
+				}
+				movimientoProveedorDTO.setId(null);
+			}
 		}
 		return true;
 	}

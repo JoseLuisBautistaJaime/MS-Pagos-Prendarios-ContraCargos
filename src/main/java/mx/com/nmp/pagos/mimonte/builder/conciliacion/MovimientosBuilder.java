@@ -133,7 +133,7 @@ public abstract class MovimientosBuilder {
 			movimientoProveedorDTO.setDescription(movimientoProveedor.getDescription());
 			movimientoProveedorDTO.setErrorCode(movimientoProveedor.getErrorCode());
 			movimientoProveedorDTO.setErrorMessage(movimientoProveedor.getErrorMessage());
-			movimientoProveedorDTO.setId(movimientoProveedor.getId());
+			movimientoProveedorDTO.setIdMovimiento(movimientoProveedor.getIdMovimiento());
 			movimientoProveedorDTO.setMethod(movimientoProveedor.getMethod());
 			movimientoProveedorDTO.getPaymentMethod()
 					.setType(movimientoProveedor.getMetodoPagoMovimientosProveedor().getType());
@@ -235,6 +235,7 @@ public abstract class MovimientosBuilder {
 	public static MovimientoProveedor buildMovimientoProveedorFromMovimientoProveedorDTO(
 			MovimientoProveedorDTO movimientoProveedorDTO, final long idReporte) {
 		MovimientoProveedor movimientoProveedor = new MovimientoProveedor();
+		movimientoProveedor.setId(null);
 		movimientoProveedor.setReporte(idReporte);
 		movimientoProveedor.setAmount(movimientoProveedorDTO.getAmount());
 		movimientoProveedor.setAuthorization(movimientoProveedorDTO.getAuthorization());
@@ -245,7 +246,7 @@ public abstract class MovimientosBuilder {
 		movimientoProveedor.setDescription(movimientoProveedorDTO.getDescription());
 		movimientoProveedor.setErrorCode(movimientoProveedorDTO.getErrorCode());
 		movimientoProveedor.setErrorMessage(movimientoProveedorDTO.getErrorMessage());
-		movimientoProveedor.setId(movimientoProveedorDTO.getId());
+		movimientoProveedor.setIdMovimiento(movimientoProveedorDTO.getIdMovimiento());
 		movimientoProveedor.setMethod(movimientoProveedorDTO.getMethod());
 		movimientoProveedor.setOperationDate(movimientoProveedorDTO.getOperationDate());
 		movimientoProveedor.setOperationType(movimientoProveedorDTO.getOperationType());

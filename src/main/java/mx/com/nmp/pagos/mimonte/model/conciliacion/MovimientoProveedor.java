@@ -10,6 +10,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -26,8 +28,12 @@ import javax.persistence.Table;
 public class MovimientoProveedor {
 
 	@Id
-	@Column(name = "id", nullable = false)
-	private String id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false, unique = true)
+	private Integer id;
+
+	@Column(name = "id_movimiento", nullable = true)
+	private String idMovimiento;
 
 	@Column(name = "id_reporte", nullable = false)
 	private Long reporte;
@@ -83,12 +89,20 @@ public class MovimientoProveedor {
 	@Embedded
 	private TarjetaMovimientosProveedor tarjetaMovimientosProveedor;
 
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getIdMovimiento() {
+		return idMovimiento;
+	}
+
+	public void setIdMovimiento(String idMovimiento) {
+		this.idMovimiento = idMovimiento;
 	}
 
 	public String getAuthorization() {
@@ -237,12 +251,13 @@ public class MovimientoProveedor {
 
 	@Override
 	public String toString() {
-		return "MovimientoProveedor [id=" + id + ", authorization=" + authorization + ", operationType=" + operationType
-				+ ", method=" + method + ", transactionType=" + transactionType + ", status=" + status
-				+ ", conciliated=" + conciliated + ", creationDate=" + creationDate + ", operationDate=" + operationDate
-				+ ", description=" + description + ", errorMessage=" + errorMessage + ", orderId=" + orderId
-				+ ", customerId=" + customerId + ", errorCode=" + errorCode + ", currency=" + currency + ", amount="
-				+ amount + ", reporte=" + reporte + ", metodoPagoMovimientosProveedor=" + metodoPagoMovimientosProveedor
+		return "MovimientoProveedor [id=" + id + ", idMovimiento=" + idMovimiento + ", reporte=" + reporte
+				+ ", authorization=" + authorization + ", operationType=" + operationType + ", method=" + method
+				+ ", transactionType=" + transactionType + ", status=" + status + ", conciliated=" + conciliated
+				+ ", creationDate=" + creationDate + ", operationDate=" + operationDate + ", description=" + description
+				+ ", errorMessage=" + errorMessage + ", orderId=" + orderId + ", customerId=" + customerId
+				+ ", errorCode=" + errorCode + ", currency=" + currency + ", amount=" + amount
+				+ ", metodoPagoMovimientosProveedor=" + metodoPagoMovimientosProveedor
 				+ ", tarjetaMovimientosProveedor=" + tarjetaMovimientosProveedor + "]";
 	}
 

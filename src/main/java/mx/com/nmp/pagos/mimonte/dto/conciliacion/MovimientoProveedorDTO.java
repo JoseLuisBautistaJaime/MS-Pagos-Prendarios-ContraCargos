@@ -16,9 +16,10 @@ import java.util.Date;
  * @version 1.0
  * @created 31-Mar-2019 6:33:48 PM
  */
-public class MovimientoProveedorDTO implements Comparable<MovimientoProveedorDTO> {
+public class MovimientoProveedorDTO {
 
-	private String id;
+	private Integer id;
+	private String idMovimiento;
 	private String authorization;
 	private String operationType;
 	private String method;
@@ -37,12 +38,12 @@ public class MovimientoProveedorDTO implements Comparable<MovimientoProveedorDTO
 	private MetodoPagoMovimientosProveedorDTO paymentMethod;
 	private TarjetaMovimientosProveedorDTO card;
 
-	public String getId() {
-		return id;
+	public String getIdMovimiento() {
+		return idMovimiento;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setIdMovimiento(String idMovimiento) {
+		this.idMovimiento = idMovimiento;
 	}
 
 	public String getAuthorization() {
@@ -181,19 +182,23 @@ public class MovimientoProveedorDTO implements Comparable<MovimientoProveedorDTO
 		this.card = card;
 	}
 
-	@Override
-	public String toString() {
-		return "MovimientoProveedorDTO [id=" + id + ", authorization=" + authorization + ", operationType="
-				+ operationType + ", method=" + method + ", transactionType=" + transactionType + ", status=" + status
-				+ ", conciliated=" + conciliated + ", creationDate=" + creationDate + ", operationDate=" + operationDate
-				+ ", description=" + description + ", errorMessage=" + errorMessage + ", orderId=" + orderId
-				+ ", customerId=" + customerId + ", errorCode=" + errorCode + ", currency=" + currency + ", amount="
-				+ amount + ", paymentMethod=" + paymentMethod + ", card=" + card + "]";
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	@Override
-	public int compareTo(MovimientoProveedorDTO arg0) {
-		return arg0.id.compareTo(this.id);
+	public String toString() {
+		return "MovimientoProveedorDTO [id=" + id + ", idMovimiento=" + idMovimiento + ", authorization="
+				+ authorization + ", operationType=" + operationType + ", method=" + method + ", transactionType="
+				+ transactionType + ", status=" + status + ", conciliated=" + conciliated + ", creationDate="
+				+ creationDate + ", operationDate=" + operationDate + ", description=" + description + ", errorMessage="
+				+ errorMessage + ", orderId=" + orderId + ", customerId=" + customerId + ", errorCode=" + errorCode
+				+ ", currency=" + currency + ", amount=" + amount + ", paymentMethod=" + paymentMethod + ", card="
+				+ card + "]";
 	}
 
 }
