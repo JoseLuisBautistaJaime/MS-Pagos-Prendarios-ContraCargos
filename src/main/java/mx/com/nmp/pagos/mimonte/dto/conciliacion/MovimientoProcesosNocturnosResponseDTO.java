@@ -35,6 +35,14 @@ public class MovimientoProcesosNocturnosResponseDTO {
 	private Boolean estatus;
 	private String consumidor;
 	private BigDecimal importeTransaccion;
+	
+	private String codigoError;
+	private String idTarjeta;
+	private String marcaTarjeta;
+	private String mensajeError;
+	private String monedaPago;
+	private String tarjeta;
+	private String tipoTarjeta;
 
 	public Long getFolioPartida() {
 		return folioPartida;
@@ -172,6 +180,64 @@ public class MovimientoProcesosNocturnosResponseDTO {
 		this.importeTransaccion = importeTransaccion;
 	}
 
+	
+	
+	public String getCodigoError() {
+		return codigoError;
+	}
+
+	public void setCodigoError(String codigoError) {
+		this.codigoError = codigoError;
+	}
+
+	public String getIdTarjeta() {
+		return idTarjeta;
+	}
+
+	public void setIdTarjeta(String idTarjeta) {
+		this.idTarjeta = idTarjeta;
+	}
+
+	public String getMarcaTarjeta() {
+		return marcaTarjeta;
+	}
+
+	public void setMarcaTarjeta(String marcaTarjeta) {
+		this.marcaTarjeta = marcaTarjeta;
+	}
+
+	public String getMensajeError() {
+		return mensajeError;
+	}
+
+	public void setMensajeError(String mensajeError) {
+		this.mensajeError = mensajeError;
+	}
+
+	public String getMonedaPago() {
+		return monedaPago;
+	}
+
+	public void setMonedaPago(String monedaPago) {
+		this.monedaPago = monedaPago;
+	}
+
+	public String getTarjeta() {
+		return tarjeta;
+	}
+
+	public void setTarjeta(String tarjeta) {
+		this.tarjeta = tarjeta;
+	}
+
+	public String getTipoTarjeta() {
+		return tipoTarjeta;
+	}
+
+	public void setTipoTarjeta(String tipoTarjeta) {
+		this.tipoTarjeta = tipoTarjeta;
+	}
+
 	@Override
 	public String toString() {
 		return "MovimientoProcesosNocturnosResponseDTO [folioPartida=" + folioPartida + ", transaccion=" + transaccion
@@ -180,7 +246,11 @@ public class MovimientoProcesosNocturnosResponseDTO {
 				+ montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc
 				+ ", numAutorizacion=" + numAutorizacion + ", capitalActual=" + capitalActual + ", comisiones="
 				+ comisiones + ", interes=" + interes + ", estatus=" + estatus + ", consumidor=" + consumidor
-				+ ", importeTransaccion=" + importeTransaccion + "]";
+				+ ", importeTransaccion=" + importeTransaccion + ", codigoError=" + codigoError + ", idTarjeta="
+				+ idTarjeta + ", marcaTarjeta=" + marcaTarjeta + ", mensajeError=" + mensajeError + ", monedaPago="
+				+ monedaPago + ", tarjeta=" + tarjeta + ", tipoTarjeta=" + tipoTarjeta + "]";
 	}
+
+	
 
 }
