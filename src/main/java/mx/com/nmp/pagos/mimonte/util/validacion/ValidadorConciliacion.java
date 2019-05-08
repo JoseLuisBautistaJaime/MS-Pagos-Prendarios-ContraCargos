@@ -63,7 +63,9 @@ public interface ValidadorConciliacion {
 		if (null != movimientoProcesosNocturnosListResponseDTO
 				&& null != movimientoProcesosNocturnosListResponseDTO.getFolio()
 				&& null != movimientoProcesosNocturnosListResponseDTO.getMovimientos()
-				&& !movimientoProcesosNocturnosListResponseDTO.getMovimientos().isEmpty()) {
+				&& !movimientoProcesosNocturnosListResponseDTO.getMovimientos().isEmpty()
+				&& null != movimientoProcesosNocturnosListResponseDTO.getFechaDesde()
+				&& null != movimientoProcesosNocturnosListResponseDTO.getFechaHasta()) {
 			for (MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO
 					.getMovimientos())
 				if (null == movimientoMidasRequestDTO.getCapitalActual()
@@ -105,7 +107,9 @@ public interface ValidadorConciliacion {
 			MovimientoTransaccionalListRequestDTO movimientoTransaccionalListRequestDTO) {
 		if (null == movimientoTransaccionalListRequestDTO || null == movimientoTransaccionalListRequestDTO.getFolio()
 				|| null == movimientoTransaccionalListRequestDTO.getMovimientos()
-				|| movimientoTransaccionalListRequestDTO.getMovimientos().isEmpty())
+				|| movimientoTransaccionalListRequestDTO.getMovimientos().isEmpty()
+				|| null == movimientoTransaccionalListRequestDTO.getFechaDesde()
+				|| null == movimientoTransaccionalListRequestDTO.getFechaHasta())
 			return false;
 		else {
 			for (MovimientoProveedorDTO movimientoProveedorDTO : movimientoTransaccionalListRequestDTO.getMovimientos())
