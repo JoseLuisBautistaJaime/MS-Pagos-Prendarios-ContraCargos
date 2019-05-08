@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -15,10 +16,11 @@ import java.util.Date;
  * @creationDate 02/04/2019 15:49 hrs.
  * @version 0.1
  */
-public class MovimientoProcesosNocturnosResponseDTO implements Comparable<MovimientoProcesosNocturnosResponseDTO>{
-	
+public class MovimientoProcesosNocturnosResponseDTO {
+
 	private Long folioPartida;
 	private Long transaccion;
+	private String estadoTransaccion;
 	private Long sucursal;
 	private Date fecha;
 	private String operacionAbr;
@@ -30,7 +32,9 @@ public class MovimientoProcesosNocturnosResponseDTO implements Comparable<Movimi
 	private Double capitalActual;
 	private Double comisiones;
 	private Double interes;
-	private String estatus;
+	private Boolean estatus;
+	private String consumidor;
+	private BigDecimal importeTransaccion;
 
 	public Long getFolioPartida() {
 		return folioPartida;
@@ -46,6 +50,14 @@ public class MovimientoProcesosNocturnosResponseDTO implements Comparable<Movimi
 
 	public void setTransaccion(Long transaccion) {
 		this.transaccion = transaccion;
+	}
+
+	public String getEstadoTransaccion() {
+		return estadoTransaccion;
+	}
+
+	public void setEstadoTransaccion(String estadoTransaccion) {
+		this.estadoTransaccion = estadoTransaccion;
 	}
 
 	public Long getSucursal() {
@@ -136,27 +148,39 @@ public class MovimientoProcesosNocturnosResponseDTO implements Comparable<Movimi
 		this.interes = interes;
 	}
 
-	public String getEstatus() {
+	public Boolean getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(Boolean estatus) {
 		this.estatus = estatus;
+	}
+
+	public String getConsumidor() {
+		return consumidor;
+	}
+
+	public void setConsumidor(String consumidor) {
+		this.consumidor = consumidor;
+	}
+
+	public BigDecimal getImporteTransaccion() {
+		return importeTransaccion;
+	}
+
+	public void setImporteTransaccion(BigDecimal importeTransaccion) {
+		this.importeTransaccion = importeTransaccion;
 	}
 
 	@Override
 	public String toString() {
 		return "MovimientoProcesosNocturnosResponseDTO [folioPartida=" + folioPartida + ", transaccion=" + transaccion
-				+ ", sucursal=" + sucursal + ", fecha=" + fecha + ", operacionAbr=" + operacionAbr + ", operacionDesc="
-				+ operacionDesc + ", montoOperacion=" + montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr
-				+ ", tipoContratoDesc=" + tipoContratoDesc + ", numAutorizacion=" + numAutorizacion + ", capitalActual="
-				+ capitalActual + ", comisiones=" + comisiones + ", interes=" + interes + ", estatus=" + estatus + "]";
-	}
-
-	@Override
-	public int compareTo(MovimientoProcesosNocturnosResponseDTO o) {
-		// TODO Auto-generated method stub
-		return 0;
+				+ ", estadoTransaccion=" + estadoTransaccion + ", sucursal=" + sucursal + ", fecha=" + fecha
+				+ ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc + ", montoOperacion="
+				+ montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc
+				+ ", numAutorizacion=" + numAutorizacion + ", capitalActual=" + capitalActual + ", comisiones="
+				+ comisiones + ", interes=" + interes + ", estatus=" + estatus + ", consumidor=" + consumidor
+				+ ", importeTransaccion=" + importeTransaccion + "]";
 	}
 
 }

@@ -24,6 +24,7 @@ public class MovimientoMidasDTO {
 	private Long folioPartida;
 	private Long transaccion;
 	private Long sucursal;
+	private String estadoTransaccion;
 	private Date fecha;
 	private String operacionAbr;
 	private String operacionDesc;
@@ -34,7 +35,33 @@ public class MovimientoMidasDTO {
 	private BigDecimal capitalActual;
 	private BigDecimal comisiones;
 	private BigDecimal interes;
-	private String estatus;
+	private Boolean estatus;
+	private String consumidor;
+	private BigDecimal importeTransaccion;
+
+	public String getEstadoTransaccion() {
+		return estadoTransaccion;
+	}
+
+	public void setEstadoTransaccion(String estadoTransaccion) {
+		this.estadoTransaccion = estadoTransaccion;
+	}
+
+	public String getConsumidor() {
+		return consumidor;
+	}
+
+	public void setConsumidor(String idConsumidor) {
+		this.consumidor = idConsumidor;
+	}
+
+	public BigDecimal getImporteTransaccion() {
+		return importeTransaccion;
+	}
+
+	public void setImporteTransaccion(BigDecimal importeTransaccion) {
+		this.importeTransaccion = importeTransaccion;
+	}
 
 	public Long getId() {
 		return id;
@@ -148,21 +175,12 @@ public class MovimientoMidasDTO {
 		this.interes = interes;
 	}
 
-	public String getEstatus() {
+	public Boolean getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(Boolean estatus) {
 		this.estatus = estatus;
-	}
-
-	@Override
-	public String toString() {
-		return "MovimientoMidasDTO [id=" + id + ", folioPartida=" + folioPartida + ", transaccion=" + transaccion
-				+ ", sucursal=" + sucursal + ", fecha=" + fecha + ", operacionAbr=" + operacionAbr + ", operacionDesc="
-				+ operacionDesc + ", montoOperacion=" + montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr
-				+ ", tipoContratoDesc=" + tipoContratoDesc + ", numAutorizacion=" + numAutorizacion + ", capitalActual="
-				+ capitalActual + ", comisiones=" + comisiones + ", interes=" + interes + ", estatus=" + estatus + "]";
 	}
 
 }

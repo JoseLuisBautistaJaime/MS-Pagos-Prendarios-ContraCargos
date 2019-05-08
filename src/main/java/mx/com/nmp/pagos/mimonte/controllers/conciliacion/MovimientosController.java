@@ -30,7 +30,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoIDDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
@@ -40,12 +42,10 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.TarjetaMovimientosProveedorDTO;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosProveedorService;
 import mx.com.nmp.pagos.mimonte.util.Response;
-import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
 /**
  * @name MovimientosController
@@ -132,23 +132,9 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientosProvedor(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
-//		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
-//			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		movimientoTransaccionalListDTO = buildDummyX1();
-//		Integer total = movimientosProveedorService
-//				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
-//		if (null != total) {
-//			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
-//			movimientoTransaccionalListDTO.setTotal(total);
-//			movimientoTransaccionalListDTO
-//					.setMovimientos(movimientosProveedorService.findByFolio(commonConciliacionRequestDTO));
-//		} else
-//			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-//		if (null == movimientoTransaccionalListDTO.getTotal() || null == movimientoTransaccionalListDTO.getMovimientos()
-//				|| movimientoTransaccionalListDTO.getMovimientos().isEmpty())
-//			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY,
-				movimientoTransaccionalListDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoTransaccionalListDTO);
 	}
 
 	/**
@@ -168,25 +154,11 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findMovimientosNocturnos(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+	public Response findMovimientosNocturnos(@RequestBody CommonConciliacionEstatusRequestDTO commonConciliacionRequestDTO) {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
-		 movimientoProcesosNocturnosListDTO = buildDummyX2();
-//		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
-//			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-//		Integer total = movimientosMidasService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
-//		if (null != total) {
-//			movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
-//			movimientoProcesosNocturnosListDTO.setTotal(total);
-//			movimientoProcesosNocturnosListDTO
-//					.setMovimientos(movimientosMidasService.findByFolio(commonConciliacionRequestDTO));
-//		} else
-//			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-//		if (null == movimientoProcesosNocturnosListDTO.getTotal()
-//				|| null == movimientoProcesosNocturnosListDTO.getMovimientos()
-//				|| movimientoProcesosNocturnosListDTO.getMovimientos().isEmpty())
-//			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY,
-				movimientoProcesosNocturnosListDTO);
+		movimientoProcesosNocturnosListDTO = buildDummyX2();
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoProcesosNocturnosListDTO);
 	}
 
 	/**
@@ -210,11 +182,11 @@ public class MovimientosController {
 	public Response saveMovimientosProvedor(
 			@RequestBody MovimientoTransaccionalListRequestDTO movimientoTransaccionalDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		MovimientoIDDTO movimientoIDDTO = null;
-		movimientoIDDTO = buildDummyX3();
+//		MovimientoIDDTO movimientoIDDTO = null;
+//		movimientoIDDTO = buildDummyX3();
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 //			movimientoIDDTO
-			null);
+				null);
 	}
 
 	/**
@@ -238,8 +210,8 @@ public class MovimientosController {
 			@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 
-		MovimientoIDDTO movimientoIDDTO = null;
-	movimientoIDDTO = buildDummyX3();
+//		MovimientoIDDTO movimientoIDDTO = null;
+//		movimientoIDDTO = buildDummyX3();
 
 //		MovimientoIDDTO movimientoIDDTO = null;
 //		movimientoIDDTO = buildDummyX3();
@@ -256,36 +228,43 @@ public class MovimientosController {
 	public static MovimientoTransaccionalListDTO buildDummyX1() {
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
 		MovimientoProveedorDTO movimientoTransaccionalDTO = new MovimientoProveedorDTO();
-		movimientoTransaccionalDTO.setCodigoAutorizacion("67032");
-		movimientoTransaccionalDTO.setCodigoPuertaEnlace("Aprobado");
-		movimientoTransaccionalDTO.setCodigoRespuesta("0");
-		movimientoTransaccionalDTO.setEntidadGestora("EGLOBAL");
-		movimientoTransaccionalDTO.setEsquemaTarjeta("Visa");
-		movimientoTransaccionalDTO.setFecha(new Date());
+		movimientoTransaccionalDTO.setPaymentMethod(new MetodoPagoMovimientosProveedorDTO());
+		movimientoTransaccionalDTO.setCard(new TarjetaMovimientosProveedorDTO());
+		movimientoTransaccionalDTO.setAmount(new BigDecimal("100.02"));
+		movimientoTransaccionalDTO.setAuthorization("AUTH123");
+		movimientoTransaccionalDTO.getCard().setAddress("ADDRESS123");
+		movimientoTransaccionalDTO.getCard().setAllowsCharges(true);
+		movimientoTransaccionalDTO.getCard().setAllowsPayouts(true);
+		movimientoTransaccionalDTO.getCard().setBankCode("bxm123");
+		movimientoTransaccionalDTO.getCard().setBankName("citi");
+		movimientoTransaccionalDTO.getCard().setBrand("brand 123");
+		movimientoTransaccionalDTO.getCard().setCardNumber("1234567891234567");
+		movimientoTransaccionalDTO.getCard().setCreationDate(new Date());
+		movimientoTransaccionalDTO.getCard().setCustomerId("123");
+		movimientoTransaccionalDTO.getCard().setExpirationMonth("10");
+		movimientoTransaccionalDTO.getCard().setExpirationYear("2024");
+		movimientoTransaccionalDTO.getCard().setHolderName("Nathan Gould");
+		movimientoTransaccionalDTO.getCard().setId("1");
+		movimientoTransaccionalDTO.getCard().setType("visa");
+		movimientoTransaccionalDTO.setConciliated(true);
+		movimientoTransaccionalDTO.setCreationDate(new Date());
+		movimientoTransaccionalDTO.setCurrency("mxn");
+		movimientoTransaccionalDTO.setCustomerId("12554");
+		movimientoTransaccionalDTO.setDescription("movimiento proveedor 1");
+		movimientoTransaccionalDTO.setErrorCode("5003");
+		movimientoTransaccionalDTO.setErrorMessage("ocurrio un error");
 		movimientoTransaccionalDTO.setId(1L);
-		movimientoTransaccionalDTO.setIdComerciante("1063488");
-		movimientoTransaccionalDTO.setIdentificadorBanco("");
-		movimientoTransaccionalDTO.setIdentificadorCuenta("481515xxxxxx6567");
-		movimientoTransaccionalDTO.setIdPedido("6ae26139-6b12-4050-8c2b-2de6319487b3");
-		movimientoTransaccionalDTO.setIdTransaccion("1");
-		movimientoTransaccionalDTO.setMetodoPago("Tarjeta");
-		movimientoTransaccionalDTO.setMoneda("MXN");
-		movimientoTransaccionalDTO.setMonto(new BigDecimal("406.45"));
-		movimientoTransaccionalDTO.setNumeroLotePago("20181001");
-		movimientoTransaccionalDTO.setOrigenTransaccion("Internet");
-		movimientoTransaccionalDTO.setReciboTransaccion("827412214425");
-		movimientoTransaccionalDTO.setRecomendacionRiesgo("");
-		movimientoTransaccionalDTO.setReferenciaPedido("148341390002");
-		movimientoTransaccionalDTO.setReferenciaTransaccion("");
-		movimientoTransaccionalDTO.setRespuesta3DS("");
-		movimientoTransaccionalDTO.setRespuestaAVS("");
-		movimientoTransaccionalDTO.setRespuestaCSC("");
-		movimientoTransaccionalDTO.setResultado("Exito");
-		movimientoTransaccionalDTO.setResultadoRevisionRiesgo("");
-		movimientoTransaccionalDTO.setT3dsECI("");
-		movimientoTransaccionalDTO.setTipoTransaccion("Pago");
-		movimientoTransaccionalDTO.setTitularCuenta("Eduardo Lopez Lopez");
-		movimientoTransaccionalListDTO.setTotal(406);
+		movimientoTransaccionalDTO.setIdMovimiento("1");
+		movimientoTransaccionalDTO.setMethod("method 1");
+		movimientoTransaccionalDTO.setOperationDate(new Date());
+		movimientoTransaccionalDTO.setOperationType("type 1");
+		movimientoTransaccionalDTO.setOrderId("3344");
+		movimientoTransaccionalDTO.setPaymentMethod(new MetodoPagoMovimientosProveedorDTO());
+		movimientoTransaccionalDTO.getPaymentMethod().setType("card");
+		movimientoTransaccionalDTO.getPaymentMethod().setUrl("http://payment.net/123");
+		movimientoTransaccionalDTO.setStatus("active");
+		movimientoTransaccionalDTO.setTransactionType("type tr 1");
+		movimientoTransaccionalListDTO.setTotal(406L);
 		List<MovimientoProveedorDTO> lst = new ArrayList<>();
 		lst.add(movimientoTransaccionalDTO);
 		movimientoTransaccionalListDTO.setMovimientos(lst);
@@ -304,7 +283,7 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setTransaccion(1L);
 		movimientoProcesosNocturnosDTO.setCapitalActual(new BigDecimal("400.12"));
 		movimientoProcesosNocturnosDTO.setComisiones(new BigDecimal("10.23"));
-		movimientoProcesosNocturnosDTO.setEstatus("Exitoso");
+		movimientoProcesosNocturnosDTO.setEstatus(true);
 		movimientoProcesosNocturnosDTO.setFecha(new Date());
 		movimientoProcesosNocturnosDTO.setFolioPartida(12345L);
 		movimientoProcesosNocturnosDTO.setInteres(new BigDecimal("24.52"));
@@ -315,6 +294,9 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setSucursal(12L);
 		movimientoProcesosNocturnosDTO.setTipoContratoAbr("PL");
 		movimientoProcesosNocturnosDTO.setTipoContratoDesc("Pagos Libres");
+		movimientoProcesosNocturnosDTO.setEstadoTransaccion("En proceso");
+		movimientoProcesosNocturnosDTO.setImporteTransaccion(new BigDecimal("101.2"));
+		movimientoProcesosNocturnosDTO.setConsumidor("123");
 		movimientoProcesosNocturnosListDTO.setTotal(400);
 		List<MovimientoMidasDTO> lst = new ArrayList<>();
 		lst.add(movimientoProcesosNocturnosDTO);

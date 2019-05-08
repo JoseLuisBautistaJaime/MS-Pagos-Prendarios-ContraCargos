@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,21 +16,15 @@ import java.util.List;
  * @creationDate 29/04/2019 16:36 hrs.
  * @version 0.1
  */
-public class MovimientoProcesosNocturnosListResponseDTO
-		implements Comparable<MovimientoProcesosNocturnosListResponseDTO> {
+public class MovimientoProcesosNocturnosListResponseDTO {
 
 	private Integer folio;
+	private Date fechaDesde;
+	private Date fechaHasta;
 	private List<MovimientoProcesosNocturnosResponseDTO> movimientos;
 
 	public MovimientoProcesosNocturnosListResponseDTO() {
 		super();
-	}
-
-	public MovimientoProcesosNocturnosListResponseDTO(Integer folio,
-			List<MovimientoProcesosNocturnosResponseDTO> movimientos) {
-		super();
-		this.folio = folio;
-		this.movimientos = movimientos;
 	}
 
 	public Integer getFolio() {
@@ -48,14 +43,26 @@ public class MovimientoProcesosNocturnosListResponseDTO
 		this.movimientos = movimientos;
 	}
 
-	@Override
-	public String toString() {
-		return "MovimientoProcesosNocturnosListResponseDTO [folio=" + folio + ", movimientos=" + movimientos + "]";
+	public Date getFechaDesde() {
+		return fechaDesde;
+	}
+
+	public void setFechaDesde(Date fechaDesde) {
+		this.fechaDesde = fechaDesde;
+	}
+
+	public Date getFechaHasta() {
+		return fechaHasta;
+	}
+
+	public void setFechaHasta(Date fechaHasta) {
+		this.fechaHasta = fechaHasta;
 	}
 
 	@Override
-	public int compareTo(MovimientoProcesosNocturnosListResponseDTO o) {
-		return 0;
+	public String toString() {
+		return "MovimientoProcesosNocturnosListResponseDTO [folio=" + folio + ", fechaDesde=" + fechaDesde
+				+ ", fechaHasta=" + fechaHasta + ", movimientos=" + movimientos + "]";
 	}
 
 }
