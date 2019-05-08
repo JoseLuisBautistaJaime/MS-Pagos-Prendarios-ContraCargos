@@ -18,13 +18,13 @@ public class CommonConciliacionEstatusRequestDTO implements Comparable<CommonCon
 	private Integer folio;
 	private Integer resultados;
 	private Integer pagina;
-	private String estatus;
+	private Boolean estatus;
 
 	public CommonConciliacionEstatusRequestDTO() {
 		super();
 	}
 
-	public CommonConciliacionEstatusRequestDTO(Integer folio, Integer resultados, Integer pagina, String estatus) {
+	public CommonConciliacionEstatusRequestDTO(Integer folio, Integer resultados, Integer pagina, Boolean estatus) {
 		super();
 		this.folio = folio;
 		this.resultados = resultados;
@@ -32,11 +32,11 @@ public class CommonConciliacionEstatusRequestDTO implements Comparable<CommonCon
 		this.estatus = estatus;
 	}
 
-	public String getEstatus() {
+	public Boolean getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(Boolean estatus) {
 		this.estatus = estatus;
 	}
 

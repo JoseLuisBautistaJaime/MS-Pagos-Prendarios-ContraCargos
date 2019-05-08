@@ -75,7 +75,7 @@ public class MovimientosMidasService {
 	 * @param estatus
 	 * @return
 	 */
-	public Long countByConciliacionId(final Long idConciliacion, final String estatus) {
+	public Long countByConciliacionId(final Long idConciliacion, final Boolean estatus) {
 		return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion, estatus);
 	}
 

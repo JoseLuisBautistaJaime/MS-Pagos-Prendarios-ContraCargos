@@ -983,5 +983,13 @@ ADD COLUMN tarjeta VARCHAR(50) NULL DEFAULT NULL,
 ADD COLUMN moneda_pago VARCHAR(50) NULL DEFAULT NULL;
 
 
+-- SE MODIFICA COLUMNA id_consumidor por consumidor en tabla to_movimiento_midas --
+-- SE AGREGA NUEVA COLUMNA importe_transaccion a tabla to_movimiento_midas --
+-- SE CAMBIA TIPO DE DATO EN CAMPO estatus DE TABLA to_movimiento_midas DE VARCHAR(50) A BIT--
+-- [2019-05-08 11:55:35] --
+ALTER TABLE to_movimiento_midas CHANGE id_consumidor consumidor VARCHAR(50) NULL DEFAULT NULL;
+ALTER TABLE to_movimiento_midas ADD COLUMN importe_transaccion DECIMAL (16,4) NULL DEFAULT NULL;
+TRUNCATE TABLE to_movimiento_midas;
+ALTER TABLE to_movimiento_midas CHANGE estatus estatus BIT DEFAULT TRUE;
 
 

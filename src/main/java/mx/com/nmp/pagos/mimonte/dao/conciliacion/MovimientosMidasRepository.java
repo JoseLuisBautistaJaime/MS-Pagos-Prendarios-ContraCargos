@@ -33,7 +33,8 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @return
 	 */
 	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
-	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId, @Param("estatus") final String estatus, Pageable pageable);
+	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId,
+			@Param("estatus") final Boolean estatus, Pageable pageable);
 
 	/**
 	 * Regresa el total de registros midas por id de conciliacion
@@ -42,6 +43,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @return
 	 */
 	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
-	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId, @Param("estatus") final String estatus);
+	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId,
+			@Param("estatus") final Boolean estatus);
 
 }

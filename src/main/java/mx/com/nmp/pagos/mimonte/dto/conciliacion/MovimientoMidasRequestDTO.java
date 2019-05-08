@@ -31,8 +31,8 @@ public class MovimientoMidasRequestDTO implements Comparable<MovimientoMidasRequ
 	private BigDecimal capitalActual;
 	private BigDecimal comisiones;
 	private BigDecimal interes;
-	private String estatus;
-	private String idConsumidor;
+	private Boolean estatus;
+	private String consumidor;
 	private String codigoError;
 	private String mensajeError;
 	private String idTarjeta;
@@ -40,6 +40,7 @@ public class MovimientoMidasRequestDTO implements Comparable<MovimientoMidasRequ
 	private String tipoTarjeta;
 	private String tarjeta;
 	private String monedaPago;
+	private BigDecimal importeTransaccion;
 
 	public Long getId() {
 		return id;
@@ -153,11 +154,11 @@ public class MovimientoMidasRequestDTO implements Comparable<MovimientoMidasRequ
 		this.interes = interes;
 	}
 
-	public String getEstatus() {
+	public Boolean getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(Boolean estatus) {
 		this.estatus = estatus;
 	}
 
@@ -169,12 +170,12 @@ public class MovimientoMidasRequestDTO implements Comparable<MovimientoMidasRequ
 		this.estadoTransaccion = estadoTransaccion;
 	}
 
-	public String getIdConsumidor() {
-		return idConsumidor;
+	public String getConsumidor() {
+		return consumidor;
 	}
 
-	public void setIdConsumidor(String idConsumidor) {
-		this.idConsumidor = idConsumidor;
+	public void setConsumidor(String idConsumidor) {
+		this.consumidor = idConsumidor;
 	}
 
 	public String getCodigoError() {
@@ -233,6 +234,14 @@ public class MovimientoMidasRequestDTO implements Comparable<MovimientoMidasRequ
 		this.monedaPago = monedaPago;
 	}
 
+	public BigDecimal getImporteTransaccion() {
+		return importeTransaccion;
+	}
+
+	public void setImporteTransaccion(BigDecimal importeTransaccion) {
+		this.importeTransaccion = importeTransaccion;
+	}
+
 	@Override
 	public String toString() {
 		return "MovimientoMidasRequestDTO [id=" + id + ", folioPartida=" + folioPartida + ", transaccion=" + transaccion
@@ -240,10 +249,179 @@ public class MovimientoMidasRequestDTO implements Comparable<MovimientoMidasRequ
 				+ ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc + ", montoOperacion="
 				+ montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc
 				+ ", numAutorizacion=" + numAutorizacion + ", capitalActual=" + capitalActual + ", comisiones="
-				+ comisiones + ", interes=" + interes + ", estatus=" + estatus + ", idConsumidor=" + idConsumidor
+				+ comisiones + ", interes=" + interes + ", estatus=" + estatus + ", consumidor=" + consumidor
 				+ ", codigoError=" + codigoError + ", mensajeError=" + mensajeError + ", idTarjeta=" + idTarjeta
 				+ ", marcaTarjeta=" + marcaTarjeta + ", tipoTarjeta=" + tipoTarjeta + ", tarjeta=" + tarjeta
-				+ ", monedaPago=" + monedaPago + "]";
+				+ ", monedaPago=" + monedaPago + ", importeTransaccion=" + importeTransaccion + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((capitalActual == null) ? 0 : capitalActual.hashCode());
+		result = prime * result + ((codigoError == null) ? 0 : codigoError.hashCode());
+		result = prime * result + ((comisiones == null) ? 0 : comisiones.hashCode());
+		result = prime * result + ((consumidor == null) ? 0 : consumidor.hashCode());
+		result = prime * result + ((estadoTransaccion == null) ? 0 : estadoTransaccion.hashCode());
+		result = prime * result + ((estatus == null) ? 0 : estatus.hashCode());
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result + ((folioPartida == null) ? 0 : folioPartida.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((idTarjeta == null) ? 0 : idTarjeta.hashCode());
+		result = prime * result + ((importeTransaccion == null) ? 0 : importeTransaccion.hashCode());
+		result = prime * result + ((interes == null) ? 0 : interes.hashCode());
+		result = prime * result + ((marcaTarjeta == null) ? 0 : marcaTarjeta.hashCode());
+		result = prime * result + ((mensajeError == null) ? 0 : mensajeError.hashCode());
+		result = prime * result + ((monedaPago == null) ? 0 : monedaPago.hashCode());
+		result = prime * result + ((montoOperacion == null) ? 0 : montoOperacion.hashCode());
+		result = prime * result + ((numAutorizacion == null) ? 0 : numAutorizacion.hashCode());
+		result = prime * result + ((operacionAbr == null) ? 0 : operacionAbr.hashCode());
+		result = prime * result + ((operacionDesc == null) ? 0 : operacionDesc.hashCode());
+		result = prime * result + ((sucursal == null) ? 0 : sucursal.hashCode());
+		result = prime * result + ((tarjeta == null) ? 0 : tarjeta.hashCode());
+		result = prime * result + ((tipoContratoAbr == null) ? 0 : tipoContratoAbr.hashCode());
+		result = prime * result + ((tipoContratoDesc == null) ? 0 : tipoContratoDesc.hashCode());
+		result = prime * result + ((tipoTarjeta == null) ? 0 : tipoTarjeta.hashCode());
+		result = prime * result + ((transaccion == null) ? 0 : transaccion.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MovimientoMidasRequestDTO other = (MovimientoMidasRequestDTO) obj;
+		if (capitalActual == null) {
+			if (other.capitalActual != null)
+				return false;
+		} else if (!capitalActual.equals(other.capitalActual))
+			return false;
+		if (codigoError == null) {
+			if (other.codigoError != null)
+				return false;
+		} else if (!codigoError.equals(other.codigoError))
+			return false;
+		if (comisiones == null) {
+			if (other.comisiones != null)
+				return false;
+		} else if (!comisiones.equals(other.comisiones))
+			return false;
+		if (consumidor == null) {
+			if (other.consumidor != null)
+				return false;
+		} else if (!consumidor.equals(other.consumidor))
+			return false;
+		if (estadoTransaccion == null) {
+			if (other.estadoTransaccion != null)
+				return false;
+		} else if (!estadoTransaccion.equals(other.estadoTransaccion))
+			return false;
+		if (estatus == null) {
+			if (other.estatus != null)
+				return false;
+		} else if (!estatus.equals(other.estatus))
+			return false;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (folioPartida == null) {
+			if (other.folioPartida != null)
+				return false;
+		} else if (!folioPartida.equals(other.folioPartida))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (idTarjeta == null) {
+			if (other.idTarjeta != null)
+				return false;
+		} else if (!idTarjeta.equals(other.idTarjeta))
+			return false;
+		if (importeTransaccion == null) {
+			if (other.importeTransaccion != null)
+				return false;
+		} else if (!importeTransaccion.equals(other.importeTransaccion))
+			return false;
+		if (interes == null) {
+			if (other.interes != null)
+				return false;
+		} else if (!interes.equals(other.interes))
+			return false;
+		if (marcaTarjeta == null) {
+			if (other.marcaTarjeta != null)
+				return false;
+		} else if (!marcaTarjeta.equals(other.marcaTarjeta))
+			return false;
+		if (mensajeError == null) {
+			if (other.mensajeError != null)
+				return false;
+		} else if (!mensajeError.equals(other.mensajeError))
+			return false;
+		if (monedaPago == null) {
+			if (other.monedaPago != null)
+				return false;
+		} else if (!monedaPago.equals(other.monedaPago))
+			return false;
+		if (montoOperacion == null) {
+			if (other.montoOperacion != null)
+				return false;
+		} else if (!montoOperacion.equals(other.montoOperacion))
+			return false;
+		if (numAutorizacion == null) {
+			if (other.numAutorizacion != null)
+				return false;
+		} else if (!numAutorizacion.equals(other.numAutorizacion))
+			return false;
+		if (operacionAbr == null) {
+			if (other.operacionAbr != null)
+				return false;
+		} else if (!operacionAbr.equals(other.operacionAbr))
+			return false;
+		if (operacionDesc == null) {
+			if (other.operacionDesc != null)
+				return false;
+		} else if (!operacionDesc.equals(other.operacionDesc))
+			return false;
+		if (sucursal == null) {
+			if (other.sucursal != null)
+				return false;
+		} else if (!sucursal.equals(other.sucursal))
+			return false;
+		if (tarjeta == null) {
+			if (other.tarjeta != null)
+				return false;
+		} else if (!tarjeta.equals(other.tarjeta))
+			return false;
+		if (tipoContratoAbr == null) {
+			if (other.tipoContratoAbr != null)
+				return false;
+		} else if (!tipoContratoAbr.equals(other.tipoContratoAbr))
+			return false;
+		if (tipoContratoDesc == null) {
+			if (other.tipoContratoDesc != null)
+				return false;
+		} else if (!tipoContratoDesc.equals(other.tipoContratoDesc))
+			return false;
+		if (tipoTarjeta == null) {
+			if (other.tipoTarjeta != null)
+				return false;
+		} else if (!tipoTarjeta.equals(other.tipoTarjeta))
+			return false;
+		if (transaccion == null) {
+			if (other.transaccion != null)
+				return false;
+		} else if (!transaccion.equals(other.transaccion))
+			return false;
+		return true;
 	}
 
 	@Override

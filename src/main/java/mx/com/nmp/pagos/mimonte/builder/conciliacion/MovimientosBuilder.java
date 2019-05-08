@@ -61,7 +61,8 @@ public abstract class MovimientosBuilder {
 			movimientoMidasDTO.setTipoContratoDesc(movimientoMidas.getTipoContratoDesc());
 			movimientoMidasDTO.setTransaccion(movimientoMidas.getTransaccion());
 			movimientoMidasDTO.setEstadoTransaccion(movimientoMidas.getEstadoTransaccion());
-			movimientoMidasDTO.setIdConsumidor(movimientoMidas.getIdConsumidor());
+			movimientoMidasDTO.setConsumidor(movimientoMidas.getConsumidor());
+			movimientoMidasDTO.setImporteTransaccion(movimientoMidas.getImporteTransaccion());
 		}
 		return movimientoMidasDTO;
 	}
@@ -179,7 +180,7 @@ public abstract class MovimientosBuilder {
 		MovimientoMidas movimientoMidas = new MovimientoMidas();
 		movimientoMidas.setId(null);
 		movimientoMidas.setReporte(idReporte);
-		movimientoMidas.setIdConsumidor(movimientoMidasDTO.getIdConsumidor());
+		movimientoMidas.setConsumidor(movimientoMidasDTO.getConsumidor());
 		movimientoMidas.setEstadoTransaccion(movimientoMidasDTO.getEstadoTransaccion());
 		movimientoMidas.setCapital(movimientoMidasDTO.getCapitalActual());
 		movimientoMidas.setComisiones(movimientoMidasDTO.getComisiones());
@@ -195,6 +196,7 @@ public abstract class MovimientosBuilder {
 		movimientoMidas.setTipoContratoAbr(movimientoMidasDTO.getTipoContratoAbr());
 		movimientoMidas.setTipoContratoDesc(movimientoMidasDTO.getTipoContratoDesc());
 		movimientoMidas.setTransaccion(movimientoMidasDTO.getTransaccion());
+		movimientoMidas.setImporteTransaccion(movimientoMidasDTO.getImporteTransaccion());
 		return movimientoMidas;
 	}
 

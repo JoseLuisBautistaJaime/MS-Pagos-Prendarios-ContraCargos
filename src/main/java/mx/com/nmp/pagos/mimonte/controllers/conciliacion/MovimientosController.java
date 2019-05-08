@@ -304,7 +304,7 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setTransaccion(1L);
 		movimientoProcesosNocturnosDTO.setCapitalActual(new BigDecimal("400.12"));
 		movimientoProcesosNocturnosDTO.setComisiones(new BigDecimal("10.23"));
-		movimientoProcesosNocturnosDTO.setEstatus("Exitoso");
+		movimientoProcesosNocturnosDTO.setEstatus(true);
 		movimientoProcesosNocturnosDTO.setFecha(new Date());
 		movimientoProcesosNocturnosDTO.setFolioPartida(12345L);
 		movimientoProcesosNocturnosDTO.setInteres(new BigDecimal("24.52"));
@@ -316,7 +316,7 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setTipoContratoAbr("PL");
 		movimientoProcesosNocturnosDTO.setTipoContratoDesc("Pagos Libres");
 		movimientoProcesosNocturnosDTO.setEstadoTransaccion("Activo");
-		movimientoProcesosNocturnosDTO.setIdConsumidor("Mobile");
+		movimientoProcesosNocturnosDTO.setConsumidor("Mobile");
 		movimientoProcesosNocturnosListDTO.setTotal(400L);
 		List<MovimientoMidasDTO> lst = new ArrayList<>();
 		lst.add(movimientoProcesosNocturnosDTO);

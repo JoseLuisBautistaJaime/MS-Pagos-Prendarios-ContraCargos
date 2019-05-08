@@ -88,7 +88,8 @@ public interface ValidadorConciliacion {
 						|| null == movimientoMidasRequestDTO.getMarcaTarjeta()
 						|| null == movimientoMidasRequestDTO.getTipoTarjeta()
 						|| null == movimientoMidasRequestDTO.getTarjeta()
-						|| null == movimientoMidasRequestDTO.getMonedaPago())
+						|| null == movimientoMidasRequestDTO.getMonedaPago()
+						|| null == movimientoMidasRequestDTO.getImporteTransaccion())
 					return false;
 		} else
 			return false;
@@ -135,7 +136,7 @@ public interface ValidadorConciliacion {
 						|| null == movimientoProveedorDTO.getCustomerId()
 						|| null == movimientoProveedorDTO.getDescription()
 						|| null == movimientoProveedorDTO.getErrorCode()
-						|| null == movimientoProveedorDTO.getErrorMessage() || null == movimientoProveedorDTO.getId()
+						|| null == movimientoProveedorDTO.getErrorMessage()
 						|| null == movimientoProveedorDTO.getMethod()
 						|| null == movimientoProveedorDTO.getPaymentMethod()
 						|| null == movimientoProveedorDTO.getPaymentMethod().getType()
