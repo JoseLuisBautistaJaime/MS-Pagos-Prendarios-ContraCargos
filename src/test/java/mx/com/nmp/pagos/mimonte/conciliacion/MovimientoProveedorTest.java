@@ -4,6 +4,10 @@
  */
 package mx.com.nmp.pagos.mimonte.conciliacion;
 
+import org.junit.runner.RunWith;
+
+import com.intuit.karate.junit4.Karate;
+
 /**
  * @name MovimientoMidasTest
  * @description Clase de pruebas automatizadas para el proyecto Conciliacion
@@ -14,5 +18,6 @@ package mx.com.nmp.pagos.mimonte.conciliacion;
  * @version 0.1
  *
  */
+@RunWith(Karate.class)
 public class MovimientoProveedorTest {
 }
