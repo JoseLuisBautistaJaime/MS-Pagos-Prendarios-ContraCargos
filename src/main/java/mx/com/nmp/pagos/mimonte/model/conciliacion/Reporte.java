@@ -5,9 +5,12 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,9 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.model.Updatable;
 
 /**
@@ -31,7 +32,12 @@ import mx.com.nmp.pagos.mimonte.model.Updatable;
  */
 @Entity
 @Table(name = "to_reporte")
-public class Reporte extends Updatable implements Comparable<Reporte> {
+public class Reporte extends Updatable implements Comparable<Reporte>{
+
+//	/**
+//	 * Serial id
+//	 */
+//	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,9 +48,9 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	@JoinColumn(name = "id_conciliacion", nullable = false)
 	private Conciliacion conciliacion;
 
-	@Size(max = ConciliacionConstants.ENTITY_VALIDATION_SIZE_VALUE_45, message = ConciliacionConstants.ENTITY_VALIDATION_SIZE_MESSAGE_45)
 	@Column(name = "tipo", nullable = false)
-	private String tipo;
+	@Enumerated(EnumType.STRING)
+	private TipoReporteEnum tipo;
 
 	@Column(name = "disponible", nullable = false)
 	private Boolean disponible;
@@ -77,11 +83,11 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 		this.conciliacion = conciliacion;
 	}
 
-	public String getTipo() {
+	public TipoReporteEnum getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(TipoReporteEnum tipo) {
 		this.tipo = tipo;
 	}
 
@@ -122,57 +128,20 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((conciliacion == null) ? 0 : conciliacion.hashCode());
-		result = prime * result + ((disponible == null) ? 0 : disponible.hashCode());
-		result = prime * result + ((fechaDesde == null) ? 0 : fechaDesde.hashCode());
-		result = prime * result + ((fechaHasta == null) ? 0 : fechaHasta.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
-		return result;
+		return Objects.hash(id, conciliacion, tipo, disponible, fechaDesde, fechaHasta);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+
+		if (!(obj instanceof Reporte))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Reporte other = (Reporte) obj;
-		if (conciliacion == null) {
-			if (other.conciliacion != null)
-				return false;
-		} else if (!conciliacion.equals(other.conciliacion))
-			return false;
-		if (disponible == null) {
-			if (other.disponible != null)
-				return false;
-		} else if (!disponible.equals(other.disponible))
-			return false;
-		if (fechaDesde == null) {
-			if (other.fechaDesde != null)
-				return false;
-		} else if (!fechaDesde.equals(other.fechaDesde))
-			return false;
-		if (fechaHasta == null) {
-			if (other.fechaHasta != null)
-				return false;
-		} else if (!fechaHasta.equals(other.fechaHasta))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (tipo == null) {
-			if (other.tipo != null)
-				return false;
-		} else if (!tipo.equals(other.tipo))
-			return false;
-		return true;
+
+		final Reporte other = (Reporte) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 }

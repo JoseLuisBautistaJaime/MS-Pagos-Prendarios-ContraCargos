@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -40,6 +42,24 @@ public class MetodoPagoMovimientosProveedor {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(type, url);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof MetodoPagoMovimientosProveedor))
+			return false;
+
+		final MetodoPagoMovimientosProveedor other = (MetodoPagoMovimientosProveedor) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

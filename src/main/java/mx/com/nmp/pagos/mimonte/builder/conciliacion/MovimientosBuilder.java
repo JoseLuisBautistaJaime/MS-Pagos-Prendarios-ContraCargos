@@ -134,6 +134,7 @@ public abstract class MovimientosBuilder {
 			movimientoProveedorDTO.setErrorCode(movimientoProveedor.getErrorCode());
 			movimientoProveedorDTO.setErrorMessage(movimientoProveedor.getErrorMessage());
 			movimientoProveedorDTO.setIdMovimiento(movimientoProveedor.getIdMovimiento());
+			movimientoProveedorDTO.setId(movimientoProveedor.getId());
 			movimientoProveedorDTO.setMethod(movimientoProveedor.getMethod());
 			movimientoProveedorDTO.getPaymentMethod()
 					.setType(movimientoProveedor.getMetodoPagoMovimientosProveedor().getType());

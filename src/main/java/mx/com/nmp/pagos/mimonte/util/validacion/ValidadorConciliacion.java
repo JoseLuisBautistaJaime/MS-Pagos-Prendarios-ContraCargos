@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
+import static org.junit.Assert.assertNotNull;
+
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
@@ -29,11 +31,17 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateCommonConciliacionEstatusRequestDTO(
 			final CommonConciliacionEstatusRequestDTO commonConciliacionRequestDTO) {
-		return (null != commonConciliacionRequestDTO && null != commonConciliacionRequestDTO.getFolio()
-				&& null != commonConciliacionRequestDTO.getPagina()
-				&& null != commonConciliacionRequestDTO.getResultados() && commonConciliacionRequestDTO.getFolio() > 0
-				&& commonConciliacionRequestDTO.getResultados() > 0 && commonConciliacionRequestDTO.getPagina() >= 0
-				&& null != commonConciliacionRequestDTO.getEstatus());
+		try {
+			assertNotNull(commonConciliacionRequestDTO);
+			assertNotNull(commonConciliacionRequestDTO.getFolio());
+			assertNotNull(commonConciliacionRequestDTO.getPagina());
+			assertNotNull(commonConciliacionRequestDTO.getResultados());
+			assertNotNull(commonConciliacionRequestDTO.getEstatus());
+		} catch (Exception ex) {
+			return false;
+		}
+		return (commonConciliacionRequestDTO.getFolio() > 0 && commonConciliacionRequestDTO.getResultados() > 0
+				&& commonConciliacionRequestDTO.getPagina() >= 0);
 	}
 
 	/**
@@ -45,10 +53,16 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateCommonConciliacionRequestDTO(
 			final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
-		return (null != commonConciliacionRequestDTO && null != commonConciliacionRequestDTO.getFolio()
-				&& null != commonConciliacionRequestDTO.getPagina()
-				&& null != commonConciliacionRequestDTO.getResultados() && commonConciliacionRequestDTO.getFolio() > 0
-				&& commonConciliacionRequestDTO.getResultados() > 0 && commonConciliacionRequestDTO.getPagina() >= 0);
+		try {
+			assertNotNull(commonConciliacionRequestDTO);
+			assertNotNull(commonConciliacionRequestDTO.getFolio());
+			assertNotNull(commonConciliacionRequestDTO.getPagina());
+			assertNotNull(commonConciliacionRequestDTO.getResultados());
+		} catch (Exception ex) {
+			return false;
+		}
+		return (commonConciliacionRequestDTO.getFolio() > 0 && commonConciliacionRequestDTO.getResultados() > 0
+				&& commonConciliacionRequestDTO.getPagina() >= 0);
 	}
 
 	/**
@@ -60,42 +74,44 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateMovimientoProcesosNocturnosListResponseDTO(
 			MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosListResponseDTO) {
-		if (null != movimientoProcesosNocturnosListResponseDTO
-				&& null != movimientoProcesosNocturnosListResponseDTO.getFolio()
-				&& null != movimientoProcesosNocturnosListResponseDTO.getMovimientos()
-				&& !movimientoProcesosNocturnosListResponseDTO.getMovimientos().isEmpty()
-				&& null != movimientoProcesosNocturnosListResponseDTO.getFechaDesde()
-				&& null != movimientoProcesosNocturnosListResponseDTO.getFechaHasta()) {
-			for (MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO
-					.getMovimientos()) {
-				if (null == movimientoMidasRequestDTO.getCapitalActual()
-						|| null == movimientoMidasRequestDTO.getComisiones()
-						|| null == movimientoMidasRequestDTO.getFolioPartida()
-						|| null == movimientoMidasRequestDTO.getInteres()
-						|| null == movimientoMidasRequestDTO.getMontoOperacion()
-						|| null == movimientoMidasRequestDTO.getSucursal()
-						|| null == movimientoMidasRequestDTO.getTransaccion()
-						|| null == movimientoMidasRequestDTO.getEstatus()
-						|| null == movimientoMidasRequestDTO.getFecha()
-						|| null == movimientoMidasRequestDTO.getNumAutorizacion()
-						|| null == movimientoMidasRequestDTO.getOperacionAbr()
-						|| null == movimientoMidasRequestDTO.getOperacionDesc()
-						|| null == movimientoMidasRequestDTO.getTipoContratoAbr()
-						|| null == movimientoMidasRequestDTO.getTipoContratoDesc()
-						|| null == movimientoMidasRequestDTO.getCodigoError()
-						|| null == movimientoMidasRequestDTO.getMensajeError()
-						|| null == movimientoMidasRequestDTO.getIdTarjeta()
-						|| null == movimientoMidasRequestDTO.getMarcaTarjeta()
-						|| null == movimientoMidasRequestDTO.getTipoTarjeta()
-						|| null == movimientoMidasRequestDTO.getTarjeta()
-						|| null == movimientoMidasRequestDTO.getMonedaPago()
-						|| null == movimientoMidasRequestDTO.getImporteTransaccion()) {
-					return false;
+		try {
+			assertNotNull(movimientoProcesosNocturnosListResponseDTO);
+			assertNotNull(movimientoProcesosNocturnosListResponseDTO.getFolio());
+			assertNotNull(movimientoProcesosNocturnosListResponseDTO.getMovimientos());
+			assertNotNull(movimientoProcesosNocturnosListResponseDTO.getFechaDesde());
+			assertNotNull(movimientoProcesosNocturnosListResponseDTO.getFechaHasta());
+			if (!movimientoProcesosNocturnosListResponseDTO.getMovimientos().isEmpty()) {
+				for (MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO
+						.getMovimientos()) {
+					assertNotNull(movimientoMidasRequestDTO.getCapitalActual());
+					assertNotNull(null == movimientoMidasRequestDTO.getComisiones());
+					assertNotNull(movimientoMidasRequestDTO.getFolioPartida());
+					assertNotNull(movimientoMidasRequestDTO.getInteres());
+					assertNotNull(movimientoMidasRequestDTO.getMontoOperacion());
+					assertNotNull(movimientoMidasRequestDTO.getSucursal());
+					assertNotNull(movimientoMidasRequestDTO.getTransaccion());
+					assertNotNull(movimientoMidasRequestDTO.getEstatus());
+					assertNotNull(movimientoMidasRequestDTO.getFecha());
+					assertNotNull(movimientoMidasRequestDTO.getNumAutorizacion());
+					assertNotNull(movimientoMidasRequestDTO.getOperacionAbr());
+					assertNotNull(movimientoMidasRequestDTO.getOperacionDesc());
+					assertNotNull(movimientoMidasRequestDTO.getTipoContratoAbr());
+					assertNotNull(movimientoMidasRequestDTO.getTipoContratoDesc());
+					assertNotNull(movimientoMidasRequestDTO.getCodigoError());
+					assertNotNull(movimientoMidasRequestDTO.getMensajeError());
+					assertNotNull(movimientoMidasRequestDTO.getIdTarjeta());
+					assertNotNull(movimientoMidasRequestDTO.getMarcaTarjeta());
+					assertNotNull(movimientoMidasRequestDTO.getTipoTarjeta());
+					assertNotNull(movimientoMidasRequestDTO.getTarjeta());
+					assertNotNull(movimientoMidasRequestDTO.getMonedaPago());
+					assertNotNull(movimientoMidasRequestDTO.getImporteTransaccion());
+					movimientoMidasRequestDTO.setId(null);
 				}
-				movimientoMidasRequestDTO.setId(null);
-			}
-		} else
+			} else
+				return false;
+		} catch (Exception ex) {
 			return false;
+		}
 		return true;
 
 	}
@@ -109,52 +125,57 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateMovimientoTransaccionalListRequestDTO(
 			MovimientoTransaccionalListRequestDTO movimientoTransaccionalListRequestDTO) {
-		if (null == movimientoTransaccionalListRequestDTO || null == movimientoTransaccionalListRequestDTO.getFolio()
-				|| null == movimientoTransaccionalListRequestDTO.getMovimientos()
-				|| movimientoTransaccionalListRequestDTO.getMovimientos().isEmpty()
-				|| null == movimientoTransaccionalListRequestDTO.getFechaDesde()
-				|| null == movimientoTransaccionalListRequestDTO.getFechaHasta())
-			return false;
-		else {
-			for (MovimientoProveedorDTO movimientoProveedorDTO : movimientoTransaccionalListRequestDTO
-					.getMovimientos()) {
-				if (null == movimientoProveedorDTO.getAmount() || null == movimientoProveedorDTO.getAuthorization()
-						|| null == movimientoProveedorDTO.getCard()
-						|| null == movimientoProveedorDTO.getCard().getAddress()
-						|| null == movimientoProveedorDTO.getCard().getAllowsCharges()
-						|| null == movimientoProveedorDTO.getCard().getAllowsPayouts()
-						|| null == movimientoProveedorDTO.getCard().getBankCode()
-						|| null == movimientoProveedorDTO.getCard().getBankName()
-						|| null == movimientoProveedorDTO.getCard().getBrand()
-						|| null == movimientoProveedorDTO.getCard().getCreationDate()
-						|| null == movimientoProveedorDTO.getCard().getCustomerId()
-						|| null == movimientoProveedorDTO.getCard().getExpirationMonth()
-						|| null == movimientoProveedorDTO.getCard().getExpirationYear()
-						|| null == movimientoProveedorDTO.getCard().getHolderName()
-						|| null == movimientoProveedorDTO.getCard().getId()
-						|| null == movimientoProveedorDTO.getCard().getCardNumber()
-						|| null == movimientoProveedorDTO.getCard().getType()
-						|| null == movimientoProveedorDTO.getConciliated()
-						|| null == movimientoProveedorDTO.getCreationDate()
-						|| null == movimientoProveedorDTO.getCurrency()
-						|| null == movimientoProveedorDTO.getCustomerId()
-						|| null == movimientoProveedorDTO.getDescription()
-						|| null == movimientoProveedorDTO.getErrorCode()
-						|| null == movimientoProveedorDTO.getErrorMessage()
-						|| null == movimientoProveedorDTO.getMethod()
-						|| null == movimientoProveedorDTO.getPaymentMethod()
-						|| null == movimientoProveedorDTO.getPaymentMethod().getType()
-						|| null == movimientoProveedorDTO.getPaymentMethod().getUrl()
-						|| null == movimientoProveedorDTO.getOperationDate()
-						|| null == movimientoProveedorDTO.getOperationType()
-						|| null == movimientoProveedorDTO.getOrderId() || null == movimientoProveedorDTO.getStatus()
-						|| null == movimientoProveedorDTO.getTransactionType()
-						|| null == movimientoProveedorDTO.getIdMovimiento()) {
-					return false;
+		try {
+			assertNotNull(movimientoTransaccionalListRequestDTO);
+			assertNotNull(movimientoTransaccionalListRequestDTO.getFolio());
+			assertNotNull(movimientoTransaccionalListRequestDTO.getMovimientos());
+			assertNotNull(movimientoTransaccionalListRequestDTO.getFechaDesde());
+			assertNotNull(movimientoTransaccionalListRequestDTO.getFechaHasta());
+			if (!movimientoTransaccionalListRequestDTO.getMovimientos().isEmpty()) {
+				for (MovimientoProveedorDTO movimientoProveedorDTO : movimientoTransaccionalListRequestDTO
+						.getMovimientos()) {
+					assertNotNull(movimientoProveedorDTO.getAmount());
+					assertNotNull(movimientoProveedorDTO.getAuthorization());
+					assertNotNull(movimientoProveedorDTO.getCard());
+					assertNotNull(movimientoProveedorDTO.getCard().getAddress());
+					assertNotNull(movimientoProveedorDTO.getCard().getAllowsCharges());
+					assertNotNull(movimientoProveedorDTO.getCard().getAllowsPayouts());
+					assertNotNull(movimientoProveedorDTO.getCard().getBankCode());
+					assertNotNull(movimientoProveedorDTO.getCard().getBankName());
+					assertNotNull(movimientoProveedorDTO.getCard().getBrand());
+					assertNotNull(movimientoProveedorDTO.getCard().getCreationDate());
+					assertNotNull(movimientoProveedorDTO.getCard().getCustomerId());
+					assertNotNull(movimientoProveedorDTO.getCard().getExpirationMonth());
+					assertNotNull(movimientoProveedorDTO.getCard().getExpirationYear());
+					assertNotNull(movimientoProveedorDTO.getCard().getHolderName());
+					assertNotNull(movimientoProveedorDTO.getCard().getId());
+					assertNotNull(movimientoProveedorDTO.getCard().getCardNumber());
+					assertNotNull(movimientoProveedorDTO.getCard().getType());
+					assertNotNull(movimientoProveedorDTO.getConciliated());
+					assertNotNull(movimientoProveedorDTO.getCreationDate());
+					assertNotNull(movimientoProveedorDTO.getCurrency());
+					assertNotNull(movimientoProveedorDTO.getCustomerId());
+					assertNotNull(movimientoProveedorDTO.getDescription());
+					assertNotNull(movimientoProveedorDTO.getErrorCode());
+					assertNotNull(movimientoProveedorDTO.getErrorMessage());
+					assertNotNull(movimientoProveedorDTO.getMethod());
+					assertNotNull(movimientoProveedorDTO.getPaymentMethod());
+					assertNotNull(movimientoProveedorDTO.getPaymentMethod().getType());
+					assertNotNull(movimientoProveedorDTO.getPaymentMethod().getUrl());
+					assertNotNull(movimientoProveedorDTO.getOperationDate());
+					assertNotNull(movimientoProveedorDTO.getOperationType());
+					assertNotNull(movimientoProveedorDTO.getOrderId());
+					assertNotNull(movimientoProveedorDTO.getStatus());
+					assertNotNull(movimientoProveedorDTO.getTransactionType());
+					assertNotNull(movimientoProveedorDTO.getIdMovimiento());
+					movimientoProveedorDTO.setId(null);
 				}
-				movimientoProveedorDTO.setId(null);
-			}
+			} else
+				return false;
+		} catch (Exception ex) {
+			return false;
 		}
+
 		return true;
 	}
 

@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -173,6 +174,34 @@ public class TarjetaMovimientosProveedor {
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, type, brand, address, cardNumber, holderName, expirationYear, expirationMonth,
+				allowsCharges, allowsPayouts, creationDate, bankName, bankCode, customerId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof TarjetaMovimientosProveedor))
+			return false;
+
+		final TarjetaMovimientosProveedor other = (TarjetaMovimientosProveedor) obj;
+		return (this.hashCode() == other.hashCode());
+
+	}
+
+	@Override
+	public String toString() {
+		return "TarjetaMovimientosProveedor [id=" + id + ", type=" + type + ", brand=" + brand + ", address=" + address
+				+ ", cardNumber=" + cardNumber + ", holderName=" + holderName + ", expirationYear=" + expirationYear
+				+ ", expirationMonth=" + expirationMonth + ", allowsCharges=" + allowsCharges + ", allowsPayouts="
+				+ allowsPayouts + ", creationDate=" + creationDate + ", bankName=" + bankName + ", bankCode=" + bankCode
+				+ ", customerId=" + customerId + "]";
 	}
 
 }

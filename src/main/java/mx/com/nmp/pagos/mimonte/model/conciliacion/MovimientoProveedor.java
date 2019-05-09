@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -247,6 +248,26 @@ public class MovimientoProveedor {
 
 	public void setReporte(Long reporte) {
 		this.reporte = reporte;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, idMovimiento, reporte, authorization, operationType, method, transactionType, status,
+				conciliated, creationDate, operationDate, description, errorMessage, orderId, customerId, errorCode,
+				currency, amount, metodoPagoMovimientosProveedor, tarjetaMovimientosProveedor);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof MovimientoProveedor))
+			return false;
+
+		final MovimientoProveedor other = (MovimientoProveedor) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

@@ -182,7 +182,7 @@ public class MovimientosMidasService {
 		reporte.setId(0);
 		reporte.setLastModifiedBy(null);
 		reporte.setLastModifiedDate(null);
-		reporte.setTipo(TipoReporteEnum.PROVEEDOR.name());
+		reporte.setTipo(TipoReporteEnum.MIDAS);
 		return reporte;
 	}
 
