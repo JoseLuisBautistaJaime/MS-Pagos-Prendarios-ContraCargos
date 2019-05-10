@@ -97,6 +97,13 @@ public class MovimientosProveedorService {
 		return null;
 	}
 
+	/**
+	 * Regresa el total de registros encontrados compatibles con el id de
+	 * conciliacion especificado como parametro
+	 * 
+	 * @param idConciliacion
+	 * @return
+	 */
 	public Long countByConciliacionId(final Long idConciliacion) {
 		return movimientoProveedorRepository.countByReporteConciliacionId(idConciliacion);
 	}

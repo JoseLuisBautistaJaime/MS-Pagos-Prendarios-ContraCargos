@@ -17,24 +17,24 @@ import java.util.List;
  */
 public class MovimientosEstadoCuentaDTO implements Comparable<MovimientosEstadoCuentaDTO> {
 
-	private Double total;
+	private Long total;
 	private List<MovimientoEstadoCuentaDTO> movimientos;
 
 	public MovimientosEstadoCuentaDTO() {
 		super();
 	}
 
-	public MovimientosEstadoCuentaDTO(Double total, List<MovimientoEstadoCuentaDTO> movimientos) {
+	public MovimientosEstadoCuentaDTO(Long total, List<MovimientoEstadoCuentaDTO> movimientos) {
 		super();
 		this.total = total;
 		this.movimientos = movimientos;
 	}
 
-	public Double getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Double total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
