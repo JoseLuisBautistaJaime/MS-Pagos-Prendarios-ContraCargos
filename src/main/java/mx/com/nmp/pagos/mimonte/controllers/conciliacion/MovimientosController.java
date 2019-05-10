@@ -42,6 +42,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequ
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosEstadoCuentaService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosProveedorService;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -89,6 +90,13 @@ public class MovimientosController {
 	private MovimientosProveedorService movimientosProveedorService;
 
 	/**
+	 * Service de MovimientosEstadoCuentaService
+	 */
+	@Autowired
+	@Qualifier("movimientosEstadoCuentaService")
+	private MovimientosEstadoCuentaService movimientosEstadoCuentaService;
+
+	/**
 	 * Consulta movimientos estado de cuneta por filtros de objeto
 	 * CommonConciliacionRequestDTO
 	 * 
@@ -106,9 +114,25 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+	public Response findMovimientoEsadoCuenta(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;
-		movimientosEstadoCuentaDTO = buildDummy1();
+
+//		movimientosEstadoCuentaDTO = buildDummy1();
+		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		Long total = movimientosEstadoCuentaService
+				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		if (null != total) {
+			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
+			movimientosEstadoCuentaDTO.setTotal(total);
+			movimientosEstadoCuentaDTO
+					.setMovimientos(movimientosEstadoCuentaService.findByFolio(commonConciliacionRequestDTO));
+		} else
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		if (null == movimientosEstadoCuentaDTO.getTotal() || null == movimientosEstadoCuentaDTO.getMovimientos()
+				|| movimientosEstadoCuentaDTO.getMovimientos().isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
 				movimientosEstadoCuentaDTO);
 	}
@@ -345,20 +369,20 @@ public class MovimientosController {
 	public static MovimientosEstadoCuentaDTO buildDummy1() {
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
 		List<MovimientoEstadoCuentaDTO> movimientoEstadoCuentaDTOList = new ArrayList<>();
-		movimientosEstadoCuentaDTO.setTotal(100D);
+		movimientosEstadoCuentaDTO.setTotal(10L);
 		MovimientoEstadoCuentaDTO movimientoEstadoCuentaDTO1 = new MovimientoEstadoCuentaDTO();
-		movimientoEstadoCuentaDTO1.setDepositos(0D);
+		movimientoEstadoCuentaDTO1.setDepositos(new BigDecimal("0.0"));
 		movimientoEstadoCuentaDTO1.setDescripcion("Ventas netas tarjeta …");
 		movimientoEstadoCuentaDTO1.setFecha(new Date());
-		movimientoEstadoCuentaDTO1.setRetiros(12882.62D);
-		movimientoEstadoCuentaDTO1.setSaldo(0D);
+		movimientoEstadoCuentaDTO1.setRetiros(new BigDecimal("12882.62"));
+		movimientoEstadoCuentaDTO1.setSaldo(new BigDecimal("0.00"));
 		movimientoEstadoCuentaDTO1.setId(1L);
 		MovimientoEstadoCuentaDTO movimientoEstadoCuentaDTO2 = new MovimientoEstadoCuentaDTO();
-		movimientoEstadoCuentaDTO2.setDepositos(0D);
+		movimientoEstadoCuentaDTO2.setDepositos(new BigDecimal("0.0"));
 		movimientoEstadoCuentaDTO2.setDescripcion("Cargos…");
 		movimientoEstadoCuentaDTO2.setFecha(new Date());
-		movimientoEstadoCuentaDTO2.setRetiros(245.00D);
-		movimientoEstadoCuentaDTO2.setSaldo(0D);
+		movimientoEstadoCuentaDTO2.setRetiros(new BigDecimal("245.00"));
+		movimientoEstadoCuentaDTO2.setSaldo(new BigDecimal("0.0"));
 		movimientoEstadoCuentaDTO2.setId(2L);
 		movimientoEstadoCuentaDTOList.add(movimientoEstadoCuentaDTO1);
 		movimientoEstadoCuentaDTOList.add(movimientoEstadoCuentaDTO2);

@@ -754,7 +754,7 @@ CREATE TABLE to_reporte (
 
 
 CREATE TABLE to_movimiento_estado_cuenta (
-	id INTEGER NOT NULL,
+	id INTEGER NOT NULL AUTO_INCREMENT,
 	id_reporte INTEGER NOT NULL,
 	fecha DATE NOT NULL,
 	descripcion VARCHAR(150),
@@ -1015,4 +1015,5 @@ CREATE TABLE to_layout_header (
 -- [2019-05-08 14:23:15] --
 -- ALTER TABLE to_movimiento_proveedor CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
 -- ALTER TABLE to_movimiento_proveedor ADD COLUMN id_movimiento VARCHAR(100) NULL DEFAULT NULL;
+
 
