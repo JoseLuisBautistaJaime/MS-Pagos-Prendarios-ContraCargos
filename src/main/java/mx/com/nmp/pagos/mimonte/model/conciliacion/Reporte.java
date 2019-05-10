@@ -32,12 +32,7 @@ import mx.com.nmp.pagos.mimonte.model.Updatable;
  */
 @Entity
 @Table(name = "to_reporte")
-public class Reporte extends Updatable implements Comparable<Reporte>{
-
-//	/**
-//	 * Serial id
-//	 */
-//	private static final long serialVersionUID = 1L;
+public class Reporte extends Updatable implements Comparable<Reporte> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,11 +62,11 @@ public class Reporte extends Updatable implements Comparable<Reporte>{
 		super();
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

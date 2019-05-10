@@ -1016,4 +1016,104 @@ CREATE TABLE to_layout_header (
 -- ALTER TABLE to_movimiento_proveedor CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
 -- ALTER TABLE to_movimiento_proveedor ADD COLUMN id_movimiento VARCHAR(100) NULL DEFAULT NULL;
 
+-- SE CREAN TABLAS PARA MOVIMIENTOS ESTADO CUENTA --
+-- [2019-05-10 11:49:39] --
 
+DROP TABLE IF EXISTS to_estado_cuenta;
+DROP TABLE IF EXISTS to_estado_cuenta_totales_adicional;
+DROP TABLE IF EXISTS to_estado_cuenta_totales;
+DROP TABLE IF EXISTS to_estado_cuenta_cabecera;
+DROP TABLE IF EXISTS to_movimiento_estado_cuenta;
+
+CREATE TABLE to_estado_cuenta
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	reporte INTEGER,
+	cabecera INTEGER,
+	total_movimientos INTEGER,
+	totales INTEGER,
+	totales_adicional INTEGER,
+	fecha_carga DATE,
+	PRIMARY KEY (id),
+	KEY (cabecera),
+	KEY (totales),
+	KEY (totales_adicional)
+);
+
+CREATE TABLE to_estado_cuenta_totales_adicional
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	clave_pais VARCHAR(4),
+	sucursal VARCHAR(4),
+	cuenta VARCHAR(10),
+	no_cargos VARCHAR(5),
+	importe_total_cargos DECIMAL(16,2),
+	no_abonos INTEGER,
+	importe_total_abonos DECIMAL(16,2),
+	tipo_saldo TINYINT,
+	saldo_final DECIMAL(16,2),
+	moneda_alfabetica VARCHAR(3),
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE to_estado_cuenta_totales
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	clave_pais VARCHAR(3),
+	subcodigo_registro VARCHAR(2),
+	informacion1 VARCHAR(35),
+	informacion2 VARCHAR(35),
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE to_estado_cuenta_cabecera
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	clave_pais VARCHAR(4),
+	sucursal VARCHAR(4),
+	cuenta VARCHAR(10),
+	tipo_saldo TINYINT,
+	saldo_inicial DECIMAL(16,2),
+	moneda_alfabetica VARCHAR(3),
+	digito_cuenta_clabe CHAR(1),
+	titular_cuenta VARCHAR(23),
+	plaza_cuenta_clabe VARCHAR(3),
+	libre VARCHAR(3),
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE to_movimiento_estado_cuenta
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	estado_cuenta INTEGER,
+	clave_pais VARCHAR(4),
+	sucursal VARCHAR(4),
+	fecha_operacion DATE,
+	fecha_valor DATE,
+	libre VARCHAR(2),
+	clave_leyenda VARCHAR(3),
+	tipo_movimiento TINYINT,
+	importe DECIMAL(16,2),
+	dato VARCHAR(10),
+	concepto VARCHAR(28),
+	codigo_dato VARCHAR(2),
+	referencia_ampliada VARCHAR(38),
+	referencia VARCHAR(38),
+	PRIMARY KEY (id),
+	KEY (estado_cuenta)
+);
+
+ALTER TABLE to_estado_cuenta ADD CONSTRAINT FK_to_estado_cuenta_to_movimiento_estado_cuenta_cabecera 
+	FOREIGN KEY (cabecera) REFERENCES to_estado_cuenta_cabecera (id);
+
+ALTER TABLE to_estado_cuenta ADD CONSTRAINT FK_to_estado_cuenta_to_movimiento_estado_cuenta_totales 
+	FOREIGN KEY (totales) REFERENCES to_estado_cuenta_totales (id);
+
+ALTER TABLE to_estado_cuenta ADD CONSTRAINT FK_to_estado_cuenta_to_movimiento_edo_cta_tot_adicional 
+	FOREIGN KEY (totales_adicional) REFERENCES to_estado_cuenta_totales_adicional (id);
+
+ALTER TABLE to_estado_cuenta ADD CONSTRAINT FK_to_estado_cuenta_to_reporte 
+	FOREIGN KEY (id) REFERENCES to_reporte (id);
+
+ALTER TABLE to_movimiento_estado_cuenta ADD CONSTRAINT FK_to_movimiento_estado_cuenta_to_estado_cuenta 
+	FOREIGN KEY (estado_cuenta) REFERENCES to_estado_cuenta (id);

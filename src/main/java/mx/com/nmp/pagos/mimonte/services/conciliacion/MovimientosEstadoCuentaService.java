@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovEstadoCuentaRequestDTO;
@@ -105,7 +104,7 @@ public class MovimientosEstadoCuentaService {
 	 * @return
 	 */
 	public Long countByConciliacionId(final Long idConciliacion) {
-		return movimientoEstadoCuentaRepository.countByReporteConciliacionId(idConciliacion);
+		return movimientoEstadoCuentaRepository.countByIdConciliacion(idConciliacion);
 	}
 
 	public List<MovimientoEstadoCuentaDTO> findByFolio(
@@ -113,9 +112,8 @@ public class MovimientosEstadoCuentaService {
 		@SuppressWarnings("deprecation")
 		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
 				commonConciliacionRequestDTO.getResultados());
-		return MovimientosBuilder
-				.buildMovimientoEstadoCuentaDTOListFromMovimientoEstadoCuentaList(movimientoEstadoCuentaRepository
-						.findByReporteConciliacionId((long) commonConciliacionRequestDTO.getFolio(), pageable));
+		movimientoEstadoCuentaRepository.findByIdConciliacion(commonConciliacionRequestDTO.getFolio(), pageable);
+		return null;
 	}
 
 }

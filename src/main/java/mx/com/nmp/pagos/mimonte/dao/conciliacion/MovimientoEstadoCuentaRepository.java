@@ -26,18 +26,11 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 @Repository("movimientoEstadoCuentaRepository")
 public interface MovimientoEstadoCuentaRepository extends PagingAndSortingRepository<MovimientoEstadoCuenta, Long> {
 
-	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN Reporte r ON mm.idReporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public List<MovimientoEstadoCuenta> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId,
-			Pageable pageable);
+	@Query("SELECT COUNT(mm.id) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
+	public Long countByIdConciliacion(@Param("folioConciliacion") final Long folioConciliacion);
 
-	/**
-	 * Regresa el total de registros de movimientos de estado de cuenta por id de
-	 * conciliacion
-	 * 
-	 * @param conciliacionId
-	 * @return
-	 */
-	@Query("SELECT COUNT(mm.id) FROM MovimientoEstadoCuenta mm INNER JOIN Reporte r ON mm.idReporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId);
+	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
+	public List<MovimientoEstadoCuenta> findByIdConciliacion(
+			@Param("folioConciliacion") final Integer folioConciliacion, Pageable pageable);
 
 }

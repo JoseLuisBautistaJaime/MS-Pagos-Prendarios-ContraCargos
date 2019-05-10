@@ -34,37 +34,48 @@ public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "id_reporte")
-	private Long idReporte;
+	@Column(name = "estado_cuenta")
+	private Long idEstadoCuenta;
+
+	@Column(name = "clave_pais")
+	private String clavePais;
+
+	@Column(name = "sucursal")
+	private String sucursal;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha")
-	private Date fecha;
-
-	@Column(name = "descripcion")
-	private String descripcion;
-
-	@Column(name = "depositos")
-	private BigDecimal depositos;
-
-	@Column(name = "retiros")
-	private BigDecimal retiros;
-
-	@Column(name = "saldo")
-	private BigDecimal saldo;
-	private long idEstadoCuenta;
-	private String clavePais;
-	private String sucursal;
+	@Column(name = "fecha_operacion")
 	private Date fechaOperacion;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_valor")
 	private Date fechaValor;
+
+	@Column(name = "libre")
 	private String libre;
+
+	@Column(name = "clave_leyenda")
 	private String claveLeyenda;
-	private int tipoMovimiento;
+
+	@Column(name = "tipo_movimiento")
+	private Integer tipoMovimiento;
+
+	@Column(name = "importe")
 	private BigDecimal importe;
+
+	@Column(name = "dato")
 	private String dato;
+
+	@Column(name = "concepto")
 	private String concepto;
+
+	@Column(name = "codigo_dato")
 	private String codigoDato;
+
+	@Column(name = "referencia_ampliada")
 	private String referenciaAmpliada;
+
+	@Column(name = "referencia")
 	private String referencia;
 
 	public Long getId() {
@@ -75,63 +86,131 @@ public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta
 		this.id = id;
 	}
 
-	public Long getIdReporte() {
-		return idReporte;
+	public Long getIdEstadoCuenta() {
+		return idEstadoCuenta;
 	}
 
-	public void setIdReporte(Long idReporte) {
-		this.idReporte = idReporte;
+	public void setIdEstadoCuenta(Long idEstadoCuenta) {
+		this.idEstadoCuenta = idEstadoCuenta;
 	}
 
-	public Date getFecha() {
-		return fecha;
+	public String getClavePais() {
+		return clavePais;
 	}
 
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
+	public void setClavePais(String clavePais) {
+		this.clavePais = clavePais;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+	public String getSucursal() {
+		return sucursal;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+	public void setSucursal(String sucursal) {
+		this.sucursal = sucursal;
 	}
 
-	public BigDecimal getDepositos() {
-		return depositos;
+	public Date getFechaOperacion() {
+		return fechaOperacion;
 	}
 
-	public void setDepositos(BigDecimal depositos) {
-		this.depositos = depositos;
+	public void setFechaOperacion(Date fechaOperacion) {
+		this.fechaOperacion = fechaOperacion;
 	}
 
-	public BigDecimal getRetiros() {
-		return retiros;
+	public Date getFechaValor() {
+		return fechaValor;
 	}
 
-	public void setRetiros(BigDecimal retiros) {
-		this.retiros = retiros;
+	public void setFechaValor(Date fechaValor) {
+		this.fechaValor = fechaValor;
 	}
 
-	public BigDecimal getSaldo() {
-		return saldo;
+	public String getLibre() {
+		return libre;
 	}
 
-	public void setSaldo(BigDecimal saldo) {
-		this.saldo = saldo;
+	public void setLibre(String libre) {
+		this.libre = libre;
+	}
+
+	public String getClaveLeyenda() {
+		return claveLeyenda;
+	}
+
+	public void setClaveLeyenda(String claveLeyenda) {
+		this.claveLeyenda = claveLeyenda;
+	}
+
+	public Integer getTipoMovimiento() {
+		return tipoMovimiento;
+	}
+
+	public void setTipoMovimiento(Integer tipoMovimiento) {
+		this.tipoMovimiento = tipoMovimiento;
+	}
+
+	public BigDecimal getImporte() {
+		return importe;
+	}
+
+	public void setImporte(BigDecimal importe) {
+		this.importe = importe;
+	}
+
+	public String getDato() {
+		return dato;
+	}
+
+	public void setDato(String dato) {
+		this.dato = dato;
+	}
+
+	public String getConcepto() {
+		return concepto;
+	}
+
+	public void setConcepto(String concepto) {
+		this.concepto = concepto;
+	}
+
+	public String getCodigoDato() {
+		return codigoDato;
+	}
+
+	public void setCodigoDato(String codigoDato) {
+		this.codigoDato = codigoDato;
+	}
+
+	public String getReferenciaAmpliada() {
+		return referenciaAmpliada;
+	}
+
+	public void setReferenciaAmpliada(String referenciaAmpliada) {
+		this.referenciaAmpliada = referenciaAmpliada;
+	}
+
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
 	}
 
 	@Override
 	public String toString() {
-		return "MovimientoEstadoCuenta [id=" + id + ", idReporte=" + idReporte + ", fecha=" + fecha + ", descripcion="
-				+ descripcion + ", depositos=" + depositos + ", retiros=" + retiros + ", saldo=" + saldo + "]";
+		return "MovimientoEstadoCuenta [id=" + id + ", idEstadoCuenta=" + idEstadoCuenta + ", clavePais=" + clavePais
+				+ ", sucursal=" + sucursal + ", fechaOperacion=" + fechaOperacion + ", fechaValor=" + fechaValor
+				+ ", libre=" + libre + ", claveLeyenda=" + claveLeyenda + ", tipoMovimiento=" + tipoMovimiento
+				+ ", importe=" + importe + ", dato=" + dato + ", concepto=" + concepto + ", codigoDato=" + codigoDato
+				+ ", referenciaAmpliada=" + referenciaAmpliada + ", referencia=" + referencia + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, idReporte, fecha, descripcion, depositos, retiros, saldo);
+		return Objects.hash(id, idEstadoCuenta, clavePais, sucursal, fechaOperacion, fechaValor, libre, claveLeyenda,
+				tipoMovimiento, importe, dato, concepto, codigoDato, referenciaAmpliada, referencia);
 	}
 
 	@Override
@@ -150,10 +229,6 @@ public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta
 	@Override
 	public int compareTo(MovimientoEstadoCuenta arg0) {
 		return arg0.id.compareTo(this.id);
-	}
-
-	public void finalize() throws Throwable {
-
 	}
 
 }

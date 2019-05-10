@@ -179,7 +179,7 @@ public class MovimientosMidasService {
 		reporte.setDisponible(true);
 		reporte.setFechaDesde(fechaDesde);
 		reporte.setFechaHasta(fechaHasta);
-		reporte.setId(0);
+		reporte.setId(0L);
 		reporte.setLastModifiedBy(null);
 		reporte.setLastModifiedDate(null);
 		reporte.setTipo(TipoReporteEnum.MIDAS);
