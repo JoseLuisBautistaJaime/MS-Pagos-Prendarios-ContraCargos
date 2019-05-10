@@ -17,8 +17,26 @@ public class MovimientoEstadoCuenta {
 	private BigDecimal depositos;
 	private BigDecimal retiros;
 	private BigDecimal saldo;
+	private long idEstadoCuenta;
+	private String clavePais;
+	private String sucursal;
+	private Date fechaOperacion;
+	private Date fechaValor;
+	private String libre;
+	private String claveLeyenda;
+	private int tipoMovimiento;
+	private BigDecimal importe;
+	private String dato;
+	private String concepto;
+	private String codigoDato;
+	private String referenciaAmpliada;
+	private String referencia;
 
 	public MovimientoEstadoCuenta(){
+
+	}
+
+	public void finalize() throws Throwable {
 
 	}
 
