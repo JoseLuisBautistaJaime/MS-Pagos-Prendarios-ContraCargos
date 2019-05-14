@@ -375,14 +375,16 @@ public class MovimientosController {
 		movimientoEstadoCuentaDTO1.setDescripcion("Ventas netas tarjeta …");
 		movimientoEstadoCuentaDTO1.setFecha(new Date());
 		movimientoEstadoCuentaDTO1.setRetiros(new BigDecimal("12882.62"));
-		movimientoEstadoCuentaDTO1.setSaldo(new BigDecimal("0.00"));
+		movimientoEstadoCuentaDTO1.setSaldoInicial(new BigDecimal("0.00"));
+		movimientoEstadoCuentaDTO1.setSaldoFinal(new BigDecimal("0.00"));
 		movimientoEstadoCuentaDTO1.setId(1L);
 		MovimientoEstadoCuentaDTO movimientoEstadoCuentaDTO2 = new MovimientoEstadoCuentaDTO();
 		movimientoEstadoCuentaDTO2.setDepositos(new BigDecimal("0.0"));
 		movimientoEstadoCuentaDTO2.setDescripcion("Cargos…");
 		movimientoEstadoCuentaDTO2.setFecha(new Date());
 		movimientoEstadoCuentaDTO2.setRetiros(new BigDecimal("245.00"));
-		movimientoEstadoCuentaDTO2.setSaldo(new BigDecimal("0.0"));
+		movimientoEstadoCuentaDTO2.setSaldoInicial(new BigDecimal("0.0"));
+		movimientoEstadoCuentaDTO2.setSaldoFinal(new BigDecimal("0.0"));
 		movimientoEstadoCuentaDTO2.setId(2L);
 		movimientoEstadoCuentaDTOList.add(movimientoEstadoCuentaDTO1);
 		movimientoEstadoCuentaDTOList.add(movimientoEstadoCuentaDTO2);

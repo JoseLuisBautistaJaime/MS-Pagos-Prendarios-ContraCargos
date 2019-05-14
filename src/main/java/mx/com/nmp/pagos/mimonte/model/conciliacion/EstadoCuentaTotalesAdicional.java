@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -64,10 +65,7 @@ public class EstadoCuentaTotalesAdicional implements Comparable<EstadoCuentaTota
 	@Column(name = "moneda_alfabetica")
 	private String monedaAlfabetica;
 
-//	@Column(name = "")
-//	private EstadoCuenta totalesAdicional;
-
-	@OneToMany(mappedBy = "totalesAdicional")
+	@OneToMany(mappedBy = "totalesAdicional", fetch = FetchType.LAZY)
 	private Set<EstadoCuenta> estadoCuentaSet;
 
 	public Long getId() {
@@ -158,14 +156,6 @@ public class EstadoCuentaTotalesAdicional implements Comparable<EstadoCuentaTota
 		this.monedaAlfabetica = monedaAlfabetica;
 	}
 
-//	public EstadoCuenta getTotalesAdicional() {
-//		return totalesAdicional;
-//	}
-
-//	public void setTotalesAdicional(EstadoCuenta totalesAdicional) {
-//		this.totalesAdicional = totalesAdicional;
-//	}
-
 	public Set<EstadoCuenta> getEstadoCuentaSet() {
 		return estadoCuentaSet;
 	}
@@ -193,14 +183,14 @@ public class EstadoCuentaTotalesAdicional implements Comparable<EstadoCuentaTota
 
 	}
 
-//	@Override
-//	public String toString() {
-//		return "EstadoCuentaTotalesAdicional [id=" + id + ", clavePais=" + clavePais + ", sucursal=" + sucursal
-//				+ ", cuenta=" + cuenta + ", noCargos=" + noCargos + ", importeTotalCargos=" + importeTotalCargos
-//				+ ", noAbonos=" + noAbonos + ", importeTotalAbonos=" + importeTotalAbonos + ", tipoSaldo=" + tipoSaldo
-//				+ ", saldoFinal=" + saldoFinal + ", monedaAlfabetica=" + monedaAlfabetica + ", totalesAdicional="
-//				+ totalesAdicional + "]";
-//	}
+	@Override
+	public String toString() {
+		return "EstadoCuentaTotalesAdicional [id=" + id + ", clavePais=" + clavePais + ", sucursal=" + sucursal
+				+ ", cuenta=" + cuenta + ", noCargos=" + noCargos + ", importeTotalCargos=" + importeTotalCargos
+				+ ", noAbonos=" + noAbonos + ", importeTotalAbonos=" + importeTotalAbonos + ", tipoSaldo=" + tipoSaldo
+				+ ", saldoFinal=" + saldoFinal + ", monedaAlfabetica=" + monedaAlfabetica + ", estadoCuentaSet="
+				+ estadoCuentaSet + "]";
+	}
 
 	@Override
 	public int compareTo(EstadoCuentaTotalesAdicional o) {

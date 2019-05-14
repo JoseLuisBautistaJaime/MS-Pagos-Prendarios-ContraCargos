@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -64,7 +65,7 @@ public class EstadoCuentaCabecera implements Comparable<EstadoCuentaCabecera> {
 	@Column(name = "libre")
 	private String libre;
 
-	@OneToMany(mappedBy = "cabecera")
+	@OneToMany(mappedBy = "cabecera", fetch = FetchType.LAZY)
 	private Set<EstadoCuenta> estadoCuentaSet;
 
 	public Long getId() {

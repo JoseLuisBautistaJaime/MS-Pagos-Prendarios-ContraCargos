@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
@@ -300,6 +302,53 @@ public abstract class MovimientosBuilder {
 			}
 		}
 		return movimientoProveedorList;
+	}
+
+	/**
+	 * Construye un objeto de tipo MovimientoEstadoCuentaDTO a partir de un objeto
+	 * de tipo MovimientoEstadoCuentaDBDTO
+	 * 
+	 * @param movimientoEstadoCuentaDBDTO
+	 * @return
+	 */
+	public static MovimientoEstadoCuentaDTO buildMovimientoEstadoCuentaDTOFromMovimientoEstadoCuentaDBDTO(
+			MovimientoEstadoCuentaDBDTO movimientoEstadoCuentaDBDTO) {
+		MovimientoEstadoCuentaDTO movimientoEstadoCuentaDTO = null;
+		if (null != movimientoEstadoCuentaDBDTO) {
+			movimientoEstadoCuentaDTO = new MovimientoEstadoCuentaDTO();
+			movimientoEstadoCuentaDTO.setDepositos(
+					movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(1) ? movimientoEstadoCuentaDBDTO.getImporte()
+							: null);
+			movimientoEstadoCuentaDTO.setDescripcion(movimientoEstadoCuentaDBDTO.getDescripcion());
+			movimientoEstadoCuentaDTO.setFecha(movimientoEstadoCuentaDBDTO.getFecha());
+			movimientoEstadoCuentaDTO.setId(movimientoEstadoCuentaDBDTO.getId());
+			movimientoEstadoCuentaDTO.setRetiros(
+					movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(2) ? movimientoEstadoCuentaDBDTO.getImporte()
+							: null);
+			movimientoEstadoCuentaDTO.setSaldoFinal(movimientoEstadoCuentaDBDTO.getTotalFinal());
+			movimientoEstadoCuentaDTO.setSaldoInicial(movimientoEstadoCuentaDBDTO.getTotalInicial());
+		}
+		return movimientoEstadoCuentaDTO;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo MovimientoEstadoCuentaDTO a partir de
+	 * una lista de objetos de tipo MovimientoEstadoCuentaDBDTO
+	 * 
+	 * @param movimientoEstadoCuentaDBDTOList
+	 * @return
+	 */
+	public static List<MovimientoEstadoCuentaDTO> buildMovimientoEstadoCuentaDTOListFromMovimientoEstadoCuentaDBDTOList(
+			List<MovimientoEstadoCuentaDBDTO> movimientoEstadoCuentaDBDTOList) {
+		List<MovimientoEstadoCuentaDTO> movimientoEstadoCuentaDTOList = null;
+		if (null != movimientoEstadoCuentaDBDTOList && !movimientoEstadoCuentaDBDTOList.isEmpty()) {
+			movimientoEstadoCuentaDTOList = new ArrayList<>();
+			for (MovimientoEstadoCuentaDBDTO movimientoEstadoCuentaDBDTO : movimientoEstadoCuentaDBDTOList) {
+				movimientoEstadoCuentaDTOList.add(
+						buildMovimientoEstadoCuentaDTOFromMovimientoEstadoCuentaDBDTO(movimientoEstadoCuentaDBDTO));
+			}
+		}
+		return movimientoEstadoCuentaDTOList;
 	}
 
 }

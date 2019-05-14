@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,8 +29,8 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "to_estado_cuenta")
-public class EstadoCuenta implements Comparable<EstadoCuenta> {
 
+public class EstadoCuenta implements Comparable<EstadoCuenta> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, unique = true)
@@ -38,7 +39,7 @@ public class EstadoCuenta implements Comparable<EstadoCuenta> {
 	@Column(name = "reporte")
 	private Long idReporte;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cabecera", referencedColumnName = "id")
 	private EstadoCuentaCabecera cabecera;
 
@@ -46,7 +47,7 @@ public class EstadoCuenta implements Comparable<EstadoCuenta> {
 	@JoinColumn(name = "totales", referencedColumnName = "id")
 	private EstadoCuentaTotales totales;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "totales_adicional", referencedColumnName = "id")
 	private EstadoCuentaTotalesAdicional totalesAdicional;
 

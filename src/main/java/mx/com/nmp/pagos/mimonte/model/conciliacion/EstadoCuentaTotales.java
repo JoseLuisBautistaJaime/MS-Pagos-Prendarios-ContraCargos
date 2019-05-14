@@ -46,7 +46,7 @@ public class EstadoCuentaTotales implements Comparable<EstadoCuentaTotales> {
 
 	@OneToMany(mappedBy = "totales")
 	private Set<EstadoCuenta> estadoCuentaSet;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -86,7 +86,7 @@ public class EstadoCuentaTotales implements Comparable<EstadoCuentaTotales> {
 	public void setInformacion2(String informacion2) {
 		this.informacion2 = informacion2;
 	}
-	
+
 	public Set<EstadoCuenta> getEstadoCuentaSet() {
 		return estadoCuentaSet;
 	}

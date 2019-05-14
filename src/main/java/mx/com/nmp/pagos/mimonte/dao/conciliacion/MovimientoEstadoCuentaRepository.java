@@ -7,11 +7,11 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 
 /**
@@ -26,11 +26,25 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 @Repository("movimientoEstadoCuentaRepository")
 public interface MovimientoEstadoCuentaRepository extends PagingAndSortingRepository<MovimientoEstadoCuenta, Long> {
 
-	@Query("SELECT COUNT(mm.id) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
-	public Long countByIdConciliacion(@Param("folioConciliacion") final Long folioConciliacion);
+	/**
+	 * Cuenta los movimientos de estado cuenta relacionados con un folio de
+	 * conciliacion especifico
+	 * 
+	 * @param folioConciliacion
+	 * @return
+	 */
+	public Long jpqlCBIC(@Param("folioConciliacion") final Long folioConciliacion);
 
-	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
-	public List<MovimientoEstadoCuenta> findByIdConciliacion(
-			@Param("folioConciliacion") final Integer folioConciliacion, Pageable pageable);
+	/**
+	 * Regresa una lista de objetos de tipo MovimientoEstadoCuentaDBDTO relacionados
+	 * con un folio de conciliacion, ademas de regresar la lista en base a una
+	 * paginacion especifica
+	 * 
+	 * @param folioConciliacion
+	 * @param pageable
+	 * @return
+	 */
+	public List<MovimientoEstadoCuentaDBDTO> jpqlFBIC(
+			@Param("folioConciliacion") final Long folioConciliacion, Pageable pageable);
 
 }

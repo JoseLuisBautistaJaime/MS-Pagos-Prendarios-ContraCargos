@@ -13,10 +13,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaBatchDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 
 /**
@@ -104,16 +106,27 @@ public class MovimientosEstadoCuentaService {
 	 * @return
 	 */
 	public Long countByConciliacionId(final Long idConciliacion) {
-		return movimientoEstadoCuentaRepository.countByIdConciliacion(idConciliacion);
+		return movimientoEstadoCuentaRepository.jpqlCBIC(idConciliacion);
 	}
 
+	/**
+	 * Encuentra la lista de conciliaciones por folio de conciliacion
+	 * 
+	 * @param commonConciliacionRequestDTO
+	 * @return
+	 */
 	public List<MovimientoEstadoCuentaDTO> findByFolio(
 			final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+		List<MovimientoEstadoCuentaDBDTO> movimientoEstadoCuentaDBDTOLst = null;
+		List<MovimientoEstadoCuentaDTO> movimientoEstadoCuentaDTOList = null;
 		@SuppressWarnings("deprecation")
 		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
 				commonConciliacionRequestDTO.getResultados());
-		movimientoEstadoCuentaRepository.findByIdConciliacion(commonConciliacionRequestDTO.getFolio(), pageable);
-		return null;
+		movimientoEstadoCuentaDBDTOLst = movimientoEstadoCuentaRepository
+				.jpqlFBIC((long) commonConciliacionRequestDTO.getFolio(), pageable);
+		movimientoEstadoCuentaDTOList = MovimientosBuilder
+				.buildMovimientoEstadoCuentaDTOListFromMovimientoEstadoCuentaDBDTOList(movimientoEstadoCuentaDBDTOLst);
+		return movimientoEstadoCuentaDTOList;
 	}
 
 }
