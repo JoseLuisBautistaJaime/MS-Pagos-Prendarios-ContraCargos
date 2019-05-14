@@ -24,23 +24,21 @@ public class MovimientoEstadoCuentaDTO implements Comparable<MovimientoEstadoCue
 	private String descripcion;
 	private BigDecimal depositos;
 	private BigDecimal retiros;
-	private BigDecimal saldoInicial;
-	private BigDecimal saldoFinal;
+	private BigDecimal saldo;
 
 	public MovimientoEstadoCuentaDTO() {
 		super();
 	}
 
 	public MovimientoEstadoCuentaDTO(Long id, Date fecha, String descripcion, BigDecimal depositos, BigDecimal retiros,
-			BigDecimal saldoInicial, BigDecimal saldoFinal) {
+			BigDecimal saldo) {
 		super();
 		this.id = id;
 		this.fecha = fecha;
 		this.descripcion = descripcion;
 		this.depositos = depositos;
 		this.retiros = retiros;
-		this.saldoInicial = saldoInicial;
-		this.saldoFinal = saldoFinal;
+		this.saldo = saldo;
 	}
 
 	public Long getId() {
@@ -83,25 +81,23 @@ public class MovimientoEstadoCuentaDTO implements Comparable<MovimientoEstadoCue
 		this.retiros = retiros;
 	}
 
-	public BigDecimal getSaldoInicial() {
-		return saldoInicial;
+	public BigDecimal getSaldo() {
+		return saldo;
 	}
 
-	public void setSaldoInicial(BigDecimal saldoInicial) {
-		this.saldoInicial = saldoInicial;
+	public void setSaldo(BigDecimal saldo) {
+		this.saldo = saldo;
 	}
 
-	public BigDecimal getSaldoFinal() {
-		return saldoFinal;
-	}
-
-	public void setSaldoFinal(BigDecimal saldoFinal) {
-		this.saldoFinal = saldoFinal;
+	@Override
+	public String toString() {
+		return "MovimientoEstadoCuentaDTO [id=" + id + ", fecha=" + fecha + ", descripcion=" + descripcion
+				+ ", depositos=" + depositos + ", retiros=" + retiros + ", saldo=" + saldo + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, fecha, descripcion, depositos, retiros, saldoInicial, saldoFinal);
+		return Objects.hash(id, fecha, descripcion, depositos, retiros, saldo);
 	}
 
 	@Override

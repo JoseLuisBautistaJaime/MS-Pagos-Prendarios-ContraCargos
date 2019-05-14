@@ -312,7 +312,7 @@ public abstract class MovimientosBuilder {
 	 * @return
 	 */
 	public static MovimientoEstadoCuentaDTO buildMovimientoEstadoCuentaDTOFromMovimientoEstadoCuentaDBDTO(
-			MovimientoEstadoCuentaDBDTO movimientoEstadoCuentaDBDTO) {
+			MovimientoEstadoCuentaDBDTO movimientoEstadoCuentaDBDTO, final int pos, final int fin) {
 		MovimientoEstadoCuentaDTO movimientoEstadoCuentaDTO = null;
 		if (null != movimientoEstadoCuentaDBDTO) {
 			movimientoEstadoCuentaDTO = new MovimientoEstadoCuentaDTO();
@@ -325,8 +325,10 @@ public abstract class MovimientosBuilder {
 			movimientoEstadoCuentaDTO.setRetiros(
 					movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(2) ? movimientoEstadoCuentaDBDTO.getImporte()
 							: null);
-			movimientoEstadoCuentaDTO.setSaldoFinal(movimientoEstadoCuentaDBDTO.getTotalFinal());
-			movimientoEstadoCuentaDTO.setSaldoInicial(movimientoEstadoCuentaDBDTO.getTotalInicial());
+			if (pos == 0)
+				movimientoEstadoCuentaDTO.setSaldo(movimientoEstadoCuentaDBDTO.getTotalInicial());
+			if (pos == fin)
+				movimientoEstadoCuentaDTO.setSaldo(movimientoEstadoCuentaDBDTO.getTotalFinal());
 		}
 		return movimientoEstadoCuentaDTO;
 	}
@@ -341,11 +343,15 @@ public abstract class MovimientosBuilder {
 	public static List<MovimientoEstadoCuentaDTO> buildMovimientoEstadoCuentaDTOListFromMovimientoEstadoCuentaDBDTOList(
 			List<MovimientoEstadoCuentaDBDTO> movimientoEstadoCuentaDBDTOList) {
 		List<MovimientoEstadoCuentaDTO> movimientoEstadoCuentaDTOList = null;
+		int pos, fin;
+		pos = 0;
 		if (null != movimientoEstadoCuentaDBDTOList && !movimientoEstadoCuentaDBDTOList.isEmpty()) {
+			fin = movimientoEstadoCuentaDBDTOList.size() - 1;
 			movimientoEstadoCuentaDTOList = new ArrayList<>();
 			for (MovimientoEstadoCuentaDBDTO movimientoEstadoCuentaDBDTO : movimientoEstadoCuentaDBDTOList) {
-				movimientoEstadoCuentaDTOList.add(
-						buildMovimientoEstadoCuentaDTOFromMovimientoEstadoCuentaDBDTO(movimientoEstadoCuentaDBDTO));
+				movimientoEstadoCuentaDTOList.add(buildMovimientoEstadoCuentaDTOFromMovimientoEstadoCuentaDBDTO(
+						movimientoEstadoCuentaDBDTO, pos, fin));
+				pos++;
 			}
 		}
 		return movimientoEstadoCuentaDTOList;
