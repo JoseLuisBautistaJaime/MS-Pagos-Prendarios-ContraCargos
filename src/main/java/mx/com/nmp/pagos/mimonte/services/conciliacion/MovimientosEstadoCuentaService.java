@@ -14,12 +14,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaBatchDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 
 /**
  * @name MovimientosEstadoCuentaService
@@ -39,6 +42,13 @@ public class MovimientosEstadoCuentaService {
 	@Autowired
 	@Qualifier("movimientoEstadoCuentaRepository")
 	private MovimientoEstadoCuentaRepository movimientoEstadoCuentaRepository;
+
+	/**
+	 * Repository de Reporte
+	 */
+	@Autowired
+	@Qualifier("reporteRepository")
+	private ReporteRepository reporteRepository;
 
 	public MovimientosEstadoCuentaService() {
 		super();
@@ -127,6 +137,17 @@ public class MovimientosEstadoCuentaService {
 		movimientoEstadoCuentaDTOList = MovimientosBuilder
 				.buildMovimientoEstadoCuentaDTOListFromMovimientoEstadoCuentaDBDTOList(movimientoEstadoCuentaDBDTOLst);
 		return movimientoEstadoCuentaDTOList;
+	}
+
+	/**
+	 * Guarda un reporte relacionado con un movimiento de estado de cuenta
+	 * 
+	 * @param saveEstadoCuentaRequestDTO
+	 * @param userRequest
+	 */
+	public void saveByFolio(final SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO, final String userRequest) {
+		reporteRepository.save(
+				ReporteBuilder.buildReporteFromSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO, userRequest));
 	}
 
 }

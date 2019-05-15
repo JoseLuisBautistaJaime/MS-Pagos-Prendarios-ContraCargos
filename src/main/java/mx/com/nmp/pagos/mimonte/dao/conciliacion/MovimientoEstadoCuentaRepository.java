@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,7 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	 * @param folioConciliacion
 	 * @return
 	 */
+	@Query("SELECT COUNT(mm.id) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
 	public Long jpqlCBIC(@Param("folioConciliacion") final Long folioConciliacion);
 
 	/**
@@ -44,7 +46,8 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	 * @param pageable
 	 * @return
 	 */
-	public List<MovimientoEstadoCuentaDBDTO> jpqlFBIC(
-			@Param("folioConciliacion") final Long folioConciliacion, Pageable pageable);
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO(mm.id, mm.fechaOperacion, mm.concepto, mm.tipoMovimiento, mm.importe, ec.cabecera.saldoInicial, ec.totalesAdicional.saldoFinal) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
+	public List<MovimientoEstadoCuentaDBDTO> jpqlFBIC(@Param("folioConciliacion") final Long folioConciliacion,
+			Pageable pageable);
 
 }

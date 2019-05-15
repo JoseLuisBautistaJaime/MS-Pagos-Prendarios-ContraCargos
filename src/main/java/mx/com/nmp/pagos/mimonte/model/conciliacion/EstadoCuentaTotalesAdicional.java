@@ -6,15 +6,12 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -64,9 +61,6 @@ public class EstadoCuentaTotalesAdicional implements Comparable<EstadoCuentaTota
 
 	@Column(name = "moneda_alfabetica")
 	private String monedaAlfabetica;
-
-	@OneToMany(mappedBy = "totalesAdicional", fetch = FetchType.LAZY)
-	private Set<EstadoCuenta> estadoCuentaSet;
 
 	public Long getId() {
 		return id;
@@ -156,14 +150,6 @@ public class EstadoCuentaTotalesAdicional implements Comparable<EstadoCuentaTota
 		this.monedaAlfabetica = monedaAlfabetica;
 	}
 
-	public Set<EstadoCuenta> getEstadoCuentaSet() {
-		return estadoCuentaSet;
-	}
-
-	public void setEstadoCuentaSet(Set<EstadoCuenta> estadoCuentaSet) {
-		this.estadoCuentaSet = estadoCuentaSet;
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, clavePais, sucursal, cuenta, noCargos, importeTotalCargos, noAbonos, importeTotalAbonos,
@@ -188,8 +174,7 @@ public class EstadoCuentaTotalesAdicional implements Comparable<EstadoCuentaTota
 		return "EstadoCuentaTotalesAdicional [id=" + id + ", clavePais=" + clavePais + ", sucursal=" + sucursal
 				+ ", cuenta=" + cuenta + ", noCargos=" + noCargos + ", importeTotalCargos=" + importeTotalCargos
 				+ ", noAbonos=" + noAbonos + ", importeTotalAbonos=" + importeTotalAbonos + ", tipoSaldo=" + tipoSaldo
-				+ ", saldoFinal=" + saldoFinal + ", monedaAlfabetica=" + monedaAlfabetica + ", estadoCuentaSet="
-				+ estadoCuentaSet + "]";
+				+ ", saldoFinal=" + saldoFinal + ", monedaAlfabetica=" + monedaAlfabetica + "]";
 	}
 
 	@Override

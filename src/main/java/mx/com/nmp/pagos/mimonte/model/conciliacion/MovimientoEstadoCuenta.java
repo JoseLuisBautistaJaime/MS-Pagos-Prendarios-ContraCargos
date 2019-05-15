@@ -13,8 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,9 +27,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "to_movimiento_estado_cuenta")
-@NamedQueries(value = {
-		@NamedQuery(name = "MovimientoEstadoCuenta.jpqlCBIC", query = "SELECT COUNT(mm.id) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion"),
-		@NamedQuery(name = "MovimientoEstadoCuenta.jpqlFBIC", query = "SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO(mm.id, mm.fechaOperacion, mm.concepto, mm.tipoMovimiento, mm.importe, ec.cabecera.saldoInicial, ec.totalesAdicional.saldoFinal) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion") })
 public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta> {
 
 	@Id

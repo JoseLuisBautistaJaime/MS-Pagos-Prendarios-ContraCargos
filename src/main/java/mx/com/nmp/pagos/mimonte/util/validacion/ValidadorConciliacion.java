@@ -12,6 +12,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 
 /**
  * @name ValidadorConciliacion
@@ -176,6 +177,25 @@ public interface ValidadorConciliacion {
 			return false;
 		}
 
+		return true;
+	}
+
+	/**
+	 * Valida que la informacion dentro de un objeto de tipo
+	 * SaveEstadoCuentaRequestDTO sea correcta y no sea nula
+	 * 
+	 * @param saveEstadoCuentaRequestDTO
+	 * @return
+	 */
+	public static boolean validateSaveEstadoCuentaRequestDTO(SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO) {
+		try {
+			assertNotNull(saveEstadoCuentaRequestDTO);
+			assertNotNull(saveEstadoCuentaRequestDTO.getFolio());
+			assertNotNull(saveEstadoCuentaRequestDTO.getFechaInicial());
+			assertNotNull(saveEstadoCuentaRequestDTO.getFechaFinal());
+		} catch (Exception ex) {
+			return false;
+		}
 		return true;
 	}
 

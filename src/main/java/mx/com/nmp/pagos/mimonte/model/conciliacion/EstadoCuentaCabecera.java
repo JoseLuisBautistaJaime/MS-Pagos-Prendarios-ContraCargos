@@ -6,15 +6,12 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -64,9 +61,6 @@ public class EstadoCuentaCabecera implements Comparable<EstadoCuentaCabecera> {
 
 	@Column(name = "libre")
 	private String libre;
-
-	@OneToMany(mappedBy = "cabecera", fetch = FetchType.LAZY)
-	private Set<EstadoCuenta> estadoCuentaSet;
 
 	public Long getId() {
 		return id;
@@ -154,14 +148,6 @@ public class EstadoCuentaCabecera implements Comparable<EstadoCuentaCabecera> {
 
 	public void setLibre(String libre) {
 		this.libre = libre;
-	}
-
-	public Set<EstadoCuenta> getEstadoCuentaSet() {
-		return estadoCuentaSet;
-	}
-
-	public void setEstadoCuentaSet(Set<EstadoCuenta> estadoCuentaSet) {
-		this.estadoCuentaSet = estadoCuentaSet;
 	}
 
 	@Override
