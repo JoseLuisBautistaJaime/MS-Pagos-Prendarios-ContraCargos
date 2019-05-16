@@ -231,8 +231,8 @@ public class LayoutsController {
 		layoutLineaDTOsList.add(layoutLineaDTOs2);
 
 		LayOutDTOs layOutDTOs1 = new LayOutDTOs(1, "PAGOS", layoutCabeceraDTOs, layoutLineaDTOsList);
-		LayOutDTOs layOutDTOs2 = new LayOutDTOs(1, "DEVOLUCIONES", layoutCabeceraDTOs, layoutLineaDTOsList);
-		LayOutDTOs layOutDTOs3 = new LayOutDTOs(1, "PAGOS", layoutCabeceraDTOs, layoutLineaDTOsList);
+		LayOutDTOs layOutDTOs2 = new LayOutDTOs(2, "DEVOLUCIONES", layoutCabeceraDTOs, layoutLineaDTOsList);
+		LayOutDTOs layOutDTOs3 = new LayOutDTOs(3, "COMISIONES", layoutCabeceraDTOs, layoutLineaDTOsList);
 
 		List<LayOutDTOs> layOutDTOsList = new ArrayList<>();
 
