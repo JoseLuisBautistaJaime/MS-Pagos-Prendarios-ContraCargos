@@ -17,7 +17,6 @@ import java.util.Date;
  */
 public class ResumenConciliacionesRequest implements Comparable<ResumenConciliacionesRequest>{
 	
-    private Integer folio;
     private Date fechaInicial;
     private Date fechaFinal;
 
@@ -28,17 +27,8 @@ public class ResumenConciliacionesRequest implements Comparable<ResumenConciliac
 
 	public ResumenConciliacionesRequest(Integer folio, Date fechaInicial, Date fechaFinal) {
 		super();
-		this.folio = folio;
 		this.fechaInicial = fechaInicial;
 		this.fechaFinal = fechaFinal;
-	}
-
-	public Integer getFolio() {
-		return folio;
-	}
-
-	public void setFolio(Integer folio) {
-		this.folio = folio;
 	}
 
 	public Date getFechaInicial() {
@@ -59,7 +49,7 @@ public class ResumenConciliacionesRequest implements Comparable<ResumenConciliac
 
 	@Override
 	public String toString() {
-		return "ResumenConciliacionesRequest [folio=" + folio + ", fechaInicial=" + fechaInicial + ", fechaFinal="
+		return "ResumenConciliacionesRequest [fechaInicial=" + fechaInicial + ", fechaFinal="
 				+ fechaFinal + "]";
 	}
 

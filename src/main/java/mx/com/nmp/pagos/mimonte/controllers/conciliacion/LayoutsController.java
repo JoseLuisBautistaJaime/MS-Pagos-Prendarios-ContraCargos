@@ -215,24 +215,35 @@ public class LayoutsController {
 	}
 	
 	public static ListaLayoutDTO buildConsultaLayoutsFolio() {
-		
-		LayoutCabeceraDTOs layoutCabeceraDTOs = new LayoutCabeceraDTOs(1 , "H", "NMP01", "COMISION ECOMM 14122018",	new Date());
-		
+
+		LayoutCabeceraDTOs layoutCabeceraDTOs = new LayoutCabeceraDTOs(1, "H", "NMP01", "COMISION ECOMM 14122018",
+				new Date());
+
 		List<LayoutLineaDTOs> layoutLineaDTOsList = new ArrayList<>();
-		
-		LayoutLineaDTOs layoutLineaDTOs = new LayoutLineaDTOs(1, "L", "6402001001", "", "13000", "PRENDA", "SUCS_NB", new BigDecimal(30.00));
-		
-		LayoutLineaDTOs layoutLineaDTOs2 = new LayoutLineaDTOs(2, "L", "6402001001", "", "13001", "PRENDA", "SUCS_NB", new BigDecimal(90.00));
-		
+
+		LayoutLineaDTOs layoutLineaDTOs = new LayoutLineaDTOs(1, "L", "6402001001", "", "13000", "PRENDA", "SUCS_NB",
+				new BigDecimal(30.00));
+
+		LayoutLineaDTOs layoutLineaDTOs2 = new LayoutLineaDTOs(2, "L", "6402001001", "", "13001", "PRENDA", "SUCS_NB",
+				new BigDecimal(90.00));
+
 		layoutLineaDTOsList.add(layoutLineaDTOs);
 		layoutLineaDTOsList.add(layoutLineaDTOs2);
-		
-		LayOutDTOs layOutDTOs = new LayOutDTOs(1, "PAGOS", layoutCabeceraDTOs, layoutLineaDTOsList);
-		
-		ListaLayoutDTO listaLayoutDTO = new ListaLayoutDTO(1234, layOutDTOs);
-		
+
+		LayOutDTOs layOutDTOs1 = new LayOutDTOs(1, "PAGOS", layoutCabeceraDTOs, layoutLineaDTOsList);
+		LayOutDTOs layOutDTOs2 = new LayOutDTOs(1, "DEVOLUCIONES", layoutCabeceraDTOs, layoutLineaDTOsList);
+		LayOutDTOs layOutDTOs3 = new LayOutDTOs(1, "PAGOS", layoutCabeceraDTOs, layoutLineaDTOsList);
+
+		List<LayOutDTOs> layOutDTOsList = new ArrayList<>();
+
+		layOutDTOsList.add(layOutDTOs1);
+		layOutDTOsList.add(layOutDTOs2);
+		layOutDTOsList.add(layOutDTOs3);
+
+		ListaLayoutDTO listaLayoutDTO = new ListaLayoutDTO(1234, layOutDTOsList);
+
 		return listaLayoutDTO;
-		
+
 	}
 
 }

@@ -693,7 +693,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(1L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -752,7 +752,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(2L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -812,7 +812,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(3L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -871,7 +871,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(4L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -930,7 +930,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(5L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -990,7 +990,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(6L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -1050,7 +1050,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(7L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -1109,7 +1109,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(8L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -1169,7 +1169,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(9L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -1228,7 +1228,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(10L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -1288,7 +1288,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(11L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -1348,7 +1348,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(12L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -1408,7 +1408,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(13L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -1467,7 +1467,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(14L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -1526,7 +1526,7 @@ public class ConciliacionController {
 		comisionesDTOList.add(comisionesDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(15L, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
+				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
 				movTransitoDTOList, comisionesDTOList, new Date(), new Date(), "NMP", "NMP");
 
@@ -1766,91 +1766,91 @@ public class ConciliacionController {
 
 		// Inicio 1
 		ConsultaConciliacionDTO consultaConciliacionDTO1 = new ConsultaConciliacionDTO(1, estatusConciliacionDTO,
-				subEstatusConciliacionDTO, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO, cuentaDTO,
+				subEstatusConciliacionDTO, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO, cuentaDTO,
 				658);
 		// Fin 1
 
 		// Inicio 2
 		ConsultaConciliacionDTO consultaConciliacionDTO2 = new ConsultaConciliacionDTO(2, estatusConciliacionDTO2,
-				subEstatusConciliacionDTO2, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO2, cuentaDTO2,
+				subEstatusConciliacionDTO2, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO2, cuentaDTO2,
 				372);
 		// Fin 2
 
 		// Inicio 3
 		ConsultaConciliacionDTO consultaConciliacionDTO3 = new ConsultaConciliacionDTO(3, estatusConciliacionDTO3,
-				subEstatusConciliacionDTO3, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO3, cuentaDTO3,
+				subEstatusConciliacionDTO3, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO3, cuentaDTO3,
 				372);
 		// Fin 3
 
 		// Inicio 4
 		ConsultaConciliacionDTO consultaConciliacionDTO4 = new ConsultaConciliacionDTO(4, estatusConciliacionDTO4,
-				subEstatusConciliacionDTO4, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO4, cuentaDTO4,
+				subEstatusConciliacionDTO4, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO4, cuentaDTO4,
 				372);
 		// Fin 4
 
 		// Inicio 5
 		ConsultaConciliacionDTO consultaConciliacionDTO5 = new ConsultaConciliacionDTO(5, estatusConciliacionDTO5,
-				subEstatusConciliacionDTO5, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO5, cuentaDTO5,
+				subEstatusConciliacionDTO5, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO5, cuentaDTO5,
 				372);
 		// Fin 5
 
 		// Inicio 6
 		ConsultaConciliacionDTO consultaConciliacionDTO6 = new ConsultaConciliacionDTO(6, estatusConciliacionDTO6,
-				subEstatusConciliacionDTO6, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO6, cuentaDTO6,
+				subEstatusConciliacionDTO6, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO6, cuentaDTO6,
 				372);
 		// Fin 6
 
 		// Inicio 7
 		ConsultaConciliacionDTO consultaConciliacionDTO7 = new ConsultaConciliacionDTO(7, estatusConciliacionDTO7,
-				subEstatusConciliacionDTO7, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO7, cuentaDTO7,
+				subEstatusConciliacionDTO7, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO7, cuentaDTO7,
 				372);
 		// Fin 7
 
 		// Inicio 8
 		ConsultaConciliacionDTO consultaConciliacionDTO8 = new ConsultaConciliacionDTO(8, estatusConciliacionDTO8,
-				subEstatusConciliacionDTO8, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO8, cuentaDTO8,
+				subEstatusConciliacionDTO8, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO8, cuentaDTO8,
 				372);
 		// Fin 8
 
 		// Inicio 9
 		ConsultaConciliacionDTO consultaConciliacionDTO9 = new ConsultaConciliacionDTO(9, estatusConciliacionDTO9,
-				subEstatusConciliacionDTO9, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO9, cuentaDTO9,
+				subEstatusConciliacionDTO9, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO9, cuentaDTO9,
 				372);
 		// Fin 9
 
 		// Inicio 10
 		ConsultaConciliacionDTO consultaConciliacionDTO10 = new ConsultaConciliacionDTO(10, estatusConciliacionDTO10,
-				subEstatusConciliacionDTO10, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO10,
+				subEstatusConciliacionDTO10, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO10,
 				cuentaDTO10, 372);
 		// Fin 10
 
 		// Inicio 11
 		ConsultaConciliacionDTO consultaConciliacionDTO11 = new ConsultaConciliacionDTO(11, estatusConciliacionDTO11,
-				subEstatusConciliacionDTO11, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO11,
+				subEstatusConciliacionDTO11, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO11,
 				cuentaDTO11, 372);
 		// Fin 11
 
 		// Inicio 12
 		ConsultaConciliacionDTO consultaConciliacionDTO12 = new ConsultaConciliacionDTO(12, estatusConciliacionDTO12,
-				subEstatusConciliacionDTO12, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO12,
+				subEstatusConciliacionDTO12, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO12,
 				cuentaDTO12, 372);
 		// Fin 12
 
 		// Inicio 13
 		ConsultaConciliacionDTO consultaConciliacionDTO13 = new ConsultaConciliacionDTO(13, estatusConciliacionDTO13,
-				subEstatusConciliacionDTO13, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO13,
+				subEstatusConciliacionDTO13, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO13,
 				cuentaDTO13, 372);
 		// Fin 13
 
 		// Inicio 14
 		ConsultaConciliacionDTO consultaConciliacionDTO14 = new ConsultaConciliacionDTO(14, estatusConciliacionDTO14,
-				subEstatusConciliacionDTO14, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO14,
+				subEstatusConciliacionDTO14, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO14,
 				cuentaDTO14, 372);
 		// Fin 14
 
 		// Inicio 15
 		ConsultaConciliacionDTO consultaConciliacionDTO15 = new ConsultaConciliacionDTO(15, estatusConciliacionDTO15,
-				subEstatusConciliacionDTO15, "", 1L, 1L, new Date(), "NMP", new Date(), "NMP", entidadDTO15,
+				subEstatusConciliacionDTO15, "", null, null, new Date(), "NMP", new Date(), "NMP", entidadDTO15,
 				cuentaDTO15, 372);
 		// Fin 15
 

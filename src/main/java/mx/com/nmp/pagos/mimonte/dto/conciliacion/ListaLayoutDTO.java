@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.List;
+
 /**
  * @name ListaLayoutDTO
  * @description Clase que encapsula la informacion de un objeto
@@ -16,14 +18,14 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 public class ListaLayoutDTO implements Comparable<ListaLayoutDTO>{
 	
 	private Integer folio;
-	private LayOutDTOs layouts;
+	private List<LayOutDTOs> layouts;
 
 	public ListaLayoutDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ListaLayoutDTO(Integer folio, LayOutDTOs layouts) {
+	public ListaLayoutDTO(Integer folio, List<LayOutDTOs> layouts) {
 		super();
 		this.folio = folio;
 		this.layouts = layouts;
@@ -37,11 +39,11 @@ public class ListaLayoutDTO implements Comparable<ListaLayoutDTO>{
 		this.folio = folio;
 	}
 
-	public LayOutDTOs getLayouts() {
+	public List<LayOutDTOs> getLayouts() {
 		return layouts;
 	}
 
-	public void setLayouts(LayOutDTOs layouts) {
+	public void setLayouts(List<LayOutDTOs> layouts) {
 		this.layouts = layouts;
 	}
 
