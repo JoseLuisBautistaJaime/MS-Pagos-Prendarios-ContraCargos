@@ -117,8 +117,6 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientoEsadoCuenta(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;
-
-//		movimientosEstadoCuentaDTO = buildDummy1();
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		Long total = movimientosEstadoCuentaService
@@ -126,8 +124,8 @@ public class MovimientosController {
 		if (null != total) {
 			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
 			movimientosEstadoCuentaDTO.setTotal(total);
-			movimientosEstadoCuentaDTO
-					.setMovimientos(movimientosEstadoCuentaService.findByFolioAndPagination(commonConciliacionRequestDTO));
+			movimientosEstadoCuentaDTO.setMovimientos(
+					movimientosEstadoCuentaService.findByFolioAndPagination(commonConciliacionRequestDTO));
 		} else
 			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 		if (null == movimientosEstadoCuentaDTO.getTotal() || null == movimientosEstadoCuentaDTO.getMovimientos()
@@ -185,7 +183,6 @@ public class MovimientosController {
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-//		movimientoTransaccionalListDTO = buildDummyX1();
 		Long total = movimientosProveedorService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
 		if (null != total) {
 			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
@@ -221,7 +218,6 @@ public class MovimientosController {
 	public Response findMovimientosNocturnos(
 			@RequestBody CommonConciliacionEstatusRequestDTO commonConciliacionRequestDTO) {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
-//		 movimientoProcesosNocturnosListDTO = buildDummyX2();
 		if (!ValidadorConciliacion.validateCommonConciliacionEstatusRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		Long total = movimientosMidasService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio(),
@@ -261,8 +257,6 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalListRequestDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-//		MovimientoIDDTO movimientoIDDTO = null;
-//		movimientoIDDTO = buildDummyX3();
 		if (!ValidadorConciliacion.validateMovimientoTransaccionalListRequestDTO(movimientos))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		movimientosProveedorService.save(movimientos, userRequest);
@@ -289,8 +283,6 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-//		MovimientoIDDTO movimientoIDDTO = null;
-//		movimientoIDDTO = buildDummyX3();
 		if (!ValidadorConciliacion.validateMovimientoProcesosNocturnosListResponseDTO(movimientos))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		movimientosMidasService.save(movimientos, userRequest);

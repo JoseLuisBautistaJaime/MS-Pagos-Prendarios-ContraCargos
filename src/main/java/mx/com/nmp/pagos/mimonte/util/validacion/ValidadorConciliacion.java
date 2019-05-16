@@ -41,7 +41,6 @@ public interface ValidadorConciliacion {
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
 			assertNotNull(commonConciliacionRequestDTO.getPagina());
 			assertNotNull(commonConciliacionRequestDTO.getResultados());
-//			assertNotNull(commonConciliacionRequestDTO.getEstatus());
 		} catch (Exception ex) {
 			return false;
 		}
@@ -89,7 +88,6 @@ public interface ValidadorConciliacion {
 				for (MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO
 						.getMovimientos()) {
 					assertNotNull(movimientoMidasRequestDTO.getCapitalActual());
-//					assertNotNull(null == movimientoMidasRequestDTO.getComisiones());
 					assertNotNull(movimientoMidasRequestDTO.getFolioPartida());
 					assertNotNull(movimientoMidasRequestDTO.getInteres());
 					assertNotNull(movimientoMidasRequestDTO.getMontoOperacion());
