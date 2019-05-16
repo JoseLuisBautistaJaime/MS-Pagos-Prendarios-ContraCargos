@@ -32,7 +32,10 @@ import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEdoCtaReq;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEdoCtaRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoIDDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
@@ -218,6 +221,26 @@ public class MovimientosController {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
+	}
+	
+	/**
+	 * Permite consultar y dar de alta movimientos del estado de cuenta mediante un rango de fechas, se considera un estado de cuenta por día.
+	 * @param movimientoEdoCtaRequest
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/movimientos/estadocuenta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Permite consultar y dar de alta movimientos del estado de cuenta mediante un rango de fechas, se considera un estado de cuenta por día.", tags = {
+			"Movimientos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta Exitosa."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response altaMovimientosEdoCta(@RequestBody List<MovimientoEdoCtaRequest> movimientoEdoCtaReq, @RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta Exitosa.", null);
 	}
 
 	/**

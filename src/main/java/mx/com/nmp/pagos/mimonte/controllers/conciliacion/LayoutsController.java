@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,10 +31,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayOutDTOs;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTOs;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTOs;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ListaLayoutDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
@@ -145,6 +150,27 @@ public class LayoutsController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layout eliminado con éxito.",
 				null);
 	}
+	
+	/**
+	 * Permite realizar la consulta de todos los layouts asociados a la conciliación indicada.
+	 * @param folio
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/layouts/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Permite realizar la consulta de todos los layouts asociados a la conciliación indicada.", tags = {
+			"Layouts" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta de Layouts Exitosa."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response consultaLayoutsFolio(@PathVariable(value = "folio", required = true) Integer folio) {
+	
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta de Layouts Exitosa.",
+				buildConsultaLayoutsFolio());
+	}
 
 	/**
 	 * Construye un objeto dummy
@@ -186,6 +212,27 @@ public class LayoutsController {
 		layoutDTO.setTipoLayout(TipoLayoutEnum.PAGOS);
 		layoutDTO.setFolio(1);
 		return layoutDTO;
+	}
+	
+	public static ListaLayoutDTO buildConsultaLayoutsFolio() {
+		
+		LayoutCabeceraDTOs layoutCabeceraDTOs = new LayoutCabeceraDTOs(1 , "H", "NMP01", "COMISION ECOMM 14122018",	new Date());
+		
+		List<LayoutLineaDTOs> layoutLineaDTOsList = new ArrayList<>();
+		
+		LayoutLineaDTOs layoutLineaDTOs = new LayoutLineaDTOs(1, "L", "6402001001", "", "13000", "PRENDA", "SUCS_NB", new BigDecimal(30.00));
+		
+		LayoutLineaDTOs layoutLineaDTOs2 = new LayoutLineaDTOs(2, "L", "6402001001", "", "13001", "PRENDA", "SUCS_NB", new BigDecimal(90.00));
+		
+		layoutLineaDTOsList.add(layoutLineaDTOs);
+		layoutLineaDTOsList.add(layoutLineaDTOs2);
+		
+		LayOutDTOs layOutDTOs = new LayOutDTOs(1, "PAGOS", layoutCabeceraDTOs, layoutLineaDTOsList);
+		
+		ListaLayoutDTO listaLayoutDTO = new ListaLayoutDTO(1234, layOutDTOs);
+		
+		return listaLayoutDTO;
+		
 	}
 
 }
