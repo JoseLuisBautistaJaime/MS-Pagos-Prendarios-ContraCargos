@@ -116,7 +116,7 @@ public class MovimientosEstadoCuentaService {
 	 * @return
 	 */
 	public Long countByConciliacionId(final Long idConciliacion) {
-		return movimientoEstadoCuentaRepository.jpqlCBIC(idConciliacion);
+		return movimientoEstadoCuentaRepository.countMovimientos(idConciliacion);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class MovimientosEstadoCuentaService {
 	 * @param commonConciliacionRequestDTO
 	 * @return
 	 */
-	public List<MovimientoEstadoCuentaDTO> findByFolio(
+	public List<MovimientoEstadoCuentaDTO> findByFolioAndPagination(
 			final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		List<MovimientoEstadoCuentaDBDTO> movimientoEstadoCuentaDBDTOLst = null;
 		List<MovimientoEstadoCuentaDTO> movimientoEstadoCuentaDTOList = null;
@@ -133,7 +133,7 @@ public class MovimientosEstadoCuentaService {
 		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
 				commonConciliacionRequestDTO.getResultados());
 		movimientoEstadoCuentaDBDTOLst = movimientoEstadoCuentaRepository
-				.jpqlFBIC((long) commonConciliacionRequestDTO.getFolio(), pageable);
+				.listMovimientos((long) commonConciliacionRequestDTO.getFolio(), pageable);
 		movimientoEstadoCuentaDTOList = MovimientosBuilder
 				.buildMovimientoEstadoCuentaDTOListFromMovimientoEstadoCuentaDBDTOList(movimientoEstadoCuentaDBDTOLst);
 		return movimientoEstadoCuentaDTOList;
@@ -145,7 +145,7 @@ public class MovimientosEstadoCuentaService {
 	 * @param saveEstadoCuentaRequestDTO
 	 * @param userRequest
 	 */
-	public void saveByFolio(final SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO, final String userRequest) {
+	public void save(final SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO, final String userRequest) {
 		reporteRepository.save(
 				ReporteBuilder.buildReporteFromSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO, userRequest));
 	}

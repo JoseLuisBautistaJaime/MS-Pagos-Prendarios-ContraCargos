@@ -6,6 +6,9 @@ package mx.com.nmp.pagos.mimonte.util.validacion;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Calendar;
+
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
@@ -13,6 +16,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosList
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 
 /**
  * @name ValidadorConciliacion
@@ -37,7 +41,7 @@ public interface ValidadorConciliacion {
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
 			assertNotNull(commonConciliacionRequestDTO.getPagina());
 			assertNotNull(commonConciliacionRequestDTO.getResultados());
-			assertNotNull(commonConciliacionRequestDTO.getEstatus());
+//			assertNotNull(commonConciliacionRequestDTO.getEstatus());
 		} catch (Exception ex) {
 			return false;
 		}
@@ -85,7 +89,7 @@ public interface ValidadorConciliacion {
 				for (MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO
 						.getMovimientos()) {
 					assertNotNull(movimientoMidasRequestDTO.getCapitalActual());
-					assertNotNull(null == movimientoMidasRequestDTO.getComisiones());
+//					assertNotNull(null == movimientoMidasRequestDTO.getComisiones());
 					assertNotNull(movimientoMidasRequestDTO.getFolioPartida());
 					assertNotNull(movimientoMidasRequestDTO.getInteres());
 					assertNotNull(movimientoMidasRequestDTO.getMontoOperacion());
@@ -193,6 +197,10 @@ public interface ValidadorConciliacion {
 			assertNotNull(saveEstadoCuentaRequestDTO.getFolio());
 			assertNotNull(saveEstadoCuentaRequestDTO.getFechaInicial());
 			assertNotNull(saveEstadoCuentaRequestDTO.getFechaFinal());
+			Calendar ini = Calendar.getInstance();
+			Calendar fin = Calendar.getInstance();
+			if (ini.after(fin))
+				throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE);
 		} catch (Exception ex) {
 			return false;
 		}

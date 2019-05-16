@@ -70,6 +70,12 @@ public final class ConciliacionConstants {
 		 */
 		public static final String VALIDATION_PARAM_ERROR = "Se genero un error de validacion";
 
+		/**
+		 * Mensaje que es mostrado cuando se intenta ingresar una fecha inicial
+		 * posterior a la fecha final
+		 */
+		public static final String INITIAL_DATE_AFTER_FINAL_DATE = "La fecah inicial es posterior a la fecha final";
+
 	}
 
 }

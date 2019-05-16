@@ -127,7 +127,7 @@ public class MovimientosController {
 			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
 			movimientosEstadoCuentaDTO.setTotal(total);
 			movimientosEstadoCuentaDTO
-					.setMovimientos(movimientosEstadoCuentaService.findByFolio(commonConciliacionRequestDTO));
+					.setMovimientos(movimientosEstadoCuentaService.findByFolioAndPagination(commonConciliacionRequestDTO));
 		} else
 			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 		if (null == movimientosEstadoCuentaDTO.getTotal() || null == movimientosEstadoCuentaDTO.getMovimientos()
@@ -160,7 +160,7 @@ public class MovimientosController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		movimientosEstadoCuentaService.saveByFolio(saveEstadoCuentaRequestDTO, userRequest);
+		movimientosEstadoCuentaService.save(saveEstadoCuentaRequestDTO, userRequest);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta de estado cuenta exitosa.", null);
 	}
 
