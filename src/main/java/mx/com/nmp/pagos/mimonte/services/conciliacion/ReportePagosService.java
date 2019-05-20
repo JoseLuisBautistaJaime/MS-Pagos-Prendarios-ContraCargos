@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.CatalogoOperacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.CatalogoTipoContratoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReportePagosRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CatalogoOperacion;
@@ -60,8 +62,10 @@ public class ReportePagosService {
 	 * @param reporteRequestDTO
 	 * @return
 	 */
-	public List<ReportePagosLibresDTO> getReportePagosLibres(ReporteRequestDTO reporteRequestDTO) {
+	public ReportePagosLibresOuterDTO getReportePagosLibres(ReporteRequestDTO reporteRequestDTO) {
+		ReportePagosLibresOuterDTO reportePagosLibresOuterDTO = null;
 		List<ReportePagosLibresDTO> reportePagosLibresDTOList = null;
+		BigDecimal sum = new BigDecimal("0.0");
 		CatalogoOperacion catalogoOperacion = null;
 		CatalogoTipoContrato catalogoTipoContrato = null;
 		String operacionAbr = null;
@@ -81,7 +85,14 @@ public class ReportePagosService {
 		reportePagosLibresDTOList = reportePagosRepository.getReportePagosLibres(reporteRequestDTO.getFechaDesde(),
 				reporteRequestDTO.getFechaHasta(), tipoContratoAbr, operacionAbr, reporteRequestDTO.getSucursales(),
 				reporteRequestDTO.getPartida());
-		return reportePagosLibresDTOList;
+		reportePagosLibresOuterDTO = new ReportePagosLibresOuterDTO();
+		reportePagosLibresOuterDTO.setMovimientos(reportePagosLibresDTOList);
+		reportePagosLibresOuterDTO.setTotalMovimientos(reportePagosLibresDTOList.size());
+		for (ReportePagosLibresDTO reportePagosLibresDTO : reportePagosLibresDTOList) {
+			sum = sum.add(reportePagosLibresDTO.getMonto());
+		}
+		reportePagosLibresOuterDTO.setMontoTotal(sum);
+		return reportePagosLibresOuterDTO;
 	}
 
 }

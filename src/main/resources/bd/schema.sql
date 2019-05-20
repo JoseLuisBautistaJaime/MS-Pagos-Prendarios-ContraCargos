@@ -1167,3 +1167,9 @@ INSERT INTO `compose`.`tk_tipo_contrato`
 VALUES
 	(146, 'PAGOS LIBRES', 'f', 'PL', 0),
     (145, 'CLASICO', 'f', 'CL', 0);
+
+
+-- ---------- SE AGREGAN COLUMNAS NUEVAS A TABLA to_movimiento_midas ---- --
+-- ------------------------ [2019-05-20 18:18:47] ------------------------ --
+ALTER TABLE to_movimiento_midas ADD COLUMN id_operacion INT(11) DEFAULT NULL;
+ALTER TABLE to_movimiento_midas ADD COLUMN id_tipo_contrato INT(11) DEFAULT NULL;

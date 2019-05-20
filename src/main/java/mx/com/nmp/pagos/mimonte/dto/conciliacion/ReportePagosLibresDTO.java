@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @name ReportePagosLibresDTO
@@ -96,6 +97,30 @@ public class ReportePagosLibresDTO {
 
 	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
+	}
+
+	@Override
+	public String toString() {
+		return "ReportePagosLibresDTO [fecha=" + fecha + ", canal=" + canal + ", partida=" + partida + ", tipoProducto="
+				+ tipoProducto + ", operacion=" + operacion + ", sucursal=" + sucursal + ", monto=" + monto + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(fecha, canal, partida, tipoProducto, operacion, sucursal, monto);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof ReportePagosLibresDTO))
+			return false;
+
+		final ReportePagosLibresDTO other = (ReportePagosLibresDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 }

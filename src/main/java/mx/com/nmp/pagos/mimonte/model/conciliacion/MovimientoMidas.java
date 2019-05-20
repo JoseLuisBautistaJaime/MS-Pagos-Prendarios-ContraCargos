@@ -118,6 +118,12 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 	@Column(name = "importe_transaccion", nullable = true)
 	private BigDecimal importeTransaccion;
 
+	@Column(name = "id_operacion", nullable = true)
+	private Integer idOperacion;
+
+	@Column(name = "id_tipo_contrato", nullable = true)
+	private Integer idTipoContrato;
+
 	public Long getId() {
 		return id;
 	}
@@ -326,6 +332,22 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 		this.importeTransaccion = importeTransaccion;
 	}
 
+	public Integer getIdOperacion() {
+		return idOperacion;
+	}
+
+	public void setIdOperacion(Integer idOperacion) {
+		this.idOperacion = idOperacion;
+	}
+
+	public Integer getIdTipoContrato() {
+		return idTipoContrato;
+	}
+
+	public void setIdTipoContrato(Integer idTipoContrato) {
+		this.idTipoContrato = idTipoContrato;
+	}
+
 	@Override
 	public String toString() {
 		return "MovimientoMidas [id=" + id + ", reporte=" + reporte + ", transaccion=" + transaccion
@@ -336,7 +358,8 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 				+ ", interes=" + interes + ", estatus=" + estatus + ", consumidor=" + consumidor + ", codigoError="
 				+ codigoError + ", mensajeError=" + mensajeError + ", idTarjeta=" + idTarjeta + ", marcaTarjeta="
 				+ marcaTarjeta + ", tipoTarjeta=" + tipoTarjeta + ", tarjeta=" + tarjeta + ", monedaPago=" + monedaPago
-				+ ", importeTransaccion=" + importeTransaccion + "]";
+				+ ", importeTransaccion=" + importeTransaccion + ", idOperacion=" + idOperacion + ", idTipoContrato="
+				+ idTipoContrato + "]";
 	}
 
 	@Override

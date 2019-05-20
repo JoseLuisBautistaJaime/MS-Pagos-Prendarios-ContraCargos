@@ -30,6 +30,7 @@ import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ReportePagosService;
@@ -89,10 +90,10 @@ public class ReportesController {
 	public Response save(@RequestBody ReporteRequestDTO reporteRequestDTO) {
 		if (!ValidadorConciliacion.validateReporteRequestDTO(reporteRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		List<ReportePagosLibresDTO> reportePagosLibresDTO = reportePagosService
+		ReportePagosLibresOuterDTO reportePagosLibresOuterDTO = reportePagosService
 				.getReportePagosLibres(reporteRequestDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-				reportePagosLibresDTO);
+				reportePagosLibresOuterDTO);
 	}
 
 	/**

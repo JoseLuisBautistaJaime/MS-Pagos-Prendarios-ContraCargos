@@ -109,6 +109,8 @@ public interface ValidadorConciliacion {
 					assertNotNull(movimientoMidasRequestDTO.getTarjeta());
 					assertNotNull(movimientoMidasRequestDTO.getMonedaPago());
 					assertNotNull(movimientoMidasRequestDTO.getImporteTransaccion());
+					assertNotNull(movimientoMidasRequestDTO.getIdOperacion());
+					assertNotNull(movimientoMidasRequestDTO.getIdTipoContrato());
 					movimientoMidasRequestDTO.setId(null);
 				}
 			} else
