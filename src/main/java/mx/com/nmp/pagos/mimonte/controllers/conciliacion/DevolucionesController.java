@@ -153,11 +153,12 @@ public class DevolucionesController {
 	 */
 	public static List<DevolucionEntidadDTO> buildDummy1() {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOListList = new ArrayList<>();
+		// Devolcion 1
 		DevolucionEntidadDTO devolucionEntidadDTO = new DevolucionEntidadDTO();
 		devolucionEntidadDTO.setId(1L);
 		devolucionEntidadDTO.setEntidad(new BaseEntidadDTO(1L, "Banco 1", "Banco 1"));
 		devolucionEntidadDTO.setFecha(new Date());
-		devolucionEntidadDTO.setEstatus(new EstatusDevolucionDTO(2, "Solicitada", true));
+		devolucionEntidadDTO.setEstatus(new EstatusDevolucionDTO(1, "Solicitada", true));
 		devolucionEntidadDTO.setSucursal(3);
 		devolucionEntidadDTO.setMonto(150.00);
 		devolucionEntidadDTO.setEsquemaTarjeta("Visa");
@@ -165,7 +166,84 @@ public class DevolucionesController {
 		devolucionEntidadDTO.setTitular("Juana Garcia Garcia");
 		devolucionEntidadDTO.setCodigoAutorizacion("859363");
 		devolucionEntidadDTO.setFechaLiquidacion(new Date());
+		
+		// Devolcion 2
+		DevolucionEntidadDTO devolucionEntidadDTO2 = new DevolucionEntidadDTO();
+		devolucionEntidadDTO2.setId(2L);
+		devolucionEntidadDTO2.setEntidad(new BaseEntidadDTO(2L, "Banco 2", "Banco 2"));
+		devolucionEntidadDTO2.setFecha(new Date());
+		devolucionEntidadDTO2.setEstatus(new EstatusDevolucionDTO(2, "Pendiente", true));
+		devolucionEntidadDTO2.setSucursal(30);
+		devolucionEntidadDTO2.setMonto(250.00);
+		devolucionEntidadDTO2.setEsquemaTarjeta("Master Card");
+		devolucionEntidadDTO2.setIdentificadorCuenta("6598xxxxxxxx100");
+		devolucionEntidadDTO2.setTitular("Baltazar Gracian");
+		devolucionEntidadDTO2.setCodigoAutorizacion("789654");
+		devolucionEntidadDTO2.setFechaLiquidacion(new Date());
+		
+		// Devolcion 3
+		DevolucionEntidadDTO devolucionEntidadDTO3 = new DevolucionEntidadDTO();
+		devolucionEntidadDTO3.setId(3L);
+		devolucionEntidadDTO3.setEntidad(new BaseEntidadDTO(3L, "Banco 3", "Banco 3"));
+		devolucionEntidadDTO3.setFecha(new Date());
+		devolucionEntidadDTO3.setEstatus(new EstatusDevolucionDTO(3, "Liquidada", true));
+		devolucionEntidadDTO3.setSucursal(10);
+		devolucionEntidadDTO3.setMonto(170.00);
+		devolucionEntidadDTO3.setEsquemaTarjeta("Visa");
+		devolucionEntidadDTO3.setIdentificadorCuenta("7789xxxxxxxx123");
+		devolucionEntidadDTO3.setTitular("Juana de Arco");
+		devolucionEntidadDTO3.setCodigoAutorizacion("1020301");
+		devolucionEntidadDTO3.setFechaLiquidacion(new Date());
+		
+		// Devolcion 4
+		DevolucionEntidadDTO devolucionEntidadDTO4 = new DevolucionEntidadDTO();
+		devolucionEntidadDTO4.setId(4L);
+		devolucionEntidadDTO4.setEntidad(new BaseEntidadDTO(4L, "Banco 4", "Banco 4"));
+		devolucionEntidadDTO4.setFecha(new Date());
+		devolucionEntidadDTO4.setEstatus(new EstatusDevolucionDTO(1, "Solicitada", true));
+		devolucionEntidadDTO4.setSucursal(3);
+		devolucionEntidadDTO4.setMonto(320.00);
+		devolucionEntidadDTO4.setEsquemaTarjeta("Master Card");
+		devolucionEntidadDTO4.setIdentificadorCuenta("9977xxxxxxxx002");
+		devolucionEntidadDTO4.setTitular("Nicolas Maquiavelo");
+		devolucionEntidadDTO4.setCodigoAutorizacion("1203457");
+		devolucionEntidadDTO4.setFechaLiquidacion(new Date());
+		
+		// Devolcion 5
+		DevolucionEntidadDTO devolucionEntidadDTO5 = new DevolucionEntidadDTO();
+		devolucionEntidadDTO5.setId(5L);
+		devolucionEntidadDTO5.setEntidad(new BaseEntidadDTO(5L, "Banco 5", "Banco 5"));
+		devolucionEntidadDTO5.setFecha(new Date());
+		devolucionEntidadDTO5.setEstatus(new EstatusDevolucionDTO(2, "Pendiente", true));
+		devolucionEntidadDTO5.setSucursal(30);
+		devolucionEntidadDTO5.setMonto(510.00);
+		devolucionEntidadDTO5.setEsquemaTarjeta("Visa");
+		devolucionEntidadDTO5.setIdentificadorCuenta("1047xxxxxxxx111");
+		devolucionEntidadDTO5.setTitular("Napoleon Bonaparte");
+		devolucionEntidadDTO5.setCodigoAutorizacion("1123301");
+		devolucionEntidadDTO5.setFechaLiquidacion(new Date());
+		
+		// Devolcion 6
+		DevolucionEntidadDTO devolucionEntidadDTO6 = new DevolucionEntidadDTO();
+		devolucionEntidadDTO6.setId(6L);
+		devolucionEntidadDTO6.setEntidad(new BaseEntidadDTO(6L, "Banco 6", "Banco 6"));
+		devolucionEntidadDTO6.setFecha(new Date());
+		devolucionEntidadDTO6.setEstatus(new EstatusDevolucionDTO(3, "Liquidada", true));
+		devolucionEntidadDTO6.setSucursal(10);
+		devolucionEntidadDTO6.setMonto(450.00);
+		devolucionEntidadDTO6.setEsquemaTarjeta("MasterCard");
+		devolucionEntidadDTO6.setIdentificadorCuenta("8899xxxxxxxx101");
+		devolucionEntidadDTO6.setTitular("Isabel I");
+		devolucionEntidadDTO6.setCodigoAutorizacion("1457996");
+		devolucionEntidadDTO6.setFechaLiquidacion(new Date());
+		
 		devolucionEntidadDTOListList.add(devolucionEntidadDTO);
+		devolucionEntidadDTOListList.add(devolucionEntidadDTO2);
+		devolucionEntidadDTOListList.add(devolucionEntidadDTO3);
+		devolucionEntidadDTOListList.add(devolucionEntidadDTO4);
+		devolucionEntidadDTOListList.add(devolucionEntidadDTO5);
+		devolucionEntidadDTOListList.add(devolucionEntidadDTO6);
+		
 		return devolucionEntidadDTOListList;
 	}
 

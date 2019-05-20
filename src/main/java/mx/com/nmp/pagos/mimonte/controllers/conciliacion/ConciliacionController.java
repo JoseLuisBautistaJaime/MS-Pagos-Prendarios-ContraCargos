@@ -381,7 +381,7 @@ public class ConciliacionController {
 	public Response consultaMovimientosDevolucion(@PathVariable(value = "folio", required = true) Integer folio) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Devoluciones Exitosa.",
-				buildMarcarDevolucionesDummy());
+				buildMarcarDevolucionesDummyVarias());
 	}
 
 	/**
@@ -562,25 +562,21 @@ public class ConciliacionController {
 				buildConsultaActividadesDummy());
 	}
 
+	/**
+	 * Construye un objeto dummy
+	 * @return
+	 */
 	public static ConciliacionDTO buildDummy() {
 		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1, "En proceso", true);
 		EntidadDTO entidadDTO = null;
 		entidadDTO = new EntidadDTO(1, "Banco Banamex", true, "Banamex");
 		CuentaDTO cuentaDTO = new CuentaDTO(1, "1122131", true);
-		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO(new Date(),
-				new Date(), false);
-		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO(
-				new Date(), new Date(), false);
-		ReporteEstadoCuentaDTO reporteEstadoCuentaDTO = new ReporteEstadoCuentaDTO(new Date(), new Date(), false);
-
-		ConciliacionDTO conciliacionDTO = new ConciliacionDTO(0001, estatusConciliacionDTO, entidadDTO, cuentaDTO, null,
-				null, null, null, null, null, null, new Date(), new Date(), "NMP", "NMP");
-
-		// ConciliacionDTO conciliacionDTO = new ConciliacionDTO(0001,
-		// estatusConciliacionDTO, entidadDTO, cuentaDTO,
-		// reporteProcesosNocturnosDTO, reporteProveedorTransaccionalDTO,
-		// reporteEstadoCuentaDTO, null, null, null,
-		// null, new Date(), new Date(), "NMP", "NMP");
+		ConciliacionDTO conciliacionDTO = new ConciliacionDTO(0001, estatusConciliacionDTO, entidadDTO, cuentaDTO, null, null, null, null, null, null, null, new Date(), new Date(), "NMP", "NMP");		
+		// new attributes
+		conciliacionDTO.setSubEstatus(new SubEstatusConciliacionDTO(1, "Creada"));
+		conciliacionDTO.setSubEstatusDescripcion("");
+		conciliacionDTO.setIdPolizaTesoreria(null);
+		conciliacionDTO.setIdAsientoContable(null);
 		return conciliacionDTO;
 	}
 
@@ -1903,6 +1899,47 @@ public class ConciliacionController {
 		return devolucionDTOlist;
 	}
 
+	public static List<DevolucionConDTO> buildMarcarDevolucionesDummyVarias() {
+
+		List<DevolucionConDTO> devolucionDTOlist = new ArrayList<>();
+		EstatusDevolucionDTO estatusDevolucionDTO = new EstatusDevolucionDTO(1, "Solicitada", true);
+		EstatusDevolucionDTO estatusDevolucionDTO2 = new EstatusDevolucionDTO(2, "Pendiente", true);
+		EstatusDevolucionDTO estatusDevolucionDTO3 = new EstatusDevolucionDTO(3, "Liquidada", true);
+		
+		// Devolucion 1
+		DevolucionConDTO devolucionDTO = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO,
+				new BigDecimal("150.00"), "Visa", "4152xxxxxxxx1478", "Juana Garcia Garcia",
+				"859363", 3);
+		// Devolucion 2
+		DevolucionConDTO devolucionDTO2 = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO2,
+				new BigDecimal("170.00"), "Master Card", "4456xxxxxxxx9987", "Ettore Bugatti",
+				"444558", 30);
+		// Devolucion 3
+		DevolucionConDTO devolucionDTO3 = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO3,
+				new BigDecimal("210.00"), "Visa", "6697xxxxxxxx1230", "ferruccio lamborghini",
+				"120354", 10);
+		// Devolucion 4
+		DevolucionConDTO devolucionDTO4 = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO,
+				new BigDecimal("180.00"), "Master Card", "7894xxxxxxxx1478", "Horacio Paganni",
+				"789665", 30);
+		// Devolucion 5
+		DevolucionConDTO devolucionDTO5 = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO2,
+				new BigDecimal("190.00"), "Visa", "1365xxxxxxxx7963", "C.E. Harald von Koenigsegg",
+				"147741", 10);
+		// Devolucion 6
+		DevolucionConDTO devolucionDTO6 = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO3,
+				new BigDecimal("200.00"), "Master Card", "1248xxxxxxxx1002", "Bruce McLaren",
+				"112336", 3);
+		
+		devolucionDTOlist.add(devolucionDTO);
+		devolucionDTOlist.add(devolucionDTO2);
+		devolucionDTOlist.add(devolucionDTO3);
+		devolucionDTOlist.add(devolucionDTO4);
+		devolucionDTOlist.add(devolucionDTO5);
+		devolucionDTOlist.add(devolucionDTO6);
+		return devolucionDTOlist;
+	}
+	
 	public static List<DevolucionesMovimientosDTO> buildLiquidacionMovimientosDummy() {
 
 		List<DevolucionesMovimientosDTO> devolucionesMovimientosDTOList = new ArrayList<>();

@@ -23,9 +23,11 @@ public class MovimientoProcesosNocturnosResponseDTO {
 	private String estadoTransaccion;
 	private Long sucursal;
 	private Date fecha;
+	private Integer idOperacion;
 	private String operacionAbr;
 	private String operacionDesc;
 	private Double montoOperacion;
+	private Integer idTipoContrato;
 	private String tipoContratoAbr;
 	private String tipoContratoDesc;
 	private String numAutorizacion;
@@ -43,6 +45,22 @@ public class MovimientoProcesosNocturnosResponseDTO {
 	private String monedaPago;
 	private String tarjeta;
 	private String tipoTarjeta;
+	
+	public Integer getIdOperacion() {
+		return idOperacion;
+	}
+
+	public void setIdOperacion(Integer idOperacion) {
+		this.idOperacion = idOperacion;
+	}
+
+	public Integer getIdTipoContrato() {
+		return idTipoContrato;
+	}
+
+	public void setIdTipoContrato(Integer idTipoContrato) {
+		this.idTipoContrato = idTipoContrato;
+	}
 
 	public Long getFolioPartida() {
 		return folioPartida;
@@ -242,15 +260,14 @@ public class MovimientoProcesosNocturnosResponseDTO {
 	public String toString() {
 		return "MovimientoProcesosNocturnosResponseDTO [folioPartida=" + folioPartida + ", transaccion=" + transaccion
 				+ ", estadoTransaccion=" + estadoTransaccion + ", sucursal=" + sucursal + ", fecha=" + fecha
-				+ ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc + ", montoOperacion="
-				+ montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc
-				+ ", numAutorizacion=" + numAutorizacion + ", capitalActual=" + capitalActual + ", comisiones="
-				+ comisiones + ", interes=" + interes + ", estatus=" + estatus + ", consumidor=" + consumidor
-				+ ", importeTransaccion=" + importeTransaccion + ", codigoError=" + codigoError + ", idTarjeta="
-				+ idTarjeta + ", marcaTarjeta=" + marcaTarjeta + ", mensajeError=" + mensajeError + ", monedaPago="
-				+ monedaPago + ", tarjeta=" + tarjeta + ", tipoTarjeta=" + tipoTarjeta + "]";
+				+ ", idOperacion=" + idOperacion + ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc
+				+ ", montoOperacion=" + montoOperacion + ", idTipoContrato=" + idTipoContrato + ", tipoContratoAbr="
+				+ tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc + ", numAutorizacion=" + numAutorizacion
+				+ ", capitalActual=" + capitalActual + ", comisiones=" + comisiones + ", interes=" + interes
+				+ ", estatus=" + estatus + ", consumidor=" + consumidor + ", importeTransaccion=" + importeTransaccion
+				+ ", codigoError=" + codigoError + ", idTarjeta=" + idTarjeta + ", marcaTarjeta=" + marcaTarjeta
+				+ ", mensajeError=" + mensajeError + ", monedaPago=" + monedaPago + ", tarjeta=" + tarjeta
+				+ ", tipoTarjeta=" + tipoTarjeta + "]";
 	}
-
-	
 
 }

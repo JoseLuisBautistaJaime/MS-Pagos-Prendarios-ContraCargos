@@ -20,6 +20,10 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 
 	private Integer folio;
 	private EstatusConciliacionDTO estatus;
+	private SubEstatusConciliacionDTO subEstatus;
+	private String subEstatusDescripcion;
+	private String idPolizaTesoreria;
+	private String idAsientoContable;
 	private EntidadDTO entidad;
 	private CuentaDTO cuenta;
 	private ReporteProcesosNocturnosDTO reporteProcesosNocturnos;
@@ -143,11 +147,45 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	public void setComisiones(ComisionesDTO comisiones) {
 		this.comisiones = comisiones;
 	}
+	
+	public SubEstatusConciliacionDTO getSubEstatus() {
+		return subEstatus;
+	}
+
+	public void setSubEstatus(SubEstatusConciliacionDTO subEstatus) {
+		this.subEstatus = subEstatus;
+	}
+
+	public String getSubEstatusDescripcion() {
+		return subEstatusDescripcion;
+	}
+
+	public void setSubEstatusDescripcion(String subEstatusDescripcion) {
+		this.subEstatusDescripcion = subEstatusDescripcion;
+	}
+
+	public String getIdPolizaTesoreria() {
+		return idPolizaTesoreria;
+	}
+
+	public void setIdPolizaTesoreria(String idPolizaTesoreria) {
+		this.idPolizaTesoreria = idPolizaTesoreria;
+	}
+
+	public String getIdAsientoContable() {
+		return idAsientoContable;
+	}
+
+	public void setIdAsientoContable(String idAsientoContable) {
+		this.idAsientoContable = idAsientoContable;
+	}
 
 	@Override
 	public String toString() {
-		return "ConciliacionDTO [folio=" + folio + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta="
-				+ cuenta + ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
+		return "ConciliacionDTO [folio=" + folio + ", estatus=" + estatus + ", subEstatus=" + subEstatus
+				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idPolizaTesoreria=" + idPolizaTesoreria
+				+ ", idAsientoContable=" + idAsientoContable + ", entidad=" + entidad + ", cuenta=" + cuenta
+				+ ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
 				+ reporteProveedorTransaccional + ", reporteEstadoCuenta=" + reporteEstadoCuenta + ", global=" + global
 				+ ", devoluciones=" + devoluciones + ", movimientosTransito=" + movimientosTransito + ", comisiones="
 				+ comisiones + "]";
