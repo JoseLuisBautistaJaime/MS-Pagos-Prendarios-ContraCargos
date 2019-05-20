@@ -1,28 +1,22 @@
-/*
- * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
- * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
- */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.Date;
 
-/**
- * @author Quarksoft
- * @version 1.0
- * @created 31-Mar-2019 6:33:34 PM
- */
-public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparable<ConciliacionDTO> {
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
+
+public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
+		implements Comparable<ConciliacionResponseSaveDTO> {
 
 	/**
 	 * Serial id.
 	 */
-	private static final long serialVersionUID = 1838609195762330516L;
+	private static final long serialVersionUID = 4775215154348440515L;
 
 	private Integer folio;
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
-	private Long idPolizaTesoreria;
+	private Long idTesoreria;
 	private Long idAsientoContable;
 	private EntidadDTO entidad;
 	private CuentaDTO cuenta;
@@ -34,18 +28,19 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	private MovTransitoDTO movimientosTransito;
 	private ComisionesDTO comisiones;
 
-	public ConciliacionDTO() {
+	public ConciliacionResponseSaveDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ConciliacionDTO(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
+	public ConciliacionResponseSaveDTO(Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 		// TODO Auto-generated constructor stub
 	}
 
-	public ConciliacionDTO(Integer folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
-			String subEstatusDescripcion, Long idPolizaTesoreria, Long idAsientoContable, EntidadDTO entidad,
+	public ConciliacionResponseSaveDTO(Integer folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
+			String subEstatusDescripcion, Long idTesoreria, Long idAsientoContable, EntidadDTO entidad,
 			CuentaDTO cuenta, ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
 			GlobalDTO global, DevolucionConDTO devoluciones, MovTransitoDTO movimientosTransito,
@@ -55,7 +50,7 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 		this.estatus = estatus;
 		this.subEstatus = subEstatus;
 		this.subEstatusDescripcion = subEstatusDescripcion;
-		this.idPolizaTesoreria = idPolizaTesoreria;
+		this.idTesoreria = idTesoreria;
 		this.idAsientoContable = idAsientoContable;
 		this.entidad = entidad;
 		this.cuenta = cuenta;
@@ -100,12 +95,12 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 		this.subEstatusDescripcion = subEstatusDescripcion;
 	}
 
-	public Long getIdPolizaTesoreria() {
-		return idPolizaTesoreria;
+	public Long getIdTesoreria() {
+		return idTesoreria;
 	}
 
-	public void setIdPolizaTesoreria(Long idPolizaTesoreria) {
-		this.idPolizaTesoreria = idPolizaTesoreria;
+	public void setIdTesoreria(Long idTesoreria) {
+		this.idTesoreria = idTesoreria;
 	}
 
 	public Long getIdAsientoContable() {
@@ -190,8 +185,8 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 
 	@Override
 	public String toString() {
-		return "ConciliacionDTO [folio=" + folio + ", estatus=" + estatus + ", subEstatus=" + subEstatus
-				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idPolizaTesoreria=" + idPolizaTesoreria
+		return "ConciliacionResponseSaveDTO [folio=" + folio + ", estatus=" + estatus + ", subEstatus=" + subEstatus
+				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idTesoreria=" + idTesoreria
 				+ ", idAsientoContable=" + idAsientoContable + ", entidad=" + entidad + ", cuenta=" + cuenta
 				+ ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
 				+ reporteProveedorTransaccional + ", reporteEstadoCuenta=" + reporteEstadoCuenta + ", global=" + global
@@ -200,7 +195,7 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	}
 
 	@Override
-	public int compareTo(ConciliacionDTO o) {
+	public int compareTo(ConciliacionResponseSaveDTO o) {
 		return 0;
 	}
 

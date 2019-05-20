@@ -4,32 +4,34 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.io.Serializable;
+
 /**
- * @name EstatusDevolucionDTO
- * @description Clase que encapsula la informacion de la devolición de la
+ * @name EstatusConciliacionResponseSaveDTO
+ * @description Clase que encapsula la informacion del estatus de la
  *              conciliación.
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net
- * @creationDate 02/04/2019 23:12 hrs.
+ * @creationDate 06/05/2019 17:40 hrs.
  * @version 0.1
  */
-public class EstatusDevolucionDTO implements Comparable<EstatusDevolucionDTO> {
+public class EstatusConciliacionResponseSaveDTO implements Serializable{
 
 	/**
 	 * Serial id.
 	 */
-	private static final long serialVersionUID = 3417477420340701274L;
-
+	private static final long serialVersionUID = -7928335862433836894L;
+	
 	private Integer id;
 	private String descripcion;
 	private Boolean estatus;
-
-	public EstatusDevolucionDTO() {
+	
+	public EstatusConciliacionResponseSaveDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public EstatusDevolucionDTO(Integer id, String descripcion, Boolean estatus) {
+	public EstatusConciliacionResponseSaveDTO(Integer id, String descripcion, Boolean estatus) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
@@ -62,12 +64,8 @@ public class EstatusDevolucionDTO implements Comparable<EstatusDevolucionDTO> {
 
 	@Override
 	public String toString() {
-		return "EstatusDevolucionDTO [id=" + id + ", descripcion=" + descripcion + ", estatus=" + estatus + "]";
-	}
-
-	@Override
-	public int compareTo(EstatusDevolucionDTO o) {
-		return 0;
+		return "EstatusConciliacionResponseSaveDTO [id=" + id + ", descripcion=" + descripcion + ", estatus=" + estatus
+				+ "]";
 	}
 
 }

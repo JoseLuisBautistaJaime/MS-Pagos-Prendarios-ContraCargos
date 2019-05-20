@@ -1,66 +1,65 @@
-package mx.com.nmp.pagos.mimonte.model;
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
+package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
+import mx.com.nmp.pagos.mimonte.model.AbstractCatalogo;
 
 /**
- * @name EstatusOperacion
- * @description Clase que mapea el catalogo de EstatusTransito
- * @date: 31/01/2018 14:49 hrs.
+ * @name EstatusConciliacion
+ * @description Clase que mapea el catalogo de EstatusConciliacion
+ * @date: 07/05/2019 13:05 hrs.
  * @version 0.1
  */
 @Entity
-@Table(name = "tk_estatus_movimientos_en_transito")
-public class EstatusTransito extends AbstractCatalogo implements Serializable{
+@Table(name = "tk_estatus_conciliacion")
+public class EstatusConciliacion extends AbstractCatalogo {
 
-	/**
-	 * Serial id.
-	 */
-	private static final long serialVersionUID = 7869588361293186039L;
-
-	@Column(name = "nombre")
+	@Column(name="nombre")
 	private String nombre;
 	
-	@Column(name = "estatus")
+	@Column(name="estatus")
 	private Boolean estatus;
 	
-	@Column(name = "created_date")
-	private Date createdDate;
+	@Column(name="created_date")
+	private Date createdDate; 
 	
-	@Column(name = "last_modified_date")
+	@Column(name="last_modified_date")
 	private Date lastModifiedDate;
 	
-	@Column(name = "created_by")
+	@Column(name="created_by")
 	private String createdBy;
 	
-	@Column(name = "last_modified_by")
+	@Column(name="last_modified_by")
 	private String lastModifiedBy;
 	
-	@OneToMany(mappedBy = "estatus")
-	private Set<MovimientoTransito> movimientoTransitoSet;
+//	@OneToMany(mappedBy = "estatus", fetch = FetchType.LAZY)
+//	private Set<Conciliacion> conciliacionSet;
 
-	public EstatusTransito() {
+	public EstatusConciliacion() {
 		super();
 	}
 
-	public EstatusTransito(Integer id, String descripcionCorta, String descripcion) {
+	public EstatusConciliacion(Integer id, String descripcionCorta, String descripcion) {
 		super(id, descripcionCorta, descripcion);
 	}
 
-	public EstatusTransito(Integer id) {
+	public EstatusConciliacion(Integer id) {
 		super(id);
 	}
 
-	public EstatusTransito(String nombre, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy) {
+	public EstatusConciliacion(String nombre, Boolean estatus, Date createdDate, Date lastModifiedDate,
+			String createdBy, String lastModifiedBy) {
 		super();
 		this.nombre = nombre;
 		this.estatus = estatus;
@@ -118,13 +117,13 @@ public class EstatusTransito extends AbstractCatalogo implements Serializable{
 		this.lastModifiedBy = lastModifiedBy;
 	}
 
-	public Set<MovimientoTransito> getMovimientoTransitoSet() {
-		return movimientoTransitoSet;
-	}
-
-	public void setMovimientoTransitoSet(Set<MovimientoTransito> movimientoTransitoSet) {
-		this.movimientoTransitoSet = movimientoTransitoSet;
-	}
+//	public Set<Conciliacion> getConciliacionSet() {
+//		return conciliacionSet;
+//	}
+//
+//	public void setConciliacionSet(Set<Conciliacion> conciliacionSet) {
+//		this.conciliacionSet = conciliacionSet;
+//	}
 
 	@Override
 	public int hashCode() {
@@ -147,7 +146,7 @@ public class EstatusTransito extends AbstractCatalogo implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EstatusTransito other = (EstatusTransito) obj;
+		EstatusConciliacion other = (EstatusConciliacion) obj;
 		if (createdBy == null) {
 			if (other.createdBy != null)
 				return false;
@@ -183,7 +182,7 @@ public class EstatusTransito extends AbstractCatalogo implements Serializable{
 
 	@Override
 	public String toString() {
-		return "EstatusTransito [nombre=" + nombre + ", estatus=" + estatus + ", createdDate=" + createdDate
+		return "EstatusConciliacion [nombre=" + nombre + ", estatus=" + estatus + ", createdDate=" + createdDate
 				+ ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy="
 				+ lastModifiedBy + "]";
 	}

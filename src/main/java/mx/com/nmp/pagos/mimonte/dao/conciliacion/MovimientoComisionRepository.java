@@ -7,29 +7,31 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
- * @name MovimientoTransitoRepository
+ * @name MovimientoComisionRepository
  * @description Interface de capa DAO que sirve para realizar operaciones de
- *              base de datos relacionadas con los movimientos en transito.
+ *              base de datos relacionadas con los movimientos de la comision.
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net
- * @creationDate 08/05/2019 21:55 hrs.
+ * @creationDate 08/05/2019 21:28 hrs.
  * @version 0.1
  */
-@Repository("movimientoTransitoRepository")
-public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTransito, Integer> {
+@Repository("movimientoConciliacionRepository")
+public interface MovimientoComisionRepository extends JpaRepository<MovimientoComision, Long>{
 	
-	@Query("FROM MovimientoTransito mt WHERE mt.id IN ( :lst ) ")
-	public List<MovimientoTransito> findByIds( List<Integer> lst);
+	@Query("FROM MovimientoComision mco WHERE mco.id IN :lst")
+	public List<MovimientoComision> findByIds(List<Integer> lst);
 	
-	@Query("SELECT mt FROM MovimientoConciliacion mc INNER JOIN MovimientoTransito mt ON mc.id = mt.id WHERE mt.idConciliacion = :folio")
-	public List<MovimientoTransito> findByIdConciliacion(@Param("folio") Integer folio);
+	@Query("SELECT mco FROM MovimientoConciliacion mc INNER JOIN MovimientoComision mco ON mc.id = mco.id WHERE mco.idConciliacion = :folio")
+	public List<MovimientoComision> findByIdConciliacion(@Param("folio") Integer folio);
 
 }

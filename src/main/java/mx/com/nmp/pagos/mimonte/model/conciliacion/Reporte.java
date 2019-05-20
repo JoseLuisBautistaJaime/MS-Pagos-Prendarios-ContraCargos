@@ -38,7 +38,7 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
-	private Long id;
+	private Integer id;
 
 	@ManyToOne
 	@JoinColumn(name = "id_conciliacion", nullable = false)
@@ -67,13 +67,34 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 
 	public Reporte() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public long getId() {
+	public Reporte(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
+		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
+		// TODO Auto-generated constructor stub
+	}
+
+	public Reporte(Integer id, Conciliacion conciliacion,
+			@Size(max = 45, message = "Debe ingresar maximo 45 caracteres") String tipo, Boolean disponible,
+			Date fechaDesde, Date fechaHasta, Set<MovimientoMidas> movimientosMidas,
+			Set<MovimientoProveedor> movimientosProveedor) {
+		super();
+		this.id = id;
+		this.conciliacion = conciliacion;
+		this.tipo = tipo;
+		this.disponible = disponible;
+		this.fechaDesde = fechaDesde;
+		this.fechaHasta = fechaHasta;
+		this.movimientosMidas = movimientosMidas;
+		this.movimientosProveedor = movimientosProveedor;
+	}
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -133,8 +154,71 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 		this.movimientosProveedor = movimientosProveedor;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((conciliacion == null) ? 0 : conciliacion.hashCode());
+		result = prime * result + ((disponible == null) ? 0 : disponible.hashCode());
+		result = prime * result + ((fechaDesde == null) ? 0 : fechaDesde.hashCode());
+		result = prime * result + ((fechaHasta == null) ? 0 : fechaHasta.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((movimientosMidas == null) ? 0 : movimientosMidas.hashCode());
+		result = prime * result + ((movimientosProveedor == null) ? 0 : movimientosProveedor.hashCode());
+		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Reporte other = (Reporte) obj;
+		if (conciliacion == null) {
+			if (other.conciliacion != null)
+				return false;
+		} else if (!conciliacion.equals(other.conciliacion))
+			return false;
+		if (disponible == null) {
+			if (other.disponible != null)
+				return false;
+		} else if (!disponible.equals(other.disponible))
+			return false;
+		if (fechaDesde == null) {
+			if (other.fechaDesde != null)
+				return false;
+		} else if (!fechaDesde.equals(other.fechaDesde))
+			return false;
+		if (fechaHasta == null) {
+			if (other.fechaHasta != null)
+				return false;
+		} else if (!fechaHasta.equals(other.fechaHasta))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (movimientosMidas == null) {
+			if (other.movimientosMidas != null)
+				return false;
+		} else if (!movimientosMidas.equals(other.movimientosMidas))
+			return false;
+		if (movimientosProveedor == null) {
+			if (other.movimientosProveedor != null)
+				return false;
+		} else if (!movimientosProveedor.equals(other.movimientosProveedor))
+			return false;
+		if (tipo == null) {
+			if (other.tipo != null)
+				return false;
+		} else if (!tipo.equals(other.tipo))
+			return false;
+		return true;
 	}
 
 	@Override

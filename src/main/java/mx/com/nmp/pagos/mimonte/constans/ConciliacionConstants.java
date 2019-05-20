@@ -45,6 +45,22 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se realiza una consulta de manera exitosa
 	 */
 	public static final String MSG_SUCCESSFUL_MOVIMIENTOS_QUERY = "Consulta movimientos exitosa.";
+	
+	/**
+	 * Valor que se setea por default para el alta de la conciliacion
+	 */
+	public static final String EN_PROCESO = "En Proceso";
+	
+	/**
+	 * Valor que se setea por default para el alta de la subConciliacion;
+	 */
+	public static final String CREADA = "Creada";
+	
+	/**
+	 * Mensaje mostrado para un alta exitosa.
+	 */
+	public static final String SAVE_SUCCESSFUL = "Alta exitosa.";
+	
 
 	public static final class Validation {
 

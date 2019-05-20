@@ -432,19 +432,26 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `to_conciliacion` ;
 
-CREATE TABLE IF NOT EXISTS `to_conciliacion` (
-  `id` INT(11) NOT NULL,
-  `estatus` INT(11) NOT NULL,
-  `entidad` INT(11) NOT NULL,
-  `cuenta` INT(11) NOT NULL,
-  `peoplesoft_id` VARCHAR(100) NULL DEFAULT NULL,
-  `create_date` DATETIME NULL DEFAULT NULL,
-  `created_by` VARCHAR(100) NULL DEFAULT NULL,
-  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
-  `last_modified_date` DATETIME NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
+CREATE TABLE `to_conciliacion` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_estatus_conciliacion` bigint(20) NOT NULL,
+  `id_entidad` bigint(20) NOT NULL,
+  `id_cuenta` bigint(20) NOT NULL,
+  `id_poliza_tesoreria` varchar(20) DEFAULT NULL,
+  `id_asiento_contable` varchar(20) DEFAULT NULL,
+  `completed_date` datetime DEFAULT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `created_by` varchar(100) DEFAULT NULL,
+  `last_modified_by` varchar(100) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `estatus_conciliacion_fk_idx` (`id_estatus_conciliacion`),
+  KEY `entidad_fk_idx` (`id_entidad`),
+  KEY `cuenta_fk_idx` (`id_cuenta`),
+  CONSTRAINT `cuenta_fk` FOREIGN KEY (`id_cuenta`) REFERENCES `tc_cuenta` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `entidad_fk` FOREIGN KEY (`id_entidad`) REFERENCES `tc_entidad` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `estatus_conciliacion_fk` FOREIGN KEY (`id_estatus_conciliacion`) REFERENCES `tk_estatus_conciliacion` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 -- -----------------------------------------------------

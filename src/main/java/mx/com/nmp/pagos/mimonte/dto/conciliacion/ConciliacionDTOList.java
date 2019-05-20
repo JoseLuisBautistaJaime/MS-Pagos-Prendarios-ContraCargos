@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comparable<ConciliacionDTOList> {
 	
-	private Long Folio;
+	private Integer Folio;
 	private EstatusConciliacionDTO estatus;
 	private EntidadDTO entidad;
 	private CuentaDTO cuenta;
@@ -38,7 +38,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 	}
 
-	public ConciliacionDTOList(Long folio, EstatusConciliacionDTO estatus, EntidadDTO entidad, CuentaDTO cuenta,
+	public ConciliacionDTOList(Integer folio, EstatusConciliacionDTO estatus, EntidadDTO entidad, CuentaDTO cuenta,
 			ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
 			GlobalDTO global, List<DevolucionConDTO> devoluciones, List<MovTransitoDTO> movimientosTransito,
@@ -66,11 +66,11 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 	 */
 	private static final long serialVersionUID = 679398017169972235L;
 
-	public Long getFolio() {
+	public Integer getFolio() {
 		return Folio;
 	}
 
-	public void setFolio(Long folio) {
+	public void setFolio(Integer folio) {
 		Folio = folio;
 	}
 

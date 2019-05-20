@@ -19,6 +19,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+
 /**
  * @name Entidad
  * @description Clase que encapsula la informacion de una entidad de catalogo de
@@ -49,6 +51,9 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 
 	@OneToMany(mappedBy = "entidad", fetch = FetchType.LAZY)
 	private Set<EntidadCuentaAfiliacion> EntidadCuentaAfiliacionSet;
+	
+	@OneToMany(mappedBy = "entidad", fetch = FetchType.LAZY)
+	private Set<Conciliacion> conciliacionSet;
 
 	public Entidad() {
 		super();
@@ -105,6 +110,14 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 
 	public void setEntidadCuentaAfiliacionSet(Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet) {
 		EntidadCuentaAfiliacionSet = entidadCuentaAfiliacionSet;
+	}
+
+	public Set<Conciliacion> getConciliacionSet() {
+		return conciliacionSet;
+	}
+
+	public void setConciliacionSet(Set<Conciliacion> conciliacionSet) {
+		this.conciliacionSet = conciliacionSet;
 	}
 
 	@Override
