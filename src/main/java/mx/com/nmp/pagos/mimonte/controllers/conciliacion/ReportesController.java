@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,11 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,9 +28,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.ReportePagosService;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
 /**
  * @name ReportesController
@@ -59,6 +64,13 @@ public class ReportesController {
 	private static final Logger LOG = LoggerFactory.getLogger(ReportesController.class);
 
 	/**
+	 * Service de reporte de pagos en linea
+	 */
+	@Autowired
+	@Qualifier("reportePagosService")
+	private ReportePagosService reportePagosService;
+
+	/**
 	 * Permite obtener el reporte de pagos en linea.
 	 * 
 	 * @param reporteRequestDTO
@@ -74,9 +86,11 @@ public class ReportesController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody ReporteRequestDTO reporteRequestDTO,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		List<ReportePagosLibresDTO> reportePagosLibresDTO = buildDummy1();
+	public Response save(@RequestBody ReporteRequestDTO reporteRequestDTO) {
+		if (!ValidadorConciliacion.validateReporteRequestDTO(reporteRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		List<ReportePagosLibresDTO> reportePagosLibresDTO = reportePagosService
+				.getReportePagosLibres(reporteRequestDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				reportePagosLibresDTO);
 	}
@@ -87,21 +101,16 @@ public class ReportesController {
 	 * @return
 	 */
 	public static List<ReportePagosLibresDTO> buildDummy1() {
-		
 		List<ReportePagosLibresDTO> reportePagosLibresDTOList = new ArrayList<>();
 		ReportePagosLibresDTO reportePagosLibresDTO = new ReportePagosLibresDTO();
 		reportePagosLibresDTO.setCanal("Portal NMP");
 		reportePagosLibresDTO.setFecha(new Date());
-		reportePagosLibresDTO.setMonto(17000.00);
+		reportePagosLibresDTO.setMonto(new BigDecimal("17000"));
 		reportePagosLibresDTO.setOperacion("Cobro Desempenio en Linea");
 		reportePagosLibresDTO.setPartida(12345678L);
 		reportePagosLibresDTO.setSucursal(1);
 		reportePagosLibresDTO.setTipoProducto("Clasico");
-		
 		reportePagosLibresDTOList.add(reportePagosLibresDTO);
-		
 		return reportePagosLibresDTOList;
-		
-		
 	}
 }
