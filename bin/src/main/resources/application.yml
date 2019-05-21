@@ -39,3 +39,14 @@ spring:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        
+# Variables utiles para app microservicios mimonte
+#Pagos
+mimonte:
+  variables:
+    cantidad-maxima-tarjetas: 3
+    dss:
+      idcliente: "{idCliente}"
+      idregla: "{idRegla}"
+      idafiliacionregla: "{idAfiliacionRegla}"
+      idtipo: "{idTipo}"
