@@ -200,6 +200,8 @@ public abstract class MovimientosBuilder {
 		movimientoMidas.setTipoContratoDesc(movimientoMidasDTO.getTipoContratoDesc());
 		movimientoMidas.setTransaccion(movimientoMidasDTO.getTransaccion());
 		movimientoMidas.setImporteTransaccion(movimientoMidasDTO.getImporteTransaccion());
+		movimientoMidas.setIdOperacion(movimientoMidasDTO.getIdOperacion());
+		movimientoMidas.setIdTipoContrato(movimientoMidasDTO.getIdTipoContrato());
 		return movimientoMidas;
 	}
 

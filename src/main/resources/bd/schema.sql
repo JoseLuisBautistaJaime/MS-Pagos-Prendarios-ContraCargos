@@ -1117,3 +1117,59 @@ ALTER TABLE to_estado_cuenta ADD CONSTRAINT FK_to_estado_cuenta_to_reporte
 
 ALTER TABLE to_movimiento_estado_cuenta ADD CONSTRAINT FK_to_movimiento_estado_cuenta_to_estado_cuenta 
 	FOREIGN KEY (estado_cuenta) REFERENCES to_estado_cuenta (id);
+
+-- ----------------------------------------------------- --
+-- INICIAN CAMBIOS PARA MODULO REPORTE DE PAGOS EN LINEA --
+-- -------------- [2019-05-17 14:19:53] ---------------- --
+-- ----------------------------------------------------- --
+-- -------------------------------------------- --
+-- ---------- TABLE tk_operacion--------------- --
+-- -------------------------------------------- --
+DROP TABLE IF EXISTS tk_operacion;
+
+CREATE TABLE `tk_operacion` (
+  `id` INT(11) NOT NULL,
+  `tipo` INT(11) NOT NULL,
+  `abreviatura` VARCHAR(10) NOT NULL,
+  `descripcion` VARCHAR(100) NOT NULL,
+  `inddep` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- -------------------------------------------- --
+-- ---------- TABLE tk_tipo_contrato--------------- --
+-- -------------------------------------------- --
+DROP TABLE IF EXISTS tk_tipo_contrato;
+CREATE TABLE `tk_tipo_contrato` (
+  `id` INT(11) NOT NULL,
+  `descripcion` VARCHAR(100) NOT NULL,
+  `baja_logica` VARCHAR(1) NOT NULL,
+  `abreviatura` VARCHAR(10) NOT NULL,
+  `inddep` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------- --
+-- ----- INSERTS INICIALES EN tk_operacion --
+-- --------------------------------------- --
+INSERT INTO `tk_operacion`
+	(`id`, `tipo`, `abreviatura`, `descripcion`, `inddep`)
+VALUES
+	(8, 1, 'RF', 'Cobro Refrendo', 0),
+	(116, 1, 'APL', 'Abono -PagosLibres', 0),
+	(148, 1, 'DSO', 'Cobro Desempeño en Linea', 0);
+    
+-- ------------------------------------------- --
+-- ----- INSERTS INICIALES EN tk_tipo_contrato --
+-- ------------------------------------------- --
+INSERT INTO `compose`.`tk_tipo_contrato`
+	(`id`, `descripcion`, `baja_logica`, `abreviatura`, `inddep`)
+VALUES
+	(146, 'PAGOS LIBRES', 'f', 'PL', 0),
+    (145, 'CLASICO', 'f', 'CL', 0);
+
+
+-- ---------- SE AGREGAN COLUMNAS NUEVAS A TABLA to_movimiento_midas ---- --
+-- ------------------------ [2019-05-20 18:18:47] ------------------------ --
+ALTER TABLE to_movimiento_midas ADD COLUMN id_operacion INT(11) DEFAULT NULL;
+ALTER TABLE to_movimiento_midas ADD COLUMN id_tipo_contrato INT(11) DEFAULT NULL;

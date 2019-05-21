@@ -6,13 +6,18 @@ package mx.com.nmp.pagos.mimonte.util.validacion;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Calendar;
+
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 
 /**
  * @name ValidadorConciliacion
@@ -37,7 +42,6 @@ public interface ValidadorConciliacion {
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
 			assertNotNull(commonConciliacionRequestDTO.getPagina());
 			assertNotNull(commonConciliacionRequestDTO.getResultados());
-			assertNotNull(commonConciliacionRequestDTO.getEstatus());
 		} catch (Exception ex) {
 			return false;
 		}
@@ -85,7 +89,6 @@ public interface ValidadorConciliacion {
 				for (MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO
 						.getMovimientos()) {
 					assertNotNull(movimientoMidasRequestDTO.getCapitalActual());
-					assertNotNull(null == movimientoMidasRequestDTO.getComisiones());
 					assertNotNull(movimientoMidasRequestDTO.getFolioPartida());
 					assertNotNull(movimientoMidasRequestDTO.getInteres());
 					assertNotNull(movimientoMidasRequestDTO.getMontoOperacion());
@@ -106,6 +109,8 @@ public interface ValidadorConciliacion {
 					assertNotNull(movimientoMidasRequestDTO.getTarjeta());
 					assertNotNull(movimientoMidasRequestDTO.getMonedaPago());
 					assertNotNull(movimientoMidasRequestDTO.getImporteTransaccion());
+					assertNotNull(movimientoMidasRequestDTO.getIdOperacion());
+					assertNotNull(movimientoMidasRequestDTO.getIdTipoContrato());
 					movimientoMidasRequestDTO.setId(null);
 				}
 			} else
@@ -193,6 +198,43 @@ public interface ValidadorConciliacion {
 			assertNotNull(saveEstadoCuentaRequestDTO.getFolio());
 			assertNotNull(saveEstadoCuentaRequestDTO.getFechaInicial());
 			assertNotNull(saveEstadoCuentaRequestDTO.getFechaFinal());
+			Calendar ini = Calendar.getInstance();
+			Calendar fin = Calendar.getInstance();
+			ini.setTime(saveEstadoCuentaRequestDTO.getFechaInicial());
+			fin.setTime(saveEstadoCuentaRequestDTO.getFechaFinal());
+			if (ini.after(fin))
+				throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE);
+		} catch (Exception ex) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Valida que un objeto de tipo ReporteRequestDTO sea correcto y no sea nulo ni
+	 * ninguno de sus atributos requeridos
+	 * 
+	 * @param reporteRequestDTO
+	 * @return
+	 */
+	public static boolean validateReporteRequestDTO(ReporteRequestDTO reporteRequestDTO) {
+		try {
+			assertNotNull(reporteRequestDTO);
+			assertNotNull(reporteRequestDTO.getFechaDesde());
+			assertNotNull(reporteRequestDTO.getFechaHasta());
+			assertNotNull(reporteRequestDTO.getOperacion());
+			assertNotNull(reporteRequestDTO.getPartida());
+			assertNotNull(reporteRequestDTO.getProducto());
+			assertNotNull(reporteRequestDTO.getSucursales());
+			Calendar ini = Calendar.getInstance();
+			Calendar fin = Calendar.getInstance();
+			ini.setTime(reporteRequestDTO.getFechaDesde());
+			fin.setTime(reporteRequestDTO.getFechaHasta());
+			if (fin.before(ini) || reporteRequestDTO.getSucursales().isEmpty())
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			for (Integer elem : reporteRequestDTO.getSucursales()) {
+				assertNotNull(elem);
+			}
 		} catch (Exception ex) {
 			return false;
 		}

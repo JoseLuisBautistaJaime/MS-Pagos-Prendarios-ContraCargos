@@ -26,7 +26,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "to_estado_cuenta_cabecera")
-public class EstadoCuentaCabecera implements Comparable<EstadoCuentaCabecera> {
+public class EstadoCuentaCabecera {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -199,11 +199,6 @@ public class EstadoCuentaCabecera implements Comparable<EstadoCuentaCabecera> {
 		final EstadoCuentaCabecera other = (EstadoCuentaCabecera) obj;
 		return (this.hashCode() == other.hashCode());
 
-	}
-
-	@Override
-	public int compareTo(EstadoCuentaCabecera o) {
-		return o.id.compareTo(this.id);
 	}
 
 }
