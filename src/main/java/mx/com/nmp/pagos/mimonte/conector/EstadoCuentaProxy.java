@@ -31,7 +31,7 @@ public class EstadoCuentaProxy implements EstadoCuentaAPI {
 	/**
 	 * Referencia al conector hacia el Servicio Web OpenPay
 	 */
-	@Inject
+	//@Inject
 	private EstadoCuentaConector estadoCuentaConector;
 
 
