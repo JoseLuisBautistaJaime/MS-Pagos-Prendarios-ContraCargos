@@ -22,7 +22,7 @@ import java.net.URL;
  *
  * @author jgalvez
  */
-@Component
+//@Component
 public class EstadoCuentaConector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EstadoCuentaConector.class);

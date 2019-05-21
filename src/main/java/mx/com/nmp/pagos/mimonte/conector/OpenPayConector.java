@@ -20,7 +20,6 @@ import java.net.URL;
 /**
  * Se encarga de crear una referencia hacia el Servicio Web OpenPay
  *
- * @author ecancino
  */
 //@Component
 public class OpenPayConector {
