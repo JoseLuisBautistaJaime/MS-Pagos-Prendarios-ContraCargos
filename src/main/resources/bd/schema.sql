@@ -1038,7 +1038,7 @@ CREATE TABLE to_estado_cuenta
 	KEY (cabecera),
 	KEY (totales),
 	KEY (totales_adicional)
-);
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE to_estado_cuenta_totales_adicional
 (
@@ -1054,7 +1054,7 @@ CREATE TABLE to_estado_cuenta_totales_adicional
 	saldo_final DECIMAL(16,2),
 	moneda_alfabetica VARCHAR(3),
 	PRIMARY KEY (id)
-);
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE to_estado_cuenta_totales
 (
@@ -1064,7 +1064,7 @@ CREATE TABLE to_estado_cuenta_totales
 	informacion1 VARCHAR(35),
 	informacion2 VARCHAR(35),
 	PRIMARY KEY (id)
-);
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE to_estado_cuenta_cabecera
 (
@@ -1080,7 +1080,7 @@ CREATE TABLE to_estado_cuenta_cabecera
 	plaza_cuenta_clabe VARCHAR(3),
 	libre VARCHAR(3),
 	PRIMARY KEY (id)
-);
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE to_movimiento_estado_cuenta
 (
@@ -1101,7 +1101,7 @@ CREATE TABLE to_movimiento_estado_cuenta
 	referencia VARCHAR(38),
 	PRIMARY KEY (id),
 	KEY (estado_cuenta)
-);
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 ALTER TABLE to_estado_cuenta ADD CONSTRAINT FK_to_estado_cuenta_to_movimiento_estado_cuenta_cabecera 
 	FOREIGN KEY (cabecera) REFERENCES to_estado_cuenta_cabecera (id);

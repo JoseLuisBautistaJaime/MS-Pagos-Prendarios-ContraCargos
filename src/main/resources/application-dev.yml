@@ -58,4 +58,23 @@ mimonte:
       idafiliacionregla: "{idAfiliacionRegla}"
       idtipo: "{idTipo}"
 
+
+openpay:
+  wsdlLocation: openpay.wsdl
+  header:
+    api:
+      name: X-Id
+      key: 12345
+
+estadocuenta:
+  wsdlLocation: estadocuenta.wsdl
+  header:
+    api:
+      name: X-Id
+      key: 12345
+
+estadocuenta:
+  ruta: c:\Automata SMV\CIE por Convenio\
+  nombre: CLCO{CUENTA}yyMMddHHmm.txt
+
 servicios:
