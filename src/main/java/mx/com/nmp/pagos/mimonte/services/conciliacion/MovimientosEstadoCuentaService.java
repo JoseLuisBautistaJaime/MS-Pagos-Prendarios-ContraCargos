@@ -13,16 +13,28 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.ibm.icu.util.Calendar;
+
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
+import mx.com.nmp.pagos.mimonte.dto.EstadoCuentaWraper;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovEstadoCuentaRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaImplementacionEnum;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaBatchDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.services.EstadoCuentaParserService;
+import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
 
 /**
  * @name MovimientosEstadoCuentaService
@@ -49,6 +61,28 @@ public class MovimientosEstadoCuentaService {
 	@Autowired
 	@Qualifier("reporteRepository")
 	private ReporteRepository reporteRepository;
+
+	/**
+	 * Repository de Estado Cuenta
+	 */
+	@Autowired
+	@Qualifier("estadoCuentaRepository")
+	private EstadoCuentaRepository estadoCuentaRepository;
+
+	/**
+	 * Estado de cuenta Reader
+	 */
+	@Autowired
+	@Qualifier("estadoCuentaReaderC43Service")
+	private EstadoCuentaReaderService estadoCuentaReaderService;
+
+	/**
+	 * Estado de cuenta Parser
+	 */
+	@Autowired
+	@Qualifier("estadoCuentaParserC43Service")
+	private EstadoCuentaParserService estadoCuentaParserService;
+
 
 	public MovimientosEstadoCuentaService() {
 		super();
@@ -129,8 +163,7 @@ public class MovimientosEstadoCuentaService {
 			final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		List<MovimientoEstadoCuentaDBDTO> movimientoEstadoCuentaDBDTOLst = null;
 		List<MovimientoEstadoCuentaDTO> movimientoEstadoCuentaDTOList = null;
-		@SuppressWarnings("deprecation")
-		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
+		Pageable pageable = PageRequest.of(commonConciliacionRequestDTO.getPagina(),
 				commonConciliacionRequestDTO.getResultados());
 		movimientoEstadoCuentaDBDTOLst = movimientoEstadoCuentaRepository
 				.listMovimientos((long) commonConciliacionRequestDTO.getFolio(), pageable);
@@ -146,8 +179,72 @@ public class MovimientosEstadoCuentaService {
 	 * @param userRequest
 	 */
 	public void save(final SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO, final String userRequest) {
-		reporteRepository.save(
+		Reporte reporte = reporteRepository.save(
 				ReporteBuilder.buildReporteFromSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO, userRequest));
+		
+		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste los movimientos del estado de cuenta
+		Long idConciliacion = saveEstadoCuentaRequestDTO.getFolio().longValue();
+		procesarConsultaEstadoCuenta(reporte.getFechaDesde(), reporte.getFechaHasta(), idConciliacion, reporte.getId());
+	}
+
+	/**
+	 * Consulta estado de cuenta en base a las fechas indicadas
+	 * 
+	 * @param saveEstadoCuentaRequestDTO
+	 * @param userRequest
+	 */
+	public void procesarConsultaEstadoCuenta(Date fechaInicial, Date fechaFinal, Long idConciliacion, Long idReporte) throws ConciliacionException {
+
+		// Consulta los diferentes estados de cuenta por cada fecha
+		Date fechaEstadoCuenta = fechaInicial;
+		while (!fechaEstadoCuenta.after(fechaFinal)) {
+
+			// Lee el archivo usando la implementacion cuaderno 43
+			EstadoCuentaFileLayout estadoCuentaFileLayout = estadoCuentaReaderService.read(fechaEstadoCuenta, idConciliacion, EstadoCuentaImplementacionEnum.CUADERNO_43);
+			if (estadoCuentaFileLayout == null) {
+				throw new ConciliacionException("Error al leer el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "");
+			}
+
+			// Parsea el archivo
+			EstadoCuentaWraper estadoCuentaWraper = estadoCuentaParserService.extract(estadoCuentaFileLayout);
+			if (estadoCuentaWraper == null) {
+				throw new ConciliacionException("Error al parsear el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "");
+			}
+
+			// Guarda el archivo de estado de cuenta y los movimientos
+			try {
+				EstadoCuenta estadoCuenta = new EstadoCuenta();
+				estadoCuenta.setIdReporte(idReporte);
+				estadoCuenta.setFechaCarga(new Date());
+				estadoCuenta.setTotalMovimientos(estadoCuentaWraper.movimientos != null ? estadoCuentaWraper.movimientos.size() : 0);
+				estadoCuenta.setCabecera(estadoCuentaWraper.cabecera);
+				estadoCuenta.setTotales(estadoCuentaWraper.totales);
+				estadoCuenta.setTotalesAdicional(estadoCuentaWraper.totalesAdicional);
+				estadoCuentaRepository.save(estadoCuenta);
+	
+				// Se persisten los movimientos
+				if (estadoCuentaWraper.movimientos != null) {
+					List<MovimientoEstadoCuenta> movimientos = estadoCuentaWraper.movimientos;
+					// Se setea el id del estado de cuenta
+					for (MovimientoEstadoCuenta movimiento : movimientos) {
+						movimiento.setIdEstadoCuenta(estadoCuenta.getId());
+					}
+	
+					movimientoEstadoCuentaRepository.saveAll(movimientos);
+				}
+			}
+			catch (Exception ex) {
+				throw new ConciliacionException("Error al persistir los movimientos del archivo del estado de cuenta");
+			}
+
+
+			// Se mueve al siguiente dia para consultar el estado de cuenta
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(fechaEstadoCuenta);
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+			fechaEstadoCuenta = cal.getTime();
+		}
+		
 	}
 
 }

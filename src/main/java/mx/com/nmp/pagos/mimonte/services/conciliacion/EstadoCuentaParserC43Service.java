@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.dto.EstadoCuentaWraper;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
@@ -31,6 +32,7 @@ import mx.com.nmp.pagos.mimonte.util.EstadoCuentaLineQueue;
  * @version 1.0
  */
 @Component
+@Service("estadoCuentaParserC43Service")
 public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 
 

@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaFileBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaLineBuilder;
@@ -30,6 +31,7 @@ import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
  * @version 1.0
  */
 @Component
+@Service("estadoCuentaReaderC43Service")
 public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 
 	@Inject
@@ -54,9 +56,9 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 
 
 	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.services.EstadoCuentaReader#read(java.util.Date, java.lang.Long)
+	 * @see mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService#read(java.util.Date, java.lang.Long, mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaImplementacionEnum)
 	 */
-	public EstadoCuentaFileLayout read(Date date, Long idConciliacion) {
+	public EstadoCuentaFileLayout read(Date date, Long idConciliacion, EstadoCuentaImplementacionEnum implementacion) {
 
 		// Consulta el numero de cuenta asignado a la conciliacion
 		ConciliacionDTO conciliacion = conciliacionService.getById(idConciliacion);
@@ -73,9 +75,11 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 			throw new ConciliacionException("No se encontro archivo de estado de cuenta " + nombreArchivo);
 		}
 
+		if (implementacion != EstadoCuentaImplementacionEnum.CUADERNO_43) {
+			throw new ConciliacionException("Implementacion " + implementacion + " no definida");
+		}
 
 		// Crea implementacion cuaderno 43
-		EstadoCuentaImplementacionEnum implementacion = EstadoCuentaImplementacionEnum.CUADERNO_43;
 		EstadoCuentaFileLayout fileLayout = new EstadoCuentaFileLayout43();
 		for (String lineaArchivo : lineasArchivo) {
 			fileLayout.addRegistro(new EstadoCuentaLineBuilder(lineaArchivo, implementacion).buildLine());

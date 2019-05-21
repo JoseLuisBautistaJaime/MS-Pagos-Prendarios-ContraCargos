@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.services;
 import java.util.Date;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaImplementacionEnum;
 
 /**
  * @name EstadoCuentaReader
@@ -17,6 +18,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
  */
 public interface EstadoCuentaReaderService {
 
-	public EstadoCuentaFileLayout read(Date date, Long idConciliacion);
+	public EstadoCuentaFileLayout read(Date date, Long idConciliacion, EstadoCuentaImplementacionEnum implementacion);
 
 }
