@@ -158,7 +158,7 @@ public class DevolucionesController {
 		devolucionEntidadDTO.setId(1L);
 		devolucionEntidadDTO.setEntidad(new BaseEntidadDTO(1L, "Banco 1", "Banco 1"));
 		devolucionEntidadDTO.setFecha(new Date());
-		devolucionEntidadDTO.setEstatus(new EstatusDevolucionDTO(1, "Solicitada", true));
+		devolucionEntidadDTO.setEstatus(new EstatusDevolucionDTO(2, "Solicitada", true));
 		devolucionEntidadDTO.setSucursal(3);
 		devolucionEntidadDTO.setMonto(150.00);
 		devolucionEntidadDTO.setEsquemaTarjeta("Visa");
@@ -172,7 +172,7 @@ public class DevolucionesController {
 		devolucionEntidadDTO2.setId(2L);
 		devolucionEntidadDTO2.setEntidad(new BaseEntidadDTO(2L, "Banco 2", "Banco 2"));
 		devolucionEntidadDTO2.setFecha(new Date());
-		devolucionEntidadDTO2.setEstatus(new EstatusDevolucionDTO(2, "Pendiente", true));
+		devolucionEntidadDTO2.setEstatus(new EstatusDevolucionDTO(1, "Pendiente", true));
 		devolucionEntidadDTO2.setSucursal(30);
 		devolucionEntidadDTO2.setMonto(250.00);
 		devolucionEntidadDTO2.setEsquemaTarjeta("Master Card");
@@ -200,7 +200,7 @@ public class DevolucionesController {
 		devolucionEntidadDTO4.setId(4L);
 		devolucionEntidadDTO4.setEntidad(new BaseEntidadDTO(4L, "Banco 4", "Banco 4"));
 		devolucionEntidadDTO4.setFecha(new Date());
-		devolucionEntidadDTO4.setEstatus(new EstatusDevolucionDTO(1, "Solicitada", true));
+		devolucionEntidadDTO4.setEstatus(new EstatusDevolucionDTO(2, "Solicitada", true));
 		devolucionEntidadDTO4.setSucursal(3);
 		devolucionEntidadDTO4.setMonto(320.00);
 		devolucionEntidadDTO4.setEsquemaTarjeta("Master Card");
@@ -214,7 +214,7 @@ public class DevolucionesController {
 		devolucionEntidadDTO5.setId(5L);
 		devolucionEntidadDTO5.setEntidad(new BaseEntidadDTO(5L, "Banco 5", "Banco 5"));
 		devolucionEntidadDTO5.setFecha(new Date());
-		devolucionEntidadDTO5.setEstatus(new EstatusDevolucionDTO(2, "Pendiente", true));
+		devolucionEntidadDTO5.setEstatus(new EstatusDevolucionDTO(1, "Pendiente", true));
 		devolucionEntidadDTO5.setSucursal(30);
 		devolucionEntidadDTO5.setMonto(510.00);
 		devolucionEntidadDTO5.setEsquemaTarjeta("Visa");
