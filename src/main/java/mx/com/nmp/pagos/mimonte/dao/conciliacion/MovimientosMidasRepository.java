@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 
 /**
@@ -45,5 +47,22 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
 	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId,
 			@Param("estatus") final Boolean estatus);
+
+	/**
+	 * Regresa un reporte de movimientos de pagos en linea (midas)
+	 * 
+	 * @param fechaDesde
+	 * @param fechaHasta
+	 * @param producto
+	 * @param operacion
+	 * @param sucursales
+	 * @param partida
+	 * @return
+	 */
+	@Query(" SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO( mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoAbr, mm.operacionAbr, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) AND (:sucursales IS NULL OR mm.sucursal IN :sucursales) AND (:fechaDesde IS NOT NULL AND :fechaHasta IS NOT NULL AND mm.fecha BETWEEN :fechaDesde AND :fechaHasta) OR (:fechaDesde IS NOT NULL AND :fechaHasta IS NULL AND mm.fecha >= :fechaDesde) OR (:fechaDesde IS NULL AND :fechaHasta IS NOT NULL AND mm.fecha <= :fechaHasta) OR (:fechaDesde IS NULL AND :fechaHasta IS NULL)")
+	public List<ReportePagosLibresDTO> getReportePagosLibres(@Param("fechaDesde") Date fechaDesde,
+			@Param("fechaHasta") Date fechaHasta, @Param("producto") final Integer producto,
+			@Param("operacion") final Integer operacion, @Param("sucursales") List<Integer> sucursales,
+			@Param("partida") final Long partida);
 
 }
