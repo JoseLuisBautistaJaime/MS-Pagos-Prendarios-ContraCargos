@@ -19,7 +19,7 @@ public class LayOutDTOs implements Comparable<LayOutDTOs>{
 	
 	private Integer id;
 	private String tipoLayout;
-	private LayoutCabeceraDTOs cabecera;
+	private LayoutCabeceraDTO2 cabecera;
 	private List<LayoutLineaDTOs> lineas;
 
 	public LayOutDTOs() {
@@ -27,7 +27,7 @@ public class LayOutDTOs implements Comparable<LayOutDTOs>{
 		// TODO Auto-generated constructor stub
 	}
 
-	public LayOutDTOs(Integer id, String tipoLayout, LayoutCabeceraDTOs cabecera, List<LayoutLineaDTOs> lineas) {
+	public LayOutDTOs(Integer id, String tipoLayout, LayoutCabeceraDTO2 cabecera, List<LayoutLineaDTOs> lineas) {
 		super();
 		this.id = id;
 		this.tipoLayout = tipoLayout;
@@ -51,11 +51,11 @@ public class LayOutDTOs implements Comparable<LayOutDTOs>{
 		this.tipoLayout = tipoLayout;
 	}
 
-	public LayoutCabeceraDTOs getCabecera() {
+	public LayoutCabeceraDTO2 getCabecera() {
 		return cabecera;
 	}
 
-	public void setCabecera(LayoutCabeceraDTOs cabecera) {
+	public void setCabecera(LayoutCabeceraDTO2 cabecera) {
 		this.cabecera = cabecera;
 	}
 

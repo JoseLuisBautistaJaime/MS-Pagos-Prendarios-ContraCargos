@@ -33,6 +33,7 @@ import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayOutDTOs;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO2;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTOs;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
@@ -216,7 +217,7 @@ public class LayoutsController {
 	
 	public static ListaLayoutDTO buildConsultaLayoutsFolio() {
 
-		LayoutCabeceraDTOs layoutCabeceraDTOs = new LayoutCabeceraDTOs(1, "H", "NMP01", "COMISION ECOMM 14122018",
+		LayoutCabeceraDTO2 layoutCabeceraDTOs = new LayoutCabeceraDTO2(1, "H", "NMP01", "COMISION ECOMM 14122018", "B",
 				new Date());
 
 		List<LayoutLineaDTOs> layoutLineaDTOsList = new ArrayList<>();
