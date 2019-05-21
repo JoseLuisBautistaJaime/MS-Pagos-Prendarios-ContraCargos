@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +17,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
 
@@ -37,7 +40,7 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
-	private Long id;
+	private Integer id;
 
 	@ManyToOne
 	@JoinColumn(name = "id_conciliacion", nullable = false)
@@ -57,16 +60,43 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha_hasta", nullable = false)
 	private Date fechaHasta;
+	
+	@OneToMany(mappedBy = "reporte", targetEntity = MovimientoMidas.class)
+	private Set<MovimientoMidas> movimientosMidas;
+
+	@OneToMany(mappedBy = "reporte", targetEntity = MovimientoProveedor.class)
+	private Set<MovimientoProveedor> movimientosProveedor;
 
 	public Reporte() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public Long getId() {
+	public Reporte(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
+		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
+		// TODO Auto-generated constructor stub
+	}
+
+	public Reporte(Integer id, Conciliacion conciliacion,
+			@Size(max = 45, message = "Debe ingresar maximo 45 caracteres") TipoReporteEnum tipo, Boolean disponible,
+			Date fechaDesde, Date fechaHasta, Set<MovimientoMidas> movimientosMidas,
+			Set<MovimientoProveedor> movimientosProveedor) {
+		super();
+		this.id = id;
+		this.conciliacion = conciliacion;
+		this.tipo = tipo;
+		this.disponible = disponible;
+		this.fechaDesde = fechaDesde;
+		this.fechaHasta = fechaHasta;
+		this.movimientosMidas = movimientosMidas;
+		this.movimientosProveedor = movimientosProveedor;
+	}
+	
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -110,15 +140,20 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 		this.fechaHasta = fechaHasta;
 	}
 
-	@Override
-	public String toString() {
-		return "Reporte [id=" + id + ", conciliacion=" + conciliacion + ", tipo=" + tipo + ", disponible=" + disponible
-				+ ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + "]";
+	public Set<MovimientoMidas> getMovimientosMidas() {
+		return movimientosMidas;
 	}
 
-	@Override
-	public int compareTo(Reporte o) {
-		return o.id.compareTo(this.id);
+	public void setMovimientosMidas(Set<MovimientoMidas> movimientosMidas) {
+		this.movimientosMidas = movimientosMidas;
+	}
+
+	public Set<MovimientoProveedor> getMovimientosProveedor() {
+		return movimientosProveedor;
+	}
+
+	public void setMovimientosProveedor(Set<MovimientoProveedor> movimientosProveedor) {
+		this.movimientosProveedor = movimientosProveedor;
 	}
 
 	@Override
@@ -130,13 +165,61 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-
-		if (!(obj instanceof Reporte))
+		if (!super.equals(obj))
 			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Reporte other = (Reporte) obj;
+		if (conciliacion == null) {
+			if (other.conciliacion != null)
+				return false;
+		} else if (!conciliacion.equals(other.conciliacion))
+			return false;
+		if (disponible == null) {
+			if (other.disponible != null)
+				return false;
+		} else if (!disponible.equals(other.disponible))
+			return false;
+		if (fechaDesde == null) {
+			if (other.fechaDesde != null)
+				return false;
+		} else if (!fechaDesde.equals(other.fechaDesde))
+			return false;
+		if (fechaHasta == null) {
+			if (other.fechaHasta != null)
+				return false;
+		} else if (!fechaHasta.equals(other.fechaHasta))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (movimientosMidas == null) {
+			if (other.movimientosMidas != null)
+				return false;
+		} else if (!movimientosMidas.equals(other.movimientosMidas))
+			return false;
+		if (movimientosProveedor == null) {
+			if (other.movimientosProveedor != null)
+				return false;
+		} else if (!movimientosProveedor.equals(other.movimientosProveedor))
+			return false;
+		if (tipo != other.tipo)
+			return false;
+		return true;
+	}
 
-		final Reporte other = (Reporte) obj;
-		return (this.hashCode() == other.hashCode());
-
+	@Override
+	public String toString() {
+		return "Reporte [id=" + id + ", conciliacion=" + conciliacion + ", tipo=" + tipo + ", disponible=" + disponible
+				+ ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + "]";
+	}
+	
+	@Override
+	public int compareTo(Reporte arg0) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

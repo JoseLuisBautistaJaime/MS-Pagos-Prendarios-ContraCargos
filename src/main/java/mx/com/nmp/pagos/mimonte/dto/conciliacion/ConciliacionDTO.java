@@ -20,6 +20,10 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 
 	private Integer folio;
 	private EstatusConciliacionDTO estatus;
+	private SubEstatusConciliacionDTO subEstatus;
+	private String subEstatusDescripcion;
+	private Long idPolizaTesoreria;
+	private Long idAsientoContable;
 	private EntidadDTO entidad;
 	private CuentaDTO cuenta;
 	private ReporteProcesosNocturnosDTO reporteProcesosNocturnos;
@@ -32,19 +36,27 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 
 	public ConciliacionDTO() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public ConciliacionDTO(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
+		// TODO Auto-generated constructor stub
 	}
 
-	public ConciliacionDTO(Integer folio, EstatusConciliacionDTO estatus, EntidadDTO entidad, CuentaDTO cuenta,
-			ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
+	public ConciliacionDTO(Integer folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
+			String subEstatusDescripcion, Long idPolizaTesoreria, Long idAsientoContable, EntidadDTO entidad,
+			CuentaDTO cuenta, ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
-			GlobalDTO global, DevolucionConDTO devoluciones, MovTransitoDTO movimientosTransito, ComisionesDTO comisiones, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
-		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
+			GlobalDTO global, DevolucionConDTO devoluciones, MovTransitoDTO movimientosTransito,
+			ComisionesDTO comisiones) {
+		super();
 		this.folio = folio;
 		this.estatus = estatus;
+		this.subEstatus = subEstatus;
+		this.subEstatusDescripcion = subEstatusDescripcion;
+		this.idPolizaTesoreria = idPolizaTesoreria;
+		this.idAsientoContable = idAsientoContable;
 		this.entidad = entidad;
 		this.cuenta = cuenta;
 		this.reporteProcesosNocturnos = reporteProcesosNocturnos;
@@ -70,6 +82,38 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 
 	public void setEstatus(EstatusConciliacionDTO estatus) {
 		this.estatus = estatus;
+	}
+
+	public SubEstatusConciliacionDTO getSubEstatus() {
+		return subEstatus;
+	}
+
+	public void setSubEstatus(SubEstatusConciliacionDTO subEstatus) {
+		this.subEstatus = subEstatus;
+	}
+
+	public String getSubEstatusDescripcion() {
+		return subEstatusDescripcion;
+	}
+
+	public void setSubEstatusDescripcion(String subEstatusDescripcion) {
+		this.subEstatusDescripcion = subEstatusDescripcion;
+	}
+
+	public Long getIdPolizaTesoreria() {
+		return idPolizaTesoreria;
+	}
+
+	public void setIdPolizaTesoreria(Long idPolizaTesoreria) {
+		this.idPolizaTesoreria = idPolizaTesoreria;
+	}
+
+	public Long getIdAsientoContable() {
+		return idAsientoContable;
+	}
+
+	public void setIdAsientoContable(Long idAsientoContable) {
+		this.idAsientoContable = idAsientoContable;
 	}
 
 	public EntidadDTO getEntidad() {
@@ -146,8 +190,10 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 
 	@Override
 	public String toString() {
-		return "ConciliacionDTO [folio=" + folio + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta="
-				+ cuenta + ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
+		return "ConciliacionDTO [folio=" + folio + ", estatus=" + estatus + ", subEstatus=" + subEstatus
+				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idPolizaTesoreria=" + idPolizaTesoreria
+				+ ", idAsientoContable=" + idAsientoContable + ", entidad=" + entidad + ", cuenta=" + cuenta
+				+ ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
 				+ reporteProveedorTransaccional + ", reporteEstadoCuenta=" + reporteEstadoCuenta + ", global=" + global
 				+ ", devoluciones=" + devoluciones + ", movimientosTransito=" + movimientosTransito + ", comisiones="
 				+ comisiones + "]";

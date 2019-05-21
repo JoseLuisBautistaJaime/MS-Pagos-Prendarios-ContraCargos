@@ -6,8 +6,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 /**
  * @name CuentaDTO
- * @description Clase que encapsula la informacion de un objeto de la
- *              conciliación.
+ * @description Clase que encapsula la informacion la cuenta.
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net
  * @creationDate 02/04/2019 21:10 hrs.
@@ -15,26 +14,31 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class CuentaDTO {
 
-	private Integer id;
+	private Long id;
 	private String numero;
 	private Boolean estatus;
 
 	public CuentaDTO() {
 		super();
 	}
+	
+	public CuentaDTO(Long id) {
+		super();
+		this.id = id;
+	}
 
-	public CuentaDTO(Integer id, String numero, Boolean estatus) {
+	public CuentaDTO(Long id, String numero, Boolean estatus) {
 		super();
 		this.id = id;
 		this.numero = numero;
 		this.estatus = estatus;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

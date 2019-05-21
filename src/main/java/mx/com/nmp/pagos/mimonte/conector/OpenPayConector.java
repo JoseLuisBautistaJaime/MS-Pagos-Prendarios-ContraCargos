@@ -20,7 +20,6 @@ import java.net.URL;
 /**
  * Se encarga de crear una referencia hacia el Servicio Web OpenPay
  *
- * @author ecancino
  */
 @Component
 public class OpenPayConector {
@@ -110,7 +109,7 @@ public class OpenPayConector {
     }
 
     private URL getLocalURL() {
-        String wsdlLocalLocation = "client-api-definition/ConsultaTipoCambio.wsdl";
+        String wsdlLocalLocation = "client-api-definition/EstadoCuenta.wsdl";
 
         URL url = null;
         try {

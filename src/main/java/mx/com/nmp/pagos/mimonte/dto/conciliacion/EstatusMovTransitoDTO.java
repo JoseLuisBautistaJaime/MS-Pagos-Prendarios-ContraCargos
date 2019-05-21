@@ -13,19 +13,56 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  * @creationDate 02/04/2019 23:32 hrs.
  * @version 0.1
  */
-public class EstatusMovTransitoDTO extends AbstractConciliacionBasicaDTO implements Comparable<EstatusMovTransitoDTO> {
+public class EstatusMovTransitoDTO implements Comparable<EstatusMovTransitoDTO> {
 
 	/**
 	 * Serial id.
 	 */
 	private static final long serialVersionUID = 5886951973471741329L;
 
+	private Integer id;
+	private String descripcion;
+	private Boolean estatus;
+
 	public EstatusMovTransitoDTO() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public EstatusMovTransitoDTO(Integer id, String descripcion, Boolean estatus) {
-		super(id, descripcion, estatus);
+		super();
+		this.id = id;
+		this.descripcion = descripcion;
+		this.estatus = estatus;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public Boolean getEstatus() {
+		return estatus;
+	}
+
+	public void setEstatus(Boolean estatus) {
+		this.estatus = estatus;
+	}
+
+	@Override
+	public String toString() {
+		return "EstatusMovTransitoDTO [id=" + id + ", descripcion=" + descripcion + ", estatus=" + estatus + "]";
 	}
 
 	@Override

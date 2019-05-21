@@ -157,7 +157,7 @@ public class DevolucionesController {
 		devolucionEntidadDTO.setId(1L);
 		devolucionEntidadDTO.setEntidad(new BaseEntidadDTO(1L, "Banco 1", "Banco 1"));
 		devolucionEntidadDTO.setFecha(new Date());
-		devolucionEntidadDTO.setEstatus(new EstatusDevolucionDTO(2, "Solicitada", true));
+//		devolucionEntidadDTO.setEstatus(new EstatusDevolucionDTO(2, "Solicitada", true));
 		devolucionEntidadDTO.setSucursal(3);
 		devolucionEntidadDTO.setMonto(150.00);
 		devolucionEntidadDTO.setEsquemaTarjeta("Visa");

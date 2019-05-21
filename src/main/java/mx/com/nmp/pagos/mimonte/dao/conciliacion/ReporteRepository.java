@@ -4,19 +4,34 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 
 /**
  * @name ReporteRepository
- * @description Interface que define los metodos para realizar operaciones a
- *              nivel base de datos relacionada con Reporte
- * @author Ismael Flores iaguilar@quarksoft.net
- * @version 1.0
- * @created 06/05/2019 13:48 hrs.
+ * @description Interface de capa DAO que sirve para realizar operaciones de
+ *              base de datos relacionadas con los reportes.
+ *
+ * @author José Rodríguez jgrodriguez@quarksoft.net
+ * @creationDate 08/05/2019 21:55 hrs.
+ * @version 0.1
  */
 @Repository("reporteRepository")
-public interface ReporteRepository extends JpaRepository<Reporte, Long> {
+public interface ReporteRepository extends JpaRepository<Reporte, Integer> {
+
+	/**
+	 * Búsqueda de los reportes a partir del id de conciliación.
+	 * 
+	 * @param idConciliacion
+	 * @return
+	 */
+	@Query("FROM Reporte r WHERE r.conciliacion.id = :idConciliacion")
+	public List<Reporte> findByIdConciliacion(@Param("idConciliacion") final Integer idConciliacion);
+
 }

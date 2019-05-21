@@ -6,13 +6,8 @@ package mx.com.nmp.pagos.mimonte.conector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
-
 import mx.com.nmp.pagos.mimonte.conector.ws.OpenPayService;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
-
-import javax.inject.Inject;
 import java.util.Date;
 import java.util.List;
 

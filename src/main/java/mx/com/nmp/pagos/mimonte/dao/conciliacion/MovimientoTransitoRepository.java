@@ -1,14 +1,46 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
- * @author Quarksoft
- * @version 1.0
- * @created 31-Mar-2019 6:34:07 PM
+ * @name MovimientoTransitoRepository
+ * @description Interface de capa DAO que sirve para realizar operaciones de
+ *              base de datos relacionadas con los movimientos en transito.
+ *
+ * @author José Rodríguez jgrodriguez@quarksoft.net
+ * @creationDate 08/05/2019 21:55 hrs.
+ * @version 0.1
  */
-public interface MovimientoTransitoRepository /*extends JpaRepository<MovimientoTransito, Long>*/ {
+@Repository("movimientoTransitoRepository")
+public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTransito, Integer> {
+
+	/**
+	 * Búsqueda de los movimientos en transito a partir de una lista de ids.
+	 * 
+	 * @param lst
+	 * @return
+	 */
+	@Query("FROM MovimientoTransito mt WHERE mt.id IN ( :lst ) ")
+	public List<MovimientoTransito> findByIds(List<Integer> lst);
+
+	/**
+	 * Búsqueda de los movimientos en transito a partir del folio.
+	 * 
+	 * @param folio
+	 * @return
+	 */
+	@Query("SELECT mt FROM MovimientoConciliacion mc INNER JOIN MovimientoTransito mt ON mc.id = mt.id WHERE mt.idConciliacion = :folio")
+	public List<MovimientoTransito> findByIdConciliacion(@Param("folio") Integer folio);
 
 }

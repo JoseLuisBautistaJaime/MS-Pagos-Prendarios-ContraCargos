@@ -24,8 +24,12 @@ public class EntidadDTO extends AbstractConciliacionBasicaDTO implements Compara
 	public EntidadDTO() {
 		super();
 	}
+	
+	public EntidadDTO(Long id) {
+		super.id=id;
+	}
 
-	public EntidadDTO(Integer id, String descripcion, Boolean estatus, String nombre) {
+	public EntidadDTO(Long id, String descripcion, Boolean estatus, String nombre) {
 		super(id, descripcion, estatus);
 		this.id = id;
 		this.descripcion = descripcion;

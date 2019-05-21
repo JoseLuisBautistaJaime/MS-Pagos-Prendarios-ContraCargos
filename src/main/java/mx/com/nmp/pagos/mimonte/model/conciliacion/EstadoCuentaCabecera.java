@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -40,6 +41,12 @@ public class EstadoCuentaCabecera {
 
 	@Column(name = "cuenta")
 	private String cuenta;
+
+	@Column(name = "fecha_inicial")
+	private Date fechaInicial;
+
+	@Column(name = "fecha_final")
+	private Date fechaFinal;
 
 	@Column(name = "tipo_saldo")
 	private Integer tipoSaldo;
@@ -92,6 +99,22 @@ public class EstadoCuentaCabecera {
 
 	public void setCuenta(String cuenta) {
 		this.cuenta = cuenta;
+	}
+
+	public Date getFechaInicial() {
+		return fechaInicial;
+	}
+
+	public void setFechaInicial(Date fechaInicial) {
+		this.fechaInicial = fechaInicial;
+	}
+
+	public Date getFechaFinal() {
+		return fechaFinal;
+	}
+
+	public void setFechaFinal(Date fechaFinal) {
+		this.fechaFinal = fechaFinal;
 	}
 
 	public Integer getTipoSaldo() {
@@ -153,15 +176,16 @@ public class EstadoCuentaCabecera {
 	@Override
 	public String toString() {
 		return "EstadoCuentaCabecera [id=" + id + ", clavePais=" + clavePais + ", sucursal=" + sucursal + ", cuenta="
-				+ cuenta + ", tipoSaldo=" + tipoSaldo + ", saldoInicial=" + saldoInicial + ", monedaAlfabetica="
+				+ cuenta + ", fechaInicial=" + fechaInicial + ", fechaFinal=" + fechaFinal + ", tipoSaldo=" + tipoSaldo
+				+ ", saldoInicial=" + saldoInicial + ", monedaAlfabetica="
 				+ monedaAlfabetica + ", digitoCuentaClabe=" + digitoCuentaClabe + ", titularCuenta=" + titularCuenta
 				+ ", plazaCuentaClabe=" + plazaCuentaClabe + ", libre=" + libre + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, clavePais, sucursal, cuenta, tipoSaldo, saldoInicial, monedaAlfabetica,
-				digitoCuentaClabe, titularCuenta, plazaCuentaClabe, libre);
+		return Objects.hash(id, clavePais, sucursal, cuenta, fechaInicial, fechaFinal, tipoSaldo, saldoInicial,
+				monedaAlfabetica, digitoCuentaClabe, titularCuenta, plazaCuentaClabe, libre);
 	}
 
 	@Override

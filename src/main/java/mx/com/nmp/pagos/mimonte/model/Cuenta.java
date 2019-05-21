@@ -19,6 +19,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+
 /**
  * @name Cuenta
  * @description Clase que encapsula la informacion de una Cuenta
@@ -49,6 +51,9 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 
 	@OneToMany(mappedBy = "cuenta", fetch = FetchType.LAZY)
 	private Set<EntidadCuentaAfiliacion> EntidadCuentaAfiliacionSet;
+	
+	@OneToMany(mappedBy = "cuenta", fetch = FetchType.LAZY)
+	private Set<Conciliacion> conciliacionSet;
 
 	public Cuenta() {
 		super();
@@ -95,6 +100,14 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 
 	public void setEntidadCuentaAfiliacionSet(Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet) {
 		EntidadCuentaAfiliacionSet = entidadCuentaAfiliacionSet;
+	}
+
+	public Set<Conciliacion> getConciliacionSet() {
+		return conciliacionSet;
+	}
+
+	public void setConciliacionSet(Set<Conciliacion> conciliacionSet) {
+		this.conciliacionSet = conciliacionSet;
 	}
 
 	@Override
