@@ -42,6 +42,12 @@ public final class ConciliacionConstants {
 	public static final String ENTITY_VALIDATION_SIZE_MESSAGE_45 = "Debe ingresar maximo 45 caracteres";
 
 	/**
+	 * Mensaje que es mostrado si se genera un error en la creacion del objeto
+	 * reporte en BD
+	 */
+	public static final String REPORT_GENERATION_ERROR_MESSAGE = "Se ha generado un error durante la generacion del reporte";
+
+	/**
 	 * Mensaje que es mostrado cuando se realiza una consulta de manera exitosa
 	 */
 	public static final String MSG_SUCCESSFUL_MOVIMIENTOS_QUERY = "Consulta movimientos exitosa.";
@@ -61,6 +67,16 @@ public final class ConciliacionConstants {
 	 */
 	public static final String SAVE_SUCCESSFUL = "Alta exitosa.";
 	
+	/**
+	 * Mensaje mostrado para una consulta exitosa.
+	 */
+	public static final String SUCCESSFUL_SEARCH = "Consulta exitosa.";
+	
+	/**
+	 * Mensaje mostrado para una consulta exitosa.
+	 */
+	public static final String SUCCESSFUL_UPDATE = "Actualización exitosa.";
+	
 
 	public static final class Validation {
 
@@ -79,6 +95,18 @@ public final class ConciliacionConstants {
 		 * de entrada
 		 */
 		public static final String VALIDATION_PARAM_ERROR = "Se genero un error de validacion";
+
+		/**
+		 * Mensaje que es mostrado cuando se intenta ingresar una fecha inicial
+		 * posterior a la fecha final
+		 */
+		public static final String INITIAL_DATE_AFTER_FINAL_DATE = "La fecah inicial es posterior a la fecha final";
+
+		/**
+		 * Mensaje que es mostrado cuando no se encuentra una abreviatura y/o
+		 * coincidencia con un id de catalogo
+		 */
+		public static final String NO_CATALOG_INFORMATION = "No se encontro informacion de uno o mas catalogos";
 
 	}
 

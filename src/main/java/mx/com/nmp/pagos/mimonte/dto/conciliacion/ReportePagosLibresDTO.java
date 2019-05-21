@@ -4,7 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @name ReportePagosLibresDTO
@@ -15,7 +17,7 @@ import java.util.Date;
  * @creationDate 03/04/2019 13:30 hrs.
  * @version 0.1
  */
-public class ReportePagosLibresDTO implements Comparable<ReportePagosLibresDTO> {
+public class ReportePagosLibresDTO {
 
 	private Date fecha;
 	private String canal;
@@ -23,14 +25,14 @@ public class ReportePagosLibresDTO implements Comparable<ReportePagosLibresDTO> 
 	private String tipoProducto;
 	private String operacion;
 	private Integer sucursal;
-	private Double monto;
+	private BigDecimal monto;
 
 	public ReportePagosLibresDTO() {
 		super();
 	}
 
 	public ReportePagosLibresDTO(Date fecha, String canal, Long partida, String tipoProducto, String operacion,
-			Integer sucursal, Double monto) {
+			Integer sucursal, BigDecimal monto) {
 		super();
 		this.fecha = fecha;
 		this.canal = canal;
@@ -89,19 +91,36 @@ public class ReportePagosLibresDTO implements Comparable<ReportePagosLibresDTO> 
 		this.sucursal = sucursal;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "ReportePagosLibresDTO [fecha=" + fecha + ", canal=" + canal + ", partida=" + partida + ", tipoProducto="
+				+ tipoProducto + ", operacion=" + operacion + ", sucursal=" + sucursal + ", monto=" + monto + "]";
+	}
 
 	@Override
-	public int compareTo(ReportePagosLibresDTO o) {
-		return 0;
+	public int hashCode() {
+		return Objects.hash(fecha, canal, partida, tipoProducto, operacion, sucursal, monto);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof ReportePagosLibresDTO))
+			return false;
+
+		final ReportePagosLibresDTO other = (ReportePagosLibresDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 }

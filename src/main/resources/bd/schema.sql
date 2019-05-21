@@ -638,7 +638,7 @@ CREATE TABLE to_conciliacion (
 	entidad INTEGER NOT NULL,
 	cuenta INTEGER NOT NULL,
 	peoplesoft_id VARCHAR(100),
-	create_date DATETIME,
+	created_date DATETIME,
 	created_by VARCHAR(100),
 	last_modified_by VARCHAR(100),
 	last_modified_date DATETIME,
@@ -648,7 +648,7 @@ CREATE TABLE to_conciliacion (
 
 CREATE TABLE to_global (
 	id INTEGER NOT NULL,
-	conciliacion INTEGER NOT NULL,
+	id_conciliacion INTEGER NOT NULL,
 	fecha DATE NOT NULL,
 	movimientos INTEGER,
 	partidas INTEGER,
@@ -737,13 +737,13 @@ CREATE TABLE to_movimiento_transito (
 
 
 CREATE TABLE to_reporte (
-	id INTEGER NOT NULL,
+	id INTEGER NOT NULL AUTO_INCREMENT,
 	conciliacion INTEGER NOT NULL,
 	tipo VARCHAR(45) NOT NULL,
 	disponible TINYINT NOT NULL DEFAULT 0,
 	fecha_desde DATE NOT NULL,
 	fecha_hasta DATE NOT NULL,
-	create_date DATETIME,
+	created_date DATETIME,
 	created_by VARCHAR(100),
 	last_modified_by VARCHAR(100),
 	last_modified_date DATETIME,
@@ -754,8 +754,8 @@ CREATE TABLE to_reporte (
 
 
 CREATE TABLE to_movimiento_estado_cuenta (
-	id INTEGER NOT NULL,
-	reporte INTEGER NOT NULL,
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	id_reporte INTEGER NOT NULL,
 	fecha DATE NOT NULL,
 	descripcion VARCHAR(150),
 	depositos DECIMAL(16,4),
@@ -768,8 +768,8 @@ CREATE TABLE to_movimiento_estado_cuenta (
 
 
 CREATE TABLE to_movimiento_midas (
-	id INTEGER NOT NULL,
-	reporte INTEGER NOT NULL,
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	id_reporte INTEGER NOT NULL,
 	folio INTEGER,
 	sucursal INTEGER,
 	operacion_abr VARCHAR(10),
@@ -781,53 +781,71 @@ CREATE TABLE to_movimiento_midas (
 	capital DECIMAL(16,4),
 	comisiones DECIMAL(16,4),
 	interes DECIMAL(16,4),
-	estatus VARCHAR(10),
+    transaccion BIGINT(20),
+    fecha DATETIME,
+    estado_transaccion VARCHAR(100) NULL DEFAULT NULL,
+    consumidor VARCHAR(50) NULL DEFAULT NULL,
+    codigo_error VARCHAR(50) NULL DEFAULT NULL,
+	mensaje_error VARCHAR(50) NULL DEFAULT NULL,
+	id_tarjeta VARCHAR(50) NULL DEFAULT NULL,
+	marca_tarjeta VARCHAR(50) NULL DEFAULT NULL,
+	tipo_tarjeta VARCHAR(50) NULL DEFAULT NULL,
+	tarjeta VARCHAR(50) NULL DEFAULT NULL,
+	moneda_pago VARCHAR(50) NULL DEFAULT NULL,
+    importe_transaccion DECIMAL (16,4) NULL DEFAULT NULL,
+	estatus BIT DEFAULT TRUE,
 	PRIMARY KEY (id),
 	CONSTRAINT FK_to_movimiento_midas_to_reporte 
 		FOREIGN KEY (reporte) REFERENCES to_reporte (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE to_movimiento_proveedor (
-	id INTEGER NOT NULL,
-	reporte INTEGER NOT NULL,
-	id_comerciante VARCHAR(45),
-	id_pedido VARCHAR(45),
-	referencia_pedido VARCHAR(45),
-	id_transaccion VARCHAR(45),
-	referencia_transaccion VARCHAR(45),
-	entidad_gestora VARCHAR(45),
-	fecha DATETIME,
-	metodo_pago VARCHAR(45),
-	tipo_transaccion VARCHAR(45),
-	monto DECIMAL(16,4),
-	moneda VARCHAR(10),
-	resutado VARCHAR(10),
-	codigo_puerta_enlace VARCHAR(45),
-	esquema_tarjeta VARCHAR(10),
-	identificador_cuenta VARCHAR(45),
-	identificador_banco VARCHAR(45),
-	titular_cuenta VARCHAR(150),
-	codigo_autorizacion VARCHAR(45),
-	codigo_respuesta VARCHAR(45),
-	numero_lote_pago VARCHAR(45),
-	origen_transaccion VARCHAR(45),
-	recomendacion_riesgo VARCHAR(45),
-	resultado_revision_riesgo VARCHAR(45),
-	respuesta_avs VARCHAR(45),
-	respuesta_csc VARCHAR(45),
-	respuesta_3ds VARCHAR(45),
-	3dseci VARCHAR(45),
-	recibo_transaccion VARCHAR(45),
-	PRIMARY KEY (id)
-)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `to_movimiento_proveedor` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_movimiento` VARCHAR(100) NULL DEFAULT NULL,
+  `id_reporte` int(11) NOT NULL,
+  `authorization` VARCHAR(50) NOT NULL,
+  `operation_type` VARCHAR(50) NOT NULL,
+  `method` VARCHAR(50) NOT NULL,
+  `transaction_type` VARCHAR(50) NOT NULL,
+  `status` VARCHAR(50) NOT NULL,
+  `conciliated` BIT NOT NULL DEFAULT FALSE,
+  `creation_date` DATETIME NOT NULL,
+  `operation_date` DATETIME NOT NULL,
+  `description` VARCHAR(50) NOT NULL,
+  `error_message` VARCHAR(50) NOT NULL,
+  `order_id` VARCHAR(50) NOT NULL,
+  `customer_id` VARCHAR(50) NOT NULL,
+  `error_code` VARCHAR(50) NOT NULL,
+  `currency` VARCHAR(50) NOT NULL,
+  `amount` DECIMAL(16,4) NOT NULL,
+  `payment_method_type` VARCHAR(50) NOT NULL,
+  `payment_method_url` VARCHAR(50) NOT NULL,
+  `card_id` VARCHAR(50) NOT NULL,
+  `card_type` VARCHAR(50) NOT NULL,
+  `card_brand` VARCHAR(50) NOT NULL,
+  `card_address` VARCHAR(50) NOT NULL,
+  `card_number` VARCHAR(50) NOT NULL,
+  `card_holder_name` VARCHAR(50) NOT NULL,
+  `card_expiration_year` VARCHAR(50) NOT NULL,
+  `card_expiration_month` VARCHAR(50) NOT NULL,
+  `card_allows_charges` BIT NOT NULL,
+  `card_allows_payouts` BIT NOT NULL,
+  `card_creation_date` DATETIME NOT NULL,
+  `card_bank_name` VARCHAR(50) NOT NULL,
+  `card_bank_code` VARCHAR(50) NOT NULL,
+  `card_customer_id` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_to_movimiento_midas_to_reporte1` (`id_reporte`),
+  CONSTRAINT `fk_to_movimiento_midas_to_reporte1` FOREIGN KEY (`id_reporte`) REFERENCES `to_reporte` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 
 -- Layouts
 
 CREATE TABLE to_layout (
 	id INTEGER NOT NULL,
-	conciliacion INTEGER NOT NULL,
+	id_conciliacion INTEGER NOT NULL,
 	tipo VARCHAR(20) NOT NULL,
 	PRIMARY KEY (id),
 	CONSTRAINT FK_to_layout_to_conciliacion 
@@ -837,7 +855,7 @@ CREATE TABLE to_layout (
 
 CREATE TABLE to_layout_linea (
 	id INTEGER NOT NULL,
-	layout INTEGER NOT NULL,
+	id_layout INTEGER NOT NULL,
 	linea VARCHAR(10) NOT NULL,
 	cuenta VARCHAR(45),
 	dep_id VARCHAR(45),
@@ -857,7 +875,7 @@ CREATE TABLE to_layout_linea (
 
 CREATE TABLE to_layout_header (
 	id INTEGER NOT NULL,
-	layout INTEGER NOT NULL,
+	id_layout INTEGER NOT NULL,
 	cabecera VARCHAR(10) NOT NULL,
 	unidad_negocio VARCHAR(45),
 	descripcion VARCHAR(150),
@@ -878,34 +896,280 @@ CREATE TABLE to_layout_header (
 
 -- INICIAN AJUSTES PARA SEGUIR ESTANDAR DE NOMBRADO EN FOREIGN KEYS --
 
-ALTER TABLE to_movimiento_estado_cuenta CHANGE reporte id_reporte INT(11) NOT NULL;
-ALTER TABLE to_movimiento_midas CHANGE reporte id_reporte INT(11) NOT NULL;
-ALTER TABLE to_reporte CHANGE conciliacion id_conciliacion INT(11) NOT NULL;
-ALTER TABLE to_layout_linea CHANGE layout id_layout INT(11) NOT NULL;
-ALTER TABLE to_layout_header CHANGE layout id_layout INT(11) NOT NULL;
-ALTER TABLE to_layout CHANGE conciliacion id_conciliacion INT(11) NOT NULL;
-ALTER TABLE to_global CHANGE conciliacion id_conciliacion INT(11) NOT NULL;
+-- ALTER TABLE to_movimiento_estado_cuenta CHANGE reporte id_reporte INT(11) NOT NULL;
+-- ALTER TABLE to_movimiento_midas CHANGE reporte id_reporte INT(11) NOT NULL;
+-- ALTER TABLE to_reporte CHANGE conciliacion id_conciliacion INT(11) NOT NULL;
+-- ALTER TABLE to_layout_linea CHANGE layout id_layout INT(11) NOT NULL;
+-- ALTER TABLE to_layout_header CHANGE layout id_layout INT(11) NOT NULL;
+-- ALTER TABLE to_layout CHANGE conciliacion id_conciliacion INT(11) NOT NULL;
+-- ALTER TABLE to_global CHANGE conciliacion id_conciliacion INT(11) NOT NULL;
 
 -- FINALIZAN AJUSTES PARA SEGUIR ESTANDAR DE NOMBRADO EN FOREIGN KEYS --
 
 
 -- SE AGREGAN COLUMNAS DE TRANSACCION Y FECHA FALTANTES A TABLA DE MOVIMIENTOS MIDAS --
 -- [2019-04-29 17:57:24] --
-ALTER TABLE to_movimiento_midas ADD COLUMN transaccion BIGINT(20);
-ALTER TABLE to_movimiento_midas ADD COLUMN fecha DATETIME;
+-- ALTER TABLE to_movimiento_midas ADD COLUMN transaccion BIGINT(20);
+-- ALTER TABLE to_movimiento_midas ADD COLUMN fecha DATETIME;
 
 -- SE REALIZA RENOMBRADO DE COLUMNA reporte EN TABLA to_movimiento_proveedor para ajustar a estandar de noombrado --
 -- y se agrega clave foranea que apunte a el id de la tabla to_reporte --
 -- [2019-04-30 11:45:19] --
-ALTER TABLE to_movimiento_proveedor change reporte id_reporte INT(11);
-ALTER TABLE to_movimiento_proveedor ADD CONSTRAINT `fk_tmp_tr_1` FOREIGN KEY (`id_reporte`) REFERENCES `to_reporte` (`id`);
+-- ALTER TABLE to_movimiento_proveedor change reporte id_reporte INT(11);
+-- ALTER TABLE to_movimiento_proveedor ADD CONSTRAINT `fk_tmp_tr_1` FOREIGN KEY (`id_reporte`) REFERENCES `to_reporte` (`id`);
 
 -- SE REALIZA CORRECCION DE NOMBRADO EN CAMPO created_date DE TABLA to_reporte y to_conciliacion --
 -- [2019-04-30 12:24:57] --
-ALTER TABLE to_reporte CHANGE create_date created_date DATETIME NULL DEFAULT NULL;
-ALTER TABLE to_conciliacion CHANGE create_date created_date DATETIME NULL DEFAULT NULL;
+-- ALTER TABLE to_reporte CHANGE create_date created_date DATETIME NULL DEFAULT NULL;
+-- ALTER TABLE to_conciliacion CHANGE create_date created_date DATETIME NULL DEFAULT NULL;
 
 -- SE CAMBIAN IDENTIFICADORES DE TABLAS: to_movimiento_midas y to_movimiento_proveedor PARA QUE SEAN AUTOINCREMENTALES --
 -- [2019-05-02 10:14:14] --
-ALTER TABLE to_movimiento_midas CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
-ALTER TABLE to_movimiento_proveedor CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
+-- ALTER TABLE to_movimiento_midas CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
+-- ALTER TABLE to_movimiento_proveedor CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
+
+
+-- SE AGREGAN COLUMNAS estado_transaccion y canal a tabla to_movimiento_midas --
+-- [2019-05-02 17:37:10] --
+-- ALTER TABLE to_movimiento_midas ADD COLUMN estado_transaccion VARCHAR(100) NULL DEFAULT NULL;
+-- ALTER TABLE to_movimiento_midas ADD COLUMN canal VARCHAR(50) NULL DEFAULT NULL;
+
+-- SE CAMBIA LA ESTRUCTURA DE LA TABLA to_movimiento proveedor --
+-- [2019-05-06 13:38:45] --
+-- TRUNCATE to_movimiento_proveedor;
+-- DROP TABLE IF EXISTS to_movimiento_proveedor;
+
+  -- CREATE TABLE `to_movimiento_proveedor` (
+  -- `id` INT(11) NOT NULL AUTO_INCREMENT,
+  -- `id_movimiento` VARCHAR(100) NULL DEFAULT NULL,
+  -- `id_reporte` int(11) NOT NULL,
+  -- `authorization` VARCHAR(50) NOT NULL,
+  -- `operation_type` VARCHAR(50) NOT NULL,
+  -- `method` VARCHAR(50) NOT NULL,
+  -- `transaction_type` VARCHAR(50) NOT NULL,
+  -- `status` VARCHAR(50) NOT NULL,
+  -- `conciliated` BIT NOT NULL DEFAULT FALSE,
+  -- `creation_date` DATETIME NOT NULL,
+  -- `operation_date` DATETIME NOT NULL,
+  -- `description` VARCHAR(50) NOT NULL,
+  -- `error_message` VARCHAR(50) NOT NULL,
+  -- `order_id` VARCHAR(50) NOT NULL,
+  -- `customer_id` VARCHAR(50) NOT NULL,
+  -- `error_code` VARCHAR(50) NOT NULL,
+  -- `currency` VARCHAR(50) NOT NULL,
+  -- `amount` DECIMAL(16,4) NOT NULL,
+  -- `payment_method_type` VARCHAR(50) NOT NULL,
+  -- `payment_method_url` VARCHAR(50) NOT NULL,
+  -- `card_id` VARCHAR(50) NOT NULL,
+  -- `card_type` VARCHAR(50) NOT NULL,
+  -- `card_brand` VARCHAR(50) NOT NULL,
+--   `card_address` VARCHAR(50) NOT NULL,
+  -- `card_number` VARCHAR(50) NOT NULL,
+  -- `card_holder_name` VARCHAR(50) NOT NULL,
+  -- `card_expiration_year` VARCHAR(50) NOT NULL,
+  -- `card_expiration_month` VARCHAR(50) NOT NULL,
+  -- `card_allows_charges` BIT NOT NULL,
+--   `card_allows_payouts` BIT NOT NULL,
+  -- `card_creation_date` DATETIME NOT NULL,
+--   `card_bank_name` VARCHAR(50) NOT NULL,
+--   `card_bank_code` VARCHAR(50) NOT NULL,
+  -- `card_customer_id` VARCHAR(50) NOT NULL,
+  -- PRIMARY KEY (`id`),
+  -- KEY `fk_to_movimiento_midas_to_reporte1` (`id_reporte`),
+  -- CONSTRAINT `fk_to_movimiento_midas_to_reporte1` FOREIGN KEY (`id_reporte`) REFERENCES `to_reporte` (`id`)
+  -- ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+
+-- SE ACTUALIZA ID DE TABLA to_reporte A AUTO_INCREMENTAL
+-- [2019-05-06 14:47:11] --
+-- SET FOREIGN_KEY_CHECKS=0;
+-- ALTER TABLE to_reporte CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
+-- SET FOREIGN_KEY_CHECKS=1;
+
+-- RENOMBRADO DE COLUMNA CANAL EN to_movimiento_midas --
+-- [2019-05-06 19:25:19] --
+-- ALTER TABLE to_movimiento_midas CHANGE canal id_consumidor VARCHAR(50) NULL;
+
+-- SE AGREGAN CAMPOS PARA REGISTRO DE MOVIMIENTOS ERRONEOS EN TABLA to_movimiento_midas --
+-- [2019-05-07 18:24:37] --
+-- ALTER TABLE to_movimiento_midas 
+-- ADD COLUMN codigo_error VARCHAR(50) NULL DEFAULT NULL,
+-- ADD COLUMN mensaje_error VARCHAR(50) NULL DEFAULT NULL,
+-- ADD COLUMN id_tarjeta VARCHAR(50) NULL DEFAULT NULL,
+-- ADD COLUMN marca_tarjeta VARCHAR(50) NULL DEFAULT NULL,
+-- ADD COLUMN tipo_tarjeta VARCHAR(50) NULL DEFAULT NULL,
+-- ADD COLUMN tarjeta VARCHAR(50) NULL DEFAULT NULL,
+-- ADD COLUMN moneda_pago VARCHAR(50) NULL DEFAULT NULL;
+
+
+-- SE MODIFICA COLUMNA id_consumidor por consumidor en tabla to_movimiento_midas --
+-- SE AGREGA NUEVA COLUMNA importe_transaccion a tabla to_movimiento_midas --
+-- SE CAMBIA TIPO DE DATO EN CAMPO estatus DE TABLA to_movimiento_midas DE VARCHAR(50) A BIT--
+-- [2019-05-08 11:55:35] --
+-- ALTER TABLE to_movimiento_midas CHANGE id_consumidor consumidor VARCHAR(50) NULL DEFAULT NULL;
+-- ALTER TABLE to_movimiento_midas ADD COLUMN importe_transaccion DECIMAL (16,4) NULL DEFAULT NULL;
+-- TRUNCATE TABLE to_movimiento_midas;
+-- ALTER TABLE to_movimiento_midas CHANGE estatus estatus BIT DEFAULT TRUE;
+
+-- SE MODIFICA COLUMNA ID PARA QUE SEA INCREMENTAL Y DE TIPO INT Y SE AGREGA NUEVA COLUMNA PARA MAPEAR ID DE PETICION DE BUS --
+-- [2019-05-08 14:23:15] --
+-- ALTER TABLE to_movimiento_proveedor CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
+-- ALTER TABLE to_movimiento_proveedor ADD COLUMN id_movimiento VARCHAR(100) NULL DEFAULT NULL;
+
+-- SE CREAN TABLAS PARA MOVIMIENTOS ESTADO CUENTA --
+-- [2019-05-10 11:49:39] --
+
+DROP TABLE IF EXISTS to_estado_cuenta;
+DROP TABLE IF EXISTS to_estado_cuenta_totales_adicional;
+DROP TABLE IF EXISTS to_estado_cuenta_totales;
+DROP TABLE IF EXISTS to_estado_cuenta_cabecera;
+DROP TABLE IF EXISTS to_movimiento_estado_cuenta;
+
+CREATE TABLE to_estado_cuenta
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	reporte INTEGER,
+	cabecera INTEGER,
+	total_movimientos INTEGER,
+	totales INTEGER,
+	totales_adicional INTEGER,
+	fecha_carga DATE,
+	PRIMARY KEY (id),
+	KEY (cabecera),
+	KEY (totales),
+	KEY (totales_adicional)
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE to_estado_cuenta_totales_adicional
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	clave_pais VARCHAR(4),
+	sucursal VARCHAR(4),
+	cuenta VARCHAR(10),
+	no_cargos VARCHAR(5),
+	importe_total_cargos DECIMAL(16,2),
+	no_abonos INTEGER,
+	importe_total_abonos DECIMAL(16,2),
+	tipo_saldo TINYINT,
+	saldo_final DECIMAL(16,2),
+	moneda_alfabetica VARCHAR(3),
+	PRIMARY KEY (id)
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE to_estado_cuenta_totales
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	clave_pais VARCHAR(3),
+	subcodigo_registro VARCHAR(2),
+	informacion1 VARCHAR(35),
+	informacion2 VARCHAR(35),
+	PRIMARY KEY (id)
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE to_estado_cuenta_cabecera
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	clave_pais VARCHAR(4),
+	sucursal VARCHAR(4),
+	cuenta VARCHAR(10),
+	tipo_saldo TINYINT,
+	saldo_inicial DECIMAL(16,2),
+	moneda_alfabetica VARCHAR(3),
+	digito_cuenta_clabe CHAR(1),
+	titular_cuenta VARCHAR(23),
+	plaza_cuenta_clabe VARCHAR(3),
+	libre VARCHAR(3),
+	PRIMARY KEY (id)
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE to_movimiento_estado_cuenta
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	estado_cuenta INTEGER,
+	clave_pais VARCHAR(4),
+	sucursal VARCHAR(4),
+	fecha_operacion DATE,
+	fecha_valor DATE,
+	libre VARCHAR(2),
+	clave_leyenda VARCHAR(3),
+	tipo_movimiento TINYINT,
+	importe DECIMAL(16,2),
+	dato VARCHAR(10),
+	concepto VARCHAR(28),
+	codigo_dato VARCHAR(2),
+	referencia_ampliada VARCHAR(38),
+	referencia VARCHAR(38),
+	PRIMARY KEY (id),
+	KEY (estado_cuenta)
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE to_estado_cuenta ADD CONSTRAINT FK_to_estado_cuenta_to_movimiento_estado_cuenta_cabecera 
+	FOREIGN KEY (cabecera) REFERENCES to_estado_cuenta_cabecera (id);
+
+ALTER TABLE to_estado_cuenta ADD CONSTRAINT FK_to_estado_cuenta_to_movimiento_estado_cuenta_totales 
+	FOREIGN KEY (totales) REFERENCES to_estado_cuenta_totales (id);
+
+ALTER TABLE to_estado_cuenta ADD CONSTRAINT FK_to_estado_cuenta_to_movimiento_edo_cta_tot_adicional 
+	FOREIGN KEY (totales_adicional) REFERENCES to_estado_cuenta_totales_adicional (id);
+
+ALTER TABLE to_estado_cuenta ADD CONSTRAINT FK_to_estado_cuenta_to_reporte 
+	FOREIGN KEY (id) REFERENCES to_reporte (id);
+
+ALTER TABLE to_movimiento_estado_cuenta ADD CONSTRAINT FK_to_movimiento_estado_cuenta_to_estado_cuenta 
+	FOREIGN KEY (estado_cuenta) REFERENCES to_estado_cuenta (id);
+
+-- ----------------------------------------------------- --
+-- INICIAN CAMBIOS PARA MODULO REPORTE DE PAGOS EN LINEA --
+-- -------------- [2019-05-17 14:19:53] ---------------- --
+-- ----------------------------------------------------- --
+-- -------------------------------------------- --
+-- ---------- TABLE tk_operacion--------------- --
+-- -------------------------------------------- --
+DROP TABLE IF EXISTS tk_operacion;
+
+CREATE TABLE `tk_operacion` (
+  `id` INT(11) NOT NULL,
+  `tipo` INT(11) NOT NULL,
+  `abreviatura` VARCHAR(10) NOT NULL,
+  `descripcion` VARCHAR(100) NOT NULL,
+  `inddep` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- -------------------------------------------- --
+-- ---------- TABLE tk_tipo_contrato--------------- --
+-- -------------------------------------------- --
+DROP TABLE IF EXISTS tk_tipo_contrato;
+CREATE TABLE `tk_tipo_contrato` (
+  `id` INT(11) NOT NULL,
+  `descripcion` VARCHAR(100) NOT NULL,
+  `baja_logica` VARCHAR(1) NOT NULL,
+  `abreviatura` VARCHAR(10) NOT NULL,
+  `inddep` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------- --
+-- ----- INSERTS INICIALES EN tk_operacion --
+-- --------------------------------------- --
+INSERT INTO `tk_operacion`
+	(`id`, `tipo`, `abreviatura`, `descripcion`, `inddep`)
+VALUES
+	(8, 1, 'RF', 'Cobro Refrendo', 0),
+	(116, 1, 'APL', 'Abono -PagosLibres', 0),
+	(148, 1, 'DSO', 'Cobro Desempeño en Linea', 0);
+    
+-- ------------------------------------------- --
+-- ----- INSERTS INICIALES EN tk_tipo_contrato --
+-- ------------------------------------------- --
+INSERT INTO `compose`.`tk_tipo_contrato`
+	(`id`, `descripcion`, `baja_logica`, `abreviatura`, `inddep`)
+VALUES
+	(146, 'PAGOS LIBRES', 'f', 'PL', 0),
+    (145, 'CLASICO', 'f', 'CL', 0);
+
+
+-- ---------- SE AGREGAN COLUMNAS NUEVAS A TABLA to_movimiento_midas ---- --
+-- ------------------------ [2019-05-20 18:18:47] ------------------------ --
+ALTER TABLE to_movimiento_midas ADD COLUMN id_operacion INT(11) DEFAULT NULL;
+ALTER TABLE to_movimiento_midas ADD COLUMN id_tipo_contrato INT(11) DEFAULT NULL;

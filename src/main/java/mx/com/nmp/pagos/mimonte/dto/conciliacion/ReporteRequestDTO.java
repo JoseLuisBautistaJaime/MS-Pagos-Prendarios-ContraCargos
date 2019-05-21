@@ -15,27 +15,27 @@ import java.util.List;
  * @creationDate 03/04/2019 13:25 hrs.
  * @version 0.1
  */
-public class ReporteRequestDTO implements Comparable<ReporteRequestDTO> {
+public class ReporteRequestDTO {
 
 	private Date fechaDesde;
 	private Date fechaHasta;
-	private String producto;
+	private Integer producto;
 	private Integer operacion;
-	private List<Integer> sucursal;
 	private Long partida;
+	private List<Integer> sucursales;
 
 	public ReporteRequestDTO() {
 		super();
 	}
 
-	public ReporteRequestDTO(Date fechaDesde, Date fechaHasta, String producto, Integer operacion,
-			List<Integer> sucursal, Long partida) {
+	public ReporteRequestDTO(Date fechaDesde, Date fechaHasta, Integer producto, Integer operacion,
+			List<Integer> sucursales, Long partida) {
 		super();
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = fechaHasta;
 		this.producto = producto;
 		this.operacion = operacion;
-		this.sucursal = sucursal;
+		this.sucursales = sucursales;
 		this.partida = partida;
 	}
 
@@ -55,11 +55,11 @@ public class ReporteRequestDTO implements Comparable<ReporteRequestDTO> {
 		this.fechaHasta = fechaHasta;
 	}
 
-	public String getProducto() {
+	public Integer getProducto() {
 		return producto;
 	}
 
-	public void setProducto(String producto) {
+	public void setProducto(Integer producto) {
 		this.producto = producto;
 	}
 
@@ -71,12 +71,12 @@ public class ReporteRequestDTO implements Comparable<ReporteRequestDTO> {
 		this.operacion = operacion;
 	}
 
-	public List<Integer> getSucursal() {
-		return sucursal;
+	public List<Integer> getSucursales() {
+		return sucursales;
 	}
 
-	public void setSucursal(List<Integer> sucursal) {
-		this.sucursal = sucursal;
+	public void setSucursales(List<Integer> sucursales) {
+		this.sucursales = sucursales;
 	}
 
 	public Long getPartida() {
@@ -90,12 +90,7 @@ public class ReporteRequestDTO implements Comparable<ReporteRequestDTO> {
 	@Override
 	public String toString() {
 		return "ReporteRequestDTO [fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + ", producto=" + producto
-				+ ", operacion=" + operacion + ", sucursal=" + sucursal + ", partida=" + partida + "]";
-	}
-
-	@Override
-	public int compareTo(ReporteRequestDTO o) {
-		return 0;
+				+ ", operacion=" + operacion + ", sucursales=" + sucursales + ", partida=" + partida + "]";
 	}
 
 }

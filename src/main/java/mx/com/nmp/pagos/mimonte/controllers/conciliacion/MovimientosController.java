@@ -30,18 +30,20 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoIDDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosEstadoCuentaService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosProveedorService;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -89,6 +91,13 @@ public class MovimientosController {
 	private MovimientosProveedorService movimientosProveedorService;
 
 	/**
+	 * Service de MovimientosEstadoCuentaService
+	 */
+	@Autowired
+	@Qualifier("movimientosEstadoCuentaService")
+	private MovimientosEstadoCuentaService movimientosEstadoCuentaService;
+
+	/**
 	 * Consulta movimientos estado de cuneta por filtros de objeto
 	 * CommonConciliacionRequestDTO
 	 * 
@@ -106,11 +115,51 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+	public Response findMovimientoEsadoCuenta(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;
-		movimientosEstadoCuentaDTO = buildDummy1();
+		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		Long total = movimientosEstadoCuentaService
+				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		if (null != total) {
+			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
+			movimientosEstadoCuentaDTO.setTotal(total);
+			movimientosEstadoCuentaDTO.setMovimientos(
+					movimientosEstadoCuentaService.findByFolioAndPagination(commonConciliacionRequestDTO));
+		} else
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		if (null == movimientosEstadoCuentaDTO.getTotal() || null == movimientosEstadoCuentaDTO.getMovimientos()
+				|| movimientosEstadoCuentaDTO.getMovimientos().isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
 				movimientosEstadoCuentaDTO);
+	}
+
+	/**
+	 * Da de alta un movimiento de estado de cuenta y recibe como cabecera un nombre
+	 * de usuaurio que relaiza la accion
+	 * 
+	 * @param saveEstadoCuentaRequestDTO
+	 * @param userRequest
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/movimientos/estadocuenta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Permite dar de alta los movimientos del estado de cuenta.", tags = {
+			"Movimientos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta movimientos exitosa."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response saveMovimientoEsadoCuenta(@RequestBody SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		movimientosEstadoCuentaService.save(saveEstadoCuentaRequestDTO, userRequest);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta de estado cuenta exitosa.", null);
 	}
 
 	/**
@@ -134,9 +183,7 @@ public class MovimientosController {
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-//		movimientoTransaccionalListDTO = buildDummyX1();
-		Integer total = movimientosProveedorService
-				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		Long total = movimientosProveedorService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
 		if (null != total) {
 			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
 			movimientoTransaccionalListDTO.setTotal(total);
@@ -168,12 +215,13 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findMovimientosNocturnos(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+	public Response findMovimientosNocturnos(
+			@RequestBody CommonConciliacionEstatusRequestDTO commonConciliacionRequestDTO) {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
-//		 movimientoProcesosNocturnosListDTO = buildDummyX2();
-		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
+		if (!ValidadorConciliacion.validateCommonConciliacionEstatusRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		Integer total = movimientosMidasService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		Long total = movimientosMidasService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio(),
+				commonConciliacionRequestDTO.getEstatus());
 		if (null != total) {
 			movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
 			movimientoProcesosNocturnosListDTO.setTotal(total);
@@ -207,13 +255,12 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveMovimientosProvedor(
-			@RequestBody MovimientoTransaccionalListRequestDTO movimientoTransaccionalDTO,
+	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalListRequestDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		MovimientoIDDTO movimientoIDDTO = null;
-		movimientoIDDTO = buildDummyX3();
+		if (!ValidadorConciliacion.validateMovimientoTransaccionalListRequestDTO(movimientos))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		movimientosProveedorService.save(movimientos, userRequest);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-//			movimientoIDDTO
 				null);
 	}
 
@@ -234,16 +281,11 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveMovimientosNocturnos(
-			@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosDTO,
+	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-
-		MovimientoIDDTO movimientoIDDTO = null;
-		movimientoIDDTO = buildDummyX3();
-
-//		MovimientoIDDTO movimientoIDDTO = null;
-//		movimientoIDDTO = buildDummyX3();
-
+		if (!ValidadorConciliacion.validateMovimientoProcesosNocturnosListResponseDTO(movimientos))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		movimientosMidasService.save(movimientos, userRequest);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 	}
@@ -253,44 +295,45 @@ public class MovimientosController {
 	 * 
 	 * @return
 	 */
-	public static MovimientoTransaccionalListDTO buildDummyX1() {
-		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
-		MovimientoProveedorDTO movimientoTransaccionalDTO = new MovimientoProveedorDTO();
-		movimientoTransaccionalDTO.setCodigoAutorizacion("67032");
-		movimientoTransaccionalDTO.setCodigoPuertaEnlace("Aprobado");
-		movimientoTransaccionalDTO.setCodigoRespuesta("0");
-		movimientoTransaccionalDTO.setEntidadGestora("EGLOBAL");
-		movimientoTransaccionalDTO.setEsquemaTarjeta("Visa");
-		movimientoTransaccionalDTO.setFecha(new Date());
-		movimientoTransaccionalDTO.setId(1L);
-		movimientoTransaccionalDTO.setIdComerciante("1063488");
-		movimientoTransaccionalDTO.setIdentificadorBanco("");
-		movimientoTransaccionalDTO.setIdentificadorCuenta("481515xxxxxx6567");
-		movimientoTransaccionalDTO.setIdPedido("6ae26139-6b12-4050-8c2b-2de6319487b3");
-		movimientoTransaccionalDTO.setIdTransaccion("1");
-		movimientoTransaccionalDTO.setMetodoPago("Tarjeta");
-		movimientoTransaccionalDTO.setMoneda("MXN");
-		movimientoTransaccionalDTO.setMonto(new BigDecimal("406.45"));
-		movimientoTransaccionalDTO.setNumeroLotePago("20181001");
-		movimientoTransaccionalDTO.setOrigenTransaccion("Internet");
-		movimientoTransaccionalDTO.setReciboTransaccion("827412214425");
-		movimientoTransaccionalDTO.setRecomendacionRiesgo("");
-		movimientoTransaccionalDTO.setReferenciaPedido("148341390002");
-		movimientoTransaccionalDTO.setReferenciaTransaccion("");
-		movimientoTransaccionalDTO.setRespuesta3DS("");
-		movimientoTransaccionalDTO.setRespuestaAVS("");
-		movimientoTransaccionalDTO.setRespuestaCSC("");
-		movimientoTransaccionalDTO.setResultado("Exito");
-		movimientoTransaccionalDTO.setResultadoRevisionRiesgo("");
-		movimientoTransaccionalDTO.setT3dsECI("");
-		movimientoTransaccionalDTO.setTipoTransaccion("Pago");
-		movimientoTransaccionalDTO.setTitularCuenta("Eduardo Lopez Lopez");
-		movimientoTransaccionalListDTO.setTotal(406);
-		List<MovimientoProveedorDTO> lst = new ArrayList<>();
-		lst.add(movimientoTransaccionalDTO);
-		movimientoTransaccionalListDTO.setMovimientos(lst);
-		return movimientoTransaccionalListDTO;
-	}
+	// Old dummy, not used any more
+//	public static MovimientoTransaccionalListDTO buildDummyX1() {
+//		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
+//		MovimientoProveedorDTO movimientoTransaccionalDTO = new MovimientoProveedorDTO();
+//		movimientoTransaccionalDTO.setCodigoAutorizacion("67032");
+//		movimientoTransaccionalDTO.setCodigoPuertaEnlace("Aprobado");
+//		movimientoTransaccionalDTO.setCodigoRespuesta("0");
+//		movimientoTransaccionalDTO.setEntidadGestora("EGLOBAL");
+//		movimientoTransaccionalDTO.setEsquemaTarjeta("Visa");
+//		movimientoTransaccionalDTO.setFecha(new Date());
+//		movimientoTransaccionalDTO.setId(1L);
+//		movimientoTransaccionalDTO.setIdComerciante("1063488");
+//		movimientoTransaccionalDTO.setIdentificadorBanco("");
+//		movimientoTransaccionalDTO.setIdentificadorCuenta("481515xxxxxx6567");
+//		movimientoTransaccionalDTO.setIdPedido("6ae26139-6b12-4050-8c2b-2de6319487b3");
+//		movimientoTransaccionalDTO.setIdTransaccion("1");
+//		movimientoTransaccionalDTO.setMetodoPago("Tarjeta");
+//		movimientoTransaccionalDTO.setMoneda("MXN");
+//		movimientoTransaccionalDTO.setMonto(new BigDecimal("406.45"));
+//		movimientoTransaccionalDTO.setNumeroLotePago("20181001");
+//		movimientoTransaccionalDTO.setOrigenTransaccion("Internet");
+//		movimientoTransaccionalDTO.setReciboTransaccion("827412214425");
+//		movimientoTransaccionalDTO.setRecomendacionRiesgo("");
+//		movimientoTransaccionalDTO.setReferenciaPedido("148341390002");
+//		movimientoTransaccionalDTO.setReferenciaTransaccion("");
+//		movimientoTransaccionalDTO.setRespuesta3DS("");
+//		movimientoTransaccionalDTO.setRespuestaAVS("");
+//		movimientoTransaccionalDTO.setRespuestaCSC("");
+//		movimientoTransaccionalDTO.setResultado("Exito");
+//		movimientoTransaccionalDTO.setResultadoRevisionRiesgo("");
+//		movimientoTransaccionalDTO.setT3dsECI("");
+//		movimientoTransaccionalDTO.setTipoTransaccion("Pago");
+//		movimientoTransaccionalDTO.setTitularCuenta("Eduardo Lopez Lopez");
+//		movimientoTransaccionalListDTO.setTotal(406L);
+//		List<MovimientoProveedorDTO> lst = new ArrayList<>();
+//		lst.add(movimientoTransaccionalDTO);
+//		movimientoTransaccionalListDTO.setMovimientos(lst);
+//		return movimientoTransaccionalListDTO;
+//	}
 
 	/**
 	 * Construye una respuesta dummy
@@ -304,7 +347,7 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setTransaccion(1L);
 		movimientoProcesosNocturnosDTO.setCapitalActual(new BigDecimal("400.12"));
 		movimientoProcesosNocturnosDTO.setComisiones(new BigDecimal("10.23"));
-		movimientoProcesosNocturnosDTO.setEstatus("Exitoso");
+		movimientoProcesosNocturnosDTO.setEstatus(true);
 		movimientoProcesosNocturnosDTO.setFecha(new Date());
 		movimientoProcesosNocturnosDTO.setFolioPartida(12345L);
 		movimientoProcesosNocturnosDTO.setInteres(new BigDecimal("24.52"));
@@ -312,10 +355,12 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setNumAutorizacion("12345");
 		movimientoProcesosNocturnosDTO.setOperacionAbr("APL");
 		movimientoProcesosNocturnosDTO.setOperacionDesc("Abonos Pagos-Libres");
-		movimientoProcesosNocturnosDTO.setSucursal(12L);
+		movimientoProcesosNocturnosDTO.setSucursal(12);
 		movimientoProcesosNocturnosDTO.setTipoContratoAbr("PL");
 		movimientoProcesosNocturnosDTO.setTipoContratoDesc("Pagos Libres");
-		movimientoProcesosNocturnosListDTO.setTotal(400);
+		movimientoProcesosNocturnosDTO.setEstadoTransaccion("Activo");
+		movimientoProcesosNocturnosDTO.setConsumidor("Mobile");
+		movimientoProcesosNocturnosListDTO.setTotal(400L);
 		List<MovimientoMidasDTO> lst = new ArrayList<>();
 		lst.add(movimientoProcesosNocturnosDTO);
 		movimientoProcesosNocturnosListDTO.setMovimientos(lst);
@@ -343,20 +388,20 @@ public class MovimientosController {
 	public static MovimientosEstadoCuentaDTO buildDummy1() {
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
 		List<MovimientoEstadoCuentaDTO> movimientoEstadoCuentaDTOList = new ArrayList<>();
-		movimientosEstadoCuentaDTO.setTotal(100D);
+		movimientosEstadoCuentaDTO.setTotal(10L);
 		MovimientoEstadoCuentaDTO movimientoEstadoCuentaDTO1 = new MovimientoEstadoCuentaDTO();
-		movimientoEstadoCuentaDTO1.setDepositos(0D);
+		movimientoEstadoCuentaDTO1.setDepositos(new BigDecimal("0.0"));
 		movimientoEstadoCuentaDTO1.setDescripcion("Ventas netas tarjeta …");
 		movimientoEstadoCuentaDTO1.setFecha(new Date());
-		movimientoEstadoCuentaDTO1.setRetiros(12882.62D);
-		movimientoEstadoCuentaDTO1.setSaldo(0D);
+		movimientoEstadoCuentaDTO1.setRetiros(new BigDecimal("12882.62"));
+		movimientoEstadoCuentaDTO1.setSaldo(new BigDecimal("0.00"));
 		movimientoEstadoCuentaDTO1.setId(1L);
 		MovimientoEstadoCuentaDTO movimientoEstadoCuentaDTO2 = new MovimientoEstadoCuentaDTO();
-		movimientoEstadoCuentaDTO2.setDepositos(0D);
+		movimientoEstadoCuentaDTO2.setDepositos(new BigDecimal("0.0"));
 		movimientoEstadoCuentaDTO2.setDescripcion("Cargos…");
 		movimientoEstadoCuentaDTO2.setFecha(new Date());
-		movimientoEstadoCuentaDTO2.setRetiros(245.00D);
-		movimientoEstadoCuentaDTO2.setSaldo(0D);
+		movimientoEstadoCuentaDTO2.setRetiros(new BigDecimal("245.00"));
+		movimientoEstadoCuentaDTO2.setSaldo(new BigDecimal("0.0"));
 		movimientoEstadoCuentaDTO2.setId(2L);
 		movimientoEstadoCuentaDTOList.add(movimientoEstadoCuentaDTO1);
 		movimientoEstadoCuentaDTOList.add(movimientoEstadoCuentaDTO2);

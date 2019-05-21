@@ -17,24 +17,24 @@ import java.util.List;
  */
 public class MovimientoProcesosNocturnosListDTO {
 
-	private Integer total;
+	private Long total;
 	private List<MovimientoMidasDTO> movimientos;
 
 	public MovimientoProcesosNocturnosListDTO() {
 		super();
 	}
 
-	public MovimientoProcesosNocturnosListDTO(Integer total, List<MovimientoMidasDTO> movimientos) {
+	public MovimientoProcesosNocturnosListDTO(Long total, List<MovimientoMidasDTO> movimientos) {
 		super();
 		this.total = total;
 		this.movimientos = movimientos;
 	}
 
-	public Integer getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Integer total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 

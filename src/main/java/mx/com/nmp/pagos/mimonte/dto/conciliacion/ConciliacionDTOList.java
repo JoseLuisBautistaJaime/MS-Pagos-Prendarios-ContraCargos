@@ -18,8 +18,17 @@ import java.util.List;
  */
 public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comparable<ConciliacionDTOList> {
 	
+	/**
+	 * Serial id.
+	 */
+	private static final long serialVersionUID = 1087675429120495856L;
+	
 	private Integer Folio;
 	private EstatusConciliacionDTO estatus;
+	private SubEstatusConciliacionDTO subEstatus;
+	private String subEstatusDescripcion;
+	private Long idTesoreria;
+	private Long idAsientoContable;
 	private EntidadDTO entidad;
 	private CuentaDTO cuenta;
 	private ReporteProcesosNocturnosDTO reporteProcesosNocturnos;
@@ -32,20 +41,27 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 
 	public ConciliacionDTOList() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public ConciliacionDTOList(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
+		// TODO Auto-generated constructor stub
 	}
 
-	public ConciliacionDTOList(Integer folio, EstatusConciliacionDTO estatus, EntidadDTO entidad, CuentaDTO cuenta,
-			ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
+	public ConciliacionDTOList(Integer folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
+			String subEstatusDescripcion, Long idTesoreria, Long idAsientoContable, EntidadDTO entidad,
+			CuentaDTO cuenta, ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
 			GlobalDTO global, List<DevolucionConDTO> devoluciones, List<MovTransitoDTO> movimientosTransito,
-			List<ComisionesDTO> comisiones, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
+			List<ComisionesDTO> comisiones) {
 		super();
 		Folio = folio;
 		this.estatus = estatus;
+		this.subEstatus = subEstatus;
+		this.subEstatusDescripcion = subEstatusDescripcion;
+		this.idTesoreria = idTesoreria;
+		this.idAsientoContable = idAsientoContable;
 		this.entidad = entidad;
 		this.cuenta = cuenta;
 		this.reporteProcesosNocturnos = reporteProcesosNocturnos;
@@ -55,16 +71,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 		this.devoluciones = devoluciones;
 		this.movimientosTransito = movimientosTransito;
 		this.comisiones = comisiones;
-		this.createdDate = createdDate;
-		this.lastModifiedDate = lastModifiedDate;
-		this.createdBy = createdBy;
-		this.lastModifiedBy = lastModifiedBy;
 	}
-
-	/**
-	 * Serial id.
-	 */
-	private static final long serialVersionUID = 679398017169972235L;
 
 	public Integer getFolio() {
 		return Folio;
@@ -80,6 +87,38 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 
 	public void setEstatus(EstatusConciliacionDTO estatus) {
 		this.estatus = estatus;
+	}
+
+	public SubEstatusConciliacionDTO getSubEstatus() {
+		return subEstatus;
+	}
+
+	public void setSubEstatus(SubEstatusConciliacionDTO subEstatus) {
+		this.subEstatus = subEstatus;
+	}
+
+	public String getSubEstatusDescripcion() {
+		return subEstatusDescripcion;
+	}
+
+	public void setSubEstatusDescripcion(String subEstatusDescripcion) {
+		this.subEstatusDescripcion = subEstatusDescripcion;
+	}
+
+	public Long getIdTesoreria() {
+		return idTesoreria;
+	}
+
+	public void setIdTesoreria(Long idTesoreria) {
+		this.idTesoreria = idTesoreria;
+	}
+
+	public Long getIdAsientoContable() {
+		return idAsientoContable;
+	}
+
+	public void setIdAsientoContable(Long idAsientoContable) {
+		this.idAsientoContable = idAsientoContable;
 	}
 
 	public EntidadDTO getEntidad() {
@@ -154,14 +193,12 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 		this.comisiones = comisiones;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	@Override
 	public String toString() {
-		return "ConciliacionDTOList [Folio=" + Folio + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta="
-				+ cuenta + ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
+		return "ConciliacionDTOList [Folio=" + Folio + ", estatus=" + estatus + ", subEstatus=" + subEstatus
+				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idTesoreria=" + idTesoreria
+				+ ", idAsientoContable=" + idAsientoContable + ", entidad=" + entidad + ", cuenta=" + cuenta
+				+ ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
 				+ reporteProveedorTransaccional + ", reporteEstadoCuenta=" + reporteEstadoCuenta + ", global=" + global
 				+ ", devoluciones=" + devoluciones + ", movimientosTransito=" + movimientosTransito + ", comisiones="
 				+ comisiones + "]";

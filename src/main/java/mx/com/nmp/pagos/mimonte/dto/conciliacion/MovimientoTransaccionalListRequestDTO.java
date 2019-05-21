@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,15 +19,20 @@ import java.util.List;
 public class MovimientoTransaccionalListRequestDTO implements Comparable<MovimientoTransaccionalListRequestDTO> {
 
 	private Integer folio;
-	private List<MovimientoTransaccionalRequestDTO> movimientos;
+	private Date fechaDesde;
+	private Date fechaHasta;
+	private List<MovimientoProveedorDTO> movimientos;
 
 	public MovimientoTransaccionalListRequestDTO() {
 		super();
 	}
 
-	public MovimientoTransaccionalListRequestDTO(Integer folio, List<MovimientoTransaccionalRequestDTO> movimientos) {
+	public MovimientoTransaccionalListRequestDTO(Integer folio, Date fechaDesde, Date fechaHasta,
+			List<MovimientoProveedorDTO> movimientos) {
 		super();
 		this.folio = folio;
+		this.fechaDesde = fechaDesde;
+		this.fechaHasta = fechaHasta;
 		this.movimientos = movimientos;
 	}
 
@@ -38,17 +44,34 @@ public class MovimientoTransaccionalListRequestDTO implements Comparable<Movimie
 		this.folio = folio;
 	}
 
-	public List<MovimientoTransaccionalRequestDTO> getMovimientos() {
+	public List<MovimientoProveedorDTO> getMovimientos() {
 		return movimientos;
 	}
 
-	public void setMovimientos(List<MovimientoTransaccionalRequestDTO> movimientos) {
+	public void setMovimientos(List<MovimientoProveedorDTO> movimientos) {
 		this.movimientos = movimientos;
+	}
+
+	public Date getFechaDesde() {
+		return fechaDesde;
+	}
+
+	public void setFechaDesde(Date fechaDesde) {
+		this.fechaDesde = fechaDesde;
+	}
+
+	public Date getFechaHasta() {
+		return fechaHasta;
+	}
+
+	public void setFechaHasta(Date fechaHasta) {
+		this.fechaHasta = fechaHasta;
 	}
 
 	@Override
 	public String toString() {
-		return "MovimientoTransaccionalListRequestDTO [folio=" + folio + ", movimientos=" + movimientos + "]";
+		return "MovimientoTransaccionalListRequestDTO [folio=" + folio + ", fechaDesde=" + fechaDesde + ", fechaHasta="
+				+ fechaHasta + ", movimientos=" + movimientos + "]";
 	}
 
 	@Override

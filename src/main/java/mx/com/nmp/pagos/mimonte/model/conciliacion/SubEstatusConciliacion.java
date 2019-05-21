@@ -26,13 +26,11 @@ public class SubEstatusConciliacion extends AbstractCatalogoAdm {
 	
 	public SubEstatusConciliacion() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public SubEstatusConciliacion(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
 			String lastModifiedBy, String description, String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
-		// TODO Auto-generated constructor stub
 	}
 
 }

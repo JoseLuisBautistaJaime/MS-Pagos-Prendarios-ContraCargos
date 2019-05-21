@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
@@ -25,10 +24,22 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
  */
 @Repository("movimientoTransitoRepository")
 public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTransito, Integer> {
-	
+
+	/**
+	 * Búsqueda de los movimientos en transito a partir de una lista de ids.
+	 * 
+	 * @param lst
+	 * @return
+	 */
 	@Query("FROM MovimientoTransito mt WHERE mt.id IN ( :lst ) ")
-	public List<MovimientoTransito> findByIds( List<Integer> lst);
-	
+	public List<MovimientoTransito> findByIds(List<Integer> lst);
+
+	/**
+	 * Búsqueda de los movimientos en transito a partir del folio.
+	 * 
+	 * @param folio
+	 * @return
+	 */
 	@Query("SELECT mt FROM MovimientoConciliacion mc INNER JOIN MovimientoTransito mt ON mc.id = mt.id WHERE mt.idConciliacion = :folio")
 	public List<MovimientoTransito> findByIdConciliacion(@Param("folio") Integer folio);
 

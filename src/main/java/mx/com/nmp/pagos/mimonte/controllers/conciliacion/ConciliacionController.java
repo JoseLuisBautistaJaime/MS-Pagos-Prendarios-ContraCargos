@@ -124,8 +124,6 @@ public class ConciliacionController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SAVE_SUCCESSFUL,
 				ConciliacionBuilder.buildConciliacionResponseSaveDTOFromConciliacionDTO(
 						conciliacionServiceImpl.saveConciliacion(conciliacionResponseSaveDTO, createdBy)));
-		// return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta
-		// exitosa", buildDummy());
 	}
 
 //	/**
@@ -176,10 +174,7 @@ public class ConciliacionController {
 		
 		ConciliacionDTOList consultaFolio = conciliacionServiceImpl.consultaFolio(folio);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
-				consultaFolio
-//				buildConsultaFolioDummy()
-				);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH, consultaFolio);
 	}
 	
 	
@@ -200,26 +195,20 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consulta(
-			@RequestBody ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
-		
+	public Response consulta(@RequestBody ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
+
 		List<ConsultaConciliacionDTO> consulta = conciliacionServiceImpl.consulta(consultaConciliacionRequestDTO);
-		
-		
-		if(consulta != null && !consulta.isEmpty()) {
-			for(ConsultaConciliacionDTO con : consulta) {
+
+		if (consulta != null && !consulta.isEmpty()) {
+			for (ConsultaConciliacionDTO con : consulta) {
 				con.setNumeroMovimientos(consulta.size());
 			}
 		}
-		
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
-				consulta
-//				buildConsultaConciliacionDummy()
-				);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
+				consulta);
 	}
-//	
-//	
+
 	/**
 	 * Se encarga de guardar los cambios realizados en la conciliacion para las secciones de movimientos en transito "Solicitar Pago",  "Marcar como devolucion" y "Comisiones". 
 	 * 
@@ -242,7 +231,7 @@ public class ConciliacionController {
 		
 		  ActualizaionConciliacionRequestDTO actualizaConciliacion = conciliacionServiceImpl.actualizaConciliacion(actualizaionConciliacionRequestDTO);
 		
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion exitosa", null);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_UPDATE, null);
 	}
 //	
 //	/**

@@ -22,15 +22,16 @@ public class EntidadBuilder {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	/**Se ocupa
+
+	/**
 	 * Construye un objeto EntidadDTO a partir de una entidad de tipo Entidad.
+	 * 
 	 * @param entidad
 	 * @return entidadDTO
 	 */
 	public static EntidadDTO buildEntidadDTOFromEntidad(Entidad entidad) {
 		EntidadDTO entidadDTO = null;
-		if(entidad != null) {
+		if (entidad != null) {
 			entidadDTO = new EntidadDTO();
 			entidadDTO.setId(entidad.getId());
 			entidadDTO.setDescripcion(entidad.getDescription());
@@ -39,15 +40,16 @@ public class EntidadBuilder {
 		}
 		return entidadDTO;
 	}
-	
-	/**Se ocupa
+
+	/**
 	 * Construye una entidad Entidad a partir de un objeto de tipo EntidadDTO.
+	 * 
 	 * @param entidadDTO
 	 * @return entidad
 	 */
 	public static Entidad buildEntidadFromEntidadDTO(EntidadDTO entidadDTO) {
 		Entidad entidad = null;
-		if(entidadDTO != null) {
+		if (entidadDTO != null) {
 			entidad = new Entidad();
 			entidad.setId(entidadDTO.getId());
 			entidad.setDescription(entidadDTO.getDescripcion());
@@ -56,5 +58,5 @@ public class EntidadBuilder {
 		}
 		return entidad;
 	}
-	
+
 }

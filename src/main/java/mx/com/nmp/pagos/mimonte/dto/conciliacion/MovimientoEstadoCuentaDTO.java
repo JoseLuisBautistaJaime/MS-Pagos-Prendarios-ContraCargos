@@ -4,7 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @name MovimientoEstadoCuentaDTO
@@ -20,16 +22,16 @@ public class MovimientoEstadoCuentaDTO implements Comparable<MovimientoEstadoCue
 	private Long id;
 	private Date fecha;
 	private String descripcion;
-	private Double depositos;
-	private Double retiros;
-	private Double saldo;
+	private BigDecimal depositos;
+	private BigDecimal retiros;
+	private BigDecimal saldo;
 
 	public MovimientoEstadoCuentaDTO() {
 		super();
 	}
 
-	public MovimientoEstadoCuentaDTO(Long id, Date fecha, String descripcion, Double depositos, Double retiros,
-			Double saldo) {
+	public MovimientoEstadoCuentaDTO(Long id, Date fecha, String descripcion, BigDecimal depositos, BigDecimal retiros,
+			BigDecimal saldo) {
 		super();
 		this.id = id;
 		this.fecha = fecha;
@@ -63,27 +65,27 @@ public class MovimientoEstadoCuentaDTO implements Comparable<MovimientoEstadoCue
 		this.descripcion = descripcion;
 	}
 
-	public Double getDepositos() {
+	public BigDecimal getDepositos() {
 		return depositos;
 	}
 
-	public void setDepositos(Double depositos) {
+	public void setDepositos(BigDecimal depositos) {
 		this.depositos = depositos;
 	}
 
-	public Double getRetiros() {
+	public BigDecimal getRetiros() {
 		return retiros;
 	}
 
-	public void setRetiros(Double retiros) {
+	public void setRetiros(BigDecimal retiros) {
 		this.retiros = retiros;
 	}
 
-	public Double getSaldo() {
+	public BigDecimal getSaldo() {
 		return saldo;
 	}
 
-	public void setSaldo(Double saldo) {
+	public void setSaldo(BigDecimal saldo) {
 		this.saldo = saldo;
 	}
 
@@ -91,6 +93,24 @@ public class MovimientoEstadoCuentaDTO implements Comparable<MovimientoEstadoCue
 	public String toString() {
 		return "MovimientoEstadoCuentaDTO [id=" + id + ", fecha=" + fecha + ", descripcion=" + descripcion
 				+ ", depositos=" + depositos + ", retiros=" + retiros + ", saldo=" + saldo + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, fecha, descripcion, depositos, retiros, saldo);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof MovimientoEstadoCuentaDTO))
+			return false;
+
+		final MovimientoEstadoCuentaDTO other = (MovimientoEstadoCuentaDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

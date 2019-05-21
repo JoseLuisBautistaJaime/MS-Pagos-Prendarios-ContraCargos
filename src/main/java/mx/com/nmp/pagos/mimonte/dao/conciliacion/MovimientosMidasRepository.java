@@ -7,7 +7,9 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
@@ -30,7 +32,9 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param pageable
 	 * @return
 	 */
-	public List<MovimientoMidas> findByReporteConciliacionId(final Long conciliacionId, Pageable pageable);
+	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
+	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId,
+			@Param("estatus") final Boolean estatus, Pageable pageable);
 
 	/**
 	 * Regresa el total de registros midas por id de conciliacion
@@ -38,6 +42,8 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param conciliacionId
 	 * @return
 	 */
-	public Integer countByReporteConciliacionId(final Long conciliacionId);
+	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
+	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId,
+			@Param("estatus") final Boolean estatus);
 
 }

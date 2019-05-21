@@ -7,14 +7,11 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
  * @name MovimientoComisionRepository
@@ -26,11 +23,23 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
  * @version 0.1
  */
 @Repository("movimientoConciliacionRepository")
-public interface MovimientoComisionRepository extends JpaRepository<MovimientoComision, Long>{
-	
+public interface MovimientoComisionRepository extends JpaRepository<MovimientoComision, Long> {
+
+	/**
+	 * Búsqueda de los movimientos de la comisión a partir de una lista de ids
+	 * 
+	 * @param lst
+	 * @return
+	 */
 	@Query("FROM MovimientoComision mco WHERE mco.id IN :lst")
 	public List<MovimientoComision> findByIds(List<Integer> lst);
-	
+
+	/**
+	 * Búsqueda de los movimientos de la conciliación a partir del folio
+	 * 
+	 * @param folio
+	 * @return
+	 */
 	@Query("SELECT mco FROM MovimientoConciliacion mc INNER JOIN MovimientoComision mco ON mc.id = mco.id WHERE mco.idConciliacion = :folio")
 	public List<MovimientoComision> findByIdConciliacion(@Param("folio") Integer folio);
 

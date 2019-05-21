@@ -7,7 +7,6 @@ package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
@@ -18,10 +17,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.GlobalDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteEstadoCuentaDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteProveedorTransaccionalDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
@@ -62,7 +58,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setEstatus(conciliacionDTO.getEstatus()); // 1.- Finalizado 2.- En Proceso
 			conciliacionResponseSaveDTO.setEntidad(conciliacionDTO.getEntidad());
 			conciliacionResponseSaveDTO.setCuenta(conciliacionDTO.getCuenta());
-			conciliacionResponseSaveDTO.setSubEstatus(null);
+			conciliacionResponseSaveDTO.setSubEstatus(conciliacionDTO.getSubEstatus()); // 16 estados
 			conciliacionResponseSaveDTO.setSubEstatusDescripcion(conciliacionDTO.getSubEstatusDescripcion());
 			conciliacionResponseSaveDTO.setIdAsientoContable(conciliacionDTO.getIdAsientoContable());
 			conciliacionResponseSaveDTO.setIdTesoreria(conciliacionDTO.getIdPolizaTesoreria());
@@ -130,7 +126,8 @@ public abstract class ConciliacionBuilder {
 					.buildEstatusConciliacionDTOFromEstatusConciliacion(conciliacion.getEstatus()));
 			conciliacionDTO.setEntidad(EntidadBuilder.buildEntidadDTOFromEntidad(conciliacion.getEntidad()));
 			conciliacionDTO.setCuenta(CuentaBuilder.buildCuentaDTOFromCuenta(conciliacion.getCuenta()));
-			conciliacionDTO.setSubEstatus(SubEstatusConciliacionBuilder.buildSubEstatusConciliacionDTOFromSubEstatusConciliacion(conciliacion.getSubEstatus()));
+			conciliacionDTO.setSubEstatus(SubEstatusConciliacionBuilder
+					.buildSubEstatusConciliacionDTOFromSubEstatusConciliacion(conciliacion.getSubEstatus()));
 			conciliacionDTO.setSubEstatusDescripcion(null);
 			conciliacionDTO.setIdAsientoContable(null);
 			conciliacionDTO.setIdPolizaTesoreria(null);
@@ -167,16 +164,20 @@ public abstract class ConciliacionBuilder {
 			conciliacion
 					.setEntidad(EntidadBuilder.buildEntidadFromEntidadDTO(conciliacionResponseSaveDTO.getEntidad()));
 			conciliacion.setCuenta(CuentaBuilder.buildCuentaFromCuentaDTO(conciliacionResponseSaveDTO.getCuenta()));
-			conciliacion.setSubEstatus(SubEstatusConciliacionBuilder.buildSubEstatusConciliacionFromSubEstatusConciliacionDTO(conciliacionResponseSaveDTO.getSubEstatus()));
-//			conciliacion.setSubEstatusDescripcion(conciliacionResponseSaveDTO.getSubEstatusDescripcion());
-//			conciliacion.setIdAsientoContable(conciliacionResponseSaveDTO.getIdAsientoContable());
-//			conciliacion.setIdPolizaTesoreria(conciliacionResponseSaveDTO.getIdTesoreria());
+			conciliacion.setSubEstatus(
+					SubEstatusConciliacionBuilder.buildSubEstatusConciliacionFromSubEstatusConciliacionDTO(
+							conciliacionResponseSaveDTO.getSubEstatus()));
+			conciliacion.setSubEstatusDescripcion(null);
+			conciliacion.setIdAsientoContable(null);
+			conciliacion.setIdPolizaTesoreria(null);
 		}
 		return conciliacion;
 	}
-	
+
 	/**
-	 * Construye un objeto de tipo ConsultaConciliacionDTO a partir de una entidad Conciliacion
+	 * Construye un objeto de tipo ConsultaConciliacionDTO a partir de una entidad
+	 * Conciliacion
+	 * 
 	 * @param conciliacion
 	 * @return consultaConciliacionDTO
 	 */
@@ -187,12 +188,10 @@ public abstract class ConciliacionBuilder {
 			consultaConciliacionDTO.setFolio(conciliacion.getId());
 			consultaConciliacionDTO.setCuenta(CuentaBuilder.buildCuentaDTOFromCuenta(conciliacion.getCuenta()));
 			consultaConciliacionDTO.setEntidad(EntidadBuilder.buildEntidadDTOFromEntidad(conciliacion.getEntidad()));
-			consultaConciliacionDTO.setEstatus(EstatusConciliacionBuilder.buildEstatusConciliacionDTOFromEstatusConciliacion(conciliacion.getEstatus()));
-			consultaConciliacionDTO.setSubEstatus(SubEstatusConciliacionBuilder.buildSubEstatusConciliacionDTOFromSubEstatusConciliacion(conciliacion.getSubEstatus()));
-//			consultaConciliacionDTO.setSubEstatusDescripcion(conciliacion.getSubEstatusDescripcion());
-//			consultaConciliacionDTO.setIdAsientoContable(conciliacion.getIdAsientoContable());
-//			consultaConciliacionDTO.setIdPolizaTesoreria(conciliacion.getIdPolizaTesoreria());
-//			consultaConciliacionDTO.setNumeroMovimientos(null);
+			consultaConciliacionDTO.setEstatus(EstatusConciliacionBuilder
+					.buildEstatusConciliacionDTOFromEstatusConciliacion(conciliacion.getEstatus()));
+			consultaConciliacionDTO.setSubEstatus(SubEstatusConciliacionBuilder
+					.buildSubEstatusConciliacionDTOFromSubEstatusConciliacion(conciliacion.getSubEstatus()));
 			consultaConciliacionDTO.setCreatedBy(conciliacion.getCreatedBy());
 			consultaConciliacionDTO.setCreatedDate(conciliacion.getCreatedDate());
 			consultaConciliacionDTO.setLastModifiedBy(conciliacion.getLastModifiedBy());
@@ -200,65 +199,54 @@ public abstract class ConciliacionBuilder {
 		}
 		return consultaConciliacionDTO;
 	}
-	
-	
-	public static List<ConsultaConciliacionDTO> buildConsultaConciliacionDTOListFromConciliacionList(List<Conciliacion> conciliacionList){
+
+	/**
+	 * Construye un objeto de tipo List<ConsultaConciliacionDTO> a partir un entitie
+	 * de tipo List<Conciliacion>.
+	 * 
+	 * @param conciliacionList
+	 * @return
+	 */
+	public static List<ConsultaConciliacionDTO> buildConsultaConciliacionDTOListFromConciliacionList(
+			List<Conciliacion> conciliacionList) {
 		List<ConsultaConciliacionDTO> ConsultaConciliacionDTOList = null;
-		if(conciliacionList != null && !conciliacionList.isEmpty()) {
+		if (conciliacionList != null && !conciliacionList.isEmpty()) {
 			ConsultaConciliacionDTOList = new ArrayList<>();
-			for( Conciliacion conciliacion : conciliacionList) {
+			for (Conciliacion conciliacion : conciliacionList) {
 				ConsultaConciliacionDTOList.add(buildConsultaConciliacionDTOFromConciliacion(conciliacion));
 			}
 		}
 		return ConsultaConciliacionDTOList;
-		
+
 	}
-	
-	
+
 	/**
-	 * Construye una entidad de tipo Conciliacion a partir de un objeto de tipo ConsultaConciliacionDTO.
-	 * @param consultaConciliacionDTO
-	 * @return conciliacion
-	 */
-	public static Conciliacion buildConciliacionFromConsultaConciliacionDTO(ConsultaConciliacionDTO consultaConciliacionDTO) {
-		Conciliacion conciliacion = null;
-		if(consultaConciliacionDTO != null) {
-			conciliacion = new Conciliacion();
-			conciliacion.setId(consultaConciliacionDTO.getFolio());
-			conciliacion.setCuenta(CuentaBuilder.buildCuentaFromCuentaDTO(consultaConciliacionDTO.getCuenta()));
-			conciliacion.setEntidad(EntidadBuilder.buildEntidadFromEntidadDTO(consultaConciliacionDTO.getEntidad()));
-			conciliacion.setEstatus(EstatusConciliacionBuilder.buildEstatusConciliacionFromEstatusConciliacionDTO(consultaConciliacionDTO.getEstatus()));
-//			conciliacion.setNumeroMovimientos();
-			conciliacion.setCreatedBy(consultaConciliacionDTO.getCreatedBy());
-			conciliacion.setCreatedDate(consultaConciliacionDTO.getCreatedDate());
-			conciliacion.setLastModifiedBy(consultaConciliacionDTO.getLastModifiedBy());
-			conciliacion.setLastModifiedDate(consultaConciliacionDTO.getLastModifiedDate());
-		}
-		return conciliacion;
-	}
-	
-	/**
-	 * Construye un objeto de tipo ConciliacionDTOList a partir de una entidad de tipo Conciliacion
+	 * Construye un objeto de tipo ConciliacionDTOList a partir de una entidad de
+	 * tipo Conciliacion
+	 * 
 	 * @param conciliacion
 	 * @return conciliacionDTOList
 	 */
 	public static ConciliacionDTOList buildConciliacionDTOListFromConciliacion(Conciliacion conciliacion,
-			Global global,
-			Reporte reporte,
-			List<DevolucionConDTO> devolucionConDTOList, 
-			List<MovTransitoDTO> movTransitoDTOList,
-			List<ComisionesDTO> comisionesDTOList) {
+			List<Reporte> reporte, Global global, List<DevolucionConDTO> devolucionConDTOList,
+			List<MovTransitoDTO> movTransitoDTOList, List<ComisionesDTO> comisionesDTOList) {
 		ConciliacionDTOList conciliacionDTOList = null;
-		if(conciliacion != null) {
+		if (conciliacion != null) {
 			conciliacionDTOList = new ConciliacionDTOList();
 			conciliacionDTOList.setFolio(conciliacion.getId());
-			conciliacionDTOList.setEstatus(EstatusConciliacionBuilder.buildEstatusConciliacionDTOFromEstatusConciliacion(conciliacion.getEstatus()));
+			conciliacionDTOList.setEstatus(EstatusConciliacionBuilder
+					.buildEstatusConciliacionDTOFromEstatusConciliacion(conciliacion.getEstatus()));
+			conciliacionDTOList.setSubEstatus(SubEstatusConciliacionBuilder
+					.buildSubEstatusConciliacionDTOFromSubEstatusConciliacion(conciliacion.getSubEstatus()));
 			conciliacionDTOList.setEntidad(EntidadBuilder.buildEntidadDTOFromEntidad(conciliacion.getEntidad()));
 			conciliacionDTOList.setCuenta(CuentaBuilder.buildCuentaDTOFromCuenta(conciliacion.getCuenta()));
-			conciliacionDTOList.setReporteProcesosNocturnos(ReporteProcesosNocturnosBuilder.buildReporteProcesosNocturnosDTOSetFromReporteSet(conciliacion.getReportes()));
-			conciliacionDTOList.setReporteProveedorTransaccional(ReporteProveedorTransaccionalBuilder.buildReporteProveedorTransaccionalDTOSetFromReporteSet(conciliacion.getReportes()));
-			conciliacionDTOList.setReporteEstadoCuenta(ReporteEstadoCuentaBuilder.buildReporteEstadoCuentaDTOSetFromReporteSet(conciliacion.getReportes()));
-			conciliacionDTOList.setGlobal(GlobalBuilder.buildGlobalDTOSetFromGlobalSet(conciliacion.getGlobal()));
+			conciliacionDTOList.setReporteProcesosNocturnos(
+					ReporteProcesosNocturnosBuilder.buildReporteProcesosNocturnosDTOSetFromReporteSet(reporte));
+			conciliacionDTOList.setReporteProveedorTransaccional(ReporteProveedorTransaccionalBuilder
+					.buildReporteProveedorTransaccionalDTOFromReporteList(reporte));
+			conciliacionDTOList.setReporteEstadoCuenta(
+					ReporteEstadoCuentaBuilder.buildReporteEstadoCuentaDTOFromReporteList(reporte));
+			conciliacionDTOList.setGlobal(GlobalBuilder.buildGlobalDTOFromGlobal(global));
 			conciliacionDTOList.setDevoluciones(devolucionConDTOList);
 			conciliacionDTOList.setMovimientosTransito(movTransitoDTOList);
 			conciliacionDTOList.setComisiones(comisionesDTOList);
@@ -268,58 +256,6 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTOList.setLastModifiedBy(conciliacion.getLastModifiedBy());
 		}
 		return conciliacionDTOList;
-	}
-	
-	public static List<ConciliacionDTOList> buildConciliacionDTOListFromConciliacionList(List<Conciliacion> conciliacionList){
-		List<ConciliacionDTOList> ConciliacionDTOList = null;
-		if(conciliacionList != null && !conciliacionList.isEmpty()) {
-			ConciliacionDTOList = new ArrayList<>();
-			for( Conciliacion conciliacion : conciliacionList) {
-				ConciliacionDTOList.add(buildConciliacionDTOListFromConciliacion(conciliacion, null, null, null, null, null));
-			}
-		}
-		return ConciliacionDTOList;
-		
-	}
-
-	/**
-	 * Construye una entidad de tipo Conciliacion a partir de un objeto de tipo ConciliacionDTOList
-	 * @param conciliacionDTOList
-	 * @return conciliacion
-	 */
-	@SuppressWarnings("unchecked")
-	public static Conciliacion buildConciliacionFromConciliacionDTOList (ConciliacionDTOList conciliacionDTOList) {
-		Conciliacion conciliacion = null;
-		if(conciliacionDTOList != null) {
-			conciliacion = new Conciliacion();
-			conciliacion.setId(conciliacionDTOList.getFolio());
-			conciliacion.setEstatus(EstatusConciliacionBuilder.buildEstatusConciliacionFromEstatusConciliacionDTO(conciliacionDTOList.getEstatus()));
-			conciliacion.setEntidad(EntidadBuilder.buildEntidadFromEntidadDTO(conciliacionDTOList.getEntidad()));
-			conciliacion.setCuenta(CuentaBuilder.buildCuentaFromCuentaDTO(conciliacionDTOList.getCuenta()));
-			conciliacion.setReportes((Set<Reporte>) conciliacionDTOList.getReporteProcesosNocturnos());
-			conciliacion.setReportes((Set<Reporte>) conciliacionDTOList.getReporteEstadoCuenta());
-			conciliacion.setReportes((Set<Reporte>) conciliacionDTOList.getReporteProveedorTransaccional());
-			conciliacion.setGlobal((Set<Global>) conciliacionDTOList.getGlobal());
-//			conciliacion.getMovi
-//			conciliacion.setMovimientosTransito(movimientosTransito);
-//			conciliacion.setComisiones(comisiones);
-			conciliacion.setCreatedDate(conciliacionDTOList.getCreatedDate());
-			conciliacion.setLastModifiedDate(conciliacionDTOList.getLastModifiedDate());
-			conciliacion.setCreatedBy(conciliacionDTOList.getCreatedBy());
-			conciliacion.setLastModifiedBy(conciliacionDTOList.getLastModifiedBy());
-		}
-		return conciliacion;
-	}
-
-	public static ConciliacionDTOList buildConciliacionDTOListFromConciliacion(Conciliacion conciliacion,
-			GlobalDTO buildGlobalDTOFromGlobal, ConciliacionDTOList buildReporteProcesosNocturnosDTOFromReporte,
-			ReporteProveedorTransaccionalDTO buildReporteProveedorTransaccionalDTOFromReporte,
-			ReporteEstadoCuentaDTO buildReporteEstadoCuentaDTOFromReporte,
-			List<DevolucionConDTO> buildReporteEstadoCuentaDTOListFromReporteList,
-			List<MovTransitoDTO> buildMovTransitoDTOListFromMovimientoTransitoList,
-			List<ComisionesDTO> buildComisionesDTOListFromMovimientoComisionList) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

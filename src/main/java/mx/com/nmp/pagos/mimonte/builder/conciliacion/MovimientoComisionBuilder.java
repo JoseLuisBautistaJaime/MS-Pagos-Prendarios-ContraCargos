@@ -11,22 +11,29 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 
 /**
-* @name MovimientoComisionBuilder
-* @description Clase que construye objetos en base a otros relacionados con
-*              movimientoComision
-* @author Jose Rodríguez jgrodriguez@quarksoft.net
-* @creationDate 29/04/2019 19:47 hrs.
-* @version 0.1
-*/
+ * @name MovimientoComisionBuilder
+ * @description Clase que construye objetos en base a otros relacionados con
+ *              movimientoComision
+ * @author Jose Rodríguez jgrodriguez@quarksoft.net
+ * @creationDate 29/04/2019 19:47 hrs.
+ * @version 0.1
+ */
 public abstract class MovimientoComisionBuilder {
 
 	public MovimientoComisionBuilder() {
 		super();
 	}
-	
+
+	/**
+	 * Construye un objeto de tipo ComisionesDTO a partir de un entitie de tipo
+	 * MovimientoComision
+	 * 
+	 * @param movimientoComision
+	 * @return comisionesDTO
+	 */
 	public static ComisionesDTO buildComisionesDTOFromMovimientoComision(MovimientoComision movimientoComision) {
 		ComisionesDTO comisionesDTO = null;
-		if(movimientoComision != null) {
+		if (movimientoComision != null) {
 			comisionesDTO = new ComisionesDTO();
 			comisionesDTO.setId(movimientoComision.getId());
 			comisionesDTO.setFecha(movimientoComision.getFechaOperacion());
@@ -36,30 +43,20 @@ public abstract class MovimientoComisionBuilder {
 		}
 		return comisionesDTO;
 	}
-	
-	public static MovimientoComision buildMovimientoComisionFromComisionesDTO(ComisionesDTO comisionesDTO) {
-		MovimientoComision movimientoComision = null;
-		if(comisionesDTO != null) {
-			movimientoComision = new MovimientoComision();
-			movimientoComision.setId(comisionesDTO.getId());
-			movimientoComision.setFechaOperacion(comisionesDTO.getFecha());
-			movimientoComision.setFechaCargo(comisionesDTO.getFechaCargo());
-			movimientoComision.setMonto(comisionesDTO.getMonto());
-			movimientoComision.setDescripcion(comisionesDTO.getDescripcion());
-		}
-		return movimientoComision;
-	}
-	
+
 	/**
-	 * Construye un set de objetos de tipo ReporteEstadoCuentaDTO a partir de un set de entities de tipo Reporte.
+	 * Construye un set de objetos de tipo ReporteEstadoCuentaDTO a partir de un set
+	 * de entities de tipo Reporte.
+	 * 
 	 * @param reporteSet
 	 * @return reporteEstadoCuentaDTOSet
 	 */
-	public static List<ComisionesDTO> buildComisionesDTOListFromMovimientoComisionList(List<MovimientoComision> MovimientoComisionList){
+	public static List<ComisionesDTO> buildComisionesDTOListFromMovimientoComisionList(
+			List<MovimientoComision> MovimientoComisionList) {
 		List<ComisionesDTO> ComisionesDTOList = null;
-		if(MovimientoComisionList != null && !MovimientoComisionList.isEmpty()) {
+		if (MovimientoComisionList != null && !MovimientoComisionList.isEmpty()) {
 			ComisionesDTOList = new ArrayList<>();
-			for(  MovimientoComision mC : MovimientoComisionList) {
+			for (MovimientoComision mC : MovimientoComisionList) {
 				ComisionesDTOList.add(buildComisionesDTOFromMovimientoComision(mC));
 			}
 		}

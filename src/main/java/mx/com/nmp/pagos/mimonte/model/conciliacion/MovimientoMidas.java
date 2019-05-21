@@ -6,14 +6,13 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,12 +37,14 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 	@Column(name = "id", nullable = false, insertable = false, updatable = false, unique = true)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "id_reporte", nullable = false)
-	private Reporte reporte;
+	@Column(name = "id_reporte", nullable = false)
+	private Long reporte;
 
 	@Column(name = "transaccion", nullable = false)
 	private Long transaccion;
+
+	@Column(name = "estado_transaccion", nullable = false)
+	private String estadoTransaccion;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha", nullable = false)
@@ -53,7 +54,7 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 	private Long folio;
 
 	@Column(name = "sucursal", nullable = true)
-	private Long sucursal;
+	private Integer sucursal;
 
 	@Size(max = ConciliacionConstants.ENTITY_VALIDATION_SIZE_VALUE_10, message = ConciliacionConstants.ENTITY_VALIDATION_SIZE_MESSAGE_10)
 	@Column(name = "operacion_abr", nullable = true)
@@ -87,9 +88,41 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 	@Column(name = "interes", nullable = true)
 	private BigDecimal interes;
 
-	@Size(max = ConciliacionConstants.ENTITY_VALIDATION_SIZE_VALUE_10, message = ConciliacionConstants.ENTITY_VALIDATION_SIZE_MESSAGE_10)
 	@Column(name = "estatus", nullable = true)
-	private String estatus;
+	private Boolean estatus;
+
+	@Column(name = "consumidor")
+	private String consumidor;
+
+	@Column(name = "codigo_error", nullable = true)
+	private String codigoError;
+
+	@Column(name = "mensaje_error", nullable = true)
+	private String mensajeError;
+
+	@Column(name = "id_tarjeta", nullable = true)
+	private String idTarjeta;
+
+	@Column(name = "marca_tarjeta", nullable = true)
+	private String marcaTarjeta;
+
+	@Column(name = "tipo_tarjeta", nullable = true)
+	private String tipoTarjeta;
+
+	@Column(name = "tarjeta", nullable = true)
+	private String tarjeta;
+
+	@Column(name = "moneda_pago", nullable = true)
+	private String monedaPago;
+
+	@Column(name = "importe_transaccion", nullable = true)
+	private BigDecimal importeTransaccion;
+
+	@Column(name = "id_operacion", nullable = true)
+	private Integer idOperacion;
+
+	@Column(name = "id_tipo_contrato", nullable = true)
+	private Integer idTipoContrato;
 
 	public Long getId() {
 		return id;
@@ -99,19 +132,19 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 		this.id = id;
 	}
 
-	public Reporte getReporte() {
+	public Long getReporte() {
 		return reporte;
 	}
 
-	public void setReporte(Reporte reporte) {
+	public void setReporte(Long reporte) {
 		this.reporte = reporte;
 	}
 
-	public Long getSucursal() {
+	public Integer getSucursal() {
 		return sucursal;
 	}
 
-	public void setSucursal(Long sucursal) {
+	public void setSucursal(Integer sucursal) {
 		this.sucursal = sucursal;
 	}
 
@@ -195,11 +228,11 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 		this.interes = interes;
 	}
 
-	public String getEstatus() {
+	public Boolean getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(Boolean estatus) {
 		this.estatus = estatus;
 	}
 
@@ -219,13 +252,135 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 		this.fecha = fecha;
 	}
 
+	public String getEstadoTransaccion() {
+		return estadoTransaccion;
+	}
+
+	public void setEstadoTransaccion(String estadoTransaccion) {
+		this.estadoTransaccion = estadoTransaccion;
+	}
+
+	public String getConsumidor() {
+		return consumidor;
+	}
+
+	public void setConsumidor(String idConsumidor) {
+		this.consumidor = idConsumidor;
+	}
+
+	public String getCodigoError() {
+		return codigoError;
+	}
+
+	public void setCodigoError(String codigoError) {
+		this.codigoError = codigoError;
+	}
+
+	public String getMensajeError() {
+		return mensajeError;
+	}
+
+	public void setMensajeError(String mensajeError) {
+		this.mensajeError = mensajeError;
+	}
+
+	public String getIdTarjeta() {
+		return idTarjeta;
+	}
+
+	public void setIdTarjeta(String idTarjeta) {
+		this.idTarjeta = idTarjeta;
+	}
+
+	public String getMarcaTarjeta() {
+		return marcaTarjeta;
+	}
+
+	public void setMarcaTarjeta(String marcaTarjeta) {
+		this.marcaTarjeta = marcaTarjeta;
+	}
+
+	public String getTipoTarjeta() {
+		return tipoTarjeta;
+	}
+
+	public void setTipoTarjeta(String tipoTarjeta) {
+		this.tipoTarjeta = tipoTarjeta;
+	}
+
+	public String getTarjeta() {
+		return tarjeta;
+	}
+
+	public void setTarjeta(String tarjeta) {
+		this.tarjeta = tarjeta;
+	}
+
+	public String getMonedaPago() {
+		return monedaPago;
+	}
+
+	public void setMonedaPago(String monedaPago) {
+		this.monedaPago = monedaPago;
+	}
+
+	public BigDecimal getImporteTransaccion() {
+		return importeTransaccion;
+	}
+
+	public void setImporteTransaccion(BigDecimal importeTransaccion) {
+		this.importeTransaccion = importeTransaccion;
+	}
+
+	public Integer getIdOperacion() {
+		return idOperacion;
+	}
+
+	public void setIdOperacion(Integer idOperacion) {
+		this.idOperacion = idOperacion;
+	}
+
+	public Integer getIdTipoContrato() {
+		return idTipoContrato;
+	}
+
+	public void setIdTipoContrato(Integer idTipoContrato) {
+		this.idTipoContrato = idTipoContrato;
+	}
+
 	@Override
 	public String toString() {
-		return "MovimientoMidas [id=" + id + ", idReporte=" + reporte + ", sucursal=" + sucursal + ", folio=" + folio
-				+ ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc + ", monto=" + monto
+		return "MovimientoMidas [id=" + id + ", reporte=" + reporte + ", transaccion=" + transaccion
+				+ ", estadoTransaccion=" + estadoTransaccion + ", fecha=" + fecha + ", folio=" + folio + ", sucursal="
+				+ sucursal + ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc + ", monto=" + monto
 				+ ", tipoContratoAbr=" + tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc
 				+ ", numAutorizacion=" + numAutorizacion + ", capital=" + capital + ", comisiones=" + comisiones
-				+ ", interes=" + interes + ", estatus=" + estatus + "]";
+				+ ", interes=" + interes + ", estatus=" + estatus + ", consumidor=" + consumidor + ", codigoError="
+				+ codigoError + ", mensajeError=" + mensajeError + ", idTarjeta=" + idTarjeta + ", marcaTarjeta="
+				+ marcaTarjeta + ", tipoTarjeta=" + tipoTarjeta + ", tarjeta=" + tarjeta + ", monedaPago=" + monedaPago
+				+ ", importeTransaccion=" + importeTransaccion + ", idOperacion=" + idOperacion + ", idTipoContrato="
+				+ idTipoContrato + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, reporte, transaccion, estadoTransaccion, fecha, folio, sucursal, operacionAbr,
+				operacionDesc, monto, tipoContratoAbr, tipoContratoDesc, numAutorizacion, capital, comisiones, interes,
+				estatus, consumidor, codigoError, mensajeError, idTarjeta, marcaTarjeta, tipoTarjeta, tarjeta,
+				monedaPago, importeTransaccion);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof MovimientoMidas))
+			return false;
+
+		final MovimientoMidas other = (MovimientoMidas) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

@@ -5,10 +5,13 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +23,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.model.Updatable;
 
 /**
@@ -44,9 +46,9 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	@JoinColumn(name = "id_conciliacion", nullable = false)
 	private Conciliacion conciliacion;
 
-	@Size(max = ConciliacionConstants.ENTITY_VALIDATION_SIZE_VALUE_45, message = ConciliacionConstants.ENTITY_VALIDATION_SIZE_MESSAGE_45)
 	@Column(name = "tipo", nullable = false)
-	private String tipo;
+	@Enumerated(EnumType.STRING)
+	private TipoReporteEnum tipo;
 
 	@Column(name = "disponible", nullable = false)
 	private Boolean disponible;
@@ -58,7 +60,7 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha_hasta", nullable = false)
 	private Date fechaHasta;
-
+	
 	@OneToMany(mappedBy = "reporte", targetEntity = MovimientoMidas.class)
 	private Set<MovimientoMidas> movimientosMidas;
 
@@ -76,7 +78,7 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	}
 
 	public Reporte(Integer id, Conciliacion conciliacion,
-			@Size(max = 45, message = "Debe ingresar maximo 45 caracteres") String tipo, Boolean disponible,
+			@Size(max = 45, message = "Debe ingresar maximo 45 caracteres") TipoReporteEnum tipo, Boolean disponible,
 			Date fechaDesde, Date fechaHasta, Set<MovimientoMidas> movimientosMidas,
 			Set<MovimientoProveedor> movimientosProveedor) {
 		super();
@@ -89,7 +91,7 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 		this.movimientosMidas = movimientosMidas;
 		this.movimientosProveedor = movimientosProveedor;
 	}
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -106,11 +108,11 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 		this.conciliacion = conciliacion;
 	}
 
-	public String getTipo() {
+	public TipoReporteEnum getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(TipoReporteEnum tipo) {
 		this.tipo = tipo;
 	}
 
@@ -156,17 +158,7 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((conciliacion == null) ? 0 : conciliacion.hashCode());
-		result = prime * result + ((disponible == null) ? 0 : disponible.hashCode());
-		result = prime * result + ((fechaDesde == null) ? 0 : fechaDesde.hashCode());
-		result = prime * result + ((fechaHasta == null) ? 0 : fechaHasta.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((movimientosMidas == null) ? 0 : movimientosMidas.hashCode());
-		result = prime * result + ((movimientosProveedor == null) ? 0 : movimientosProveedor.hashCode());
-		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
-		return result;
+		return Objects.hash(id, conciliacion, tipo, disponible, fechaDesde, fechaHasta);
 	}
 
 	@Override
@@ -213,10 +205,7 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 				return false;
 		} else if (!movimientosProveedor.equals(other.movimientosProveedor))
 			return false;
-		if (tipo == null) {
-			if (other.tipo != null)
-				return false;
-		} else if (!tipo.equals(other.tipo))
+		if (tipo != other.tipo)
 			return false;
 		return true;
 	}
@@ -224,13 +213,13 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	@Override
 	public String toString() {
 		return "Reporte [id=" + id + ", conciliacion=" + conciliacion + ", tipo=" + tipo + ", disponible=" + disponible
-				+ ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + ", movimientosMidas=" + movimientosMidas
-				+ ", movimientosProveedor=" + movimientosProveedor + "]";
+				+ ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + "]";
 	}
-
+	
 	@Override
-	public int compareTo(Reporte o) {
-		return o.id.compareTo(this.id);
+	public int compareTo(Reporte arg0) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

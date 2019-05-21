@@ -16,13 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.GlobalBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoComisionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteEstadoCuentaBuilder;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteProcesosNocturnosBuilder;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteProveedorTransaccionalBuilder;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
@@ -87,28 +83,32 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
-	
+
 	@Autowired
 	private MovimientoConciliacionRepository movimientoConciliacionRepository;
-	
+
 	@Autowired
 	private MovimientoComisionRepository movimientoComisionRepository;
-	
+
 	@Autowired
 	private MovimientoTransitoRepository movimientoTransitoRepository;
-	
+
 	@Autowired
 	private ReporteRepository reporteRepository;
-	
+
 	@Autowired
 	private DevolucionesRepository devolucionesRepository;
-	
-	@Autowired 
+
+	@Autowired
 	private SubEstatusConciliacionRepository subEstatusConciliacionRepository;
-	
+
 	@Autowired
 	private GlobalRepository globalRepository;
 
+	
+	/**
+	 * Metodo que da de alta una conciliación regresando un folio a partir de un objeto de tipo ConciliacionResponseSaveDTO
+	 */
 	@Override
 	@Transactional
 	public ConciliacionDTO saveConciliacion(ConciliacionResponseSaveDTO conciliacionRequestDTO, String createdBy) {
@@ -142,11 +142,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				.findByNombre(ConciliacionConstants.EN_PROCESO);
 		if (estatusConciliacion == null || estatusConciliacion.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-		
+
 		conciliacionRequestDTO.setEstatus(new EstatusConciliacionDTO(estatusConciliacion.getId()));
-		
-		SubEstatusConciliacion subEstatusConciliacion = subEstatusConciliacionRepository.findByDescripcion(ConciliacionConstants.CREADA);
-		if(subEstatusConciliacion == null || subEstatusConciliacion.getId() == null)
+
+		SubEstatusConciliacion subEstatusConciliacion = subEstatusConciliacionRepository
+				.findByDescripcion(ConciliacionConstants.CREADA);
+		if (subEstatusConciliacion == null || subEstatusConciliacion.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
 		conciliacionRequestDTO.setSubEstatus(new SubEstatusConciliacionDTO(subEstatusConciliacion.getId()));
@@ -162,10 +163,14 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		return ConciliacionBuilder.buildConciliacionDTOFromConciliacion(conciliacion);
 
 	}
-	
+
+	/**
+	 * Metodo que actualiza la informacion de los movimientos en transito y movimientos de la comisión.
+	 */
 	@Override
 	@Transactional
-	public ActualizaionConciliacionRequestDTO actualizaConciliacion(ActualizaionConciliacionRequestDTO actualizaionConciliacionRequestDTO) {
+	public ActualizaionConciliacionRequestDTO actualizaConciliacion(
+			ActualizaionConciliacionRequestDTO actualizaionConciliacionRequestDTO) {
 
 		// Validación del request
 		if (actualizaionConciliacionRequestDTO == null)
@@ -197,11 +202,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		if (conciliacion == null || conciliacion.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
-		// Búsqueda del folio en la tabla de to_movimiento_conciliacion en base al folio
-		// obtenido.
+		// Búsqueda del folio en la tabla de to_movimiento_conciliacion en base al
+		// folio.
 		MovimientoConciliacion movimientoConciliacion = movimientoConciliacionRepository
 				.findByIdMovimientoConciliacion(conciliacion.getId());
-//				.findByIdConciliacion(conciliacion.getId());
 		if (movimientoConciliacion == null || movimientoConciliacion.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
@@ -243,19 +247,25 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		return actualizaionConciliacionRequestDTO;
 	}
 
-//	@SuppressWarnings("unlikely-arg-type")
+	/**
+	 * Metodo que realiza una busqueda a partir de un objeto de tipo
+	 * ConsultaConciliacionRequestDTO devolviendo como resultado una lista de tipo
+	 * ConsultaConciliacionDTO.
+	 */
 	@Override
 	public List<ConsultaConciliacionDTO> consulta(ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
 
+		// Validacion del objeto request de tipo ConsultaConciliacionRequestDTO
 		if (consultaConciliacionRequestDTO.getIdEntidad() == null || consultaConciliacionRequestDTO.getIdEntidad() < 1
 				|| consultaConciliacionRequestDTO.getIdEstatus() == null
 				|| consultaConciliacionRequestDTO.getIdEstatus() < 1
 				|| consultaConciliacionRequestDTO.getFolio() == null || consultaConciliacionRequestDTO.getFolio() < 1
 				|| consultaConciliacionRequestDTO.getFechaDesde() == null
-//				|| consultaConciliacionRequestDTO.getFechaDesde().equals("")
-				|| consultaConciliacionRequestDTO.getFechaHasta() == null
-//				|| consultaConciliacionRequestDTO.getFechaHasta().equals("")
-				)
+				|| consultaConciliacionRequestDTO.getFechaHasta() == null)
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+
+		// Validación de la fecha final no sea menor que la fecha inicial.
+		if (consultaConciliacionRequestDTO.getFechaHasta().before(consultaConciliacionRequestDTO.getFechaDesde()))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 
 		// Búsqueda y validación del idEntidad.
@@ -265,6 +275,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		if (entidad == null || entidad.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
+		// Búsqueda del estatus de la conciliacion a partir de idEstatus.
 		EstatusConciliacion estatusConciliacion = estatusConciliacionRepository
 				.findByIdEstatus(consultaConciliacionRequestDTO.getIdEstatus());
 		if (estatusConciliacion.getId() == null)
@@ -275,85 +286,60 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		if (conciliacion == null || conciliacion.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
-		
-		return  ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFecha(
-				consultaConciliacionRequestDTO.getFolio(), 
-				consultaConciliacionRequestDTO.getIdEntidad(),
-				consultaConciliacionRequestDTO.getIdEstatus(),
-				consultaConciliacionRequestDTO.getFechaDesde(),
-				consultaConciliacionRequestDTO.getFechaHasta()));
+		return ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
+				conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFecha(
+						consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
+						consultaConciliacionRequestDTO.getIdEstatus(), consultaConciliacionRequestDTO.getFechaDesde(),
+						consultaConciliacionRequestDTO.getFechaHasta()));
 	}
-	
-	@SuppressWarnings("unchecked")
+
+	/**
+	 * Metodo que consulta a partir del folio la conciliacion con los siguientes
+	 * objetos: el estatus de la conciliacion, el sub estatus de la conciliacion, la
+	 * entidad, la cuenta, reportes (Midas, Proveedor y estado de cuenta), global,
+	 * devoluciones, movimientos en transito y comisiones
+	 */
 	@Override
 	public ConciliacionDTOList consultaFolio(Integer folio) {
-		
-		
-		
-//		
-//		Conciliacion conciliacion = conciliacionRepository.findByFolio(folio);
-//		if (conciliacion == null || conciliacion.getId() == null)
-//			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-//		
-//		
-//		MovimientoConciliacion movimientoConciliacion = movimientoConciliacionRepository.findByIdMovimientoConciliacion(conciliacion.getId());
-//		if (movimientoConciliacion == null || movimientoConciliacion.getId() == null)
-//			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-//		
-//		List<MovimientoDevolucion> mD = devolucionesRepository.findByIdConciliacion(folio);
-//		List<MovimientoTransito> mT = movimientoTransitoRepository.findByIdConciliacion(folio);
-//		List<MovimientoComision> mC = movimientoComisionRepository.findByIdConciliacion(folio);
-//		
-//		return   ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(
-//				conciliacion,
-//				MovimientoDevolucionBuilder.buildReporteEstadoCuentaDTOListFromReporteList(mD), 
-//				MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(mT),
-//				MovimientoComisionBuilder.buildComisionesDTOListFromMovimientoComisionList(mC));
-		
+
+		// Validación del folio en el request.
+		if (folio == null || folio < 1)
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+
+		// Búsqueda de la conciliación a partir del folio.
 		Conciliacion conciliacion = conciliacionRepository.findByFolio(folio);
 		if (conciliacion == null || conciliacion.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
-		MovimientoConciliacion movimientoConciliacion = movimientoConciliacionRepository
-				.findByIdMovimientoConciliacion(folio);
-		if (movimientoConciliacion == null || movimientoConciliacion.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-
+		// Búsqueda de los movimientos en devolución a partir del folio
 		List<MovimientoDevolucion> mD = devolucionesRepository.findByIdConciliacion(folio);
 		if (mD == null || mD.isEmpty())
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
+		// Búsqueda de los movimientos en transito a partir del folio.
 		List<MovimientoTransito> mT = movimientoTransitoRepository.findByIdConciliacion(folio);
 		if (mT == null || mT.isEmpty())
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
+		// Búsqueda de los movimientos en comisión a partir del folio.
 		List<MovimientoComision> mC = movimientoComisionRepository.findByIdConciliacion(folio);
 		if (mC == null || mC.isEmpty())
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
-		Global global = globalRepository.findByIdConciliacion(conciliacion.getId());
+		// Búsqueda de los reporte a partir del folio.
+		List<Reporte> reporte = reporteRepository.findByIdConciliacion(folio);
+		if (reporte == null || reporte.isEmpty())
+			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+
+		// Búsqueda de los globales a partir del folio.
+		Global global = globalRepository.findByIdConciliacion(folio);
 		if (global == null || global.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
-		Reporte reporte = reporteRepository.findByIdConciliacion(conciliacion.getId());
-		if (reporte == null || reporte.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-		
-		
-		
-	return	 ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(
-					conciliacion,
-					GlobalBuilder.buildGlobalDTOFromGlobal(global),
-					ReporteProcesosNocturnosBuilder.buildReporteProcesosNocturnosDTOFromReporte(reporte),
-					ReporteProveedorTransaccionalBuilder.buildReporteProveedorTransaccionalDTOFromReporte(reporte),
-					ReporteEstadoCuentaBuilder.buildReporteEstadoCuentaDTOFromReporte(reporte),
-					MovimientoDevolucionBuilder.buildReporteEstadoCuentaDTOListFromReporteList(mD), 
-					MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(mT),
-					MovimientoComisionBuilder.buildComisionesDTOListFromMovimientoComisionList(mC));
-			
-		
-		
-		
+		return ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(conciliacion, reporte, global,
+				MovimientoDevolucionBuilder.buildDevolucionConDTOListFromMovimientoDevolucionList(mD),
+				MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(mT),
+				MovimientoComisionBuilder.buildComisionesDTOListFromMovimientoComisionList(mC));
 	}
 
 }

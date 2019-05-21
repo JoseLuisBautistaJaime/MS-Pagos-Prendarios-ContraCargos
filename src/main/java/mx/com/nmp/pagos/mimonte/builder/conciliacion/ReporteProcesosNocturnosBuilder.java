@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -34,7 +35,7 @@ public abstract class ReporteProcesosNocturnosBuilder {
 	 * @param reporteSet
 	 * @return
 	 */              
-	public static ReporteProcesosNocturnosDTO buildReporteProcesosNocturnosDTOSetFromReporteSet(Set<Reporte> reporteSet){
+	public static ReporteProcesosNocturnosDTO buildReporteProcesosNocturnosDTOSetFromReporteSet(List<Reporte> reporteSet){
 		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = null;
 		if(reporteSet != null && !reporteSet.isEmpty()) {
 			reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO();
@@ -49,67 +50,5 @@ public abstract class ReporteProcesosNocturnosBuilder {
 		}
 		return reporteProcesosNocturnosDTO;
 	}
-	
-	/**
-	 * Construye una objeto de tipo ReporteProcesosNocturnosDTO a partir de una entidad de tipo Reporte.
-	 * @param reporte
-	 * @return reporteProcesosNocturnosDTO
-	 */
-	public static ConciliacionDTOList buildReporteProcesosNocturnosDTOFromReporte(Reporte reporte) {
-		ConciliacionDTOList reporteProcesosNocturnosDTO = null;
-		if(reporte != null) {
-			reporteProcesosNocturnosDTO = new ConciliacionDTOList();
-			reporteProcesosNocturnosDTO.getReporteProcesosNocturnos().setFechaDesde(reporte.getFechaDesde());
-			reporteProcesosNocturnosDTO.getReporteProcesosNocturnos().setFechaHasta(reporte.getFechaHasta());
-			reporteProcesosNocturnosDTO.getReporteProcesosNocturnos().setDisponible(reporte.getDisponible());
-		}
-		return reporteProcesosNocturnosDTO;
-	}
-	
-	/**
-	 * Construye una entidad de tipo Reporte a partir de un objeto de tipo ReporteProcesosNocturnosDTO.
-	 * @param reporteProcesosNocturnosDTO
-	 * @return reporte
-	 */
-	public static Reporte buildReporteFromReporteProcesosNocturnosDTO(ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO) {
-		Reporte reporte = null;
-		if(reporteProcesosNocturnosDTO != null) {
-			reporte = new Reporte();
-			reporte.setFechaDesde(reporteProcesosNocturnosDTO.getFechaDesde());
-			reporte.setFechaHasta(reporteProcesosNocturnosDTO.getFechaHasta());
-			reporte.setDisponible(reporteProcesosNocturnosDTO.getDisponible());
-		}
-		return reporte;
-	}
-	
-	public static Set<Reporte> buildReporteSetFromReporteProcesosNocturnosDTOSet(Set<ReporteProcesosNocturnosDTO> reporteProcesosNocturnosDTOList){
-		Set<Reporte> reporteSet = null;
-		if(reporteProcesosNocturnosDTOList != null && !reporteProcesosNocturnosDTOList.isEmpty()) {
-			reporteSet = new TreeSet<>();
-			for(ReporteProcesosNocturnosDTO rS: reporteProcesosNocturnosDTOList) {
-				reporteSet.add(buildReporteFromReporteProcesosNocturnosDTO(rS));
-			}
-		}
-		return reporteSet;
-	}
-	
-
-	
-//	/**
-//	 * Construye un set de objetos de tipo ReporteProcesosNocturnosDTO a partir de un set de entities de tipo Reporte.
-//	 * @param reporteSet
-//	 * @return
-//	 */
-//	public static Set<ConciliacionDTOList> buildReporteProcesosNocturnosDTOSetFromReporteSet(Set<Reporte> reporteSet){
-//		Set<ConciliacionDTOList> ReporteProcesosNocturnosDTOSet = null;
-//		if(reporteSet != null && !reporteSet.isEmpty()) {
-//			ReporteProcesosNocturnosDTOSet = new TreeSet<>();
-//			for(Reporte reporte : reporteSet) {
-//				ReporteProcesosNocturnosDTOSet.add(buildReporteProcesosNocturnosDTOFromReporte(reporte));
-//			}
-//		}
-//		return null;
-//		
-//	}
 
 }

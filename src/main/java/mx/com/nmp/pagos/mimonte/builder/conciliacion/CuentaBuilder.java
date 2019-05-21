@@ -8,9 +8,8 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 
 /**
- * Nombre: CuentaBuilder Descripcion: Clase de capa de builder que se encarga
- * de convertir difrentes tipos de objetos y entidades relacionadas con la
- * Cuenta
+ * Nombre: CuentaBuilder Descripcion: Clase de capa de builder que se encarga de
+ * convertir difrentes tipos de objetos y entidades relacionadas con la Cuenta
  *
  * @author José Rodríguez jgrodriguez@qaurksoft.net
  * @creationDate 07/05/2019 14:01 hrs.
@@ -22,15 +21,16 @@ public class CuentaBuilder {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	/**Se ocupa
+
+	/**
 	 * Construye un objeto de tipo CuentaDTO a partir de una entidad de tipo Cuenta.
+	 * 
 	 * @param cuenta
 	 * @return cuentaDTO
 	 */
 	public static CuentaDTO buildCuentaDTOFromCuenta(Cuenta cuenta) {
 		CuentaDTO cuentaDTO = null;
-		if(cuenta != null) {
+		if (cuenta != null) {
 			cuentaDTO = new CuentaDTO();
 			cuentaDTO.setId(cuenta.getId());
 			cuentaDTO.setNumero(cuenta.getNumeroCuenta());
@@ -38,15 +38,16 @@ public class CuentaBuilder {
 		}
 		return cuentaDTO;
 	}
-	
-	/**Se ocupa
+
+	/**
 	 * Construye una entidad de tipo Cuenta a partir de un objeto de tipo CuentaDTO.
+	 * 
 	 * @param cuentaDTO
 	 * @return
 	 */
 	public static Cuenta buildCuentaFromCuentaDTO(CuentaDTO cuentaDTO) {
 		Cuenta cuenta = null;
-		if(cuentaDTO != null) {
+		if (cuentaDTO != null) {
 			cuenta = new Cuenta();
 			cuenta.setId(cuentaDTO.getId());
 			cuenta.setNumeroCuenta(cuentaDTO.getNumero());

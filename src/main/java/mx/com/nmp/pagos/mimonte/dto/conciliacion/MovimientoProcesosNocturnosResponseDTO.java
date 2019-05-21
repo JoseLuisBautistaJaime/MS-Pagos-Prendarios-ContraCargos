@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -15,22 +16,24 @@ import java.util.Date;
  * @creationDate 02/04/2019 15:49 hrs.
  * @version 0.1
  */
-public class MovimientoProcesosNocturnosResponseDTO implements Comparable<MovimientoProcesosNocturnosResponseDTO>{
-	
+public class MovimientoProcesosNocturnosResponseDTO implements Comparable<MovimientoProcesosNocturnosResponseDTO> {
+
 	private Long folioPartida;
 	private Long transaccion;
-	private Long sucursal;
+	private String estadoTransaccion;
+	private Integer sucursal;
 	private Date fecha;
 	private String operacionAbr;
 	private String operacionDesc;
-	private Double montoOperacion;
+	private BigDecimal montoOperacion;
 	private String tipoContratoAbr;
 	private String tipoContratoDesc;
 	private String numAutorizacion;
-	private Double capitalActual;
-	private Double comisiones;
-	private Double interes;
+	private BigDecimal capitalActual;
+	private BigDecimal comisiones;
+	private BigDecimal interes;
 	private String estatus;
+	private String idConsumidor;
 
 	public Long getFolioPartida() {
 		return folioPartida;
@@ -48,11 +51,11 @@ public class MovimientoProcesosNocturnosResponseDTO implements Comparable<Movimi
 		this.transaccion = transaccion;
 	}
 
-	public Long getSucursal() {
+	public Integer getSucursal() {
 		return sucursal;
 	}
 
-	public void setSucursal(Long sucursal) {
+	public void setSucursal(Integer sucursal) {
 		this.sucursal = sucursal;
 	}
 
@@ -80,11 +83,11 @@ public class MovimientoProcesosNocturnosResponseDTO implements Comparable<Movimi
 		this.operacionDesc = operacionDesc;
 	}
 
-	public Double getMontoOperacion() {
+	public BigDecimal getMontoOperacion() {
 		return montoOperacion;
 	}
 
-	public void setMontoOperacion(Double montoOperacion) {
+	public void setMontoOperacion(BigDecimal montoOperacion) {
 		this.montoOperacion = montoOperacion;
 	}
 
@@ -112,32 +115,48 @@ public class MovimientoProcesosNocturnosResponseDTO implements Comparable<Movimi
 		this.numAutorizacion = numAutorizacion;
 	}
 
-	public Double getCapitalActual() {
+	public BigDecimal getCapitalActual() {
 		return capitalActual;
 	}
 
-	public void setCapitalActual(Double capitalActual) {
+	public void setCapitalActual(BigDecimal capitalActual) {
 		this.capitalActual = capitalActual;
 	}
 
-	public Double getComisiones() {
+	public BigDecimal getComisiones() {
 		return comisiones;
 	}
 
-	public void setComisiones(Double comisiones) {
+	public void setComisiones(BigDecimal comisiones) {
 		this.comisiones = comisiones;
 	}
 
-	public Double getInteres() {
+	public BigDecimal getInteres() {
 		return interes;
 	}
 
-	public void setInteres(Double interes) {
+	public void setInteres(BigDecimal interes) {
 		this.interes = interes;
 	}
 
 	public String getEstatus() {
 		return estatus;
+	}
+
+	public String getEstadoTransaccion() {
+		return estadoTransaccion;
+	}
+
+	public void setEstadoTransaccion(String estadoTransaccion) {
+		this.estadoTransaccion = estadoTransaccion;
+	}
+
+	public String getIdConsumidor() {
+		return idConsumidor;
+	}
+
+	public void setIdConsumidor(String idConsumidor) {
+		this.idConsumidor = idConsumidor;
 	}
 
 	public void setEstatus(String estatus) {
@@ -147,15 +166,15 @@ public class MovimientoProcesosNocturnosResponseDTO implements Comparable<Movimi
 	@Override
 	public String toString() {
 		return "MovimientoProcesosNocturnosResponseDTO [folioPartida=" + folioPartida + ", transaccion=" + transaccion
-				+ ", sucursal=" + sucursal + ", fecha=" + fecha + ", operacionAbr=" + operacionAbr + ", operacionDesc="
-				+ operacionDesc + ", montoOperacion=" + montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr
-				+ ", tipoContratoDesc=" + tipoContratoDesc + ", numAutorizacion=" + numAutorizacion + ", capitalActual="
-				+ capitalActual + ", comisiones=" + comisiones + ", interes=" + interes + ", estatus=" + estatus + "]";
+				+ ", estadoTransaccion=" + estadoTransaccion + ", sucursal=" + sucursal + ", fecha=" + fecha
+				+ ", operacionAbr=" + operacionAbr + ", operacionDesc=" + operacionDesc + ", montoOperacion="
+				+ montoOperacion + ", tipoContratoAbr=" + tipoContratoAbr + ", tipoContratoDesc=" + tipoContratoDesc
+				+ ", numAutorizacion=" + numAutorizacion + ", capitalActual=" + capitalActual + ", comisiones="
+				+ comisiones + ", interes=" + interes + ", estatus=" + estatus + ", idConsumidor=" + idConsumidor + "]";
 	}
 
 	@Override
 	public int compareTo(MovimientoProcesosNocturnosResponseDTO o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

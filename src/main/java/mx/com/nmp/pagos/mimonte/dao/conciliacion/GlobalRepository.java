@@ -12,14 +12,24 @@ import org.springframework.stereotype.Repository;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 
 /**
- * 
- * @author Quarksoft
+ * @name GlobalRepository
+ * @description Interface de capa DAO que sirve para realizar operaciones de
+ *              base de datos relacionadas con global
  *
+ * @author José Rodríguez jgrodriguez@quarksoft.net
+ * @creationDate 08/05/2019 21:55 hrs.
+ * @version 0.1
  */
 @Repository("globalRepository")
-public interface GlobalRepository extends JpaRepository<Global, Long>{
-	
+public interface GlobalRepository extends JpaRepository<Global, Long> {
+
+	/**
+	 * Búsqueda de global a partir del id de la conciliación
+	 * 
+	 * @param idConciliacion
+	 * @return
+	 */
 	@Query("FROM Global g WHERE g.conciliacion.id = :idConciliacion")
 	public Global findByIdConciliacion(@Param("idConciliacion") final Integer idConciliacion);
-	
+
 }
