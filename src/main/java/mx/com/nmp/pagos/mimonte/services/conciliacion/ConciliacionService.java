@@ -12,6 +12,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 
 /**
  * @author Quarksoft
@@ -76,14 +77,14 @@ public interface ConciliacionService {
 //	public void generarConciliacion(Long idConciliacion, String usuario){
 //
 //	}
-//
-//	/**
-//	 * 
-//	 * @param idConcilacion
-//	 */
-//	public ConciliacionDTO getById(Long idConcilacion){
-//		return null;
-//	}
+
+	/**
+	 * 
+	 * @param idConcilacion
+	 */
+	public Conciliacion getById(Integer idConcilacion);
+
+
 //
 //	/**
 //	 * 

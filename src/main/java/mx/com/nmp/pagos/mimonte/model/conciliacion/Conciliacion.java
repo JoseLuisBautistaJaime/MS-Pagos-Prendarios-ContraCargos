@@ -106,6 +106,10 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.subEstatus = subEstatus;
 	}
 
+	public Conciliacion(long folio) {
+		this.id = new Long(folio).intValue();
+	}
+
 	public Integer getId() {
 		return id;
 	}

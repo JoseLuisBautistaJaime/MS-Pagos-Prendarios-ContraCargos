@@ -342,4 +342,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				MovimientoComisionBuilder.buildComisionesDTOListFromMovimientoComisionList(mC));
 	}
 
+	public Conciliacion getById(Integer idConciliacion) {
+		return conciliacionRepository.findByFolio(idConciliacion);
+	}
+
 }

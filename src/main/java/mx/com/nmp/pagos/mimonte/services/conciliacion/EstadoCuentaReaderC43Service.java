@@ -16,11 +16,11 @@ import org.springframework.stereotype.Service;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaFileBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaLineBuilder;
 import mx.com.nmp.pagos.mimonte.conector.EstadoCuentaAPI;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout43;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaImplementacionEnum;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
 
 /**
@@ -61,13 +61,13 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 	public EstadoCuentaFileLayout read(Date date, Long idConciliacion, EstadoCuentaImplementacionEnum implementacion) {
 
 		// Consulta el numero de cuenta asignado a la conciliacion
-		ConciliacionDTO conciliacion = conciliacionService.getById(idConciliacion);
+		Conciliacion conciliacion = conciliacionService.getById(idConciliacion.intValue());
 		if (conciliacion == null) {
 			throw new ConciliacionException("No existe conciliacion con folio " + idConciliacion);
 		}
 
 		// Crea nombre del archivo en base a la fecha
-		String nombreArchivo = EstadoCuentaFileBuilder.buildFileName(date, conciliacion.getCuenta().getNumero(), nombre);
+		String nombreArchivo = EstadoCuentaFileBuilder.buildFileName(date, conciliacion.getCuenta().getNumeroCuenta(), nombre);
 
 		// Consulta el archivo
 		List<String> lineasArchivo = estadoCuentaAPI.consulta(ruta, nombreArchivo);

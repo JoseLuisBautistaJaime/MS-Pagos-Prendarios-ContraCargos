@@ -184,7 +184,7 @@ public class MovimientosEstadoCuentaService {
 		
 		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste los movimientos del estado de cuenta
 		Long idConciliacion = saveEstadoCuentaRequestDTO.getFolio().longValue();
-		procesarConsultaEstadoCuenta(reporte.getFechaDesde(), reporte.getFechaHasta(), idConciliacion, reporte.getId());
+		procesarConsultaEstadoCuenta(reporte.getFechaDesde(), reporte.getFechaHasta(), idConciliacion, reporte.getId() != null ? reporte.getId().longValue() : 0);
 	}
 
 	/**
