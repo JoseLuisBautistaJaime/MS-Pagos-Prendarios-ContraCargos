@@ -1902,8 +1902,8 @@ public class ConciliacionController {
 	public static List<DevolucionConDTO> buildMarcarDevolucionesDummyVarias() {
 
 		List<DevolucionConDTO> devolucionDTOlist = new ArrayList<>();
-		EstatusDevolucionDTO estatusDevolucionDTO = new EstatusDevolucionDTO(1, "Solicitada", true);
-		EstatusDevolucionDTO estatusDevolucionDTO2 = new EstatusDevolucionDTO(2, "Pendiente", true);
+		EstatusDevolucionDTO estatusDevolucionDTO = new EstatusDevolucionDTO(2, "Solicitada", true);
+		EstatusDevolucionDTO estatusDevolucionDTO2 = new EstatusDevolucionDTO(1, "Pendiente", true);
 		EstatusDevolucionDTO estatusDevolucionDTO3 = new EstatusDevolucionDTO(3, "Liquidada", true);
 		
 		// Devolucion 1
