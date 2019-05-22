@@ -33,7 +33,7 @@ public interface MovimientoProveedorRepository extends PagingAndSortingRepositor
 	 * @return
 	 */
 	@Query("SELECT mp FROM MovimientoProveedor mp INNER JOIN Reporte r ON mp.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public List<MovimientoProveedor> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId,
+	public List<MovimientoProveedor> findByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId,
 			Pageable pageable);
 
 	/**
@@ -43,6 +43,6 @@ public interface MovimientoProveedorRepository extends PagingAndSortingRepositor
 	 * @return
 	 */
 	@Query("SELECT COUNT(mp.id) FROM MovimientoProveedor mp INNER JOIN Reporte r ON mp.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId);
+	public Long countByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId);
 
 }

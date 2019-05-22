@@ -6,17 +6,22 @@ package mx.com.nmp.pagos.mimonte.conector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
+
 import mx.com.nmp.pagos.mimonte.conector.ws.OpenPayService;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Referencia al servicio web Open Pay
  *
  * @author jgalvez
  */
-//@Component
+@Component
 public class OpenPayProxy implements OpenPayAPI {
 
 	private Logger LOGGER = LoggerFactory.getLogger(OpenPayProxy.class);
@@ -24,7 +29,7 @@ public class OpenPayProxy implements OpenPayAPI {
 	/**
 	 * Referencia al conector hacia el Servicio Web OpenPay
 	 */
-//	@Inject
+	@Inject
 	private OpenPayConector openPayConector;
 
 
@@ -33,7 +38,7 @@ public class OpenPayProxy implements OpenPayAPI {
 	/**
 	 * {@inheritDoc}
 	 */
-//	@Cacheable("OpenPayProxy.consulta")
+	@Cacheable("OpenPayProxy.consulta")
 	@Override
 	public List<MovimientoProveedorDTO> consulta(Date fechaInicio, Date fechaFin) {
 		LOGGER.info(">> consulta({}, {})", fechaInicio, fechaFin);

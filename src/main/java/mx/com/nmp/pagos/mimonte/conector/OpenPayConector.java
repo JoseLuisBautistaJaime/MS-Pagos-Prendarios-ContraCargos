@@ -21,7 +21,7 @@ import java.net.URL;
  * Se encarga de crear una referencia hacia el Servicio Web OpenPay
  *
  */
-//@Component
+@Component
 public class OpenPayConector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenPayConector.class);
@@ -29,19 +29,19 @@ public class OpenPayConector {
     /**
      * Contienen la URL donde se encuentra publicado el Servicio Web OpenPay
      */
-//    @Value("${openpay.wsdlLocation}")
+    @Value("${openpay.wsdlLocation}")
     private String wsdlLocation;
 
     /**
      * Header name
      */
-//    @Value("${openpay.header.api.name}")
+    @Value("${openpay.header.api.name}")
     private String apiName;
 
     /**
      * Token value
      */
-//    @Value("${openpay.header.api.key}")
+    @Value("${openpay.header.api.key}")
     private String apiKey;
 
     /**

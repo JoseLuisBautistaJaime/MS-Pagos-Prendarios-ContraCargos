@@ -221,21 +221,14 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateReporteRequestDTO(ReporteRequestDTO reporteRequestDTO) {
 		try {
-			assertNotNull(reporteRequestDTO);
-			assertNotNull(reporteRequestDTO.getFechaDesde());
-			assertNotNull(reporteRequestDTO.getFechaHasta());
-			assertNotNull(reporteRequestDTO.getOperacion());
-			assertNotNull(reporteRequestDTO.getPartida());
-			assertNotNull(reporteRequestDTO.getProducto());
-			assertNotNull(reporteRequestDTO.getSucursales());
-			Calendar ini = Calendar.getInstance();
-			Calendar fin = Calendar.getInstance();
-			ini.setTime(reporteRequestDTO.getFechaDesde());
-			fin.setTime(reporteRequestDTO.getFechaHasta());
-			if (fin.before(ini) || reporteRequestDTO.getSucursales().isEmpty())
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-			for (Integer elem : reporteRequestDTO.getSucursales()) {
-				assertNotNull(elem);
+			if (null != reporteRequestDTO && null != reporteRequestDTO.getFechaDesde()
+					&& null != reporteRequestDTO.getFechaHasta()) {
+				Calendar ini = Calendar.getInstance();
+				Calendar fin = Calendar.getInstance();
+				ini.setTime(reporteRequestDTO.getFechaDesde());
+				fin.setTime(reporteRequestDTO.getFechaHasta());
+				if (fin.before(ini))
+					throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 			}
 		} catch (Exception ex) {
 			return false;

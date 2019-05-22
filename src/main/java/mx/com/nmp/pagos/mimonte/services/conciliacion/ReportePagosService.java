@@ -11,16 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.CatalogoOperacionRepository;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.CatalogoTipoContratoRepository;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReportePagosRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.CatalogoOperacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.CatalogoTipoContrato;
 
 /**
  * @name ReportePagosService
@@ -35,25 +29,11 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.CatalogoTipoContrato;
 public class ReportePagosService {
 
 	/**
-	 * Repository de catalogo de operaciones
-	 */
-	@Autowired
-	@Qualifier("catalogoOperacionRepository")
-	private CatalogoOperacionRepository catalogoOperacionRepository;
-
-	/**
-	 * Repository de catalogo de tipos de contrato
-	 */
-	@Autowired
-	@Qualifier("catalogoTipoContratoRepository")
-	private CatalogoTipoContratoRepository catalogoTipoContratoRepository;
-
-	/**
 	 * Repository de Reporte de pagos libres (movimientos nocturnos (midas))
 	 */
 	@Autowired
-	@Qualifier("reportePagosRepository")
-	private ReportePagosRepository reportePagosRepository;
+	@Qualifier("movimientosMidasRepository")
+	private MovimientosMidasRepository movimientosMidasRepository;
 
 	/**
 	 * Regresa una lista de objetos de tipo ReportePagosLibresDTO en base a los
@@ -66,25 +46,30 @@ public class ReportePagosService {
 		ReportePagosLibresOuterDTO reportePagosLibresOuterDTO = null;
 		List<ReportePagosLibresDTO> reportePagosLibresDTOList = null;
 		BigDecimal sum = new BigDecimal("0.0");
-		CatalogoOperacion catalogoOperacion = null;
-		CatalogoTipoContrato catalogoTipoContrato = null;
-		String operacionAbr = null;
-		String tipoContratoAbr = null;
-		catalogoOperacion = catalogoOperacionRepository.findById(reporteRequestDTO.getOperacion()).isPresent()
-				? catalogoOperacionRepository.findById(reporteRequestDTO.getOperacion()).get()
-				: null;
-		catalogoTipoContrato = catalogoTipoContratoRepository.findById(reporteRequestDTO.getProducto()).isPresent()
-				? catalogoTipoContratoRepository.findById(reporteRequestDTO.getProducto()).get()
-				: null;
-		if (null != catalogoOperacion && null != catalogoOperacion.getAbreviatura() && null != catalogoTipoContrato
-				&& null != catalogoTipoContrato.getAbreviatura()) {
-			operacionAbr = catalogoOperacion.getAbreviatura();
-			tipoContratoAbr = catalogoTipoContrato.getAbreviatura();
-		} else
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_CATALOG_INFORMATION);
-		reportePagosLibresDTOList = reportePagosRepository.getReportePagosLibres(reporteRequestDTO.getFechaDesde(),
-				reporteRequestDTO.getFechaHasta(), tipoContratoAbr, operacionAbr, reporteRequestDTO.getSucursales(),
-				reporteRequestDTO.getPartida());
+		
+		
+//		long startTime = System.currentTimeMillis();
+//	    long total = 0;
+		// OR
+		reportePagosLibresDTOList = movimientosMidasRepository.getReportePagosLibres(reporteRequestDTO.getFechaDesde(),
+				reporteRequestDTO.getFechaHasta(), reporteRequestDTO.getProducto(), reporteRequestDTO.getOperacion(),
+				reporteRequestDTO.getSucursales(), reporteRequestDTO.getPartida());
+		
+//		long stopTime = System.currentTimeMillis();
+//	    long elapsedTime = stopTime - startTime;
+//	    System.out.println("DURACION QUERY OR: " + elapsedTime);
+		
+//	    long startTime2 = System.currentTimeMillis();
+//	    long total2 = 0;
+//		// DYNAMIC QUERY
+//		reportePagosLibresDTOList = movimientosMidasRepository.getReportePagosLibresDynamic(reporteRequestDTO.getFechaDesde(),
+//				reporteRequestDTO.getFechaHasta(), reporteRequestDTO.getProducto(), reporteRequestDTO.getOperacion(),
+//				reporteRequestDTO.getSucursales(), reporteRequestDTO.getPartida());
+//		long stopTime2 = System.currentTimeMillis();
+//	    long elapsedTime2 = stopTime2 - startTime2;
+//	    System.out.println("DURACION QUERY DINAMCO: " + elapsedTime2);
+		
+		
 		reportePagosLibresOuterDTO = new ReportePagosLibresOuterDTO();
 		reportePagosLibresOuterDTO.setMovimientos(reportePagosLibresDTOList);
 		reportePagosLibresOuterDTO.setTotalMovimientos(reportePagosLibresDTOList.size());

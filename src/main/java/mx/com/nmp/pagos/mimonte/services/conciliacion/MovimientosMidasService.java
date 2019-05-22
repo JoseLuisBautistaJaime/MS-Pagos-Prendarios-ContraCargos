@@ -75,7 +75,7 @@ public class MovimientosMidasService {
 	 * @param estatus
 	 * @return
 	 */
-	public Long countByConciliacionId(final Long idConciliacion, final Boolean estatus) {
+	public Long countByConciliacionId(final Integer idConciliacion, final Boolean estatus) {
 		return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion, estatus);
 	}
 
@@ -120,7 +120,7 @@ public class MovimientosMidasService {
 		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
 				commonConciliacionRequestDTO.getResultados());
 		return MovimientosBuilder.buildMovimientoMidasDTOListFromMovimientoMidasList(
-				movimientosMidasRepository.findByReporteConciliacionId((long) commonConciliacionRequestDTO.getFolio(),
+				movimientosMidasRepository.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio(),
 						commonConciliacionRequestDTO.getEstatus(), pageable));
 	}
 

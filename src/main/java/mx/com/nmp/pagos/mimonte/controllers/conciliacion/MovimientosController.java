@@ -183,7 +183,7 @@ public class MovimientosController {
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		Long total = movimientosProveedorService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		Long total = movimientosProveedorService.countByConciliacionId(commonConciliacionRequestDTO.getFolio());
 		if (null != total) {
 			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
 			movimientoTransaccionalListDTO.setTotal(total);
@@ -220,7 +220,7 @@ public class MovimientosController {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
 		if (!ValidadorConciliacion.validateCommonConciliacionEstatusRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		Long total = movimientosMidasService.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio(),
+		Long total = movimientosMidasService.countByConciliacionId(commonConciliacionRequestDTO.getFolio(),
 				commonConciliacionRequestDTO.getEstatus());
 		if (null != total) {
 			movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
