@@ -1173,3 +1173,14 @@ VALUES
 -- ------------------------ [2019-05-20 18:18:47] ------------------------ --
 ALTER TABLE to_movimiento_midas ADD COLUMN id_operacion INT(11) DEFAULT NULL;
 ALTER TABLE to_movimiento_midas ADD COLUMN id_tipo_contrato INT(11) DEFAULT NULL;
+
+-- ------------------------------------------------------------------ --
+-- ----------- SE CREAN INDICES PARA TABLA to_movimiento_midas ------ --
+-- ------------------------[2019-05-22 17:49:45] -------------------- --
+-- ------------------------------------------------------------------ --
+ALTER TABLE to_movimiento_midas ADD INDEX idx_id (id);
+ALTER TABLE to_movimiento_midas ADD INDEX idx_fecha (fecha);
+ALTER TABLE to_movimiento_midas ADD INDEX idx_folio (folio);
+ALTER TABLE to_movimiento_midas ADD INDEX idx_id_operacion (id_operacion);
+ALTER TABLE to_movimiento_midas ADD INDEX idx_id_tipo_contrato (id_tipo_contrato);
+ALTER TABLE to_movimiento_midas ADD INDEX idx_sucursal (sucursal);
