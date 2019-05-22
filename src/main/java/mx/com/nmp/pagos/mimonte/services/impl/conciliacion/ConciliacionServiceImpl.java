@@ -55,7 +55,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
-import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
 /**
  * @name ConciliacionServiceImpl
@@ -114,9 +113,16 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	@Transactional
 	public ConciliacionDTO saveConciliacion(ConciliacionResponseSaveDTO conciliacionRequestDTO, String createdBy) {
-		
-		ValidadorConciliacion.validaConciliacionResponseSaveDTO(conciliacionRequestDTO, createdBy);
-		throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+
+		// Validación del objeto ConciliacionRequestDTO
+		if (conciliacionRequestDTO.getCuenta() == null || conciliacionRequestDTO.getCuenta().getId() < 1)
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		if (conciliacionRequestDTO.getEntidad() == null || conciliacionRequestDTO.getEntidad().getId() < 1)
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+
+		// Validación del atributo createdBy
+		if (createdBy == null || createdBy.isEmpty() || createdBy.equals(""))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 
 		// Búsqueda y validacion del idCuenta.
 		Cuenta cuenta = cuentaRepository.findById(conciliacionRequestDTO.getCuenta().getId()).isPresent()
