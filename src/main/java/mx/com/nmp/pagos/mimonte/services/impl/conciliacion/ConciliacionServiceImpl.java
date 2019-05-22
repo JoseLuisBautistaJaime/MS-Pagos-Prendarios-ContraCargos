@@ -28,6 +28,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.GlobalRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoComisionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.SubEstatusConciliacionRepository;
@@ -54,6 +55,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
 /**
  * @name ConciliacionServiceImpl
@@ -97,7 +99,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	private ReporteRepository reporteRepository;
 
 	@Autowired
-	private DevolucionesRepository devolucionesRepository;
+	private MovimientoDevolucionRepository movimientoDevolucionRepository;
 
 	@Autowired
 	private SubEstatusConciliacionRepository subEstatusConciliacionRepository;
@@ -112,16 +114,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	@Transactional
 	public ConciliacionDTO saveConciliacion(ConciliacionResponseSaveDTO conciliacionRequestDTO, String createdBy) {
-
-		// Validación del objeto ConciliacionRequestDTO
-		if (conciliacionRequestDTO.getCuenta() == null || conciliacionRequestDTO.getCuenta().getId() < 1)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		if (conciliacionRequestDTO.getEntidad() == null || conciliacionRequestDTO.getEntidad().getId() < 1)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-
-		// Validación del atributo createdBy
-		if (createdBy == null || createdBy.isEmpty() || createdBy.equals(""))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		
+		ValidadorConciliacion.validaConciliacionResponseSaveDTO(conciliacionRequestDTO, createdBy);
+		throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 
 		// Búsqueda y validacion del idCuenta.
 		Cuenta cuenta = cuentaRepository.findById(conciliacionRequestDTO.getCuenta().getId()).isPresent()
@@ -202,12 +197,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		if (conciliacion == null || conciliacion.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
-		// Búsqueda del folio en la tabla de to_movimiento_conciliacion en base al
-		// folio.
-		MovimientoConciliacion movimientoConciliacion = movimientoConciliacionRepository
-				.findByIdMovimientoConciliacion(conciliacion.getId());
-		if (movimientoConciliacion == null || movimientoConciliacion.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+//		// Búsqueda del folio en la tabla de to_movimiento_conciliacion en base al
+//		// folio.
+//		MovimientoConciliacion movimientoConciliacion = movimientoConciliacionRepository
+//				.findByIdMovimientoConciliacion(conciliacion.getId());
+//		if (movimientoConciliacion == null || movimientoConciliacion.getId() == null)
+//			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
 		List<Integer> lst = new ArrayList<>();
 		Map<Integer, MovTransitoRequestDTO> map = new HashMap<>();
@@ -276,8 +271,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
 		// Búsqueda del estatus de la conciliacion a partir de idEstatus.
-		EstatusConciliacion estatusConciliacion = estatusConciliacionRepository
-				.findByIdEstatus(consultaConciliacionRequestDTO.getIdEstatus());
+		EstatusConciliacion estatusConciliacion = estatusConciliacionRepository.findById(consultaConciliacionRequestDTO.getIdEstatus()).isPresent()
+				? estatusConciliacionRepository.findById(consultaConciliacionRequestDTO.getIdEstatus()).get()
+						: null;
 		if (estatusConciliacion.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
@@ -312,7 +308,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
 		// Búsqueda de los movimientos en devolución a partir del folio
-		List<MovimientoDevolucion> mD = devolucionesRepository.findByIdConciliacion(folio);
+		List<MovimientoDevolucion> mD = movimientoDevolucionRepository.findByIdConciliacion(folio);
 		if (mD == null || mD.isEmpty())
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
