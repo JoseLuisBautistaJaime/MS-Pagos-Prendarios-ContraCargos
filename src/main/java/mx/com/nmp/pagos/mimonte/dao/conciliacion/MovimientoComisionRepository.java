@@ -40,7 +40,7 @@ public interface MovimientoComisionRepository extends JpaRepository<MovimientoCo
 	 * @param folio
 	 * @return
 	 */
-	@Query("SELECT mco FROM MovimientoConciliacion mc INNER JOIN MovimientoComision mco ON mc.id = mco.id WHERE mco.idConciliacion = :folio")
+	@Query("SELECT mco FROM MovimientoComision mco INNER JOIN MovimientoConciliacion mc ON mc.id = mco.id WHERE mco.idConciliacion = :folio")
 	public List<MovimientoComision> findByIdConciliacion(@Param("folio") Integer folio);
 
 }

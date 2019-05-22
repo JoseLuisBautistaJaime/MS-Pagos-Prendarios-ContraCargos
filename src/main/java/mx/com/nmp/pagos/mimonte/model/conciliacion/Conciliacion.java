@@ -70,7 +70,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 	private Date completedDate;
 	
 	@OneToMany(mappedBy = "conciliacion")
-	private Set<Global> global;
+    private Set<Global> global;
 
 	@OneToMany(mappedBy = "conciliacion")
 	private Set<Reporte> reportes;

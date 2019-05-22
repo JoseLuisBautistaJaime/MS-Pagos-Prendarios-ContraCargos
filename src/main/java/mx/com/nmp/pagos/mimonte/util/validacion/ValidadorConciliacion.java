@@ -11,6 +11,8 @@ import java.util.Calendar;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
@@ -229,6 +231,22 @@ public interface ValidadorConciliacion {
 					throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 			}
 		} catch (Exception ex) {
+			return false;
+		}
+		return true;
+	}
+	
+	public static boolean validaConciliacionResponseSaveDTO(ConciliacionResponseSaveDTO conciliacionRequestDTO, String createdBy) {
+		try {
+			assertNotNull(conciliacionRequestDTO.getCuenta().getId());
+			assertNotNull(conciliacionRequestDTO.getEntidad().getId());
+			if (conciliacionRequestDTO.getCuenta().getId() < 1)
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			if (conciliacionRequestDTO.getEntidad().getId() < 1)
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			if (createdBy == null || createdBy.isEmpty() || createdBy.equals(""))
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		}catch (Exception ex) {
 			return false;
 		}
 		return true;

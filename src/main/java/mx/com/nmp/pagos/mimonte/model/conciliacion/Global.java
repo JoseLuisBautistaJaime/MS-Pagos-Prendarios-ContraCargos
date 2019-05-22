@@ -67,7 +67,7 @@ public class Global implements Serializable{
 	private BigDecimal diferenciaProveedorBanco;
 	
 	@ManyToOne(cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "id",  insertable = false, updatable = false)
+	@JoinColumn(name = "id_conciliacion",  insertable = false, updatable = false)
 	private Conciliacion conciliacion;
 
 	public Global() {

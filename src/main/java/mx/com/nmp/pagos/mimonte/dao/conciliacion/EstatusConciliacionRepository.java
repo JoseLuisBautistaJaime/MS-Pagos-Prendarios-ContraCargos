@@ -31,13 +31,5 @@ public interface EstatusConciliacionRepository extends JpaRepository<EstatusConc
 	 */
 	@Query("FROM EstatusConciliacion ec WHERE ec.nombre = :nombre")
 	public EstatusConciliacion findByNombre(@Param("nombre") final String nombre);
-	
-	/**
-	 * Búsqueda del estatus de la conciliación a partir del id del estatus de la conciliación.
-	 * @param idEstatus
-	 * @return
-	 */
-	@Query("FROM EstatusConciliacion ec WHERE ec.id = :idEstatus")
-	public EstatusConciliacion findByIdEstatus(@Param("idEstatus") final Integer idEstatus);
 
 }

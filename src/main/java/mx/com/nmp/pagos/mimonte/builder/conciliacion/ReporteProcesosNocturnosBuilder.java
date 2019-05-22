@@ -35,6 +35,7 @@ public abstract class ReporteProcesosNocturnosBuilder {
 	 * @param reporteSet
 	 * @return
 	 */              
+	@SuppressWarnings("unlikely-arg-type")
 	public static ReporteProcesosNocturnosDTO buildReporteProcesosNocturnosDTOSetFromReporteSet(List<Reporte> reporteSet){
 		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = null;
 		if(reporteSet != null && !reporteSet.isEmpty()) {

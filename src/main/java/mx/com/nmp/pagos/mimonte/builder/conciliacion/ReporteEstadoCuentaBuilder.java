@@ -33,6 +33,7 @@ public abstract class ReporteEstadoCuentaBuilder {
 	 * @param reporteSet
 	 * @return reporteEstadoCuentaDTOSet
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public static ReporteEstadoCuentaDTO buildReporteEstadoCuentaDTOFromReporteList(List<Reporte> reporteList) {
 		ReporteEstadoCuentaDTO reporteEstadoCuentaDTO = null;
 		if (reporteList != null && !reporteList.isEmpty()) {

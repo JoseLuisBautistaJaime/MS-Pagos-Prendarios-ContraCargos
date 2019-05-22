@@ -33,6 +33,7 @@ public abstract class ReporteProveedorTransaccionalBuilder {
 	 * @param reporteSet
 	 * @return reporteProveedorTransaccionalDTO
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public static ReporteProveedorTransaccionalDTO buildReporteProveedorTransaccionalDTOFromReporteList(
 			List<Reporte> reporteList) {
 		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = null;

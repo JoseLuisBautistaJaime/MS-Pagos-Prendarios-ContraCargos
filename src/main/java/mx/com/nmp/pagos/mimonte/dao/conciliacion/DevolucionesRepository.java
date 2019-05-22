@@ -24,14 +24,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
  * @version 0.1
  */
 @Repository("devolucionesRepository")
-public interface DevolucionesRepository extends JpaRepository<MovimientoDevolucion, Integer> {
+public interface DevolucionesRepository /*extends JpaRepository<MovimientoDevolucion, Integer> */{
 
-	/**
-	 * Busqueda de los movimientos de las devoluciones apartir del folio.
-	 * 
-	 * @param folio
-	 * @return
-	 */
-	@Query("SELECT md FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON mc.id=md.id WHERE md.idConciliacion = :folio")
-	public List<MovimientoDevolucion> findByIdConciliacion(@Param("folio") Integer folio);
+	
 }

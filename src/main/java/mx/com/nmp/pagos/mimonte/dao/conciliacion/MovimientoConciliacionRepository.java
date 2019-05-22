@@ -24,13 +24,4 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 @Repository("MovimientoConciliacionRepository")
 public interface MovimientoConciliacionRepository extends JpaRepository<MovimientoConciliacion, Integer> {
 
-	/**
-	 * Búsqueda de los movimientos de la conciliación a partir del folio.
-	 * 
-	 * @param folio
-	 * @return
-	 */
-	@Query("FROM MovimientoConciliacion mc WHERE mc.id = :folio")
-	public MovimientoConciliacion findByIdMovimientoConciliacion(@Param("folio") final Integer folio);
-
 }
