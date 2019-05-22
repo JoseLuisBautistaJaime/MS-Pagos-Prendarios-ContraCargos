@@ -87,14 +87,14 @@ public class ReportesController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response save(@RequestBody ReporteRequestDTO reporteRequestDTO) {
+	public Response getReportePagosEnLinea(@RequestBody ReporteRequestDTO reporteRequestDTO) {
 		if (!ValidadorConciliacion.validateReporteRequestDTO(reporteRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		ReportePagosLibresOuterDTO reportePagosLibresOuterDTO = reportePagosService
 				.getReportePagosLibres(reporteRequestDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				reportePagosLibresOuterDTO);
-	}
+	} 
 
 	/**
 	 * Construye un objeto dummy

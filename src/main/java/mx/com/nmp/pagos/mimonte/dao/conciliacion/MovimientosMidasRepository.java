@@ -35,7 +35,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @return
 	 */
 	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
-	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId,
+	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId,
 			@Param("estatus") final Boolean estatus, Pageable pageable);
 
 	/**
@@ -45,7 +45,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @return
 	 */
 	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
-	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId,
+	public Long countByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId,
 			@Param("estatus") final Boolean estatus);
 
 	/**
@@ -64,5 +64,11 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 			@Param("fechaHasta") Date fechaHasta, @Param("producto") final Integer producto,
 			@Param("operacion") final Integer operacion, @Param("sucursales") List<Integer> sucursales,
 			@Param("partida") final Long partida);
+
+//	@Query(" SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO( mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoAbr, mm.operacionAbr, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE mm.idTipoContrato = :producto AND mm.folio= :partida AND mm.idOperacion = :operacion AND mm.sucursal IN :sucursales AND mm.fecha BETWEEN :fechaDesde AND :fechaHasta")
+//	public List<ReportePagosLibresDTO> getReportePagosLibresDynamic(@Param("fechaDesde") Date fechaDesde,
+//			@Param("fechaHasta") Date fechaHasta, @Param("producto") final Integer producto,
+//			@Param("operacion") final Integer operacion, @Param("sucursales") List<Integer> sucursales,
+//			@Param("partida") final Long partida);
 
 }

@@ -104,7 +104,7 @@ public class MovimientosProveedorService {
 	 * @param idConciliacion
 	 * @return
 	 */
-	public Long countByConciliacionId(final Long idConciliacion) {
+	public Long countByConciliacionId(final Integer idConciliacion) {
 		return movimientoProveedorRepository.countByReporteConciliacionId(idConciliacion);
 	}
 
@@ -155,7 +155,7 @@ public class MovimientosProveedorService {
 				commonConciliacionRequestDTO.getResultados());
 		return MovimientosBuilder
 				.buildMovimientoProveedorDTOListFromMovimientoProveedorList(movimientoProveedorRepository
-						.findByReporteConciliacionId((long) commonConciliacionRequestDTO.getFolio(), pageable));
+						.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio(), pageable));
 	}
 
 	/**
