@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
@@ -16,52 +20,53 @@ import javax.persistence.Table;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 
 /**
+ * @name MovimientoDevolucion
+ * 
+ * @description encapsula informacion de un movimiento estado cuenta
  * @author Quarksoft
  * @version 1.0
  * @created 31-Mar-2019 5:57:49 PM
  */
 @Entity
 @Table(name = "to_movimiento_devolucion")
-public class MovimientoDevolucion extends MovimientoConciliacion implements Serializable{
+public class MovimientoDevolucion extends MovimientoConciliacion implements Serializable {
 
 	/**
 	 * Serial id;
 	 */
 	private static final long serialVersionUID = 8987562819738981175L;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "estatus")
 	private EstatusDevolucion estatus;
-	
+
 	@Column(name = "fecha")
 	private Date fecha;
-	
+
 	@Column(name = "monto")
 	private BigDecimal monto;
-	
+
 	@Column(name = "esquema_tarjeta")
 	private String esquemaTarjeta;
-	
+
 	@Column(name = "identificador_cuenta")
 	private String identificadorCuenta;
-	
+
 	@Column(name = "titular")
 	private String titular;
-	
+
 	@Column(name = "codigo_autorizacion")
 	private String codigoAutorizacion;
-	
+
 	@Column(name = "sucursal")
 	private Integer sucursal;
 
 	public MovimientoDevolucion() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public MovimientoDevolucion(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
-		// TODO Auto-generated constructor stub
 	}
 
 	public MovimientoDevolucion(EstatusDevolucion estatus, Date fecha, BigDecimal monto, String esquemaTarjeta,
@@ -141,70 +146,30 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	public void setSucursal(Integer sucursal) {
 		this.sucursal = sucursal;
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(estatus, fecha, monto, esquemaTarjeta, identificadorCuenta, titular, codigoAutorizacion, sucursal);
+		return Objects.hash(estatus, fecha, monto, esquemaTarjeta, identificadorCuenta, titular, codigoAutorizacion,
+				sucursal);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
+
+		if (!(obj instanceof MovimientoDevolucion))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MovimientoDevolucion other = (MovimientoDevolucion) obj;
-		if (codigoAutorizacion == null) {
-			if (other.codigoAutorizacion != null)
-				return false;
-		} else if (!codigoAutorizacion.equals(other.codigoAutorizacion))
-			return false;
-		if (esquemaTarjeta == null) {
-			if (other.esquemaTarjeta != null)
-				return false;
-		} else if (!esquemaTarjeta.equals(other.esquemaTarjeta))
-			return false;
-		if (estatus == null) {
-			if (other.estatus != null)
-				return false;
-		} else if (!estatus.equals(other.estatus))
-			return false;
-		if (fecha == null) {
-			if (other.fecha != null)
-				return false;
-		} else if (!fecha.equals(other.fecha))
-			return false;
-		if (identificadorCuenta == null) {
-			if (other.identificadorCuenta != null)
-				return false;
-		} else if (!identificadorCuenta.equals(other.identificadorCuenta))
-			return false;
-		if (monto == null) {
-			if (other.monto != null)
-				return false;
-		} else if (!monto.equals(other.monto))
-			return false;
-		if (sucursal == null) {
-			if (other.sucursal != null)
-				return false;
-		} else if (!sucursal.equals(other.sucursal))
-			return false;
-		if (titular == null) {
-			if (other.titular != null)
-				return false;
-		} else if (!titular.equals(other.titular))
-			return false;
-		return true;
+
+		final MovimientoDevolucion other = (MovimientoDevolucion) obj;
+		return (this.hashCode() == other.hashCode());
 	}
 
 	@Override
 	public String toString() {
 		return "MovimientoDevolucion [estatus=" + estatus + ", fecha=" + fecha + ", monto=" + monto
 				+ ", esquemaTarjeta=" + esquemaTarjeta + ", identificadorCuenta=" + identificadorCuenta + ", titular="
-				+ titular + ", codigoAutorizacion=" + codigoAutorizacion + ", sucursal=" + sucursal
-				+ "]";
+				+ titular + ", codigoAutorizacion=" + codigoAutorizacion + ", sucursal=" + sucursal + "]";
 	}
 
 }

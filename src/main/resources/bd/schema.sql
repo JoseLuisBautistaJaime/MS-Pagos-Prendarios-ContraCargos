@@ -1184,3 +1184,9 @@ ALTER TABLE to_movimiento_midas ADD INDEX idx_folio (folio);
 ALTER TABLE to_movimiento_midas ADD INDEX idx_id_operacion (id_operacion);
 ALTER TABLE to_movimiento_midas ADD INDEX idx_id_tipo_contrato (id_tipo_contrato);
 ALTER TABLE to_movimiento_midas ADD INDEX idx_sucursal (sucursal);
+
+-- ------------------------------------------------------------------------------------------ --
+-- --------------- SE REALIZAN AJUSTES PARA ARTEFACTO TRANSACCIONESCOMISIONESBD ------------- --
+-- -------------------------------- [2019-05-23 11:14:28] ----------------------------------- --
+-- ------------------------------------------------------------------------------------------ --
+ALTER TABLE to_movimiento_pago ADD FOREIGN KEY (estatus) REFERENCES tk_estatus_transaccion(id);
