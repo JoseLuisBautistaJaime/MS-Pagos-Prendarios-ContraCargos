@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -23,6 +24,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
  * @created 21/11/2018 16:41 AM
  */
 @Table(name = "tk_estatus_transaccion")
+@Entity
 public class EstatusPago extends AbstractCatalogo {
 
 	public EstatusPago() {
