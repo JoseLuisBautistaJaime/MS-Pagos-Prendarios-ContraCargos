@@ -1190,3 +1190,9 @@ ALTER TABLE to_movimiento_midas ADD INDEX idx_sucursal (sucursal);
 -- -------------------------------- [2019-05-23 11:14:28] ----------------------------------- --
 -- ------------------------------------------------------------------------------------------ --
 ALTER TABLE to_movimiento_pago ADD FOREIGN KEY (estatus) REFERENCES tk_estatus_transaccion(id);
+
+-- ----------------------------------------------------------------------------------------- --
+-- -------------- SE AGREGA COLUMNA PARA IDENTFICAR EL TIPO (COMISION O IVA_COMISION) ------ --
+-- ------------------------------ [2019-05-27 14:58:06] ------------------------------------- --
+-- ----------------------------------------------------------------------------------------- --
+ALTER TABLE to_movimiento_comision ADD COLUMN tipo ENUM('COMISION','IVA_COMISION') NULL;

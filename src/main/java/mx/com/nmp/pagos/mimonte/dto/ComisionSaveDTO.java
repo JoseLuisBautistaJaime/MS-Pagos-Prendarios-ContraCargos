@@ -4,7 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @name ComisionSaveDTO
@@ -21,14 +23,15 @@ public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 	private Integer id;
 	private Date fechaOperacion;
 	private Date fechaCargo;
-	private Double monto;
+	private BigDecimal monto;
 	private String descripcion;
 
 	public ComisionSaveDTO() {
 		super();
 	}
 
-	public ComisionSaveDTO(Integer folio, Integer id, Date fechaOperacion, Date fechaCargo, Double monto, String descripcion) {
+	public ComisionSaveDTO(Integer folio, Integer id, Date fechaOperacion, Date fechaCargo, BigDecimal monto,
+			String descripcion) {
 		super();
 		this.folio = folio;
 		this.id = id;
@@ -70,11 +73,11 @@ public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 		this.fechaCargo = fechaCargo;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 
@@ -88,14 +91,31 @@ public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 
 	@Override
 	public String toString() {
-		return "ComisionSaveDTO [id=" + id + ", folio=" + folio + ", fechaOperacion=" + fechaOperacion + ", fechaCargo=" + fechaCargo
-				+ ", monto=" + monto + ", descripcion=" + descripcion + "]";
+		return "ComisionSaveDTO [id=" + id + ", folio=" + folio + ", fechaOperacion=" + fechaOperacion + ", fechaCargo="
+				+ fechaCargo + ", monto=" + monto + ", descripcion=" + descripcion + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(folio, id, fechaOperacion, fechaCargo, monto, descripcion);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof ComisionSaveDTO))
+			return false;
+
+		final ComisionSaveDTO other = (ComisionSaveDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override
 	public int compareTo(ComisionSaveDTO o) {
-		// TODO Auto-generated method stub
-		return 0;
+		return o.id.compareTo(this.id);
 	}
 
 }

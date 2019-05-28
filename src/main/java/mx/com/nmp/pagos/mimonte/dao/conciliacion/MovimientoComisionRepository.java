@@ -22,7 +22,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
  * @creationDate 08/05/2019 21:28 hrs.
  * @version 0.1
  */
-@Repository("movimientoConciliacionRepository")
+@Repository("movimientoComisionRepository")
 public interface MovimientoComisionRepository extends JpaRepository<MovimientoComision, Long> {
 
 	/**

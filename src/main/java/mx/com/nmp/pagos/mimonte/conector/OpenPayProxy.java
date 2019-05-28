@@ -21,7 +21,7 @@ import javax.inject.Inject;
  *
  * @author jgalvez
  */
-@Component
+//@Component
 public class OpenPayProxy implements OpenPayAPI {
 
 	private Logger LOGGER = LoggerFactory.getLogger(OpenPayProxy.class);
@@ -29,7 +29,7 @@ public class OpenPayProxy implements OpenPayAPI {
 	/**
 	 * Referencia al conector hacia el Servicio Web OpenPay
 	 */
-	@Inject
+//	@Inject
 	private OpenPayConector openPayConector;
 
 
@@ -38,7 +38,7 @@ public class OpenPayProxy implements OpenPayAPI {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Cacheable("OpenPayProxy.consulta")
+//	@Cacheable("OpenPayProxy.consulta")
 	@Override
 	public List<MovimientoProveedorDTO> consulta(Date fechaInicio, Date fechaFin) {
 		LOGGER.info(">> consulta({}, {})", fechaInicio, fechaFin);

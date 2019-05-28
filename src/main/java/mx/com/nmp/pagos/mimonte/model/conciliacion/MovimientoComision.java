@@ -11,6 +11,8 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 /**
@@ -44,6 +46,10 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 
 	@Column(name = "estatus")
 	private Boolean estatus;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tipo")
+	private TipoMovimientoEnum tipo;
 
 	public MovimientoComision() {
 		super();
@@ -99,9 +105,17 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 		this.estatus = estatus;
 	}
 
+	public TipoMovimientoEnum getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoMovimientoEnum tipo) {
+		this.tipo = tipo;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(fechaOperacion, fechaCargo, monto, descripcion, estatus);
+		return Objects.hash(fechaOperacion, fechaCargo, monto, descripcion, estatus, tipo);
 	}
 
 	@Override
@@ -119,7 +133,7 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 	@Override
 	public String toString() {
 		return "MovimientoComision [fechaOperacion=" + fechaOperacion + ", fechaCargo=" + fechaCargo + ", monto="
-				+ monto + ", descripcion=" + descripcion + ", estatus=" + estatus + "]";
+				+ monto + ", descripcion=" + descripcion + ", estatus=" + estatus + ", tipo=" + tipo + "]";
 	}
 
 }

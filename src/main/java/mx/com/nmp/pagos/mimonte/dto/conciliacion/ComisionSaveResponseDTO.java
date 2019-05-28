@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -21,7 +22,7 @@ public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseD
 	private Integer id;
 	private Date fechaOperacion;
 	private Date fechaCargo;
-	private Double monto;
+	private BigDecimal monto;
 	private String descripcion;
 	private Boolean nuevaComision;
 	
@@ -30,7 +31,7 @@ public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseD
 		// TODO Auto-generated constructor stub
 	}
 
-	public ComisionSaveResponseDTO(Integer folio, Integer id, Date fechaOperacion, Date fechaCargo, Double monto,
+	public ComisionSaveResponseDTO(Integer folio, Integer id, Date fechaOperacion, Date fechaCargo, BigDecimal monto,
 			String descripcion, Boolean nuevaComision) {
 		super();
 		this.folio = folio;
@@ -74,11 +75,11 @@ public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseD
 		this.fechaCargo = fechaCargo;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 

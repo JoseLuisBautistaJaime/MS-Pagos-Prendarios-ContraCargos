@@ -6,12 +6,15 @@ package mx.com.nmp.pagos.mimonte.util.validacion;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDeleteDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
@@ -235,8 +238,9 @@ public interface ValidadorConciliacion {
 		}
 		return true;
 	}
-	
-	public static boolean validaConciliacionResponseSaveDTO(ConciliacionResponseSaveDTO conciliacionRequestDTO, String createdBy) {
+
+	public static boolean validaConciliacionResponseSaveDTO(ConciliacionResponseSaveDTO conciliacionRequestDTO,
+			String createdBy) {
 		try {
 			assertNotNull(conciliacionRequestDTO.getCuenta().getId());
 			assertNotNull(conciliacionRequestDTO.getEntidad().getId());
@@ -246,10 +250,84 @@ public interface ValidadorConciliacion {
 				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 			if (createdBy == null || createdBy.isEmpty() || createdBy.equals(""))
 				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		}catch (Exception ex) {
+		} catch (Exception ex) {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Valida que un objeto de tipo ComisionSaveDTO contenga todos los atributos
+	 * requeridos y estos sean valores validos
+	 * 
+	 * @param comisionSaveDTO
+	 * @return
+	 */
+	public static boolean validateComisionSaveDTO(ComisionSaveDTO comisionSaveDTO) {
+		Calendar today = Calendar.getInstance();
+		try {
+			assertNotNull(comisionSaveDTO);
+			assertNotNull(comisionSaveDTO.getDescripcion());
+			assertNotNull(comisionSaveDTO.getFechaCargo());
+			assertNotNull(comisionSaveDTO.getFechaOperacion());
+			assertNotNull(comisionSaveDTO.getFolio());
+			assertNotNull(comisionSaveDTO.getId());
+			assertNotNull(comisionSaveDTO.getMonto());
+		} catch (Exception ex) {
+			return false;
+		}
+		return (!comisionSaveDTO.getDescripcion().isEmpty() && !"".equals(comisionSaveDTO.getDescripcion())
+				&& !today.before(comisionSaveDTO.getFechaCargo()) && !today.before(comisionSaveDTO.getFechaOperacion())
+				&& comisionSaveDTO.getId() > 0 && comisionSaveDTO.getMonto().compareTo(new BigDecimal("0")) > 0);
+	}
+
+	/**
+	 * Valida que un objeto de tipo ComisionDeleteDTO contenga los atributos
+	 * requeridos y que estos sean valores validos
+	 * 
+	 * @param comisionDeleteDTO
+	 * @return
+	 */
+	public static boolean validateComisionDeleteDTO(ComisionDeleteDTO comisionDeleteDTO) {
+		try {
+			assertNotNull(comisionDeleteDTO);
+			assertNotNull(comisionDeleteDTO.getFolio());
+			assertNotNull(comisionDeleteDTO.getIdComisiones());
+			if (!comisionDeleteDTO.getIdComisiones().isEmpty()) {
+				for (Integer com : comisionDeleteDTO.getIdComisiones()) {
+					assertNotNull(com);
+				}
+			} else
+				return false;
+		} catch (Exception ex) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Valida un objeto de tipo ComisionesTransaccionesRequestDTO para ver que
+	 * contenga todos los atributos requeridos y que estos sean valores validos
+	 * 
+	 * @param comisionesTransaccionesRequestDTO
+	 * @return
+	 */
+	public static boolean validateComisionesTransaccionesRequestDTO(
+			ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO) {
+		Calendar desde = Calendar.getInstance();
+		Calendar hasta = Calendar.getInstance();
+		Calendar today = Calendar.getInstance();
+		try {
+			assertNotNull(comisionesTransaccionesRequestDTO);
+			assertNotNull(comisionesTransaccionesRequestDTO.getComision());
+			assertNotNull(comisionesTransaccionesRequestDTO.getFechaDesde());
+			assertNotNull(comisionesTransaccionesRequestDTO.getFechaHasta());
+		} catch (Exception ex) {
+			return false;
+		}
+		desde.setTime(comisionesTransaccionesRequestDTO.getFechaDesde());
+		hasta.setTime(comisionesTransaccionesRequestDTO.getFechaHasta());
+		return (!today.before(desde) && !today.before(hasta) && (desde.before(hasta) || desde.equals(hasta)));
 	}
 
 }

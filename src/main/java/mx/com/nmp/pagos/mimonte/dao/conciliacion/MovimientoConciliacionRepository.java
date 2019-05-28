@@ -21,7 +21,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
  * @creationDate 08/05/2019 19:04 hrs.
  * @version 0.1
  */
-@Repository("MovimientoConciliacionRepository")
+@Repository("movimientoConciliacionRepository")
 public interface MovimientoConciliacionRepository extends JpaRepository<MovimientoConciliacion, Integer> {
 
 }
