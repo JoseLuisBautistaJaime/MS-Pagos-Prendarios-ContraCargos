@@ -160,13 +160,13 @@ public class ComisionesService {
 		buildComisionReal(comisionesTransRealDTO, sumaComision, sumaIva);
 		// Agrega las comisions reales a el objeto padre
 		comisionesTransDTO.setReal(comisionesTransRealDTO);
-		
+
 		// Guarda las comisiones y proyecciones (NUEVAS ESTRUCTURAS DE DATOS)
 		comisionTransaccion = ComisionesBuilder
 				.buildComisionTransaccionFromComisionesTransDTOAndComisionesTransaccionesRequestDTO(comisionesTransDTO,
 						comisionesTransaccionesRequestDTO, idConciliacion, requestUser);
 		comisionTransaccionRepository.save(comisionTransaccion);
-		
+
 		// regresa el objeto
 		return comisionesTransDTO;
 	}
@@ -196,10 +196,8 @@ public class ComisionesService {
 	 * @param requestuser
 	 */
 	public void delete(final ComisionDeleteDTO comisionDeleteDTO, final String requestUser) {
-		comisionesRepository
-				.deleteByIdsAndIdConciliacion(comisionDeleteDTO.getIdComisiones()/*
-																					 * , comisionDeleteDTO.getFolio()
-																					 */);
+		comisionesRepository.deleteByIdsAndIdConciliacion(comisionDeleteDTO.getIdComisiones(),
+				comisionDeleteDTO.getFolio());
 	}
 
 	/**

@@ -38,11 +38,9 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param idConciliacion
 	 */
 	@Modifying
-	@Query("DELETE FROM MovimientoComision mc WHERE mc.id IN :idsComisiones AND mc.id NOT IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = false)")
-	public void deleteByIdsAndIdConciliacion(
-			@Param("idsComisiones") final List<Integer> idsComisiones/*
-																		 * , final Integer idConciliacion
-																		 */);
+	@Query("DELETE FROM MovimientoComision mc WHERE mc.id IN :idsComisiones AND mc.id NOT IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = false) AND mcon.idConciliacion = :idConciliacion")
+	public void deleteByIdsAndIdConciliacion(@Param("idsComisiones") final List<Integer> idsComisiones,
+			@Param("idConciliacion") final Integer idConciliacion);
 
 	/**
 	 * Regresa el total de movimientos de pagos que estan entre las fechas
