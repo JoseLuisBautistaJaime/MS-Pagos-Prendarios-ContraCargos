@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -33,7 +35,7 @@ import mx.com.nmp.pagos.mimonte.model.Updatable;
  */
 @Entity
 @Table(name = "to_comision_transaccion")
-public class ComisionTransaccion extends Updatable implements java.io.Serializable {
+public class ComisionTransaccion extends Updatable implements java.io.Serializable, Comparable<ComisionTransaccion> {
 
 	/**
 	 * Serial id
@@ -45,8 +47,9 @@ public class ComisionTransaccion extends Updatable implements java.io.Serializab
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "id_conciliacion", nullable = true)
-	private Integer idConciliacion;
+	@ManyToOne
+	@JoinColumn(name = "id_conciliacion", nullable = true)
+	private Conciliacion conciliacion;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha_desde", nullable = false)
@@ -73,12 +76,12 @@ public class ComisionTransaccion extends Updatable implements java.io.Serializab
 		this.id = id;
 	}
 
-	public Integer getIdConciliacion() {
-		return idConciliacion;
+	public Conciliacion getConciliacion() {
+		return conciliacion;
 	}
 
-	public void setIdConciliacion(Integer idConciliacion) {
-		this.idConciliacion = idConciliacion;
+	public void setConciliacion(Conciliacion conciliacion) {
+		this.conciliacion = conciliacion;
 	}
 
 	public Date getFechaDesde() {
@@ -124,7 +127,7 @@ public class ComisionTransaccion extends Updatable implements java.io.Serializab
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, idConciliacion, fechaDesde, fechaHasta, comision);
+		return Objects.hash(id, conciliacion, fechaDesde, fechaHasta, comision);
 	}
 
 	@Override
@@ -142,8 +145,13 @@ public class ComisionTransaccion extends Updatable implements java.io.Serializab
 
 	@Override
 	public String toString() {
-		return "ComisionTransaccion [id=" + id + ", idConciliacion=" + idConciliacion + ", fechaDesde=" + fechaDesde
+		return "ComisionTransaccion [id=" + id + ", conciliacion=" + conciliacion + ", fechaDesde=" + fechaDesde
 				+ ", fechaHasta=" + fechaHasta + ", comision=" + comision + "]";
+	}
+
+	@Override
+	public int compareTo(ComisionTransaccion o) {
+		return o.id.compareTo(this.id);
 	}
 
 }

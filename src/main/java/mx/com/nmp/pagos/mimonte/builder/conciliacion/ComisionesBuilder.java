@@ -14,6 +14,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestD
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionProyeccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionReal;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
@@ -114,7 +115,7 @@ public abstract class ComisionesBuilder {
 			comisionTransaccion.setFechaDesde(comisionesTransaccionesRequestDTO.getFechaDesde());
 			comisionTransaccion.setFechaHasta(comisionesTransaccionesRequestDTO.getFechaHasta());
 			comisionTransaccion.setId(0L);
-			comisionTransaccion.setIdConciliacion(idConciliacion);
+			comisionTransaccion.setConciliacion(new Conciliacion(idConciliacion));
 		}
 		return comisionTransaccion;
 	}

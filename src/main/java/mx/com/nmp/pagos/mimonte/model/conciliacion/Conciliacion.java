@@ -82,6 +82,9 @@ public class Conciliacion extends Updatable implements Serializable  {
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "id_sub_estatus_conciliacion")
 	private SubEstatusConciliacion subEstatus;
+	
+	@OneToMany(mappedBy = "conciliacion")
+	private Set<ComisionTransaccion> comisionTransaccionSet;
 
 	public Conciliacion() {
 		super();
@@ -204,6 +207,14 @@ public class Conciliacion extends Updatable implements Serializable  {
 
 	public void setSubEstatus(SubEstatusConciliacion subEstatus) {
 		this.subEstatus = subEstatus;
+	}
+	
+	public Set<ComisionTransaccion> getComisionTransaccionSet() {
+		return comisionTransaccionSet;
+	}
+
+	public void setComisionTransaccionSet(Set<ComisionTransaccion> comisionTransaccionSet) {
+		this.comisionTransaccionSet = comisionTransaccionSet;
 	}
 
 	@Override
