@@ -38,7 +38,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param idConciliacion
 	 */
 	@Modifying
-	@Query("DELETE FROM MovimientoComision mc WHERE mc.id IN :idsComisiones")
+	@Query("DELETE FROM MovimientoComision mc WHERE mc.id IN :idsComisiones AND mc.id NOT IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = false)")
 	public void deleteByIdsAndIdConciliacion(
 			@Param("idsComisiones") final List<Integer> idsComisiones/*
 																		 * , final Integer idConciliacion
@@ -66,6 +66,17 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 */
 	@Query("SELECT COUNT(md.id) FROM MovimientoDevolucion md INNER JOIN MovimientoConciliacion mc ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta")
 	public Long findTransaccionesDevolucionesByFechas(@Param("fechaDesde") final Date fechaDesde,
+			@Param("fechaHasta") final Date fechaHasta);
+
+	/**
+	 * Encuentra el id de conciliacion para las comisiones reales
+	 * 
+	 * @param fechaDesde
+	 * @param fechaHasta
+	 * @return
+	 */
+	@Query("SELECT mc.idConciliacion FROM MovimientoDevolucion md INNER JOIN MovimientoConciliacion mc ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta")
+	public Integer findIdConciliacionByFechas(@Param("fechaDesde") final Date fechaDesde,
 			@Param("fechaHasta") final Date fechaHasta);
 
 	/**

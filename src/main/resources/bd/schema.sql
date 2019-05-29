@@ -1202,8 +1202,8 @@ ALTER TABLE to_movimiento_comision ADD COLUMN tipo ENUM('COMISION','IVA_COMISION
 -- Comision Transaccion
 
 CREATE TABLE to_comision_transaccion (
-	id INTEGER NOT NULL,
-	conciliacion INTEGER NOT NULL,
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	id_conciliacion BIGINT(20) NOT NULL,
 	fecha_desde DATE NOT NULL,
 	fecha_hasta DATE NOT NULL,
 	comision DECIMAL(16,4) NOT NULL,
@@ -1212,12 +1212,12 @@ CREATE TABLE to_comision_transaccion (
 	last_modified_by VARCHAR(100),
 	last_modified_date DATETIME,
 	PRIMARY KEY (id),
-	KEY (conciliacion)
+	KEY (id_conciliacion)
 )  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 CREATE TABLE to_comision_transaccion_real (
-	id INTEGER NOT NULL,
+	id INTEGER NOT NULL AUTO_INCREMENT,
 	comision_transaccion INTEGER NOT NULL,
 	comision DECIMAL(16,4) NOT NULL,
 	iva_comision DECIMAL(16,4),
@@ -1228,24 +1228,30 @@ CREATE TABLE to_comision_transaccion_real (
 
 
 CREATE TABLE to_comision_transaccion_proyeccion (
-	id BIGINT NOT NULL,
+	id BIGINT NOT NULL AUTO_INCREMENT,
 	comision_transaccion INTEGER NOT NULL,
 	operacion BIGINT NOT NULL,
-	transacciones DECIMAL(16,4),
-	comision DECIMAL(16,4),
+	-- transacciones DECIMAL(16,4),
+	transacciones INT(11) NULL,
+    comision DECIMAL(16,4),
 	iva DECIMAL(16,4),
 	total DECIMAL(16,4),
 	PRIMARY KEY (id),
 	KEY (comision_transaccion)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- ADDED [CAMBIA TIPO DE INTEGER A BIGINT Y NOMBRADO PARA SEGUIR ESTANDAR]
+-- ALTER TABLE to_comision_transaccion CHANGE conciliacion id_conciliacion BIGINT(20);
 
+-- MODIFIED [CON NUEVO NOMBRE DE COLUMNA DE CONCILIACION]
 ALTER TABLE to_comision_transaccion ADD CONSTRAINT FK_to_comision_transaccion_to_conciliacion 
-	FOREIGN KEY (conciliacion) REFERENCES to_conciliacion (id);
+	FOREIGN KEY (id_conciliacion) REFERENCES to_conciliacion (id);
+-- ALTER TABLE to_comision_transaccion ADD CONSTRAINT FK_to_comision_transaccion_to_conciliacion 
+	-- FOREIGN KEY (conciliacion) REFERENCES to_conciliacion (id);
+-- END MODIFIED
 
 ALTER TABLE to_comision_transaccion_real ADD CONSTRAINT FK_to_comision_transaccion_real_to_comision_transaccion 
 	FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id);
 
 ALTER TABLE to_comision_transaccion_proyeccion ADD CONSTRAINT FK_to_comision_transaccion_proyeccion_to_comision_transaccion 
 	FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id);
-

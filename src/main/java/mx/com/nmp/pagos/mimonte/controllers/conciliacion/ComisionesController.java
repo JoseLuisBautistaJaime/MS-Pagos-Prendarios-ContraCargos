@@ -146,11 +146,11 @@ public class ComisionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaComisionesTransacciones(
-			@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO) {
+			@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO, @RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		if (!ValidadorConciliacion.validateComisionesTransaccionesRequestDTO(comisionesTransaccionesRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Exitosa.",
-				comisionesService.findByFechasAndComision(comisionesTransaccionesRequestDTO));
+				comisionesService.findByFechasAndComision(comisionesTransaccionesRequestDTO, userRequest));
 //		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Exitosa.",
 //				buildComisionesTransaccionesDummy());
 	}

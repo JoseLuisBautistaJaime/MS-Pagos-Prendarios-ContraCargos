@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ComisionesBuilder;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionTransaccionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionesRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
@@ -30,6 +31,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransRealDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesOperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ProyeccionComisionDTO;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.OperacionComisionProyeccionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 
@@ -59,6 +61,13 @@ public class ComisionesService {
 	@Autowired
 	@Qualifier("movimientoConciliacionRepository")
 	private MovimientoConciliacionRepository movimientoConciliacionRepository;
+
+	/**
+	 * Repository de ComisionTransaccionRepository
+	 */
+	@Autowired
+	@Qualifier("comisionTransaccionRepository")
+	private ComisionTransaccionRepository comisionTransaccionRepository;
 
 	/**
 	 * Propiedad IVA
@@ -104,8 +113,9 @@ public class ComisionesService {
 	 * @param comisionesTransaccionesRequestDTO
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.REQUIRED)
 	public ComisionesTransDTO findByFechasAndComision(
-			final ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO) {
+			final ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO, String requestUser) {
 		// Declaracion de objetos
 		List<ComisionesTransaccionesOperacionDTO> comisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO();
@@ -113,6 +123,7 @@ public class ComisionesService {
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO();
 		ComisionesTransaccionesOperacionDTO movimientoPagos = new ComisionesTransaccionesOperacionDTO();
 		ComisionesTransaccionesOperacionDTO movimientoDevoluciones = new ComisionesTransaccionesOperacionDTO();
+		ComisionTransaccion comisionTransaccion = null;
 		BigDecimal totalOperaciones = null;
 		BigDecimal sumaComision = null;
 		BigDecimal sumaIva = null;
@@ -121,6 +132,9 @@ public class ComisionesService {
 				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta());
 		// Encontrar suma total de devoluciones
 		Long transaccionesDevoluciones = comisionesRepository.findTransaccionesDevolucionesByFechas(
+				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta());
+		// Se obtiene el id de conciliacion asociado a las comisiones reales
+		Integer idConciliacion = comisionesRepository.findIdConciliacionByFechas(
 				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta());
 		// Construir objeto pagos
 		buildMovimiento(movimientoPagos, OperacionComisionProyeccionEnum.PAGOS.getDescripcion(), transaccionesPagos,
@@ -146,6 +160,13 @@ public class ComisionesService {
 		buildComisionReal(comisionesTransRealDTO, sumaComision, sumaIva);
 		// Agrega las comisions reales a el objeto padre
 		comisionesTransDTO.setReal(comisionesTransRealDTO);
+		
+		// Guarda las comisiones y proyecciones (NUEVAS ESTRUCTURAS DE DATOS)
+		comisionTransaccion = ComisionesBuilder
+				.buildComisionTransaccionFromComisionesTransDTOAndComisionesTransaccionesRequestDTO(comisionesTransDTO,
+						comisionesTransaccionesRequestDTO, idConciliacion, requestUser);
+		comisionTransaccionRepository.save(comisionTransaccion);
+		
 		// regresa el objeto
 		return comisionesTransDTO;
 	}
@@ -174,7 +195,7 @@ public class ComisionesService {
 	 * @param comisionDeleteDTO
 	 * @param requestuser
 	 */
-	public void delete(final ComisionDeleteDTO comisionDeleteDTO, final String requestuser) {
+	public void delete(final ComisionDeleteDTO comisionDeleteDTO, final String requestUser) {
 		comisionesRepository
 				.deleteByIdsAndIdConciliacion(comisionDeleteDTO.getIdComisiones()/*
 																					 * , comisionDeleteDTO.getFolio()

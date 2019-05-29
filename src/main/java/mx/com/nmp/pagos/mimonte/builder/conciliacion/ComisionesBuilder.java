@@ -5,10 +5,18 @@
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionProyeccion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionReal;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 
 /**
  * @name ComisionesBuilder
@@ -74,5 +82,40 @@ public abstract class ComisionesBuilder {
 			movimientoConciliacion.setIdConciliacion(conciliacionId);
 		}
 		return movimientoConciliacion;
+	}
+
+	public static ComisionTransaccion buildComisionTransaccionFromComisionesTransDTOAndComisionesTransaccionesRequestDTO(
+			ComisionesTransDTO comisionesTransDTO, ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO,
+			Integer idConciliacion, String requestUser) {
+		ComisionTransaccion comisionTransaccion = null;
+		if (null != comisionesTransDTO) {
+			comisionTransaccion = new ComisionTransaccion();
+			comisionTransaccion.setLastModifiedBy(null);
+			comisionTransaccion.setLastModifiedDate(null);
+			comisionTransaccion.setComision(comisionesTransDTO.getReal().getComision());
+			Set<ComisionTransaccionProyeccion> proyecciones = new TreeSet<>();
+			proyecciones.add(new ComisionTransaccionProyeccion(0L, TipoMovimientoEnum.COMISION.getId(),
+					comisionesTransDTO.getProyeccion().getOperaciones().get(0).getTransacciones(),
+					comisionesTransDTO.getProyeccion().getOperaciones().get(0).getComision(),
+					comisionesTransDTO.getProyeccion().getOperaciones().get(0).getIvaComision(),
+					comisionesTransDTO.getProyeccion().getOperaciones().get(0).getTotalComision()));
+			proyecciones.add(new ComisionTransaccionProyeccion(0L, TipoMovimientoEnum.IVA_COMISION.getId(),
+					comisionesTransDTO.getProyeccion().getOperaciones().get(1).getTransacciones(),
+					comisionesTransDTO.getProyeccion().getOperaciones().get(1).getComision(),
+					comisionesTransDTO.getProyeccion().getOperaciones().get(1).getIvaComision(),
+					comisionesTransDTO.getProyeccion().getOperaciones().get(1).getTotalComision()));
+			comisionTransaccion.setComisionTransaccionProyeccionSet(proyecciones);
+			Set<ComisionTransaccionReal> reales = new TreeSet<>();
+			reales.add(new ComisionTransaccionReal(0L, comisionesTransDTO.getReal().getComision(),
+					comisionesTransDTO.getReal().getIvaComision(), comisionesTransDTO.getReal().getTotalComision()));
+			comisionTransaccion.setComisionTransaccionRealSet(reales);
+			comisionTransaccion.setCreatedBy(requestUser);
+			comisionTransaccion.setCreatedDate(new Date());
+			comisionTransaccion.setFechaDesde(comisionesTransaccionesRequestDTO.getFechaDesde());
+			comisionTransaccion.setFechaHasta(comisionesTransaccionesRequestDTO.getFechaHasta());
+			comisionTransaccion.setId(0L);
+			comisionTransaccion.setIdConciliacion(idConciliacion);
+		}
+		return comisionTransaccion;
 	}
 }
