@@ -134,6 +134,20 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 
 				lineas.add(movimiento);
 			}
+			else if (line.getTipo() == EstadoCuentaFileLayoutTipoEnum.C43_23) { // Linea 23 es inmediatamente despues de la 22
+
+				if (line.getTipo().valido(line.getLinea())) {
+					throw new ConciliacionException("La linea " + line.getIndex() + " tiene una longitud invalida");
+				}
+
+				EstadoCuentaLineQueue lineQueue = new EstadoCuentaLineQueue(line.getLinea());
+				
+				MovimientoEstadoCuenta movimiento = lineas.get(lineas.size() - 1);
+				lineQueue.get(2); // Registro
+				movimiento.setCodigoDato(lineQueue.get(2));
+				movimiento.setReferenciaAmpliada(lineQueue.get(38));
+				movimiento.setReferencia(lineQueue.get(38));
+			}
 		}
 
 		return lineas;

@@ -61,7 +61,7 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 	public EstadoCuentaFileLayout read(Date date, Long idConciliacion, EstadoCuentaImplementacionEnum implementacion) {
 
 		// Consulta el numero de cuenta asignado a la conciliacion
-		Conciliacion conciliacion = conciliacionService.getById(idConciliacion.intValue());
+ 		Conciliacion conciliacion = conciliacionService.getById(idConciliacion.intValue());
 		if (conciliacion == null) {
 			throw new ConciliacionException("No existe conciliacion con folio " + idConciliacion);
 		}

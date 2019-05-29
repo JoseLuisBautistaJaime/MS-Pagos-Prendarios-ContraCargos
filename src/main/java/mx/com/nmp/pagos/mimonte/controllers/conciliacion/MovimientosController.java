@@ -43,6 +43,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosEstadoCuentaService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosProveedorService;
@@ -158,7 +159,12 @@ public class MovimientosController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		movimientosEstadoCuentaService.save(saveEstadoCuentaRequestDTO, userRequest);
+		Reporte reporte = movimientosEstadoCuentaService.save(saveEstadoCuentaRequestDTO, userRequest);
+		//Reporte reporte = new Reporte();
+		//reporte.setId(0);
+		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste los movimientos del estado de cuenta
+		Long idConciliacion = saveEstadoCuentaRequestDTO.getFolio().longValue();
+		movimientosEstadoCuentaService.procesarConsultaEstadoCuenta(saveEstadoCuentaRequestDTO.getFechaInicial(), saveEstadoCuentaRequestDTO.getFechaFinal(), idConciliacion, Integer.valueOf(reporte.getId()).longValue());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta de estado cuenta exitosa.", null);
 	}
 
