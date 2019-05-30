@@ -120,7 +120,11 @@ public class ComisionesController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		if (!ValidadorConciliacion.validateComisionDeleteDTO(comisionDeleteDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		comisionesService.delete(comisionDeleteDTO, userRequest);
+		try {
+			comisionesService.delete(comisionDeleteDTO, userRequest);
+		} catch (ConciliacionException cex) {
+			throw cex;
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
 	}

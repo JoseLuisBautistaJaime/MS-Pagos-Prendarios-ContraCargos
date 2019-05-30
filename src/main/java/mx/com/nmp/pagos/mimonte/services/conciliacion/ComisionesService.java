@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,8 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ComisionesBuilder;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionTransaccionProyeccionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionTransaccionRealRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionTransaccionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionesRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDTO;
@@ -31,7 +35,10 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransRealDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesOperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ProyeccionComisionDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.OperacionComisionProyeccionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 
@@ -70,6 +77,27 @@ public class ComisionesService {
 	private ComisionTransaccionRepository comisionTransaccionRepository;
 
 	/**
+	 * Repository de Conciliacion
+	 */
+	@Autowired
+	@Qualifier("conciliacionRepository")
+	private ConciliacionRepository conciliacionRepository;
+
+	/**
+	 * repository de ComisionTransaccionProyeccion
+	 */
+	@Autowired
+	@Qualifier("comisionTransaccionProyeccionRepository")
+	private ComisionTransaccionProyeccionRepository comisionTransaccionProyeccionRepository;
+
+	/**
+	 * repository de ComsionTransaccionReal
+	 */
+	@Autowired
+	@Qualifier("comisionTransaccionRealRepository")
+	private ComisionTransaccionRealRepository comisionTransaccionRealRepository;
+
+	/**
 	 * Propiedad IVA
 	 */
 	@Value(ConciliacionConstants.ConstantProperties.IVA)
@@ -103,6 +131,8 @@ public class ComisionesService {
 		if (null != folio) {
 			comisionDTOList = comisionesRepository.findByFolio(folio);
 		}
+		if (null == comisionDTOList || comisionDTOList.isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
 		return comisionDTOList;
 	}
 
@@ -136,6 +166,13 @@ public class ComisionesService {
 		// Se obtiene el id de conciliacion asociado a las comisiones reales
 		Integer idConciliacion = comisionesRepository.findIdConciliacionByFechas(
 				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta());
+		if (null == idConciliacion)
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS);
+		// Se obtiene el id de la comision
+		Integer idComision = comisionesRepository.findIdComisionByFechas(
+				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta());
+		if (null == idComision)
+			throw new ConciliacionException(ConciliacionConstants.COMISION_NOT_FOUND_FOR_SUCH_PARAMS);
 		// Construir objeto pagos
 		buildMovimiento(movimientoPagos, OperacionComisionProyeccionEnum.PAGOS.getDescripcion(), transaccionesPagos,
 				comisionesTransaccionesRequestDTO.getComision());
@@ -153,19 +190,27 @@ public class ComisionesService {
 		// Poner el objeto proyeccion en el objeto padre
 		comisionesTransDTO.setProyeccion(comisionesTransProyeccionDTO);
 		// Realiza suma de comisiones
-		sumaComision = comisionesRepository.findMovimientosSum(TipoMovimientoEnum.COMISION.getDescripcion());
+		sumaComision = comisionesRepository.findMovimientosSum(TipoMovimientoEnum.COMISION);
+		sumaComision = null != sumaComision ? sumaComision : new BigDecimal("0");
 		// Realiza suma de iva's
-		sumaIva = comisionesRepository.findMovimientosSum(TipoMovimientoEnum.IVA_COMISION.getDescripcion());
+		sumaIva = comisionesRepository.findMovimientosSum(TipoMovimientoEnum.IVA_COMISION);
+		sumaIva = null != sumaIva ? sumaIva : new BigDecimal("0");
 		// Construye el objeto de comisiones real
 		buildComisionReal(comisionesTransRealDTO, sumaComision, sumaIva);
 		// Agrega las comisions reales a el objeto padre
 		comisionesTransDTO.setReal(comisionesTransRealDTO);
 
-		// Guarda las comisiones y proyecciones (NUEVAS ESTRUCTURAS DE DATOS)
+		// Guarda las comisiones (NUEVAS ESTRUCTURAS DE DATOS)
 		comisionTransaccion = ComisionesBuilder
 				.buildComisionTransaccionFromComisionesTransDTOAndComisionesTransaccionesRequestDTO(comisionesTransDTO,
 						comisionesTransaccionesRequestDTO, idConciliacion, requestUser);
-		comisionTransaccionRepository.save(comisionTransaccion);
+		comisionTransaccion = comisionTransaccionRepository.save(comisionTransaccion);
+		// Guarda las proyecciones
+		comisionTransaccionProyeccionRepository.saveAll(ComisionesBuilder
+				.buildComisionTransaccionProyeccionFromComisionTransaccion(comisionTransaccion, comisionesTransDTO));
+		// Guarda los datos reales de la comisones y proyecicones
+		comisionTransaccionRealRepository.save(ComisionesBuilder
+				.buildComisionTransaccionRealFromComisionTransaccion(comisionTransaccion, comisionesTransDTO));
 
 		// regresa el objeto
 		return comisionesTransDTO;
@@ -181,8 +226,10 @@ public class ComisionesService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public ComisionSaveResponseDTO save(final ComisionSaveDTO comisionSaveDTO, final String requestUser) {
 		ComisionSaveResponseDTO comisionSaveResponseDTO = null;
-		movimientoConciliacionRepository.save(ComisionesBuilder
-				.buildMovimientoConciliacionFromConciliacionIdAndRequestUser(comisionSaveDTO.getFolio(), requestUser));
+		// El siguiente save persiste tambien la entidad MovimientoConciliacion por lo
+		// que este save es inncesesario
+//		movimientoConciliacionRepository.save(ComisionesBuilder
+//				.buildMovimientoConciliacionFromConciliacionIdAndRequestUser(comisionSaveDTO.getFolio(), requestUser));
 		comisionesRepository
 				.save(ComisionesBuilder.buildMovimientoComisionFromComisionSaveDTO(comisionSaveDTO, requestUser));
 		comisionSaveResponseDTO = comisionesRepository.findByIdComision(comisionSaveDTO.getId());
@@ -195,7 +242,13 @@ public class ComisionesService {
 	 * @param comisionDeleteDTO
 	 * @param requestuser
 	 */
-	public void delete(final ComisionDeleteDTO comisionDeleteDTO, final String requestUser) {
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void delete(final ComisionDeleteDTO comisionDeleteDTO, final String requestUser)
+			throws ConciliacionException {
+		Optional<Conciliacion> conciliacion = null;
+		conciliacion = conciliacionRepository.findById(comisionDeleteDTO.getFolio());
+		if (!conciliacion.isPresent())
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND);
 		comisionesRepository.deleteByIdsAndIdConciliacion(comisionDeleteDTO.getIdComisiones(),
 				comisionDeleteDTO.getFolio());
 	}

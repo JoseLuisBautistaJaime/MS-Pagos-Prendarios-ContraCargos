@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionSaveResponseDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 
 /**
  * @name ComisionesRepository
@@ -76,6 +77,16 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	@Query("SELECT mc.idConciliacion FROM MovimientoDevolucion md INNER JOIN MovimientoConciliacion mc ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta")
 	public Integer findIdConciliacionByFechas(@Param("fechaDesde") final Date fechaDesde,
 			@Param("fechaHasta") final Date fechaHasta);
+	
+	/**
+	 * Encuentra el id de la comision asociada a determinadas fechas
+	 * @param fechaDesde
+	 * @param fechaHasta
+	 * @return
+	 */
+	@Query("SELECT mc.id FROM MovimientoDevolucion md INNER JOIN MovimientoConciliacion mc ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta")
+	public Integer findIdComisionByFechas(@Param("fechaDesde") final Date fechaDesde,
+			@Param("fechaHasta") final Date fechaHasta);
 
 	/**
 	 * Regresa la suma de los movimientos segun su tipo
@@ -83,8 +94,8 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param tipoComision
 	 * @return
 	 */
-	@Query("SELECT SUM(mc) FROM MovimientoComision mc WHERE mc.tipo = :tipoComision")
-	public BigDecimal findMovimientosSum(@Param("tipoComision") final String tipoComision);
+	@Query("SELECT SUM(mc.monto) FROM MovimientoComision mc WHERE mc.tipo = :tipoComision")
+	public BigDecimal findMovimientosSum(@Param("tipoComision") final TipoMovimientoEnum tipoComision);
 
 	/**
 	 * Rehresa las comisiones por tipo de operacion (COMISION E IVA_COMISION)

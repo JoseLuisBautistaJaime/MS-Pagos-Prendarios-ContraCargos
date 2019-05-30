@@ -78,6 +78,26 @@ public final class ConciliacionConstants {
 	public static final String SUCCESSFUL_UPDATE = "Actualización exitosa.";
 
 	/**
+	 * Mensaje que es mostrado cuando se intenta buscar o asociar un id de conciliacion que no existe
+	 */
+	public static final String CONCILIACION_ID_NOT_FOUND = "No se encontro el id de conciliacion ingresado";
+	
+	/**
+	 * Se regresa cuando no se encuentra informacion en una busqueda relacionada con los procesos de conciliacion en general
+	 */
+	public static final String INFORMATION_NOT_FOUND = "No se encontro informacion relacionada con los parametros de busqueda";
+	
+	/**
+	 * Mensaje que es mostrado cuando no es posible obtener una conciliacion de acuerdo a los parametros recibidos
+	 */
+	public static final String CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados";
+	
+	/**
+	 * Mensaje que es mostrado cuando no es posible obtener una comision de acuerdo a los parametros recibidos
+	 */
+	public static final String COMISION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados";
+	
+	/**
 	 * Subclase de cosntantes que se mapearan de propiedades del archivo de
 	 * configuracion de spring
 	 * 

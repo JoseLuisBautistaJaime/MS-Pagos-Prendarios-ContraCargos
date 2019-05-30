@@ -14,7 +14,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  */
 public enum TipoMovimientoEnum {
 
-	COMISION(1, "Comision"), IVA_COMISION(2, "Iva Comision");
+	COMISION(1, "COMISION"), IVA_COMISION(2, "IVA_COMISION");
 
 	private int id;
 	private String descripcion;

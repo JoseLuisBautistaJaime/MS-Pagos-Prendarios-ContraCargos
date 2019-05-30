@@ -62,12 +62,21 @@ public class ComisionTransaccion extends Updatable implements java.io.Serializab
 	@Column(name = "comision", nullable = false)
 	private BigDecimal comision;
 
-	@OneToMany(mappedBy = "comisionTransaccion", cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+	@OneToMany(mappedBy = "comisionTransaccion")
 	private Set<ComisionTransaccionProyeccion> comisionTransaccionProyeccionSet;
 
-	@OneToMany(mappedBy = "comisionTransaccion", cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+	@OneToMany(mappedBy = "comisionTransaccion")
 	private Set<ComisionTransaccionReal> comisionTransaccionRealSet;
 
+	public ComisionTransaccion() {
+		super();
+	}
+	
+	public ComisionTransaccion(Long id) {
+		super();
+		this.id = id;
+	}
+	
 	public Long getId() {
 		return id;
 	}

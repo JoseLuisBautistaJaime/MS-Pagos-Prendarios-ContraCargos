@@ -58,6 +58,7 @@ public abstract class ComisionesBuilder {
 			movimientoComision.setId(comisionSaveDTO.getId());
 			movimientoComision.setIdConciliacion(comisionSaveDTO.getFolio());
 			movimientoComision.setMonto(comisionSaveDTO.getMonto());
+			movimientoComision.setTipo(TipoMovimientoEnum.COMISION);
 		}
 		return movimientoComision;
 	}
@@ -85,6 +86,16 @@ public abstract class ComisionesBuilder {
 		return movimientoConciliacion;
 	}
 
+	/**
+	 * Constrye un entity de tipo ComisionTransaccion a partir de los objetos
+	 * ComisionesTransDTO, ComisionesTransaccionesRequestDTO, Integer, String
+	 * 
+	 * @param comisionesTransDTO
+	 * @param comisionesTransaccionesRequestDTO
+	 * @param idConciliacion
+	 * @param requestUser
+	 * @return
+	 */
 	public static ComisionTransaccion buildComisionTransaccionFromComisionesTransDTOAndComisionesTransaccionesRequestDTO(
 			ComisionesTransDTO comisionesTransDTO, ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO,
 			Integer idConciliacion, String requestUser) {
@@ -94,22 +105,6 @@ public abstract class ComisionesBuilder {
 			comisionTransaccion.setLastModifiedBy(null);
 			comisionTransaccion.setLastModifiedDate(null);
 			comisionTransaccion.setComision(comisionesTransDTO.getReal().getComision());
-			Set<ComisionTransaccionProyeccion> proyecciones = new TreeSet<>();
-			proyecciones.add(new ComisionTransaccionProyeccion(0L, TipoMovimientoEnum.COMISION.getId(),
-					comisionesTransDTO.getProyeccion().getOperaciones().get(0).getTransacciones(),
-					comisionesTransDTO.getProyeccion().getOperaciones().get(0).getComision(),
-					comisionesTransDTO.getProyeccion().getOperaciones().get(0).getIvaComision(),
-					comisionesTransDTO.getProyeccion().getOperaciones().get(0).getTotalComision()));
-			proyecciones.add(new ComisionTransaccionProyeccion(0L, TipoMovimientoEnum.IVA_COMISION.getId(),
-					comisionesTransDTO.getProyeccion().getOperaciones().get(1).getTransacciones(),
-					comisionesTransDTO.getProyeccion().getOperaciones().get(1).getComision(),
-					comisionesTransDTO.getProyeccion().getOperaciones().get(1).getIvaComision(),
-					comisionesTransDTO.getProyeccion().getOperaciones().get(1).getTotalComision()));
-			comisionTransaccion.setComisionTransaccionProyeccionSet(proyecciones);
-			Set<ComisionTransaccionReal> reales = new TreeSet<>();
-			reales.add(new ComisionTransaccionReal(0L, comisionesTransDTO.getReal().getComision(),
-					comisionesTransDTO.getReal().getIvaComision(), comisionesTransDTO.getReal().getTotalComision()));
-			comisionTransaccion.setComisionTransaccionRealSet(reales);
 			comisionTransaccion.setCreatedBy(requestUser);
 			comisionTransaccion.setCreatedDate(new Date());
 			comisionTransaccion.setFechaDesde(comisionesTransaccionesRequestDTO.getFechaDesde());
@@ -119,4 +114,50 @@ public abstract class ComisionesBuilder {
 		}
 		return comisionTransaccion;
 	}
+
+	/**
+	 * Construye un objeto de objetos de tipo ComisionTransaccionProyeccion a partir
+	 * de los objetos ComisionTransaccion y ComisionesTransDTO
+	 * 
+	 * @param comisionTransaccion
+	 * @param comisionesTransDTO
+	 * @return
+	 */
+	public static Set<ComisionTransaccionProyeccion> buildComisionTransaccionProyeccionFromComisionTransaccion(
+			ComisionTransaccion comisionTransaccion, ComisionesTransDTO comisionesTransDTO) {
+		Set<ComisionTransaccionProyeccion> proyecciones = new TreeSet<>();
+		proyecciones.add(new ComisionTransaccionProyeccion(0L, new ComisionTransaccion(comisionTransaccion.getId()),
+				TipoMovimientoEnum.COMISION.getId(),
+				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getTransacciones(),
+				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getComision(),
+				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getIvaComision(),
+				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getTotalComision()));
+		proyecciones.add(new ComisionTransaccionProyeccion(0L, new ComisionTransaccion(comisionTransaccion.getId()),
+				TipoMovimientoEnum.IVA_COMISION.getId(),
+				comisionesTransDTO.getProyeccion().getOperaciones().get(1).getTransacciones(),
+				comisionesTransDTO.getProyeccion().getOperaciones().get(1).getComision(),
+				comisionesTransDTO.getProyeccion().getOperaciones().get(1).getIvaComision(),
+				comisionesTransDTO.getProyeccion().getOperaciones().get(1).getTotalComision()));
+		comisionTransaccion.setComisionTransaccionProyeccionSet(proyecciones);
+		return proyecciones;
+	}
+
+	/**
+	 * Construye un objeto de tipo ComisionTransaccionReal a partir de dos objetos:
+	 * ComisionTransaccion y ComisionesTransDTO
+	 * 
+	 * @param comisionTransaccion
+	 * @param comisionesTransDTO
+	 * @return
+	 */
+	public static ComisionTransaccionReal buildComisionTransaccionRealFromComisionTransaccion(
+			ComisionTransaccion comisionTransaccion, ComisionesTransDTO comisionesTransDTO) {
+		ComisionTransaccionReal comisionTransaccionReal = null;
+		comisionTransaccionReal = new ComisionTransaccionReal(0L, new ComisionTransaccion(comisionTransaccion.getId()),
+				comisionesTransDTO.getReal().getComision(), comisionesTransDTO.getReal().getIvaComision(),
+				comisionesTransDTO.getReal().getTotalComision());
+
+		return comisionTransaccionReal;
+	}
+
 }
