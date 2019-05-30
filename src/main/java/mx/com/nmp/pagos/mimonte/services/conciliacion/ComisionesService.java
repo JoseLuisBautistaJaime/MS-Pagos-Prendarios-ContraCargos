@@ -208,7 +208,7 @@ public class ComisionesService {
 	 * @param transacciones
 	 * @param comision
 	 */
-	public void buildMovimiento(ComisionesTransaccionesOperacionDTO movimiento, final String operacion,
+	private void buildMovimiento(ComisionesTransaccionesOperacionDTO movimiento, final String operacion,
 			final Long transacciones, final BigDecimal comision) {
 		movimiento.setOperacion(operacion);
 		movimiento.setTransacciones(transacciones);
@@ -224,7 +224,7 @@ public class ComisionesService {
 	 * @param sumaComision
 	 * @param sumaIva
 	 */
-	public void buildComisionReal(ComisionesTransRealDTO comisionesTransRealDTO, final BigDecimal sumaComision,
+	private void buildComisionReal(ComisionesTransRealDTO comisionesTransRealDTO, final BigDecimal sumaComision,
 			final BigDecimal sumaIva) {
 		comisionesTransRealDTO.setComision(sumaComision);
 		comisionesTransRealDTO.setIvaComision(sumaIva);

@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @name ComisionesTransaccionesRequestDTO
@@ -58,14 +59,32 @@ public class ComisionesTransaccionesRequestDTO implements Comparable<ComisionesT
 	}
 
 	@Override
-	public String toString() {
-		return "ComisionesTransaccionesRequestDTO [fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta
-				+ ", comision=" + comision + "]";
+	public int hashCode() {
+		return Objects.hash(fechaDesde, fechaHasta, comision);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof ComisionesTransaccionesRequestDTO))
+			return false;
+
+		final ComisionesTransaccionesRequestDTO other = (ComisionesTransaccionesRequestDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override
 	public int compareTo(ComisionesTransaccionesRequestDTO o) {
 		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return "ComisionesTransaccionesRequestDTO [fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta
+				+ ", comision=" + comision + "]";
 	}
 
 }

@@ -90,12 +90,6 @@ public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 	}
 
 	@Override
-	public String toString() {
-		return "ComisionSaveDTO [id=" + id + ", folio=" + folio + ", fechaOperacion=" + fechaOperacion + ", fechaCargo="
-				+ fechaCargo + ", monto=" + monto + ", descripcion=" + descripcion + "]";
-	}
-
-	@Override
 	public int hashCode() {
 		return Objects.hash(folio, id, fechaOperacion, fechaCargo, monto, descripcion);
 	}
@@ -111,6 +105,12 @@ public class ComisionSaveDTO implements Comparable<ComisionSaveDTO> {
 		final ComisionSaveDTO other = (ComisionSaveDTO) obj;
 		return (this.hashCode() == other.hashCode());
 
+	}
+
+	@Override
+	public String toString() {
+		return "ComisionSaveDTO [id=" + id + ", folio=" + folio + ", fechaOperacion=" + fechaOperacion + ", fechaCargo="
+				+ fechaCargo + ", monto=" + monto + ", descripcion=" + descripcion + "]";
 	}
 
 	@Override

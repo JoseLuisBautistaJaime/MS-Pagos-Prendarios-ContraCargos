@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @name ComisionDeleteDTO
@@ -47,8 +48,31 @@ public class ComisionDeleteDTO implements Comparable<ComisionDeleteDTO> {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(folio, idComisiones);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof ComisionDeleteDTO))
+			return false;
+
+		final ComisionDeleteDTO other = (ComisionDeleteDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
+	}
+	
+	@Override
 	public int compareTo(ComisionDeleteDTO o) {
 		return o.folio.compareTo(this.folio);
+	}
+
+	@Override
+	public String toString() {
+		return "ComisionDeleteDTO [folio=" + folio + ", idComisiones=" + idComisiones + "]";
 	}
 
 }

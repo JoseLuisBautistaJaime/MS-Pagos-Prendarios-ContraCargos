@@ -40,7 +40,7 @@ import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 /**
  * @name ComisionesController
  * @description Clase de tipo Controlador spring que expone los servicios
- *              relacionados con Comisiones
+ *              relacionados con Comisiones.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 02/04/2019 14:56 hrs.
@@ -96,8 +96,6 @@ public class ComisionesController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		comisionSaveResponseDTO = comisionesService.save(comisionSaveDTO, userRequest);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta Exitosa.", comisionSaveResponseDTO);
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta Exitosa.",
-//				builComisionSaveResponseDTODummy());
 	}
 
 	/**
@@ -146,13 +144,12 @@ public class ComisionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaComisionesTransacciones(
-			@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO, @RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+			@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		if (!ValidadorConciliacion.validateComisionesTransaccionesRequestDTO(comisionesTransaccionesRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Exitosa.",
 				comisionesService.findByFechasAndComision(comisionesTransaccionesRequestDTO, userRequest));
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Exitosa.",
-//				buildComisionesTransaccionesDummy());
 	}
 
 	/**
@@ -175,60 +172,6 @@ public class ComisionesController {
 	public Response consultaComisiones(@PathVariable(value = "folio", required = true) Integer folio) {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
 				comisionesService.findByFolio(folio));
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
-//				buildConsultaComisionesDummy());
 	}
 
-	/**
-	 * Construye un objeto de respuesta dummy para la consulta de transacciones
-	 * 
-	 * @return
-	 */
-//	public static ComisionesTransDTO buildComisionesTransaccionesDummy() {
-//		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(
-//				new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64),
-//				new BigDecimal(19.00, MathContext.DECIMAL64));
-//		List<ComisionesTransaccionesOperacionDTO> comisionesTransaccionesOperacionDTOList = new ArrayList<>();
-//		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO(
-//				"Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64),
-//				new BigDecimal(19.00, MathContext.DECIMAL64));
-//		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO(
-//				"Pagos", 15L, new BigDecimal(12.00, MathContext.DECIMAL64), new BigDecimal(2.00, MathContext.DECIMAL64),
-//				new BigDecimal(14.00, MathContext.DECIMAL64));
-//		comisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
-//		comisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
-//		ComisionesTransProyeccionDTO comisionesTransProyeccionDTO = new ComisionesTransProyeccionDTO(
-//				comisionesTransaccionesOperacionDTOList, new BigDecimal(33.00, MathContext.DECIMAL64));
-//		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(comisionesTransProyeccionDTO,
-//				comisionesTransRealDTO);
-//		return comisionesTransDTO;
-//	}
-
-	/**
-	 * Construye un objeto de respuesta dummy para la consulta por folio
-	 * 
-	 * @return
-	 */
-//	public static List<ComisionDTO> buildConsultaComisionesDummy() {
-//		List<ComisionDTO> comisionDTOList = new ArrayList<>();
-//		ComisionDTO comisionDTO = new ComisionDTO(1, new Date(), new Date(),
-//				new BigDecimal(100.00, MathContext.DECIMAL64), "Cargo diverso comision", false);
-//		ComisionDTO comisionDTO2 = new ComisionDTO(2, new Date(), new Date(),
-//				new BigDecimal(100.00, MathContext.DECIMAL64), "Comision nueva", true);
-//		comisionDTOList.add(comisionDTO);
-//		comisionDTOList.add(comisionDTO2);
-//		return comisionDTOList;
-//
-//	}
-
-	/**
-	 * Construye un objeto de respuesta dummy para el alta de comisiones
-	 * 
-	 * @return
-	 */
-//	public static ComisionSaveResponseDTO builComisionSaveResponseDTODummy() {
-//		ComisionSaveResponseDTO comisionSaveDTO = new ComisionSaveResponseDTO(1, 1, new Date(), new Date(), 100.00,
-//				"Cargo diverso comision", true);
-//		return comisionSaveDTO;
-//	}
 }
