@@ -98,7 +98,7 @@ public abstract class ComisionesBuilder {
 	 */
 	public static ComisionTransaccion buildComisionTransaccionFromComisionesTransDTOAndComisionesTransaccionesRequestDTO(
 			ComisionesTransDTO comisionesTransDTO, ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO,
-			Integer idConciliacion, String requestUser) {
+			Long idConciliacion, String requestUser) {
 		ComisionTransaccion comisionTransaccion = null;
 		if (null != comisionesTransDTO) {
 			comisionTransaccion = new ComisionTransaccion();

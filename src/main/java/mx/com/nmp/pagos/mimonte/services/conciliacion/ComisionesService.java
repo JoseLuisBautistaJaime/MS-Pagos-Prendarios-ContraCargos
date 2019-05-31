@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,6 +149,8 @@ public class ComisionesService {
 			final ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO, String requestUser) {
 		// Declaracion de objetos
 		List<ComisionesTransaccionesOperacionDTO> comisionesTransaccionesOperacionDTOList = new ArrayList<>();
+		Map<String, Long> mapResult = null;
+		Map<String, BigDecimal> sums = null;
 		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO();
 		ComisionesTransProyeccionDTO comisionesTransProyeccionDTO = new ComisionesTransProyeccionDTO();
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO();
@@ -160,17 +163,14 @@ public class ComisionesService {
 		// Encontrar suma total de pagos
 		Long transaccionesPagos = comisionesRepository.findTransaccionesPagosByFechas(
 				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta());
-		// Encontrar suma total de devoluciones
-		Long transaccionesDevoluciones = comisionesRepository.findTransaccionesDevolucionesByFechas(
-				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta());
-		// Se obtiene el id de conciliacion asociado a las comisiones reales
-		Integer idConciliacion = comisionesRepository.findIdConciliacionByFechas(
-				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta());
+		// Se obtiene el id de comision, el conteo del mismo y el id de la conciliacion
+		mapResult = comisionesRepository.findDataByFechas(comisionesTransaccionesRequestDTO.getFechaDesde(),
+				comisionesTransaccionesRequestDTO.getFechaHasta());
+		Long transaccionesDevoluciones = mapResult.get("countId");
+		Long idConciliacion = mapResult.get("idConciliacion");
+		Long idComision = mapResult.get("idComision");
 		if (null == idConciliacion)
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS);
-		// Se obtiene el id de la comision
-		Integer idComision = comisionesRepository.findIdComisionByFechas(
-				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta());
 		if (null == idComision)
 			throw new ConciliacionException(ConciliacionConstants.COMISION_NOT_FOUND_FOR_SUCH_PARAMS);
 		// Construir objeto pagos
@@ -189,11 +189,11 @@ public class ComisionesService {
 		comisionesTransProyeccionDTO.setTotalOperaciones(totalOperaciones);
 		// Poner el objeto proyeccion en el objeto padre
 		comisionesTransDTO.setProyeccion(comisionesTransProyeccionDTO);
-		// Realiza suma de comisiones
-		sumaComision = comisionesRepository.findMovimientosSum(TipoMovimientoEnum.COMISION);
+		// Realiza suma de comisiones e ivas
+		sums = comisionesRepository.findMovimientosSum(TipoMovimientoEnum.COMISION, TipoMovimientoEnum.IVA_COMISION);
+		sumaComision = sums.get("comision");
+		sumaIva = sums.get("iva");
 		sumaComision = null != sumaComision ? sumaComision : new BigDecimal("0");
-		// Realiza suma de iva's
-		sumaIva = comisionesRepository.findMovimientosSum(TipoMovimientoEnum.IVA_COMISION);
 		sumaIva = null != sumaIva ? sumaIva : new BigDecimal("0");
 		// Construye el objeto de comisiones real
 		buildComisionReal(comisionesTransRealDTO, sumaComision, sumaIva);
@@ -226,10 +226,6 @@ public class ComisionesService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public ComisionSaveResponseDTO save(final ComisionSaveDTO comisionSaveDTO, final String requestUser) {
 		ComisionSaveResponseDTO comisionSaveResponseDTO = null;
-		// El siguiente save persiste tambien la entidad MovimientoConciliacion por lo
-		// que este save es inncesesario
-//		movimientoConciliacionRepository.save(ComisionesBuilder
-//				.buildMovimientoConciliacionFromConciliacionIdAndRequestUser(comisionSaveDTO.getFolio(), requestUser));
 		comisionesRepository
 				.save(ComisionesBuilder.buildMovimientoComisionFromComisionSaveDTO(comisionSaveDTO, requestUser));
 		comisionSaveResponseDTO = comisionesRepository.findByIdComision(comisionSaveDTO.getId());
@@ -246,9 +242,16 @@ public class ComisionesService {
 	public void delete(final ComisionDeleteDTO comisionDeleteDTO, final String requestUser)
 			throws ConciliacionException {
 		Optional<Conciliacion> conciliacion = null;
+		Long flag = null;
+		// Valida que el folio de conciliacion exista
 		conciliacion = conciliacionRepository.findById(comisionDeleteDTO.getFolio());
 		if (!conciliacion.isPresent())
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND);
+		// Valida si se puede eliminar esa comision
+		flag = comisionesRepository.verifyById(comisionDeleteDTO.getIdComisiones(), comisionDeleteDTO.getFolio());
+		if (null == flag || flag == 0)
+			throw new ConciliacionException(ConciliacionConstants.COMISION_CANT_BE_DELETED);
+		// Elimina la comision
 		comisionesRepository.deleteByIdsAndIdConciliacion(comisionDeleteDTO.getIdComisiones(),
 				comisionDeleteDTO.getFolio());
 	}

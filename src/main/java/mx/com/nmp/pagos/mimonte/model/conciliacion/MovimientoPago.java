@@ -29,17 +29,17 @@ public class MovimientoPago implements Comparable<MovimientoPago> {
 
 	@Id
 	@Column(name = "id", nullable = false)
-	private long id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "estatus", nullable = false)
 	private EstatusPago estatus;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

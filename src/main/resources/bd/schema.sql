@@ -1255,3 +1255,9 @@ ALTER TABLE to_comision_transaccion_real ADD CONSTRAINT FK_to_comision_transacci
 
 ALTER TABLE to_comision_transaccion_proyeccion ADD CONSTRAINT FK_to_comision_transaccion_proyeccion_to_comision_transaccion 
 	FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id);
+
+-- ------------------------------------------------------------------------ --
+-- CAMBIO DE TIPO DE DATO EN COLUMNA TIPO DE ENUM A VARCHAR BUG: NMPCA-D263 --
+-- -------------------- [2019-05-31 11:27:25] ----------------------------- --
+-- ------------------------------------------------------------------------ --
+ALTER TABLE to_movimiento_comision CHANGE tipo tipo VARCHAR(50);

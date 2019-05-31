@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public class DevolucionConDTO implements Comparable<DevolucionConDTO> {
 
-	private Integer id;
+	private Long id;
 	private Date fecha;
 	private EstatusDevolucionDTO estatus;
 	private BigDecimal monto;
@@ -32,7 +32,7 @@ public class DevolucionConDTO implements Comparable<DevolucionConDTO> {
 		super();
 	}
 
-	public DevolucionConDTO(Integer id, Date fecha, EstatusDevolucionDTO estatus, BigDecimal monto, String esquemaTarjeta,
+	public DevolucionConDTO(Long id, Date fecha, EstatusDevolucionDTO estatus, BigDecimal monto, String esquemaTarjeta,
 			String identificacionCuenta, String titular, String codigiAutorizacion, Integer sucursal) {
 		super();
 		this.id = id;
@@ -46,11 +46,11 @@ public class DevolucionConDTO implements Comparable<DevolucionConDTO> {
 		this.sucursal = sucursal;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

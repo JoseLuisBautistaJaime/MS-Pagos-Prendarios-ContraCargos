@@ -98,6 +98,11 @@ public final class ConciliacionConstants {
 	public static final String COMISION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados";
 	
 	/**
+	 * Mensaje que es mostrado cuando se intenta eliminar una comision y esta no puede ser eliminada por regla de negocio
+	 */
+	public static final String COMISION_CANT_BE_DELETED = "La comision no puede ser eliminada ya que fue no fue dada de alta desde la aplicacion.";
+	
+	/**
 	 * Subclase de cosntantes que se mapearan de propiedades del archivo de
 	 * configuracion de spring
 	 * 
