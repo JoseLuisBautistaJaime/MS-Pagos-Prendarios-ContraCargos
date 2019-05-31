@@ -41,7 +41,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 */
 	@Modifying
 	@Query("DELETE FROM MovimientoComision mc WHERE mc.id IN :idsComisiones AND mc.id IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = true AND mcon.idConciliacion = :idConciliacion)")
-	public void deleteByIdsAndIdConciliacion(@Param("idsComisiones") final List<Integer> idsComisiones,
+	public void deleteByIdsAndIdConciliacion(@Param("idsComisiones") final List<Long> idsComisiones,
 			@Param("idConciliacion") final Integer idConciliacion);
 
 	/**
@@ -52,7 +52,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @return
 	 */
 	@Query("SELECT mc.id FROM MovimientoComision mc WHERE mc.id IN :idsComisiones AND mc.id IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = true AND mcon.idConciliacion = :idConciliacion)")
-	public Long verifyById(@Param("idsComisiones") final List<Integer> idsComisiones,
+	public Long verifyById(@Param("idsComisiones") final List<Long> idsComisiones,
 			@Param("idConciliacion") final Integer idConciliacion);
 
 	/**
@@ -76,7 +76,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @return
 	 */
 	@Query("SELECT mc.id AS idComision, COUNT(md.id) AS countId, mc.idConciliacion AS idConciliacion FROM MovimientoDevolucion md INNER JOIN MovimientoConciliacion mc ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta")
-	public Map<String, Long> findDataByFechas(@Param("fechaDesde") final Date fechaDesde,
+	public Map<String, Object> findDataByFechas(@Param("fechaDesde") final Date fechaDesde,
 			@Param("fechaHasta") final Date fechaHasta);
 
 	/**

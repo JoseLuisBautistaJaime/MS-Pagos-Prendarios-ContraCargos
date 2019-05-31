@@ -149,7 +149,7 @@ public class ComisionesService {
 			final ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO, String requestUser) {
 		// Declaracion de objetos
 		List<ComisionesTransaccionesOperacionDTO> comisionesTransaccionesOperacionDTOList = new ArrayList<>();
-		Map<String, Long> mapResult = null;
+		Map<String, Object> mapResult = null;
 		Map<String, BigDecimal> sums = null;
 		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO();
 		ComisionesTransProyeccionDTO comisionesTransProyeccionDTO = new ComisionesTransProyeccionDTO();
@@ -166,9 +166,9 @@ public class ComisionesService {
 		// Se obtiene el id de comision, el conteo del mismo y el id de la conciliacion
 		mapResult = comisionesRepository.findDataByFechas(comisionesTransaccionesRequestDTO.getFechaDesde(),
 				comisionesTransaccionesRequestDTO.getFechaHasta());
-		Long transaccionesDevoluciones = mapResult.get("countId");
-		Long idConciliacion = mapResult.get("idConciliacion");
-		Long idComision = mapResult.get("idComision");
+		Long transaccionesDevoluciones = (Long) mapResult.get("countId");
+		Integer idConciliacion = (Integer) mapResult.get("idConciliacion");
+		Long idComision = (Long) mapResult.get("idComision");
 		if (null == idConciliacion)
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS);
 		if (null == idComision)
@@ -203,7 +203,7 @@ public class ComisionesService {
 		// Guarda las comisiones (NUEVAS ESTRUCTURAS DE DATOS)
 		comisionTransaccion = ComisionesBuilder
 				.buildComisionTransaccionFromComisionesTransDTOAndComisionesTransaccionesRequestDTO(comisionesTransDTO,
-						comisionesTransaccionesRequestDTO, idConciliacion, requestUser);
+						comisionesTransaccionesRequestDTO, (long)idConciliacion, requestUser);
 		comisionTransaccion = comisionTransaccionRepository.save(comisionTransaccion);
 		// Guarda las proyecciones
 		comisionTransaccionProyeccionRepository.saveAll(ComisionesBuilder

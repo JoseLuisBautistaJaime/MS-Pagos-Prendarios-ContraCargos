@@ -294,7 +294,7 @@ public interface ValidadorConciliacion {
 			assertNotNull(comisionDeleteDTO.getFolio());
 			assertNotNull(comisionDeleteDTO.getIdComisiones());
 			if (!comisionDeleteDTO.getIdComisiones().isEmpty()) {
-				for (Integer com : comisionDeleteDTO.getIdComisiones()) {
+				for (Long com : comisionDeleteDTO.getIdComisiones()) {
 					assertNotNull(com);
 				}
 			} else
