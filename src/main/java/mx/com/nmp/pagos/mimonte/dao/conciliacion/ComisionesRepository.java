@@ -18,7 +18,6 @@ import org.springframework.stereotype.Repository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionSaveResponseDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 
 /**
  * @name ComisionesRepository
@@ -40,7 +39,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param idConciliacion
 	 */
 	@Modifying
-	@Query("DELETE FROM MovimientoComision mc WHERE mc.id IN :idsComisiones AND mc.id IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = true AND mcon.idConciliacion = :idConciliacion)")
+	@Query("DELETE FROM MovimientoComision mc WHERE mc.id IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = true AND mcon.idConciliacion = :idConciliacion)")
 	public void deleteByIdsAndIdConciliacion(@Param("idsComisiones") final List<Long> idsComisiones,
 			@Param("idConciliacion") final Integer idConciliacion);
 
@@ -52,7 +51,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @return
 	 */
 	@Query("SELECT mc.id FROM MovimientoComision mc WHERE mc.id IN :idsComisiones AND mc.id IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = true AND mcon.idConciliacion = :idConciliacion)")
-	public Long verifyById(@Param("idsComisiones") final List<Long> idsComisiones,
+	public List<Long> verifyById(@Param("idsComisiones") final List<Long> idsComisiones,
 			@Param("idConciliacion") final Integer idConciliacion);
 
 	/**
@@ -63,9 +62,9 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("SELECT COUNT(mp.id) FROM MovimientoPago mp INNER JOIN MovimientoConciliacion mc ON mp.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta")
-	public Long findTransaccionesPagosByFechas(@Param("fechaDesde") final Date fechaDesde,
-			@Param("fechaHasta") final Date fechaHasta);
+	@Query("SELECT COUNT(mp.id) FROM MovimientoPago mp INNER JOIN MovimientoConciliacion mc ON mp.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta AND mc.idConciliacion = :idConciliacion")
+	public Long findTransaccionesPagosByFechasAndIdConciliacion(@Param("fechaDesde") final Date fechaDesde,
+			@Param("fechaHasta") final Date fechaHasta, @Param("idConciliacion") Integer idConciliacion);
 
 	/**
 	 * Regresa el id de un movimiento comision su id de conciliacion asociado y el
@@ -75,9 +74,9 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("SELECT mc.id AS idComision, COUNT(md.id) AS countId, mc.idConciliacion AS idConciliacion FROM MovimientoDevolucion md INNER JOIN MovimientoConciliacion mc ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta")
-	public Map<String, Object> findDataByFechas(@Param("fechaDesde") final Date fechaDesde,
-			@Param("fechaHasta") final Date fechaHasta);
+	@Query("SELECT mc.id AS idComision, COUNT(md.id) AS countId, mc.idConciliacion AS idConciliacion FROM MovimientoDevolucion md INNER JOIN MovimientoConciliacion mc ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta AND mc.idConciliacion = :idConciliacion")
+	public Map<String, Object> findDataByFechasAndIdConciliacion(@Param("fechaDesde") final Date fechaDesde,
+			@Param("fechaHasta") final Date fechaHasta, @Param("idConciliacion") Integer idConciliacion);
 
 	/**
 	 * Regresa la suma de los movimientos tipo COMISION y los de tipo IVA_COMISION
@@ -87,8 +86,8 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @return
 	 */
 	@Query(nativeQuery = true, value = "SELECT comision, iva FROM (SELECT SUM(mc.monto) AS comision FROM to_movimiento_comision mc WHERE mc.tipo = :tipoComisionPago) comision, (SELECT SUM(mc.monto) AS iva FROM to_movimiento_comision mc WHERE mc.tipo = :tipoComisionIva) iva")
-	public Map<String, BigDecimal> findMovimientosSum(@Param("tipoComisionPago") final TipoMovimientoEnum tipoComisionPago,
-			@Param("tipoComisionIva") final TipoMovimientoEnum tipoComisionIva);
+	public Map<String, BigDecimal> findMovimientosSum(@Param("tipoComisionPago") final String tipoComisionPago,
+			@Param("tipoComisionIva") final String tipoComisionIva);
 
 	/**
 	 * Rehresa las comisiones por tipo de operacion (COMISION E IVA_COMISION)

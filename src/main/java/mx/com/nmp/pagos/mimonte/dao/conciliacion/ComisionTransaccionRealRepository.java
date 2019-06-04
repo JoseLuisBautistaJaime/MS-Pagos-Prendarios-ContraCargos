@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,5 +21,14 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionReal;
  * @version 0.1
  */
 @Repository("comisionTransaccionRealRepository")
-public interface ComisionTransaccionRealRepository extends JpaRepository<ComisionTransaccionReal, Long>{
+public interface ComisionTransaccionRealRepository extends JpaRepository<ComisionTransaccionReal, Long> {
+
+	/**
+	 * Regresa un set de ComisionTransaccionReal en base al id de su comision
+	 * 
+	 * @param idComision
+	 * @return
+	 */
+	public Set<ComisionTransaccionReal> findByComisionTransaccion_Id(Long idComision);
+
 }

@@ -322,6 +322,7 @@ public interface ValidadorConciliacion {
 			assertNotNull(comisionesTransaccionesRequestDTO.getComision());
 			assertNotNull(comisionesTransaccionesRequestDTO.getFechaDesde());
 			assertNotNull(comisionesTransaccionesRequestDTO.getFechaHasta());
+			assertNotNull(comisionesTransaccionesRequestDTO.getIdConciliacion());
 		} catch (Exception ex) {
 			return false;
 		}

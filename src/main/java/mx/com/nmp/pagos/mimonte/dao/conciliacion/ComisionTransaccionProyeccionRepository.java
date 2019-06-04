@@ -4,7 +4,11 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionProyeccion;
@@ -21,4 +25,14 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionProyeccion
  */
 @Repository("comisionTransaccionProyeccionRepository")
 public interface ComisionTransaccionProyeccionRepository extends JpaRepository<ComisionTransaccionProyeccion, Long> {
+
+	/**
+	 * Regresa una comision transaccion proyeccion por id de comision transaccion
+	 * 
+	 * @param idComisionTransccion
+	 * @return
+	 */
+	@Query("SELECT ctp.id FROM ComisionTransaccionProyeccion ctp WHERE ctp.comisionTransaccion.id = :idComisionTransccion")
+	public List<Long> findBycomisionTransaccionId(Long idComisionTransccion);
+
 }

@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,7 +40,7 @@ public class ComisionTransaccionProyeccion implements java.io.Serializable, Comp
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "comision_transaccion", nullable = false)
 	private ComisionTransaccion comisionTransaccion;
 
@@ -62,6 +63,17 @@ public class ComisionTransaccionProyeccion implements java.io.Serializable, Comp
 		super();
 	}
 
+	public ComisionTransaccionProyeccion(ComisionTransaccion comisionTransaccion, Integer operacion,
+			Long transacciones, BigDecimal comsion, BigDecimal ivaComision, BigDecimal total) {
+		super();
+		this.comisionTransaccion = comisionTransaccion;
+		this.operacion = operacion;
+		this.transacciones = transacciones;
+		this.comsion = comsion;
+		this.ivaComision = ivaComision;
+		this.total = total;
+	}
+	
 	public ComisionTransaccionProyeccion(Long id, ComisionTransaccion comisionTransaccion, Integer operacion,
 			Long transacciones, BigDecimal comsion, BigDecimal ivaComision, BigDecimal total) {
 		super();

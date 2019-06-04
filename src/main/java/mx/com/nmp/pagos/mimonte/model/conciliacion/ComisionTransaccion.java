@@ -6,12 +6,14 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -63,7 +65,7 @@ public class ComisionTransaccion extends Updatable implements java.io.Serializab
 	private BigDecimal comision;
 
 	@OneToMany(mappedBy = "comisionTransaccion")
-	private Set<ComisionTransaccionProyeccion> comisionTransaccionProyeccionSet;
+	private List<ComisionTransaccionProyeccion> comisionTransaccionProyeccionSet;
 
 	@OneToMany(mappedBy = "comisionTransaccion")
 	private Set<ComisionTransaccionReal> comisionTransaccionRealSet;
@@ -117,12 +119,12 @@ public class ComisionTransaccion extends Updatable implements java.io.Serializab
 		this.comision = comision;
 	}
 
-	public Set<ComisionTransaccionProyeccion> getComisionTransaccionProyeccionSet() {
+	public List<ComisionTransaccionProyeccion> getComisionTransaccionProyeccionSet() {
 		return comisionTransaccionProyeccionSet;
 	}
 
 	public void setComisionTransaccionProyeccionSet(
-			Set<ComisionTransaccionProyeccion> comisionTransaccionProyeccionSet) {
+			List<ComisionTransaccionProyeccion> comisionTransaccionProyeccionSet) {
 		this.comisionTransaccionProyeccionSet = comisionTransaccionProyeccionSet;
 	}
 

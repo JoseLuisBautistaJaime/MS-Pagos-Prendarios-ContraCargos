@@ -112,6 +112,10 @@ public class Conciliacion extends Updatable implements Serializable  {
 	public Conciliacion(long folio) {
 		this.id = new Long(folio).intValue();
 	}
+	
+	public Conciliacion(Integer id) {
+		this.id = id;
+	}
 
 	public Integer getId() {
 		return id;

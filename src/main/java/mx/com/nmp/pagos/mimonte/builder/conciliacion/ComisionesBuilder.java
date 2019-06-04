@@ -4,9 +4,11 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransDTO;
@@ -88,8 +90,10 @@ public abstract class ComisionesBuilder {
 
 	/**
 	 * Constrye un entity de tipo ComisionTransaccion a partir de los objetos
-	 * ComisionesTransDTO, ComisionesTransaccionesRequestDTO, Integer, String
+	 * ComisionTransaccion, ComisionesTransDTO, ComisionesTransaccionesRequestDTO,
+	 * Integer, String
 	 * 
+	 * @param comisionTransaccionVer
 	 * @param comisionesTransDTO
 	 * @param comisionesTransaccionesRequestDTO
 	 * @param idConciliacion
@@ -97,19 +101,21 @@ public abstract class ComisionesBuilder {
 	 * @return
 	 */
 	public static ComisionTransaccion buildComisionTransaccionFromComisionesTransDTOAndComisionesTransaccionesRequestDTO(
-			ComisionesTransDTO comisionesTransDTO, ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO,
-			Long idConciliacion, String requestUser) {
+			Long comisionTransaccionVer, ComisionesTransDTO comisionesTransDTO,
+			ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO, Integer idConciliacion,
+			String requestUser) {
 		ComisionTransaccion comisionTransaccion = null;
 		if (null != comisionesTransDTO) {
 			comisionTransaccion = new ComisionTransaccion();
-			comisionTransaccion.setLastModifiedBy(null);
-			comisionTransaccion.setLastModifiedDate(null);
+			comisionTransaccion.setLastModifiedBy(null != comisionTransaccionVer ? requestUser : null);
+			comisionTransaccion.setLastModifiedDate(null != comisionTransaccionVer ? new Date() : null);
 			comisionTransaccion.setComision(comisionesTransDTO.getReal().getComision());
-			comisionTransaccion.setCreatedBy(requestUser);
-			comisionTransaccion.setCreatedDate(new Date());
+			comisionTransaccion.setCreatedBy(null == comisionTransaccionVer ? requestUser : null);
+			comisionTransaccion.setCreatedDate(null == comisionTransaccionVer ? new Date() : null);
 			comisionTransaccion.setFechaDesde(comisionesTransaccionesRequestDTO.getFechaDesde());
 			comisionTransaccion.setFechaHasta(comisionesTransaccionesRequestDTO.getFechaHasta());
-			comisionTransaccion.setId(0L);
+			Long id = null != comisionTransaccionVer ? comisionTransaccionVer : 0L;
+			comisionTransaccion.setId(id);
 			comisionTransaccion.setConciliacion(new Conciliacion(idConciliacion));
 		}
 		return comisionTransaccion;
@@ -123,17 +129,25 @@ public abstract class ComisionesBuilder {
 	 * @param comisionesTransDTO
 	 * @return
 	 */
-	public static Set<ComisionTransaccionProyeccion> buildComisionTransaccionProyeccionFromComisionTransaccion(
-			ComisionTransaccion comisionTransaccion, ComisionesTransDTO comisionesTransDTO) {
-		Set<ComisionTransaccionProyeccion> proyecciones = new TreeSet<>();
-		proyecciones.add(new ComisionTransaccionProyeccion(0L, new ComisionTransaccion(comisionTransaccion.getId()),
-				TipoMovimientoEnum.COMISION.getId(),
+	public static List<ComisionTransaccionProyeccion> buildComisionTransaccionProyeccionFromComisionTransaccion(
+			List<Long> comisionTransaccionProyeccionList, ComisionTransaccion comisionTransaccion,
+			ComisionesTransDTO comisionesTransDTO) {
+		List<ComisionTransaccionProyeccion> proyecciones = new ArrayList<>();
+		Long idCom = null;
+		Long idIva = null;
+		if (null != comisionTransaccionProyeccionList && !comisionTransaccionProyeccionList.isEmpty()
+				&& comisionTransaccionProyeccionList.size() >= 2) {
+			idCom = comisionTransaccionProyeccionList.get(0);
+			idIva = comisionTransaccionProyeccionList.get(1);
+		}
+		proyecciones.add(new ComisionTransaccionProyeccion(null == idCom ? 0L : idCom,
+				new ComisionTransaccion(comisionTransaccion.getId()), TipoMovimientoEnum.COMISION.getId(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getTransacciones(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getComision(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getIvaComision(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getTotalComision()));
-		proyecciones.add(new ComisionTransaccionProyeccion(0L, new ComisionTransaccion(comisionTransaccion.getId()),
-				TipoMovimientoEnum.IVA_COMISION.getId(),
+		proyecciones.add(new ComisionTransaccionProyeccion(null == idIva ? 0L : idIva,
+				new ComisionTransaccion(comisionTransaccion.getId()), TipoMovimientoEnum.IVA_COMISION.getId(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(1).getTransacciones(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(1).getComision(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(1).getIvaComision(),
@@ -151,11 +165,20 @@ public abstract class ComisionesBuilder {
 	 * @return
 	 */
 	public static ComisionTransaccionReal buildComisionTransaccionRealFromComisionTransaccion(
-			ComisionTransaccion comisionTransaccion, ComisionesTransDTO comisionesTransDTO) {
+			Set<ComisionTransaccionReal> comisionTransaccionRealSet, ComisionTransaccion comisionTransaccion,
+			ComisionesTransDTO comisionesTransDTO) {
 		ComisionTransaccionReal comisionTransaccionReal = null;
-		comisionTransaccionReal = new ComisionTransaccionReal(0L, new ComisionTransaccion(comisionTransaccion.getId()),
-				comisionesTransDTO.getReal().getComision(), comisionesTransDTO.getReal().getIvaComision(),
-				comisionesTransDTO.getReal().getTotalComision());
+		Long id = null;
+		Iterator<ComisionTransaccionReal> it = null;
+		if (null != comisionTransaccionRealSet && !comisionTransaccionRealSet.isEmpty()) {
+			it = comisionTransaccionRealSet.iterator();
+			while (it.hasNext()) {
+				id = it.next().getId();
+			}
+		}
+		comisionTransaccionReal = new ComisionTransaccionReal(null == id ? 0L : id,
+				new ComisionTransaccion(comisionTransaccion.getId()), comisionesTransDTO.getReal().getComision(),
+				comisionesTransDTO.getReal().getIvaComision(), comisionesTransDTO.getReal().getTotalComision());
 
 		return comisionTransaccionReal;
 	}
