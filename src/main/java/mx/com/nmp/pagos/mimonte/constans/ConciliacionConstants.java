@@ -77,6 +77,26 @@ public final class ConciliacionConstants {
 	 */
 	public static final String SUCCESSFUL_UPDATE = "Actualización exitosa.";
 	
+	/**
+	 * Mensaje mostrado cuando se ocurre un error al cambiar el estatus.
+	 */
+	public static final String AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS = "Ocurrio un error al actualizar el estatus de la devolución";
+	
+	/**
+	 * Constante para buscar devoluciones a partir del nombre.
+	 */
+	public static final String PENDING = "Pendiente";
+	
+	/**
+	 * Constante para buscar devoluciones a partir del nombre.
+	 */
+	public static final String REQUEST = "Solicitada";
+	
+	/**
+	 * Constante para buscar devoluciones a partir del nombre.
+	 */
+	public static final String LIQUIDATE = "Liquidada";
+	
 
 	public static final class Validation {
 
@@ -107,6 +127,13 @@ public final class ConciliacionConstants {
 		 * coincidencia con un id de catalogo
 		 */
 		public static final String NO_CATALOG_INFORMATION = "No se encontro informacion de uno o mas catalogos";
+		
+		
+		/**
+		 * Mensaje que es mostrado cuando no se encuentra informacion para los
+		 * parametros de busqueda ingresados
+		 */
+		public static final String NO_INFORMATION_FOUND_FOR_IDS = "Alguno de los ids ingresados no esta en el estado Solicitada";
 
 	}
 

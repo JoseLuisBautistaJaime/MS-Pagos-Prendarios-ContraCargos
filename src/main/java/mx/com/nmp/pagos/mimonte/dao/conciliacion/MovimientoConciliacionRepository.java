@@ -4,12 +4,15 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 
 /**
  * @name MovimientoConciliacionRepository
@@ -21,7 +24,10 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
  * @creationDate 08/05/2019 19:04 hrs.
  * @version 0.1
  */
-@Repository("MovimientoConciliacionRepository")
+@Repository("movimientoConciliacionRepository")
 public interface MovimientoConciliacionRepository extends JpaRepository<MovimientoConciliacion, Integer> {
+	
+	@Query("SELECT mc FROM MovimientoConciliacion mc WHERE mc.idConciliacion = :folio")
+	public List<MovimientoConciliacion> findByFolio(@Param("folio") Integer folio);
 
 }

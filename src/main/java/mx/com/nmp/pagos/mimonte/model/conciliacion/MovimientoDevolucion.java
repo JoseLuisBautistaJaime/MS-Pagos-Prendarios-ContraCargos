@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 
@@ -33,6 +35,7 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	@JoinColumn(name = "estatus")
 	private EstatusDevolucion estatus;
 	
+	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha")
 	private Date fecha;
 	
@@ -53,6 +56,10 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	
 	@Column(name = "sucursal")
 	private Integer sucursal;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "fecha_liquidacion")
+	private Date fechaLiquidacion;
 
 	public MovimientoDevolucion() {
 		super();
@@ -65,7 +72,7 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	}
 
 	public MovimientoDevolucion(EstatusDevolucion estatus, Date fecha, BigDecimal monto, String esquemaTarjeta,
-			String identificadorCuenta, String titular, String codigoAutorizacion, Integer sucursal,
+			String identificadorCuenta, String titular, String codigoAutorizacion, Integer sucursal, Date fechaLiquidacion,
 			Set<MovimientoConciliacion> movimientoConciliacionSet) {
 		super();
 		this.estatus = estatus;
@@ -76,6 +83,7 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 		this.titular = titular;
 		this.codigoAutorizacion = codigoAutorizacion;
 		this.sucursal = sucursal;
+		this.fechaLiquidacion = fechaLiquidacion;
 	}
 
 	public EstatusDevolucion getEstatus() {
@@ -141,10 +149,18 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	public void setSucursal(Integer sucursal) {
 		this.sucursal = sucursal;
 	}
-	
+
+	public Date getFechaLiquidacion() {
+		return fechaLiquidacion;
+	}
+
+	public void setFechaLiquidacion(Date fechaLiquidacion) {
+		this.fechaLiquidacion = fechaLiquidacion;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(estatus, fecha, monto, esquemaTarjeta, identificadorCuenta, titular, codigoAutorizacion, sucursal);
+		return Objects.hash(estatus, fecha, monto, esquemaTarjeta, identificadorCuenta, titular, codigoAutorizacion, sucursal, fechaLiquidacion);
 	}
 
 	@Override
@@ -176,6 +192,11 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 				return false;
 		} else if (!fecha.equals(other.fecha))
 			return false;
+		if (fechaLiquidacion == null) {
+			if (other.fechaLiquidacion != null)
+				return false;
+		} else if (!fechaLiquidacion.equals(other.fechaLiquidacion))
+			return false;
 		if (identificadorCuenta == null) {
 			if (other.identificadorCuenta != null)
 				return false;
@@ -204,7 +225,7 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 		return "MovimientoDevolucion [estatus=" + estatus + ", fecha=" + fecha + ", monto=" + monto
 				+ ", esquemaTarjeta=" + esquemaTarjeta + ", identificadorCuenta=" + identificadorCuenta + ", titular="
 				+ titular + ", codigoAutorizacion=" + codigoAutorizacion + ", sucursal=" + sucursal
-				+ "]";
+				+ ", fechaLiquidacion=" + fechaLiquidacion + "]";
 	}
 
 }

@@ -36,6 +36,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
+import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.DevolucionesServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
 /**
@@ -68,9 +69,8 @@ public class DevolucionesController {
 	/**
 	 * Service para Devoluciones
 	 */
-//	@Autowired
-//	@Qualifier("devolucionesService")
-//	private DevolucionesService devolucionesService;
+	@Autowired
+	private DevolucionesServiceImpl devolucionesServiceImpl;
 
 	/**
 	 * Permite agregar y modificar comisiones al listado de comisiones del estado de
@@ -91,9 +91,13 @@ public class DevolucionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultar(@RequestBody DevolucionRequestDTO devolucionDTO) {
-		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
+		
+		
+//		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
+		List<DevolucionEntidadDTO> respuesta = devolucionesServiceImpl.consulta(devolucionDTO);
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Devoluciones Exitosa.",
-				devolucionEntidadDTOList);
+				respuesta);
 	}
 
 	/**
@@ -141,7 +145,10 @@ public class DevolucionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response solicitar(@RequestBody DevolucionesIdsMovimientosDTO devolucionesIdsMovimientosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
+		
+//		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
+		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl.solicitar(devolucionesIdsMovimientosDTO);
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Devoluciones Exitosa.",
 				devolucionEntidadDTOList);
 	}
@@ -154,12 +161,12 @@ public class DevolucionesController {
 	public static List<DevolucionEntidadDTO> buildDummy1() {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOListList = new ArrayList<>();
 		DevolucionEntidadDTO devolucionEntidadDTO = new DevolucionEntidadDTO();
-		devolucionEntidadDTO.setId(1L);
+		devolucionEntidadDTO.setId(1);
 		devolucionEntidadDTO.setEntidad(new BaseEntidadDTO(1L, "Banco 1", "Banco 1"));
 		devolucionEntidadDTO.setFecha(new Date());
 //		devolucionEntidadDTO.setEstatus(new EstatusDevolucionDTO(2, "Solicitada", true));
 		devolucionEntidadDTO.setSucursal(3);
-		devolucionEntidadDTO.setMonto(150.00);
+//		devolucionEntidadDTO.setMonto(150.00);
 		devolucionEntidadDTO.setEsquemaTarjeta("Visa");
 		devolucionEntidadDTO.setIdentificadorCuenta("4152xxxxxxxx953");
 		devolucionEntidadDTO.setTitular("Juana Garcia Garcia");

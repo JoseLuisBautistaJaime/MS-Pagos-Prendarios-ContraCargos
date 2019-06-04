@@ -17,24 +17,24 @@ import java.util.Date;
  */
 public class MovimientosDTO implements Comparable<MovimientosDTO> {
 
-	private Long id;
+	private Integer id;
 	private Date fecha;
 
 	public MovimientosDTO() {
 		super();
 	}
 
-	public MovimientosDTO(Long id, Date fecha) {
+	public MovimientosDTO(Integer id, Date fecha) {
 		super();
 		this.id = id;
 		this.fecha = fecha;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

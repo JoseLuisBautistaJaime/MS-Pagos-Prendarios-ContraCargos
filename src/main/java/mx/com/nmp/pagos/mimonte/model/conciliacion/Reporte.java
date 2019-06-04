@@ -8,10 +8,12 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,8 +44,8 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@ManyToOne
-	@JoinColumn(name = "id_conciliacion", nullable = false)
+	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+	@JoinColumn(name = "id_conciliacion",  insertable = false, updatable = false)
 	private Conciliacion conciliacion;
 
 	@Column(name = "tipo", nullable = false)

@@ -18,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 
@@ -43,8 +45,9 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 	private Integer folio;
 	
 	@Column(name = "sucursal")
-	private String sucursal;
+	private Integer sucursal;
 	
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha")
 	private Date fecha;
 	
@@ -75,7 +78,7 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 		// TODO Auto-generated constructor stub
 	}
 
-	public MovimientoTransito(EstatusTransito estatus, Integer folio, String sucursal, Date fecha,
+	public MovimientoTransito(EstatusTransito estatus, Integer folio, Integer sucursal, Date fecha,
 			String operacionDesc, BigDecimal monto, String tipoContratoDesc, String esquemaTarjeta, String cuenta,
 			String titular) {
 		super();
@@ -107,11 +110,11 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 		this.folio = folio;
 	}
 
-	public String getSucursal() {
+	public Integer getSucursal() {
 		return sucursal;
 	}
 
-	public void setSucursal(String sucursal) {
+	public void setSucursal(Integer sucursal) {
 		this.sucursal = sucursal;
 	}
 
