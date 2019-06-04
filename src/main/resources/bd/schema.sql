@@ -1261,3 +1261,307 @@ ALTER TABLE to_comision_transaccion_proyeccion ADD CONSTRAINT FK_to_comision_tra
 -- -------------------- [2019-05-31 11:27:25] ----------------------------- --
 -- ------------------------------------------------------------------------ --
 ALTER TABLE to_movimiento_comision CHANGE tipo tipo VARCHAR(50);
+
+-- ------------------------------------------------------------------------ --
+-- INICIO CONCILIACION ITERACION 1
+
+ALTER TABLE `compose`.`to_movimiento_conciliacion` 
+DROP FOREIGN KEY `FK_to_movimiento_conciliacion_to_conciliacion`;
+ALTER TABLE `compose`.`to_movimiento_conciliacion` 
+DROP INDEX `FK_to_movimiento_conciliacion_to_conciliacion` ;
+
+ALTER TABLE `compose`.`to_layout` 
+DROP FOREIGN KEY `FK_to_layout_to_conciliacion`;
+ALTER TABLE `compose`.`to_layout` 
+DROP INDEX `FK_to_layout_to_conciliacion` ;
+
+ALTER TABLE `compose`.`to_global` 
+DROP FOREIGN KEY `FK_to_global_to_conciliacion`;
+ALTER TABLE `compose`.`to_global` 
+DROP INDEX `UQ_to_global_conciliacion` ;
+
+ALTER TABLE `compose`.`to_reporte` 
+DROP FOREIGN KEY `FK_to_carga_reporte_to_conciliacion`;
+ALTER TABLE `compose`.`to_reporte` 
+DROP INDEX `FK_to_carga_reporte_to_conciliacion` ;
+
+ALTER TABLE `compose`.`to_movimiento_comision` 
+DROP FOREIGN KEY `FK_comisiones_to_movimiento_conciliacion`;
+
+ALTER TABLE `compose`.`to_conciliacion` 
+DROP COLUMN `peoplesoft_id`,
+CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT ,
+CHANGE COLUMN `estatus` `id_estatus_conciliacion` BIGINT(20) NOT NULL ,
+CHANGE COLUMN `entidad` `id_entidad` BIGINT(20) NOT NULL ,
+CHANGE COLUMN `cuenta` `id_cuenta` BIGINT(20) NOT NULL ,
+ADD COLUMN `id_poliza_tesoreria` VARCHAR(20) NULL AFTER `id_cuenta`,
+ADD COLUMN `id_asiento_contable` VARCHAR(20) NULL AFTER `id_poliza_tesoreria`,
+ADD COLUMN `end_day` DATETIME NULL AFTER `id_asiento_contable`,
+ADD INDEX `estatus_conciliacion_fk_idx` (`id_estatus_conciliacion` ASC),
+ADD INDEX `entidad_fk_idx` (`id_entidad` ASC),
+ADD INDEX `cuenta_fk_idx` (`id_cuenta` ASC);
+ALTER TABLE `compose`.`to_conciliacion` 
+ADD CONSTRAINT `estatus_conciliacion_fk`
+  FOREIGN KEY (`id_estatus_conciliacion`)
+  REFERENCES `compose`.`tk_estatus_conciliacion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `entidad_fk`
+  FOREIGN KEY (`id_entidad`)
+  REFERENCES `compose`.`tc_entidad` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `cuenta_fk`
+  FOREIGN KEY (`id_cuenta`)
+  REFERENCES `compose`.`tc_cuenta` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+    
+ ALTER TABLE `compose`.`to_movimiento_comision` 
+ADD CONSTRAINT `FK_comisiones_to_movimiento_conciliacion`
+  FOREIGN KEY (`id`)
+  REFERENCES `compose`.`to_movimiento_conciliacion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+  ALTER TABLE `compose`.`to_reporte` 
+CHANGE COLUMN `id_conciliacion` `id_conciliacion` BIGINT(20) NOT NULL ;
+
+ALTER TABLE `compose`.`to_reporte` 
+ADD INDEX `FK_to_carga_reporte_to_conciliacion_idx` (`id_conciliacion` ASC);
+ALTER TABLE `compose`.`to_reporte` 
+ADD CONSTRAINT `FK_to_carga_reporte_to_conciliacion`
+  FOREIGN KEY (`id_conciliacion`)
+  REFERENCES `compose`.`to_conciliacion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+  ALTER TABLE `compose`.`to_global` 
+CHANGE COLUMN `id_conciliacion` `id_conciliacion` BIGINT(20) NOT NULL ;
+
+ALTER TABLE `compose`.`to_global` 
+ADD INDEX `FK_to_global_to_conciliacion_idx` (`id_conciliacion` ASC);
+ALTER TABLE `compose`.`to_global` 
+ADD CONSTRAINT `FK_to_global_to_conciliacion`
+  FOREIGN KEY (`id_conciliacion`)
+  REFERENCES `compose`.`to_conciliacion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ ALTER TABLE `compose`.`to_layout` 
+CHANGE COLUMN `id_conciliacion` `id_conciliacion` BIGINT(20) NOT NULL ;
+
+ALTER TABLE `compose`.`to_layout` 
+ADD INDEX `FK_to_layout_to_conciliacion_idx` (`id_conciliacion` ASC);
+ALTER TABLE `compose`.`to_layout` 
+ADD CONSTRAINT `FK_to_layout_to_conciliacion`
+  FOREIGN KEY (`id_conciliacion`)
+  REFERENCES `compose`.`to_conciliacion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+  ALTER TABLE `compose`.`to_movimiento_conciliacion` 
+CHANGE COLUMN `conciliacion` `id_conciliacion` BIGINT(20) NOT NULL ;
+
+ALTER TABLE `compose`.`to_movimiento_conciliacion` 
+ADD INDEX `FK_to_movimiento_conciliacion_to_conciliacion_idx` (`id_conciliacion` ASC);
+ALTER TABLE `compose`.`to_movimiento_conciliacion` 
+ADD CONSTRAINT `FK_to_movimiento_conciliacion_to_conciliacion`
+  FOREIGN KEY (`id_conciliacion`)
+  REFERENCES `compose`.`to_conciliacion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `compose`.`tk_estatus_movimientos_en_tránsito` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL ;
+
+ALTER TABLE `compose`.`to_movimiento_transito` 
+ADD INDEX `movimiento_transito_fk_idx` (`estatus` ASC);
+ALTER TABLE `compose`.`to_movimiento_transito` 
+ADD CONSTRAINT `movimiento_transito_fk`
+  FOREIGN KEY (`estatus`)
+  REFERENCES `compose`.`tk_estatus_movimientos_en_tránsito` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+RENAME TABLE tk_estatus_movimientos_en_tránsito TO tk_estatus_movimientos_en_transito;
+
+SET FOREIGN_KEY_CHECKS=0;
+alter table to_movimiento_conciliacion change id id int(11) not null auto_increment;
+SET FOREIGN_KEY_CHECKS=1;
+
+ALTER TABLE `compose`.`to_movimiento_comision` 
+ADD COLUMN `estatus` TINYINT(4) NULL AFTER `descripcion`;
+
+ALTER TABLE `compose`.`tk_estatus_devoluciones` 
+DROP COLUMN `short_description`;
+
+ALTER TABLE `compose`.`tk_estatus_devoluciones` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL ;
+
+ALTER TABLE `compose`.`to_movimiento_devolucion` 
+ADD INDEX `to_movimiento_devoluciones_idx` (`estatus` ASC);
+ALTER TABLE `compose`.`to_movimiento_devolucion` 
+ADD CONSTRAINT `to_movimiento_devoluciones`
+  FOREIGN KEY (`estatus`)
+  REFERENCES `compose`.`tk_estatus_devoluciones` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `compose`.`tk_estatus_devoluciones` 
+RENAME TO  `compose`.`tk_estatus_devolucion` ;
+
+CREATE TABLE `compose`.`sub_estatus_conciliacion` (
+  `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` VARCHAR(150) NULL,
+  `short_description` VARCHAR(100) NULL,
+  `estatus` BIT(1) NOT NULL,
+  `created_date` DATETIME NOT NULL,
+  `created_by` VARCHAR(100) NULL,
+  `last_modified_date` DATETIME NULL,
+  `last_modified_by` VARCHAR(100) NULL,
+  PRIMARY KEY (`id`));
+  
+ALTER TABLE `compose`.`to_conciliacion` 
+ADD COLUMN `id_sub_estatus_conciliacion` BIGINT(20) NULL AFTER `last_modified_date`;
+
+ALTER TABLE `compose`.`to_conciliacion` 
+CHANGE COLUMN `id_sub_estatus_conciliacion` `id_sub_estatus_conciliacion` BIGINT(20) NULL DEFAULT NULL AFTER `id_cuenta`;
+
+ALTER TABLE `compose`.`sub_estatus_conciliacion` 
+RENAME TO  `compose`.`tk_sub_estatus_conciliacion` ;
+
+ALTER TABLE `compose`.`to_conciliacion` 
+ADD INDEX `sub_estatus_conciliacion_fk_idx` (`id_sub_estatus_conciliacion` ASC);
+ALTER TABLE `compose`.`to_conciliacion` 
+ADD CONSTRAINT `sub_estatus_conciliacion_fk`
+  FOREIGN KEY (`id_sub_estatus_conciliacion`)
+  REFERENCES `compose`.`tk_sub_estatus_conciliacion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+ 
+ALTER TABLE `compose`.`to_conciliacion` 
+ADD COLUMN `sub_estatus_descripcion` VARCHAR(100) NULL AFTER `last_modified_date`;
+
+ALTER TABLE `compose`.`to_conciliacion` 
+CHANGE COLUMN `sub_estatus_descripcion` `sub_estatus_descripcion` VARCHAR(100) NULL DEFAULT NULL AFTER `id_sub_estatus_conciliacion`;
+
+ALTER TABLE `compose`.`to_conciliacion` 
+CHANGE COLUMN `created_date` `created_date` DATETIME NOT NULL ;
+
+ALTER TABLE `compose`.`to_global` 
+ADD COLUMN `importe_devoluciones` DECIMAL(16,4) NULL AFTER `diferencia_proveedor_banco`;
+
+ALTER TABLE `compose`.`to_global` 
+CHANGE COLUMN `importe_devoluciones` `importe_devoluciones` DECIMAL(16,4) NULL DEFAULT NULL AFTER `importe_banco`;
+
+ALTER TABLE `compose`.`tk_sub_estatus_conciliacion` 
+CHANGE COLUMN `descripcion` `description` VARCHAR(150) NULL DEFAULT NULL ;
+
+ALTER TABLE `compose`.`to_conciliacion` 
+CHANGE COLUMN `end_day` `completed_date` DATETIME NULL DEFAULT NULL ;
+
+ALTER TABLE `compose`.`to_conciliacion` 
+DROP FOREIGN KEY `estatus_conciliacion_fk`;
+ALTER TABLE `compose`.`to_conciliacion` 
+DROP INDEX `estatus_conciliacion_fk_idx` ;
+
+ALTER TABLE `compose`.`tk_estatus_conciliacion` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `compose`.`tk_estatus_conciliacion` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL ;
+
+ALTER TABLE `compose`.`tk_estatus_conciliacion` 
+CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL ;
+
+ALTER TABLE `compose`.`tk_estatus_conciliacion` 
+CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `compose`.`to_conciliacion` 
+ADD INDEX `estatus_conciliacion_fk_idx` (`id_estatus_conciliacion` ASC);
+ALTER TABLE `compose`.`to_conciliacion` 
+ADD CONSTRAINT `estatus_conciliacion_fk`
+  FOREIGN KEY (`id_estatus_conciliacion`)
+  REFERENCES `compose`.`tk_estatus_conciliacion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+  ALTER TABLE `compose`.`to_conciliacion` 
+DROP FOREIGN KEY `sub_estatus_conciliacion_fk`;
+ALTER TABLE `compose`.`to_conciliacion` 
+CHANGE COLUMN `id_sub_estatus_conciliacion` `id_sub_estatus_conciliacion` BIGINT(20) NOT NULL ;
+ALTER TABLE `compose`.`to_conciliacion` 
+ADD CONSTRAINT `sub_estatus_conciliacion_fk`
+  FOREIGN KEY (`id_sub_estatus_conciliacion`)
+  REFERENCES `compose`.`tk_sub_estatus_conciliacion` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+
+INSERT INTO `compose`.`tk_estatus_conciliacion` (`nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`) VALUES ('Finalizada', 'Estatus actual de la conciliación', false, now(), 'Sistema', 'Estatus actual');
+INSERT INTO `compose`.`tk_estatus_conciliacion` (`nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`) VALUES ('En Proceso', 'Estatus actual de la conciliación', true, now(), 'Sistema', 'Estatus actual');
+
+
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Creada', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Midas', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Midas Completada', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Midas Error', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Open Pay', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Open Pay Completada', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Open Pay Error', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Conciliacion', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Conciliacion Completada', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Conciliacion Error', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Estado de Cuenta', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Estado de Cuenta Completada', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Estado de Cuenta Error', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Enviada', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Enviada Error', true, now(), 'Sistema');
+INSERT INTO `compose`.`tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Finalizada', true, now(), 'Sistema');
+
+UPDATE `compose`.`to_conciliacion` SET `id_sub_estatus_conciliacion`='1' WHERE `id`='1';
+UPDATE `compose`.`to_conciliacion` SET `id_sub_estatus_conciliacion`='1' WHERE `id`='2';
+UPDATE `compose`.`to_conciliacion` SET `id_sub_estatus_conciliacion`='1' WHERE `id`='3';
+UPDATE `compose`.`to_conciliacion` SET `id_sub_estatus_conciliacion`='1' WHERE `id`='4';
+UPDATE `compose`.`to_conciliacion` SET `id_sub_estatus_conciliacion`='1' WHERE `id`='5';
+UPDATE `compose`.`to_conciliacion` SET `id_sub_estatus_conciliacion`='1' WHERE `id`='6';
+UPDATE `compose`.`to_conciliacion` SET `id_sub_estatus_conciliacion`='1' WHERE `id`='8';
+UPDATE `compose`.`to_conciliacion` SET `id_sub_estatus_conciliacion`='1' WHERE `id`='9';
+
+
+INSERT INTO `compose`.`to_conciliacion` (`id`, `id_estatus_conciliacion`, `id_entidad`, `id_cuenta`, `id_sub_estatus_conciliacion`, `created_date`, `created_by`, `last_modified_by`) VALUES ('1', '2', '1', '1', '1', '2019-05-08 00:56:15', 'NMP', 'NMP');
+
+INSERT INTO `compose`.`to_global` (`id`, `id_conciliacion`, `fecha`, `movimientos`, `partidas`, `monto`, `importe_midas`, `importe_proveedor`, `importe_banco`, `devoluciones`, `diferencia_proveedor_midas`) VALUES ('1', '1', '2019-05-11', '232', '123', '2323.0000', '32321.0000', '321213.0000', '3213.0000', '213', '213213.0000');
+
+INSERT INTO `compose`.`to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('1', '1', 'NMP', '2019-05-08 22:53:22', '1');
+INSERT INTO `compose`.`to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('2', '1', 'NMP', '2019-05-08 22:53:22', '1');
+INSERT INTO `compose`.`to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('3', '1', 'NMP', '2019-05-08 22:53:22', '1');
+INSERT INTO `compose`.`to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('4', '1', 'NMP', '2019-05-08 22:53:22', '1');
+INSERT INTO `compose`.`to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('5', '1', 'NMP', '2019-05-08 22:53:22', '1');
+INSERT INTO `compose`.`to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('6', '1', 'NMP', '2019-05-08 22:53:22', '1');
+
+INSERT INTO `compose`.`to_movimiento_comision` (`id`, `fecha_operacion`, `fecha_cargo`, `monto`, `descripcion`, `estatus`) VALUES ('1', '2019-05-21', '2019-05-08', '123.0000', 'string', '1');
+INSERT INTO `compose`.`to_movimiento_comision` (`id`, `fecha_operacion`, `fecha_cargo`, `monto`, `descripcion`, `estatus`) VALUES ('2', '2019-05-08', '2019-05-08', '123.0000', '123.0000', '1');
+
+INSERT INTO `compose`.`to_reporte` (`id`, `id_conciliacion`, `tipo`, `disponible`, `fecha_desde`, `fecha_hasta`, `created_date`, `created_by`) VALUES ('1', '1', 'MIDAS', '1', '2019-05-18', '2019-05-18', '2019-05-18 20:44:43', 'Sistema');
+INSERT INTO `compose`.`to_reporte` (`id`, `id_conciliacion`, `tipo`, `disponible`, `fecha_desde`, `fecha_hasta`, `created_date`, `created_by`) VALUES ('2', '1', 'PROVEEEDOR', '1', '2019-05-18', '2019-05-18', '2019-05-18 20:44:43', 'Sistema');
+INSERT INTO `compose`.`to_reporte` (`id`, `id_conciliacion`, `tipo`, `disponible`, `fecha_desde`, `fecha_hasta`, `created_date`, `created_by`) VALUES ('3', '1', 'ESTADO_CUENTA', '1', '2019-05-18', '2019-05-18', '2019-05-18 20:44:43', 'Sistema');
+
+INSERT INTO `compose`.`tk_estatus_devolucion` (`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`) VALUES ('1', 'devolucion', 'devolucion', true, '2019-05-16 16:46:23', 'NMP', 'devolucion');
+
+INSERT INTO `compose`.`tk_estatus_movimientos_en_transito` (`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`) VALUES ('1', 'nombre', 'descripcion', true, '2019-05-09 16:34:23', 'NMP', 'descripcion_corta');
+
+INSERT INTO `compose`.`to_movimiento_devolucion` (`id`, `estatus`, `fecha`, `monto`, `esquema_tarjeta`, `identificador_cuenta`, `titular`, `codigo_autorizacion`, `sucursal`) VALUES ('5', true, '2019-05-16', '123.0000', '123', '123', 'dasd', '3123', '3123');
+INSERT INTO `compose`.`to_movimiento_devolucion` (`id`, `estatus`, `fecha`, `monto`, `esquema_tarjeta`, `identificador_cuenta`, `titular`, `codigo_autorizacion`, `sucursal`) VALUES ('6', true, '2019-05-16', '123.0000', '123', '123', 'dasd', '3123', '3123');
+
+-- FIN CONCILAICION ITERACION 1
+
+-- --------------------------------------------------------------------
+
+-- INCIIO DEVOLUCIONES
+
+ALTER TABLE `compose`.`to_movimiento_devolucion` 
+ADD COLUMN `fecha_liquidacion` DATE NULL AFTER `sucursal`;
+
+-- FIN DEVOLUCIONES
