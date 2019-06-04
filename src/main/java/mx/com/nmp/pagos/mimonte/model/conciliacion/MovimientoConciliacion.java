@@ -35,7 +35,7 @@ public class MovimientoConciliacion extends Updatable implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	private Integer id;
+	private Long id;
 	
 	@Column(name = "id_conciliacion")
 	private Integer idConciliacion;
@@ -51,18 +51,18 @@ public class MovimientoConciliacion extends Updatable implements Serializable {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 	}
 
-	public MovimientoConciliacion(Integer id, Integer idConciliacion, Boolean nuevo) {
+	public MovimientoConciliacion(Long id, Integer idConciliacion, Boolean nuevo) {
 		super();
 		this.id = id;
 		this.idConciliacion = idConciliacion;
 		this.nuevo = nuevo;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -1173,3 +1173,91 @@ VALUES
 -- ------------------------ [2019-05-20 18:18:47] ------------------------ --
 ALTER TABLE to_movimiento_midas ADD COLUMN id_operacion INT(11) DEFAULT NULL;
 ALTER TABLE to_movimiento_midas ADD COLUMN id_tipo_contrato INT(11) DEFAULT NULL;
+
+-- ------------------------------------------------------------------ --
+-- ----------- SE CREAN INDICES PARA TABLA to_movimiento_midas ------ --
+-- ------------------------[2019-05-22 17:49:45] -------------------- --
+-- ------------------------------------------------------------------ --
+ALTER TABLE to_movimiento_midas ADD INDEX idx_id (id);
+ALTER TABLE to_movimiento_midas ADD INDEX idx_fecha (fecha);
+ALTER TABLE to_movimiento_midas ADD INDEX idx_folio (folio);
+ALTER TABLE to_movimiento_midas ADD INDEX idx_id_operacion (id_operacion);
+ALTER TABLE to_movimiento_midas ADD INDEX idx_id_tipo_contrato (id_tipo_contrato);
+ALTER TABLE to_movimiento_midas ADD INDEX idx_sucursal (sucursal);
+
+-- ------------------------------------------------------------------------------------------ --
+-- --------------- SE REALIZAN AJUSTES PARA ARTEFACTO TRANSACCIONESCOMISIONESBD ------------- --
+-- -------------------------------- [2019-05-23 11:14:28] ----------------------------------- --
+-- ------------------------------------------------------------------------------------------ --
+ALTER TABLE to_movimiento_pago ADD FOREIGN KEY (estatus) REFERENCES tk_estatus_transaccion(id);
+
+-- ----------------------------------------------------------------------------------------- --
+-- -------------- SE AGREGA COLUMNA PARA IDENTFICAR EL TIPO (COMISION O IVA_COMISION) ------ --
+-- ------------------------------ [2019-05-27 14:58:06] ------------------------------------- --
+-- ----------------------------------------------------------------------------------------- --
+ALTER TABLE to_movimiento_comision ADD COLUMN tipo ENUM('COMISION','IVA_COMISION') NULL;
+
+
+
+-- Comision Transaccion
+
+CREATE TABLE to_comision_transaccion (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	id_conciliacion BIGINT(20) NOT NULL,
+	fecha_desde DATE NOT NULL,
+	fecha_hasta DATE NOT NULL,
+	comision DECIMAL(16,4) NOT NULL,
+	created_by VARCHAR(100),
+	created_date DATETIME,
+	last_modified_by VARCHAR(100),
+	last_modified_date DATETIME,
+	PRIMARY KEY (id),
+	KEY (id_conciliacion)
+)  ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE to_comision_transaccion_real (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	comision_transaccion INTEGER NOT NULL,
+	comision DECIMAL(16,4) NOT NULL,
+	iva_comision DECIMAL(16,4),
+	total DECIMAL(16,4),
+	PRIMARY KEY (id),
+	KEY (comision_transaccion)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE to_comision_transaccion_proyeccion (
+	id BIGINT NOT NULL AUTO_INCREMENT,
+	comision_transaccion INTEGER NOT NULL,
+	operacion BIGINT NOT NULL,
+	-- transacciones DECIMAL(16,4),
+	transacciones INT(11) NULL,
+    comision DECIMAL(16,4),
+	iva DECIMAL(16,4),
+	total DECIMAL(16,4),
+	PRIMARY KEY (id),
+	KEY (comision_transaccion)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ADDED [CAMBIA TIPO DE INTEGER A BIGINT Y NOMBRADO PARA SEGUIR ESTANDAR]
+-- ALTER TABLE to_comision_transaccion CHANGE conciliacion id_conciliacion BIGINT(20);
+
+-- MODIFIED [CON NUEVO NOMBRE DE COLUMNA DE CONCILIACION]
+ALTER TABLE to_comision_transaccion ADD CONSTRAINT FK_to_comision_transaccion_to_conciliacion 
+	FOREIGN KEY (id_conciliacion) REFERENCES to_conciliacion (id);
+-- ALTER TABLE to_comision_transaccion ADD CONSTRAINT FK_to_comision_transaccion_to_conciliacion 
+	-- FOREIGN KEY (conciliacion) REFERENCES to_conciliacion (id);
+-- END MODIFIED
+
+ALTER TABLE to_comision_transaccion_real ADD CONSTRAINT FK_to_comision_transaccion_real_to_comision_transaccion 
+	FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id);
+
+ALTER TABLE to_comision_transaccion_proyeccion ADD CONSTRAINT FK_to_comision_transaccion_proyeccion_to_comision_transaccion 
+	FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id);
+
+-- ------------------------------------------------------------------------ --
+-- CAMBIO DE TIPO DE DATO EN COLUMNA TIPO DE ENUM A VARCHAR BUG: NMPCA-D263 --
+-- -------------------- [2019-05-31 11:27:25] ----------------------------- --
+-- ------------------------------------------------------------------------ --
+ALTER TABLE to_movimiento_comision CHANGE tipo tipo VARCHAR(50);

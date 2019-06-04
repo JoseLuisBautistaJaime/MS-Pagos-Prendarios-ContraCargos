@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @name ComisionesTransaccionesRequestDTO
@@ -21,6 +22,7 @@ public class ComisionesTransaccionesRequestDTO implements Comparable<ComisionesT
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private BigDecimal comision;
+	private Integer idConciliacion;
 
 	public ComisionesTransaccionesRequestDTO() {
 		super();
@@ -57,15 +59,41 @@ public class ComisionesTransaccionesRequestDTO implements Comparable<ComisionesT
 		this.comision = comision;
 	}
 
+	public Integer getIdConciliacion() {
+		return idConciliacion;
+	}
+
+	public void setIdConciliacion(Integer idConciliacion) {
+		this.idConciliacion = idConciliacion;
+	}
+
 	@Override
-	public String toString() {
-		return "ComisionesTransaccionesRequestDTO [fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta
-				+ ", comision=" + comision + "]";
+	public int hashCode() {
+		return Objects.hash(fechaDesde, fechaHasta, comision, idConciliacion);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof ComisionesTransaccionesRequestDTO))
+			return false;
+
+		final ComisionesTransaccionesRequestDTO other = (ComisionesTransaccionesRequestDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override
 	public int compareTo(ComisionesTransaccionesRequestDTO o) {
 		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return "ComisionesTransaccionesRequestDTO [fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta
+				+ ", comision=" + comision + ", idConciliacion=" + idConciliacion + "]";
 	}
 
 }

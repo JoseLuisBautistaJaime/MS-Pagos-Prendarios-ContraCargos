@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
@@ -18,19 +22,22 @@ import javax.persistence.TemporalType;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 
 /**
+ * @name MovimientoDevolucion
+ * 
+ * @description encapsula informacion de un movimiento estado cuenta
  * @author Quarksoft
  * @version 1.0
  * @created 31-Mar-2019 5:57:49 PM
  */
 @Entity
 @Table(name = "to_movimiento_devolucion")
-public class MovimientoDevolucion extends MovimientoConciliacion implements Serializable{
+public class MovimientoDevolucion extends MovimientoConciliacion implements Serializable {
 
 	/**
 	 * Serial id;
 	 */
 	private static final long serialVersionUID = 8987562819738981175L;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "estatus")
 	private EstatusDevolucion estatus;
@@ -38,22 +45,22 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha")
 	private Date fecha;
-	
+
 	@Column(name = "monto")
 	private BigDecimal monto;
-	
+
 	@Column(name = "esquema_tarjeta")
 	private String esquemaTarjeta;
-	
+
 	@Column(name = "identificador_cuenta")
 	private String identificadorCuenta;
-	
+
 	@Column(name = "titular")
 	private String titular;
-	
+
 	@Column(name = "codigo_autorizacion")
 	private String codigoAutorizacion;
-	
+
 	@Column(name = "sucursal")
 	private Integer sucursal;
 	
@@ -63,12 +70,10 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 
 	public MovimientoDevolucion() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public MovimientoDevolucion(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
-		// TODO Auto-generated constructor stub
 	}
 
 	public MovimientoDevolucion(EstatusDevolucion estatus, Date fecha, BigDecimal monto, String esquemaTarjeta,

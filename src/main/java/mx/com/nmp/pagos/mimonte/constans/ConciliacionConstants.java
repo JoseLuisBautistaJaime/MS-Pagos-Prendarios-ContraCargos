@@ -51,31 +51,36 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se realiza una consulta de manera exitosa
 	 */
 	public static final String MSG_SUCCESSFUL_MOVIMIENTOS_QUERY = "Consulta movimientos exitosa.";
-	
+
 	/**
 	 * Valor que se setea por default para el alta de la conciliacion
 	 */
 	public static final String EN_PROCESO = "En Proceso";
-	
+
 	/**
 	 * Valor que se setea por default para el alta de la subConciliacion;
 	 */
 	public static final String CREADA = "Creada";
-	
+
 	/**
 	 * Mensaje mostrado para un alta exitosa.
 	 */
 	public static final String SAVE_SUCCESSFUL = "Alta exitosa.";
-	
+
 	/**
 	 * Mensaje mostrado para una consulta exitosa.
 	 */
 	public static final String SUCCESSFUL_SEARCH = "Consulta exitosa.";
-	
+
 	/**
 	 * Mensaje mostrado para una consulta exitosa.
 	 */
 	public static final String SUCCESSFUL_UPDATE = "Actualización exitosa.";
+
+	/**
+	 * Mensaje que es mostrado cuando se intenta buscar o asociar un id de conciliacion que no existe
+	 */
+	public static final String CONCILIACION_ID_NOT_FOUND = "No se encontro el id de conciliacion ingresado";
 	
 	/**
 	 * Mensaje mostrado cuando se ocurre un error al cambiar el estatus.
@@ -97,6 +102,43 @@ public final class ConciliacionConstants {
 	 */
 	public static final String LIQUIDATE = "Liquidada";
 	
+	/**
+	 * Se regresa cuando no se encuentra informacion en una busqueda relacionada con los procesos de conciliacion en general
+	 */
+	public static final String INFORMATION_NOT_FOUND = "No se encontro informacion relacionada con los parametros de busqueda";
+	
+	/**
+	 * Mensaje que es mostrado cuando no es posible obtener una conciliacion de acuerdo a los parametros recibidos
+	 */
+	public static final String CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados";
+	
+	/**
+	 * Mensaje que es mostrado cuando no es posible obtener una comision de acuerdo a los parametros recibidos
+	 */
+	public static final String COMISION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados";
+	
+	/**
+	 * Mensaje que es mostrado cuando se intenta eliminar una comision y esta no puede ser eliminada por regla de negocio
+	 */
+	public static final String COMISION_CANT_BE_DELETED = "La comision no puede ser eliminada ya que fue no fue dada de alta desde la aplicacion.";
+	
+	/**
+	 * Subclase de cosntantes que se mapearan de propiedades del archivo de
+	 * configuracion de spring
+	 * 
+	 * @author user
+	 *
+	 */
+	public static final class ConstantProperties {
+		private ConstantProperties() {
+			super();
+		}
+
+		/**
+		 * Valor del iva (IMPUESTO AL VALOR AGREGADO)
+		 */
+		public static final String IVA = "${mimonte.variables.iva}";
+	}
 
 	public static final class Validation {
 

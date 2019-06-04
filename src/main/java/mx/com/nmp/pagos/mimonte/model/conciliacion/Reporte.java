@@ -46,6 +46,7 @@ public class Reporte extends Updatable implements Comparable<Reporte> {
 
 	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
 	@JoinColumn(name = "id_conciliacion",  insertable = false, updatable = false)
+
 	private Conciliacion conciliacion;
 
 	@Column(name = "tipo", nullable = false)

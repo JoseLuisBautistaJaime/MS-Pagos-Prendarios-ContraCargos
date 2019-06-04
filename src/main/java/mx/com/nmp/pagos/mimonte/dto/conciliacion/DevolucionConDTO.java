@@ -33,8 +33,10 @@ public class DevolucionConDTO implements Comparable<DevolucionConDTO> {
 		super();
 	}
 
-	public DevolucionConDTO(Integer id, Date fecha, EstatusDevolucionDTO estatus, BigDecimal monto, String esquemaTarjeta,
-			String identificacionCuenta, String titular, String codigiAutorizacion, Integer sucursal, Date fechaLiquidacion) {
+	public DevolucionConDTO(Integer id, Date fecha, EstatusDevolucionDTO estatus, BigDecimal monto,
+			String esquemaTarjeta, String identificacionCuenta, String titular, String codigiAutorizacion,
+			Integer sucursal, Date fechaLiquidacion) {
+
 		super();
 		this.id = id;
 		this.fecha = fecha;
@@ -132,7 +134,8 @@ public class DevolucionConDTO implements Comparable<DevolucionConDTO> {
 	public String toString() {
 		return "DevolucionConDTO [id=" + id + ", fecha=" + fecha + ", estatus=" + estatus + ", monto=" + monto
 				+ ", esquemaTarjeta=" + esquemaTarjeta + ", identificacionCuenta=" + identificacionCuenta + ", titular="
-				+ titular + ", codigiAutorizacion=" + codigiAutorizacion + ", sucursal=" + sucursal + ", fechaLiquidacion=" + fechaLiquidacion + "]";
+				+ titular + ", codigiAutorizacion=" + codigiAutorizacion + ", sucursal=" + sucursal
+				+ ", fechaLiquidacion=" + fechaLiquidacion + "]";
 	}
 
 	@Override

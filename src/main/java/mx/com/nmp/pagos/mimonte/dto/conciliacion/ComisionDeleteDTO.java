@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @name ComisionDeleteDTO
@@ -18,13 +19,13 @@ import java.util.List;
 public class ComisionDeleteDTO implements Comparable<ComisionDeleteDTO> {
 
 	private Integer folio;
-	private List<Integer> idComisiones;
+	private List<Long> idComisiones;
 
 	public ComisionDeleteDTO() {
 		super();
 	}
 
-	public ComisionDeleteDTO(Integer folio, List<Integer> idComisiones) {
+	public ComisionDeleteDTO(Integer folio, List<Long> idComisiones) {
 		super();
 		this.folio = folio;
 		this.idComisiones = idComisiones;
@@ -38,17 +39,40 @@ public class ComisionDeleteDTO implements Comparable<ComisionDeleteDTO> {
 		this.folio = folio;
 	}
 
-	public List<Integer> getIdComisiones() {
+	public List<Long> getIdComisiones() {
 		return idComisiones;
 	}
 
-	public void setIdComisiones(List<Integer> idComisiones) {
+	public void setIdComisiones(List<Long> idComisiones) {
 		this.idComisiones = idComisiones;
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(folio, idComisiones);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof ComisionDeleteDTO))
+			return false;
+
+		final ComisionDeleteDTO other = (ComisionDeleteDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
+	}
+	
+	@Override
 	public int compareTo(ComisionDeleteDTO o) {
 		return o.folio.compareTo(this.folio);
+	}
+
+	@Override
+	public String toString() {
+		return "ComisionDeleteDTO [folio=" + folio + ", idComisiones=" + idComisiones + "]";
 	}
 
 }

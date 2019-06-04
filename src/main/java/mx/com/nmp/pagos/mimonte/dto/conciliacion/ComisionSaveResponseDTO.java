@@ -4,7 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @name ComisionSaveResponseDTO
@@ -15,22 +17,21 @@ import java.util.Date;
  * @creationDate 17/04/2019 17:32 hrs.
  * @version 0.1
  */
-public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseDTO>{
-	
+public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseDTO> {
+
 	private Integer folio;
-	private Integer id;
+	private Long id;
 	private Date fechaOperacion;
 	private Date fechaCargo;
-	private Double monto;
+	private BigDecimal monto;
 	private String descripcion;
 	private Boolean nuevaComision;
-	
+
 	public ComisionSaveResponseDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public ComisionSaveResponseDTO(Integer folio, Integer id, Date fechaOperacion, Date fechaCargo, Double monto,
+	public ComisionSaveResponseDTO(Integer folio, Long id, Date fechaOperacion, Date fechaCargo, BigDecimal monto,
 			String descripcion, Boolean nuevaComision) {
 		super();
 		this.folio = folio;
@@ -50,11 +51,11 @@ public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseD
 		this.folio = folio;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -74,11 +75,11 @@ public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseD
 		this.fechaCargo = fechaCargo;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 
@@ -99,16 +100,33 @@ public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseD
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(folio, id, fechaOperacion, fechaCargo, monto, descripcion, nuevaComision);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof ComisionSaveResponseDTO))
+			return false;
+
+		final ComisionSaveResponseDTO other = (ComisionSaveResponseDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
+	}
+	
+	@Override
+	public int compareTo(ComisionSaveResponseDTO o) {
+		return o.id.compareTo(this.id);
+	}
+
+	@Override
 	public String toString() {
 		return "ComisionSaveResponseDTO [folio=" + folio + ", id=" + id + ", fechaOperacion=" + fechaOperacion
 				+ ", fechaCargo=" + fechaCargo + ", monto=" + monto + ", descripcion=" + descripcion
 				+ ", nuevaComision=" + nuevaComision + "]";
-	}
-
-	@Override
-	public int compareTo(ComisionSaveResponseDTO o) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

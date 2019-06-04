@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @name ComisionDTO
@@ -17,7 +18,7 @@ import java.util.Date;
  */
 public class ComisionDTO implements Comparable<ComisionDTO> {
 
-	private Integer id;
+	private Long id;
 	private Date fechaOperacion;
 	private Date fechaCargo;
 	private BigDecimal monto;
@@ -28,7 +29,7 @@ public class ComisionDTO implements Comparable<ComisionDTO> {
 		super();
 	}
 
-	public ComisionDTO(Integer id, Date fechaOperacion, Date fechaCargo, BigDecimal monto, String descripcion,
+	public ComisionDTO(Long id, Date fechaOperacion, Date fechaCargo, BigDecimal monto, String descripcion,
 			Boolean nuevaComision) {
 		super();
 		this.id = id;
@@ -39,11 +40,11 @@ public class ComisionDTO implements Comparable<ComisionDTO> {
 		this.nuevaComision = nuevaComision;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -94,8 +95,26 @@ public class ComisionDTO implements Comparable<ComisionDTO> {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(id, fechaOperacion, fechaCargo, monto, descripcion, nuevaComision);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof ComisionDTO))
+			return false;
+
+		final ComisionDTO other = (ComisionDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
+	}
+
+	@Override
 	public int compareTo(ComisionDTO o) {
-		return 0;
+		return o.id.compareTo(this.id);
 	}
 
 }

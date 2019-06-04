@@ -174,17 +174,14 @@ public class MovimientosEstadoCuentaService {
 
 	/**
 	 * Guarda un reporte relacionado con un movimiento de estado de cuenta
-	 * 
+	 * @return reporte
 	 * @param saveEstadoCuentaRequestDTO
 	 * @param userRequest
 	 */
-	public void save(final SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO, final String userRequest) {
+	public Reporte save(final SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO, final String userRequest) {
 		Reporte reporte = reporteRepository.save(
 				ReporteBuilder.buildReporteFromSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO, userRequest));
-		
-		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste los movimientos del estado de cuenta
-		Long idConciliacion = saveEstadoCuentaRequestDTO.getFolio().longValue();
-		procesarConsultaEstadoCuenta(reporte.getFechaDesde(), reporte.getFechaHasta(), idConciliacion, reporte.getId() != null ? reporte.getId().longValue() : 0);
+		return reporte;
 	}
 
 	/**

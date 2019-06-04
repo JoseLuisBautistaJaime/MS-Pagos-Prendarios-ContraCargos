@@ -45,6 +45,7 @@ spring:
 mimonte:
   variables:
     cantidad-maxima-tarjetas: 3
+    iva: 0.16
     dss:
       idcliente: "{idCliente}"
       idregla: "{idRegla}"
