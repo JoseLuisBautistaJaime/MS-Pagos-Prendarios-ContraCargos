@@ -18,6 +18,7 @@ import java.util.Date;
  */
 public class ComisionesTransaccionesRequestDTO implements Comparable<ComisionesTransaccionesRequestDTO> {
 
+	private Integer folio;
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private BigDecimal comision;
@@ -26,11 +27,20 @@ public class ComisionesTransaccionesRequestDTO implements Comparable<ComisionesT
 		super();
 	}
 
-	public ComisionesTransaccionesRequestDTO(Date fechaDesde, Date fechaHasta, BigDecimal comision) {
+	public ComisionesTransaccionesRequestDTO(Integer folio, Date fechaDesde, Date fechaHasta, BigDecimal comision) {
 		super();
+		this.folio = folio;
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = fechaHasta;
 		this.comision = comision;
+	}
+
+	public Integer getFolio() {
+		return folio;
+	}
+
+	public void setFolio(Integer folio) {
+		this.folio = folio;
 	}
 
 	public Date getFechaDesde() {
@@ -59,8 +69,8 @@ public class ComisionesTransaccionesRequestDTO implements Comparable<ComisionesT
 
 	@Override
 	public String toString() {
-		return "ComisionesTransaccionesRequestDTO [fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta
-				+ ", comision=" + comision + "]";
+		return "ComisionesTransaccionesRequestDTO [folio=" + folio + ", fechaDesde=" + fechaDesde + ", fechaHasta="
+				+ fechaHasta + ", comision=" + comision + "]";
 	}
 
 	@Override

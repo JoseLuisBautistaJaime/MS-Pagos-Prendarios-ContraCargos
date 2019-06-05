@@ -6,8 +6,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 /**
  * @name EstatusDevolucionDTO
- * @description Clase que encapsula la informacion de la devolición de la
- *              conciliación.
+ * @description Clase que encapsula la información del estatus devolución de la conciliación..
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net
  * @creationDate 02/04/2019 23:12 hrs.

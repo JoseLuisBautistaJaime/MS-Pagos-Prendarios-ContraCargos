@@ -20,22 +20,17 @@ public class ConsultaActividadesRequest implements Comparable<ConsultaActividade
 	    private Integer folio;
 	    private Date fechaDesde;
 	    private Date fechaHasta;
-	    private Integer resultados;
-	    private Integer pagina;
 
 	public ConsultaActividadesRequest() {
 			super();
 			// TODO Auto-generated constructor stub
 		}
 
-	public ConsultaActividadesRequest(Integer folio, Date fechaDesde, Date fechaHasta, Integer resultados,
-			Integer pagina) {
+	public ConsultaActividadesRequest(Integer folio, Date fechaDesde, Date fechaHasta) {
 		super();
 		this.folio = folio;
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = fechaHasta;
-		this.resultados = resultados;
-		this.pagina = pagina;
 	}
 
 	public Integer getFolio() {
@@ -61,27 +56,11 @@ public class ConsultaActividadesRequest implements Comparable<ConsultaActividade
 	public void setFechaHasta(Date fechaHasta) {
 		this.fechaHasta = fechaHasta;
 	}
-
-	public Integer getResultados() {
-		return resultados;
-	}
-
-	public void setResultados(Integer resultados) {
-		this.resultados = resultados;
-	}
-
-	public Integer getPagina() {
-		return pagina;
-	}
-
-	public void setPagina(Integer pagina) {
-		this.pagina = pagina;
-	}
-
+	
 	@Override
 	public String toString() {
 		return "ConsultaActividadesRequest [folio=" + folio + ", fechaDesde=" + fechaDesde + ", fechaHasta="
-				+ fechaHasta + ", resultados=" + resultados + ", pagina=" + pagina + "]";
+				+ fechaHasta + "]";
 	}
 
 	@Override

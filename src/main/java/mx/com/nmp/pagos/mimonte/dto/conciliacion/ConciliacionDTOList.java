@@ -38,6 +38,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 	private List<DevolucionConDTO> devoluciones;
 	private List<MovTransitoDTO> movimientosTransito;
 	private List<ComisionesDTO> comisiones;
+	private ComisionesTransDTO comisionesTransacciones;
 
 	public ConciliacionDTOList() {
 		super();
@@ -54,7 +55,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 			CuentaDTO cuenta, ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
 			GlobalDTO global, List<DevolucionConDTO> devoluciones, List<MovTransitoDTO> movimientosTransito,
-			List<ComisionesDTO> comisiones, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
+			List<ComisionesDTO> comisiones, ComisionesTransDTO comisionesTransacciones, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super();
 		Folio = folio;
 		this.estatus = estatus;
@@ -71,6 +72,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 		this.devoluciones = devoluciones;
 		this.movimientosTransito = movimientosTransito;
 		this.comisiones = comisiones;
+		this.comisionesTransacciones = comisionesTransacciones;
 		this.createdDate = createdDate;
 		this.lastModifiedDate = lastModifiedDate;
 		this.createdBy = createdBy;
@@ -197,6 +199,14 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 		this.comisiones = comisiones;
 	}
 
+	public ComisionesTransDTO getComisionesTransacciones() {
+		return comisionesTransacciones;
+	}
+
+	public void setComisionesTransacciones(ComisionesTransDTO comisionesTransacciones) {
+		this.comisionesTransacciones = comisionesTransacciones;
+	}
+
 	@Override
 	public String toString() {
 		return "ConciliacionDTOList [Folio=" + Folio + ", estatus=" + estatus + ", subEstatus=" + subEstatus
@@ -205,7 +215,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 				+ ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
 				+ reporteProveedorTransaccional + ", reporteEstadoCuenta=" + reporteEstadoCuenta + ", global=" + global
 				+ ", devoluciones=" + devoluciones + ", movimientosTransito=" + movimientosTransito + ", comisiones="
-				+ comisiones + "]";
+				+ comisiones + ", comisionesTransacciones=" + comisionesTransacciones + "]";
 	}
 
 	@Override

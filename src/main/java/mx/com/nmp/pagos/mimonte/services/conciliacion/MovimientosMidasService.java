@@ -96,13 +96,13 @@ public class MovimientosMidasService {
 	 * @param commonConciliacionRequestDTO
 	 * @return
 	 */
-	public List<MovimientoMidasDTO> findByFolio(final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
-		@SuppressWarnings("deprecation")
-		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
-				commonConciliacionRequestDTO.getResultados());
-		return MovimientosBuilder.buildMovimientoMidasDTOListFromMovimientoMidasList(movimientosMidasRepository
-				.findByReporteConciliacionId((long) commonConciliacionRequestDTO.getFolio(), pageable));
-	}
+//	public List<MovimientoMidasDTO> findByFolio(final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+//		@SuppressWarnings("deprecation")
+//		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
+//				commonConciliacionRequestDTO.getResultados());
+//		return MovimientosBuilder.buildMovimientoMidasDTOListFromMovimientoMidasList(movimientosMidasRepository
+//				.findByReporteConciliacionId((long) commonConciliacionRequestDTO.getFolio(), pageable));
+//	}
 
 	/**
 	 * 

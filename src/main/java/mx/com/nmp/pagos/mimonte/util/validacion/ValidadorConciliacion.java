@@ -22,12 +22,12 @@ public interface ValidadorConciliacion {
 	 * @param commonConciliacionRequestDTO
 	 * @return
 	 */
-	public static boolean validateCommonConciliacionRequestDTO(
-			final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
-		return (null != commonConciliacionRequestDTO && null != commonConciliacionRequestDTO.getFolio()
-				&& null != commonConciliacionRequestDTO.getPagina()
-				&& null != commonConciliacionRequestDTO.getResultados() && commonConciliacionRequestDTO.getFolio() > 0
-				&& commonConciliacionRequestDTO.getResultados() > 0 && commonConciliacionRequestDTO.getPagina() >= 0);
-	}
+//	public static boolean validateCommonConciliacionRequestDTO(
+//			final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+//		return (null != commonConciliacionRequestDTO && null != commonConciliacionRequestDTO.getFolio()
+//				&& null != commonConciliacionRequestDTO.getPagina()
+//				&& null != commonConciliacionRequestDTO.getResultados() && commonConciliacionRequestDTO.getFolio() > 0
+//				&& commonConciliacionRequestDTO.getResultados() > 0 && commonConciliacionRequestDTO.getPagina() >= 0);
+//	}
 
 }

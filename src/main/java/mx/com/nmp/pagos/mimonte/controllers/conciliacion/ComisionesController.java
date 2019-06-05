@@ -190,7 +190,7 @@ public class ComisionesController {
 		comisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		ComisionesTransProyeccionDTO comisionesTransProyeccionDTO = new ComisionesTransProyeccionDTO(
 				comisionesTransaccionesOperacionDTOList, new BigDecimal(33.00, MathContext.DECIMAL64));
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64),comisionesTransProyeccionDTO, comisionesTransRealDTO);
 		return comisionesTransDTO;
 	}
 
