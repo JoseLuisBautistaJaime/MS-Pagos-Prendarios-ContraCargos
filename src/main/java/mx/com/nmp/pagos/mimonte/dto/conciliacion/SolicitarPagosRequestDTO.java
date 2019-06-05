@@ -18,13 +18,13 @@ import java.util.List;
 public class SolicitarPagosRequestDTO implements Comparable<SolicitarPagosRequestDTO> {
 
 	private Integer folio;
-	private List<Integer> idMovimientos;
+	private List<Long> idMovimientos;
 
 	public SolicitarPagosRequestDTO() {
 		super();
 	}
 
-	public SolicitarPagosRequestDTO(Integer folio, List<Integer> idMovimientos) {
+	public SolicitarPagosRequestDTO(Integer folio, List<Long> idMovimientos) {
 		super();
 		this.folio = folio;
 		this.idMovimientos = idMovimientos;
@@ -38,11 +38,11 @@ public class SolicitarPagosRequestDTO implements Comparable<SolicitarPagosReques
 		this.folio = folio;
 	}
 
-	public List<Integer> getIdMovimientos() {
+	public List<Long> getIdMovimientos() {
 		return idMovimientos;
 	}
 
-	public void setIdMovimientos(List<Integer> idMovimientos) {
+	public void setIdMovimientos(List<Long> idMovimientos) {
 		this.idMovimientos = idMovimientos;
 	}
 

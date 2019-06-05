@@ -1261,3 +1261,11 @@ ALTER TABLE to_comision_transaccion_proyeccion ADD CONSTRAINT FK_to_comision_tra
 -- -------------------- [2019-05-31 11:27:25] ----------------------------- --
 -- ------------------------------------------------------------------------ --
 ALTER TABLE to_movimiento_comision CHANGE tipo tipo VARCHAR(50);
+
+-- ------------------------------------------------------------------------ --
+-- SE AGREGA COLUMNA Y FOREIGN KEY EN TABLA to_movimiento_conciliacion ---- --
+-- --------------- QUE PUNTE A LA TABLA to_movimiento_midas --------------- --
+-- -------------------- [2019-06-04 20:44:35] ----------------------------- --
+-- ------------------------------------------------------------------------ --
+ALTER TABLE to_movimiento_conciliacion ADD COLUMN id_movimiento_midas INT(11) NULL;
+ALTER TABLE to_movimiento_conciliacion ADD FOREIGN KEY (id_movimiento_midas) REFERENCES to_movimiento_midas(id);

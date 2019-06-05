@@ -103,6 +103,11 @@ public final class ConciliacionConstants {
 	public static final String COMISION_CANT_BE_DELETED = "La comision no puede ser eliminada ya que fue no fue dada de alta desde la aplicacion.";
 	
 	/**
+	 * Mensaje que es mostrado cuando no se encuentran contactos a los cuales enviar el email
+	 */
+	public static final String THERE_IS_NO_CONTACTS_TO_SEND_MAIL = "No existen contactos a los cuales enviar email";
+	
+	/**
 	 * Subclase de cosntantes que se mapearan de propiedades del archivo de
 	 * configuracion de spring
 	 * 

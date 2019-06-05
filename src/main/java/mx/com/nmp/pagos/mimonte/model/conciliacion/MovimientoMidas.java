@@ -7,12 +7,14 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,7 +32,12 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
  */
 @Entity
 @Table(name = "to_movimiento_midas")
-public class MovimientoMidas implements Comparable<MovimientoMidas> {
+public class MovimientoMidas implements Comparable<MovimientoMidas>, java.io.Serializable {
+
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -123,6 +130,9 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 
 	@Column(name = "id_tipo_contrato", nullable = true)
 	private Integer idTipoContrato;
+
+	@OneToMany(mappedBy = "movimientoMidas")
+	private Set<MovimientoConciliacion> movimientoConciliacionSet;
 
 	public Long getId() {
 		return id;
@@ -346,6 +356,14 @@ public class MovimientoMidas implements Comparable<MovimientoMidas> {
 
 	public void setIdTipoContrato(Integer idTipoContrato) {
 		this.idTipoContrato = idTipoContrato;
+	}
+
+	public Set<MovimientoConciliacion> getMovimientoConciliacionSet() {
+		return movimientoConciliacionSet;
+	}
+
+	public void setMovimientoConciliacionSet(Set<MovimientoConciliacion> movimientoConciliacionSet) {
+		this.movimientoConciliacionSet = movimientoConciliacionSet;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 
 /**
@@ -65,10 +66,15 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 			@Param("operacion") final Integer operacion, @Param("sucursales") List<Integer> sucursales,
 			@Param("partida") final Long partida);
 
-//	@Query(" SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO( mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoAbr, mm.operacionAbr, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE mm.idTipoContrato = :producto AND mm.folio= :partida AND mm.idOperacion = :operacion AND mm.sucursal IN :sucursales AND mm.fecha BETWEEN :fechaDesde AND :fechaHasta")
-//	public List<ReportePagosLibresDTO> getReportePagosLibresDynamic(@Param("fechaDesde") Date fechaDesde,
-//			@Param("fechaHasta") Date fechaHasta, @Param("producto") final Integer producto,
-//			@Param("operacion") final Integer operacion, @Param("sucursales") List<Integer> sucursales,
-//			@Param("partida") final Long partida);
+	/**
+	 * Regresa un objeto de tipo X (por definir) para envio de correo
+	 * 
+	 * @param folio
+	 * @param idsComisiones
+	 * @return
+	 */
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO(mt.folio, mt.sucursal, mt.fecha, mt.monto, mt.tipoContratoDesc, mt.cuenta, mt.titular) FROM MovimientoTransito mt WHERE mt.folio = :folio AND mt.id IN :idsComisiones")
+	public List<SolicitarPagosMailDataDTO> getDataByFolioAndIdMovimientos(@Param("folio") final Integer folio,
+			@Param("idsComisiones") final List<Long> idsComisiones);
 
 }

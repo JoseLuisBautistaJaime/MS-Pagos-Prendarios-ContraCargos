@@ -4,9 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,40 +29,21 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
-import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaIdPsRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMidasProveedorRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.CuentaDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesMovimientosDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusMovTransitoDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.GlobalDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteEstadoCuentaDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteProcesosNocturnosDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteProveedorTransaccionalDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
 /**
  * @name ConciliacionController
@@ -90,6 +69,13 @@ public class ConciliacionController {
 	@Autowired
 	private ConciliacionServiceImpl conciliacionServiceImpl;
 
+	/**
+	 * Repository de SolicitarPagosService
+	 */
+	@Autowired
+	@Qualifier("solicitarPagosService")
+	private SolicitarPagosService solicitarPagosService;
+	
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
@@ -281,28 +267,30 @@ public class ConciliacionController {
 //	}
 //	
 //	
-//	/**
-//	 *Permite realizar la solicitud de pagos no reflejados en Midas de los movimientos que se encuentran en tránsito.
-//	 * 
-//	 * @param solicitarPagosRequestDTO
-//	 * @param createdBy
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	@PostMapping(value = "/conciliacion/solicitarpagos", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//	@ApiOperation(httpMethod = "POST", value = "Permite realizar la solicitud de pagos no reflejados en Midas de los movimientos que se encuentran en tránsito.", tags = {
-//			"Conciliación" })
-//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Solicitud Pago Exitosa."),
-//			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-//			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-//			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-//	public Response solicitarPagos(@RequestBody SolicitarPagosRequestDTO solicitarPagosRequestDTO,
-//			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-//
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Pago Exitosa.", null);
-//	}
+	/**
+	 *Permite realizar la solicitud de pagos no reflejados en Midas de los movimientos que se encuentran en tránsito.
+	 * 
+	 * @param solicitarPagosRequestDTO
+	 * @param createdBy
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/conciliacion/solicitarpagos", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Permite realizar la solicitud de pagos no reflejados en Midas de los movimientos que se encuentran en tránsito.", tags = {
+			"Conciliación" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Solicitud Pago Exitosa."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response solicitarPagos(@RequestBody SolicitarPagosRequestDTO solicitarPagosRequestDTO,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		if(!ValidadorConciliacion.validateSolicitarPagosRequestDTO(solicitarPagosRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		solicitarPagosService.getDataByFolioAndIdMovimientos(solicitarPagosRequestDTO.getFolio(), solicitarPagosRequestDTO.getIdMovimientos());
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Pago Exitosa.", null);
+	}
 //	
 //	/**
 //	 * Marca las transacciones seleccionadas de movimientos en tránsito a movimientos de devolución para cuando los pagos solicitados no fueron realizados.
