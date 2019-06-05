@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
@@ -42,5 +44,16 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 */
 	@Query("SELECT mt FROM MovimientoConciliacion mc INNER JOIN MovimientoTransito mt ON mc.id = mt.id WHERE mt.idConciliacion = :folio")
 	public List<MovimientoTransito> findByIdConciliacion(@Param("folio") Integer folio);
+	
+	/**
+	 * Obtiene los movimientos en transito.
+	 * @param folio
+	 * @param idMovimiento
+	 * @return
+	 */
+	@Query("SELECT mt FROM MovimientoConciliacion mc INNER JOIN MovimientoTransito mt ON mc.id = mt.id WHERE mc.idConciliacion = :folio AND mt.id = :idMovimiento ")
+	public List<MovimientoTransito> findByIdFolioAndIdMovimiento(
+			@Param("folio") final Integer folio,
+			@Param("idMovimiento") final long idMovimiento);
 
 }

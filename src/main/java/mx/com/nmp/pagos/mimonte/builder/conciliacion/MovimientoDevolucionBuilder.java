@@ -45,6 +45,7 @@ public abstract class MovimientoDevolucionBuilder {
 			devolucionConDTO.setTitular(movimientoDevolucion.getTitular());
 			devolucionConDTO.setCodigiAutorizacion(movimientoDevolucion.getCodigoAutorizacion());
 			devolucionConDTO.setSucursal(movimientoDevolucion.getSucursal());
+			devolucionConDTO.setFechaLiquidacion(movimientoDevolucion.getFechaLiquidacion());
 
 		}
 		return devolucionConDTO;

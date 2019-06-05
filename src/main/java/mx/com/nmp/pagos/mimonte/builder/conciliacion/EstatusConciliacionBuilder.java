@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusConciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 
 /**
@@ -63,6 +64,17 @@ public abstract class EstatusConciliacionBuilder {
 			estatusConciliacion.setLastModifiedDate(null);
 		}
 		return estatusConciliacion;
+	}
+	
+	public static EstatusDevolucionDTO buildEstatusDevolucionDTOFromEstatusConciliacion(EstatusConciliacion estatusConciliacion) {
+		EstatusDevolucionDTO estatusDevolucionDTO = null;
+		if(estatusConciliacion != null) {
+			estatusDevolucionDTO = new EstatusDevolucionDTO();
+			estatusDevolucionDTO.setId(estatusConciliacion.getId());
+			estatusDevolucionDTO.setEstatus(estatusConciliacion.getEstatus());
+			estatusDevolucionDTO.setDescripcion(estatusConciliacion.getDescripcion());
+		}
+		return estatusDevolucionDTO;
 	}
 
 }

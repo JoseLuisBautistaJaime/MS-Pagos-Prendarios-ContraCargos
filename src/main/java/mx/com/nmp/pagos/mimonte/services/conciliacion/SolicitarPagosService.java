@@ -65,7 +65,7 @@ public class SolicitarPagosService {
 	 * @param folio
 	 * @param idsComisiones
 	 */
-	public void getDataByFolioAndIdMovimientos(final Integer folio, final List<Long> idsComisiones) {
+	public void getDataByFolioAndIdMovimientos(final Integer folio, final List<Integer> idsComisiones) {
 		// Declaracion de objetos y variables necesrios
 		List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList = null;
 		List<Contactos> contactos = null;

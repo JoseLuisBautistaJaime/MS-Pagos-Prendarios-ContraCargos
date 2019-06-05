@@ -18,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 
@@ -45,6 +47,7 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 	@Column(name = "sucursal")
 	private Integer sucursal;
 	
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha")
 	private Date fecha;
 	

@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 
@@ -32,7 +33,7 @@ public abstract class EstatusDevolucionesBuilder {
 			estatusDevolucionDTO = new EstatusDevolucionDTO();
 			estatusDevolucionDTO.setId(estatusDevolucion.getId());
 			estatusDevolucionDTO.setDescripcion(estatusDevolucion.getDescripcion());
-//			estatusDevolucionDTO.setEstatus(estatusDevolucion.getEstatus());
+			estatusDevolucionDTO.setEstatus(estatusDevolucion.getEstatus());
 		}
 		return estatusDevolucionDTO;
 	}
@@ -51,6 +52,22 @@ public abstract class EstatusDevolucionesBuilder {
 //			estatusDevolucion.setEstatus(estatusDevolucionDTO.getEstatus());
 		}
 		return estatusDevolucion;
+	}
+	
+	/**
+	 * Construye un objeto de tipo EstatusDevolucionDTO a partir de un entitie de tipo EstatusDevolucion.
+	 * @param estatusDevolucion
+	 * @return
+	 */
+	public static EstatusDevolucionDTO buildEstatusDevolucionDTOFromEstatusDevolucionSolicita(EstatusDevolucion estatusDevolucion) {
+		EstatusDevolucionDTO estatusDevolucionDTO = null;
+		if(estatusDevolucion != null) {
+			estatusDevolucionDTO = new EstatusDevolucionDTO();
+			estatusDevolucionDTO.setId(estatusDevolucion.getId());
+			estatusDevolucionDTO.setDescripcion(ConciliacionConstants.REQUEST);
+//			estatusDevolucionDTO.setEstatus(estatusDevolucion.getEstatus());
+		}
+		return estatusDevolucionDTO;
 	}
 
 }

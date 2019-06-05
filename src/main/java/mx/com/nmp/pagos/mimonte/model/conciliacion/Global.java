@@ -7,12 +7,15 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import mx.com.nmp.pagos.mimonte.model.Cuenta;
 
 /**
  * @author Quarksoft
@@ -66,7 +69,7 @@ public class Global implements Serializable{
 	@Column(name = "diferencia_proveedor_banco")
 	private BigDecimal diferenciaProveedorBanco;
 	
-	@ManyToOne(cascade = CascadeType.REFRESH)
+	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
 	@JoinColumn(name = "id_conciliacion",  insertable = false, updatable = false)
 	private Conciliacion conciliacion;
 
@@ -77,7 +80,8 @@ public class Global implements Serializable{
 
 	public Global(Long id, Date fecha, Integer movmientos, Integer partidas, BigDecimal monto, BigDecimal importeMidas,
 			BigDecimal importeProveedor, BigDecimal importeBanco, BigDecimal importeDevoluciones, Integer devoluciones,
-			BigDecimal diferenciaProveedorMidas, BigDecimal diferenciaProveedorBanco, Conciliacion conciliacion) {
+			BigDecimal diferenciaProveedorMidas, BigDecimal diferenciaProveedorBanco, Conciliacion conciliacion
+			) {
 		super();
 		this.id = id;
 		this.fecha = fecha;
@@ -303,5 +307,7 @@ public class Global implements Serializable{
 				+ devoluciones + ", diferenciaProveedorMidas=" + diferenciaProveedorMidas
 				+ ", diferenciaProveedorBanco=" + diferenciaProveedorBanco + ", conciliacion=" + conciliacion + "]";
 	}
+
+	
 	
 }

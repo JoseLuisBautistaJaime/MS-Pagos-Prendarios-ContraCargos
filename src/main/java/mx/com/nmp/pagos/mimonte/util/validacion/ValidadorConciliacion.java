@@ -345,7 +345,7 @@ public interface ValidadorConciliacion {
 			assertNotNull(solicitarPagosRequestDTO.getFolio());
 			assertNotNull(solicitarPagosRequestDTO.getIdMovimientos());
 			if (!solicitarPagosRequestDTO.getIdMovimientos().isEmpty())
-				for (Long val : solicitarPagosRequestDTO.getIdMovimientos())
+				for (Integer val : solicitarPagosRequestDTO.getIdMovimientos())
 					assertNotNull(val);
 			else
 				return false;

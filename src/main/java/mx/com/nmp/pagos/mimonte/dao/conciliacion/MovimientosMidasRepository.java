@@ -75,6 +75,6 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO(mt.folio, mt.sucursal, mt.fecha, mt.monto, mt.tipoContratoDesc, mt.cuenta, mt.titular) FROM MovimientoTransito mt WHERE mt.folio = :folio AND mt.id IN :idsComisiones")
 	public List<SolicitarPagosMailDataDTO> getDataByFolioAndIdMovimientos(@Param("folio") final Integer folio,
-			@Param("idsComisiones") final List<Long> idsComisiones);
+			@Param("idsComisiones") final List<Integer> idsComisiones);
 
 }

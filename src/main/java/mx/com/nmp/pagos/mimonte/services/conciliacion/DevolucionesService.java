@@ -4,7 +4,16 @@ import java.util.Date;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaDevolucionesRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesMovimientosDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.FormatoReporteEnum;
 
 /**
@@ -12,86 +21,118 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.FormatoReporteEnum;
  * @version 1.0
  * @created 31-Mar-2019 6:33:41 PM
  */
-public class DevolucionesService {
+public interface DevolucionesService {
 
-	public DevolucionesService(){
+//	public void finalize() throws Throwable {
+//
+//	}
 
-	}
-
-	public void finalize() throws Throwable {
-
-	}
-
+//	/**
+//	 * 
+//	 * @param movimientos
+//	 * @param usuario
+//	 */
+//	public void solicitarDevolucion(List<Long> movimientos, String usuario);
+//
+//	/**
+//	 * 
+//	 * @param idConciliacion
+//	 */
+//	public List<DevolucionDTO> listByConciliacion(Long idConciliacion);
+//
+//	/**
+//	 * 
+//	 * @param criterios
+//	 * @param page
+//	 * @param pageSize
+//	 */
+//	public List<DevolucionDTO> search(ConsultaDevolucionesRequestDTO criterios, Integer page, Integer pageSize);
+//
+//	/**
+//	 * 
+//	 * @param criterios
+//	 */
+//	public Integer count(ConsultaDevolucionesRequestDTO criterios);
+//
+//	/**
+//	 * 
+//	 * @param id
+//	 * @param fechaLiquidacion
+//	 * @param usuario
+//	 */
+//	public void actualizar(Long id, Date fechaLiquidacion, String usuario);
+//
+//	/**
+//	 * 
+//	 * @param id
+//	 * @param usuario
+//	 */
+//	public void liquidar(Long id, String usuario);
+//
+//	/**
+//	 * 
+//	 * @param id
+//	 * @param usuario
+//	 */
+//	public void solicitar(Long id, String usuario);
+//
+//	/**
+//	 * 
+//	 * @param idConciliacion
+//	 * @param formato
+//	 */
+//	public void exportarDevoluciones(Long idConciliacion, FormatoReporteEnum formato);
+	
 	/**
 	 * 
-	 * @param movimientos
+	 * @param folio
+	 * @return
+	 */
+	public List<DevolucionConDTO> consultaDevolucion(Integer folio);
+	
+	/**
+	 * 
+	 * @param liquidarDevoluciones
 	 * @param usuario
+	 * @return
 	 */
-	public void solicitarDevolucion(List<Long> movimientos, String usuario){
-
-	}
-
+	public List<DevolucionEntidadDTO> liquidarDevoluciones(LiquidacionMovimientosRequestDTO liquidarDevoluciones, String usuario);
+	
 	/**
 	 * 
-	 * @param idConciliacion
-	 */
-	public List<DevolucionDTO> listByConciliacion(Long idConciliacion){
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param criterios
-	 * @param page
-	 * @param pageSize
-	 */
-	public List<DevolucionDTO> search(ConsultaDevolucionesRequestDTO criterios, Integer page, Integer pageSize){
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param criterios
-	 */
-	public Integer count(ConsultaDevolucionesRequestDTO criterios){
-		return 0;
-	}
-
-	/**
-	 * 
-	 * @param id
-	 * @param fechaLiquidacion
+	 * @param folios
 	 * @param usuario
+	 * @return
 	 */
-	public void actualizar(Long id, Date fechaLiquidacion, String usuario){
-
-	}
-
+	public List<DevolucionEntidadDTO> solicitarDevoluciones(FolioRequestDTO folios, String usuario);
+	
 	/**
 	 * 
-	 * @param id
-	 * @param usuario
+	 * @param devoluciones
+	 * @return
 	 */
-	public void liquidar(Long id, String usuario){
-
-	}
-
+	public List<DevolucionEntidadDTO> actualizacionDevoluciones(List<DevolucionUpdtDTO> devoluciones);
+	
 	/**
 	 * 
-	 * @param id
-	 * @param usuario
+	 * @param devoluciones
+	 * @return
 	 */
-	public void solicitar(Long id, String usuario){
-
-	}
-
+	public List<DevolucionEntidadDTO> consulta(DevolucionRequestDTO devoluciones);
+	
 	/**
 	 * 
-	 * @param idConciliacion
-	 * @param formato
+	 * @param solicitar
+	 * @return
 	 */
-	public void exportarDevoluciones(Long idConciliacion, FormatoReporteEnum formato){
-
-	}
-
+	public List<DevolucionEntidadDTO>  solicitar(DevolucionesIdsMovimientosDTO solicitar);
+	
+	/**
+	 * 
+	 * @param marcarDevoluciones
+	 * @param createdBy
+	 * @return
+	 */
+	public List<DevolucionConDTO> marcarDevolucion(SolicitarPagosRequestDTO marcarDevoluciones, String createdBy);
+	
 }
