@@ -39,6 +39,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionSaveResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransProyeccionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransRealDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesOperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -184,13 +185,14 @@ public class ComisionesController {
 				"Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64),
 				new BigDecimal(19.00, MathContext.DECIMAL64));
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO(
-				"Pagos", 15L, new BigDecimal(12.00, MathContext.DECIMAL64), new BigDecimal(2.00, MathContext.DECIMAL64),
+				"Devoluciones", 15L, new BigDecimal(12.00, MathContext.DECIMAL64), new BigDecimal(2.00, MathContext.DECIMAL64),
 				new BigDecimal(14.00, MathContext.DECIMAL64));
 		comisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		comisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		ComisionesTransProyeccionDTO comisionesTransProyeccionDTO = new ComisionesTransProyeccionDTO(
 				comisionesTransaccionesOperacionDTOList, new BigDecimal(33.00, MathContext.DECIMAL64));
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64),comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		
+		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(comisionesTransProyeccionDTO, comisionesTransRealDTO);
 		return comisionesTransDTO;
 	}
 

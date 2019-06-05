@@ -36,9 +36,9 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaIdPsRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaSubEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransProyeccionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransRealDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesOperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
@@ -584,73 +584,73 @@ public class ConciliacionController {
 		return conciliacionDTO;
 	}
 
-	public static ConciliacionDTOList buildConsultaMidasProveedorDummy() {
-
-		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1, "En proceso", true);
-
-		SubEstatusConciliacionDTO subEstatusConciliacionDTO = new SubEstatusConciliacionDTO(1, "Creada");
-
-		EntidadDTO entidadDTO = new EntidadDTO(1, "Banco Banamex", true, "Banamex");
-
-		CuentaDTO cuentaDTO = new CuentaDTO(1, "1122131", true);
-
-		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO(new Date(),
-				new Date(), false);
-
-		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO(
-				new Date(), new Date(), false);
-
-		ReporteEstadoCuentaDTO reporteEstadoCuentaDTO = new ReporteEstadoCuentaDTO(new Date(), new Date(), false);
-
-		GlobalDTO globalDTO = new GlobalDTO(1, new Date(), 300L, 250L, new BigDecimal(404607.92, MathContext.DECIMAL64),
-				new BigDecimal(404607.92, MathContext.DECIMAL64), new BigDecimal(404607.92, MathContext.DECIMAL64),
-				new BigDecimal(150.00, MathContext.DECIMAL64), new BigDecimal(0.00, MathContext.DECIMAL64),
-				new BigDecimal(0.00, MathContext.DECIMAL64));
-
-		EstatusDevolucionDTO estatusDevolucionDTO = new EstatusDevolucionDTO(1, "Pendiente", true);
-
-		List<DevolucionConDTO> devolucionDTOList = new ArrayList<>();
-
-		DevolucionConDTO devolucionDTO = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO,
-				new BigDecimal(150.00, MathContext.DECIMAL64), "Visa", "4152xxxxxxxx9531", "Juana Garcia Garcia",
-				"859363", 3);
-
-		devolucionDTOList.add(devolucionDTO);
-
-		List<MovTransitoDTO> movTransitoDTOlist = new ArrayList<>();
-
-		EstatusMovTransitoDTO estatusMovTransitoDTO = new EstatusMovTransitoDTO(1, "No identificada en midas", true);
-
-		MovTransitoDTO movTransitoDTO = new MovTransitoDTO(1, estatusMovTransitoDTO, 821547220, null, new Date(),
-				"Pago", new BigDecimal(218.87, MathContext.DECIMAL64), "", "Mastercard", "557920xxxxxxxx8994",
-				"Mariana Rodriguez Urbano");
-
-		movTransitoDTOlist.add(movTransitoDTO);
-
-		List<ComisionesDTO> comisionesDTOList = new ArrayList<>();
-
-		ComisionesDTO comisionesDTO = new ComisionesDTO(1, new Date(), new Date(),
-				new BigDecimal(1500.00, MathContext.DECIMAL64), "Cargo diverso sucursal");
-
-		comisionesDTOList.add(comisionesDTO);
-		
-		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
-		
-		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
-		
-		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
-		
-		ComisionesTransProyeccionDTO comisionesTransProyeccionDTO = new ComisionesTransProyeccionDTO(ComisionesTransaccionesOperacionDTOList,	new BigDecimal(33.00, MathContext.DECIMAL64));
-		
-		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
-		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
-
-		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(1L, estatusConciliacionDTO, subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO, reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionDTOList,
-				movTransitoDTOlist, comisionesDTOList, comisionesTransDTO ,  new Date(), new Date(), "NMP", "NMP");
-
-		return conciliacionDTOList;
-	}
+//	public static ConciliacionDTOList buildConsultaMidasProveedorDummy() {
+//
+//		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1, "En proceso", true);
+//
+//		SubEstatusConciliacionDTO subEstatusConciliacionDTO = new SubEstatusConciliacionDTO(1, "Creada");
+//
+//		EntidadDTO entidadDTO = new EntidadDTO(1, "Banco Banamex", true, "Banamex");
+//
+//		CuentaDTO cuentaDTO = new CuentaDTO(1, "1122131", true);
+//
+//		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO(new Date(),
+//				new Date(), false);
+//
+//		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO(
+//				new Date(), new Date(), false);
+//
+//		ReporteEstadoCuentaDTO reporteEstadoCuentaDTO = new ReporteEstadoCuentaDTO(new Date(), new Date(), false);
+//
+//		GlobalDTO globalDTO = new GlobalDTO(1, new Date(), 300L, 250L, new BigDecimal(404607.92, MathContext.DECIMAL64),
+//				new BigDecimal(404607.92, MathContext.DECIMAL64), new BigDecimal(404607.92, MathContext.DECIMAL64),
+//				new BigDecimal(150.00, MathContext.DECIMAL64), new BigDecimal(0.00, MathContext.DECIMAL64),
+//				new BigDecimal(0.00, MathContext.DECIMAL64));
+//
+//		EstatusDevolucionDTO estatusDevolucionDTO = new EstatusDevolucionDTO(1, "Pendiente", true);
+//
+//		List<DevolucionConDTO> devolucionDTOList = new ArrayList<>();
+//
+//		DevolucionConDTO devolucionDTO = new DevolucionConDTO(1, new Date(), estatusDevolucionDTO,
+//				new BigDecimal(150.00, MathContext.DECIMAL64), "Visa", "4152xxxxxxxx9531", "Juana Garcia Garcia",
+//				"859363", 3);
+//
+//		devolucionDTOList.add(devolucionDTO);
+//
+//		List<MovTransitoDTO> movTransitoDTOlist = new ArrayList<>();
+//
+//		EstatusMovTransitoDTO estatusMovTransitoDTO = new EstatusMovTransitoDTO(1, "No identificada en midas", true);
+//
+//		MovTransitoDTO movTransitoDTO = new MovTransitoDTO(1, estatusMovTransitoDTO, 821547220, null, new Date(),
+//				"Pago", new BigDecimal(218.87, MathContext.DECIMAL64), "", "Mastercard", "557920xxxxxxxx8994",
+//				"Mariana Rodriguez Urbano");
+//
+//		movTransitoDTOlist.add(movTransitoDTO);
+//
+//		List<ComisionesDTO> comisionesDTOList = new ArrayList<>();
+//
+//		ComisionesDTO comisionesDTO = new ComisionesDTO(1, new Date(), new Date(),
+//				new BigDecimal(1500.00, MathContext.DECIMAL64), "Cargo diverso sucursal");
+//
+//		comisionesDTOList.add(comisionesDTO);
+//		
+//		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
+//		
+//		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+//		
+//		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
+//		
+//		ComisionesTransProyeccionDTO comisionesTransProyeccionDTO = new ComisionesTransProyeccionDTO(ComisionesTransaccionesOperacionDTOList,	new BigDecimal(33.00, MathContext.DECIMAL64));
+//		
+//		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
+//		
+//		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+//
+//		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(1L, estatusConciliacionDTO, subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO, reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionDTOList,
+//				movTransitoDTOlist, comisionesDTOList, comisionesTransaccionesDTO ,  new Date(), new Date(), "NMP", "NMP");
+//
+//		return conciliacionDTOList;
+//	}
 
 	public static ConciliacionDTOList buildConsultaFolioDummy1() {
 
@@ -706,18 +706,21 @@ public class ConciliacionController {
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
 		
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
 		ComisionesTransProyeccionDTO comisionesTransProyeccionDTO = new ComisionesTransProyeccionDTO(ComisionesTransaccionesOperacionDTOList,	new BigDecimal(33.00, MathContext.DECIMAL64));
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(1L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -776,6 +779,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -783,12 +789,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(2L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -848,6 +854,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -855,12 +864,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(3L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -919,6 +928,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -926,12 +938,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(4L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -990,6 +1002,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -997,12 +1012,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(5L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1062,6 +1077,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1069,12 +1087,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(6L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1134,6 +1152,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1141,12 +1162,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(7L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1205,6 +1226,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1212,12 +1236,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(8L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1277,6 +1301,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1284,12 +1311,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(9L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO,new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO,new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1348,6 +1375,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1355,12 +1385,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(10L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1420,6 +1450,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1427,12 +1460,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(11L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1492,6 +1525,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1499,12 +1535,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(12L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1564,6 +1600,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1571,12 +1610,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(13L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1635,6 +1674,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1642,12 +1684,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(14L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1706,6 +1748,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1713,12 +1758,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(15L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", null, null, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 
@@ -1777,6 +1822,9 @@ public class ConciliacionController {
 		List<ComisionesTransaccionesOperacionDTO> ComisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		
 		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO = new ComisionesTransaccionesOperacionDTO("Pagos", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		ComisionesTransaccionesOperacionDTO comisionesTransaccionesOperacionDTO2 = new ComisionesTransaccionesOperacionDTO("Devoluciones", 15L, new BigDecimal(15.00, MathContext.DECIMAL64),	new BigDecimal(4.00, MathContext.DECIMAL64),	new BigDecimal(19.00, MathContext.DECIMAL64));
+		
+		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO2);
 		
 		ComisionesTransaccionesOperacionDTOList.add(comisionesTransaccionesOperacionDTO);
 		
@@ -1784,12 +1832,12 @@ public class ConciliacionController {
 		
 		ComisionesTransRealDTO comisionesTransRealDTO = new ComisionesTransRealDTO(new BigDecimal(15.00, MathContext.DECIMAL64), new BigDecimal(4.00, MathContext.DECIMAL64), new BigDecimal(19.00, MathContext.DECIMAL64));
 		
-		ComisionesTransDTO comisionesTransDTO = new ComisionesTransDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
+		ComisionesTransaccionesDTO comisionesTransaccionesDTO = new ComisionesTransaccionesDTO(new Date(), new Date(), new BigDecimal(4.5, MathContext.DECIMAL64), comisionesTransProyeccionDTO, comisionesTransRealDTO);
 
 		ConciliacionDTOList conciliacionDTOList = new ConciliacionDTOList(16L, estatusConciliacionDTO,
 				subEstatusConciliacionDTO, "", 1L, 1L, entidadDTO, cuentaDTO, reporteProcesosNocturnosDTO,
 				reporteProveedorTransaccionalDTO, reporteEstadoCuentaDTO, globalDTO, devolucionConDTOList,
-				movTransitoDTOList, comisionesDTOList, comisionesTransDTO, new Date(), new Date(), "NMP", "NMP");
+				movTransitoDTOList, comisionesDTOList, comisionesTransaccionesDTO, new Date(), new Date(), "NMP", "NMP");
 
 		return conciliacionDTOList;
 

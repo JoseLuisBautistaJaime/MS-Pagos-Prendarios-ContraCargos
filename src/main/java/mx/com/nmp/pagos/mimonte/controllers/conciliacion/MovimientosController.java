@@ -32,9 +32,7 @@ import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEdoCtaReq;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEdoCtaRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoIDDTO;
@@ -159,7 +157,16 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientosNocturnos(@RequestBody CommonConciliacionEstatusRequestDTO commonConciliacionRequestDTO) {
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
-		movimientoProcesosNocturnosListDTO = buildDummyX2();
+		
+		if(commonConciliacionRequestDTO.getEstatus() == null) {
+			movimientoProcesosNocturnosListDTO = null;
+		}
+		if(commonConciliacionRequestDTO.getEstatus() == true) {
+			movimientoProcesosNocturnosListDTO = buildDummyX2();
+		}
+		if(commonConciliacionRequestDTO.getEstatus() == false) {
+			movimientoProcesosNocturnosListDTO = buildDummyX2False();
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoProcesosNocturnosListDTO);
 	}
@@ -238,7 +245,7 @@ public class MovimientosController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response altaMovimientosEdoCta(@RequestBody List<MovimientoEdoCtaRequest> movimientoEdoCtaReq, @RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+	public Response altaMovimientosEdoCta(@RequestBody MovimientoEdoCtaRequest movimientoEdoCtaReq, @RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta Exitosa.", null);
 	}
@@ -312,6 +319,39 @@ public class MovimientosController {
 		movimientoProcesosNocturnosDTO.setInteres(new BigDecimal("24.52"));
 		movimientoProcesosNocturnosDTO.setMontoOperacion(new BigDecimal("123.45"));
 		movimientoProcesosNocturnosDTO.setNumAutorizacion("12345");
+		movimientoProcesosNocturnosDTO.setOperacionAbr("APL");
+		movimientoProcesosNocturnosDTO.setOperacionDesc("Abonos Pagos-Libres");
+		movimientoProcesosNocturnosDTO.setSucursal(12L);
+		movimientoProcesosNocturnosDTO.setTipoContratoAbr("PL");
+		movimientoProcesosNocturnosDTO.setTipoContratoDesc("Pagos Libres");
+		movimientoProcesosNocturnosDTO.setEstadoTransaccion("En proceso");
+		movimientoProcesosNocturnosDTO.setImporteTransaccion(new BigDecimal("101.2"));
+		movimientoProcesosNocturnosDTO.setConsumidor("123");
+		movimientoProcesosNocturnosListDTO.setTotal(400);
+		List<MovimientoMidasDTO> lst = new ArrayList<>();
+		lst.add(movimientoProcesosNocturnosDTO);
+		movimientoProcesosNocturnosListDTO.setMovimientos(lst);
+		return movimientoProcesosNocturnosListDTO;
+	}
+	
+	/**
+	 * Construye una respuesta dummy
+	 * 
+	 * @return
+	 */
+	public static MovimientoProcesosNocturnosListDTO buildDummyX2False() {
+		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
+		MovimientoMidasDTO movimientoProcesosNocturnosDTO = new MovimientoMidasDTO();
+		movimientoProcesosNocturnosDTO.setId(1L);
+		movimientoProcesosNocturnosDTO.setTransaccion(1L);
+		movimientoProcesosNocturnosDTO.setCapitalActual(new BigDecimal("430.12"));
+		movimientoProcesosNocturnosDTO.setComisiones(new BigDecimal("12.23"));
+		movimientoProcesosNocturnosDTO.setEstatus(false);
+		movimientoProcesosNocturnosDTO.setFecha(new Date());
+		movimientoProcesosNocturnosDTO.setFolioPartida(5789L);
+		movimientoProcesosNocturnosDTO.setInteres(new BigDecimal("27.52"));
+		movimientoProcesosNocturnosDTO.setMontoOperacion(new BigDecimal("154.45"));
+		movimientoProcesosNocturnosDTO.setNumAutorizacion("6789");
 		movimientoProcesosNocturnosDTO.setOperacionAbr("APL");
 		movimientoProcesosNocturnosDTO.setOperacionDesc("Abonos Pagos-Libres");
 		movimientoProcesosNocturnosDTO.setSucursal(12L);

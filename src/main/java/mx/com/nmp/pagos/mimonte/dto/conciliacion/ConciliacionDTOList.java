@@ -38,7 +38,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 	private List<DevolucionConDTO> devoluciones;
 	private List<MovTransitoDTO> movimientosTransito;
 	private List<ComisionesDTO> comisiones;
-	private ComisionesTransDTO comisionesTransacciones;
+	private ComisionesTransaccionesDTO comisionesTransacciones;
 
 	public ConciliacionDTOList() {
 		super();
@@ -55,7 +55,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 			CuentaDTO cuenta, ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
 			GlobalDTO global, List<DevolucionConDTO> devoluciones, List<MovTransitoDTO> movimientosTransito,
-			List<ComisionesDTO> comisiones, ComisionesTransDTO comisionesTransacciones, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
+			List<ComisionesDTO> comisiones, ComisionesTransaccionesDTO comisionesTransacciones, Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super();
 		Folio = folio;
 		this.estatus = estatus;
@@ -199,11 +199,11 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 		this.comisiones = comisiones;
 	}
 
-	public ComisionesTransDTO getComisionesTransacciones() {
+	public ComisionesTransaccionesDTO getComisionesTransacciones() {
 		return comisionesTransacciones;
 	}
 
-	public void setComisionesTransacciones(ComisionesTransDTO comisionesTransacciones) {
+	public void setComisionesTransacciones(ComisionesTransaccionesDTO comisionesTransacciones) {
 		this.comisionesTransacciones = comisionesTransacciones;
 	}
 
