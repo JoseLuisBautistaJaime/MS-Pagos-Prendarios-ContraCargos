@@ -52,6 +52,9 @@ spring:
 mimonte:
   variables:
     mail:
+      response:
+        resp-key: respuesta
+        cod-key: codigo
       from: mail@nmp.com
       auth:
         user: mimonte
@@ -75,6 +78,7 @@ mimonte:
           content-type-value: application/x-www-form-urlencoded
         url: https://iamdr.montepiedad.com.mx:4444/NMP/oauth2/v1
       send-mail:
+        success-flag: success
         headers:
           oauth-bearer-key: oauth.bearer
           content-type-value: application/json

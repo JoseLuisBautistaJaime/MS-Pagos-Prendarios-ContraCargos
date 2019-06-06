@@ -46,13 +46,10 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
-			assertNotNull(commonConciliacionRequestDTO.getPagina());
-			assertNotNull(commonConciliacionRequestDTO.getResultados());
 		} catch (Exception ex) {
 			return false;
 		}
-		return (commonConciliacionRequestDTO.getFolio() > 0 && commonConciliacionRequestDTO.getResultados() > 0
-				&& commonConciliacionRequestDTO.getPagina() >= 0);
+		return (commonConciliacionRequestDTO.getFolio() > 0);
 	}
 
 	/**
@@ -67,13 +64,10 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
-			assertNotNull(commonConciliacionRequestDTO.getPagina());
-			assertNotNull(commonConciliacionRequestDTO.getResultados());
 		} catch (Exception ex) {
 			return false;
 		}
-		return (commonConciliacionRequestDTO.getFolio() > 0 && commonConciliacionRequestDTO.getResultados() > 0
-				&& commonConciliacionRequestDTO.getPagina() >= 0);
+		return (commonConciliacionRequestDTO.getFolio() > 0);
 	}
 
 	/**

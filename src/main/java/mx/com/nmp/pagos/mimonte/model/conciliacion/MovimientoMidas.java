@@ -134,6 +134,15 @@ public class MovimientoMidas implements Comparable<MovimientoMidas>, java.io.Ser
 	@OneToMany(mappedBy = "movimientoMidas")
 	private Set<MovimientoConciliacion> movimientoConciliacionSet;
 
+	public MovimientoMidas(Long id) {
+		super();
+		this.id = id;
+	}
+	
+	public MovimientoMidas() {
+		super();
+	}
+	
 	public Long getId() {
 		return id;
 	}

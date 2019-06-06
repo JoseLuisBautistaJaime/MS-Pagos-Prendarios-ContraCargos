@@ -4,24 +4,39 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.constans.LayoutMailConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dao.TipoContactoRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosPagoRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.GeneralBusMailDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosAdjuntoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
+import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.TipoContacto;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
  * @name SolicitarPagosService
@@ -36,11 +51,37 @@ import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 public class SolicitarPagosService {
 
 	/**
+	 * Instancia que registra los eventos en la bitacora
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(SolicitarPagosService.class);
+
+	/**
 	 * Repository de movimientos nocturnos (midas)
 	 */
 	@Autowired
 	@Qualifier("movimientosMidasRepository")
 	private MovimientosMidasRepository movimientosMidasRepository;
+
+	/**
+	 * Repository de MovimientoConciliacionRepository
+	 */
+	@Autowired
+	@Qualifier("movimientoConciliacionRepository")
+	private MovimientoConciliacionRepository movimientoConciliacionRepository;
+
+	/**
+	 * Repository de MovimientosPagoRepository
+	 */
+	@Autowired
+	@Qualifier("movimientosPagoRepository")
+	private MovimientosPagoRepository movimientosPagoRepository;
+
+	/**
+	 * Repository de MovimientoTransitoRepository
+	 */
+	@Autowired
+	@Qualifier("movimientoTransitoRepository")
+	private MovimientoTransitoRepository movimientoTransitoRepository;
 
 	/**
 	 * Repository de tipo contacto
@@ -54,10 +95,31 @@ public class SolicitarPagosService {
 	@Autowired
 	private ContactoRespository contactoRespository;
 
+	/**
+	 * Objeto para consumo de servicio Rest para envio de e-mail
+	 */
 	@Autowired
 	@Qualifier("busMailRestService")
 	private BusMailRestService busMailRestService;
-	
+
+	/**
+	 * Mail from para envio de e-mail
+	 */
+	@Value(value = "${mimonte.variables.mail.from}")
+	private String mailFrom;
+
+	/**
+	 * Usuario para envio de e-mail
+	 */
+	@Value(value = "${mimonte.variables.mail.auth.user}")
+	private String mailUser;
+
+	/**
+	 * Password para envio de e-mail
+	 */
+	@Value(value = "${mimonte.variables.mail.auth.password}")
+	private String mailPass;
+
 	/**
 	 * Regresa un objeto de tipo X (por definir) con la infromacion que se debe
 	 * enviar por mail para la solicitud de pagos
@@ -65,22 +127,40 @@ public class SolicitarPagosService {
 	 * @param folio
 	 * @param idsComisiones
 	 */
-	public void getDataByFolioAndIdMovimientos(final Integer folio, final List<Integer> idsComisiones) {
-		// Declaracion de objetos y variables necesrios
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void getDataByFolioAndIdMovimientos(final Integer folio, final List<Integer> idsMovimientos, final String createdBy) {
+		// Declaracion de objetos y variables necesarios
 		List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList = null;
 		List<Contactos> contactos = null;
+		List<MovimientoConciliacion> movimientoConciliacionList = null;
+		List<MovimientoTransito> movimientoTransitoList = null;
 		GeneralBusMailDTO generalBusMailDTO = null;
 		StringBuilder contacts = null;
 		TipoContacto tipoContacto = null;
 		StringBuilder dataTable = null;
 		String bearerToken = null;
-		@SuppressWarnings("unused")
-		String response = null;
+		boolean statusResponse = true;
 		String mainHtml = null;
 		String htmlMail = null;
 		int ct = 0;
-		// Consultar datos
-		solicitarPagosMailDataDTOList = movimientosMidasRepository.getDataByFolioAndIdMovimientos(folio, idsComisiones);
+		// Consultar datos, actualizacion y generacion de registros en pagos
+		// Consulta
+		solicitarPagosMailDataDTOList = movimientosMidasRepository.getDataByFolioAndIdMovimientos(folio,
+				idsMovimientos);
+		// Actualiza
+		movimientoTransitoList = movimientoTransitoRepository.findByFolioAndIds(folio, idsMovimientos);
+		if (null == movimientoTransitoList || movimientoTransitoList.isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
+		for (MovimientoTransito mt : movimientoTransitoList) {
+			mt.setEstatus(new EstatusTransito(2));
+		}
+		movimientoTransitoRepository.saveAll(movimientoTransitoList);
+		// Inserta
+		movimientoConciliacionList = movimientoConciliacionRepository.findByFolioAndIds(folio, idsMovimientos);
+		if (null == movimientoConciliacionList || movimientoConciliacionList.isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
+		movimientosPagoRepository.saveAll(
+				MovimientosBuilder.buildMovimientoPagoListFromMovimientoConciliacionList(movimientoConciliacionList, createdBy));
 		if (null == solicitarPagosMailDataDTOList || solicitarPagosMailDataDTOList.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
 		// Se obtienen los contactos de midas
@@ -109,10 +189,15 @@ public class SolicitarPagosService {
 			contacts.append(cto.getEmail());
 			ct++;
 		}
-		generalBusMailDTO = new GeneralBusMailDTO(contacts.toString(), "mail@nmp.com", "Solicitud de Pagos", htmlMail,
-				null);
-		bearerToken = busMailRestService.postForGetToken("mimonte", "iXjqY2ccS783PTF0");
-		response = busMailRestService.postMail("mimonte", "iXjqY2ccS783PTF0",generalBusMailDTO, bearerToken);
+		generalBusMailDTO = new GeneralBusMailDTO(contacts.toString(), mailFrom, "Solicitud de Pagos", htmlMail,
+				new SolicitarPagosAdjuntoDTO(new ArrayList<>()));
+		bearerToken = busMailRestService.postForGetToken(mailUser, mailPass);
+		if (null == bearerToken || "".equals(bearerToken))
+			throw new ConciliacionException(ConciliacionConstants.CANNOT_GET_MAIL_TOKEN);
+		statusResponse = busMailRestService.postMail(mailUser, mailPass, generalBusMailDTO, bearerToken);
+		LOG.debug(statusResponse ? "Mail enviado correctamente" : "Error al enviar el e-mail");
+		if (!statusResponse)
+			throw new ConciliacionException(ConciliacionConstants.MAIL_CANNOT_BE_SEND);
 	}
 
 	/**

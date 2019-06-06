@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 
 /**
  * @name MovimientoConciliacionRepository
@@ -26,8 +25,20 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
  */
 @Repository("movimientoConciliacionRepository")
 public interface MovimientoConciliacionRepository extends JpaRepository<MovimientoConciliacion, Integer> {
-	
+
 	@Query("SELECT mc FROM MovimientoConciliacion mc WHERE mc.idConciliacion = :folio")
 	public List<MovimientoConciliacion> findByFolio(@Param("folio") Integer folio);
+
+	/**
+	 * Regresa una lista de MovimientoConciliacion por folio de conciliacion e ids
+	 * de MovimientoConciliacion
+	 * 
+	 * @param folio
+	 * @param idMovimientos
+	 * @return
+	 */
+	@Query("SELECT mc FROM MovimientoConciliacion mc WHERE mc.idConciliacion = :folio AND mc.id IN :idMovimientos")
+	public List<MovimientoConciliacion> findByFolioAndIds(@Param("folio") final Integer folio,
+			@Param("idMovimientos") final List<Integer> idMovimientos);
 
 }

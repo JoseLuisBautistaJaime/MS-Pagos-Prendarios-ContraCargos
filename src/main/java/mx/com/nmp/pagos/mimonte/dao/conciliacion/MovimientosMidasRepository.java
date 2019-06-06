@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO;
+import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 
 /**
@@ -37,7 +39,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 */
 	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
 	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId,
-			@Param("estatus") final Boolean estatus, Pageable pageable);
+			@Param("estatus") final Boolean estatus/*, Pageable pageable*/);
 
 	/**
 	 * Regresa el total de registros midas por id de conciliacion

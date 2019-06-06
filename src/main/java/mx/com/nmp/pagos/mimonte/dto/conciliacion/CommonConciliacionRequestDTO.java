@@ -16,18 +16,14 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 public class CommonConciliacionRequestDTO implements Comparable<CommonConciliacionRequestDTO> {
 
 	private Integer folio;
-	private Integer resultados;
-	private Integer pagina;
 
 	public CommonConciliacionRequestDTO() {
 		super();
 	}
 
-	public CommonConciliacionRequestDTO(Integer folio, Integer resultados, Integer pagina) {
+	public CommonConciliacionRequestDTO(Integer folio) {
 		super();
 		this.folio = folio;
-		this.resultados = resultados;
-		this.pagina = pagina;
 	}
 
 	public Integer getFolio() {
@@ -38,26 +34,9 @@ public class CommonConciliacionRequestDTO implements Comparable<CommonConciliaci
 		this.folio = folio;
 	}
 
-	public Integer getResultados() {
-		return resultados;
-	}
-
-	public void setResultados(Integer resultados) {
-		this.resultados = resultados;
-	}
-
-	public Integer getPagina() {
-		return pagina;
-	}
-
-	public void setPagina(Integer pagina) {
-		this.pagina = pagina;
-	}
-
 	@Override
 	public String toString() {
-		return "CommonConciliacionRequestDTO [folio=" + folio + ", resultados=" + resultados + ", pagina=" + pagina
-				+ "]";
+		return "CommonConciliacionRequestDTO [folio=" + folio + "]";
 	}
 
 	@Override

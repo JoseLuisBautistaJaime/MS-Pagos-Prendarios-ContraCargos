@@ -128,6 +128,16 @@ public final class ConciliacionConstants {
 	public static final String THERE_IS_NO_CONTACTS_TO_SEND_MAIL = "No existen contactos a los cuales enviar email";
 	
 	/**
+	 * Mensaje que es mostrado cuando no se puede obtener el token en el servicio de email
+	 */
+	public static final String CANNOT_GET_MAIL_TOKEN = "No fue posible obtener el token del email";
+	
+	/**
+	 * Mensaje que aparece cuando el email no pudo ser enviado
+	 */
+	public static final String MAIL_CANNOT_BE_SEND = "El e-mail no pudo ser enviado";
+	
+	/**
 	 * Subclase de cosntantes que se mapearan de propiedades del archivo de
 	 * configuracion de spring
 	 * 
