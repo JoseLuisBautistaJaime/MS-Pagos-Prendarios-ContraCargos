@@ -27,12 +27,15 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "to_movimiento_estado_cuenta")
-public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta> {
+public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta>, MovimientoReporte {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
+
+	@Column(name = "id_reporte", nullable = false)
+	private Long reporte;
 
 	@Column(name = "estado_cuenta")
 	private Long idEstadoCuenta;
@@ -196,6 +199,14 @@ public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta
 
 	public void setReferencia(String referencia) {
 		this.referencia = referencia;
+	}
+
+	public Long getReporte() {
+		return reporte;
+	}
+
+	public void setReporte(Long reporte) {
+		this.reporte = reporte;
 	}
 
 	@Override

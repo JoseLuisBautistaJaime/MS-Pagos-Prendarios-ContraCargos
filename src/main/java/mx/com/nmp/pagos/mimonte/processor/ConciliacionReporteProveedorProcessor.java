@@ -6,10 +6,10 @@ package mx.com.nmp.pagos.mimonte.processor;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
+import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 
 /**
  * Nombre: ConciliacionProcessor
@@ -23,18 +23,20 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 @Service("conciliacionReporteProveedorProcessor")
 public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessorChain {
 
+	public ConciliacionReporteProveedorProcessor(MergeReporteHandler mergeReporteHandler) {
+		super(mergeReporteHandler);
+	}
+
 
 	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.processor.ConciliacionProcessorChain#process(mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte)
+	 * @see mx.com.nmp.pagos.mimonte.processor.ConciliacionProcessorChain#process(mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper)
 	 */
-	public void process(Reporte reporte) throws ConciliacionException {
+	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
 	
-		if (reporte.getTipo() == TipoReporteEnum.PROVEEDOR) {
+		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR)) {
 			
 		}
-		if (next != null) {
-			next.process(reporte);
-		}
+		processNext(reportesWrapper);
 	}
 
 }

@@ -4,8 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.processor;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 
 /**
@@ -19,9 +19,12 @@ import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 public abstract class ConciliacionProcessorChain {
 
 	protected MergeReporteHandler mergeReporteHandler;
-
 	protected ConciliacionProcessorChain next;
 
+
+	public ConciliacionProcessorChain(MergeReporteHandler mergeReporteHandler) {
+		this.mergeReporteHandler = mergeReporteHandler;
+	}
 
 	/**
 	 * Setea el siguiente procesador dentro de la cadena
@@ -33,10 +36,16 @@ public abstract class ConciliacionProcessorChain {
 
 
 	/**
-	 * Se encarga de procesar el reporte
-	 * @param reporte
+	 * Se encarga de procesar los reportes
+	 * @param reportesWrapper
 	 * @throws ConciliacionException
 	 */
-	public abstract void process(Reporte reporte) throws ConciliacionException;
+	public abstract void process(ReportesWrapper reportesWrapper) throws ConciliacionException;
+
+	public void processNext(ReportesWrapper reportesWrapper) {
+		if (next != null) {
+			next.process(reportesWrapper);
+		}
+	}
 
 }

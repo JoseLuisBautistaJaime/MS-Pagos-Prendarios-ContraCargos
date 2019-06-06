@@ -11,6 +11,8 @@ import java.util.Observer;
 import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Service;
+
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
 
@@ -22,6 +24,7 @@ import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
  * Fecha: 30/05/2019 9:44 PM
  * @version 0.1
  */
+@Service("reporteObserver")
 public class ReporteObserver implements Observer {
 
 	@Inject

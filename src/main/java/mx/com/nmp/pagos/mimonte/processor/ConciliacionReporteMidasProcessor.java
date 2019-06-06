@@ -4,15 +4,18 @@
  */
 package mx.com.nmp.pagos.mimonte.processor;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.collections.CollectionUtils;
 
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
+import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 
 /**
  * Nombre: ConciliacionProcessor
@@ -24,28 +27,52 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
  */
 public class ConciliacionReporteMidasProcessor extends ConciliacionProcessorChain {
 
-	private MovimientosMidasRepository movimientosMidasRepository;
+	public ConciliacionReporteMidasProcessor(MergeReporteHandler mergeReporteHandler) {
+		super(mergeReporteHandler);
+	}
 
 	/* (non-Javadoc)
 	 * @see mx.com.nmp.pagos.mimonte.processor.ConciliacionProcessorChain#process(mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte)
 	 */
-	public void process(Reporte reporte) throws ConciliacionException {
+	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
 	
-		if (reporte.getTipo() == TipoReporteEnum.MIDAS) {
+		if (reportesWrapper.contains(TipoReporteEnum.MIDAS)) {
 			
 			// Obtiene los movimientos midas
-			List<MovimientoMidas> movimientosMidas = movimientosMidasRepository.findByReporteId(reporte.getId());
+			List<MovimientoMidas> movimientosMidas = reportesWrapper.getByTipoReporte(TipoReporteEnum.MIDAS);
 			if (CollectionUtils.isNotEmpty(movimientosMidas)) {
 				
 				// Por cada movimiento verifica si se encuentra en error o es correcto
-				
-				
+				List<MovimientoTransito> movsTransito = extraerMovimientosNoIdentificadosMidas(reportesWrapper);
+				if (CollectionUtils.isNotEmpty(movsTransito)) {
+					mergeReporteHandler.getMovimientoTransitoCuentaRepository().saveAll(movsTransito);
+				}
 			}
 			
 		}
-		if (next != null) {
-			next.process(reporte);
+		processNext(reportesWrapper);
+	}
+
+	
+	private List<MovimientoTransito> extraerMovimientosNoIdentificadosMidas(ReportesWrapper reportesWrapper) {
+		
+		List<MovimientoTransito> transito = new ArrayList<MovimientoTransito>();
+
+		// Iterar sobre los movimientos del proveedor para obtener los movimientos no identificados en midas
+		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR)) {
+			List<MovimientoProveedor> movimientosProveedor = reportesWrapper.getByTipoReporte(TipoReporteEnum.PROVEEDOR);
+			for (MovimientoProveedor movimientoProveedor : movimientosProveedor) {
+				
+				// Se verifica que la transaccion exista en midas
+				String transaccionId = movimientoProveedor.getOrderId();
+				List<MovimientoMidas> movimientosMidas = reportesWrapper.getMovimientosMidasByTransaccion(Long.valueOf(transaccionId));
+				if (CollectionUtils.isEmpty(movimientosMidas)) {
+					transito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovProveedor(movimientoProveedor));
+				}
+			}
 		}
+
+		return transito;
 	}
 
 }
