@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
@@ -16,8 +17,11 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosList
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TarjetaMovimientosProveedorDTO;
+import mx.com.nmp.pagos.mimonte.model.EstatusPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MetodoPagoMovimientosProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TarjetaMovimientosProveedor;
 
@@ -357,6 +361,49 @@ public abstract class MovimientosBuilder {
 			}
 		}
 		return movimientoEstadoCuentaDTOList;
+	}
+
+	/**
+	 * Construye un entity de tipo MovimientoPago a partir de un entity de tipo
+	 * MovimientoConciliacion
+	 * 
+	 * @param mc
+	 * @return
+	 */
+	public static MovimientoPago buildMovimientoPagoFromMovimientoConciliacion(MovimientoConciliacion mc, final String createdBy) {
+		MovimientoPago movimientoPago = null;
+		if (null != mc) {
+			movimientoPago = new MovimientoPago();
+			movimientoPago.setCreatedBy(createdBy);
+			movimientoPago.setCreatedDate(new Date());
+			movimientoPago.setEstatus(new EstatusPago(1));
+			movimientoPago.setId(0);
+			movimientoPago.setIdConciliacion(mc.getIdConciliacion());
+			movimientoPago.setLastModifiedBy(null);
+			movimientoPago.setLastModifiedDate(null);
+			movimientoPago.setMovimientoMidas(new MovimientoMidas(mc.getMovimientoMidas().getId()));
+			movimientoPago.setNuevo(false);
+		}
+		return movimientoPago;
+	}
+
+	/**
+	 * Construye una lista de entities de tipo MovimientoPago a partir de una lista
+	 * de entities de tipo MovimientoConciliacion
+	 * 
+	 * @param movimientoConciliacionList
+	 * @return
+	 */
+	public static List<MovimientoPago> buildMovimientoPagoListFromMovimientoConciliacionList(
+			List<MovimientoConciliacion> movimientoConciliacionList, final String createdBy) {
+		List<MovimientoPago> movimientoPagoList = null;
+		if (null != movimientoConciliacionList) {
+			movimientoPagoList = new ArrayList<>();
+			for (MovimientoConciliacion mc : movimientoConciliacionList) {
+				movimientoPagoList.add(buildMovimientoPagoFromMovimientoConciliacion(mc, createdBy));
+			}
+		}
+		return movimientoPagoList;
 	}
 
 }

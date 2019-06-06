@@ -35,7 +35,6 @@ public abstract class AbstractCatalogo {
 
     public AbstractCatalogo(Integer id) {
         super();
-
         this.id = id;
     }
 

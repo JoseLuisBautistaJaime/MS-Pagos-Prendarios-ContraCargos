@@ -88,6 +88,26 @@ public final class ConciliacionConstants {
 	public static final String CONCILIACION_ID_NOT_FOUND = "No se encontro el id de conciliacion ingresado";
 	
 	/**
+	 * Mensaje mostrado cuando se ocurre un error al cambiar el estatus.
+	 */
+	public static final String AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS = "Ocurrio un error al actualizar el estatus de la devolución";
+	
+	/**
+	 * Constante para buscar devoluciones a partir del nombre.
+	 */
+	public static final String PENDING = "Pendiente";
+	
+	/**
+	 * Constante para buscar devoluciones a partir del nombre.
+	 */
+	public static final String REQUEST = "Solicitada";
+	
+	/**
+	 * Constante para buscar devoluciones a partir del nombre.
+	 */
+	public static final String LIQUIDATE = "Liquidada";
+	
+	/**
 	 * Se regresa cuando no se encuentra informacion en una busqueda relacionada con los procesos de conciliacion en general
 	 */
 	public static final String INFORMATION_NOT_FOUND = "No se encontro informacion relacionada con los parametros de busqueda";
@@ -106,6 +126,21 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se intenta eliminar una comision y esta no puede ser eliminada por regla de negocio
 	 */
 	public static final String COMISION_CANT_BE_DELETED = "La comision no puede ser eliminada ya que fue no fue dada de alta desde la aplicacion.";
+	
+	/**
+	 * Mensaje que es mostrado cuando no se encuentran contactos a los cuales enviar el email
+	 */
+	public static final String THERE_IS_NO_CONTACTS_TO_SEND_MAIL = "No existen contactos a los cuales enviar email";
+	
+	/**
+	 * Mensaje que es mostrado cuando no se puede obtener el token en el servicio de email
+	 */
+	public static final String CANNOT_GET_MAIL_TOKEN = "No fue posible obtener el token del email";
+	
+	/**
+	 * Mensaje que aparece cuando el email no pudo ser enviado
+	 */
+	public static final String MAIL_CANNOT_BE_SEND = "El e-mail no pudo ser enviado";
 	
 	/**
 	 * Subclase de cosntantes que se mapearan de propiedades del archivo de
@@ -154,6 +189,13 @@ public final class ConciliacionConstants {
 		 * coincidencia con un id de catalogo
 		 */
 		public static final String NO_CATALOG_INFORMATION = "No se encontro informacion de uno o mas catalogos";
+		
+		
+		/**
+		 * Mensaje que es mostrado cuando no se encuentra informacion para los
+		 * parametros de busqueda ingresados
+		 */
+		public static final String NO_INFORMATION_FOUND_FOR_IDS = "Alguno de los ids ingresados no esta en el estado Solicitada";
 
 	}
 

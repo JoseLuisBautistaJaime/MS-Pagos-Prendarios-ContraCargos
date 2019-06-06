@@ -69,11 +69,13 @@ public class Conciliacion extends Updatable implements Serializable  {
 	@Column(name = "completed_date")
 	private Date completedDate;
 	
-	@OneToMany(mappedBy = "conciliacion")
-    private Set<Global> global;
+	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+	@JoinColumn(name = "id", insertable = false, updatable = false)
+    private Global global;
 
-	@OneToMany(mappedBy = "conciliacion")
-	private Set<Reporte> reportes;
+	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+	@JoinColumn(name = "id", insertable = false, updatable = false)
+	private Reporte reportes;
 	
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
 	@JoinColumn(name = "id_conciliacion")
@@ -96,7 +98,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 
 	public Conciliacion(Integer id, EstatusConciliacion estatus, Entidad entidad, Cuenta cuenta,
 			String subEstatusDescripcion, Long idPolizaTesoreria, Long idAsientoContable, Date completedDate,
-			Set<Global> global, Set<Reporte> reportes, Set<MovimientoConciliacion> movimientoConciliacionSet,
+			Global global, Reporte reportes, Set<MovimientoConciliacion> movimientoConciliacionSet,
 			SubEstatusConciliacion subEstatus) {
 		super();
 		this.id = id;
@@ -185,19 +187,19 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.completedDate = completedDate;
 	}
 
-	public Set<Global> getGlobal() {
+	public Global getGlobal() {
 		return global;
 	}
 
-	public void setGlobal(Set<Global> global) {
+	public void setGlobal(Global global) {
 		this.global = global;
 	}
 
-	public Set<Reporte> getReportes() {
+	public Reporte getReportes() {
 		return reportes;
 	}
 
-	public void setReportes(Set<Reporte> reportes) {
+	public void setReportes(Reporte reportes) {
 		this.reportes = reportes;
 	}
 

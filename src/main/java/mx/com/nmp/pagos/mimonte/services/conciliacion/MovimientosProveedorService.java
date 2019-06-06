@@ -150,12 +150,12 @@ public class MovimientosProveedorService {
 	 * @return
 	 */
 	public List<MovimientoProveedorDTO> findByFolio(final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
-		@SuppressWarnings("deprecation")
-		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
-				commonConciliacionRequestDTO.getResultados());
+//		@SuppressWarnings("deprecation")
+//		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
+//				commonConciliacionRequestDTO.getResultados());
 		return MovimientosBuilder
 				.buildMovimientoProveedorDTOListFromMovimientoProveedorList(movimientoProveedorRepository
-						.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio(), pageable));
+						.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()/*, pageable*/));
 	}
 
 	/**

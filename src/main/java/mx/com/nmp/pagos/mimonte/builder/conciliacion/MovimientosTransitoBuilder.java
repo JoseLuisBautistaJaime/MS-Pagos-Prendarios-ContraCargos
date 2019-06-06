@@ -4,10 +4,15 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
+import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
@@ -68,5 +73,38 @@ public abstract class MovimientosTransitoBuilder {
 			}
 		}
 		return movTransitoDTOList;
+	}
+	
+	public static DevolucionConDTO buildDevolucionConDTOFromMovimientoTransito(MovimientoTransito movimientoTransito, EstatusDevolucion estatusDevolucion) {
+		DevolucionConDTO devolucionConDTO = null;
+		if(movimientoTransito != null) {
+			devolucionConDTO = new DevolucionConDTO();
+			devolucionConDTO.setId(movimientoTransito.getId());
+			devolucionConDTO.setFecha(movimientoTransito.getFecha());
+			devolucionConDTO.setEstatus(EstatusDevolucionesBuilder.buildEstatusDevolucionDTOFromEstatusDevolucion(estatusDevolucion));
+			devolucionConDTO.setMonto(movimientoTransito.getMonto());
+			devolucionConDTO.setEsquemaTarjeta(movimientoTransito.getEsquemaTarjeta());
+			devolucionConDTO.setIdentificacionCuenta(null);
+			devolucionConDTO.setTitular(movimientoTransito.getTitular());
+			devolucionConDTO.setCodigiAutorizacion(null);
+			devolucionConDTO.setSucursal(movimientoTransito.getSucursal());
+			devolucionConDTO.setFechaLiquidacion(null);
+			
+			
+		}
+		return devolucionConDTO;
+	}
+	
+	public static List<DevolucionConDTO> buildDevolucionConDTOListFromMovimientoTransitoList(
+			List<MovimientoTransito> movimientoTransito, EstatusDevolucion estatusDevolucion) {
+		List<DevolucionConDTO> devolucionConDTOList = null;
+		if (movimientoTransito != null && !movimientoTransito.isEmpty()) {
+			devolucionConDTOList = new ArrayList<>();
+			for (MovimientoTransito mt : movimientoTransito) {
+				devolucionConDTOList.add(buildDevolucionConDTOFromMovimientoTransito(mt, estatusDevolucion));
+			}
+
+		}
+		return devolucionConDTOList;
 	}
 }

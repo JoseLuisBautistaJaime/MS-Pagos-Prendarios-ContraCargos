@@ -16,6 +16,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 
@@ -39,7 +41,8 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "estatus")
 	private EstatusDevolucion estatus;
-
+	
+	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha")
 	private Date fecha;
 
@@ -60,6 +63,10 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 
 	@Column(name = "sucursal")
 	private Integer sucursal;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "fecha_liquidacion")
+	private Date fechaLiquidacion;
 
 	public MovimientoDevolucion() {
 		super();
@@ -70,7 +77,7 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	}
 
 	public MovimientoDevolucion(EstatusDevolucion estatus, Date fecha, BigDecimal monto, String esquemaTarjeta,
-			String identificadorCuenta, String titular, String codigoAutorizacion, Integer sucursal,
+			String identificadorCuenta, String titular, String codigoAutorizacion, Integer sucursal, Date fechaLiquidacion,
 			Set<MovimientoConciliacion> movimientoConciliacionSet) {
 		super();
 		this.estatus = estatus;
@@ -81,6 +88,7 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 		this.titular = titular;
 		this.codigoAutorizacion = codigoAutorizacion;
 		this.sucursal = sucursal;
+		this.fechaLiquidacion = fechaLiquidacion;
 	}
 
 	public EstatusDevolucion getEstatus() {
@@ -147,29 +155,82 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 		this.sucursal = sucursal;
 	}
 
+	public Date getFechaLiquidacion() {
+		return fechaLiquidacion;
+	}
+
+	public void setFechaLiquidacion(Date fechaLiquidacion) {
+		this.fechaLiquidacion = fechaLiquidacion;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(estatus, fecha, monto, esquemaTarjeta, identificadorCuenta, titular, codigoAutorizacion,
-				sucursal);
+		return Objects.hash(estatus, fecha, monto, esquemaTarjeta, identificadorCuenta, titular, codigoAutorizacion, sucursal, fechaLiquidacion);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-
-		if (!(obj instanceof MovimientoDevolucion))
+		if (!super.equals(obj))
 			return false;
-
-		final MovimientoDevolucion other = (MovimientoDevolucion) obj;
-		return (this.hashCode() == other.hashCode());
+		if (getClass() != obj.getClass())
+			return false;
+		MovimientoDevolucion other = (MovimientoDevolucion) obj;
+		if (codigoAutorizacion == null) {
+			if (other.codigoAutorizacion != null)
+				return false;
+		} else if (!codigoAutorizacion.equals(other.codigoAutorizacion))
+			return false;
+		if (esquemaTarjeta == null) {
+			if (other.esquemaTarjeta != null)
+				return false;
+		} else if (!esquemaTarjeta.equals(other.esquemaTarjeta))
+			return false;
+		if (estatus == null) {
+			if (other.estatus != null)
+				return false;
+		} else if (!estatus.equals(other.estatus))
+			return false;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (fechaLiquidacion == null) {
+			if (other.fechaLiquidacion != null)
+				return false;
+		} else if (!fechaLiquidacion.equals(other.fechaLiquidacion))
+			return false;
+		if (identificadorCuenta == null) {
+			if (other.identificadorCuenta != null)
+				return false;
+		} else if (!identificadorCuenta.equals(other.identificadorCuenta))
+			return false;
+		if (monto == null) {
+			if (other.monto != null)
+				return false;
+		} else if (!monto.equals(other.monto))
+			return false;
+		if (sucursal == null) {
+			if (other.sucursal != null)
+				return false;
+		} else if (!sucursal.equals(other.sucursal))
+			return false;
+		if (titular == null) {
+			if (other.titular != null)
+				return false;
+		} else if (!titular.equals(other.titular))
+			return false;
+		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "MovimientoDevolucion [estatus=" + estatus + ", fecha=" + fecha + ", monto=" + monto
 				+ ", esquemaTarjeta=" + esquemaTarjeta + ", identificadorCuenta=" + identificadorCuenta + ", titular="
-				+ titular + ", codigoAutorizacion=" + codigoAutorizacion + ", sucursal=" + sucursal + "]";
+				+ titular + ", codigoAutorizacion=" + codigoAutorizacion + ", sucursal=" + sucursal
+				+ ", fechaLiquidacion=" + fechaLiquidacion + "]";
 	}
 
 }

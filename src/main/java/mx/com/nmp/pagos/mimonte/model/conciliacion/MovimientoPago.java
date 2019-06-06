@@ -25,22 +25,24 @@ import mx.com.nmp.pagos.mimonte.model.EstatusPago;
  */
 @Entity
 @Table(name = "to_movimiento_pago")
-public class MovimientoPago implements Comparable<MovimientoPago> {
+public class MovimientoPago extends MovimientoConciliacion implements Comparable<MovimientoPago> {
 
-	@Id
-	@Column(name = "id", nullable = false)
-	private Long id;
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@ManyToOne
 	@JoinColumn(name = "estatus", nullable = false)
 	private EstatusPago estatus;
-
-	public Long getId() {
-		return id;
+	
+	public MovimientoPago() {
+		super();
 	}
-
-	public void setId(Long id) {
-		this.id = id;
+	
+	public MovimientoPago(EstatusPago estatus) {
+		super();
+		this.estatus = estatus;
 	}
 
 	public EstatusPago getEstatus() {
@@ -53,12 +55,12 @@ public class MovimientoPago implements Comparable<MovimientoPago> {
 
 	@Override
 	public String toString() {
-		return "MovimientoPago [id=" + id + ", estatus=" + estatus + "]";
+		return "MovimientoPago [estatus=" + estatus + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, estatus);
+		return Objects.hash(estatus);
 	}
 
 	@Override
@@ -76,7 +78,7 @@ public class MovimientoPago implements Comparable<MovimientoPago> {
 
 	@Override
 	public int compareTo(MovimientoPago arg0) {
-		return arg0.id == this.id ? 0 : -1;
+		return 0;
 	}
 
 }

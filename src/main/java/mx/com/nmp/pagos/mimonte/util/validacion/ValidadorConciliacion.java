@@ -22,6 +22,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 
 /**
@@ -45,13 +46,10 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
-			assertNotNull(commonConciliacionRequestDTO.getPagina());
-			assertNotNull(commonConciliacionRequestDTO.getResultados());
 		} catch (Exception ex) {
 			return false;
 		}
-		return (commonConciliacionRequestDTO.getFolio() > 0 && commonConciliacionRequestDTO.getResultados() > 0
-				&& commonConciliacionRequestDTO.getPagina() >= 0);
+		return (commonConciliacionRequestDTO.getFolio() > 0);
 	}
 
 	/**
@@ -66,13 +64,10 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
-			assertNotNull(commonConciliacionRequestDTO.getPagina());
-			assertNotNull(commonConciliacionRequestDTO.getResultados());
 		} catch (Exception ex) {
 			return false;
 		}
-		return (commonConciliacionRequestDTO.getFolio() > 0 && commonConciliacionRequestDTO.getResultados() > 0
-				&& commonConciliacionRequestDTO.getPagina() >= 0);
+		return (commonConciliacionRequestDTO.getFolio() > 0);
 	}
 
 	/**
@@ -329,6 +324,29 @@ public interface ValidadorConciliacion {
 		desde.setTime(comisionesTransaccionesRequestDTO.getFechaDesde());
 		hasta.setTime(comisionesTransaccionesRequestDTO.getFechaHasta());
 		return (!today.before(desde) && !today.before(hasta) && (desde.before(hasta) || desde.equals(hasta)));
+	}
+
+	/**
+	 * Valida un objeto de tipo SolicitarPagosRequestDTO para que tenga todos los
+	 * atributos requeridos y estos sean valores validos
+	 * 
+	 * @param solicitarPagosRequestDTO
+	 * @return
+	 */
+	public static boolean validateSolicitarPagosRequestDTO(SolicitarPagosRequestDTO solicitarPagosRequestDTO) {
+		try {
+			assertNotNull(solicitarPagosRequestDTO);
+			assertNotNull(solicitarPagosRequestDTO.getFolio());
+			assertNotNull(solicitarPagosRequestDTO.getIdMovimientos());
+			if (!solicitarPagosRequestDTO.getIdMovimientos().isEmpty())
+				for (Integer val : solicitarPagosRequestDTO.getIdMovimientos())
+					assertNotNull(val);
+			else
+				return false;
+		} catch (Exception ex) {
+			return false;
+		}
+		return true;
 	}
 
 }

@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.util.Date;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -41,8 +42,9 @@ public class Reporte extends Updatable {
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_conciliacion", nullable = false)
+	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+	@JoinColumn(name = "id_conciliacion",  insertable = false, updatable = false)
+
 	private Conciliacion conciliacion;
 
 	@Column(name = "tipo", nullable = false)

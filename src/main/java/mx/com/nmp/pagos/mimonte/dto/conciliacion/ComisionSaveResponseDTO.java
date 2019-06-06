@@ -20,7 +20,7 @@ import java.util.Objects;
 public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseDTO> {
 
 	private Integer folio;
-	private Long id;
+	private Integer id;
 	private Date fechaOperacion;
 	private Date fechaCargo;
 	private BigDecimal monto;
@@ -31,7 +31,7 @@ public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseD
 		super();
 	}
 
-	public ComisionSaveResponseDTO(Integer folio, Long id, Date fechaOperacion, Date fechaCargo, BigDecimal monto,
+	public ComisionSaveResponseDTO(Integer folio, Integer id, Date fechaOperacion, Date fechaCargo, BigDecimal monto,
 			String descripcion, Boolean nuevaComision) {
 		super();
 		this.folio = folio;
@@ -51,11 +51,11 @@ public class ComisionSaveResponseDTO implements Comparable<ComisionSaveResponseD
 		this.folio = folio;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

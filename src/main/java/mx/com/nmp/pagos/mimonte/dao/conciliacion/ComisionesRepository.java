@@ -105,5 +105,5 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @return
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionSaveResponseDTO(mcon.idConciliacion, mc.id, mc.fechaOperacion, mc.fechaCargo, mc.monto, mc.descripcion, mcon.nuevo) FROM MovimientoComision mc INNER JOIN MovimientoConciliacion mcon ON mc.id = mcon.id WHERE mc.id = :idComision")
-	public ComisionSaveResponseDTO findByIdComision(@Param("idComision") final Long idComision);
+	public ComisionSaveResponseDTO findByIdComision(@Param("idComision") final Integer idComision);
 }

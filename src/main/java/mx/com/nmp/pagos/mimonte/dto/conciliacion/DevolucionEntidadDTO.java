@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
@@ -19,13 +20,13 @@ import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
  */
 public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 
-	private Long id;
+	private Integer id;
 	private BaseEntidadDTO entidad;
 	private Date fecha;
 	private EstatusDevolucionDTO estatus;
 	private Integer sucursal;
 	private String identificadorCuenta;
-	private Double monto;
+	private BigDecimal monto;
 	private String esquemaTarjeta;
 	private String titular;
 	private String codigoAutorizacion;
@@ -35,8 +36,8 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 		super();
 	}
 
-	public DevolucionEntidadDTO(Long id, BaseEntidadDTO entidad, Date fecha, EstatusDevolucionDTO estatus,
-			Integer sucursal, String identificadorCuenta, Double monto, String esquemaTarjeta, 
+	public DevolucionEntidadDTO(Integer id, BaseEntidadDTO entidad, Date fecha, EstatusDevolucionDTO estatus,
+			Integer sucursal, String identificadorCuenta, BigDecimal monto, String esquemaTarjeta, 
 			String titular, String codigoAutorizacion, Date fechaLiquidacion) {
 		super();
 		this.id = id;
@@ -60,11 +61,11 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 		this.entidad = entidad;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -100,11 +101,11 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 		this.sucursal = sucursal;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 

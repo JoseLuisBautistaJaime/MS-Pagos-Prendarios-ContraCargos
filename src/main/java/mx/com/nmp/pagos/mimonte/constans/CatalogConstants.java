@@ -243,6 +243,11 @@ public final class CatalogConstants {
 	public static final String THERE_ARE_NO_ACCOUNTS = "No existen cuentas en el catalogo";
 
 	/**
+	 * mensaje que es mostrado cuando el tipo de contacto no es encontrado en el catalogo
+	 */
+	public static final String TIPO_CONTACTO_NOT_FOUND = "El tipo de contacto no existe en el catalogo";
+	
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */

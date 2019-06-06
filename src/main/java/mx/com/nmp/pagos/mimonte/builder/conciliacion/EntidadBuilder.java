@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
+import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 
@@ -58,5 +59,19 @@ public class EntidadBuilder {
 		}
 		return entidad;
 	}
+	
+	
+//--------------------------------------------------------------------------------------------------
+	public static BaseEntidadDTO buildBaseEntidadDTOFromEntidad(Entidad entidad) {
+		BaseEntidadDTO baseEntidadDTO = null;
+		if(entidad != null) {
+			baseEntidadDTO = new BaseEntidadDTO();
+			baseEntidadDTO.setId(entidad.getId());
+			baseEntidadDTO.setNombre(entidad.getNombre());
+			baseEntidadDTO.setDescripcion(entidad.getDescription());
+		}
+		return baseEntidadDTO;	
+	}
+	
 
 }

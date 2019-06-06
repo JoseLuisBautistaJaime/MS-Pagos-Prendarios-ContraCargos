@@ -9,6 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
@@ -75,4 +76,31 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFecha(@Param("folio") final Integer folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus,
 			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta);
+	
+	/**
+	 * 
+	 * @param idEstatus
+	 * @param idEntidad
+	 * @param identificadorCuenta
+	 * @param sucursal
+	 * @param fechaDesde
+	 * @param fechaHasta
+	 * @return
+	 */
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, c.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
+			+ " WHERE ( :idEstatus IS NULL OR c.estatus.id = :idEstatus ) AND "
+			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
+			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND "
+			+ " c.createdDate BETWEEN :fechaDesde AND :fechaHasta ")
+	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursal(
+			@Param("idEstatus") final Integer idEstatus, 
+			@Param("idEntidad") final Long idEntidad, 
+			@Param("identificadorCuenta") final String identificadorCuenta,
+			@Param("sucursal") final Integer sucursal,
+			@Param("fechaDesde") final Date fechaDesde,
+			@Param("fechaHasta") final Date fechaHasta);
+	
+	@Query("FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id WHERE md.id = :ids ")
+	public List<Conciliacion> findByIdDevolucion(@Param("ids") final Integer ids);
 }

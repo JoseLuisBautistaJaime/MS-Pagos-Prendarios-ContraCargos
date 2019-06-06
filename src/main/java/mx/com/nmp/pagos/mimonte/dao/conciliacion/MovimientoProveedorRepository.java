@@ -32,8 +32,8 @@ public interface MovimientoProveedorRepository extends PagingAndSortingRepositor
 	 * @return
 	 */
 	@Query("SELECT mp FROM MovimientoProveedor mp INNER JOIN Reporte r ON mp.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public List<MovimientoProveedor> findByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId,
-			Pageable pageable);
+	public List<MovimientoProveedor> findByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId
+			/*,Pageable pageable*/);
 
 	/**
 	 * Regresa el total de registros midas por id de conciliacion
