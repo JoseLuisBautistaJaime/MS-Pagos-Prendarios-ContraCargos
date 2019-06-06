@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
+import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
+import mx.com.nmp.pagos.mimonte.observer.ReporteObserver;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 
 /**
@@ -105,6 +108,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	@Autowired
 	private GlobalRepository globalRepository;
+
+	@Autowired
+	private ReporteObserver reporteObserver;
 
 	
 	/**
@@ -344,8 +350,45 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				MovimientoComisionBuilder.buildComisionesDTOListFromMovimientoComisionList(mC));
 	}
 
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#getById(java.lang.Integer)
+	 */
 	public Conciliacion getById(Integer idConciliacion) {
 		return conciliacionRepository.findByFolio(idConciliacion);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#generarConciliacion(java.lang.Integer, java.lang.String)
+	 */
+	@Transactional
+	public void generarConciliacion(Integer folio, String lastModifiedBy) throws ConciliacionException {
+
+		// Validación del request
+		if (folio == null)
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+
+		if (lastModifiedBy == null)
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		
+		// Obtiene todos los reportes de la bd generados hasta el momento
+		List<Reporte> reportes = reporteRepository.findByIdConciliacion(folio);
+		if (reportes == null) {
+			throw new ConciliacionException("No se tiene disponible ningun reporte para generar la conciliacion");
+		}
+
+		// Al menos 2 reportes
+		if (reportes.size() == 1) {
+			throw new ConciliacionException("Se requiere al menos 2 reportes para generar la conciliacion. Reporte recibido: " + reportes.get(0).getTipo());
+		}
+
+
+		// Notificar cambios o alta de reportes, si existen...
+		ReporteObservable reporteObservable = new ReporteObservable(reportes);
+		reporteObservable.addObserver(reporteObserver);
+		reporteObservable.notifyObservers();
+
 	}
 
 }
