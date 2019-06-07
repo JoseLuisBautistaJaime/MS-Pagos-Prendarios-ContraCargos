@@ -1572,3 +1572,27 @@ ALTER TABLE `compose`.`to_movimiento_devolucion`
 ADD COLUMN `fecha_liquidacion` DATE NULL AFTER `sucursal`;
 
 -- FIN DEVOLUCIONES
+
+
+-- ------------------------------------------------------------ --
+-- INSERT PARA CATALOGO NO ADMINISTRABLE tk_estatus_transaccion --
+-- ------------------ [2019-06-07 16:51:31] ------------------- --
+-- ------------------------------------------------------------ --
+INSERT INTO `compose`.`tk_estatus_transaccion`
+	(`id`, `descripcion_corta`, `descripcion`)
+VALUES
+	(1, 'Solicitada', 'Solicitada'),
+	(2, 'En Proceso', 'En Proceso'),
+	(3, 'Terminada', 'Terminada')
+	;
+
+-- ------------------------------------------------------------------------ --
+-- INSERT PARA CATALOGO NO ADMINISTRABLE tk_estatus_movimientos_en_transito --
+-- ------------------------ [2019-06-07 16:51:31] -------------------------- --
+-- ------------------------------------------------------------------------- --    
+INSERT INTO `compose`.`tk_estatus_movimientos_en_transito`
+	(`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `last_modified_date`, `created_by`, `last_modified_by`, `descripcion_corta`)
+VALUES
+	(1, 'No identificada en MIDAS', 'No identificada en MIDAS', true, NOW(), NULL, 'Quarksoft', NULL, 'No identificada en MIDAS'),
+	(2, 'Solicitada', 'Solicitada', true, NOW(), NULL, 'Quarksoft', NULL, 'Solicitada')
+;
