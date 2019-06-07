@@ -380,7 +380,7 @@ public class ConciliacionController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		if(!ValidadorConciliacion.validateSolicitarPagosRequestDTO(solicitarPagosRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		solicitarPagosService.getDataByFolioAndIdMovimientos(solicitarPagosRequestDTO.getFolio(), solicitarPagosRequestDTO.getIdMovimientos(), createdBy);
+		solicitarPagosService.solicitarPagosService(solicitarPagosRequestDTO.getFolio(), solicitarPagosRequestDTO.getIdMovimientos(), createdBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Pago Exitosa.", null);
 	}
 //	
