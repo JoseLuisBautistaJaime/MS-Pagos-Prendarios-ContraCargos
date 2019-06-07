@@ -13,6 +13,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
@@ -106,5 +107,12 @@ public abstract class MovimientosTransitoBuilder {
 
 		}
 		return devolucionConDTOList;
+	}
+
+	public static MovimientoTransito buildMovTransitoFromMovProveedor(MovimientoProveedor movimientoProveedor) {
+		MovimientoTransito movTransito = new MovimientoTransito();
+		movTransito.setCreatedBy("SYSTEM");
+		movTransito.setCreatedDate(new Date());
+		return movTransito;
 	}
 }

@@ -88,6 +88,10 @@ public class Conciliacion extends Updatable implements Serializable  {
 	@OneToMany(mappedBy = "conciliacion")
 	private Set<ComisionTransaccion> comisionTransaccionSet;
 
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_conciliacion")
+	private ConciliacionMerge merge;
+	
 	public Conciliacion() {
 		super();
 	}
@@ -223,6 +227,14 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.comisionTransaccionSet = comisionTransaccionSet;
 	}
 
+	public ConciliacionMerge getMerge() {
+		return merge;
+	}
+
+	public void setMerge(ConciliacionMerge merge) {
+		this.merge = merge;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -239,6 +251,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 		result = prime * result + ((reportes == null) ? 0 : reportes.hashCode());
 		result = prime * result + ((subEstatus == null) ? 0 : subEstatus.hashCode());
 		result = prime * result + ((subEstatusDescripcion == null) ? 0 : subEstatusDescripcion.hashCode());
+		result = prime * result + ((merge == null) ? 0 : merge.hashCode());
 		return result;
 	}
 
@@ -246,72 +259,12 @@ public class Conciliacion extends Updatable implements Serializable  {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
+
+		if (!(obj instanceof Conciliacion))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Conciliacion other = (Conciliacion) obj;
-		if (completedDate == null) {
-			if (other.completedDate != null)
-				return false;
-		} else if (!completedDate.equals(other.completedDate))
-			return false;
-		if (cuenta == null) {
-			if (other.cuenta != null)
-				return false;
-		} else if (!cuenta.equals(other.cuenta))
-			return false;
-		if (entidad == null) {
-			if (other.entidad != null)
-				return false;
-		} else if (!entidad.equals(other.entidad))
-			return false;
-		if (estatus == null) {
-			if (other.estatus != null)
-				return false;
-		} else if (!estatus.equals(other.estatus))
-			return false;
-		if (global == null) {
-			if (other.global != null)
-				return false;
-		} else if (!global.equals(other.global))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (idAsientoContable == null) {
-			if (other.idAsientoContable != null)
-				return false;
-		} else if (!idAsientoContable.equals(other.idAsientoContable))
-			return false;
-		if (idPolizaTesoreria == null) {
-			if (other.idPolizaTesoreria != null)
-				return false;
-		} else if (!idPolizaTesoreria.equals(other.idPolizaTesoreria))
-			return false;
-		if (movimientoConciliacionSet == null) {
-			if (other.movimientoConciliacionSet != null)
-				return false;
-		} else if (!movimientoConciliacionSet.equals(other.movimientoConciliacionSet))
-			return false;
-		if (reportes == null) {
-			if (other.reportes != null)
-				return false;
-		} else if (!reportes.equals(other.reportes))
-			return false;
-		if (subEstatus == null) {
-			if (other.subEstatus != null)
-				return false;
-		} else if (!subEstatus.equals(other.subEstatus))
-			return false;
-		if (subEstatusDescripcion == null) {
-			if (other.subEstatusDescripcion != null)
-				return false;
-		} else if (!subEstatusDescripcion.equals(other.subEstatusDescripcion))
-			return false;
-		return true;
+
+		final Conciliacion other = (Conciliacion) obj;
+		return (this.hashCode() == other.hashCode());
 	}
 
 	@Override
@@ -322,5 +275,5 @@ public class Conciliacion extends Updatable implements Serializable  {
 				+ ", reportes=" + reportes + ", movimientoConciliacionSet=" + movimientoConciliacionSet
 				+ ", subEstatus=" + subEstatus + "]";
 	}
-	
+
 }

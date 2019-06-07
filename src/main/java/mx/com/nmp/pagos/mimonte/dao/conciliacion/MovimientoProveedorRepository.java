@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 
 /**
@@ -44,5 +43,12 @@ public interface MovimientoProveedorRepository extends PagingAndSortingRepositor
 	 */
 	@Query("SELECT COUNT(mp.id) FROM MovimientoProveedor mp INNER JOIN Reporte r ON mp.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
 	public Long countByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId);
+
+	/**
+	 * Regresa los movimientos proveedor por id de reporte
+	 * @param idReporte
+	 * @return
+	 */
+	public List<MovimientoProveedor> findByReporte(@Param("reporteId") final Integer reporteId);
 
 }

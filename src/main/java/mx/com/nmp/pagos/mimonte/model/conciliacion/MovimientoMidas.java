@@ -32,7 +32,7 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
  */
 @Entity
 @Table(name = "to_movimiento_midas")
-public class MovimientoMidas implements Comparable<MovimientoMidas>, java.io.Serializable {
+public class MovimientoMidas implements Comparable<MovimientoMidas>, java.io.Serializable, MovimientoReporte {
 
 	/**
 	 * Serial id

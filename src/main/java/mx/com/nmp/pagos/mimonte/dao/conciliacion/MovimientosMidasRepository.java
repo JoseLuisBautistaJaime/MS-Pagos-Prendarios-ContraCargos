@@ -6,17 +6,12 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 import java.util.Date;
 import java.util.List;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO;
-import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 
 /**
@@ -29,6 +24,22 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
  */
 @Repository("movimientosMidasRepository")
 public interface MovimientosMidasRepository extends PagingAndSortingRepository<MovimientoMidas, Long> {
+
+	/**
+	 * Regresa los movimientos midas por id de reporte
+	 * @param idReporte
+	 * @return
+	 */
+	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id AND r.id = :reporteId")
+	public List<MovimientoMidas> findByReporteId(@Param("reporteId") final Integer reporteId);
+
+	/**
+	 * Regresa los movimientos midas por id de conciliacion validando el ultimo reporte
+	 * @param conciliacionId
+	 * @return
+	 */
+	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND r.id = (SELECT MAX(r1.id) FROM Reporte r1 WHERE r1.conciliacion.id = con.id)") // Obtiene ultimo reporte
+	public List<MovimientoMidas> findByConciliacionId(@Param("conciliacionId") final Integer conciliacionId);
 
 	/**
 	 * Regresa los movimientos midas por id de conciliacion

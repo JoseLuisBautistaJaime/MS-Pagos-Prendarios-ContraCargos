@@ -78,6 +78,11 @@ public final class ConciliacionConstants {
 	public static final String SUCCESSFUL_UPDATE = "Actualización exitosa.";
 
 	/**
+	 * Mensaje mostrado para una consulta exitosa.
+	 */
+	public static final String SUCCESSFUL_GENERACION = "Se inicia proceso de conciliacion.";
+
+	/**
 	 * Mensaje que es mostrado cuando se intenta buscar o asociar un id de conciliacion que no existe
 	 */
 	public static final String CONCILIACION_ID_NOT_FOUND = "No se encontro el id de conciliacion ingresado";
