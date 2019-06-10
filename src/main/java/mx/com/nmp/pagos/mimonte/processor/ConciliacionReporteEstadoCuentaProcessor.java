@@ -35,6 +35,8 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 	
 		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR)) {
 			
+			// Detectar movimientos de tipo devoluciones
+
 		}
 		processNext(reportesWrapper);
 	}

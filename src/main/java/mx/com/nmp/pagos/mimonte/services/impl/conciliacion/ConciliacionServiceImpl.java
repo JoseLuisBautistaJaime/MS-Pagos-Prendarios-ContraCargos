@@ -359,17 +359,17 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#generarConciliacion(java.lang.Integer, java.lang.String)
 	 */
 	@Transactional
-	public void generarConciliacion(Integer folio, String lastModifiedBy) throws ConciliacionException {
+	public void generarConciliacion(Integer idConciliacion, String lastModifiedBy) throws ConciliacionException {
 
 		// Validación del request
-		if (folio == null)
+		if (idConciliacion == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 
 		if (lastModifiedBy == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		
 		// Obtiene todos los reportes de la bd generados hasta el momento
-		List<Reporte> reportes = reporteRepository.findByIdConciliacion(folio);
+		List<Reporte> reportes = reporteRepository.findByIdConciliacion(idConciliacion);
 		if (reportes == null) {
 			throw new ConciliacionException("No se tiene disponible ningun reporte para generar la conciliacion");
 		}
@@ -381,7 +381,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 
 		// Notificar cambios o alta de reportes, si existen...
-		ReporteObservable reporteObservable = new ReporteObservable(reportes);
+		ReporteObservable reporteObservable = new ReporteObservable(reportes, idConciliacion);
 		reporteObservable.addObserver(reporteObserver);
 		reporteObservable.notifyObservers();
 

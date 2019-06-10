@@ -19,6 +19,8 @@ public final class ConciliacionConstants {
 		super();
 	}
 
+	public static final String USER_SYSTEM = "System";
+	
 	/**
 	 * Valor estatico para un tamanio de 10 caracteres
 	 */
@@ -141,6 +143,11 @@ public final class ConciliacionConstants {
 	 * Mensaje que aparece cuando el email no pudo ser enviado
 	 */
 	public static final String MAIL_CANNOT_BE_SEND = "El e-mail no pudo ser enviado";
+
+	/**
+	 * Movimiento no identificado en MIDAS
+	 */
+	public static final Integer ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS = 1;
 	
 	/**
 	 * Subclase de cosntantes que se mapearan de propiedades del archivo de

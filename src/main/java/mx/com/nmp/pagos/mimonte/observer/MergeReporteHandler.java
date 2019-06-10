@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.GlobalRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
@@ -47,16 +48,20 @@ public class MergeReporteHandler {
 	@Inject
 	private MovimientoTransitoRepository movimientoTransitoCuentaRepository;
 
+	@Inject
+	private GlobalRepository globalRepository;
+
 
 
 
 	/**
 	 * Se encarga de generar la cadena de procesadores de acuerdo al tipo de reporte
-	 * @param reportesActualizados
+	 * @param reportes
+	 * @param idConciliacion
 	 */
-	public void handle(List<Reporte> reportes) {
+	public void handle(List<Reporte> reportes, Integer idConciliacion) {
 
-		ReportesWrapper wrapper = new ReportesWrapper();
+		ReportesWrapper wrapper = new ReportesWrapper(idConciliacion);
 		
 		for (Reporte reporte : reportes) {
 			switch (reporte.getTipo()) {
@@ -110,6 +115,12 @@ public class MergeReporteHandler {
 
 	public MovimientoTransitoRepository getMovimientoTransitoCuentaRepository() {
 		return movimientoTransitoCuentaRepository;
+	}
+
+
+
+	public GlobalRepository getGlobalRepository() {
+		return globalRepository;
 	}
 
 }
