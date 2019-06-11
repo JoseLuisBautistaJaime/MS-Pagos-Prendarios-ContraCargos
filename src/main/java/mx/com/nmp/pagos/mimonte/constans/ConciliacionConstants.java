@@ -123,6 +123,58 @@ public final class ConciliacionConstants {
 	public static final String COMISION_CANT_BE_DELETED = "La comision no puede ser eliminada ya que fue no fue dada de alta desde la aplicacion.";
 	
 	/**
+	 * Mensaje que es mostrado cuando se inicia procesos de conciliación.
+	 */
+	public static final String CONCILIATION_PROCESS_BEGINS = "Se inicia proceso de conciliacion.";
+	
+	
+	/**
+	 * Mensaje que es mostrado cuando se envia de forma exitosa la conciliación.
+	 */
+	public static final String CONCILIATION_SENT_SUCCESSFULLY = "Conciliacion Enviada de forma Exitosa.";
+	
+	/**
+	 * Mensaje que es mostrado cuando se actualiza correctamente el sub estatus de la conciliación.
+	 */
+	public static final String SUB_STATUS_RECONCILIATION_UPDATED_CORRECTLY = "Sub Estatus Conciliacion actualizado correctamente.";
+	
+	
+	/**
+	 * Mensaje que es mostrado cuando se actualiza correctamente el proceso.
+	 */
+	public static final String STATUS_PROCESS_CORRECTLY_UPDATED = "Estatus Proceso actualizado correctamente.";
+	
+	/**
+	 * Mensaje que es mostrado cuando solicitud de pago es exitosa.
+	 */
+	public static final String SUCCESSFUL_PAYMENT_APPLICATION = "Solicitud Pago Exitosa.";
+	
+	/**
+	 * Mensaje que es mostrado cuando al marcar la solicitud es exitosa.
+	 */
+	public static final String MARK_AS_SUCCESSFUL_RETURN = "Marcar como Devolucion Exitosa.";
+	
+	/**
+	 * Mensaje que es mostrado cuando la consulta de la devolución es exitosa.
+	 */
+	public static final String SUCCESSFUL_RETURNS_CONSULTATION = "Consulta Devoluciones Exitosa.";
+	
+	/**
+	 * Mensaje que es mostrado cuando la solicitud de la devolución es exitosa.
+	 */
+	public static final String REQUEST_SUCCESSFUL_RETURN = "Solicitud Devolucion Exitosa.";
+	
+	/**
+	 * Mensaje que es mostrado cuando la solicitud de la devolución es liquidada correctamente.
+	 */
+	public static final String  SUCCESSFUL_CLEARANCE_REQUEST = "Solicitud Liquidacion Exitosa.";
+	
+	/**
+	 * Mensaje que es mostrado cuando el identificador peoplesoft es actualizado correctamente.
+	 */
+	public static final String IDENTIFIER_PS_UPDATED_IN_THE_CONCILIATION = "Identificador PS actualizado en la conciliación.";
+	
+	/**
 	 * Subclase de cosntantes que se mapearan de propiedades del archivo de
 	 * configuracion de spring
 	 * 

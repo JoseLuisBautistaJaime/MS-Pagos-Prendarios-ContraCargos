@@ -6,12 +6,22 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaIdPsRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaSubEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionesRequest;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 
 /**
@@ -19,6 +29,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
  * @version 1.0
  * @created 31-Mar-2019 6:33:32 PM
  */
+@Service("conciliacionService")
 public interface ConciliacionService {
 	
 	/**
@@ -50,6 +61,66 @@ public interface ConciliacionService {
 	 * @return
 	 */
 	public ConciliacionDTOList consultaFolio(Integer folio);
+	
+	
+// ITERACION 2	
+	/**
+	 * Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transacional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.
+	 * @param idConciliacion
+	 * @param usuario
+	 * @param urlCallBack
+	 */
+	public void generarConciliacion(Integer idConciliacion, String usuario, String urlCallBack);
+	
+	
+	/**
+	 * Servicio que permite enviar la conciliación.
+	 * @param idConciliacion
+	 * @param usuario
+	 */
+	public void enviarConciliacion(Integer idConciliacion, String usuario);
+	
+	
+//	/**
+//	 * sevicio callBack que será usuado para actualizar el id del registro de las pantallas que será devuelto por PeopleSoft.
+//	 * @param idsPS
+//	 * @param usuario
+//	 */
+//	public void actualizarPS(ActualizaIdPsRequestDTO actualizaIdPsRequestDTO, String usuario);
+	
+	
+	/**
+	 * Servicio que sirve para actualizar el subestatus del proceso de conciliacion para conocer el estatus de la consulta de los reportes.
+	 * @param ActualizaSubEstatusDTO
+	 * @param usuario
+	 */
+	public void actualizaSubEstatusConciliacion(ActualizaSubEstatusDTO actualizaSubEstatusDTO, String usuario);
+	
+	/**
+	 * Servicio que consulta el resumen de conciliaciones realizadas.
+	 * @param resumenConciliacionesRequest
+	 */
+	public ResumenConciliacionDTO resumenConciliaciones(ResumenConciliacionesRequest resumenConciliacionesRequest);
+	
+	/**
+	 * Realiza la consulta del log de las ultimas actividades realizadas en el sistema como son: altas reportes, movimientos realizados durante la conciliación, cambio de estatus.
+	 * @param consultaActividadesRequest
+	 */
+	public List<ConsultaActividadDTO> consultaActividades(ConsultaActividadesRequest consultaActividadesRequest);
+	
+	/**
+	 * Realiza la consulta de los movimientos en transito de la conciliacion (con error).
+	 * @param folio
+	 * @return
+	 */
+	public List<MovTransitoDTO> consultaMovimientosTransito(Integer folio);
+	
+	/**
+	 * Permite realizar la solicitud de pagos no reflejados en MIDAS de los movimientos que se encuentran en transito.
+	 * @param solicitarPagosRequestDTO
+	 * @param usuario
+	 */
+	public void solicitarPagos(SolicitarPagosRequestDTO solicitarPagosRequestDTO, String usuario);
 
 //	public ConciliacionService(){
 //
