@@ -11,16 +11,20 @@ import java.util.Calendar;
 
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDeleteDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -345,6 +349,102 @@ public interface ValidadorConciliacion {
 				return false;
 		} catch (Exception ex) {
 			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Valida que un objeto de tipo Integer no sea nulo
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static boolean validateInteger(final Integer value) {
+		try {
+			assertNotNull(value);
+		} catch (Exception ex) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Valida que el objeto de tipo ActualizarIdPSRequest contenga los atributos
+	 * requeridos y estos contengan valores validos
+	 * 
+	 * @param actualizarIdPSRequest
+	 * @return
+	 */
+	public static boolean validateActualizarIdPSRequest(ActualizarIdPSRequest actualizarIdPSRequest) {
+		try {
+			assertNotNull(actualizarIdPSRequest);
+			assertNotNull(actualizarIdPSRequest.getFolio());
+		} catch (Exception ex) {
+			return false;
+		}
+		return !(null == actualizarIdPSRequest.getIdAsientoContable()
+				&& null == actualizarIdPSRequest.getIdPolizaTesoreria());
+	}
+
+	/**
+	 * Valida un objeto de tipo ActualizarSubEstatusRequestDTO para que contenga
+	 * todos los atributos requeridos y estos a su vez sean valores validos
+	 * 
+	 * @param actualizarSubEstatusRequestDTO
+	 * @return
+	 */
+	public static boolean validateActualizarSubEstatusRequestDTO(
+			ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO) {
+		try {
+			assertNotNull(actualizarSubEstatusRequestDTO);
+			assertNotNull(actualizarSubEstatusRequestDTO.getFolio());
+			assertNotNull(actualizarSubEstatusRequestDTO.getIdSubEstatus());
+		} catch (Exception ex) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Valida un objeto de tipo ResumenConciliacionRequestDTO para que contenga
+	 * todos los campos requeridos y estaos a su vez sean valores validos
+	 * 
+	 * @param resumenConciliacionRequestDTO
+	 * @return
+	 */
+	public static boolean validateResumenConciliacionRequestDTO(
+			ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
+		Calendar ini = Calendar.getInstance();
+		Calendar fin = Calendar.getInstance();
+		Calendar hoy = Calendar.getInstance();
+		if (null != resumenConciliacionRequestDTO && null != resumenConciliacionRequestDTO.getFechaInicial()
+				&& null != resumenConciliacionRequestDTO.getFechaFinal()) {
+			ini.setTime(resumenConciliacionRequestDTO.getFechaInicial());
+			fin.setTime(resumenConciliacionRequestDTO.getFechaFinal());
+			if (ini.after(fin) || hoy.before(ini))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Valida un objeto de tipo ConsultaActividadesRequestDTO para que contenga
+	 * todos los atributos requeridos y a su vez estos sean valires validos
+	 * 
+	 * @param consultaActividadesRequestDTO
+	 * @return
+	 */
+	public static boolean validateConsultaActividadesRequestDTO(
+			ConsultaActividadesRequestDTO consultaActividadesRequestDTO) {
+		Calendar ini = Calendar.getInstance();
+		Calendar fin = Calendar.getInstance();
+		Calendar hoy = Calendar.getInstance();
+		if (null != consultaActividadesRequestDTO && null != consultaActividadesRequestDTO.getFechaDesde()
+				&& null != consultaActividadesRequestDTO.getFechaHasta()) {
+			ini.setTime(consultaActividadesRequestDTO.getFechaDesde());
+			fin.setTime(consultaActividadesRequestDTO.getFechaHasta());
+			if (ini.after(fin) || hoy.before(ini))
+				return false;
 		}
 		return true;
 	}
