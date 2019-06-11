@@ -35,9 +35,9 @@ import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaIdPsRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaSubEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
@@ -51,16 +51,10 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusMovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteEstadoCuentaDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteProcesosNocturnosDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteProveedorTransaccionalDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionesRequest;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
-import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.DevolucionesServiceImpl;
@@ -275,7 +269,7 @@ public class ConciliacionController {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_GENERACION, null);
 	}
-	
+
 	/**
 	 *Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.
 	 * 
@@ -295,12 +289,13 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response enviaConciliacion(@PathVariable(value = "folio", required = true) Integer folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		
-		conciliacionService.enviarConciliacion(folio, createdBy);
-
+		if(!ValidadorConciliacion.validateInteger(folio))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		conciliacionServiceImpl.enviarConciliacion(folio, createdBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.CONCILIATION_SENT_SUCCESSFULLY, null);
 	}
 
+	// TODO: Completed
 	/**
 	 * Realiza la consulta de los movimientos en transito de la conciliacion (con error).
 	 * 
@@ -319,9 +314,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Integer folio) {
-		
 		List<MovTransitoDTO> response = conciliacionService.consultaMovimientosTransito(folio);
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH, response);
 	}
 	
@@ -456,6 +449,7 @@ public class ConciliacionController {
 				);
 	}
 	
+	// TODO: Completed
 	/**
 	 * Servicio callback que será usado para actualizar el id del registro de las plantillas que será devuelto por PeopleSoft. 
 	 * 
@@ -473,12 +467,16 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response actualizaIdPs(@RequestBody ActualizaIdPsRequestDTO actualizaIdPsRequestDTO,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String LastModifiedBy) {
-		
+	public Response actualizaIdPs(@RequestBody ActualizarIdPSRequest actualizarIdPSRequest/*ActualizaIdPsRequestDTO actualizaIdPsRequestDTO*/,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		if(!ValidadorConciliacion.validateActualizarIdPSRequest(actualizarIdPSRequest))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		// Comentado por ahora, hasta que la funcionalidad de la capa de servicio este completa
+		conciliacionServiceImpl.actualizarPS(actualizarIdPSRequest, lastModifiedBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.IDENTIFIER_PS_UPDATED_IN_THE_CONCILIATION, null);
 	}
-	
+
+	// TODO: Completed
 	/**
 	 * Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transaccional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.
 	 * 
@@ -498,65 +496,11 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Integer folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser,
-			@RequestHeader(CatalogConstants.REQUEST_HEADER_URL) String urlCallBack) {
-		
-		conciliacionService.generarConciliacion(folio, requestUser, urlCallBack);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.CONCILIATION_PROCESS_BEGINS, null);
-	}
-	
-	/**
-	 * Servicio que será usado para actualizar el sub estatus del proceso de
-	 * conciliación para conocer el estatus de la consulta de los reportes.
-	 * 
-	 * @param ActualizaSubEstatusDTO
-	 * @param LastModifiedBy
-	 * @return
-	 */
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/conciliacion/actualizarSubEstatus", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "PUT", value = "Servicio que será usado para actualizar el sub estatus del proceso de conciliación para conocer el estatus de la consulta de los reportes.", tags = {
-			"Conciliación" })
-	@ApiResponses({
-			@ApiResponse(code = 200, response = Response.class, message = "Sub Estatus Conciliacion actualizado correctamente."),
-			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response actualizaSubEstatus(@RequestBody ActualizaSubEstatusDTO actualizaSubEstatusDTO,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String LastModifiedBy) {
-		
-		
-		conciliacionService.actualizaSubEstatusConciliacion(actualizaSubEstatusDTO, LastModifiedBy);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUB_STATUS_RECONCILIATION_UPDATED_CORRECTLY, null);
-	}
-	
-	/**
-	 * Servicio que consulta el resumen de conciliaciones realizadas.
-	 * 
-	 * @param folio
-	 * @param fechaInicial
-	 * @param fechaFinal
-	 * @return
-	 */
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/conciliacion/resumen", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Servicio que consulta el resumen de conciliaciones realizadas.", tags = {
-			"Conciliación" })
-	@ApiResponses({
-			@ApiResponse(code = 200, response = Response.class, message = "Estatus Proceso actualizado correctamente."),
-			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response resumenConciliaciones(@RequestBody ResumenConciliacionesRequest resumenConciliacionesRequest) {
-		
-		ResumenConciliacionDTO response = conciliacionService.resumenConciliaciones(resumenConciliacionesRequest);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.STATUS_PROCESS_CORRECTLY_UPDATED, response);
+			@RequestHeader(CatalogConstants.REQUEST_HEADER_URL) String urlCallBack) {		
+		if(!ValidadorConciliacion.validateInteger(folio))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		conciliacionServiceImpl.generarConciliacion(folio, urlCallBack);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.CONCILIATION_PROCESS_BEGINS, null);		
 	}
 	
 	/**
@@ -577,13 +521,64 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaActividades(@RequestBody ConsultaActividadesRequest consultaActividadesRequest) {
-		
+		if(!ValidadorConciliacion.validateConsultaActividadesRequest(consultaActividadesRequest))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		List<ConsultaActividadDTO> response = conciliacionService.consultaActividades(consultaActividadesRequest);
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH, response);
 	}
 
+	// TODO: Completed
+	/**
+	 * Realiza la actualizacion del sub estatus de una conciliacion
+	 * @param actualizarSubEstatusRequestDTO
+	 * @param requestUser
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PutMapping(value = "/conciliacion/actualizarSubEstatus", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "PUT", value = "Servicio que permite actualizar el subestatus de una conciliacion.", tags = {
+			"Conciliación" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Se inicia proceso de Actualizacion de sub estatus."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response actualizaSubEstatus(@RequestBody ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
+			@RequestHeader(name = CatalogConstants.REQUEST_USER_HEADER, required = true) String requestUser) {		
+		if(!ValidadorConciliacion.validateActualizarSubEstatusRequestDTO(actualizarSubEstatusRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		conciliacionServiceImpl.actualizaSubEstatusConciliacion(actualizarSubEstatusRequestDTO, requestUser);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion de sub estatus correcta.",
+				null);
+	}
 
+	
+	// TODO: Comleted
+	/**
+	 * Obtiene el resumen de conciliaciones realizadas
+	 * @param resumenConciliacionRequestDTO
+	 * @param requestUser
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/conciliacion/resumen", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Servicio que consulta el resumen de conciliaciones realizadas.", tags = {
+			"Conciliación" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Se inicia consulta de resumen de conciliaciones."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response resumenConciliaciones(@RequestBody ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {		
+		if(!ValidadorConciliacion.validateResumenConciliacionRequestDTO(resumenConciliacionRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		conciliacionServiceImpl.resumenConciliaciones(resumenConciliacionRequestDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Resumen de conciliaciones obtenido correctamente.",
+				null);
+	}
+	
 //	public static ConciliacionDTO buildDummy() {
 //		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1, "En proceso", true);
 //		EntidadDTO entidadDTO = null;

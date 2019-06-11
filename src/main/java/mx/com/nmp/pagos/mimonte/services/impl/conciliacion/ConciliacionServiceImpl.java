@@ -32,6 +32,8 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.SubEstatusConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaSubEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
@@ -44,6 +46,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SubEstatusConciliacionDTO;
@@ -374,13 +377,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	}
 
 	@Override
-	public void actualizaSubEstatusConciliacion(ActualizaSubEstatusDTO ActualizaSubEstatusDTO, String usuario) {
+	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO, String usuario) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public ResumenConciliacionDTO resumenConciliaciones(ResumenConciliacionesRequest resumenConciliacionesRequest) {
+	public ResumenConciliacionDTO resumenConciliaciones(ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -403,7 +406,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	}
 		
 		
-
+	public void actualizarPS(ActualizarIdPSRequest actualizarIdPSRequest, String usuario) {
+		// TODO
+	}
 
 	/* (non-Javadoc)
 	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#generarConciliacion(java.lang.Integer, java.lang.String)

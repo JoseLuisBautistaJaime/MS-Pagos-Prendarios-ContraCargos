@@ -8,9 +8,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaIdPsRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaSubEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
@@ -20,7 +20,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionesRequest;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
@@ -82,26 +82,27 @@ public interface ConciliacionService {
 	public void enviarConciliacion(Integer idConciliacion, String usuario);
 	
 	
-//	/**
-//	 * sevicio callBack que será usuado para actualizar el id del registro de las pantallas que será devuelto por PeopleSoft.
-//	 * @param idsPS
-//	 * @param usuario
-//	 */
-//	public void actualizarPS(ActualizaIdPsRequestDTO actualizaIdPsRequestDTO, String usuario);
+	/**
+	 * sevicio callBack que será usuado para actualizar el id del registro de las pantallas que será devuelto por PeopleSoft.
+	 * @param idsPS
+	 * @param usuario
+	 */
+	public void actualizarPS(ActualizarIdPSRequest actualizarIdPSRequest, String usuario);
 	
 	
 	/**
 	 * Servicio que sirve para actualizar el subestatus del proceso de conciliacion para conocer el estatus de la consulta de los reportes.
-	 * @param ActualizaSubEstatusDTO
+	 * @param actualizarSubEstatusRequestDTO
 	 * @param usuario
 	 */
-	public void actualizaSubEstatusConciliacion(ActualizaSubEstatusDTO actualizaSubEstatusDTO, String usuario);
+	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO, String usuario);
 	
 	/**
 	 * Servicio que consulta el resumen de conciliaciones realizadas.
-	 * @param resumenConciliacionesRequest
+	 * @param resumenConciliacionRequestDTO
+	 * @return
 	 */
-	public ResumenConciliacionDTO resumenConciliaciones(ResumenConciliacionesRequest resumenConciliacionesRequest);
+	public ResumenConciliacionDTO resumenConciliaciones(ResumenConciliacionRequestDTO resumenConciliacionRequestDTO);
 	
 	/**
 	 * Realiza la consulta del log de las ultimas actividades realizadas en el sistema como son: altas reportes, movimientos realizados durante la conciliación, cambio de estatus.
