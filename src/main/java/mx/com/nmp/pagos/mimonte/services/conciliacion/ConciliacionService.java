@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
@@ -81,12 +82,12 @@ public interface ConciliacionService {
 	public void enviarConciliacion(Integer idConciliacion, String usuario);
 	
 	
-//	/**
-//	 * sevicio callBack que será usuado para actualizar el id del registro de las pantallas que será devuelto por PeopleSoft.
-//	 * @param idsPS
-//	 * @param usuario
-//	 */
-//	public void actualizarPS(ActualizaIdPsRequestDTO actualizaIdPsRequestDTO, String usuario);
+	/**
+	 * sevicio callBack que será usuado para actualizar el id del registro de las pantallas que será devuelto por PeopleSoft.
+	 * @param idsPS
+	 * @param usuario
+	 */
+	public void actualizarPS(ActualizarIdPSRequest actualizarIdPSRequest, String usuario);
 	
 	
 	/**

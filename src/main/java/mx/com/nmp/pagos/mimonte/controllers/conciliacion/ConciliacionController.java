@@ -528,7 +528,7 @@ public class ConciliacionController {
 		if(!ValidadorConciliacion.validateActualizarIdPSRequest(actualizarIdPSRequest))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		// Comentado por ahora, hasta que la funcionalidad de la capa de servicio este completa
-//		conciliacionServiceImpl.actualizaIdPs(actualizarIdPSRequest);
+		conciliacionServiceImpl.actualizarPS(actualizarIdPSRequest, lastModifiedBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.IDENTIFIER_PS_UPDATED_IN_THE_CONCILIATION, null);
 	}
 
