@@ -275,57 +275,6 @@ public class ConciliacionController {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_GENERACION, null);
 	}
-
-
-//	
-//	/**
-//	 *Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.
-//	 * 
-//	 * @param folio
-//	 * @param createdBy
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	@PostMapping(value = "/conciliacion/enviar/{folio}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//	@ApiOperation(httpMethod = "POST", value = "Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.", tags = {
-//			"Conciliación" })
-//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Conciliacion Enviada de forma Exitosa."),
-//			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-//			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-//			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-//	public Response enviaConcicliacion(@PathVariable(value = "folio", required = true) Integer folio,
-//			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-//
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Conciliacion Enviada de forma Exitosa.", null);
-//	}
-//	
-//	/**
-//	 * Realiza la consulta de los movimientos en transito de la conciliacion (con error).
-//	 * 
-//	 * @param folio
-//	 * @param createdBy
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	@GetMapping(value = "/conciliacion/transito/consulta/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@ApiOperation(httpMethod = "GET", value = "Realiza la consulta de los movimientos en transito de la conciliacion (con error).", tags = {
-//			"Conciliación" })
-//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta Folio"),
-//			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-//			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-//			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-//	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Integer folio) {
-//
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
-//				buildConsultaTransitoFolioDummy());
-//	}
-//	
-//	
-
 	
 	/**
 	 *Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.
