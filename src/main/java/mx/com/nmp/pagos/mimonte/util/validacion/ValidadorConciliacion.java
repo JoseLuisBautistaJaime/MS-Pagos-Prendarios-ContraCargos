@@ -18,6 +18,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestD
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
@@ -443,6 +444,27 @@ public interface ValidadorConciliacion {
 				&& null != consultaActividadesRequestDTO.getFechaHasta()) {
 			ini.setTime(consultaActividadesRequestDTO.getFechaDesde());
 			fin.setTime(consultaActividadesRequestDTO.getFechaHasta());
+			if (ini.after(fin) || hoy.before(ini))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Valida un objeto de tipo ConsultaActividadesRequest para que contenga todos
+	 * los atributos requeridos y que esteos tengan valores validos
+	 * 
+	 * @param consultaActividadesRequest
+	 * @return
+	 */
+	public static boolean validateConsultaActividadesRequest(ConsultaActividadesRequest consultaActividadesRequest) {
+		Calendar ini = Calendar.getInstance();
+		Calendar fin = Calendar.getInstance();
+		Calendar hoy = Calendar.getInstance();
+		if (null != consultaActividadesRequest && null != consultaActividadesRequest.getFechaDesde()
+				&& null != consultaActividadesRequest.getFechaHasta()) {
+			ini.setTime(consultaActividadesRequest.getFechaDesde());
+			fin.setTime(consultaActividadesRequest.getFechaHasta());
 			if (ini.after(fin) || hoy.before(ini))
 				return false;
 		}
