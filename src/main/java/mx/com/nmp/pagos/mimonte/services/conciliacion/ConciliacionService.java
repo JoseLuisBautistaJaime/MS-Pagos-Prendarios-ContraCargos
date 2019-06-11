@@ -22,6 +22,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 
 /**
@@ -155,6 +156,14 @@ public interface ConciliacionService {
 	 */
 	public Conciliacion getById(Integer idConcilacion);
 
+	/**
+	 * Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transaccional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.
+	 * Genera la sección global con el resumen de la conciliación, asi como la extracción de movimientos en tránsito y comisiones.
+	 * @param folio
+	 * @param lastModifiedBy
+	 * @throws ConciliacionException
+	 */
+	public void generarConciliacion(Integer folio, String lastModifiedBy) throws ConciliacionException;
 
 //
 //	/**

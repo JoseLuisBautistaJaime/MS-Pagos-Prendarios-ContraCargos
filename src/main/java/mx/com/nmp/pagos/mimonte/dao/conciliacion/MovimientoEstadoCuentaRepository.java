@@ -5,13 +5,10 @@
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 import java.util.List;
-
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 
@@ -47,7 +44,14 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	 * @return
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO(mm.id, mm.fechaOperacion, mm.concepto, mm.tipoMovimiento, mm.importe, ec.cabecera.saldoInicial, ec.totalesAdicional.saldoFinal) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
-	public List<MovimientoEstadoCuentaDBDTO> listMovimientos(@Param("folioConciliacion") final Long folioConciliacion,
-			Pageable pageable);
+	public List<MovimientoEstadoCuentaDBDTO> listMovimientos(@Param("folioConciliacion") final Long folioConciliacion
+			/*,Pageable pageable*/);
+
+	/**
+	 * Regresa los movimientos proveedor por id de reporte
+	 * @param idReporte
+	 * @return
+	 */
+	public List<MovimientoEstadoCuenta> findByReporte(@Param("reporteId") final Integer reporteId);
 
 }

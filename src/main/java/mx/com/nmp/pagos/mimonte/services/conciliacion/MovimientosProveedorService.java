@@ -9,8 +9,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -150,12 +148,12 @@ public class MovimientosProveedorService {
 	 * @return
 	 */
 	public List<MovimientoProveedorDTO> findByFolio(final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
-		@SuppressWarnings("deprecation")
-		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
-				commonConciliacionRequestDTO.getResultados());
+//		@SuppressWarnings("deprecation")
+//		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
+//				commonConciliacionRequestDTO.getResultados());
 		return MovimientosBuilder
 				.buildMovimientoProveedorDTOListFromMovimientoProveedorList(movimientoProveedorRepository
-						.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio(), pageable));
+						.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()/*, pageable*/));
 	}
 
 	/**

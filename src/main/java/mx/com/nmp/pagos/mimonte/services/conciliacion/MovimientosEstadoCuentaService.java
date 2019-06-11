@@ -163,10 +163,10 @@ public class MovimientosEstadoCuentaService {
 			final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		List<MovimientoEstadoCuentaDBDTO> movimientoEstadoCuentaDBDTOLst = null;
 		List<MovimientoEstadoCuentaDTO> movimientoEstadoCuentaDTOList = null;
-		Pageable pageable = PageRequest.of(commonConciliacionRequestDTO.getPagina(),
-				commonConciliacionRequestDTO.getResultados());
+//		Pageable pageable = PageRequest.of(commonConciliacionRequestDTO.getPagina(),
+//				commonConciliacionRequestDTO.getResultados());
 		movimientoEstadoCuentaDBDTOLst = movimientoEstadoCuentaRepository
-				.listMovimientos((long) commonConciliacionRequestDTO.getFolio(), pageable);
+				.listMovimientos((long) commonConciliacionRequestDTO.getFolio()/*, pageable*/);
 		movimientoEstadoCuentaDTOList = MovimientosBuilder
 				.buildMovimientoEstadoCuentaDTOListFromMovimientoEstadoCuentaDBDTOList(movimientoEstadoCuentaDBDTOLst);
 		return movimientoEstadoCuentaDTOList;

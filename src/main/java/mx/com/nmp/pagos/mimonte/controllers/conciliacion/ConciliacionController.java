@@ -32,17 +32,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
-import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaIdPsRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaSubEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
@@ -50,17 +45,10 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMidasProveedorRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesMovimientosDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusMovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.GlobalDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteEstadoCuentaDTO;
@@ -71,9 +59,13 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.DevolucionesServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
 /**
  * @name ConciliacionController
@@ -106,6 +98,13 @@ public class ConciliacionController {
 	@Autowired
 	private DevolucionesServiceImpl devolucionesServiceImpl;
 
+	/**
+	 * Repository de SolicitarPagosService
+	 */
+	@Autowired
+	@Qualifier("solicitarPagosService")
+	private SolicitarPagosService solicitarPagosService;
+	
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
@@ -249,6 +248,84 @@ public class ConciliacionController {
 		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_UPDATE, null);
 	}
+
+
+	/**
+	 * Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transaccional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.
+	 * Genera la sección global con el resumen de la conciliación, asi como la extracción de movimientos en tránsito y comisiones. 
+	 * 
+	 * @param ActualizaionConciliacionRequestDTO
+	 * @param LastModifiedBy
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PutMapping(value = "/conciliacion/generar/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transaccional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.", tags = {
+			"Conciliación" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Entidad encontrada"),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response generarConciliacion(@PathVariable(value = "folio", required = true) Integer folio,
+										@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+
+		conciliacionServiceImpl.generarConciliacion(folio, lastModifiedBy);
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_GENERACION, null);
+	}
+
+
+//	
+//	/**
+//	 *Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.
+//	 * 
+//	 * @param folio
+//	 * @param createdBy
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@ResponseStatus(HttpStatus.OK)
+//	@PostMapping(value = "/conciliacion/enviar/{folio}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//	@ApiOperation(httpMethod = "POST", value = "Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.", tags = {
+//			"Conciliación" })
+//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Conciliacion Enviada de forma Exitosa."),
+//			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+//			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+//			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+//	public Response enviaConcicliacion(@PathVariable(value = "folio", required = true) Integer folio,
+//			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+//
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Conciliacion Enviada de forma Exitosa.", null);
+//	}
+//	
+//	/**
+//	 * Realiza la consulta de los movimientos en transito de la conciliacion (con error).
+//	 * 
+//	 * @param folio
+//	 * @param createdBy
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@ResponseStatus(HttpStatus.OK)
+//	@GetMapping(value = "/conciliacion/transito/consulta/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
+//	@ApiOperation(httpMethod = "GET", value = "Realiza la consulta de los movimientos en transito de la conciliacion (con error).", tags = {
+//			"Conciliación" })
+//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta Folio"),
+//			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+//			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+//			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+//	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Integer folio) {
+//
+//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
+//				buildConsultaTransitoFolioDummy());
+//	}
+//	
+//	
+
 	
 	/**
 	 *Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.
@@ -319,11 +396,13 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response solicitarPagos(@RequestBody SolicitarPagosRequestDTO solicitarPagosRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		
-		conciliacionService.solicitarPagos(solicitarPagosRequestDTO, createdBy);
+		if(!ValidadorConciliacion.validateSolicitarPagosRequestDTO(solicitarPagosRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		solicitarPagosService.solicitarPagosService(solicitarPagosRequestDTO.getFolio(), solicitarPagosRequestDTO.getIdMovimientos(), createdBy);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Pago Exitosa.", null);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_PAYMENT_APPLICATION, null);
 	}
+
 	
 	/**
 	 * Marca las transacciones seleccionadas de movimientos en tránsito a movimientos de devolución para cuando los pagos solicitados no fueron realizados.
@@ -554,6 +633,7 @@ public class ConciliacionController {
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH, response);
 	}
+
 
 //	public static ConciliacionDTO buildDummy() {
 //		EstatusConciliacionDTO estatusConciliacionDTO = new EstatusConciliacionDTO(1, "En proceso", true);

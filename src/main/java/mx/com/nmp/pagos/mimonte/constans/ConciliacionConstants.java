@@ -78,50 +78,107 @@ public final class ConciliacionConstants {
 	public static final String SUCCESSFUL_UPDATE = "Actualización exitosa.";
 
 	/**
-	 * Mensaje que es mostrado cuando se intenta buscar o asociar un id de conciliacion que no existe
+	 * Mensaje mostrado para una consulta exitosa.
+	 */
+	public static final String SUCCESSFUL_GENERACION = "Se inicia proceso de conciliacion.";
+
+	/**
+	 * Mensaje que es mostrado cuando se intenta buscar o asociar un id de
+	 * conciliacion que no existe
 	 */
 	public static final String CONCILIACION_ID_NOT_FOUND = "No se encontro el id de conciliacion ingresado";
-	
+
 	/**
 	 * Mensaje mostrado cuando se ocurre un error al cambiar el estatus.
 	 */
 	public static final String AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS = "Ocurrio un error al actualizar el estatus de la devolución";
-	
+
 	/**
 	 * Constante para buscar devoluciones a partir del nombre.
 	 */
 	public static final String PENDING = "Pendiente";
-	
+
 	/**
 	 * Constante para buscar devoluciones a partir del nombre.
 	 */
 	public static final String REQUEST = "Solicitada";
-	
+
 	/**
 	 * Constante para buscar devoluciones a partir del nombre.
 	 */
 	public static final String LIQUIDATE = "Liquidada";
-	
+
 	/**
-	 * Se regresa cuando no se encuentra informacion en una busqueda relacionada con los procesos de conciliacion en general
+	 * Se regresa cuando no se encuentra informacion en una busqueda relacionada con
+	 * los procesos de conciliacion en general
 	 */
 	public static final String INFORMATION_NOT_FOUND = "No se encontro informacion relacionada con los parametros de busqueda";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando no es posible obtener una conciliacion de acuerdo a los parametros recibidos
+	 * Mensaje que es mostrado cuando no es posible obtener una conciliacion de
+	 * acuerdo a los parametros recibidos
 	 */
 	public static final String CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando no es posible obtener una comision de acuerdo a los parametros recibidos
+	 * Mensaje que es mostrado cuando no es posible obtener una comision de acuerdo
+	 * a los parametros recibidos
 	 */
 	public static final String COMISION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se intenta eliminar una comision y esta no puede ser eliminada por regla de negocio
+	 * Mensaje que es mostrado cuando se intenta eliminar una comision y esta no
+	 * puede ser eliminada por regla de negocio
 	 */
 	public static final String COMISION_CANT_BE_DELETED = "La comision no puede ser eliminada ya que fue no fue dada de alta desde la aplicacion.";
-	
+
+	/**
+	 * Mensaje que es mostrado cuando no se encuentran contactos a los cuales enviar
+	 * el email
+	 */
+	public static final String THERE_IS_NO_CONTACTS_TO_SEND_MAIL = "No existen contactos a los cuales enviar email";
+
+	/**
+	 * Mensaje que es mostrado cuando no se puede obtener el token en el servicio de
+	 * email
+	 */
+	public static final String CANNOT_GET_MAIL_TOKEN = "No fue posible obtener el token del email";
+
+	/**
+	 * Mensaje que aparece cuando el email no pudo ser enviado
+	 */
+	public static final String MAIL_CANNOT_BE_SEND = "El e-mail no pudo ser enviado";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la consulta de
+	 * movimientos en transito
+	 */
+	public static final String ERROR_ON_GET_MOVIMIENTOS_TRANSITO = "Se genero un error al consultar los movimientos en transito";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la actualizacion de
+	 * movimientos en transito
+	 */
+	public static final String ERROR_ON_UPDATE_MOVIMIENTOS_TRANSITO = "Se genero un error al consultar los movimientos en transito";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la insercion de
+	 * movimientos pago
+	 */
+	public static final String ERROR_ON_INSERT_MOVIMIENTOS_PAGO = "Se genero un error al insertar los movimientos pago";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la construccion del
+	 * email de movimientos en transito
+	 */
+	public static final String ERROR_ON_BUILD_EMAIL = "Se genero un error durante la creacion del email";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante el envio de emial
+	 * de movimientos en transito
+	 */
+	public static final String ERROR_ON_SENDING_EMAIL = "Se genero un error durante el envio del email";
+
 	/**
 	 * Mensaje que es mostrado cuando se inicia procesos de conciliación.
 	 */
@@ -221,8 +278,7 @@ public final class ConciliacionConstants {
 		 * coincidencia con un id de catalogo
 		 */
 		public static final String NO_CATALOG_INFORMATION = "No se encontro informacion de uno o mas catalogos";
-		
-		
+
 		/**
 		 * Mensaje que es mostrado cuando no se encuentra informacion para los
 		 * parametros de busqueda ingresados

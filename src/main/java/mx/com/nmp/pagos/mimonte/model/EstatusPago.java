@@ -31,6 +31,10 @@ public class EstatusPago extends AbstractCatalogo {
 		super();
 	}
 
+	public EstatusPago(Integer id) {
+		super(id);
+	}
+	
 	public EstatusPago(Integer id, String descripcionCorta, String descripcion) {
 		super(id, descripcionCorta, descripcion);
 	}

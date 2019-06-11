@@ -51,6 +51,38 @@ spring:
 # Variables utiles para app microservicios mimonte
 mimonte:
   variables:
+    mail:
+      response:
+        resp-key: respuesta
+        cod-key: codigo
+      from: mail@nmp.com
+      auth:
+        user: mimonte
+        password: iXjqY2ccS783PTF0
+      common-headers:
+        auth: Authorization
+        auth-value: Basic
+        content-type: Content-Type
+        id-consumidor: idConsumidor
+        id-consumidor-value: 42
+        id-destino: idDestino
+        id-destino-value: 100
+        usuario: usuario
+        usuario-value: usuario
+      token:
+        headers:
+          grant-key: grant_type
+          grant-value: client_credentials
+          scope-key: scope
+          scope-value: UserProfile.me
+          content-type-value: application/x-www-form-urlencoded
+        url: https://iamdr.montepiedad.com.mx:4444/NMP/oauth2/v1
+      send-mail:
+        success-flag: success
+        headers:
+          oauth-bearer-key: oauth.bearer
+          content-type-value: application/json
+        url: https://iamdr.montepiedad.com.mx:4444/NMP/Utileria/EnvioCorreo/v2
     cantidad-maxima-tarjetas: 3
     iva: 0.16
     dss:

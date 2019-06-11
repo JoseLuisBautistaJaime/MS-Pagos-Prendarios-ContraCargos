@@ -26,7 +26,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "to_movimiento_proveedor")
-public class MovimientoProveedor {
+public class MovimientoProveedor implements MovimientoReporte {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

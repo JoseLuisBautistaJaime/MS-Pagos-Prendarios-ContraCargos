@@ -29,4 +29,11 @@ public interface TipoContactoRepository extends JpaRepository<TipoContacto, Long
 	 */
 	public TipoContacto findByDescription(final String name);
 
+	/**
+	 * Regresa un tipo de contacto en el que su descripcion contega la palabra especificada
+	 * @param description
+	 * @return
+	 */
+	public TipoContacto findByDescriptionContaining(final String description);
+	
 }

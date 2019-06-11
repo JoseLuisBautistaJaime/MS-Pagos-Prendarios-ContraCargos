@@ -3,7 +3,6 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +23,7 @@ import mx.com.nmp.pagos.mimonte.model.Updatable;
  */
 @Entity
 @Table(name = "to_movimiento_conciliacion")
-@Inheritance(strategy=InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 public class MovimientoConciliacion extends Updatable implements Serializable {
 
 	/**
@@ -36,12 +35,16 @@ public class MovimientoConciliacion extends Updatable implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	private Integer id;
-	
+
 	@Column(name = "id_conciliacion")
 	private Integer idConciliacion;
-	
+
 	@Column(name = "nuevo")
 	private Boolean nuevo;
+
+	@ManyToOne
+	@JoinColumn(name = "id_movimiento_midas")
+	private MovimientoMidas movimientoMidas;
 
 	public MovimientoConciliacion() {
 		super();
@@ -56,6 +59,22 @@ public class MovimientoConciliacion extends Updatable implements Serializable {
 		this.id = id;
 		this.idConciliacion = idConciliacion;
 		this.nuevo = nuevo;
+	}
+
+	public MovimientoConciliacion(Integer id, Integer idConciliacion, Boolean nuevo, MovimientoMidas movimientoMidas) {
+		super();
+		this.id = id;
+		this.idConciliacion = idConciliacion;
+		this.nuevo = nuevo;
+		this.movimientoMidas = movimientoMidas;
+	}
+
+	public MovimientoMidas getMovimientoMidas() {
+		return movimientoMidas;
+	}
+
+	public void setMovimientoMidas(MovimientoMidas movimientoMidas) {
+		this.movimientoMidas = movimientoMidas;
 	}
 
 	public Integer getId() {
@@ -122,5 +141,5 @@ public class MovimientoConciliacion extends Updatable implements Serializable {
 	@Override
 	public String toString() {
 		return "MovimientoConciliacion [id=" + id + ", idConciliacion=" + idConciliacion + ", nuevo=" + nuevo + "]";
-	}	
+	}
 }
