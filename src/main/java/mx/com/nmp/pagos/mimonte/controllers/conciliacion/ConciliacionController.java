@@ -495,11 +495,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Integer folio,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser,
-			@RequestHeader(CatalogConstants.REQUEST_HEADER_URL) String urlCallBack) {		
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {		
 		if(!ValidadorConciliacion.validateInteger(folio))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		conciliacionServiceImpl.generarConciliacion(folio, urlCallBack);
+		conciliacionServiceImpl.generarConciliacion(folio, requestUser);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.CONCILIATION_PROCESS_BEGINS, null);		
 	}
 	
