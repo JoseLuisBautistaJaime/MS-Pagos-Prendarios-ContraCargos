@@ -9,9 +9,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.util.Calendar;
 
@@ -174,13 +173,16 @@ public class MovimientosEstadoCuentaService {
 
 	/**
 	 * Guarda un reporte relacionado con un movimiento de estado de cuenta
-	 * @return reporte
-	 * @param saveEstadoCuentaRequestDTO
+	 * @param request
 	 * @param userRequest
 	 */
-	public Reporte save(final SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO, final String userRequest) {
-		Reporte reporte = reporteRepository.save(
-				ReporteBuilder.buildReporteFromSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO, userRequest));
+	@Transactional
+	public Reporte save(final SaveEstadoCuentaRequestDTO request, final String userRequest) {
+		
+		// Insertar el nuevo reporte (este reporte sera el nuevo reporte a considerar)
+		Reporte reporte = ReporteBuilder.buildReporteFromSaveEstadoCuentaRequestDTO(request, userRequest);
+		reporte = reporteRepository.save(reporte);
+
 		return reporte;
 	}
 
@@ -190,11 +192,28 @@ public class MovimientosEstadoCuentaService {
 	 * @param saveEstadoCuentaRequestDTO
 	 * @param userRequest
 	 */
-	public void procesarConsultaEstadoCuenta(Date fechaInicial, Date fechaFinal, Long idConciliacion, Long idReporte) throws ConciliacionException {
+	@Transactional
+	public void procesarConsultaEstadoCuenta(SaveEstadoCuentaRequestDTO request, final String userRequest) throws ConciliacionException {
+
+		Reporte reporte = null;
+		try {
+			reporte = save(request, userRequest);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al guardar la solicitud de consulta de estado de cuenta");
+		}
+
+		if (reporte == null || reporte.getId() == null || reporte.getId() == 0) {
+			throw new ConciliacionException("Error al guardar la solicitud de consulta de estado de cuenta");
+		}
 
 		// Consulta los diferentes estados de cuenta por cada fecha
-		Date fechaEstadoCuenta = fechaInicial;
-		while (!fechaEstadoCuenta.after(fechaFinal)) {
+		Date fechaEstadoCuenta = reporte.getFechaDesde();
+		long idConciliacion = reporte.getConciliacion().getId().longValue();
+		long idReporte = reporte.getId();
+		
+		while (!fechaEstadoCuenta.after(reporte.getFechaHasta())) {
 
 			// Lee el archivo usando la implementacion cuaderno 43
 			EstadoCuentaFileLayout estadoCuentaFileLayout = estadoCuentaReaderService.read(fechaEstadoCuenta, idConciliacion, EstadoCuentaImplementacionEnum.CUADERNO_43);
@@ -231,6 +250,7 @@ public class MovimientosEstadoCuentaService {
 				}
 			}
 			catch (Exception ex) {
+				ex.printStackTrace();
 				throw new ConciliacionException("Error al persistir los movimientos del archivo del estado de cuenta");
 			}
 

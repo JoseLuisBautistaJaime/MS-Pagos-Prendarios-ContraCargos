@@ -2,89 +2,48 @@ Feature: MS Conciliacion- ComisionesTransacciones
 	Background:
 		* url 'http://localhost:8080'
 		* header Accept = 'application/json'
-	Scenario: Da de alta una comision (CORRECTO)
-		Given path 'mimonte/comisiones'
-		And header requestUser = 'ismael'
-		And request {"folio":1,"id":1,"fechaOperacion":"2019/01/01","fechaCargo":"2019/01/01","monto":1500.5,"descripcion":"Descripcion 1"}
-		When method POST
-		Then status 200
-
-	Scenario: Da de alta una comision con fechas posteriores a la actual(INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And header requestUser = 'ismael'
-		And request {"folio":1,"id":1,"fechaOperacion":"2050/01/01","fechaCargo":"2050/01/01","monto":1500.5,"descripcion":"Descripcion 1"}
-		When method POST
-		Then status 200
-
-	Scenario: Da de alta una comision con folio e id menor a 0(INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And header requestUser = 'ismael'
-		And request {"folio":-1,"id":-11,"fechaOperacion":"2019/01/01","fechaCargo":"2019/29/01","monto":1500.5,"descripcion":"Descripcion 1"}
-		When method POST
-		Then status 200
-
-	Scenario: Da de alta una comision con folio e id igual a 0(INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And header requestUser = 'ismael'
-		And request {"folio":0,"id":0,"fechaOperacion":"2019/01/01","fechaCargo":"2019/29/01","monto":1500.5,"descripcion":"Descripcion 1"}
-		When method POST
-		Then status 200
-
-	Scenario: Da de alta una comision con monto igual a 0(INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And header requestUser = 'ismael'
-		And request {"folio":0,"id":0,"fechaOperacion":"2019/01/01","fechaCargo":"2019/29/01","monto":0.0,"descripcion":"Descripcion 1"}
-		When method POST
-		Then status 200
-
-	Scenario: Elimina una comision (CORRECTO)
-		Given path 'mimonte/comisiones'
-		And request {"folio":1,"idComisiones":[1,2,3,4,5,6,7]}
-		When method DELETE
-		Then status 200
-
-	Scenario: Elimina una comision lista de ids comisiones vacia (INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And request {"folio":1,"idComisiones":[]}
-		When method DELETE
-		Then status 200
-
-	Scenario: Elimina una comision folio igual a 0 (INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And request {"folio":0,"idComisiones":[1,2,3,4,5,6]}
-		When method DELETE
-		Then status 200
-
-	Scenario: Regresa una lista de comisiones por folio de conciliacion (CORRECTO)
-		Given path 'mimonte/comisiones/consulta/1'
+	Scenario: Realiza la consulta de movimientos de devolución para la conciliacion.
+		Given path '/mimonte/conciliacion/devoluciones/consulta/1'
 		When method GET
 		Then status 200
 
-	Scenario: Regresa una lista de comisiones por folio de conciliacion con folio igual 0 (INCORRECTO)
-		Given path 'mimonte/comisiones/consulta/0'
-		When method GET
-		Then status 200
-
-	Scenario: Regresa una proyeccion de movimientos de tipo Pagos y Devoluciones ademas el total de comisiones (CORRECTO)
-		Given path 'mimonte/comisiones/consulta/transacciones'
-		And request {"fechaDesde":"2019/01/01","fechaHasta":"2019/12/01","comision":1.2}
+	Scenario: Realiza la liquidación de los movimientos seleccionados; se debe especificar la fecha de liquidación para cada uno de los movimientos.
+		Given path '/mimonte/conciliacion/devoluciones/liquidar'
+		And header requestUser = 'SISTEMA'
+		And request {"folio":1,"movimientos":[{"fecha":"2019-06-11T15:14:03.890Z","id":1}]}
 		When method POST
 		Then status 200
 
-	Scenario: Regresa una proyeccion de movimientos de tipo Pagos y Devoluciones ademas el total de comisiones fechas posiblemente posteriores a hoy (INCORRECTO)
-		Given path 'mimonte/comisiones/consulta/transacciones'
-		And request {"fechaDesde":"2050/01/01","fechaHasta":"2050/12/01","comision":1.2}
+	Scenario: El estatus de la transacción de devolución cambiará de Pendiente a Solicitada.
+		Given path '/mimonte/conciliacion/devoluciones/solicitar'
+		And header requestUser = 'SISTEMA'
+		And request {"folio":1}
 		When method POST
 		Then status 200
 
-	Scenario: Regresa una proyeccion de movimientos de tipo Pagos y Devoluciones ademas el total de comisiones fecha desde posterior a fecha hasta (INCORRECTO)
-		Given path 'mimonte/comisiones/consulta/transacciones'
-		And request {"fechaDesde":"2019/02/01","fechaHasta":"2019/01/01","comision":1.2}
+	Scenario: Marca las transacciones seleccionadas de movimientos en tránsito a movimientos de devolución para cuando los pagos solicitados no fueron realizados.
+		Given path '/mimonte/conciliacion/marcardevoluciones'
+		And header requestUser = 'SISTEMA'
+		And request {"folio":1,"idMovimientos":[1]}
 		When method POST
 		Then status 200
 
-	Scenario: Regresa una proyeccion de movimientos de tipo Pagos y Devoluciones ademas el total de comisiones comision menor a 0 (INCORRECTO)
-		Given path 'mimonte/comisiones/consulta/transacciones'
-		And request {"fechaDesde":"2019/02/01","fechaHasta":"2019/01/01","comision":-1.2}
+	Scenario: Realiza la administración de devoluciones a nivel entidad - Actualización de la fecha y liquidación para las devoluciones.
+		Given path '/mimonte/devoluciones/actualizacion'
+		And header requestUser = 'SISTEMA'
+		And request [{"fecha":"2019-06-11T15:14:04.226Z","idMovimiento":1,"liquidar":true}]
+		When method PUT
+		Then status 200
+
+	Scenario: Realiza la administración de devoluciones a nivel entidad - Consulta de devoluciones para todas las entidades bancarias.
+		Given path '/mimonte/devoluciones/consulta'
+		And request {"estatus":1,"fechaDesde":"2019-06-11T15:14:04.235Z","fechaHasta":"2019-06-11T15:14:04.235Z","idEntidad":1,"identificadorCuenta":"1234","sucursal":1}
+		When method POST
+		Then status 200
+
+	Scenario: Realiza la administración de devoluciones a nivel entidad - Enviar solicitud de devoluciones.
+		Given path '/mimonte/devoluciones/solicitar'
+		And header requestUser = 'SISTEMA'
+		And request {"idsMovimientos":[1]}
 		When method POST
 		Then status 200

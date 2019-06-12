@@ -51,6 +51,10 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 	@Column(name = "tipo")
 	private TipoMovimientoEnum tipo;
 
+	@Column(name="id_movimiento_estado_cuenta")
+	private Long idMovimientoEstadoCuenta;
+
+
 	public MovimientoComision() {
 		super();
 	}
@@ -113,9 +117,18 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 		this.tipo = tipo;
 	}
 
+	public Long getIdMovimientoEstadoCuenta() {
+		return idMovimientoEstadoCuenta;
+	}
+
+	public void setIdMovimientoEstadoCuenta(Long idMovimientoEstadoCuenta) {
+		this.idMovimientoEstadoCuenta = idMovimientoEstadoCuenta;
+	}
+
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(fechaOperacion, fechaCargo, monto, descripcion, estatus, tipo);
+		return Objects.hash(fechaOperacion, fechaCargo, monto, descripcion, estatus, tipo, idMovimientoEstadoCuenta);
 	}
 
 	@Override
@@ -133,7 +146,7 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 	@Override
 	public String toString() {
 		return "MovimientoComision [fechaOperacion=" + fechaOperacion + ", fechaCargo=" + fechaCargo + ", monto="
-				+ monto + ", descripcion=" + descripcion + ", estatus=" + estatus + ", tipo=" + tipo + "]";
+				+ monto + ", descripcion=" + descripcion + ", estatus=" + estatus + ", tipo=" + tipo + ", idMovimientoEstadoCuenta=" + idMovimientoEstadoCuenta + "]";
 	}
 
 }

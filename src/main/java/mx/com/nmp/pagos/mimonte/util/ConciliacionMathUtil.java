@@ -14,7 +14,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
  * @creationDate 06/10/2019 20:47 hrs.
  * @version 0.1
  */
-public class MergeMathUtil {
+public class ConciliacionMathUtil {
 
 
 	// Sumatorias

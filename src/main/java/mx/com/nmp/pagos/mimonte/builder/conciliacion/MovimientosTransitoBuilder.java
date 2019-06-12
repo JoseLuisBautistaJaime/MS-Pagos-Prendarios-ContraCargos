@@ -121,6 +121,12 @@ public abstract class MovimientosTransitoBuilder {
 		return movTransito;
 	}
 
+
+	/**
+	 * Crea un movimiento transito a partir de un movimiento midas
+	 * @param movMidas
+	 * @return
+	 */
 	public static MovimientoTransito buildMovTransitoFromMovMidas(MovimientoMidas movMidas) {
 		MovimientoTransito movTransito = new MovimientoTransito();
 		movTransito.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
@@ -136,7 +142,7 @@ public abstract class MovimientosTransitoBuilder {
 		movTransito.setTitular(movTransito.getTitular());
 		movTransito.setMovimientoMidas(movMidas);
 		movTransito.setNuevo(false);
-		movTransito.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS));
+		movTransito.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS.intValue()));
 		return movTransito;
 	}
 
