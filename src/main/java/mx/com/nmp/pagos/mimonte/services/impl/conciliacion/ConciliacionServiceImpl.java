@@ -30,15 +30,25 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.SubEstatusConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaSubEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusConciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionesRequest;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SubEstatusConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
@@ -353,7 +363,52 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	public Conciliacion getById(Integer idConciliacion) {
 		return conciliacionRepository.findByFolio(idConciliacion);
 	}
+	
+	@Override
+	public void generarConciliacion(Integer idConciliacion, String usuario, String urlCallBack) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void enviarConciliacion(Integer idConciliacion, String usuario) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO, String usuario) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ResumenConciliacionDTO resumenConciliaciones(ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ConsultaActividadDTO> consultaActividades(ConsultaActividadesRequest consultaActividadesRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<MovTransitoDTO> consultaMovimientosTransito(Integer folio) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void solicitarPagos(SolicitarPagosRequestDTO solicitarPagosRequestDTO, String usuario) {
+		// TODO Auto-generated method stub
+	}
+		
+		
+	public void actualizarPS(ActualizarIdPSRequest actualizarIdPSRequest, String usuario) {
+		// TODO
+	}
 
 	/* (non-Javadoc)
 	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#generarConciliacion(java.lang.Integer, java.lang.String)
@@ -384,6 +439,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		ReporteObservable reporteObservable = new ReporteObservable(reportes, idConciliacion);
 		reporteObservable.addObserver(reporteObserver);
 		reporteObservable.notifyObservers();
+
 
 	}
 

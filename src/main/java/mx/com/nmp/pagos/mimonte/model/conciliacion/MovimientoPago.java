@@ -4,11 +4,11 @@
  */
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -35,14 +35,23 @@ public class MovimientoPago extends MovimientoConciliacion implements Comparable
 	@ManyToOne
 	@JoinColumn(name = "estatus", nullable = false)
 	private EstatusPago estatus;
-	
+
+	@Column(name = "monto")
+	private BigDecimal monto;
+
 	public MovimientoPago() {
 		super();
 	}
-	
+
 	public MovimientoPago(EstatusPago estatus) {
 		super();
 		this.estatus = estatus;
+	}
+
+	public MovimientoPago(EstatusPago estatus, BigDecimal monto) {
+		super();
+		this.estatus = estatus;
+		this.monto = monto;
 	}
 
 	public EstatusPago getEstatus() {
@@ -52,15 +61,19 @@ public class MovimientoPago extends MovimientoConciliacion implements Comparable
 	public void setEstatus(EstatusPago estatus) {
 		this.estatus = estatus;
 	}
+	
+	
+	public BigDecimal getMonto() {
+		return monto;
+	}
 
-	@Override
-	public String toString() {
-		return "MovimientoPago [estatus=" + estatus + "]";
+	public void setMonto(BigDecimal monto) {
+		this.monto = monto;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(estatus);
+		return Objects.hash(estatus, monto);
 	}
 
 	@Override
@@ -79,6 +92,11 @@ public class MovimientoPago extends MovimientoConciliacion implements Comparable
 	@Override
 	public int compareTo(MovimientoPago arg0) {
 		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return "MovimientoPago [estatus=" + estatus + ", monto=" + monto + "]";
 	}
 
 }

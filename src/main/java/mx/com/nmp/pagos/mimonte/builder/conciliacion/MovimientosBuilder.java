@@ -370,7 +370,8 @@ public abstract class MovimientosBuilder {
 	 * @param mc
 	 * @return
 	 */
-	public static MovimientoPago buildMovimientoPagoFromMovimientoConciliacion(MovimientoConciliacion mc, final String createdBy) {
+	public static MovimientoPago buildMovimientoPagoFromMovimientoConciliacion(MovimientoConciliacion mc,
+			final String createdBy) {
 		MovimientoPago movimientoPago = null;
 		if (null != mc) {
 			movimientoPago = new MovimientoPago();
@@ -381,7 +382,11 @@ public abstract class MovimientosBuilder {
 			movimientoPago.setIdConciliacion(mc.getIdConciliacion());
 			movimientoPago.setLastModifiedBy(null);
 			movimientoPago.setLastModifiedDate(null);
-			movimientoPago.setMovimientoMidas(new MovimientoMidas(mc.getMovimientoMidas().getId()));
+			movimientoPago.setMovimientoMidas(
+					null != mc.getMovimientoMidas() ? new MovimientoMidas(mc.getMovimientoMidas().getId()) : null);
+			movimientoPago.setMonto(null != mc.getMovimientoMidas() && null != mc.getMovimientoMidas().getMonto()
+					? mc.getMovimientoMidas().getMonto()
+					: null);
 			movimientoPago.setNuevo(false);
 		}
 		return movimientoPago;

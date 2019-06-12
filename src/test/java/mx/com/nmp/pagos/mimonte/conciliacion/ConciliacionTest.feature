@@ -2,89 +2,70 @@ Feature: MS Conciliacion- ComisionesTransacciones
 	Background:
 		* url 'http://localhost:8080'
 		* header Accept = 'application/json'
-	Scenario: Da de alta una comision (CORRECTO)
-		Given path 'mimonte/comisiones'
-		And header requestUser = 'ismael'
-		And request {"folio":1,"id":1,"fechaOperacion":"2019/01/01","fechaCargo":"2019/01/01","monto":1500.5,"descripcion":"Descripcion 1"}
+	Scenario: para dar de alta una nueva conciliacion para entidad y cuenta seleccionados
+		Given path 'mimonte/conciliacion'
+		And header requestUser = 'SISTEMA'
+		And request {"idCuenta": 1,"idEntidad": 1}
 		When method POST
 		Then status 200
 
-	Scenario: Da de alta una comision con fechas posteriores a la actual(INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And header requestUser = 'ismael'
-		And request {"folio":1,"id":1,"fechaOperacion":"2050/01/01","fechaCargo":"2050/01/01","monto":1500.5,"descripcion":"Descripcion 1"}
+	Scenario: Se encarga de guardar los cambios realizados en la conciliacion para las secciones de movimientos en transito.
+		Given path '/mimonte/conciliacion'
+		And header requestUser = 'SISTEMA'
+		And request {"comisiones":[{"descripcion":"prueba","estatus":true,"fecha":"2019-06-05T19:00:38.642Z","id":1,"monto":123}],"folio":1,"movimientosTransito":[{"id":1,"tipo":"prueba"}]}
+		When method PUT
+		Then status 200
+
+	Scenario: Realiza la consulta del log de las últimas actividades realizadas en el sistema.
+		Given path '/mimonte/conciliacion/actividades'
+		And request {"fechaDesde":"2019-06-05T19:00:38.660Z","fechaHasta":"2019-06-05T19:00:38.660Z","folio":1}
 		When method POST
 		Then status 200
 
-	Scenario: Da de alta una comision con folio e id menor a 0(INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And header requestUser = 'ismael'
-		And request {"folio":-1,"id":-11,"fechaOperacion":"2019/01/01","fechaCargo":"2019/29/01","monto":1500.5,"descripcion":"Descripcion 1"}
+	Scenario: Servicio callback que será usado para actualizar el id del registro de las plantillas que será devuelto por PeopleSoft
+		Given path '/mimonte/conciliacion/actualizarPS'
+		And header requestUser = 'SISTEMA'
+		And request {"folio":1,"idEstatusConciliacion":1,"idPeopleSoft":1}
+		When method PUT
+		Then status 200
+
+	Scenario: Servicio que será usado para actualizar el sub estatus del proceso de conciliación para conocer el estatus de la consulta de los reportes
+		Given path '/mimonte/conciliacion/actualizarSubEstatus'
+		And header requestUser = 'SISTEMA'
+		And request {"descripcion":"PRUEBA","folio":1,"idSubEstatus":1}
+		When method PUT
+		Then status 200
+
+	Scenario: Realiza la consulta de las conciliaciones dadas de alta en el sistema
+		Given path '/mimonte/conciliacion/consulta'
+		And request {"fechaDesde":"2019-06-05T19:00:38.702Z","fechaHasta":"2019-06-05T19:00:38.702Z","folio":1,"idEntidad":1,"idEstatus":1}
 		When method POST
 		Then status 200
 
-	Scenario: Da de alta una comision con folio e id igual a 0(INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And header requestUser = 'ismael'
-		And request {"folio":0,"id":0,"fechaOperacion":"2019/01/01","fechaCargo":"2019/29/01","monto":1500.5,"descripcion":"Descripcion 1"}
-		When method POST
-		Then status 200
-
-	Scenario: Da de alta una comision con monto igual a 0(INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And header requestUser = 'ismael'
-		And request {"folio":0,"id":0,"fechaOperacion":"2019/01/01","fechaCargo":"2019/29/01","monto":0.0,"descripcion":"Descripcion 1"}
-		When method POST
-		Then status 200
-
-	Scenario: Elimina una comision (CORRECTO)
-		Given path 'mimonte/comisiones'
-		And request {"folio":1,"idComisiones":[1,2,3,4,5,6,7]}
-		When method DELETE
-		Then status 200
-
-	Scenario: Elimina una comision lista de ids comisiones vacia (INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And request {"folio":1,"idComisiones":[]}
-		When method DELETE
-		Then status 200
-
-	Scenario: Elimina una comision folio igual a 0 (INCORRECTO)
-		Given path 'mimonte/comisiones'
-		And request {"folio":0,"idComisiones":[1,2,3,4,5,6]}
-		When method DELETE
-		Then status 200
-
-	Scenario: Regresa una lista de comisiones por folio de conciliacion (CORRECTO)
-		Given path 'mimonte/comisiones/consulta/1'
+	Scenario: Realiza la consulta de la conciliación desde la pantalla de consulta de conciliaciones.
+		Given path '/mimonte/conciliacion/consulta/1'
 		When method GET
 		Then status 200
 
-	Scenario: Regresa una lista de comisiones por folio de conciliacion con folio igual 0 (INCORRECTO)
-		Given path 'mimonte/comisiones/consulta/0'
-		When method GET
-		Then status 200
-
-	Scenario: Regresa una proyeccion de movimientos de tipo Pagos y Devoluciones ademas el total de comisiones (CORRECTO)
-		Given path 'mimonte/comisiones/consulta/transacciones'
-		And request {"fechaDesde":"2019/01/01","fechaHasta":"2019/12/01","comision":1.2}
+	Scenario: Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.
+		Given path '/mimonte/conciliacion/enviar/1'
+		And header requestUser = 'SISTEMA'
 		When method POST
 		Then status 200
 
-	Scenario: Regresa una proyeccion de movimientos de tipo Pagos y Devoluciones ademas el total de comisiones fechas posiblemente posteriores a hoy (INCORRECTO)
-		Given path 'mimonte/comisiones/consulta/transacciones'
-		And request {"fechaDesde":"2050/01/01","fechaHasta":"2050/12/01","comision":1.2}
+	Scenario: Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transaccional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.
+		Given path '/mimonte/conciliacion/generar/1'
+		And header requestUser = 'SISTEMA'
 		When method POST
 		Then status 200
 
-	Scenario: Regresa una proyeccion de movimientos de tipo Pagos y Devoluciones ademas el total de comisiones fecha desde posterior a fecha hasta (INCORRECTO)
-		Given path 'mimonte/comisiones/consulta/transacciones'
-		And request {"fechaDesde":"2019/02/01","fechaHasta":"2019/01/01","comision":1.2}
+	Scenario: Servicio que consulta el resumen de conciliaciones realizadas.
+		Given path '/mimonte/conciliacion/resumen'
+		And request {"fechaFinal":"2019-06-11T15:14:04.023Z","fechaInicial":"2018-06-11T15:14:04.023Z"}
 		When method POST
 		Then status 200
 
-	Scenario: Regresa una proyeccion de movimientos de tipo Pagos y Devoluciones ademas el total de comisiones comision menor a 0 (INCORRECTO)
-		Given path 'mimonte/comisiones/consulta/transacciones'
-		And request {"fechaDesde":"2019/02/01","fechaHasta":"2019/01/01","comision":-1.2}
+	Scenario: Realiza la consulta de los movimientos en transito de la conciliacion (con error)
+		Given path '/mimonte/conciliacion/transito/consulta/1'
 		When method POST
 		Then status 200
