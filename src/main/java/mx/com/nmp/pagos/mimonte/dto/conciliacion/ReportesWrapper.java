@@ -114,7 +114,6 @@ public class ReportesWrapper {
 		return reporteEstadoCuenta;
 	}
 
-
 	public void setReporteMidas(List<MovimientoMidas> movimientosMidas, Reporte reporteMidas) {
 		this.movimientosMidas = movimientosMidas;
 		this.reporteMidas = reporteMidas;

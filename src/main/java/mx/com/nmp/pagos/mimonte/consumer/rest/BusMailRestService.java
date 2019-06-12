@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,6 +18,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import mx.com.nmp.pagos.mimonte.constans.MailServiceConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.GeneralBusMailDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TokenServiceReponseDTO;
 
@@ -34,130 +35,11 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.TokenServiceReponseDTO;
 public class BusMailRestService {
 
 	/**
-	 * URL para servicio que provee el token
+	 * Clase de constantes que mapean propiedades relacionadas con el envio de
+	 * e-mail por medio del servicio expuesto por BUS
 	 */
-	@Value(value = "${mimonte.variables.mail.token.url}")
-	private String urlGetToken;
-
-	/**
-	 * URL para el servicio de envio de e-mail
-	 */
-	@Value(value = "${mimonte.variables.mail.send-mail.url}")
-	private String urlSendEmail;
-
-	/**
-	 * Key de Cabecera de autenticacion
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.auth}")
-	private String headerAuthKey;
-
-	/**
-	 * Valor de cabecera de autenticacion
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.auth-value}")
-	private String headerAuthValue;
-
-	/**
-	 * Key de cabecera para tipo de contenido
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.content-type}")
-	private String contentTypeKey;
-
-	/**
-	 * Valor para cabecera con tipo de contenido para servicio de token
-	 */
-	@Value(value = "${mimonte.variables.mail.token.headers.content-type-value}")
-	private String tokenContentTypeValue;
-
-	/**
-	 * Valor para cabecera con tipo de contenido para servicio de envio de e-mail
-	 */
-	@Value(value = "${mimonte.variables.mail.send-mail.headers.content-type-value}")
-	private String senMailContentTypeValue;
-
-	/**
-	 * Key de Cabecera para id de consumidor
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.id-consumidor}")
-	private String idConsumidorKey;
-
-	/**
-	 * Valor de cabecera para id consumidor
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.id-consumidor-value}")
-	private String idConsumidorValue;
-
-	/**
-	 * Key para cabecera de id de destino
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.id-destino}")
-	private String idDestinoKey;
-
-	/**
-	 * Valor para cabecera de id de destino
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.id-destino-value}")
-	private String idDestinoValue;
-
-	/**
-	 * Key para cabecera de usuario
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.usuario}")
-	private String usuarioKey;
-
-	/**
-	 * Valor para cabecera de usuario
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.usuario-value}")
-	private String usuarioValue;
-
-	/**
-	 * Key para cabecera de envio de mail que contiene el token
-	 */
-	@Value(value = "${mimonte.variables.mail.send-mail.headers.oauth-bearer-key}")
-	private String oauthBearer;
-
-	/**
-	 * Bandera que indica si la operacion de envio se realizo correctamente
-	 */
-	@Value(value = "${mimonte.variables.mail.send-mail.success-flag}")
-	private String flagSendingSuccess;
-
-	/**
-	 * Key de cabecera para propiedad GrantTypeKey
-	 */
-	@Value(value = "${mimonte.variables.mail.token.headers.grant-key}")
-	private String headerGrantTypeKey;
-
-	/**
-	 * Valor de cabecera para propiedad GrantTypeKey
-	 */
-	@Value(value = "${mimonte.variables.mail.token.headers.grant-value}")
-	private String headerGrantTypeValue;
-
-	/**
-	 * Key de cabecera para propiedad scope
-	 */
-	@Value(value = "${mimonte.variables.mail.token.headers.scope-key}")
-	private String headerScopeKey;
-
-	/**
-	 * Valor de cabecera para propiedad scope
-	 */
-	@Value(value = "${mimonte.variables.mail.token.headers.scope-value}")
-	private String headerScopeValue;
-
-	/**
-	 * Key para el objeto de respuesta 'respuesta' de envio de e-mail
-	 */
-	@Value(value = "${mimonte.variables.mail.response.resp-key}")
-	private String responseRespKey;
-
-	/**
-	 * Key para el objeto de respuesta 'codigo' de envio de e-mail
-	 */
-	@Value(value = "${mimonte.variables.mail.response.cod-key}")
-	private String responseCodpKey;
+	@Autowired
+	private MailServiceConstants mc;
 
 	public BusMailRestService() {
 		super();
@@ -173,12 +55,12 @@ public class BusMailRestService {
 	public String postForGetToken(final String user, final String password) {
 		RestTemplate restTemplate = new RestTemplate();
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-		map.add(headerGrantTypeKey, headerGrantTypeValue);
-		map.add(headerScopeKey, headerScopeValue);
+		map.add(mc.headerGrantTypeKey, mc.headerGrantTypeValue);
+		map.add(mc.headerScopeKey, mc.headerScopeValue);
 		HttpEntity<MultiValueMap<String, String>> request2 = new HttpEntity<MultiValueMap<String, String>>(map,
 				createHeadersToken(user, password));
-		ResponseEntity<TokenServiceReponseDTO> response = restTemplate.exchange(urlGetToken, HttpMethod.POST, request2,
-				TokenServiceReponseDTO.class);
+		ResponseEntity<TokenServiceReponseDTO> response = restTemplate.exchange(mc.urlGetToken, HttpMethod.POST,
+				request2, TokenServiceReponseDTO.class);
 		TokenServiceReponseDTO obj = response.getBody();
 		return null != obj && null != obj.getAccess_token() ? obj.getAccess_token() : null;
 	}
@@ -199,12 +81,13 @@ public class BusMailRestService {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<GeneralBusMailDTO> request = new HttpEntity<>(generalBusMailDTO,
 				createHeadersSend(user, password, bearerToken));
-		Object resp = restTemplate.postForObject(urlSendEmail, request, Object.class);
+		Object resp = restTemplate.postForObject(mc.urlSendEmail, request, Object.class);
 		obj = new LinkedHashMap<>();
 		obj = (LinkedHashMap) resp;
-		return null != obj && null != obj.get(responseRespKey)
-				&& null != ((LinkedHashMap) (obj.get(responseRespKey))).get(responseCodpKey) && flagSendingSuccess
-						.equals(((LinkedHashMap) (obj.get(responseRespKey))).get(responseCodpKey).toString());
+		return null != obj && null != obj.get(mc.responseRespKey)
+				&& null != ((LinkedHashMap) (obj.get(mc.responseRespKey))).get(mc.responseCodpKey)
+				&& mc.flagSendingSuccess
+						.equals(((LinkedHashMap) (obj.get(mc.responseRespKey))).get(mc.responseCodpKey).toString());
 	}
 
 	/**
@@ -220,11 +103,11 @@ public class BusMailRestService {
 		byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
 		String base64Creds = new String(base64CredsBytes);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(headerAuthKey, headerAuthValue.concat(" ") + base64Creds);
-		headers.add(contentTypeKey, tokenContentTypeValue);
-		headers.add(idConsumidorKey, idConsumidorValue);
-		headers.add(idDestinoKey, idDestinoValue);
-		headers.add(usuarioKey, usuarioValue);
+		headers.add(mc.headerAuthKey, mc.headerAuthValue.concat(" ") + base64Creds);
+		headers.add(mc.contentTypeKey, mc.tokenContentTypeValue);
+		headers.add(mc.idConsumidorKey, mc.idConsumidorValue);
+		headers.add(mc.idDestinoKey, mc.idDestinoValue);
+		headers.add(mc.usuarioKey, mc.usuarioValue);
 		return headers;
 	}
 
@@ -242,12 +125,12 @@ public class BusMailRestService {
 		byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
 		String base64Creds = new String(base64CredsBytes);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(headerAuthKey, headerAuthValue.concat(" ") + base64Creds);
-		headers.add(contentTypeKey, senMailContentTypeValue);
-		headers.add(idConsumidorKey, idConsumidorValue);
-		headers.add(idDestinoKey, idDestinoValue);
-		headers.add(usuarioKey, usuarioValue);
-		headers.add(oauthBearer, bearerToken);
+		headers.add(mc.headerAuthKey, mc.headerAuthValue.concat(" ") + base64Creds);
+		headers.add(mc.contentTypeKey, mc.senMailContentTypeValue);
+		headers.add(mc.idConsumidorKey, mc.idConsumidorValue);
+		headers.add(mc.idDestinoKey, mc.idDestinoValue);
+		headers.add(mc.usuarioKey, mc.usuarioValue);
+		headers.add(mc.oauthBearer, bearerToken);
 		return headers;
 	}
 
