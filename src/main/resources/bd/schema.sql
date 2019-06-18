@@ -1596,3 +1596,34 @@ VALUES
 	(1, 'No identificada en MIDAS', 'No identificada en MIDAS', true, NOW(), NULL, 'Quarksoft', NULL, 'No identificada en MIDAS'),
 	(2, 'Solicitada', 'Solicitada', true, NOW(), NULL, 'Quarksoft', NULL, 'Solicitada')
 ;
+
+-- ------------------------------------------------------------------------------------------------- --
+-- CREA TABLA RELACIONAL PARA CONECTAR TABLAS: tk_estatus_conciliacion y tk_sub_estatus_conciliacion --
+-- ------------------------------------- [2019-06-13 19:34:19] -------------------------------------- --
+-- ------------------------------------------------------------------------------------------------- --    
+CREATE TABLE tr_estatus_conciliacion_sub_estatus_conciliacion (
+	id_estatus BIGINT(20) NOT NULL,
+    id_sub_estatus BIGINT(11) NOT NULL,
+    KEY k_id_estatus (id_estatus),
+    KEY k_id_sub_estatus (id_sub_estatus),
+    FOREIGN KEY fk_estatus_01 (id_estatus) REFERENCES tk_estatus_conciliacion (id),
+    FOREIGN KEY fk_sub_estatus_01 (id_sub_estatus) REFERENCES tk_sub_estatus_conciliacion (id)
+);
+
+-- --------------------------------------------------------------------------- --
+-- CREA LA TABLA DONDE SE ALMACENARAN LAS ACTIVIDADES (BITACORA): tb_actividad --
+-- --------------------------- [2019-06-14 11:46:29] ------------------------- --
+-- ---------------------------------------------------------------------------- -- 
+CREATE TABLE tb_actividad(
+	id BIGINT(20) AUTO_INCREMENT NOT NULL,
+	tipo VARCHAR(20) NOT NULL,
+	sub_tipo VARCHAR(20) NOT NULL,
+	descripcion VARCHAR(150) NOT NULL,
+	fecha DATETIME NOT NULL,
+    folio BIGINT(11) NOT NULL,
+	argument_array VARCHAR(500) NOT NULL,
+    INDEX idx_id_actividades (id),
+    INDEX idx_tipo_actividades (tipo),
+    INDEX idx_fecha_actividades (fecha),
+    PRIMARY KEY(id)
+);

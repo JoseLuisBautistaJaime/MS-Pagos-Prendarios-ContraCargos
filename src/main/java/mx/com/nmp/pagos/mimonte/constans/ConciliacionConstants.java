@@ -232,6 +232,21 @@ public final class ConciliacionConstants {
 	public static final String IDENTIFIER_PS_UPDATED_IN_THE_CONCILIATION = "Identificador PS actualizado en la conciliación.";
 	
 	/**
+	 * Valor constante que es enviado como parametro de consulta para discrimnacion por estatus de conciliacion en proceso
+	 */
+	public static final String CONCILIACION_EN_PROCESO_VALUE = "proceso";
+	
+	/**
+	 * Valor constante que es enviado como parametro de consulta para discrimnacion por estatus de devolucioniquidada
+	 */
+	public static final String DEVOLUCION_LIQUIDAD_VALUE = "liquidada";
+	
+	/**
+	 * Mensaje que es mostrado cuando se desea actualizar un sub estatus que no tiene asociado nungun estatus
+	 */
+	public static final String NO_STATUS_FOR_SUCH_SUB_STATUS = "No se encontro un estatus asociado al id de subestatus especificado";
+	
+	/**
 	 * Subclase de cosntantes que se mapearan de propiedades del archivo de
 	 * configuracion de spring
 	 * 

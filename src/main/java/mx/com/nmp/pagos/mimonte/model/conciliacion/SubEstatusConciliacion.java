@@ -5,8 +5,10 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.model.AbstractCatalogoAdm;
@@ -24,8 +26,23 @@ import mx.com.nmp.pagos.mimonte.model.AbstractCatalogoAdm;
 @Table(name = "tk_sub_estatus_conciliacion")
 public class SubEstatusConciliacion extends AbstractCatalogoAdm {
 	
+	@ManyToMany(mappedBy = "subEstatusList")
+	private List<EstatusConciliacion> estatusList;
+	
 	public SubEstatusConciliacion() {
 		super();
+	}
+	
+	public SubEstatusConciliacion(Long id) {
+		super.id = id;
+	}
+	
+	public List<EstatusConciliacion> getEstatusList() {
+		return estatusList;
+	}
+
+	public void setEstatusList(List<EstatusConciliacion> estatusList) {
+		this.estatusList = estatusList;
 	}
 
 	public SubEstatusConciliacion(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
