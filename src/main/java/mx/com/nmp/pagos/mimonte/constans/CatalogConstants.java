@@ -246,6 +246,15 @@ public final class CatalogConstants {
 	 * mensaje que es mostrado cuando el tipo de contacto no es encontrado en el catalogo
 	 */
 	public static final String TIPO_CONTACTO_NOT_FOUND = "El tipo de contacto no existe en el catalogo";
+
+	/**
+	 * Movimiento no identificado en MIDAS
+	 */
+	public static final Integer ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS = 1;
+
+	public static final String CONCEPTO_DEVOLUCION = "DEV"; // Pendiente
+
+	public static final String CONCEPTO_LIQUIDACION = "LIQ"; // Pendiente
 	
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no

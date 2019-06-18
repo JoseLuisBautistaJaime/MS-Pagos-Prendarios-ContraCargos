@@ -4,13 +4,14 @@
  */
 package mx.com.nmp.pagos.mimonte.processor;
 
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.GlobalBuilder;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 
 /**
- * Nombre: ConciliacionProcessor
+ * Nombre: ConciliacionGlobalProcessor
  * Descripcion: Clase que se encarga de procesar todos los reportes y generar datos en la seccion global
  *
  * @author JGALVEZ
@@ -24,14 +25,22 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 		super(mergeReporteHandler);
 	}
 
+
 	/* (non-Javadoc)
 	 * @see mx.com.nmp.pagos.mimonte.processor.ConciliacionProcessorChain#process(mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte)
 	 */
 	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
-	
-		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR)) {
-			
-		}
+
+		// Obtener seccion global
+		Global global = this.mergeReporteHandler.getGlobalRepository().findByIdConciliacion(reportesWrapper.getIdConciliacion());
+
+		// Actualizar seccion global
+		global = GlobalBuilder.updateGlobal(global, reportesWrapper);
+
+		// Guardar global en la bd
+		this.mergeReporteHandler.getGlobalRepository().saveAndFlush(global);
+
+		// Siguiente procesador
 		processNext(reportesWrapper);
 	}
 

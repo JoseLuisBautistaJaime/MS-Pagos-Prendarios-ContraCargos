@@ -4,15 +4,16 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
+import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
@@ -109,10 +110,34 @@ public abstract class MovimientosTransitoBuilder {
 		return devolucionConDTOList;
 	}
 
-	public static MovimientoTransito buildMovTransitoFromMovProveedor(MovimientoProveedor movimientoProveedor) {
+	public static MovimientoTransito buildMovTransitoFromMovProveedor(MovimientoProveedor movProveedor) {
 		MovimientoTransito movTransito = new MovimientoTransito();
-		movTransito.setCreatedBy("SYSTEM");
+		movTransito.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
 		movTransito.setCreatedDate(new Date());
+		//movTransito.setFolio(movProveedor.getTarjetaMovimientosProveedor().get); // TODO:
+		//movTransito.setSucursal(movProveedor.get); // TODO:
+		// movTransito.set
+		movTransito.setCuenta(movProveedor.getTarjetaMovimientosProveedor().getCardNumber()); // TODO: Enmascarar
 		return movTransito;
 	}
+
+	public static MovimientoTransito buildMovTransitoFromMovMidas(MovimientoMidas movMidas) {
+		MovimientoTransito movTransito = new MovimientoTransito();
+		movTransito.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
+		movTransito.setCreatedDate(new Date());
+		movTransito.setFolio(movMidas.getFolio() != null ? movMidas.getFolio().intValue() : null);
+		movTransito.setSucursal(movMidas.getSucursal());
+		movTransito.setFecha(movMidas.getFecha());
+		movTransito.setOperacionDesc(movMidas.getOperacionDesc());
+		movTransito.setMonto(movMidas.getMonto());
+		movTransito.setTipoContratoDesc(movMidas.getTipoContratoDesc());
+		movTransito.setEsquemaTarjeta(movTransito.getEsquemaTarjeta());
+		movTransito.setCuenta(movMidas.getTarjeta()); // TODO: Enmascarar
+		movTransito.setTitular(movTransito.getTitular());
+		movTransito.setMovimientoMidas(movMidas);
+		movTransito.setNuevo(false);
+		movTransito.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS));
+		return movTransito;
+	}
+
 }

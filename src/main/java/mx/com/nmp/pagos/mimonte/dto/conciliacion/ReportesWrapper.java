@@ -10,6 +10,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoReporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
@@ -22,10 +23,19 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
  */
 public class ReportesWrapper {
 
+	private Reporte reporteMidas;
+	private Reporte reporteProveedor;
+	private Reporte reporteEstadoCuenta;
+	
 	private List<MovimientoMidas> movimientosMidas;
 	private List<MovimientoProveedor> movimientosProveedor;
 	private List<MovimientoEstadoCuenta> movimientosEstadoCuenta;
+	private Integer idConciliacion;
 
+
+	public ReportesWrapper(Integer idConciliacion) {
+		this.idConciliacion = idConciliacion;
+	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends MovimientoReporte> List<T> getByTipoReporte(TipoReporteEnum tipoReporte) {
@@ -88,17 +98,35 @@ public class ReportesWrapper {
 		return contains;
 	}
 
+	public Integer getIdConciliacion() {
+		return idConciliacion;
+	}
 
-	public void setMovimientosMidas(List<MovimientoMidas> movimientosMidas) {
+	public Reporte getReporteMidas() {
+		return reporteMidas;
+	}
+
+	public Reporte getReporteProveedor() {
+		return reporteProveedor;
+	}
+
+	public Reporte getReporteEstadoCuenta() {
+		return reporteEstadoCuenta;
+	}
+
+	public void setReporteMidas(List<MovimientoMidas> movimientosMidas, Reporte reporteMidas) {
 		this.movimientosMidas = movimientosMidas;
+		this.reporteMidas = reporteMidas;
 	}
 
-	public void setMovimientosProveedor(List<MovimientoProveedor> movimientosProveedor) {
+	public void setReporteProveedor(List<MovimientoProveedor> movimientosProveedor, Reporte reporteProveedor) {
 		this.movimientosProveedor = movimientosProveedor;
+		this.reporteProveedor = reporteProveedor;
 	}
 
-	public void setMovimientosEstadoCuenta(List<MovimientoEstadoCuenta> movimientosEstadoCuenta) {
+	public void setReporteEstadoCuenta(List<MovimientoEstadoCuenta> movimientosEstadoCuenta, Reporte reporteEstadoCuenta) {
 		this.movimientosEstadoCuenta = movimientosEstadoCuenta;
+		this.reporteEstadoCuenta = reporteEstadoCuenta;
 	}
 
 }

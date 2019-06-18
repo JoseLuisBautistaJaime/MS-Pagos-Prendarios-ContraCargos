@@ -19,6 +19,8 @@ public final class ConciliacionConstants {
 		super();
 	}
 
+	public static final String USER_SYSTEM = "System";
+	
 	/**
 	 * Valor estatico para un tamanio de 10 caracteres
 	 */

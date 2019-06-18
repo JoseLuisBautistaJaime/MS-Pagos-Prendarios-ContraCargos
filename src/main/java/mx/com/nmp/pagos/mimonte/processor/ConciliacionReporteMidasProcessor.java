@@ -42,10 +42,10 @@ public class ConciliacionReporteMidasProcessor extends ConciliacionProcessorChai
 			List<MovimientoMidas> movimientosMidas = reportesWrapper.getByTipoReporte(TipoReporteEnum.MIDAS);
 			if (CollectionUtils.isNotEmpty(movimientosMidas)) {
 				
-				// Por cada movimiento verifica si se encuentra en error o es correcto
+				// Por cada movimiento verifica si se encuentra en error o no identificado en midas
 				List<MovimientoTransito> movsTransito = extraerMovimientosNoIdentificadosMidas(reportesWrapper);
 				if (CollectionUtils.isNotEmpty(movsTransito)) {
-					mergeReporteHandler.getMovimientoTransitoCuentaRepository().saveAll(movsTransito);
+					mergeReporteHandler.getMovimientoTransitoRepository().saveAll(movsTransito);
 				}
 			}
 			
@@ -68,6 +68,22 @@ public class ConciliacionReporteMidasProcessor extends ConciliacionProcessorChai
 				List<MovimientoMidas> movimientosMidas = reportesWrapper.getMovimientosMidasByTransaccion(Long.valueOf(transaccionId));
 				if (CollectionUtils.isEmpty(movimientosMidas)) {
 					transito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovProveedor(movimientoProveedor));
+				}
+			}
+
+			// TODO: Verificar los movimientos con error
+			List<MovimientoMidas> movimientosMidas = reportesWrapper.getByTipoReporte(TipoReporteEnum.MIDAS);
+			for (MovimientoMidas movimientoMidas : movimientosMidas) {
+				if (!movimientoMidas.getEstatus()) {
+					MovimientoTransito movTransito = MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movimientoMidas);
+					movTransito.setIdConciliacion(reportesWrapper.getIdConciliacion());
+					
+					
+					// Verificar si ya existe el movimiento de transito con anteriodad
+					this.mergeReporteHandler.getMovimientoTransitoCuentaRepository()
+					
+					
+					transito.add(movTransito);
 				}
 			}
 		}

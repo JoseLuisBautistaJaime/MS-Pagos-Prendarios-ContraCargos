@@ -10,10 +10,13 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.GlobalRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
@@ -23,6 +26,7 @@ import mx.com.nmp.pagos.mimonte.processor.ConciliacionGlobalProcessor;
 import mx.com.nmp.pagos.mimonte.processor.ConciliacionReporteEstadoCuentaProcessor;
 import mx.com.nmp.pagos.mimonte.processor.ConciliacionReporteMidasProcessor;
 import mx.com.nmp.pagos.mimonte.processor.ConciliacionReporteProveedorProcessor;
+import mx.com.nmp.pagos.mimonte.processor.ConciliacionUpdateReporteProcessor;
 
 /**
  * Nombre: MergeReporteHandler
@@ -45,53 +49,77 @@ public class MergeReporteHandler {
 	private MovimientoEstadoCuentaRepository movimientoEstadoCuentaRepository;
 
 	@Inject
-	private MovimientoTransitoRepository movimientoTransitoCuentaRepository;
+	private MovimientoTransitoRepository movimientoTransitoRepository;
+
+	@Inject
+	private ReporteRepository reporteRepository;
+
+	@Inject
+	private GlobalRepository globalRepository;
+
+	@Inject
+	private ConciliacionRepository conciliacionRepository;
 
 
 
 
 	/**
 	 * Se encarga de generar la cadena de procesadores de acuerdo al tipo de reporte
-	 * @param reportesActualizados
+	 * @param reportes
+	 * @param idConciliacion
 	 */
-	public void handle(List<Reporte> reportes) {
+	public void handle(List<Reporte> reportes, Integer idConciliacion) {
 
-		ReportesWrapper wrapper = new ReportesWrapper();
+		ReportesWrapper wrapper = new ReportesWrapper(idConciliacion);
 		
 		for (Reporte reporte : reportes) {
 			switch (reporte.getTipo()) {
-			
-			case MIDAS:  // Procesa reporte midas y adicionalmente la seccion global
 
-				List<MovimientoMidas> movimientosMidas = movimientosMidasRepository.findByReporteId(reporte.getId());
-				wrapper.setMovimientosMidas(movimientosMidas);
-				break;
-
-			case PROVEEDOR: // Procesa el reporte open pay y adicionalmente la seccion global
-
-				List<MovimientoProveedor> movimientosProveedor = movimientoProveedorRepository.findByReporte(reporte.getId());
-				wrapper.setMovimientosProveedor(movimientosProveedor);
-				break;
-
-			case ESTADO_CUENTA: // Procesa el reporte de estado de cuenta y adicionalmente la seccion global
-
-				List<MovimientoEstadoCuenta> movimientosEstadoCuenta = movimientoEstadoCuentaRepository.findByReporte(reporte.getId());
-				wrapper.setMovimientosEstadoCuenta(movimientosEstadoCuenta);
-				break;
+				case MIDAS:  // Procesa reporte midas y adicionalmente la seccion global
+	
+					List<MovimientoMidas> movimientosMidas = movimientosMidasRepository.findByReporteId(reporte.getId());
+					wrapper.setReporteMidas(movimientosMidas, reporte);
+					break;
+	
+				case PROVEEDOR: // Procesa el reporte open pay y adicionalmente la seccion global
+	
+					List<MovimientoProveedor> movimientosProveedor = movimientoProveedorRepository.findByReporte(reporte.getId());
+					wrapper.setReporteProveedor(movimientosProveedor, reporte);
+					break;
+	
+				case ESTADO_CUENTA: // Procesa el reporte de estado de cuenta y adicionalmente la seccion global
+	
+					List<MovimientoEstadoCuenta> movimientosEstadoCuenta = movimientoEstadoCuentaRepository.findByReporte(reporte.getId());
+					wrapper.setReporteEstadoCuenta(movimientosEstadoCuenta, reporte);
+					break;
 
 			}			
 		}
-		
+
+		// Se configuran los procesadores
+		ConciliacionReporteMidasProcessor reporteMidasProcessor = configurarProcesadores();
+
+		reporteMidasProcessor.process(wrapper);
+	}
+
+
+
+	/**
+	 * Se encarga de configurar la cadena de procesadores
+	 * @return
+	 */
+	private ConciliacionReporteMidasProcessor configurarProcesadores() {
 		ConciliacionReporteMidasProcessor reporteMidasProcessor = new ConciliacionReporteMidasProcessor(this);
 		ConciliacionReporteProveedorProcessor reporteProveedorProcessor = new ConciliacionReporteProveedorProcessor(this);
 		ConciliacionReporteEstadoCuentaProcessor reporteEstadoCuentaProcessor = new ConciliacionReporteEstadoCuentaProcessor(this);
 		ConciliacionGlobalProcessor globalProcessor = new ConciliacionGlobalProcessor(this);
+		ConciliacionUpdateReporteProcessor updateProcessor = new ConciliacionUpdateReporteProcessor(this);
 		
 		reporteMidasProcessor.setNextProcessor(reporteProveedorProcessor);
 		reporteProveedorProcessor.setNextProcessor(reporteEstadoCuentaProcessor);
 		reporteEstadoCuentaProcessor.setNextProcessor(globalProcessor);
-
-		reporteMidasProcessor.process(wrapper);
+		globalProcessor.setNextProcessor(updateProcessor);
+		return reporteMidasProcessor;
 	}
 
 
@@ -108,8 +136,20 @@ public class MergeReporteHandler {
 		return movimientoEstadoCuentaRepository;
 	}
 
-	public MovimientoTransitoRepository getMovimientoTransitoCuentaRepository() {
-		return movimientoTransitoCuentaRepository;
+	public MovimientoTransitoRepository getMovimientoTransitoRepository() {
+		return movimientoTransitoRepository;
+	}
+
+	public GlobalRepository getGlobalRepository() {
+		return globalRepository;
+	}
+
+	public ReporteRepository getReporteRepository() {
+		return reporteRepository;
+	}
+
+	public ConciliacionRepository getConciliacionRepository() {
+		return conciliacionRepository;
 	}
 
 }
