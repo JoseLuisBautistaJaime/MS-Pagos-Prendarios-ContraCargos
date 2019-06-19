@@ -5,12 +5,13 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.model.AbstractCatalogo;
@@ -25,26 +26,28 @@ import mx.com.nmp.pagos.mimonte.model.AbstractCatalogo;
 @Table(name = "tk_estatus_conciliacion")
 public class EstatusConciliacion extends AbstractCatalogo {
 
-	@Column(name="nombre")
+	@Column(name = "nombre")
 	private String nombre;
-	
-	@Column(name="estatus")
+
+	@Column(name = "estatus")
 	private Boolean estatus;
-	
-	@Column(name="created_date")
-	private Date createdDate; 
-	
-	@Column(name="last_modified_date")
+
+	@Column(name = "created_date")
+	private Date createdDate;
+
+	@Column(name = "last_modified_date")
 	private Date lastModifiedDate;
-	
-	@Column(name="created_by")
+
+	@Column(name = "created_by")
 	private String createdBy;
-	
-	@Column(name="last_modified_by")
+
+	@Column(name = "last_modified_by")
 	private String lastModifiedBy;
-	
-//	@OneToMany(mappedBy = "estatus", fetch = FetchType.LAZY)
-//	private Set<Conciliacion> conciliacionSet;
+
+	@ManyToMany
+	@JoinTable(name = "tr_estatus_conciliacion_sub_estatus_conciliacion", joinColumns = {
+			@JoinColumn(name = "id_estatus", nullable = false, referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "id_sub_estatus", nullable = false, referencedColumnName = "id")})
+	private List<SubEstatusConciliacion> subEstatusList;
 
 	public EstatusConciliacion() {
 		super();
@@ -67,6 +70,14 @@ public class EstatusConciliacion extends AbstractCatalogo {
 		this.lastModifiedDate = lastModifiedDate;
 		this.createdBy = createdBy;
 		this.lastModifiedBy = lastModifiedBy;
+	}
+	
+	public List<SubEstatusConciliacion> getSubEstatusList() {
+		return subEstatusList;
+	}
+
+	public void setSubEstatusList(List<SubEstatusConciliacion> subEstatusList) {
+		this.subEstatusList = subEstatusList;
 	}
 
 	public String getNombre() {
@@ -116,14 +127,6 @@ public class EstatusConciliacion extends AbstractCatalogo {
 	public void setLastModifiedBy(String lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
 	}
-
-//	public Set<Conciliacion> getConciliacionSet() {
-//		return conciliacionSet;
-//	}
-//
-//	public void setConciliacionSet(Set<Conciliacion> conciliacionSet) {
-//		this.conciliacionSet = conciliacionSet;
-//	}
 
 	@Override
 	public int hashCode() {
@@ -186,5 +189,5 @@ public class EstatusConciliacion extends AbstractCatalogo {
 				+ ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy + ", lastModifiedBy="
 				+ lastModifiedBy + "]";
 	}
-	
+
 }

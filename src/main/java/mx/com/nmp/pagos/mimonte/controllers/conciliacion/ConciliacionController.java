@@ -573,9 +573,8 @@ public class ConciliacionController {
 	public Response resumenConciliaciones(@RequestBody ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {		
 		if(!ValidadorConciliacion.validateResumenConciliacionRequestDTO(resumenConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		conciliacionServiceImpl.resumenConciliaciones(resumenConciliacionRequestDTO);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Resumen de conciliaciones obtenido correctamente.",
-				null);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
+				conciliacionServiceImpl.resumenConciliaciones(resumenConciliacionRequestDTO));
 	}
 	
 //	public static ConciliacionDTO buildDummy() {

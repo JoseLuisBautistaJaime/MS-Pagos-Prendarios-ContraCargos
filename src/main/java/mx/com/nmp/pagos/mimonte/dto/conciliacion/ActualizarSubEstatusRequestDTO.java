@@ -18,14 +18,14 @@ import java.util.Objects;
 public class ActualizarSubEstatusRequestDTO {
 
 	private Integer folio;
-	private Integer idSubEstatus;
+	private Long idSubEstatus;
 	private String descripcion;
 
 	public ActualizarSubEstatusRequestDTO() {
 		super();
 	}
 
-	public ActualizarSubEstatusRequestDTO(Integer folio, Integer idSubEstatus, String descripcion) {
+	public ActualizarSubEstatusRequestDTO(Integer folio, Long idSubEstatus, String descripcion) {
 		super();
 		this.folio = folio;
 		this.idSubEstatus = idSubEstatus;
@@ -40,11 +40,11 @@ public class ActualizarSubEstatusRequestDTO {
 		this.folio = folio;
 	}
 
-	public Integer getIdSubEstatus() {
+	public Long getIdSubEstatus() {
 		return idSubEstatus;
 	}
 
-	public void setIdSubEstatus(Integer idSubEstatus) {
+	public void setIdSubEstatus(Long idSubEstatus) {
 		this.idSubEstatus = idSubEstatus;
 	}
 

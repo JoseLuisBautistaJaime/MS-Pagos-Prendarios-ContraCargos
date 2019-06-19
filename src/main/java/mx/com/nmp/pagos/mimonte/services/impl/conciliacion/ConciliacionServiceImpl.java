@@ -5,15 +5,20 @@
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoComisionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
@@ -21,6 +26,7 @@ import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ActividadRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.GlobalRepository;
@@ -30,7 +36,6 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.SubEstatusConciliacionRepository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaSubEstatusDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
@@ -47,7 +52,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SubEstatusConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -61,6 +65,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
 import mx.com.nmp.pagos.mimonte.observer.ReporteObserver;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
@@ -118,9 +124,19 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Autowired
 	private ReporteObserver reporteObserver;
 
-	
+	@Autowired
+	@Qualifier("actividadRepository")
+	ActividadRepository actividadRepository;
+
 	/**
-	 * Metodo que da de alta una conciliación regresando un folio a partir de un objeto de tipo ConciliacionResponseSaveDTO
+	 * Registro de actividades
+	 */
+	@Autowired
+	private ActividadGenericMethod actividadGenericMethod;
+
+	/**
+	 * Metodo que da de alta una conciliación regresando un folio a partir de un
+	 * objeto de tipo ConciliacionResponseSaveDTO
 	 */
 	@Override
 	@Transactional
@@ -173,12 +189,17 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		conciliacion.setEntidad(entidad);
 		conciliacion.setSubEstatus(subEstatusConciliacion);
 
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(conciliacion.getId(), "Alta de conciliacion",
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTIVIDAD_CONCILIACION, conciliacion.toString());
+
 		return ConciliacionBuilder.buildConciliacionDTOFromConciliacion(conciliacion);
 
 	}
 
 	/**
-	 * Metodo que actualiza la informacion de los movimientos en transito y movimientos de la comisión.
+	 * Metodo que actualiza la informacion de los movimientos en transito y
+	 * movimientos de la comisión.
 	 */
 	@Override
 	@Transactional
@@ -257,6 +278,11 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 		movimientoComisionRepository.flush();
 
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(conciliacion.getId(), "Actualizacion de conciliacion",
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTIVIDAD_CONCILIACION,
+				actualizaionConciliacionRequestDTO.toString());
+
 		return actualizaionConciliacionRequestDTO;
 	}
 
@@ -289,8 +315,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
 		// Búsqueda del estatus de la conciliacion a partir de idEstatus.
-		EstatusConciliacion estatusConciliacion = estatusConciliacionRepository.findById(consultaConciliacionRequestDTO.getIdEstatus()).isPresent()
-				? estatusConciliacionRepository.findById(consultaConciliacionRequestDTO.getIdEstatus()).get()
+		EstatusConciliacion estatusConciliacion = estatusConciliacionRepository
+				.findById(consultaConciliacionRequestDTO.getIdEstatus()).isPresent()
+						? estatusConciliacionRepository.findById(consultaConciliacionRequestDTO.getIdEstatus()).get()
 						: null;
 		if (estatusConciliacion.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
@@ -299,6 +326,11 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		Conciliacion conciliacion = conciliacionRepository.findByFolio(consultaConciliacionRequestDTO.getFolio());
 		if (conciliacion == null || conciliacion.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(consultaConciliacionRequestDTO.getFolio(), "Consulta de conciliacion",
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTIVIDAD_CONCILIACION,
+				consultaConciliacionRequestDTO.toString());
 
 		return ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
 				conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFecha(
@@ -350,48 +382,113 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		if (global == null || global.getId() == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(folio, "Consulta de folio conciliacion", TipoActividadEnum.ACTIVIDAD,
+				SubTipoActividadEnum.ACTIVIDAD_CONCILIACION, conciliacion.toString());
+
 		return ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(conciliacion, reporte, global,
 				MovimientoDevolucionBuilder.buildDevolucionConDTOListFromMovimientoDevolucionList(mD),
 				MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(mT),
 				MovimientoComisionBuilder.buildComisionesDTOListFromMovimientoComisionList(mC));
 	}
 
-
-	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#getById(java.lang.Integer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#getById(
+	 * java.lang.Integer)
 	 */
 	public Conciliacion getById(Integer idConciliacion) {
 		return conciliacionRepository.findByFolio(idConciliacion);
 	}
-	
+
 	@Override
 	public void generarConciliacion(Integer idConciliacion, String usuario, String urlCallBack) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void enviarConciliacion(Integer idConciliacion, String usuario) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO, String usuario) {
-		// TODO Auto-generated method stub
-		
+	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
+			String usuario) {
+		Integer idEstatusConciliacion = conciliacionRepository
+				.findIdEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus());
+		if (null == idEstatusConciliacion)
+			throw new ConciliacionException(ConciliacionConstants.NO_STATUS_FOR_SUCH_SUB_STATUS);
+		conciliacionRepository.actualizaSubEstatusConciliacion(actualizarSubEstatusRequestDTO.getFolio(),
+				new SubEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus()), usuario, new Date(),
+				new EstatusConciliacion(idEstatusConciliacion));
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
+				"Actualizacion de subEstatus de conciliacion", TipoActividadEnum.ACTIVIDAD,
+				SubTipoActividadEnum.ACTIVIDAD_CONCILIACION, actualizarSubEstatusRequestDTO.toString());
 	}
 
+	/**
+	 * Regresa un objeto con el resumen de totoal de conciliaciones en proceso, el
+	 * total de devoluciones liquidadas y el total de conciliaciones, puede recibir
+	 * fechas inicial y final como parametros
+	 */
 	@Override
 	public ResumenConciliacionDTO resumenConciliaciones(ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Long> res = null;
+		ResumenConciliacionDTO resumenConciliacionDTO = null;
+		res = (null != resumenConciliacionRequestDTO.getFechaInicial()
+				&& null != resumenConciliacionRequestDTO.getFechaFinal())
+						? conciliacionRepository.resumenConciliaciones(resumenConciliacionRequestDTO.getFechaInicial(),
+								resumenConciliacionRequestDTO.getFechaFinal(),
+								ConciliacionConstants.CONCILIACION_EN_PROCESO_VALUE,
+								ConciliacionConstants.DEVOLUCION_LIQUIDAD_VALUE)
+						: conciliacionRepository.resumenConciliaciones(
+								ConciliacionConstants.CONCILIACION_EN_PROCESO_VALUE,
+								ConciliacionConstants.DEVOLUCION_LIQUIDAD_VALUE);
+		if (null != res && !res.isEmpty())
+			resumenConciliacionDTO = new ResumenConciliacionDTO(res.get("en_proceso"), res.get("dev_liquidadas"),
+					res.get("conc_totales"));
+
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(0, "Obtencion de resumen de conciliacion", TipoActividadEnum.ACTIVIDAD,
+				SubTipoActividadEnum.ACTIVIDAD_CONCILIACION, resumenConciliacionRequestDTO.toString());
+
+		return resumenConciliacionDTO;
 	}
 
+	/**
+	 * Consulta actividades por un rango de fechas y folio de conciliacion
+	 * opcionales, de no tener folio de conciliacion ni fecha regresa los 10 ultimos
+	 * registros
+	 */
 	@Override
 	public List<ConsultaActividadDTO> consultaActividades(ConsultaActividadesRequest consultaActividadesRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		List<ConsultaActividadDTO> consultaActividadDTOList = null;
+		// Ningun atributo es nulo
+		if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
+				&& null != consultaActividadesRequest.getFechaHasta())
+			consultaActividadDTOList = actividadRepository.findByFilter(consultaActividadesRequest.getFolio(),
+					consultaActividadesRequest.getFechaDesde(), consultaActividadesRequest.getFechaHasta());
+		// La fechaHasta es nula
+		else if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde())
+			consultaActividadDTOList = actividadRepository.findByFilterF(consultaActividadesRequest.getFolio(),
+					consultaActividadesRequest.getFechaDesde());
+		// La fechaDesde es nula
+		else if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaHasta())
+			consultaActividadDTOList = actividadRepository.findByFilterF2(consultaActividadesRequest.getFolio(),
+					consultaActividadesRequest.getFechaHasta());
+		// Ambas fechas son nulas
+		else if (null != consultaActividadesRequest.getFolio())
+			consultaActividadDTOList = actividadRepository.findByFilter(consultaActividadesRequest.getFolio());
+		// Todos los atributos son nulos
+		else
+			consultaActividadDTOList = actividadRepository.nGetTopTenActividades();
+		return consultaActividadDTOList;
 	}
 
 	@Override
@@ -404,14 +501,16 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	public void solicitarPagos(SolicitarPagosRequestDTO solicitarPagosRequestDTO, String usuario) {
 		// TODO Auto-generated method stub
 	}
-		
-		
+
 	public void actualizarPS(ActualizarIdPSRequest actualizarIdPSRequest, String usuario) {
 		// TODO
 	}
 
-	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#generarConciliacion(java.lang.Integer, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#
+	 * generarConciliacion(java.lang.Integer, java.lang.String)
 	 */
 	@Transactional
 	public void generarConciliacion(Integer idConciliacion, String lastModifiedBy) throws ConciliacionException {
@@ -422,7 +521,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		if (lastModifiedBy == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		
+
 		// Obtiene todos los reportes de la bd generados hasta el momento
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(idConciliacion);
 		if (reportes == null || reportes.size() == 0) {
@@ -431,14 +530,19 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Al menos 2 reportes
 		if (reportes.size() == 1) {
-			throw new ConciliacionException("Se requiere al menos 2 reportes para generar la conciliacion. Reporte recibido: " + reportes.get(0).getTipo());
+			throw new ConciliacionException(
+					"Se requiere al menos 2 reportes para generar la conciliacion. Reporte recibido: "
+							+ reportes.get(0).getTipo());
 		}
-
 
 		// Notificar cambios o alta de reportes, si existen...
 		ReporteObservable reporteObservable = new ReporteObservable(reportes, idConciliacion);
 		reporteObservable.addObserver(reporteObserver);
 		reporteObservable.notifyObservers();
+
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(folio, "Generar conciliacion", TipoActividadEnum.ACTIVIDAD,
+				SubTipoActividadEnum.ACTIVIDAD_CONCILIACION, folio.toString());
 
 	}
 
