@@ -48,10 +48,18 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 			/*,Pageable pageable*/);
 
 	/**
-	 * Regresa los movimientos proveedor por id de reporte
+	 * Regresa los movimientos estado cuenta por id de reporte
 	 * @param idReporte
 	 * @return
 	 */
-	public List<MovimientoEstadoCuenta> findByReporte(@Param("reporteId") final Integer reporteId);
+	public List<MovimientoEstadoCuenta> findByReporte(final Long reporteId);
+
+	/**
+	 * Regresa los movimientos estado de cuenta por id de reporte y claves leyenda
+	 * @param idReporte
+	 * @param clavesLeyenda
+	 * @return
+	 */
+	public List<MovimientoEstadoCuenta> findByReporteAndClaveLeyendaIn(final Long reporteId, List<String> clavesLeyenda);
 
 }

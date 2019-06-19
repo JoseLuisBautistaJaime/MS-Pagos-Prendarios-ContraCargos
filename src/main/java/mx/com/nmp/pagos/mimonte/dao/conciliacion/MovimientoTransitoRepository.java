@@ -65,4 +65,12 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	public List<MovimientoTransito> findByFolioAndIds(@Param("folio") final Integer folio,
 			@Param("idMovimientos") final List<Integer> idMovimientos);
 
+	/**
+	 * Obtiene los movimientos en transito por movimiento midas
+	 * @param folio
+	 * @param idMovimiento
+	 * @return
+	 */
+	public List<MovimientoTransito> findByIdConciliacionAndMovimientoMidasId(Integer idConciliacion, long idMovimientoMidas);
+
 }

@@ -524,7 +524,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Obtiene todos los reportes de la bd generados hasta el momento
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(idConciliacion);
-		if (reportes == null) {
+		if (reportes == null || reportes.size() == 0) {
 			throw new ConciliacionException("No se tiene disponible ningun reporte para generar la conciliacion");
 		}
 

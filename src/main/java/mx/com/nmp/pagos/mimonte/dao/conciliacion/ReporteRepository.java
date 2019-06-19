@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * @name ReporteRepository
@@ -33,5 +34,27 @@ public interface ReporteRepository extends JpaRepository<Reporte, Integer> {
 	 */
 	@Query("FROM Reporte r WHERE r.conciliacion.id = :idConciliacion")
 	public List<Reporte> findByIdConciliacion(@Param("idConciliacion") final Integer idConciliacion);
+
+
+	/**
+	 * Búsqueda de los reportes a partir del id de conciliación y del tipo de reporte
+	 * @param idConciliacion
+	 * @return
+	 */
+	@Query(
+		"FROM Reporte r " +
+		"WHERE " +
+			"r.conciliacion.id = :idConciliacion " +
+			"AND r.tipo = :tipo " +
+			"AND r.createdDate = (" +
+				"SELECT " +
+					"MAX(r1.createdDate) " +
+				"FROM Reporte r1 " +
+				"WHERE " +
+					"r1.conciliacion.id = :idConciliacion " +
+					"AND r1.tipo = :tipo" +
+			")"
+	)
+	public Reporte findLastByIdConciliacionAndTipo(@Param("idConciliacion") final Integer idConciliacion, @Param("tipo") TipoReporteEnum tipo);
 
 }

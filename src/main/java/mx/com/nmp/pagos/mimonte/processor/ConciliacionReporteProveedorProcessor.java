@@ -34,7 +34,7 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
 	
 		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR)) {
-			
+			// Comisiones
 		}
 		processNext(reportesWrapper);
 	}

@@ -232,7 +232,13 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando el identificador peoplesoft es actualizado correctamente.
 	 */
 	public static final String IDENTIFIER_PS_UPDATED_IN_THE_CONCILIATION = "Identificador PS actualizado en la conciliación.";
-	
+
+
+	// CATALOGOS
+	public static final Long ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS = 1L;
+	public static final Long CATEGORIA_ESTADO_CUENTA_COMISIONES = 2L;
+
+
 	/**
 	 * Valor constante que es enviado como parametro de consulta para discrimnacion por estatus de conciliacion en proceso
 	 */

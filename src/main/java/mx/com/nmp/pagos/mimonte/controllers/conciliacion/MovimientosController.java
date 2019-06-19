@@ -159,12 +159,10 @@ public class MovimientosController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		Reporte reporte = movimientosEstadoCuentaService.save(saveEstadoCuentaRequestDTO, userRequest);
-		//Reporte reporte = new Reporte();
-		//reporte.setId(0);
+
 		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste los movimientos del estado de cuenta
-		Long idConciliacion = saveEstadoCuentaRequestDTO.getFolio().longValue();
-		movimientosEstadoCuentaService.procesarConsultaEstadoCuenta(saveEstadoCuentaRequestDTO.getFechaInicial(), saveEstadoCuentaRequestDTO.getFechaFinal(), idConciliacion, Integer.valueOf(reporte.getId()).longValue());
+		movimientosEstadoCuentaService.procesarConsultaEstadoCuenta(saveEstadoCuentaRequestDTO, userRequest);
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta de estado cuenta exitosa.", null);
 	}
 

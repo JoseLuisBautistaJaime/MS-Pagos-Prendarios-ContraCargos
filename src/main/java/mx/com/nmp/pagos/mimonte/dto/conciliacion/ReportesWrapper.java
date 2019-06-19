@@ -4,18 +4,12 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
-import java.util.ArrayList;
-import java.util.List;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoReporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * Nombre: ReportesWrapper
- * Descripcion: Clase que encapsula los movimientos de los reportes de las diferentes fuentes
+ * Descripcion: Clase que encapsula los reportes de las diferentes fuentes
  *
  * @author JGALVEZ
  * Fecha: 04/06/2019 9:44 PM
@@ -23,79 +17,48 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
  */
 public class ReportesWrapper {
 
+	private Integer idConciliacion;
+
 	private Reporte reporteMidas;
 	private Reporte reporteProveedor;
-	private Reporte reporteEstadoCuenta;
+	private Reporte reporteEstadoCuenta;	
 	
-	private List<MovimientoMidas> movimientosMidas;
-	private List<MovimientoProveedor> movimientosProveedor;
-	private List<MovimientoEstadoCuenta> movimientosEstadoCuenta;
-	private Integer idConciliacion;
 
 
 	public ReportesWrapper(Integer idConciliacion) {
 		this.idConciliacion = idConciliacion;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T extends MovimientoReporte> List<T> getByTipoReporte(TipoReporteEnum tipoReporte) {
-		List<T> movimientos = null;
-		switch (tipoReporte) {
-			case MIDAS:
-				movimientos = (List<T>) this.movimientosMidas;
-				break;
-			case PROVEEDOR:
-				movimientos = (List<T>) this.movimientosProveedor;
-				break;
-			case ESTADO_CUENTA:
-				movimientos = (List<T>) this.movimientosEstadoCuenta;
-				break;
-		}
-		return movimientos;
-	}
-
-
-	public List<MovimientoMidas> getMovimientosMidasByTransaccion(Long transaccion) {
-		List<MovimientoMidas> movimientos = null;
-		if (this.movimientosMidas != null && transaccion != null) {
-			movimientos = new ArrayList<MovimientoMidas>();
-			for (MovimientoMidas movimientoMidas : this.movimientosMidas) {
-				if (movimientoMidas.getTransaccion() != null && movimientoMidas.getTransaccion() == transaccion.longValue()) {
-					movimientos.add(movimientoMidas);
-				}
-			}
-		}
-		return movimientos;
-	}
-
-
-	public List<MovimientoProveedor> getByTransaccion(String transaccion) {
-		List<MovimientoProveedor> movimientos = null;
-		if (this.movimientosProveedor != null && transaccion != null) {
-			movimientos = new ArrayList<MovimientoProveedor>();
-			for (MovimientoProveedor movimientoProveedor : this.movimientosProveedor) {
-				if (movimientoProveedor.getOrderId() != null && movimientoProveedor.getOrderId().equals(transaccion)) {
-					movimientos.add(movimientoProveedor);
-				}
-			}
-		}
-		return movimientos;
-	}
-
 	public boolean contains(TipoReporteEnum tipoReporte) {
 		boolean contains = false;
 		switch (tipoReporte) {
 			case MIDAS:
-				contains = this.movimientosMidas != null && this.movimientosMidas.size() > 0;
+				contains = this.reporteMidas != null && this.reporteMidas.getId() > 0;
 				break;
 			case PROVEEDOR:
-				contains = this.movimientosProveedor != null && this.movimientosProveedor.size() > 0;
+				contains = this.reporteProveedor != null && this.reporteProveedor.getId() > 0;
 				break;
 			case ESTADO_CUENTA:
-				contains = this.movimientosEstadoCuenta != null && this.movimientosEstadoCuenta.size() > 0;
+				contains = this.reporteEstadoCuenta != null && this.reporteEstadoCuenta.getId() > 0;
 				break;
 		}
 		return contains;
+	}
+
+	public long getIdReporte(TipoReporteEnum tipoReporte) {
+		long idReporte = 0;
+		switch (tipoReporte) {
+			case MIDAS:
+				idReporte = this.reporteMidas != null ? this.reporteMidas.getId() : 0;
+				break;
+			case PROVEEDOR:
+				idReporte = this.reporteProveedor != null ? this.reporteProveedor.getId() : 0;
+				break;
+			case ESTADO_CUENTA:
+				idReporte = this.reporteEstadoCuenta != null ? this.reporteEstadoCuenta.getId() : 0;
+				break;
+		}
+		return idReporte;
 	}
 
 	public Integer getIdConciliacion() {
@@ -114,18 +77,15 @@ public class ReportesWrapper {
 		return reporteEstadoCuenta;
 	}
 
-	public void setReporteMidas(List<MovimientoMidas> movimientosMidas, Reporte reporteMidas) {
-		this.movimientosMidas = movimientosMidas;
+	public void setReporteMidas(Reporte reporteMidas) {
 		this.reporteMidas = reporteMidas;
 	}
 
-	public void setReporteProveedor(List<MovimientoProveedor> movimientosProveedor, Reporte reporteProveedor) {
-		this.movimientosProveedor = movimientosProveedor;
+	public void setReporteProveedor(Reporte reporteProveedor) {
 		this.reporteProveedor = reporteProveedor;
 	}
 
-	public void setReporteEstadoCuenta(List<MovimientoEstadoCuenta> movimientosEstadoCuenta, Reporte reporteEstadoCuenta) {
-		this.movimientosEstadoCuenta = movimientosEstadoCuenta;
+	public void setReporteEstadoCuenta(Reporte reporteEstadoCuenta) {
 		this.reporteEstadoCuenta = reporteEstadoCuenta;
 	}
 
