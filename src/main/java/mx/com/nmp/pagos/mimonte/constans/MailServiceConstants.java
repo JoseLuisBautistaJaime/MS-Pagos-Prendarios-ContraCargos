@@ -22,6 +22,24 @@ import org.springframework.stereotype.Component;
 public class MailServiceConstants {
 
 	/**
+	 * Titulo del e-mail para solicitud de pagos
+	 */
+	@Value("${mimonte.variables.mail.solicitud-pagos.title}")
+	public String subjectMail;
+
+	/**
+	 * Tipo de codificacion para e-mail para solicitud de pagos
+	 */
+	@Value("${mimonte.variables.mail.solicitud-pagos.encode-type}")
+	public String encodeType;
+
+	/**
+	 * Layout velocity para e-mail para solicitud de pagos
+	 */
+	@Value("${mimonte.variables.mail.solicitud-pagos.velocity-layout}")
+	public String velocityLayout;
+
+	/**
 	 * Mail from para envio de e-mail
 	 */
 	@Value(value = "${mimonte.variables.mail.from}")
@@ -38,7 +56,7 @@ public class MailServiceConstants {
 	 */
 	@Value(value = "${mimonte.variables.mail.auth.password}")
 	public String mailPass;
-	
+
 	/**
 	 * URL para servicio que provee el token
 	 */
@@ -164,5 +182,87 @@ public class MailServiceConstants {
 	 */
 	@Value(value = "${mimonte.variables.mail.response.cod-key}")
 	public String responseCodpKey;
-	
+
+	/**
+	 * Clase que contiene las constantes que mapean las propiedades de textos del
+	 * e-mail
+	 * 
+	 * @author user
+	 *
+	 */
+
+	/**
+	 * Mail text constnts properties
+	 */
+	@Value("${mimonte.variables.mail.text1}")
+	public String text1;
+
+	@Value("${mimonte.variables.mail.text2}")
+	public String text2;
+
+	@Value("${mimonte.variables.mail.text3}")
+	public String text3;
+
+	/**
+	 * Constantes que mapean propiedades a poner como titulos de columna en la tabla
+	 * de email de movimientos transito
+	 * 
+	 * @author user
+	 *
+	 */
+
+	/**
+	 * Table Headers constants properties
+	 */
+	@Value("${mimonte.variables.mail.table.headers.fechaTransaccion}")
+	public String fechaTransaccion;
+
+	@Value("${mimonte.variables.mail.table.headers.folioPartida}")
+	public String folioPartida;
+
+	@Value("${mimonte.variables.mail.table.headers.transaccion}")
+	public String transaccion;
+
+	@Value("${mimonte.variables.mail.table.headers.codigoDescuento}")
+	public String codigoDescuento;
+
+	@Value("${mimonte.variables.mail.table.headers.tipoTransaccion}")
+	public String tipoTransaccion;
+
+	@Value("${mimonte.variables.mail.table.headers.montoTransaccion}")
+	public String montoTransaccion;
+
+	@Value("${mimonte.variables.mail.table.headers.tipoMoneda}")
+	public String tipoMoneda;
+
+	@Value("${mimonte.variables.mail.table.headers.tipoCuenta}")
+	public String tipoCuenta;
+
+	@Value("${mimonte.variables.mail.table.headers.codigoRespuestaMotorPagosTransaccion}")
+	public String codigoRespuestaMotorPagosTransaccion;
+
+	@Value("${mimonte.variables.mail.table.headers.metodoPago}")
+	public String metodoPago;
+
+	@Value("${mimonte.variables.mail.table.headers.identificadorCuenta}")
+	public String identificadorCuenta;
+
+	@Value("${mimonte.variables.mail.table.headers.idTerminalAdquiriente}")
+	public String idTerminalAdquiriente;
+
+	@Value("${mimonte.variables.mail.table.headers.titularCuenta}")
+	public String titularCuenta;
+
+	@Value("${mimonte.variables.mail.table.headers.codigoAutorizacion}")
+	public String codigoAutorizacion;
+
+	@Value("${mimonte.variables.mail.table.headers.codigoRespuestaAdquiriente}")
+	public String codigoRespuestaAdquiriente;
+
+	@Value("${mimonte.variables.mail.table.headers.numeroLoteAdquiriente}")
+	public String numeroLoteAdquiriente;
+
+	@Value("${mimonte.variables.mail.table.headers.fuenteTransaccion}")
+	public String fuenteTransaccion;
+
 }

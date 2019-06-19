@@ -1,0 +1,78 @@
+<!DOCTYPE>
+<HTML>
+  <HEAD>
+    <STYLE>
+    span {
+      font-size: 15px;
+      color: #0C5D89;
+      font-family: georgia, serif;
+    }
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+    }
+    tr td{
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    </STYLE>
+  </HEAD>
+  <BODY>
+    <span>${text1}</span>
+    <br>
+    <br>
+    <span>${text2}</span>
+    <br>
+    <br>
+    <span>${text3}</span>
+    <br>
+    <br>
+    <table>
+      <thead>
+        <tr style="background-color: #dddddd;">
+          <th>${fechaTransaccion}</th>
+          <th>${folioPartida}</th>
+          <th>${transaccion}</th>
+          <th>${codigoDescuento}</th>
+          <th>${tipoTransaccion}</th>
+          <th>${montoTransaccion}</th>
+          <th>${tipoMoneda}</th>
+          <th>${tipoCuenta}</th>
+          <th>${codigoRespuestaMotorPagosTransaccion}</th>
+          <th>${metodoPago}</th>
+          <th>${identificadorCuenta}</th>
+          <th>${idTerminalAdquiriente}</th>
+          <th>${titularCuenta}</th>
+          <th>${codigoAutorizacion}</th>
+          <th>${codigoRespuestaAdquiriente}</th>
+          <th>${numeroLoteAdquiriente}</th>
+          <th>${fuenteTransaccion}</th>
+        </tr>
+      </thead>
+      <tbody>
+        #foreach( $elem in $elements )
+          <tr>
+            <td>$elem.fechaTransaccion</td>
+            <td>$elem.folioPartida</td>
+            <td>$elem.transaccion</td>
+            <td>$elem.codigoDescuento</td>
+            <td>$elem.tipoTransaccion</td>
+            <td>$elem.montoTransaccion</td>
+            <td>$elem.tipoMoneda</td>
+            <td>$elem.tipoCuenta</td>
+            <td>$elem.codigoRespuestaMotorPagosTransaccion</td>
+            <td>$elem.metodoPago</td>
+            <td>$elem.identificadorCuenta</td>
+            <td>$elem.idTerminalAdquiriente</td>
+            <td>$elem.titularCuenta</td>
+            <td>$elem.codigoAutorizacion</td>
+            <td>$elem.codigoRespuestaAdquiriente</td>
+            <td>$elem.numeroLoteAdquiriente</td>
+            <td>$elem.fuenteTransaccion</td>
+          </tr>
+        #end
+      </tbody>
+    </table>
+  </BODY>
+</HTML>
