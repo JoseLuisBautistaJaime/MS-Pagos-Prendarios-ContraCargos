@@ -219,11 +219,25 @@
 			<artifactId>commons-collections4</artifactId>
 			<version>4.0</version>
 		</dependency>
-		
+		<!-- Intercepcion de eventos -->
 		<dependency>
 	        <groupId>org.springframework.boot</groupId>
 	        <artifactId>spring-boot-starter-aop</artifactId>
     	</dependency>
+		
+		<!-- Construccion de plantillas HTML para envio de correo electronico -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-velocity</artifactId>
+			<version>1.4.7.RELEASE</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context-support</artifactId>
+		    <version>3.2.0.RELEASE</version>
+		</dependency>
 		
     </dependencies>
 
@@ -331,8 +345,9 @@
 			     <directory>src/main/resources</directory>
 			     <filtering>true</filtering>
 			     <includes>
-			          <include>application-dev.yml</include>
-						<include>application.yml</include>
+			     	<include>application-dev.yml</include>
+					<include>application.yml</include>
+					<include>/templates/*</include>
 			     </includes>
 			</resource>
 		</resources>
