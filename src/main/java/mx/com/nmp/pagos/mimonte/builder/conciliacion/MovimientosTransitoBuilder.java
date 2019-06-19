@@ -136,7 +136,9 @@ public abstract class MovimientosTransitoBuilder {
 		movTransito.setTitular(movTransito.getTitular());
 		movTransito.setMovimientoMidas(movMidas);
 		movTransito.setNuevo(false);
-		movTransito.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS));
+		// TODO: Remover comentario
+//		movTransito.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS));
+		
 		return movTransito;
 	}
 

@@ -23,89 +23,221 @@ public class SolicitarPagosMailDataDTO implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Integer folio;
-	private Integer sucursal;
-	private Date fecha;
-	private BigDecimal monto;
-	private String tipoContratoDesc;
-	private String cuenta;
-	private String titular;
+	private Date fechaTransaccion;
+	private Integer folioPartida;
+	private String transaccion;
+	private String codigoDescuento;
+	private String tipoTransaccion;
+	private BigDecimal montoTransaccion;
+	private String tipoMoneda;
+	private String tipoCuenta;
+	private String codigoRespuestaMotorPagosTransaccion;
+	private String metodoPago;
+	private String identificadorCuenta;
+	private String idTerminalAdquiriente;
+	private String titularCuenta;
+	private String codigoAutorizacion;
+	private String codigoRespuestaAdquiriente;
+	private String numeroLoteAdquiriente;
+	private String fuenteTransaccion;
 
 	public SolicitarPagosMailDataDTO() {
 		super();
 	}
 
-	public SolicitarPagosMailDataDTO(Integer folio, Integer sucursal, Date fecha, BigDecimal monto,
-			String tipoContratoDesc, String cuenta, String titular) {
+	public SolicitarPagosMailDataDTO(Date fechaTransaccion, Integer folioPartida, String transaccion,
+			String codigoDescuento, String tipoTransaccion, BigDecimal montoTransaccion, String tipoMoneda,
+			String tipoCuenta, String codigoRespuestaMotorPagosTransaccion, String metodoPago,
+			String identificadorCuenta, String idTerminalAdquiriente, String titularCuenta, String codigoAutorizacion,
+			String codigoRespuestaAdquiriente, String numeroLoteAdquiriente, String fuenteTransaccion) {
 		super();
-		this.folio = folio;
-		this.sucursal = sucursal;
-		this.fecha = fecha;
-		this.monto = monto;
-		this.tipoContratoDesc = tipoContratoDesc;
-		this.cuenta = cuenta;
-		this.titular = titular;
+		this.fechaTransaccion = fechaTransaccion;
+		this.folioPartida = folioPartida;
+		this.transaccion = transaccion;
+		this.codigoDescuento = codigoDescuento;
+		this.tipoTransaccion = tipoTransaccion;
+		this.montoTransaccion = montoTransaccion;
+		this.tipoMoneda = tipoMoneda;
+		this.tipoCuenta = tipoCuenta;
+		this.codigoRespuestaMotorPagosTransaccion = codigoRespuestaMotorPagosTransaccion;
+		this.metodoPago = metodoPago;
+		this.identificadorCuenta = identificadorCuenta;
+		this.idTerminalAdquiriente = idTerminalAdquiriente;
+		this.titularCuenta = titularCuenta;
+		this.codigoAutorizacion = codigoAutorizacion;
+		this.codigoRespuestaAdquiriente = codigoRespuestaAdquiriente;
+		this.numeroLoteAdquiriente = numeroLoteAdquiriente;
+		this.fuenteTransaccion = fuenteTransaccion;
 	}
 
-	public Integer getFolio() {
-		return folio;
+	public SolicitarPagosMailDataDTO(Date fechaTransaccion, Integer folioPartida, String transaccion,
+			String tipoTransaccion, BigDecimal montoTransaccion, String tipoMoneda, String tipoCuenta,
+			String codigoRespuestaMotorPagosTransaccion, String metodoPago, String identificadorCuenta,
+			String titularCuenta, String codigoAutorizacion, String fuenteTransaccion) {
+		super();
+		this.fechaTransaccion = fechaTransaccion;
+		this.folioPartida = folioPartida;
+		this.transaccion = transaccion;
+		this.tipoTransaccion = tipoTransaccion;
+		this.montoTransaccion = montoTransaccion;
+		this.tipoMoneda = tipoMoneda;
+		this.tipoCuenta = tipoCuenta;
+		this.codigoRespuestaMotorPagosTransaccion = codigoRespuestaMotorPagosTransaccion;
+		this.metodoPago = metodoPago;
+		this.identificadorCuenta = identificadorCuenta;
+		this.titularCuenta = titularCuenta;
+		this.codigoAutorizacion = codigoAutorizacion;
+		this.fuenteTransaccion = fuenteTransaccion;
+		// Se llenan con N/A ya que no es posible regresar estos datos dado que no
+		// existen en niguna tabla
+		this.codigoDescuento = "N/A";
+		this.idTerminalAdquiriente = "N/A";
+		this.codigoRespuestaAdquiriente = "N/A";
+		this.numeroLoteAdquiriente = "N/A";
 	}
 
-	public void setFolio(Integer folio) {
-		this.folio = folio;
+	public Date getFechaTransaccion() {
+		return fechaTransaccion;
 	}
 
-	public Integer getSucursal() {
-		return sucursal;
+	public void setFechaTransaccion(Date fechaTransaccion) {
+		this.fechaTransaccion = fechaTransaccion;
 	}
 
-	public void setSucursal(Integer sucursal) {
-		this.sucursal = sucursal;
+	public Integer getFolioPartida() {
+		return folioPartida;
 	}
 
-	public Date getFecha() {
-		return fecha;
+	public void setFolioPartida(Integer folioPartida) {
+		this.folioPartida = folioPartida;
 	}
 
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
+	public String getTransaccion() {
+		return transaccion;
 	}
 
-	public BigDecimal getMonto() {
-		return monto;
+	public void setTransaccion(String transaccion) {
+		this.transaccion = transaccion;
 	}
 
-	public void setMonto(BigDecimal monto) {
-		this.monto = monto;
+	public String getCodigoDescuento() {
+		return codigoDescuento;
 	}
 
-	public String getTipoContratoDesc() {
-		return tipoContratoDesc;
+	public void setCodigoDescuento(String codigoDescuento) {
+		this.codigoDescuento = codigoDescuento;
 	}
 
-	public void setTipoContratoDesc(String tipoContratoDesc) {
-		this.tipoContratoDesc = tipoContratoDesc;
+	public String getTipoTransaccion() {
+		return tipoTransaccion;
 	}
 
-	public String getCuenta() {
-		return cuenta;
+	public void setTipoTransaccion(String tipoTransaccion) {
+		this.tipoTransaccion = tipoTransaccion;
 	}
 
-	public void setCuenta(String cuenta) {
-		this.cuenta = cuenta;
+	public BigDecimal getMontoTransaccion() {
+		return montoTransaccion;
 	}
 
-	public String getTitular() {
-		return titular;
+	public void setMontoTransaccion(BigDecimal montoTransaccion) {
+		this.montoTransaccion = montoTransaccion;
 	}
 
-	public void setTitular(String titular) {
-		this.titular = titular;
+	public String getTipoMoneda() {
+		return tipoMoneda;
+	}
+
+	public void setTipoMoneda(String tipoMoneda) {
+		this.tipoMoneda = tipoMoneda;
+	}
+
+	public String getTipoCuenta() {
+		return tipoCuenta;
+	}
+
+	public void setTipoCuenta(String tipoCuenta) {
+		this.tipoCuenta = tipoCuenta;
+	}
+
+	public String getCodigoRespuestaMotorPagosTransaccion() {
+		return codigoRespuestaMotorPagosTransaccion;
+	}
+
+	public void setCodigoRespuestaMotorPagosTransaccion(String codigoRespuestaMotorPagosTransaccion) {
+		this.codigoRespuestaMotorPagosTransaccion = codigoRespuestaMotorPagosTransaccion;
+	}
+
+	public String getMetodoPago() {
+		return metodoPago;
+	}
+
+	public void setMetodoPago(String metodoPago) {
+		this.metodoPago = metodoPago;
+	}
+
+	public String getIdentificadorCuenta() {
+		return identificadorCuenta;
+	}
+
+	public void setIdentificadorCuenta(String identificadorCuenta) {
+		this.identificadorCuenta = identificadorCuenta;
+	}
+
+	public String getIdTerminalAdquiriente() {
+		return idTerminalAdquiriente;
+	}
+
+	public void setIdTerminalAdquiriente(String idTerminalAdquiriente) {
+		this.idTerminalAdquiriente = idTerminalAdquiriente;
+	}
+
+	public String getTitularCuenta() {
+		return titularCuenta;
+	}
+
+	public void setTitularCuenta(String titularCuenta) {
+		this.titularCuenta = titularCuenta;
+	}
+
+	public String getCodigoAutorizacion() {
+		return codigoAutorizacion;
+	}
+
+	public void setCodigoAutorizacion(String codigoAutorizacion) {
+		this.codigoAutorizacion = codigoAutorizacion;
+	}
+
+	public String getCodigoRespuestaAdquiriente() {
+		return codigoRespuestaAdquiriente;
+	}
+
+	public void setCodigoRespuestaAdquiriente(String codigoRespuestaAdquiriente) {
+		this.codigoRespuestaAdquiriente = codigoRespuestaAdquiriente;
+	}
+
+	public String getNumeroLoteAdquiriente() {
+		return numeroLoteAdquiriente;
+	}
+
+	public void setNumeroLoteAdquiriente(String numeroLoteAdquiriente) {
+		this.numeroLoteAdquiriente = numeroLoteAdquiriente;
+	}
+
+	public String getFuenteTransaccion() {
+		return fuenteTransaccion;
+	}
+
+	public void setFuenteTransaccion(String fuenteTransaccion) {
+		this.fuenteTransaccion = fuenteTransaccion;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(folio, sucursal, fecha, monto, tipoContratoDesc, cuenta, titular);
+		return Objects.hash(fechaTransaccion, folioPartida, transaccion, codigoDescuento, tipoTransaccion,
+				montoTransaccion, tipoMoneda, tipoCuenta, codigoRespuestaMotorPagosTransaccion, metodoPago,
+				identificadorCuenta, idTerminalAdquiriente, titularCuenta, codigoAutorizacion,
+				codigoRespuestaAdquiriente, numeroLoteAdquiriente, fuenteTransaccion);
 	}
 
 	@Override
@@ -123,9 +255,15 @@ public class SolicitarPagosMailDataDTO implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "SolicitarPagosMailDataDTO [folio=" + folio + ", sucursal=" + sucursal + ", fecha=" + fecha + ", monto="
-				+ monto + ", tipoContratoDesc=" + tipoContratoDesc + ", cuenta=" + cuenta + ", titular=" + titular
-				+ "]";
+		return "SolicitarPagosMailDataDTO [fechaTransaccion=" + fechaTransaccion + ", folioPartida=" + folioPartida
+				+ ", transaccion=" + transaccion + ", codigoDescuento=" + codigoDescuento + ", tipoTransaccion="
+				+ tipoTransaccion + ", montoTransaccion=" + montoTransaccion + ", tipoMoneda=" + tipoMoneda
+				+ ", tipoCuenta=" + tipoCuenta + ", codigoRespuestaMotorPagosTransaccion="
+				+ codigoRespuestaMotorPagosTransaccion + ", metodoPago=" + metodoPago + ", identificadorCuenta="
+				+ identificadorCuenta + ", idTerminalAdquiriente=" + idTerminalAdquiriente + ", titularCuenta="
+				+ titularCuenta + ", codigoAutorizacion=" + codigoAutorizacion + ", codigoRespuestaAdquiriente="
+				+ codigoRespuestaAdquiriente + ", numeroLoteAdquiriente=" + numeroLoteAdquiriente
+				+ ", fuenteTransaccion=" + fuenteTransaccion + "]";
 	}
 
 }

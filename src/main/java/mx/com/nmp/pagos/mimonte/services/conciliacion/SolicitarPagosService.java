@@ -5,8 +5,11 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
@@ -110,6 +114,12 @@ public class SolicitarPagosService {
 	private MailServiceConstants mc;
 
 	/**
+	 * Velocity HTML layouts Engine
+	 */
+	@Autowired
+	private VelocityEngine velocityEngine;
+
+	/**
 	 * Regresa un objeto de tipo X (por definir) con la infromacion que se debe
 	 * enviar por mail para la solicitud de pagos
 	 * 
@@ -154,8 +164,10 @@ public class SolicitarPagosService {
 		}
 		try {
 			// Construye e-mail
-			generalBusMailDTO = construyeEMail(contactos, contacts, tipoContacto, dataTable, mainHtml, htmlMail, ct,
-					solicitarPagosMailDataDTOList, generalBusMailDTO);
+//			generalBusMailDTO = construyeEMail(contactos, contacts, tipoContacto, dataTable, mainHtml, htmlMail, ct,
+//					solicitarPagosMailDataDTOList, generalBusMailDTO);
+			generalBusMailDTO = construyeEMailVelocity(contactos, contacts, tipoContacto, dataTable, mainHtml, htmlMail,
+					ct, solicitarPagosMailDataDTOList, generalBusMailDTO);
 
 		} catch (Exception ex) {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL);
@@ -265,7 +277,34 @@ public class SolicitarPagosService {
 			contacts.append(cto.getEmail());
 			ct++;
 		}
-		return new GeneralBusMailDTO(contacts.toString(), mc.mailFrom, "Solicitud de Pagos", htmlMail,
+		return new GeneralBusMailDTO(contacts.toString(), mc.mailFrom, mc.subjectMail, htmlMail,
+				new SolicitarPagosAdjuntoDTO(new ArrayList<>()));
+	}
+
+	public GeneralBusMailDTO construyeEMailVelocity(List<Contactos> contactos, StringBuilder contacts,
+			TipoContacto tipoContacto, StringBuilder dataTable, String mainHtml, String htmlMail, int ct,
+			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList, GeneralBusMailDTO generalBusMailDTO) {
+		Map<String, Object> model;
+		// Se obtienen los contactos de midas
+		tipoContacto = tipoContactoRepository.findByDescriptionContaining("Midas");
+		if (null == tipoContacto || null == tipoContacto.getId())
+			throw new InformationNotFoundException(CatalogConstants.TIPO_CONTACTO_NOT_FOUND);
+		contactos = contactoRespository.findByIdTipoContacto(tipoContacto.getId());
+		if (null == contactos || contactos.isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL);
+		// Se constrye el cuerpo de correo HTML
+		model = buildMailModel(solicitarPagosMailDataDTOList);
+		htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, mc.velocityLayout, mc.encodeType, model);
+		// Se construye el DTO de request y se invoca el servicio de correo proveido por
+		// BUS
+		contacts = new StringBuilder();
+		for (Contactos cto : contactos) {
+			if (ct > 0)
+				contacts.append(",");
+			contacts.append(cto.getEmail());
+			ct++;
+		}
+		return new GeneralBusMailDTO(contacts.toString(), mc.mailFrom, mc.subjectMail, htmlMail,
 				new SolicitarPagosAdjuntoDTO(new ArrayList<>()));
 	}
 
@@ -326,29 +365,61 @@ public class SolicitarPagosService {
 	 * @param value
 	 */
 	public void buildBodyForSolicitarPagosMailDataDTO(StringBuilder str, SolicitarPagosMailDataDTO value) {
-		str.append("<tr>");
-		str.append("<td>");
-		str.append(value.getFolio());
-		str.append("</td>");
-		str.append("<td>");
-		str.append(value.getSucursal());
-		str.append("</td>");
-		str.append("<td>");
-		str.append(value.getFecha());
-		str.append("</td>");
-		str.append("<td>");
-		str.append(value.getMonto());
-		str.append("</td>");
-		str.append("<td>");
-		str.append(value.getTipoContratoDesc());
-		str.append("</td>");
-		str.append("<td>");
-		str.append(value.getCuenta());
-		str.append("</td>");
-		str.append("<td>");
-		str.append(value.getTitular());
-		str.append("</td>");
-		str.append("</tr>");
+//		str.append("<tr>");
+//		str.append("<td>");
+//		str.append(value.getFolio());
+//		str.append("</td>");
+//		str.append("<td>");
+//		str.append(value.getSucursal());
+//		str.append("</td>");
+//		str.append("<td>");
+//		str.append(value.getFecha());
+//		str.append("</td>");
+//		str.append("<td>");
+//		str.append(value.getMonto());
+//		str.append("</td>");
+//		str.append("<td>");
+//		str.append(value.getTipoContratoDesc());
+//		str.append("</td>");
+//		str.append("<td>");
+//		str.append(value.getCuenta());
+//		str.append("</td>");
+//		str.append("<td>");
+//		str.append(value.getTitular());
+//		str.append("</td>");
+//		str.append("</tr>");
+	}
+
+	/**
+	 * Crea el modelo a usar en plantilla HTML de velocity
+	 * 
+	 * @param solicitarPagosMailDataDTOList
+	 * @return
+	 */
+	public Map<String, Object> buildMailModel(List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
+		Map<String, Object> model = new HashMap<>();
+		model.put("text1", mc.text1);
+		model.put("text2", mc.text2);
+		model.put("text3", mc.text3);
+		model.put("codigoAutorizacion", mc.codigoAutorizacion);
+		model.put("codigoDescuento", mc.codigoDescuento);
+		model.put("codigoRespuestaAdquiriente", mc.codigoRespuestaAdquiriente);
+		model.put("codigoRespuestaMotorPagosTransaccion", mc.codigoRespuestaMotorPagosTransaccion);
+		model.put("fechaTransaccion", mc.fechaTransaccion);
+		model.put("folioPartida", mc.folioPartida);
+		model.put("fuenteTransaccion", mc.fuenteTransaccion);
+		model.put("identificadorCuenta", mc.identificadorCuenta);
+		model.put("idTerminalAdquiriente", mc.idTerminalAdquiriente);
+		model.put("metodoPago", mc.metodoPago);
+		model.put("montoTransaccion", mc.montoTransaccion);
+		model.put("numeroLoteAdquiriente", mc.numeroLoteAdquiriente);
+		model.put("tipoCuenta", mc.tipoCuenta);
+		model.put("tipoMoneda", mc.tipoMoneda);
+		model.put("tipoTransaccion", mc.tipoTransaccion);
+		model.put("titularCuenta", mc.titularCuenta);
+		model.put("transaccion", mc.transaccion);
+		model.put("elements", solicitarPagosMailDataDTOList);
+		return model;
 	}
 
 }

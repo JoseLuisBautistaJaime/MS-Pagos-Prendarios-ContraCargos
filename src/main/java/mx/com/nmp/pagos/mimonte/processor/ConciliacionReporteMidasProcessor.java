@@ -80,7 +80,8 @@ public class ConciliacionReporteMidasProcessor extends ConciliacionProcessorChai
 					
 					
 					// Verificar si ya existe el movimiento de transito con anteriodad
-					this.mergeReporteHandler.getMovimientoTransitoCuentaRepository()
+					// TODO: Remover comentario
+//					this.mergeReporteHandler.getMovimientoTransitoCuentaRepository()
 					
 					
 					transito.add(movTransito);
