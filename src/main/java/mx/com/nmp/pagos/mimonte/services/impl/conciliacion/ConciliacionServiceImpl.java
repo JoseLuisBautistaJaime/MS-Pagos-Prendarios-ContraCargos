@@ -541,8 +541,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		reporteObservable.notifyObservers();
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(folio, "Generar conciliacion", TipoActividadEnum.ACTIVIDAD,
-				SubTipoActividadEnum.ACTIVIDAD_CONCILIACION, folio.toString());
+		actividadGenericMethod.registroActividad(idConciliacion, "Generar conciliacion", TipoActividadEnum.ACTIVIDAD,
+				SubTipoActividadEnum.ACTIVIDAD_CONCILIACION, idConciliacion.toString());
 
 	}
 
