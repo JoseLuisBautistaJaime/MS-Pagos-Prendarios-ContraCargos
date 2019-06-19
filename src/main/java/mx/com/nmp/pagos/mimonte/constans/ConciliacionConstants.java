@@ -233,6 +233,11 @@ public final class ConciliacionConstants {
 	 */
 	public static final String IDENTIFIER_PS_UPDATED_IN_THE_CONCILIATION = "Identificador PS actualizado en la conciliación.";
 
+	/**
+	 * Mensaje que es mostrado cuando se desea actualizar a un sub estatus con un orden inferior al actual
+	 */
+	public static final String WRONG_ORDER_SUB_STATUS = "El subestatus que desea actualizar tiene un orden incorrecto";
+	
 
 	// CATALOGOS
 	public static final Long ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS = 1L;
@@ -253,6 +258,11 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se desea actualizar un sub estatus que no tiene asociado nungun estatus
 	 */
 	public static final String NO_STATUS_FOR_SUCH_SUB_STATUS = "No se encontro un estatus asociado al id de subestatus especificado";
+	
+	/**
+	 * Mensaje que es mostrado cuando se genera un error obteniendo el actual sub estatus de conciliacion
+	 */
+	public static final String ERROR_GETTING_CURRENT_SUB_STATUS = "Error obteniendo el sub estatus de conciliacion actual";
 	
 	/**
 	 * Subclase de cosntantes que se mapearan de propiedades del archivo de

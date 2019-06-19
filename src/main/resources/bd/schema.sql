@@ -1627,3 +1627,24 @@ CREATE TABLE tb_actividad(
     INDEX idx_fecha_actividades (fecha),
     PRIMARY KEY(id)
 );
+
+
+-- -------------------------------------------------------------------------------------------- --
+-- SE AGREGAN COLUMNAS DE ORDEN A  TABLAS tk_estatus_conciliacion y tk_sub_estatus_conciliacion --
+-- ----------------------------------- [ 2019-06-19 13:37:33 ] --------------------------------- --
+-- -------------------------------------------------------------------------------------------- --
+ALTER TABLE tk_estatus_conciliacion ADD COLUMN order_number INT(11);
+ALTER TABLE tk_sub_estatus_conciliacion ADD COLUMN order_number INT(11);
+
+-- ------------------------------------------------------- --
+-- SE ELIMINA COLUMNA argument_array DE TABLA tb_actividad --
+-- ------------- [ 2019-06-19 14:12:55 ] ------------------ --
+-- ------------------------------------------------------- --
+ALTER TABLE tb_actividad DROP COLUMN argument_array;
+
+-- -------------------------------------------------------------------- --
+-- SE CAMBIA LONGITUD DE COLUMNAS tipo y sub_tipo en tabla tb_actividad --
+-- -------------------- [ 2019-06-19 15:08:52 ] ------------------------ --
+-- -------------------------------------------------------------------- --
+ALTER TABLE tb_actividad CHANGE tipo tipo VARCHAR(50) NOT NULL;
+ALTER TABLE tb_actividad CHANGE sub_tipo sub_tipo VARCHAR(50) NOT NULL;
