@@ -44,10 +44,10 @@ INSERT INTO tk_estatus_operacion(id, descripcion_corta, descripcion) VALUES
 
 -- INSERCION INICIAL DE TIPOS DE CONTACTOS --
 INSERT INTO `tk_tipo_contacto` (`id`, `estatus`, `description`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`, `short_description`) VALUES
-(1, true, 'Contacto Midas', 'Ismael', now(), null, null, 'Contacto Midas'),
-(2, true, 'Contacto Entidad', 'Ismael', now(), null, null, 'Contacto Ent');
+(1, true, 'Contacto Midas', 'Quarksoft', now(), null, null, 'Contacto Midas'),
+(2, true, 'Contacto Entidad', 'Quarksoft', now(), null, null, 'Contacto Ent');
 
--- INSERCION DE TIPOS DE AFILIACION --
+-- INSERCION DE TIPOS DE AFILIACION (SE USA EN MODULO DSS)--
 INSERT INTO `tk_tipo_afiliacion` (`id`, `descripcion_corta`, `descripcion`) VALUES
 (1, 'Ninguno', 'Ningun tipo de afiliacion'),
 (2, '3DSecure', '3DSecure');
