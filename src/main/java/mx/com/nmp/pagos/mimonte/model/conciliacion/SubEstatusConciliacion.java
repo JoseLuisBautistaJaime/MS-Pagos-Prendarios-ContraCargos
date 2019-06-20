@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -26,6 +27,9 @@ import mx.com.nmp.pagos.mimonte.model.AbstractCatalogoAdm;
 @Table(name = "tk_sub_estatus_conciliacion")
 public class SubEstatusConciliacion extends AbstractCatalogoAdm {
 	
+	@Column(name = "order_number", nullable = true)
+	private Integer orderNumber;
+	
 	@ManyToMany(mappedBy = "subEstatusList")
 	private List<EstatusConciliacion> estatusList;
 	
@@ -43,6 +47,14 @@ public class SubEstatusConciliacion extends AbstractCatalogoAdm {
 
 	public void setEstatusList(List<EstatusConciliacion> estatusList) {
 		this.estatusList = estatusList;
+	}
+	
+	public Integer getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(Integer orderNumber) {
+		this.orderNumber = orderNumber;
 	}
 
 	public SubEstatusConciliacion(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,

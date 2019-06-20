@@ -102,28 +102,48 @@ INSERT INTO `tk_tipo_contrato` (`id`, `descripcion`, `baja_logica`, `abreviatura
 (146, 'PAGOS LIBRES', 'f', 'PL', 0),
 (145, 'CLASICO', 'f', 'CL', 0);    
 
-INSERT INTO `tk_estatus_conciliacion` (`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`) VALUES
-(1, 'En Proceso', 'En Proceso', true, now(), 'Sistema', 'En Proceso'),
-(2, 'Finalizada', 'Finalizada', true, now(), 'Sistema', 'En Proceso');
+INSERT INTO `tk_estatus_conciliacion` (`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`, `order_number`) VALUES
+(1, 'En Proceso', 'En Proceso', true, now(), 'Sistema', 'En Proceso', 1),
+(2, 'Finalizada', 'Finalizada', true, now(), 'Sistema', 'Finalizada', 2);
 
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (1, 'Creada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (2, 'Consulta Midas', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (3, 'Consulta Midas Completada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (4, 'Consulta Midas Error', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (5, 'Consulta Open Pay', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (6, 'Consulta Open Pay Completada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (7, 'Consulta Open Pay Error', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (8, 'Conciliacion', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (9, 'Conciliacion Completada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (10, 'Conciliacion Error', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (11, 'Consulta Estado de Cuenta', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (12, 'Consulta Estado de Cuenta Completada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (13, 'Consulta Estado de Cuenta Error', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (14, 'Enviada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (15, 'Enviada Error', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (16, 'Finalizada', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (1, 'Creada', true, now(), 'Sistema', 1);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (2, 'Consulta Midas', true, now(), 'Sistema', 2);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (3, 'Consulta Midas Completada', true, now(), 'Sistema', 3);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (4, 'Consulta Midas Error', true, now(), 'Sistema', 4);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (5, 'Consulta Open Pay', true, now(), 'Sistema', 5);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (6, 'Consulta Open Pay Completada', true, now(), 'Sistema', 6);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (7, 'Consulta Open Pay Error', true, now(), 'Sistema', 7);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (8, 'Conciliacion', true, now(), 'Sistema', 8);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (9, 'Conciliacion Completada', true, now(), 'Sistema', 9);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (10, 'Conciliacion Error', true, now(), 'Sistema', 10);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (11, 'Consulta Estado de Cuenta', true, now(), 'Sistema', 11);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (12, 'Consulta Estado de Cuenta Completada', true, now(), 'Sistema', 12);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (13, 'Consulta Estado de Cuenta Error', true, now(), 'Sistema', 13);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (14, 'Enviada', true, now(), 'Sistema', 14);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (15, 'Enviada Error', true, now(), 'Sistema', 15);
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`, `order_number`) VALUES (16, 'Finalizada', true, now(), 'Sistema', 16);
 
-
+-- --------------------------------------------------------------------------------- --
+-- INSERCIONES EN TABLA RELACIONAL PARA SABER CUAL ES LA ASOCIAN ESTATUS - SUB ESTATUS
+-- --------------------------------------------------------------------------------- --
+INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion(id_estatus, id_sub_estatus) 
+	VALUES
+		((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Creada')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Midas')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Midas Completada')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Midas Error')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Open Pay')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Open Pay Completada')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Open Pay Error')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Conciliacion')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Conciliacion Completada')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Conciliacion Error')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Estado de Cuenta')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Estado de Cuenta Completada')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Estado de Cuenta Error')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Enviada')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Enviada Error')),
+        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%Finalizada%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Finalizada'));
 
 
 

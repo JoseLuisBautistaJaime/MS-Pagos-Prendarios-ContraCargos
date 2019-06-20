@@ -47,13 +47,11 @@ public class Actividad {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Size(max = 20, message = "La longitud del tipo debe ser de maximo 20 caracteres")
 	@Column(name = "tipo", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private TipoActividadEnum tipo;
 
-	@Size(max = 20, message = "La longitud del subtipo debe ser de maximo 20 caracteres")
-	@Column(name = "subTipo", nullable = false)
+	@Column(name = "sub_tipo", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private SubTipoActividadEnum subTipo;
 
@@ -68,16 +66,12 @@ public class Actividad {
 	@Column(name = "folio", nullable = false)
 	private Integer folio;
 
-	@Size(max = 500, message = "La longitud del argument array debe ser de maximo 500 caracteres")
-	@Column(name = "argumentArray", nullable = false)
-	private String argumentArray;
-
 	public Actividad() {
 		super();
 	}
 
 	public Actividad(Long id, TipoActividadEnum tipo, SubTipoActividadEnum subTipo, String descripcion, Date fecha,
-			Integer folio, String argumentArray) {
+			Integer folio) {
 		super();
 		this.id = id;
 		this.tipo = tipo;
@@ -85,7 +79,6 @@ public class Actividad {
 		this.descripcion = descripcion;
 		this.fecha = fecha;
 		this.folio = folio;
-		this.argumentArray = argumentArray;
 	}
 
 	public Long getId() {
@@ -136,17 +129,9 @@ public class Actividad {
 		this.folio = folio;
 	}
 
-	public String getArgumentArray() {
-		return argumentArray;
-	}
-
-	public void setArgumentArray(String argumentArray) {
-		this.argumentArray = argumentArray;
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, tipo, subTipo, descripcion, fecha, folio, argumentArray);
+		return Objects.hash(id, tipo, subTipo, descripcion, fecha, folio);
 	}
 
 	@Override
@@ -165,7 +150,7 @@ public class Actividad {
 	@Override
 	public String toString() {
 		return "Actividad [id=" + id + ", tipo=" + tipo + ", subTipo=" + subTipo + ", descripcion=" + descripcion
-				+ ", fecha=" + fecha + ", folio=" + folio + ", argumentArray=" + argumentArray + "]";
+				+ ", fecha=" + fecha + ", folio=" + folio + "]";
 	}
 
 }

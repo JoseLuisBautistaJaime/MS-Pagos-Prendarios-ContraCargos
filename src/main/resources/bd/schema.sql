@@ -548,6 +548,7 @@ CREATE TABLE IF NOT EXISTS `tk_estatus_conciliacion` (
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
   `descripcion_corta` VARCHAR(100) NULL DEFAULT NULL,
+  `order_number` INT(11) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 3
@@ -601,6 +602,7 @@ CREATE TABLE IF NOT EXISTS `tk_sub_estatus_conciliacion` (
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `order_number` INT(11) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 17
@@ -756,9 +758,17 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_midas` (
   `transaccion` BIGINT(20) NULL DEFAULT NULL,
   `fecha` DATETIME NULL DEFAULT NULL,
   `estado_transaccion` VARCHAR(100) NULL DEFAULT NULL,
-  `id_consumidor` VARCHAR(50) NULL DEFAULT NULL,
+  `consumidor` VARCHAR(50) NULL DEFAULT NULL,
   `id_operacion` INT(11) NULL DEFAULT NULL,
   `id_tipo_contrato` INT(11) NULL DEFAULT NULL,
+  `codigo_error` VARCHAR(100) NULL DEFAULT NULL,
+  `mensaje_error` VARCHAR(100) NULL DEFAULT NULL,
+  `id_tarjeta` VARCHAR(100) NULL DEFAULT NULL,
+  `marca_tarjeta` VARCHAR(100) NULL DEFAULT NULL,
+  `tipo_tarjeta` VARCHAR(100) NULL DEFAULT NULL,
+  `tarjeta` VARCHAR(100) NULL DEFAULT NULL,
+  `moneda_pago` VARCHAR(100) NULL DEFAULT NULL,
+  `importe_transaccion` DECIMAL(16,4) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `FK_to_movimiento_midas_to_reporte` (`id_reporte` ASC),
   INDEX `idx_id` (`id` ASC),
@@ -1005,6 +1015,7 @@ DEFAULT CHARACTER SET = latin1;
 CREATE TABLE IF NOT EXISTS `to_movimiento_pago` (
   `id` INT(11) NOT NULL,
   `estatus` INT(11) NOT NULL,
+  `monto` DECIMAL(16,4),
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_to_movimiento_pago_to_movimiento_conciliacion`
     FOREIGN KEY (`id`)
@@ -1191,7 +1202,6 @@ CREATE TABLE IF NOT EXISTS `tb_actividad` (
   `descripcion` VARCHAR(150) NOT NULL,
   `fecha` DATETIME NOT NULL,
   `folio` BIGINT(11) NOT NULL,
-  `argument_array` VARCHAR(500) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_id_actividades` (`id` ASC),
   INDEX `idx_tipo_actividades` (`tipo` ASC),

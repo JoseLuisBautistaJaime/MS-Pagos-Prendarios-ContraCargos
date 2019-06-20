@@ -15,20 +15,35 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  */
 public enum SubTipoActividadEnum {
 
-	ACTIVIDAD_CONCILIACION(1, "Actividad Conciliacion", "Registro de una actividad relacionada con Conciliacion"),
-	OPERACION_CONCILIACION(2, "Operacion Conciliacion", "Registro de una operacion relacionada con Conciliacion"),
-	CRUD_CATALOGOS(3, "Crud Catalogos", "Registro de operaciones crud sobre catalogos"),
-	ERROR_TRANSACCION(4, "Error Transacciones", "Registro de errores en transacciones"),
-	OTRO(5, "Otro", "Otro SubTipo");
+	GENERACION_CONCILIACION(1, "Generacion de Conciliacion",
+			"Registro de una actividad relacionada con la generacion de una Conciliacion", TipoActividadEnum.ACTIVIDAD),
+
+	ACTUALIZACION_ESTATUS_CONCILIACION(2, "Actualizacion de estatus de Conciliacion",
+			"Registro de una operacion relacionada con la actualizacion de sub esttus y tal vez estatus de Conciliacion",
+			TipoActividadEnum.ACTIVIDAD),
+
+	ACTUALIZAR_CONCILIACION(3, "Actualizacion de Conciliacion",
+			"Registro un evento relacionado con la actualizacion de una Conciliacion", TipoActividadEnum.ACTIVIDAD),
+
+	SOLICITAR_PAGO(4, "Solicitu de Pagos", "Registra un evento relacionado con la solicitud de pagos",
+			TipoActividadEnum.ACTIVIDAD),
+
+	ENVIO_DE_PLANTILLA(5, "Envio de Plantilla", "Registra un evento relacionado con el envio de plantillas.",
+			TipoActividadEnum.ACTIVIDAD),
+	
+	CONSULTA_CONCILIACION(6, "Consulta de Conciliacion", "Registra un evento relacionado con la consulta de Conciliacion.",
+			TipoActividadEnum.ACTIVIDAD);
 
 	private Integer id;
 	private String nombre;
 	private String descripcion;
+	private TipoActividadEnum tipoActividad;
 
-	SubTipoActividadEnum(Integer id, String nombre, String descripcion) {
+	SubTipoActividadEnum(Integer id, String nombre, String descripcion, TipoActividadEnum tipoActividad) {
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
+		this.tipoActividad = tipoActividad;
 	}
 
 	public Integer getId() {
@@ -41,6 +56,10 @@ public enum SubTipoActividadEnum {
 
 	public String getDescripcion() {
 		return descripcion;
+	}
+
+	public TipoActividadEnum getTipoActividad() {
+		return tipoActividad;
 	}
 
 }

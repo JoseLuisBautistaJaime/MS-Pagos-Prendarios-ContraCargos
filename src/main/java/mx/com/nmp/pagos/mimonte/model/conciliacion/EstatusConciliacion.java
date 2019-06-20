@@ -44,6 +44,9 @@ public class EstatusConciliacion extends AbstractCatalogo {
 	@Column(name = "last_modified_by")
 	private String lastModifiedBy;
 
+	@Column(name = "order_number", nullable = true)
+	private Integer orderNumber;
+	
 	@ManyToMany
 	@JoinTable(name = "tr_estatus_conciliacion_sub_estatus_conciliacion", joinColumns = {
 			@JoinColumn(name = "id_estatus", nullable = false, referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "id_sub_estatus", nullable = false, referencedColumnName = "id")})
@@ -59,6 +62,14 @@ public class EstatusConciliacion extends AbstractCatalogo {
 
 	public EstatusConciliacion(Integer id) {
 		super(id);
+	}
+	
+	public Integer getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(Integer orderNumber) {
+		this.orderNumber = orderNumber;
 	}
 
 	public EstatusConciliacion(String nombre, Boolean estatus, Date createdDate, Date lastModifiedDate,

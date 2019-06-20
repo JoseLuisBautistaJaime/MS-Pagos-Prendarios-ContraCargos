@@ -1,5 +1,6 @@
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +135,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			"(SELECT COUNT(*) " + 
 			"	FROM to_conciliacion " + 
 			"    ) AS conc_totales;")
-	public Map<String, Long> resumenConciliaciones(@Param("fechaIncial") Date fechaIncial, @Param("fechaFinal") Date fechaFinal, @Param("estatusConcProcesada") final String estatusConcProcesada, @Param("estatusDevLiquidada") final String estatusDevLiquidada);
+	public Map<String, BigInteger> resumenConciliaciones(@Param("fechaIncial") Date fechaIncial, @Param("fechaFinal") Date fechaFinal, @Param("estatusConcProcesada") final String estatusConcProcesada, @Param("estatusDevLiquidada") final String estatusDevLiquidada);
 	
 	/**
 	 * Regresa un mapa con tres valores, [en_proceso]: Con el total de las conciliaciones en proceso, [dev_liquidadas]: Con el total de las devoluciones liquidadas y [conc_totales]: Con el total de conciliaciones
@@ -154,15 +155,15 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			"(SELECT COUNT(*) " + 
 			"	FROM to_conciliacion " + 
 			"    ) AS conc_totales;")
-	public Map<String, Long> resumenConciliaciones(@Param("folio") final String estatusConcProcesada, @Param("estatusDevLiquidada") final String estatusDevLiquidada);
+	public Map<String, BigInteger> resumenConciliaciones(@Param("folio") final String estatusConcProcesada, @Param("estatusDevLiquidada") final String estatusDevLiquidada);
 	
 	/**
 	 * Regresa el id de estatus de una conciliacion dependiendo de su id de subestatus
 	 * @param idSubEstatus
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT DISTINCT id_estatus FROM tr_estatus_conciliacion_sub_estatus_conciliacion WHERE id_sub_estatus = :idSubEstatus ORDER BY id_estatus ASC LIMIT 1")
-	public Integer findIdEstatusConciliacion(@Param("idSubEstatus") Long idSubEstatus);
+	@Query(nativeQuery = true, value = "SELECT DISTINCT tr.id_estatus AS estatus, ec.order_number AS estatus_order, sc.order_number AS sub_estatus_order FROM tr_estatus_conciliacion_sub_estatus_conciliacion tr INNER JOIN tk_estatus_conciliacion ec ON ec.id = tr.id_estatus INNER JOIN tk_sub_estatus_conciliacion sc ON sc.id = tr.id_sub_estatus WHERE tr.id_sub_estatus = :idSubEstatus ORDER BY id_estatus ASC LIMIT 1")
+	public Map<String, Object> findIdEstatusConciliacion(@Param("idSubEstatus") Long idSubEstatus);
 	
 	/**
 	 * Se actualiza el subestatus de una conciliacion por folio de la misma
@@ -172,7 +173,15 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param fecha
 	 */
 	@Modifying
-	@Query("UPDATE Conciliacion SET subEstatus = :subEstatus, estatus= :estatusConciliacion, lastModifiedBy = :usuario, lastModifiedDate = :fecha WHERE id = :folio")
+	@Query(nativeQuery = true, value ="UPDATE to_conciliacion SET id_sub_estatus_conciliacion = :subEstatus, id_estatus_conciliacion = :estatusConciliacion, last_modified_by = :usuario, last_modified_date = :fecha WHERE id = :folio")
 	public void actualizaSubEstatusConciliacion(@Param("folio") final Integer folio, @Param("subEstatus") SubEstatusConciliacion subEstatus, @Param("usuario") final String usuario, @Param("fecha") Date fecha, @Param("estatusConciliacion") final EstatusConciliacion estatusConciliacion);
+
+	/**
+	 * Regresa el orden de sub estatus y estatus de conciliaicon en un mapa por folio de conciliacion
+	 * @param folio
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT ec.order_number AS estatus_order, sc.order_number AS sub_estatus_order FROM tk_estatus_conciliacion ec INNER JOIN to_conciliacion c ON c.id_estatus_conciliacion = ec.id INNER JOIN tk_sub_estatus_conciliacion sc ON sc.id = c.id_sub_estatus_conciliacion where C.ID = :folio")
+	public Map<String, Object> findOrderSubstatusAndStatusByFolio(@Param("folio") final Integer folio);
 	
 }

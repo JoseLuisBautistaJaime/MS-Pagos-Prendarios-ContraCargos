@@ -54,16 +54,14 @@ public class EventAspect {
 		TipoActividadEnum tipo = null;
 		SubTipoActividadEnum subTipo = null;
 		// Se obtienen los argumentos y se setean a atributos
-		String argArray = null;
 		Object[] arr = joinPoint.getArgs();
 		if (arr.length >= 4) {
 			folio = Integer.parseInt(arr[0].toString());
 			descripcion = arr[1].toString();
 			tipo = (TipoActividadEnum) arr[2];
 			subTipo = (SubTipoActividadEnum) arr[3];
-			argArray = arr[4].toString();
 			// Se construye la entidad actividad
-			actividad = buildActividad(folio, descripcion, tipo, subTipo, argArray);
+			actividad = buildActividad(folio, descripcion, tipo, subTipo);
 			// Se guarda la entidad Actividad
 			if (null != actividad)
 				actividadRepository.save(actividad);
@@ -83,11 +81,10 @@ public class EventAspect {
 	 * @return
 	 */
 	private Actividad buildActividad(final Integer folio, final String descripcion, final TipoActividadEnum tipo,
-			final SubTipoActividadEnum subTipo, final String argArray) {
+			final SubTipoActividadEnum subTipo) {
 		Actividad actividad = null;
-		if (null != folio && null != descripcion && null != tipo && null != subTipo && null != argArray) {
+		if (null != folio && null != descripcion && null != tipo && null != subTipo) {
 			actividad = new Actividad();
-			actividad.setArgumentArray(argArray);
 			actividad.setFolio(folio);
 			actividad.setDescripcion(descripcion);
 			actividad.setFecha(new Date());
