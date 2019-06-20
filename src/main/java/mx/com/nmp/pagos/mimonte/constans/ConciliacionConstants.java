@@ -55,16 +55,6 @@ public final class ConciliacionConstants {
 	public static final String MSG_SUCCESSFUL_MOVIMIENTOS_QUERY = "Consulta movimientos exitosa.";
 
 	/**
-	 * Valor que se setea por default para el alta de la conciliacion
-	 */
-	public static final String EN_PROCESO = "En Proceso";
-
-	/**
-	 * Valor que se setea por default para el alta de la subConciliacion;
-	 */
-	public static final String CREADA = "Creada";
-
-	/**
 	 * Mensaje mostrado para un alta exitosa.
 	 */
 	public static final String SAVE_SUCCESSFUL = "Alta exitosa.";
@@ -237,6 +227,16 @@ public final class ConciliacionConstants {
 	// CATALOGOS
 	public static final Long ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS = 1L;
 	public static final Long CATEGORIA_ESTADO_CUENTA_COMISIONES = 2L;
+
+	// Estatus conciliacion
+	public static final Integer ESTATUS_CONCILIACION_EN_PROCESO = 1;
+	public static final Integer ESTATUS_CONCILIACION_FINALIZADA = 2;
+	
+	// Subestatus conciliacion
+	public static final Long SUBESTATUS_CONCILIACION_CREADA = 1L;
+	
+	public static final String CONCEPTO_DEVOLUCION = "DEV"; // Pendiente
+	public static final String CONCEPTO_LIQUIDACION = "LIQ"; // Pendiente
 
 
 	/**

@@ -35,9 +35,6 @@ public class ConciliacionMerge implements Serializable {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "id_conciliacion", nullable = false)
-	private Long conciliacion;
-
 	@Temporal(TemporalType.DATE)
 	@Column(name = "midas_last_updated", nullable = false)
 	private Date midasLastUpdated;
@@ -56,22 +53,12 @@ public class ConciliacionMerge implements Serializable {
 	}
 
 
-
-
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getConciliacion() {
-		return conciliacion;
-	}
-
-	public void setConciliacion(Long conciliacion) {
-		this.conciliacion = conciliacion;
 	}
 
 	public Date getMidasLastUpdated() {
@@ -101,7 +88,7 @@ public class ConciliacionMerge implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, conciliacion, midasLastUpdated, proveedorLastUpdated, estadoCuentaLastUpdated);
+		return Objects.hash(id, midasLastUpdated, proveedorLastUpdated, estadoCuentaLastUpdated);
 	}
 
 	@Override
@@ -118,7 +105,7 @@ public class ConciliacionMerge implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ConciliacionMerge [id=" + id + ", conciliacion=" + conciliacion + ", midasLastUpdated=" + midasLastUpdated
+		return "ConciliacionMerge [id=" + id + ", midasLastUpdated=" + midasLastUpdated
 				+ ", proveedorLastUpdated=" + proveedorLastUpdated + ", estadoCuentaLastUpdated=" + estadoCuentaLastUpdated + "]";
 	}
 

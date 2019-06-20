@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstatusConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoComisionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.SubEstatusConciliacionBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
@@ -145,6 +149,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Validación del objeto ConciliacionRequestDTO
 		if (conciliacionRequestDTO.getCuenta() == null || conciliacionRequestDTO.getCuenta().getId() < 1)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+
 		if (conciliacionRequestDTO.getEntidad() == null || conciliacionRequestDTO.getEntidad().getId() < 1)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 
@@ -153,45 +158,35 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 
 		// Búsqueda y validacion del idCuenta.
-		Cuenta cuenta = cuentaRepository.findById(conciliacionRequestDTO.getCuenta().getId()).isPresent()
-				? cuentaRepository.findById(conciliacionRequestDTO.getCuenta().getId()).get()
-				: null;
-		if (cuenta.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		Optional<Cuenta> cuenta = cuentaRepository.findById(conciliacionRequestDTO.getCuenta().getId());
+		if (!cuenta.isPresent()) {
+			throw new ConciliacionException("La cuenta especificada no existe");
+		}
 
 		// Búsqueda y validación del idEntidad.
-		Entidad entidad = entidadRepository.findById(conciliacionRequestDTO.getEntidad().getId()).isPresent()
-				? entidadRepository.findById(conciliacionRequestDTO.getEntidad().getId()).get()
-				: null;
-		if (entidad.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		Optional<Entidad> entidad = entidadRepository.findById(conciliacionRequestDTO.getEntidad().getId());
+		if (!entidad.isPresent()) {
+			throw new ConciliacionException("La entidad especificada no existe");
+		}
 
-		// Búsqueda para setear por default para el estatus de conciliación En Proceso.
-		EstatusConciliacion estatusConciliacion = estatusConciliacionRepository
-				.findByNombre(ConciliacionConstants.EN_PROCESO);
-		if (estatusConciliacion == null || estatusConciliacion.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		// Se obtiene el estatus y el sub estatus de la conciliacion
+		Optional<EstatusConciliacion> estatusConciliacion = estatusConciliacionRepository.findById(ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
+		if (!estatusConciliacion.isPresent()) {
+			throw new ConciliacionException("Estatus conciliacion en proceso no encontrado");
+		}
+		Optional<SubEstatusConciliacion> subEstatusConciliacion = subEstatusConciliacionRepository.findById(ConciliacionConstants.SUBESTATUS_CONCILIACION_CREADA);
+		if (!subEstatusConciliacion.isPresent()) {
+			throw new ConciliacionException("Sub estatus conciliacion creada no encontrado");
+		}
+		conciliacionRequestDTO.setEstatus(EstatusConciliacionBuilder.buildEstatusConciliacionDTOFromEstatusConciliacion(estatusConciliacion.get()));
+		conciliacionRequestDTO.setSubEstatus(SubEstatusConciliacionBuilder.buildSubEstatusConciliacionDTOFromSubEstatusConciliacion(subEstatusConciliacion.get()));
 
-		conciliacionRequestDTO.setEstatus(new EstatusConciliacionDTO(estatusConciliacion.getId()));
-
-		SubEstatusConciliacion subEstatusConciliacion = subEstatusConciliacionRepository
-				.findByDescripcion(ConciliacionConstants.CREADA);
-		if (subEstatusConciliacion == null || subEstatusConciliacion.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-
-		conciliacionRequestDTO.setSubEstatus(new SubEstatusConciliacionDTO(subEstatusConciliacion.getId()));
-
-		Conciliacion conciliacion = conciliacionRepository
-				.save(ConciliacionBuilder.buildConciliacionFromConciliacionResponseSaveDTO(conciliacionRequestDTO));
-
-		conciliacion.setEstatus(estatusConciliacion);
-		conciliacion.setCuenta(cuenta);
-		conciliacion.setEntidad(entidad);
-		conciliacion.setSubEstatus(subEstatusConciliacion);
+		// Se construye la conciliacion y se guarda
+		Conciliacion conciliacion = conciliacionRepository.save(ConciliacionBuilder.buildConciliacionFromConciliacionResponseSaveDTO(conciliacionRequestDTO));
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(conciliacion.getId(), "Alta de conciliacion",
-				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTIVIDAD_CONCILIACION, conciliacion.toString());
+		//actividadGenericMethod.registroActividad(conciliacion.getId(), "Alta de conciliacion",
+		//		TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTIVIDAD_CONCILIACION, conciliacion.toString());
 
 		return ConciliacionBuilder.buildConciliacionDTOFromConciliacion(conciliacion);
 

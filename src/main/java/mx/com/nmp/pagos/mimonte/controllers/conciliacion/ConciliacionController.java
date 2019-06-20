@@ -135,32 +135,6 @@ public class ConciliacionController {
 						conciliacionServiceImpl.saveConciliacion(conciliacionResponseSaveDTO, createdBy)));
 	}
 
-//	/**
-//	 * Se encarga de consultar los movimientos generados por procesos nocturnos (MIDAS) y por el proveedor transaccional.
-//	 * 
-//	 * 
-//	 * @param consultaMidasProveedorRequestDTO
-//	 * @param createdBy
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	@PostMapping(value = "/conciliacion/consulta/midasyproveedor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//	@ApiOperation(httpMethod = "POST", value = "Consulta los movimientos generados por procesos nocturnos.", tags = {
-//			"Conciliación" })
-//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
-//			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-//			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-//			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-//	public Response consultaMidasProveedor(
-//			@RequestBody ConsultaMidasProveedorRequestDTO consultaMidasProveedorRequestDTO,
-//			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-//
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
-//				buildConsultaMidasProveedorDummy());
-//	}
-	
 	
 	/**
 	 * Realiza la consulta de la conciliación desde la pantalla de consulta de conciliaciones.

@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS `to_global` ;
-DROP TABLE IF EXISTS `to_merge_conciliacion`;
 DROP TABLE IF EXISTS `tb_actividad` ;
 DROP TABLE IF EXISTS `to_layout_linea` ;
 DROP TABLE IF EXISTS `to_layout_header` ;
@@ -22,6 +21,7 @@ DROP TABLE IF EXISTS `to_comision_transaccion_real`;
 DROP TABLE IF EXISTS `to_comision_transaccion_proyeccion`;
 DROP TABLE IF EXISTS `to_comision_transaccion`;
 DROP TABLE IF EXISTS `to_conciliacion` ;
+DROP TABLE IF EXISTS `to_merge_conciliacion`;
 DROP TABLE IF EXISTS `tr_regla_negocio_variable` ;
 DROP TABLE IF EXISTS `tr_estatus_conciliacion_sub_estatus_conciliacion` ;
 DROP TABLE IF EXISTS `tr_entidad_cuenta_afiliacion` ;
@@ -630,6 +630,18 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
+-- Table `to_merge_conciliacion`
+-- -----------------------------------------------------
+CREATE TABLE `to_merge_conciliacion` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `midas_last_updated` datetime DEFAULT NULL,
+  `proveedor_last_updated` datetime DEFAULT NULL,
+  `estado_cuenta_last_updated` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- -----------------------------------------------------
 -- Table `to_conciliacion`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_conciliacion` (
@@ -641,6 +653,7 @@ CREATE TABLE IF NOT EXISTS `to_conciliacion` (
   `sub_estatus_descripcion` VARCHAR(100) NULL DEFAULT NULL,
   `id_poliza_tesoreria` VARCHAR(20) NULL DEFAULT NULL,
   `id_asiento_contable` VARCHAR(20) NULL DEFAULT NULL,
+  `id_merge` BIGINT(20) NULL DEFAULT NULL,
   `completed_date` DATETIME NULL DEFAULT NULL,
   `created_date` DATETIME NOT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
@@ -651,6 +664,7 @@ CREATE TABLE IF NOT EXISTS `to_conciliacion` (
   INDEX `entidad_fk_idx` (`id_entidad` ASC),
   INDEX `cuenta_fk_idx` (`id_cuenta` ASC),
   INDEX `sub_estatus_conciliacion_fk_idx` (`id_sub_estatus_conciliacion` ASC),
+  INDEX `merge_fk_idx` (`id_merge` ASC),
   CONSTRAINT `cuenta_fk`
     FOREIGN KEY (`id_cuenta`)
     REFERENCES `tc_cuenta` (`id`),
@@ -662,7 +676,10 @@ CREATE TABLE IF NOT EXISTS `to_conciliacion` (
     REFERENCES `tk_estatus_conciliacion` (`id`),
   CONSTRAINT `sub_estatus_conciliacion_fk`
     FOREIGN KEY (`id_sub_estatus_conciliacion`)
-    REFERENCES `tk_sub_estatus_conciliacion` (`id`))
+    REFERENCES `tk_sub_estatus_conciliacion` (`id`),
+CONSTRAINT `merge_fk`
+    FOREIGN KEY (`id_merge`)
+    REFERENCES `to_merge_conciliacion` (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = latin1;
@@ -692,21 +709,6 @@ CREATE TABLE IF NOT EXISTS `to_global` (
     REFERENCES `to_conciliacion` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
--- Table `to_merge_conciliacion`
--- -----------------------------------------------------
-CREATE TABLE `to_merge_conciliacion` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `id_conciliacion` bigint(20) NOT NULL,
-  `midas_last_updated` datetime DEFAULT NULL,
-  `proveedor_last_updated` datetime DEFAULT NULL,
-  `estado_cuenta_last_updated` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `conciliacion_fk_idx` (`id_conciliacion`),
-  CONSTRAINT `conciliacion_fk` FOREIGN KEY (`id_conciliacion`) REFERENCES `to_conciliacion` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 -- -----------------------------------------------------

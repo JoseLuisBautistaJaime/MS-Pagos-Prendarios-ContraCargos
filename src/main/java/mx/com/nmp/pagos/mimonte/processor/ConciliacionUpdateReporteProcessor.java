@@ -38,7 +38,6 @@ public class ConciliacionUpdateReporteProcessor extends ConciliacionProcessorCha
 		ConciliacionMerge merge = conciliacion.getMerge();
 		if (merge == null) {
 			merge = new ConciliacionMerge();
-			merge.setConciliacion(reportesWrapper.getIdConciliacion().longValue());
 			conciliacion.setMerge(merge);
 		}
 

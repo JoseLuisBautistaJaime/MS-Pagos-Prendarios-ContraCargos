@@ -22,7 +22,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
  * @version 0.1
  */
 @Repository("subEstatusConciliacionRepository")
-public interface SubEstatusConciliacionRepository extends JpaRepository<SubEstatusConciliacion, Integer> {
+public interface SubEstatusConciliacionRepository extends JpaRepository<SubEstatusConciliacion, Long> {
 
 	/**
 	 * Búsqueda del sub estatus de la conciliación a partir de la descripcion.

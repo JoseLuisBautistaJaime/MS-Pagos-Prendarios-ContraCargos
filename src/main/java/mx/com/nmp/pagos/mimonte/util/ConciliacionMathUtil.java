@@ -2,7 +2,7 @@ package mx.com.nmp.pagos.mimonte.util;
 
 import java.math.BigDecimal;
 import java.util.List;
-import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
@@ -29,7 +29,7 @@ public class ConciliacionMathUtil {
 		int total = 0;
 		if (movsEstadoCuenta != null) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
-				if (movEstadoCuenta.getConcepto() != null && movEstadoCuenta.getConcepto().equals(CatalogConstants.CONCEPTO_DEVOLUCION)) {
+				if (movEstadoCuenta.getConcepto() != null && movEstadoCuenta.getConcepto().equals(ConciliacionConstants.CONCEPTO_DEVOLUCION)) {
 					total ++;
 				}
 			}
@@ -79,7 +79,7 @@ public class ConciliacionMathUtil {
 		BigDecimal montoLiquidacion = new BigDecimal(0);
 		if (movsEstadoCuenta != null) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
-				if (movEstadoCuenta.getConcepto() != null && movEstadoCuenta.getConcepto().equals(CatalogConstants.CONCEPTO_DEVOLUCION)) {
+				if (movEstadoCuenta.getConcepto() != null && movEstadoCuenta.getConcepto().equals(ConciliacionConstants.CONCEPTO_DEVOLUCION)) {
 					montoLiquidacion = montoLiquidacion.add(movEstadoCuenta.getImporte());
 				}
 			}

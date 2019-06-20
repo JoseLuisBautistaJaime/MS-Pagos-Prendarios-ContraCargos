@@ -77,10 +77,6 @@ public class Conciliacion extends Updatable implements Serializable  {
 	@JoinColumn(name = "id", insertable = false, updatable = false)
 	private Reporte reportes;
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
-	@JoinColumn(name = "id_conciliacion")
-	private Set<MovimientoConciliacion> movimientoConciliacionSet;
-	
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "id_sub_estatus_conciliacion")
 	private SubEstatusConciliacion subEstatus;
@@ -89,7 +85,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 	private Set<ComisionTransaccion> comisionTransaccionSet;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_conciliacion")
+	@JoinColumn(name = "id_merge")
 	private ConciliacionMerge merge;
 	
 	public Conciliacion() {
@@ -111,7 +107,6 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.completedDate = completedDate;
 		this.global = global;
 		this.reportes = reportes;
-		this.movimientoConciliacionSet = movimientoConciliacionSet;
 		this.subEstatus = subEstatus;
 	}
 
@@ -203,14 +198,6 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.reportes = reportes;
 	}
 
-	public Set<MovimientoConciliacion> getMovimientoConciliacionSet() {
-		return movimientoConciliacionSet;
-	}
-
-	public void setMovimientoConciliacionSet(Set<MovimientoConciliacion> movimientoConciliacionSet) {
-		this.movimientoConciliacionSet = movimientoConciliacionSet;
-	}
-
 	public SubEstatusConciliacion getSubEstatus() {
 		return subEstatus;
 	}
@@ -247,7 +234,6 @@ public class Conciliacion extends Updatable implements Serializable  {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((idAsientoContable == null) ? 0 : idAsientoContable.hashCode());
 		result = prime * result + ((idPolizaTesoreria == null) ? 0 : idPolizaTesoreria.hashCode());
-		result = prime * result + ((movimientoConciliacionSet == null) ? 0 : movimientoConciliacionSet.hashCode());
 		result = prime * result + ((reportes == null) ? 0 : reportes.hashCode());
 		result = prime * result + ((subEstatus == null) ? 0 : subEstatus.hashCode());
 		result = prime * result + ((subEstatusDescripcion == null) ? 0 : subEstatusDescripcion.hashCode());
@@ -272,8 +258,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 		return "Conciliacion [id=" + id + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta=" + cuenta
 				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idPolizaTesoreria=" + idPolizaTesoreria
 				+ ", idAsientoContable=" + idAsientoContable + ", completedDate=" + completedDate + ", global=" + global
-				+ ", reportes=" + reportes + ", movimientoConciliacionSet=" + movimientoConciliacionSet
-				+ ", subEstatus=" + subEstatus + "]";
+				+ ", reportes=" + reportes + ", subEstatus=" + subEstatus + "]";
 	}
 
 }

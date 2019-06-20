@@ -1,16 +1,39 @@
 -- ------------------------------------------------------------------------------------------------------------
--- FASE 1 PAGOS ------------------------------------------------------------------------------------------------------
+-- FASE 1 PAGOS -----------------------------------------------------------------------------------------------
 -- ------------------------------------------------------------------------------------------------------------
-INSERT INTO tk_catalogo(id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
-(3, 'Afiliacion', 'Catalogo de afiliaciones', 'tc_afiliacion', 1),
+
+-- INSERCION INICIAL EN CATALOGO tk_estatus_tarjeta
+INSERT INTO tk_estatus_tarjeta(id, descripcion_corta, descripcion) VALUES
+(1, 'Activa', 'Tarjeta Activa'),
+(2, 'Inactiva', 'Tarjeta Inactiva');
+
+-- INSERCION INICIAL EN CATALOGO tk_estatus_transaccion (Estatus Pago)
+INSERT INTO tk_estatus_transaccion(id, descripcion_corta, descripcion) VALUES
+(1,'Registrado','Pago Registrado');
+
+-- INSERCION INICIAL EN CATALOGO tk_tipo_tarjeta
+INSERT INTO tk_tipo_tarjeta(id, descripcion_corta, descripcion) VALUES
+(1, 'Visa', 'Tarjeta Visa'),
+(2, 'MasterCard', 'Tarjeta MasterCard');
+
+-- INSERCION INICIAL EN CATALOGO TK_CATALOGO
+INSERT INTO tk_catalogo(id, descripcion_corta,descripcion, nombre_tabla, activo) VALUES
+(1,'Afiliacion','El catalog de afiliaicones','tc_afiliacion',1),
+(2,'Estatus Tarjeta','Catalogo de estatus de tarjeta posibles','tk_estatus_tarjeta',1),
+(3,'Estatus Transaccion','Estatus de transacciones posibles','tk_estatus_transaccion',1),
+(4,'Tipo Tarjeta','Catalogo de tipos de tarjetas','tk_tipo_tarjeta',1),
+(5,'Categoria','Categorias de codigos de estados de cuenta','tk_categoria',1)
+-- OJO:: CHECAR LOS SIGUIENTES
+/*(3, 'Afiliacion', 'Catalogo de afiliaciones', 'tc_afiliacion', 1),
 (4, 'EstatusPago', 'Estatus de las transacciones o pagos', 'tk_estatus_transaccion', 1),
 (5, 'ReglaNegocio', 'Reglas de negocio', 'tk_regla_negocio', 1),
 (6, 'Variable', 'Variables para la aplicacion', 'tk_variable', 1),
-(7, 'Categoria', 'Categorias de los codigos de estado de cuenta', 'tk_categoria', 1);
+(7, 'Categoria', 'Categorias de los codigos de estado de cuenta', 'tk_categoria', 1)*/;
 
--- INSERT DEFAULT VALUE IN STATUS TRANSACTION CATALOG
-INSERT INTO tk_estatus_transaccion(id, descripcion_corta, descripcion) VALUES (1,'Pregistrado','Pago Registrado');
--- INSERT INTO STATUS TRANSACTION ENDS
+--- INSERCION INICIAL EN CATALOG DE ESTATUS DE OPERACIONES
+INSERT INTO tk_estatus_operacion(id, descripcion_corta, descripcion) VALUES
+(1, "Operacion Exitosa", "Operacion realizada de manera exitosa"),
+(2, "Operacion Fallida", "Operacion ralizada de manera fallida");
 
 
 
@@ -47,6 +70,7 @@ INSERT INTO `tk_categoria` (`id`, `nombre`, `descripcion`, `estatus`, `created_d
 -- INSERT PARA CATALOGO NO ADMINISTRABLE tk_estatus_transaccion --
 -- ------------------ [2019-06-07 16:51:31] ------------------- --
 -- ------------------------------------------------------------ --
+-- // VERIFICAR ESTE CATALOGO (EstatusPago = tk_estatus_transaccion)
 INSERT INTO `tk_estatus_transaccion` (`id`, `descripcion_corta`, `descripcion`) VALUES
 (1, 'Solicitada', 'Solicitada'),
 (2, 'En Proceso', 'En Proceso'),
@@ -78,27 +102,26 @@ INSERT INTO `tk_tipo_contrato` (`id`, `descripcion`, `baja_logica`, `abreviatura
 (146, 'PAGOS LIBRES', 'f', 'PL', 0),
 (145, 'CLASICO', 'f', 'CL', 0);    
 
-INSERT INTO `tk_estatus_conciliacion` (`nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`) VALUES
-('Finalizada', 'Estatus actual de la conciliación', false, now(), 'Sistema', 'Estatus actual');
-INSERT INTO `tk_estatus_conciliacion` (`nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`) VALUES
-('En Proceso', 'Estatus actual de la conciliación', true, now(), 'Sistema', 'Estatus actual');
+INSERT INTO `tk_estatus_conciliacion` (`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`) VALUES
+(1, 'En Proceso', 'En Proceso', true, now(), 'Sistema', 'En Proceso'),
+(2, 'Finalizada', 'Finalizada', true, now(), 'Sistema', 'En Proceso');
 
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Creada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Midas', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Midas Completada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Midas Error', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Open Pay', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Open Pay Completada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Open Pay Error', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Conciliacion', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Conciliacion Completada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Conciliacion Error', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Estado de Cuenta', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Estado de Cuenta Completada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Consulta Estado de Cuenta Error', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Enviada', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Enviada Error', true, now(), 'Sistema');
-INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_date`, `created_by`) VALUES ('Finalizada', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (1, 'Creada', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (2, 'Consulta Midas', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (3, 'Consulta Midas Completada', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (4, 'Consulta Midas Error', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (5, 'Consulta Open Pay', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (6, 'Consulta Open Pay Completada', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (7, 'Consulta Open Pay Error', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (8, 'Conciliacion', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (9, 'Conciliacion Completada', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (10, 'Conciliacion Error', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (11, 'Consulta Estado de Cuenta', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (12, 'Consulta Estado de Cuenta Completada', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (13, 'Consulta Estado de Cuenta Error', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (14, 'Enviada', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (15, 'Enviada Error', true, now(), 'Sistema');
+INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `created_date`, `created_by`) VALUES (16, 'Finalizada', true, now(), 'Sistema');
 
 
 
@@ -107,7 +130,7 @@ INSERT INTO `tk_sub_estatus_conciliacion` (`description`, `estatus`, `created_da
 -- ------------------------------------------------------------------------------------------------------------
 -- DUMMIES/ REMOVER ----------------------------------------------------------------------------------------
 -- ------------------------------------------------------------------------------------------------------------
-
+/*
 INSERT INTO `to_conciliacion` (`id`, `id_estatus_conciliacion`, `id_entidad`, `id_cuenta`, `id_sub_estatus_conciliacion`, `created_date`, `created_by`, `last_modified_by`)
 VALUES ('1', '2', '1', '1', '1', '2019-05-08 00:56:15', 'NMP', 'NMP');
 
@@ -137,3 +160,4 @@ INSERT INTO `to_movimiento_devolucion` (`id`, `estatus`, `fecha`, `monto`, `esqu
 VALUES ('5', true, '2019-05-16', '123.0000', '123', '123', 'dasd', '3123', '3123');
 INSERT INTO `to_movimiento_devolucion` (`id`, `estatus`, `fecha`, `monto`, `esquema_tarjeta`, `identificador_cuenta`, `titular`, `codigo_autorizacion`, `sucursal`)
 VALUES ('6', true, '2019-05-16', '123.0000', '123', '123', 'dasd', '3123', '3123');
+*/
