@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
@@ -22,11 +24,11 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovimientosProveedorReq
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorBatchDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * @name MovimientosProveedorService
@@ -52,6 +54,14 @@ public class MovimientosProveedorService {
 	@Autowired
 	@Qualifier("reporteRepository")
 	private ReporteRepository reporteRepository;
+
+	/**
+	 * Conciliacion
+	 */
+	@Autowired
+	private ConciliacionRepository conciliacionRepository;
+
+
 
 	public MovimientosProveedorService() {
 		super();
@@ -117,25 +127,51 @@ public class MovimientosProveedorService {
 	/**
 	 * Guarda una lista de entidades de tipo MovimientoProveedor
 	 * 
-	 * @param movimientoTransaccionalListRequestDTO
+	 * @param listRequestDTO
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void save(MovimientoTransaccionalListRequestDTO movimientoTransaccionalListRequestDTO,
-			final String userRequest) {
-		Reporte reporte = buildReporte(movimientoTransaccionalListRequestDTO.getFolio(),
-				movimientoTransaccionalListRequestDTO.getFechaDesde(),
-				movimientoTransaccionalListRequestDTO.getFechaHasta(), userRequest);
-		if (null == reporte)
-			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+	public void save(MovimientoTransaccionalListRequestDTO listRequestDTO, final String userRequest) throws ConciliacionException {
+
+		Conciliacion conciliacion = this.conciliacionRepository.findByFolio(listRequestDTO.getFolio());
+		if (conciliacion == null) {
+			throw new ConciliacionException("Conciliacion con el folio " + listRequestDTO.getFolio() + " no existe");
+		}
+
+		// Obtiene el reporte del proveedor transaccional
+		Reporte reporte = null;
+		/*try {
+			reporte = reporteRepository.findLastByIdConciliacionAndTipo(listRequestDTO.getFolio(), TipoReporteEnum.PROVEEDOR);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException(ex.getMessage());
+		}*/
+
+		// Si no existe el reporte se crea uno nuevo
+		if (reporte == null) {
+			reporte = ReporteBuilder.buildReporte(conciliacion,
+					listRequestDTO.getFechaDesde(),
+					listRequestDTO.getFechaHasta(), userRequest);
+		}
+		// En caso de existir se actualiza la fecha de la ultima modificacion
+		/*else {
+			reporte.setLastModifiedBy(userRequest);
+			reporte.setLastModifiedDate(new Date());
+		}*/
+
+		// Se guarda el reporte y los movimientos
 		try {
+
 			reporte = reporteRepository.save(reporte);
-			if (0 == reporte.getId())
-				throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
 			List<MovimientoProveedor> movimientoProveedorList = MovimientosBuilder
 					.buildMovimientoProveedorListFromMovimientoTransaccionalListRequestDTO(
-							movimientoTransaccionalListRequestDTO, reporte.getId());
+							listRequestDTO, reporte.getId());
+
+			// Verificar si se guarda en batch
 			movimientoProveedorRepository.saveAll(movimientoProveedorList);
+
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
 		}
 	}
@@ -154,34 +190,6 @@ public class MovimientosProveedorService {
 		return MovimientosBuilder
 				.buildMovimientoProveedorDTOListFromMovimientoProveedorList(movimientoProveedorRepository
 						.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()/*, pageable*/));
-	}
-
-	/**
-	 * Construye un objeto de tipo reporte para ser persistido durante el registro
-	 * de movimientos de proveedor transaccional
-	 * 
-	 * @param folio
-	 * @param fechaDesde
-	 * @param fechaHasta
-	 * @param userRequest
-	 * @return
-	 */
-	public static Reporte buildReporte(final Integer folio, final Date fechaDesde, final Date fechaHasta,
-			final String userRequest) {
-		Reporte reporte = new Reporte();
-		if (null == folio || null == fechaDesde || null == fechaHasta || null == userRequest)
-			return null;
-		reporte.setConciliacion(new Conciliacion((long) folio));
-		reporte.setCreatedBy(userRequest);
-		reporte.setCreatedDate(new Date());
-		reporte.setDisponible(true);
-		reporte.setFechaDesde(fechaDesde);
-		reporte.setFechaHasta(fechaHasta);
-		reporte.setId(0);
-		reporte.setLastModifiedBy(null);
-		reporte.setLastModifiedDate(null);
-		reporte.setTipo(TipoReporteEnum.PROVEEDOR);
-		return reporte;
 	}
 
 }
