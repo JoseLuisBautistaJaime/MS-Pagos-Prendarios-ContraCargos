@@ -54,6 +54,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
@@ -497,6 +498,8 @@ public class ConciliacionController {
 		if(!ValidadorConciliacion.validateConsultaActividadesRequest(consultaActividadesRequest))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		List<ConsultaActividadDTO> response = conciliacionService.consultaActividades(consultaActividadesRequest);
+		if(null == response || response.isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH, response);
 	}
 

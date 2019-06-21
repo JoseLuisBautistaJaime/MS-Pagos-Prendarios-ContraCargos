@@ -27,7 +27,6 @@ import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoComisionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.SubEstatusConciliacionBuilder;
-import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
@@ -52,14 +51,13 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.SubEstatusConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
@@ -411,19 +409,26 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	}
 
+	/**
+	 * Actualiza el sub estatus de una conciliacion por folio
+	 */
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			String usuario) {
+		// Se obtienen: El id del estatus conciliacion el orden del mismo y el roden del subestatus de acuerdo al id de subestatus especificado como parametro mediante un query nativo
 		Map<String, Object> map = conciliacionRepository
 				.findIdEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus());
 		if (null == map || null == map.get("estatus"))
 			throw new ConciliacionException(ConciliacionConstants.NO_STATUS_FOR_SUCH_SUB_STATUS);
+		// Se obtienen: el id del estatus conciliacion, el orden del mismo y el orden del subestatus por folio de conciliacion mediante un query nativo
 		Map<String, Object> currenOrders = conciliacionRepository.findOrderSubstatusAndStatusByFolio(actualizarSubEstatusRequestDTO.getFolio());
 		if(null == currenOrders || null == currenOrders.get("sub_estatus_order"))
 			throw new ConciliacionException(ConciliacionConstants.ERROR_GETTING_CURRENT_SUB_STATUS);
-		if(Integer.parseInt(currenOrders.get("sub_estatus_order").toString()) > Integer.parseInt(map.get("sub_estatus_order").toString()))
+		// Se valida que el orden del estatus actual no sea mayor al orden dele status que se va a actualizar
+		if(Integer.parseInt(currenOrders.get("estatus_order").toString()) > Integer.parseInt(map.get("estatus_order").toString()))
 			throw new ConciliacionException(ConciliacionConstants.WRONG_ORDER_SUB_STATUS);
+		// Se actualiza el sub estatus de la conciliacion al que se recibio como parametro, adicionalmente se actualizan los campos createdBy y createdDate
 		conciliacionRepository.actualizaSubEstatusConciliacion(actualizarSubEstatusRequestDTO.getFolio(),
 				new SubEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus()), usuario, new Date(),
 				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())));
@@ -442,23 +447,20 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	public ResumenConciliacionDTO resumenConciliaciones(ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
 		Map<String, BigInteger> res = null;
 		ResumenConciliacionDTO resumenConciliacionDTO = null;
-		res = (null != resumenConciliacionRequestDTO.getFechaInicial()
-				&& null != resumenConciliacionRequestDTO.getFechaFinal())
-						? conciliacionRepository.resumenConciliaciones(resumenConciliacionRequestDTO.getFechaInicial(),
-								resumenConciliacionRequestDTO.getFechaFinal(),
-								ConciliacionConstants.CONCILIACION_EN_PROCESO_VALUE,
-								ConciliacionConstants.DEVOLUCION_LIQUIDAD_VALUE)
-						: conciliacionRepository.resumenConciliaciones(
-								ConciliacionConstants.CONCILIACION_EN_PROCESO_VALUE,
-								ConciliacionConstants.DEVOLUCION_LIQUIDAD_VALUE);
+		// Se compara si la fecha inicial y final son nulas para plicar una consulta sin argumentos de rango de fechas o de lo contrario aplicar una consulta con argumentos de rango de fechas
+		if(null != resumenConciliacionRequestDTO.getFechaInicial()
+				&& null != resumenConciliacionRequestDTO.getFechaFinal()) {
+			res = conciliacionRepository.resumenConciliaciones(resumenConciliacionRequestDTO.getFechaInicial(), resumenConciliacionRequestDTO.getFechaFinal()
+					,ConciliacionConstants.CONCILIACION_EN_PROCESO_VALUE, ConciliacionConstants.DEVOLUCION_LIQUIDAD_VALUE);
+		}
+		else{
+			conciliacionRepository.resumenConciliaciones(ConciliacionConstants.CONCILIACION_EN_PROCESO_VALUE, ConciliacionConstants.DEVOLUCION_LIQUIDAD_VALUE);
+		}						
 		if (null != res && !res.isEmpty())
 			resumenConciliacionDTO = new ResumenConciliacionDTO(res.get("en_proceso").longValue(), res.get("dev_liquidadas").longValue(),
 					res.get("conc_totales").longValue());
-
-		// Registro de actividad
-		actividadGenericMethod.registroActividad(0, "Obtencion de resumen de conciliacion", TipoActividadEnum.ACTIVIDAD,
-				SubTipoActividadEnum.CONSULTA_CONCILIACION, resumenConciliacionRequestDTO.toString());
-
+		if(null == resumenConciliacionDTO)
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
 		return resumenConciliacionDTO;
 	}
 
@@ -473,22 +475,22 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Ningun atributo es nulo
 		if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
 				&& null != consultaActividadesRequest.getFechaHasta())
-			consultaActividadDTOList = actividadRepository.findByFilter(consultaActividadesRequest.getFolio(),
+			consultaActividadDTOList = actividadRepository.findByFolioFechaDesdeAndFechaHasta(consultaActividadesRequest.getFolio(),
 					consultaActividadesRequest.getFechaDesde(), consultaActividadesRequest.getFechaHasta());
 		// La fechaHasta es nula
 		else if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde())
-			consultaActividadDTOList = actividadRepository.findByFilterF(consultaActividadesRequest.getFolio(),
+			consultaActividadDTOList = actividadRepository.findByFolioAndFechaDesde(consultaActividadesRequest.getFolio(),
 					consultaActividadesRequest.getFechaDesde());
 		// La fechaDesde es nula
 		else if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaHasta())
-			consultaActividadDTOList = actividadRepository.findByFilterF2(consultaActividadesRequest.getFolio(),
+			consultaActividadDTOList = actividadRepository.findByFolioAndFechaHasta(consultaActividadesRequest.getFolio(),
 					consultaActividadesRequest.getFechaHasta());
 		// Ambas fechas son nulas
 		else if (null != consultaActividadesRequest.getFolio())
-			consultaActividadDTOList = actividadRepository.findByFilter(consultaActividadesRequest.getFolio());
-		// Todos los atributos son nulos
+			consultaActividadDTOList = actividadRepository.findByFolio(consultaActividadesRequest.getFolio());
+		// Todos los atributos son nulos se consultan los ultimos 10 por default
 		else
-			consultaActividadDTOList = actividadRepository.nGetTopTenActividades();
+			consultaActividadDTOList = actividadRepository.nGetTopXActividades(10);
 		return consultaActividadDTOList;
 	}
 
