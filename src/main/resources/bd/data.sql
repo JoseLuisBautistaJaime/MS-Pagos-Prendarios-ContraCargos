@@ -44,10 +44,10 @@ INSERT INTO tk_estatus_operacion(id, descripcion_corta, descripcion) VALUES
 
 -- INSERCION INICIAL DE TIPOS DE CONTACTOS --
 INSERT INTO `tk_tipo_contacto` (`id`, `estatus`, `description`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`, `short_description`) VALUES
-(1, true, 'Contacto Midas', 'Ismael', now(), null, null, 'Contacto Midas'),
-(2, true, 'Contacto Entidad', 'Ismael', now(), null, null, 'Contacto Ent');
+(1, true, 'Contacto Midas', 'Quarksoft', now(), null, null, 'Contacto Midas'),
+(2, true, 'Contacto Entidad', 'Quarksoft', now(), null, null, 'Contacto Ent');
 
--- INSERCION DE TIPOS DE AFILIACION --
+-- INSERCION DE TIPOS DE AFILIACION (SE USA EN MODULO DSS)--
 INSERT INTO `tk_tipo_afiliacion` (`id`, `descripcion_corta`, `descripcion`) VALUES
 (1, 'Ninguno', 'Ningun tipo de afiliacion'),
 (2, '3DSecure', '3DSecure');
@@ -128,23 +128,22 @@ INSERT INTO `tk_sub_estatus_conciliacion` (id, `description`, `estatus`, `create
 -- --------------------------------------------------------------------------------- --
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion(id_estatus, id_sub_estatus) 
 	VALUES
-		((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Creada')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Midas')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Midas Completada')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Midas Error')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Open Pay')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Open Pay Completada')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Open Pay Error')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Conciliacion')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Conciliacion Completada')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Conciliacion Error')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Estado de Cuenta')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Estado de Cuenta Completada')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Consulta Estado de Cuenta Error')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Enviada')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%En Proceso%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Enviada Error')),
-        ((SELECT id FROM tk_estatus_conciliacion WHERE NOMBRE LIKE '%Finalizada%'),(SELECT id FROM tk_sub_estatus_conciliacion WHERE description = 'Finalizada'));
-
+		(1,1),
+		(1,2),
+		(1,3),
+		(1,4),
+		(1,5),
+		(1,6),
+		(1,7),
+		(1,8),
+		(1,9),
+		(1,10),
+		(1,11),
+		(1,12),
+		(1,13),
+		(1,14),
+		(1,15),
+		(2,16);
 
 
 -- ------------------------------------------------------------------------------------------------------------

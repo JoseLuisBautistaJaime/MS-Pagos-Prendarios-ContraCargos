@@ -37,7 +37,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO;
 @SqlResultSetMapping(name = "ActividadResultmapping", classes = {
 		@ConstructorResult(targetClass = ConsultaActividadDTO.class, columns = { @ColumnResult(name = "folio"),
 				@ColumnResult(name = "fecha"), @ColumnResult(name = "descripcion") }) })
-@NamedNativeQuery(name = "Actividad.nGetTopTenActividades", query = "SELECT folio, fecha, descripcion FROM tb_actividad ORDER BY fecha DESC LIMIT 10;", resultSetMapping = "ActividadResultmapping")
+@NamedNativeQuery(name = "Actividad.nGetTopXActividades", query = "SELECT folio, fecha, descripcion FROM tb_actividad ORDER BY fecha DESC LIMIT :limitValue;", resultSetMapping = "ActividadResultmapping")
 @Entity
 @Table(name = "tb_actividad")
 public class Actividad {

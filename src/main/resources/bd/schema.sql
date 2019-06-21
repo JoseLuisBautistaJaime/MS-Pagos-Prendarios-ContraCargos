@@ -1197,8 +1197,8 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tb_actividad` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `tipo` VARCHAR(20) NOT NULL,
-  `sub_tipo` VARCHAR(20) NOT NULL,
+  `tipo` VARCHAR(50) NOT NULL,
+  `sub_tipo` VARCHAR(50) NOT NULL,
   `descripcion` VARCHAR(150) NOT NULL,
   `fecha` DATETIME NOT NULL,
   `folio` BIGINT(11) NOT NULL,
