@@ -18,7 +18,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
  */
 public class LayoutDTO implements Comparable<LayoutDTO> {
 
-	private Integer folio;
+	private Long folio;
 	private TipoLayoutEnum tipoLayout;
 	private LayoutCabeceraDTO cabecera;
 	private List<LayoutLineaDTO> lineas;
@@ -27,7 +27,7 @@ public class LayoutDTO implements Comparable<LayoutDTO> {
 		super();
 	}
 
-	public LayoutDTO(Integer folio, TipoLayoutEnum tipoLayout, LayoutCabeceraDTO cabecera,
+	public LayoutDTO(Long folio, TipoLayoutEnum tipoLayout, LayoutCabeceraDTO cabecera,
 			List<LayoutLineaDTO> lineas) {
 		super();
 		this.folio = folio;
@@ -36,11 +36,11 @@ public class LayoutDTO implements Comparable<LayoutDTO> {
 		this.lineas = lineas;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

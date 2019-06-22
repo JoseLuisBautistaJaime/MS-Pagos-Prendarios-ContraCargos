@@ -11,7 +11,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 
 /**
  * @name MovimientoConciliacionRepository
@@ -41,4 +44,10 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	public List<MovimientoConciliacion> findByFolioAndIds(@Param("folio") final Integer folio,
 			@Param("idMovimientos") final List<Integer> idMovimientos);
 
+	@Query("from MovimientoComision l  where l.id = l.movimientoConciliacion.id and l.movimientoConciliacion.idConciliacion = :idConciliacion")
+	public List<MovimientoComision> findMovimientoComisionByConciliacionId(@Param("idConciliacion") final Integer idConciliacion);
+	@Query("from MovimientoDevolucion l  where l.id = l.movimientoConciliacion.id and l.movimientoConciliacion.idConciliacion = :idConciliacion")
+	public List<MovimientoDevolucion> findMovimientoDevolucionByConciliacionId(@Param("idConciliacion") final Integer idConciliacion);
+	@Query("from MovimientoPago l  where l.id = l.movimientoConciliacion.id and l.movimientoConciliacion.idConciliacion = :idConciliacion")
+	public List<MovimientoPago> findMovimientoPagoByConciliacionId(@Param("idConciliacion") final Integer idConciliacion);
 }

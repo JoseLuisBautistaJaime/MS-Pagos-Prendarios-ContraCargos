@@ -13,8 +13,10 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,6 +39,9 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	 * Serial id;
 	 */
 	private static final long serialVersionUID = 8987562819738981175L;
+	
+	@Id
+	private Integer id;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "estatus")
@@ -68,6 +73,10 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	@Column(name = "fecha_liquidacion")
 	private Date fechaLiquidacion;
 
+	@OneToOne
+	@JoinColumn(name="id")
+	private MovimientoConciliacion movimientoConciliacion;
+	
 	public MovimientoDevolucion() {
 		super();
 	}
@@ -91,6 +100,14 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 		this.fechaLiquidacion = fechaLiquidacion;
 	}
 
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
 	public EstatusDevolucion getEstatus() {
 		return estatus;
 	}

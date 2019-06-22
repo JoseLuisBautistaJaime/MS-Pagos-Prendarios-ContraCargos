@@ -6,7 +6,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 /**
  * @name TipoMovimientoEnum
- * 
+ *
  * @description Enum que contiene los tipos de comisiones
  * @author Ismael Flores iaguilar@quarksoft.net
  * @version 1.0
@@ -14,7 +14,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  */
 public enum TipoMovimientoEnum {
 
-	COMISION(1, "COMISION"), IVA_COMISION(2, "IVA_COMISION");
+	COMISION(1, "COMISION"), IVA_COMISION(2, "IVA_COMISION"), OPENPAY(3, "OPENPAY");
 
 	private int id;
 	private String descripcion;
