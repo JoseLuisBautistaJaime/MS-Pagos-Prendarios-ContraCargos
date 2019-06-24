@@ -33,6 +33,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ReportePagosService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
@@ -92,9 +93,12 @@ public class ReportesController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		ReportePagosEnLineaOuterDTO reportePagosEnLineaOuterDTO = reportePagosService
 				.getReportePagosEnLinea(reporteRequestDTO);
+		if (null == reportePagosEnLineaOuterDTO || null == reportePagosEnLineaOuterDTO.getMovimientos()
+				|| reportePagosEnLineaOuterDTO.getMovimientos().isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				reportePagosEnLineaOuterDTO);
-	} 
+	}
 
 	/**
 	 * Construye un objeto dummy

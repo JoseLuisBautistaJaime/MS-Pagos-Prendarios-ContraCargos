@@ -46,9 +46,49 @@ public class ReportePagosService {
 		ReportePagosEnLineaOuterDTO reportePagosEnLineaOuterDTO = null;
 		List<ReportePagosEnLineaDTO> reportePagosEnLineaDTOList = null;
 		BigDecimal sum = new BigDecimal("0.0");
-		reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLinea(
-				reporteRequestDTO.getFechaDesde(), reporteRequestDTO.getFechaHasta(), reporteRequestDTO.getProducto(),
-				reporteRequestDTO.getOperacion(), reporteRequestDTO.getSucursales(), reporteRequestDTO.getPartida());
+		// Querys con sucursales
+		if (null != reporteRequestDTO.getFechaDesde() && null != reporteRequestDTO.getFechaHasta()
+				&& null != reporteRequestDTO.getSucursales() && !reporteRequestDTO.getSucursales().isEmpty())
+			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithFechas(
+					reporteRequestDTO.getFechaDesde(), reporteRequestDTO.getFechaHasta(),
+					reporteRequestDTO.getProducto(), reporteRequestDTO.getOperacion(),
+					reporteRequestDTO.getSucursales(), reporteRequestDTO.getPartida());
+		else if (null != reporteRequestDTO.getFechaDesde() && null == reporteRequestDTO.getFechaHasta()
+				&& null != reporteRequestDTO.getSucursales() && !reporteRequestDTO.getSucursales().isEmpty())
+			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithFechaDesde(
+					reporteRequestDTO.getFechaDesde(), reporteRequestDTO.getProducto(),
+					reporteRequestDTO.getOperacion(), reporteRequestDTO.getSucursales(),
+					reporteRequestDTO.getPartida());
+		else if (null == reporteRequestDTO.getFechaDesde() && null != reporteRequestDTO.getFechaHasta()
+				&& null != reporteRequestDTO.getSucursales() && !reporteRequestDTO.getSucursales().isEmpty())
+			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithFechaHasta(
+					reporteRequestDTO.getFechaHasta(), reporteRequestDTO.getProducto(),
+					reporteRequestDTO.getOperacion(), reporteRequestDTO.getSucursales(),
+					reporteRequestDTO.getPartida());
+		else if (null != reporteRequestDTO.getSucursales() && !reporteRequestDTO.getSucursales().isEmpty())
+			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithoutFechas(
+					reporteRequestDTO.getProducto(), reporteRequestDTO.getOperacion(),
+					reporteRequestDTO.getSucursales(), reporteRequestDTO.getPartida());
+		// Querys sin sucursales
+		else if (null != reporteRequestDTO.getFechaDesde() && null != reporteRequestDTO.getFechaHasta()
+				&& null == reporteRequestDTO.getSucursales() || reporteRequestDTO.getSucursales().isEmpty())
+			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithFechasNS(
+					reporteRequestDTO.getFechaDesde(), reporteRequestDTO.getFechaHasta(),
+					reporteRequestDTO.getProducto(), reporteRequestDTO.getOperacion(), reporteRequestDTO.getPartida());
+		else if (null != reporteRequestDTO.getFechaDesde() && null == reporteRequestDTO.getFechaHasta()
+				&& null == reporteRequestDTO.getSucursales() || reporteRequestDTO.getSucursales().isEmpty())
+			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithFechaDesdeNS(
+					reporteRequestDTO.getFechaDesde(), reporteRequestDTO.getProducto(),
+					reporteRequestDTO.getOperacion(), reporteRequestDTO.getPartida());
+		else if (null == reporteRequestDTO.getFechaDesde() && null != reporteRequestDTO.getFechaHasta()
+				&& null == reporteRequestDTO.getSucursales() || reporteRequestDTO.getSucursales().isEmpty())
+			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithFechaHastaNS(
+					reporteRequestDTO.getFechaHasta(), reporteRequestDTO.getProducto(),
+					reporteRequestDTO.getOperacion(), reporteRequestDTO.getPartida());
+		else
+			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithoutFechasNS(
+					reporteRequestDTO.getProducto(), reporteRequestDTO.getOperacion(), reporteRequestDTO.getPartida());
+
 		reportePagosEnLineaOuterDTO = new ReportePagosEnLineaOuterDTO();
 		reportePagosEnLineaOuterDTO.setMovimientos(reportePagosEnLineaDTOList);
 		reportePagosEnLineaOuterDTO.setTotalMovimientos(reportePagosEnLineaDTOList.size());
