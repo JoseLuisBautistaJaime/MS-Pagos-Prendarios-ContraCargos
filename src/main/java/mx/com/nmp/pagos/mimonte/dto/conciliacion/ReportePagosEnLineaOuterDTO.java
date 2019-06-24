@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @name ReportePagosLibresOuterDTO
+ * @name ReportePagosEnLineaOuterDTO
  * @description Clase que encapsula la informacion de una respuesta de reporte
  *              de pagos en linea y adiciona un total de movimientos y un monto
  *              total
@@ -18,17 +18,17 @@ import java.util.Objects;
  * @creationDate 20/05/2019 18:01 hrs.
  * @version 0.1
  */
-public class ReportePagosLibresOuterDTO {
+public class ReportePagosEnLineaOuterDTO {
 
-	private List<ReportePagosLibresDTO> movimientos;
+	private List<ReportePagosEnLineaDTO> movimientos;
 	private Integer totalMovimientos;
 	private BigDecimal montoTotal;
 
-	public List<ReportePagosLibresDTO> getMovimientos() {
+	public List<ReportePagosEnLineaDTO> getMovimientos() {
 		return movimientos;
 	}
 
-	public void setMovimientos(List<ReportePagosLibresDTO> movimientos) {
+	public void setMovimientos(List<ReportePagosEnLineaDTO> movimientos) {
 		this.movimientos = movimientos;
 	}
 
@@ -50,7 +50,7 @@ public class ReportePagosLibresOuterDTO {
 
 	@Override
 	public String toString() {
-		return "ReportePagosLibresOuterDTO [movimientos=" + movimientos + ", totalMovimientos=" + totalMovimientos
+		return "ReportePagosEnLineaOuterDTO [movimientos=" + movimientos + ", totalMovimientos=" + totalMovimientos
 				+ ", montoTotal=" + montoTotal + "]";
 	}
 
@@ -64,10 +64,10 @@ public class ReportePagosLibresOuterDTO {
 		if (this == obj)
 			return true;
 
-		if (!(obj instanceof ReportePagosLibresOuterDTO))
+		if (!(obj instanceof ReportePagosEnLineaOuterDTO))
 			return false;
 
-		final ReportePagosLibresOuterDTO other = (ReportePagosLibresOuterDTO) obj;
+		final ReportePagosEnLineaOuterDTO other = (ReportePagosEnLineaOuterDTO) obj;
 		return (this.hashCode() == other.hashCode());
 
 	}

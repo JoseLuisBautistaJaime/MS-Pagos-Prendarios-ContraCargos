@@ -29,8 +29,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosLibresOuterDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ReportePagosService;
@@ -90,10 +90,10 @@ public class ReportesController {
 	public Response getReportePagosEnLinea(@RequestBody ReporteRequestDTO reporteRequestDTO) {
 		if (!ValidadorConciliacion.validateReporteRequestDTO(reporteRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		ReportePagosLibresOuterDTO reportePagosLibresOuterDTO = reportePagosService
-				.getReportePagosLibres(reporteRequestDTO);
+		ReportePagosEnLineaOuterDTO reportePagosEnLineaOuterDTO = reportePagosService
+				.getReportePagosEnLinea(reporteRequestDTO);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-				reportePagosLibresOuterDTO);
+				reportePagosEnLineaOuterDTO);
 	} 
 
 	/**
@@ -101,9 +101,9 @@ public class ReportesController {
 	 * 
 	 * @return
 	 */
-	public static List<ReportePagosLibresDTO> buildDummy1() {
-		List<ReportePagosLibresDTO> reportePagosLibresDTOList = new ArrayList<>();
-		ReportePagosLibresDTO reportePagosLibresDTO = new ReportePagosLibresDTO();
+	public static List<ReportePagosEnLineaDTO> buildDummy1() {
+		List<ReportePagosEnLineaDTO> reportePagosLibresDTOList = new ArrayList<>();
+		ReportePagosEnLineaDTO reportePagosLibresDTO = new ReportePagosEnLineaDTO();
 		reportePagosLibresDTO.setCanal("Portal NMP");
 		reportePagosLibresDTO.setFecha(new Date());
 		reportePagosLibresDTO.setMonto(new BigDecimal("17000"));

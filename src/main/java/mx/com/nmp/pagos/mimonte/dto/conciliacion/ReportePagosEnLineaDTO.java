@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * @name ReportePagosLibresDTO
+ * @name ReportePagosEnLineaDTO
  * @description Clase que encapsula la informacion de una respuesta de reporte
  *              de pagos en linea
  *
@@ -17,7 +17,7 @@ import java.util.Objects;
  * @creationDate 03/04/2019 13:30 hrs.
  * @version 0.1
  */
-public class ReportePagosLibresDTO {
+public class ReportePagosEnLineaDTO {
 
 	private Date fecha;
 	private String canal;
@@ -27,11 +27,11 @@ public class ReportePagosLibresDTO {
 	private Integer sucursal;
 	private BigDecimal monto;
 
-	public ReportePagosLibresDTO() {
+	public ReportePagosEnLineaDTO() {
 		super();
 	}
 
-	public ReportePagosLibresDTO(Date fecha, String canal, Long partida, String tipoProducto, String operacion,
+	public ReportePagosEnLineaDTO(Date fecha, String canal, Long partida, String tipoProducto, String operacion,
 			Integer sucursal, BigDecimal monto) {
 		super();
 		this.fecha = fecha;
@@ -101,7 +101,7 @@ public class ReportePagosLibresDTO {
 
 	@Override
 	public String toString() {
-		return "ReportePagosLibresDTO [fecha=" + fecha + ", canal=" + canal + ", partida=" + partida + ", tipoProducto="
+		return "ReportePagosEnLineaDTO [fecha=" + fecha + ", canal=" + canal + ", partida=" + partida + ", tipoProducto="
 				+ tipoProducto + ", operacion=" + operacion + ", sucursal=" + sucursal + ", monto=" + monto + "]";
 	}
 
@@ -115,10 +115,10 @@ public class ReportePagosLibresDTO {
 		if (this == obj)
 			return true;
 
-		if (!(obj instanceof ReportePagosLibresDTO))
+		if (!(obj instanceof ReportePagosEnLineaDTO))
 			return false;
 
-		final ReportePagosLibresDTO other = (ReportePagosLibresDTO) obj;
+		final ReportePagosEnLineaDTO other = (ReportePagosEnLineaDTO) obj;
 		return (this.hashCode() == other.hashCode());
 
 	}

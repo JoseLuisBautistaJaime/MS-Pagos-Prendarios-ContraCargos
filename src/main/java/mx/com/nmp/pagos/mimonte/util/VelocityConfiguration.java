@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.util;
 
 import java.util.Properties;
@@ -6,6 +10,15 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @name VelocityConfiguration
+ * @description Clase de configuracion de spring que configura el motor de
+ *              plantillas velocity
+ * 
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @version 1.0
+ * @createdDate 24/06/2019 12:00 hrs.
+ */
 @Configuration
 public class VelocityConfiguration {
 
