@@ -16,6 +16,7 @@ import com.ibm.icu.util.Calendar;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
@@ -29,6 +30,8 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
@@ -60,6 +63,12 @@ public class MovimientosEstadoCuentaService {
 	@Autowired
 	@Qualifier("reporteRepository")
 	private ReporteRepository reporteRepository;
+
+	/**
+	 * Conciliacion helper
+	 */
+	@Autowired
+	private ConciliacionHelper conciliacionHelper;
 
 	/**
 	 * Repository de Estado Cuenta
@@ -178,10 +187,19 @@ public class MovimientosEstadoCuentaService {
 	 */
 	@Transactional
 	public Reporte save(final SaveEstadoCuentaRequestDTO request, final String userRequest) {
-		
+
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(request.getFolio());
+
 		// Insertar el nuevo reporte (este reporte sera el nuevo reporte a considerar)
-		Reporte reporte = ReporteBuilder.buildReporteFromSaveEstadoCuentaRequestDTO(request, userRequest);
-		reporte = reporteRepository.save(reporte);
+		Reporte reporte = null;
+		try {
+			reporte = ReporteBuilder.buildReporteFromSaveEstadoCuentaRequestDTO(request, conciliacion, userRequest);
+			reporte = reporteRepository.save(reporte);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al guardar la solicitud de consulta de estado de cuenta");
+		}
 
 		return reporte;
 	}
@@ -195,18 +213,7 @@ public class MovimientosEstadoCuentaService {
 	@Transactional
 	public void procesarConsultaEstadoCuenta(SaveEstadoCuentaRequestDTO request, final String userRequest) throws ConciliacionException {
 
-		Reporte reporte = null;
-		try {
-			reporte = save(request, userRequest);
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException("Error al guardar la solicitud de consulta de estado de cuenta");
-		}
-
-		if (reporte == null || reporte.getId() == null || reporte.getId() == 0) {
-			throw new ConciliacionException("Error al guardar la solicitud de consulta de estado de cuenta");
-		}
+		Reporte reporte = save(request, userRequest);
 
 		// Consulta los diferentes estados de cuenta por cada fecha
 		Date fechaEstadoCuenta = reporte.getFechaDesde();
@@ -227,33 +234,7 @@ public class MovimientosEstadoCuentaService {
 				throw new ConciliacionException("Error al parsear el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "");
 			}
 
-			// Guarda el archivo de estado de cuenta y los movimientos
-			try {
-				EstadoCuenta estadoCuenta = new EstadoCuenta();
-				estadoCuenta.setIdReporte(idReporte);
-				estadoCuenta.setFechaCarga(new Date());
-				estadoCuenta.setTotalMovimientos(estadoCuentaWraper.movimientos != null ? estadoCuentaWraper.movimientos.size() : 0);
-				estadoCuenta.setCabecera(estadoCuentaWraper.cabecera);
-				estadoCuenta.setTotales(estadoCuentaWraper.totales);
-				estadoCuenta.setTotalesAdicional(estadoCuentaWraper.totalesAdicional);
-				estadoCuentaRepository.save(estadoCuenta);
-	
-				// Se persisten los movimientos
-				if (estadoCuentaWraper.movimientos != null) {
-					List<MovimientoEstadoCuenta> movimientos = estadoCuentaWraper.movimientos;
-					// Se setea el id del estado de cuenta
-					for (MovimientoEstadoCuenta movimiento : movimientos) {
-						movimiento.setIdEstadoCuenta(estadoCuenta.getId());
-					}
-	
-					movimientoEstadoCuentaRepository.saveAll(movimientos);
-				}
-			}
-			catch (Exception ex) {
-				ex.printStackTrace();
-				throw new ConciliacionException("Error al persistir los movimientos del archivo del estado de cuenta");
-			}
-
+			saveEstadoCuentaMovimientos(idReporte, estadoCuentaWraper);
 
 			// Se mueve al siguiente dia para consultar el estado de cuenta
 			Calendar cal = Calendar.getInstance();
@@ -262,6 +243,40 @@ public class MovimientosEstadoCuentaService {
 			fechaEstadoCuenta = cal.getTime();
 		}
 		
+	}
+
+
+	/**
+	 * Guarda el archivo de estado de cuenta y los movimientos
+	 * @param idReporte
+	 * @param estadoCuentaWraper
+	 */
+	private void saveEstadoCuentaMovimientos(long idReporte, EstadoCuentaWraper estadoCuentaWraper) {
+		try {
+			EstadoCuenta estadoCuenta = new EstadoCuenta();
+			estadoCuenta.setIdReporte(idReporte);
+			estadoCuenta.setFechaCarga(new Date());
+			estadoCuenta.setTotalMovimientos(estadoCuentaWraper.movimientos != null ? estadoCuentaWraper.movimientos.size() : 0);
+			estadoCuenta.setCabecera(estadoCuentaWraper.cabecera);
+			estadoCuenta.setTotales(estadoCuentaWraper.totales);
+			estadoCuenta.setTotalesAdicional(estadoCuentaWraper.totalesAdicional);
+			estadoCuentaRepository.save(estadoCuenta);
+
+			// Se persisten los movimientos
+			if (estadoCuentaWraper.movimientos != null) {
+				List<MovimientoEstadoCuenta> movimientos = estadoCuentaWraper.movimientos;
+				// Se setea el id del estado de cuenta
+				for (MovimientoEstadoCuenta movimiento : movimientos) {
+					movimiento.setIdEstadoCuenta(estadoCuenta.getId());
+				}
+
+				movimientoEstadoCuentaRepository.saveAll(movimientos);
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al persistir los movimientos del archivo del estado de cuenta");
+		}
 	}
 
 }

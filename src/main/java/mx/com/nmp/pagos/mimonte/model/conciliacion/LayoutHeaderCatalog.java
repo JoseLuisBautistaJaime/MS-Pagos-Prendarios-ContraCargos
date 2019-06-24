@@ -9,22 +9,25 @@ import java.util.Date;
 
 
 /**
- * The persistent class for the to_layout_header database table.
+ * The persistent class for the tc_layout_header database table.
  * 
  */
 @Entity
-@Table(name="to_layout_header")
-public class LayoutHeader extends Updatable implements Serializable{
+@Table(name="tc_layout_header")
+public class LayoutHeaderCatalog extends Updatable implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name="cabecera")
 	private String cabecera;
 
+	@Column(name="campo1")
 	private String campo1;
 
+	@Column(name="campo2")
 	private String campo2;
 
 	@Column(name="codigo_origen")
@@ -38,14 +41,13 @@ public class LayoutHeader extends Updatable implements Serializable{
 	@Temporal(TemporalType.DATE)
 	private Date fecha;
 
+	@Column(name="id_layout")
+	private Long idLayout;
+
 	@Column(name="unidad_negocio")
 	private String unidadNegocio;
 
-	@OneToOne
-	@JoinColumn(name="id_layout")
-	private Layout layout;
-
-	public LayoutHeader() {
+	public LayoutHeaderCatalog() {
 	}
 
 	public Long getId() {
@@ -96,6 +98,14 @@ public class LayoutHeader extends Updatable implements Serializable{
 		this.createdBy = createdBy;
 	}
 
+	public Date getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
 	public String getDescripcion() {
 		return this.descripcion;
 	}
@@ -110,6 +120,14 @@ public class LayoutHeader extends Updatable implements Serializable{
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+
+	public Long getIdLayout() {
+		return this.idLayout;
+	}
+
+	public void setIdLayout(Long idLayout) {
+		this.idLayout = idLayout;
 	}
 
 	public String getLastModifiedBy() {
@@ -134,14 +152,6 @@ public class LayoutHeader extends Updatable implements Serializable{
 
 	public void setUnidadNegocio(String unidadNegocio) {
 		this.unidadNegocio = unidadNegocio;
-	}
-
-	public Layout getLayout() {
-		return this.layout;
-	}
-
-	public void setLayout(Layout layout) {
-		this.layout = layout;
 	}
 
 }

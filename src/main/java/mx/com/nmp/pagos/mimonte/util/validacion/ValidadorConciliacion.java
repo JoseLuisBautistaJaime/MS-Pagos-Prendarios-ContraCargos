@@ -9,6 +9,8 @@ import static org.junit.Assert.assertNotNull;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
@@ -134,17 +136,17 @@ public interface ValidadorConciliacion {
 	 * @param movimientoTransaccionalListRequestDTO
 	 * @return
 	 */
-	public static boolean validateMovimientoTransaccionalListRequestDTO(
-			MovimientoTransaccionalListRequestDTO movimientoTransaccionalListRequestDTO) {
+	public static boolean validateMovimientoTransaccionalListRequestDTO(MovimientoTransaccionalListRequestDTO listRequestDTO) {
 		try {
-			assertNotNull(movimientoTransaccionalListRequestDTO);
-			assertNotNull(movimientoTransaccionalListRequestDTO.getFolio());
-			assertNotNull(movimientoTransaccionalListRequestDTO.getMovimientos());
-			assertNotNull(movimientoTransaccionalListRequestDTO.getFechaDesde());
-			assertNotNull(movimientoTransaccionalListRequestDTO.getFechaHasta());
-			if (!movimientoTransaccionalListRequestDTO.getMovimientos().isEmpty()) {
-				for (MovimientoProveedorDTO movimientoProveedorDTO : movimientoTransaccionalListRequestDTO
-						.getMovimientos()) {
+
+			assertNotNull(listRequestDTO);
+			assertNotNull(listRequestDTO.getFolio());
+			assertNotNull(listRequestDTO.getMovimientos());
+			assertNotNull(listRequestDTO.getFechaDesde());
+			assertNotNull(listRequestDTO.getFechaHasta());
+
+			if (CollectionUtils.isNotEmpty(listRequestDTO.getMovimientos())) {
+				for (MovimientoProveedorDTO movimientoProveedorDTO : listRequestDTO.getMovimientos()) {
 					assertNotNull(movimientoProveedorDTO.getAmount());
 					assertNotNull(movimientoProveedorDTO.getAuthorization());
 					assertNotNull(movimientoProveedorDTO.getCard());

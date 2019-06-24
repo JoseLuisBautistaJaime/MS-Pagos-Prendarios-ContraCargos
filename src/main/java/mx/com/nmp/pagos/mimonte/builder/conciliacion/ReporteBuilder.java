@@ -34,11 +34,11 @@ public abstract class ReporteBuilder {
 	 * @return
 	 */
 	public static Reporte buildReporteFromSaveEstadoCuentaRequestDTO(
-			final SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO, final String userRequest) {
+			final SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO, Conciliacion concilacion, final String userRequest) {
 		Reporte reporte = null;
 		if (null != saveEstadoCuentaRequestDTO) {
 			reporte = new Reporte();
-			reporte.setConciliacion(new Conciliacion((long) saveEstadoCuentaRequestDTO.getFolio()));
+			reporte.setConciliacion(concilacion);
 			reporte.setCreatedBy(userRequest);
 			reporte.setCreatedDate(new Date());
 			reporte.setDisponible(true);
@@ -49,6 +49,33 @@ public abstract class ReporteBuilder {
 			reporte.setLastModifiedDate(null);
 			reporte.setTipo(TipoReporteEnum.ESTADO_CUENTA);
 		}
+		return reporte;
+	}
+
+
+	/**
+	 * Construye un objeto de tipo reporte para ser persistido durante el registro
+	 * de movimientos de proveedor transaccional
+	 * 
+	 * @param conciliacion
+	 * @param fechaDesde
+	 * @param fechaHasta
+	 * @param userRequest
+	 * @return
+	 */
+	public static Reporte buildReporte(Conciliacion conciliacion, final Date fechaDesde, final Date fechaHasta,
+			final String userRequest) {
+		Reporte reporte = new Reporte();
+		reporte.setConciliacion(conciliacion);
+		reporte.setCreatedBy(userRequest);
+		reporte.setCreatedDate(new Date());
+		reporte.setDisponible(true);
+		reporte.setFechaDesde(fechaDesde);
+		reporte.setFechaHasta(fechaHasta);
+		reporte.setId(0);
+		reporte.setLastModifiedBy(null);
+		reporte.setLastModifiedDate(null);
+		reporte.setTipo(TipoReporteEnum.PROVEEDOR);
 		return reporte;
 	}
 

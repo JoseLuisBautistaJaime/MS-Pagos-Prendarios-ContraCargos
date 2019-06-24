@@ -20,6 +20,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout43;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaImplementacionEnum;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
 
@@ -38,7 +39,7 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 	private EstadoCuentaAPI estadoCuentaAPI;
 
 	@Inject
-	private ConciliacionService conciliacionService;
+	private ConciliacionHelper conciliacionHelper;
 
 
 	/**
@@ -61,10 +62,7 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 	public EstadoCuentaFileLayout read(Date date, Long idConciliacion, EstadoCuentaImplementacionEnum implementacion) {
 
 		// Consulta el numero de cuenta asignado a la conciliacion
- 		Conciliacion conciliacion = conciliacionService.getById(idConciliacion.intValue());
-		if (conciliacion == null) {
-			throw new ConciliacionException("No existe conciliacion con folio " + idConciliacion);
-		}
+ 		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion.intValue());
 
 		// Crea nombre del archivo en base a la fecha
 		String nombreArchivo = EstadoCuentaFileBuilder.buildFileName(date, conciliacion.getCuenta().getNumeroCuenta(), nombre);

@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.math.BigDecimal;
+
 /**
  * @name LayoutLineaDTO
  * @description Clase que encapsula las lineas de un layout
@@ -21,14 +23,14 @@ public class LayoutLineaDTO implements Comparable<LayoutLineaDTO> {
 	private String unidadOperativa;
 	private String negocio;
 	private String proyectoNMP;
-	private Double monto;
+	private BigDecimal monto;
 
 	public LayoutLineaDTO() {
 		super();
 	}
 
 	public LayoutLineaDTO(Long id, String linea, String cuenta, String depId, String unidadOperativa, String negocio,
-			String proyectoNMP, Double monto) {
+			String proyectoNMP, BigDecimal monto) {
 		super();
 		this.id = id;
 		this.linea = linea;
@@ -47,7 +49,7 @@ public class LayoutLineaDTO implements Comparable<LayoutLineaDTO> {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	
 	public String getLinea() {
 		return linea;
 	}
@@ -96,11 +98,11 @@ public class LayoutLineaDTO implements Comparable<LayoutLineaDTO> {
 		this.proyectoNMP = proyectoNMP;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 

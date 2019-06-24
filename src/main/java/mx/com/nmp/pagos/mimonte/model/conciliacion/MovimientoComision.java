@@ -13,6 +13,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -32,6 +35,9 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 	 */
 	private static final long serialVersionUID = 2417290206180226131L;
 
+	@Id
+	private Integer id;
+	
 	@Column(name = "fecha_operacion")
 	private Date fechaOperacion;
 
@@ -54,7 +60,10 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 	@Column(name="id_movimiento_estado_cuenta")
 	private Long idMovimientoEstadoCuenta;
 
-
+	@OneToOne
+	@JoinColumn(name="id")
+	private MovimientoConciliacion movimientoConciliacion;
+	
 	public MovimientoComision() {
 		super();
 	}
@@ -67,6 +76,14 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 		this.monto = monto;
 		this.descripcion = descripcion;
 		this.estatus = estatus;
+	}
+	
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Date getFechaOperacion() {

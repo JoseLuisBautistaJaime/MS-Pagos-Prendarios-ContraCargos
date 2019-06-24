@@ -1,8 +1,6 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-
 import javax.persistence.*;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
@@ -11,20 +9,17 @@ import java.util.Date;
 
 
 /**
- * The persistent class for the to_layout_linea database table.
+ * The persistent class for the tc_layout_linea database table.
  * 
  */
 @Entity
-@Table(name="to_layout_linea")
-public class LayoutLinea extends Updatable implements Serializable {
-	private static final long serialVersionUID = 1L;
+@Table(name="tc_layout_linea")
+public class LayoutLineaCatalog extends Updatable implements Serializable {
+	private static final long serialVersionUID = -5776981826554339715L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-
-	@Column(name="created_by")
-	private String createdBy;
 
 	@Column(name="cuenta")
 	private String cuenta;
@@ -32,11 +27,14 @@ public class LayoutLinea extends Updatable implements Serializable {
 	@Column(name="dep_id")
 	private String depId;
 
+	@Column(name="id_layout")
+	private Long idLayout;
+
 	@Column(name="linea")
 	private String linea;
 
 	@Column(name="monto")
-	private BigDecimal monto;
+	private Double monto;
 
 	@Column(name="negocio")
 	private String negocio;
@@ -47,11 +45,7 @@ public class LayoutLinea extends Updatable implements Serializable {
 	@Column(name="unidad_operativa")
 	private String unidadOperativa;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="id_layout")
-	private Layout layout;
-
-	public LayoutLinea() {
+	public LayoutLineaCatalog() {
 	}
 
 	public Long getId() {
@@ -70,6 +64,14 @@ public class LayoutLinea extends Updatable implements Serializable {
 		this.createdBy = createdBy;
 	}
 
+	public Date getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
 	public String getCuenta() {
 		return this.cuenta;
 	}
@@ -84,6 +86,14 @@ public class LayoutLinea extends Updatable implements Serializable {
 
 	public void setDepId(String depId) {
 		this.depId = depId;
+	}
+
+	public Long getIdLayout() {
+		return this.idLayout;
+	}
+
+	public void setIdLayout(Long idLayout) {
+		this.idLayout = idLayout;
 	}
 
 	public String getLastModifiedBy() {
@@ -110,11 +120,11 @@ public class LayoutLinea extends Updatable implements Serializable {
 		this.linea = linea;
 	}
 
-	public BigDecimal getMonto() {
+	public Double getMonto() {
 		return this.monto;
 	}
 
-	public void setMonto(BigDecimal monto) {
+	public void setMonto(Double monto) {
 		this.monto = monto;
 	}
 
@@ -142,29 +152,29 @@ public class LayoutLinea extends Updatable implements Serializable {
 		this.unidadOperativa = unidadOperativa;
 	}
 
-	public Layout getLayout() {
-		return this.layout;
-	}
-
-	public void setLayout(Layout layout) {
-		this.layout = layout;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((createdBy == null) ? 0 : createdBy.hashCode());
-		result = prime * result + ((cuenta == null) ? 0 : cuenta.hashCode());
-		result = prime * result + ((depId == null) ? 0 : depId.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((layout == null) ? 0 : layout.hashCode());
-		result = prime * result + ((linea == null) ? 0 : linea.hashCode());
-		result = prime * result + ((monto == null) ? 0 : monto.hashCode());
-		result = prime * result + ((negocio == null) ? 0 : negocio.hashCode());
-		result = prime * result + ((proyectoNmp == null) ? 0 : proyectoNmp.hashCode());
-		result = prime * result + ((unidadOperativa == null) ? 0 : unidadOperativa.hashCode());
 		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LayoutLineaCatalog other = (LayoutLineaCatalog) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}	
 	
 }

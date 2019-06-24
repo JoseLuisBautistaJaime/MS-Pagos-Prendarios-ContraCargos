@@ -18,6 +18,13 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaImplementacionEnum;
  */
 public interface EstadoCuentaReaderService {
 
+	/**
+	 * Se encarga de leer el archivo de estado de cuenta
+	 * @param date
+	 * @param idConciliacion
+	 * @param implementacion
+	 * @return
+	 */
 	public EstadoCuentaFileLayout read(Date date, Long idConciliacion, EstadoCuentaImplementacionEnum implementacion);
 
 }

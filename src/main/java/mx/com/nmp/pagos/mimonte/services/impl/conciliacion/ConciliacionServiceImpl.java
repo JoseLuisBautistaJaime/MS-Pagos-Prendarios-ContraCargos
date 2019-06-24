@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,15 +147,18 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	public ConciliacionDTO saveConciliacion(ConciliacionResponseSaveDTO conciliacionRequestDTO, String createdBy) {
 
 		// Validación del objeto ConciliacionRequestDTO
-		if (conciliacionRequestDTO.getCuenta() == null || conciliacionRequestDTO.getCuenta().getId() < 1)
+		if (conciliacionRequestDTO.getCuenta() == null || conciliacionRequestDTO.getCuenta().getId() == null || conciliacionRequestDTO.getCuenta().getId() < 1) {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		}
 
-		if (conciliacionRequestDTO.getEntidad() == null || conciliacionRequestDTO.getEntidad().getId() < 1)
+		if (conciliacionRequestDTO.getEntidad() == null || conciliacionRequestDTO.getEntidad().getId() == null || conciliacionRequestDTO.getEntidad().getId() < 1) {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		}
 
 		// Validación del atributo createdBy
-		if (createdBy == null || createdBy.isEmpty() || createdBy.equals(""))
+		if (StringUtils.isBlank(createdBy)) {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		}
 
 		// Búsqueda y validacion del idCuenta.
 		Optional<Cuenta> cuenta = cuentaRepository.findById(conciliacionRequestDTO.getCuenta().getId());
@@ -181,7 +185,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		conciliacionRequestDTO.setSubEstatus(SubEstatusConciliacionBuilder.buildSubEstatusConciliacionDTOFromSubEstatusConciliacion(subEstatusConciliacion.get()));
 
 		// Se construye la conciliacion y se guarda
-		Conciliacion conciliacion = conciliacionRepository.save(ConciliacionBuilder.buildConciliacionFromConciliacionResponseSaveDTO(conciliacionRequestDTO));
+		Conciliacion conciliacion = ConciliacionBuilder.buildConciliacionFromConciliacionResponseSaveDTO(conciliacionRequestDTO);
+		conciliacion = conciliacionRepository.save(conciliacion);
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(conciliacion.getId(), "Alta de conciliacion",

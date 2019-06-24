@@ -9,8 +9,10 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.model.EstatusPago;
@@ -31,6 +33,9 @@ public class MovimientoPago extends MovimientoConciliacion implements Comparable
 	 * Serial id
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	@Id
+	private Integer id;
 
 	@ManyToOne
 	@JoinColumn(name = "estatus", nullable = false)
@@ -38,6 +43,10 @@ public class MovimientoPago extends MovimientoConciliacion implements Comparable
 
 	@Column(name = "monto")
 	private BigDecimal monto;
+	
+	@OneToOne
+	@JoinColumn(name="id")
+	private MovimientoConciliacion movimientoConciliacion;
 
 	public MovimientoPago() {
 		super();
@@ -52,6 +61,14 @@ public class MovimientoPago extends MovimientoConciliacion implements Comparable
 		super();
 		this.estatus = estatus;
 		this.monto = monto;
+	}
+	
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public EstatusPago getEstatus() {

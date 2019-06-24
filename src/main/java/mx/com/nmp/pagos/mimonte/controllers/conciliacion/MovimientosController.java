@@ -43,7 +43,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosEstadoCuentaService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosProveedorService;
@@ -98,109 +97,40 @@ public class MovimientosController {
 	@Qualifier("movimientosEstadoCuentaService")
 	private MovimientosEstadoCuentaService movimientosEstadoCuentaService;
 
+
+
+
+	// ////////////////////////////////////////////////////////////////////////
+	// PROCESOS NOCTURNOS (MIDAS) /////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////
+
+
 	/**
-	 * Consulta movimientos estado de cuneta por filtros de objeto
-	 * CommonConciliacionRequestDTO
+	 * Permite dar de alta movimientos resultado de los Procesos Nocturnos.
 	 * 
-	 * @param commonConciliacionRequestDTO
+	 * @param movimientoProcesosNocturnosDTO
 	 * @param userRequest
 	 * @return
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/movimientos/estadocuenta/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Permite consultar los movimientos del estado de cuenta.", tags = {
+	@PostMapping(value = "/movimientos/nocturnos", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Permite dar de alta movimientos resultado de los Procesos Nocturnos.", tags = {
 			"Movimientos" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta movimientos exitosa."),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findMovimientoEsadoCuenta(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
-		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;
-		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		Long total = movimientosEstadoCuentaService
-				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
-		if (null != total) {
-			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
-			movimientosEstadoCuentaDTO.setTotal(total);
-			movimientosEstadoCuentaDTO.setMovimientos(
-					movimientosEstadoCuentaService.findByFolioAndPagination(commonConciliacionRequestDTO));
-		} else
-			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-		if (null == movimientosEstadoCuentaDTO.getTotal() || null == movimientosEstadoCuentaDTO.getMovimientos()
-				|| movimientosEstadoCuentaDTO.getMovimientos().isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
-				movimientosEstadoCuentaDTO);
-	}
-
-	/**
-	 * Da de alta un movimiento de estado de cuenta y recibe como cabecera un nombre
-	 * de usuaurio que relaiza la accion
-	 * 
-	 * @param saveEstadoCuentaRequestDTO
-	 * @param userRequest
-	 * @return
-	 */
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/movimientos/estadocuenta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Permite dar de alta los movimientos del estado de cuenta.", tags = {
-			"Movimientos" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta movimientos exitosa."),
-			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveMovimientoEsadoCuenta(@RequestBody SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO,
+	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
+		if (!ValidadorConciliacion.validateMovimientoProcesosNocturnosListResponseDTO(movimientos))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-
-		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste los movimientos del estado de cuenta
-		movimientosEstadoCuentaService.procesarConsultaEstadoCuenta(saveEstadoCuentaRequestDTO, userRequest);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta de estado cuenta exitosa.", null);
+		movimientosMidasService.save(movimientos, userRequest);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+				null);
 	}
 
-	/**
-	 * Permite consultar los movimientos del proveedor transaccional. (Open Pay)
-	 * 
-	 * @param movimientosProveedorSaveDTO
-	 * @param userRequest
-	 * @return
-	 */
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/movimientos/proveedor/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Permite consultar los movimientos del proveedor transaccional. (Open Pay)", tags = {
-			"Movimientos" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta movimientos exitosa."),
-			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response findMovimientosProvedor(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
-		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
-		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		Long total = movimientosProveedorService.countByConciliacionId(commonConciliacionRequestDTO.getFolio());
-		if (null != total) {
-			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
-			movimientoTransaccionalListDTO.setTotal(total);
-			movimientoTransaccionalListDTO
-					.setMovimientos(movimientosProveedorService.findByFolio(commonConciliacionRequestDTO));
-		} else
-			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-		if (null == movimientoTransaccionalListDTO.getTotal() || null == movimientoTransaccionalListDTO.getMovimientos()
-				|| movimientoTransaccionalListDTO.getMovimientos().isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoTransaccionalListDTO);
-	}
 
 	/**
 	 * Permite consultar los movimientos del resultado de los procesos nocturnos.
@@ -241,6 +171,14 @@ public class MovimientosController {
 				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoProcesosNocturnosListDTO);
 	}
 
+
+
+
+	// ////////////////////////////////////////////////////////////////////////
+	// PROVEEDOR TRANSACCIONAL ////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////
+
+
 	/**
 	 * Permite dar de alta movimientos que provienen del Proveedor Transaccional
 	 * (Open Pay).
@@ -261,38 +199,128 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalListRequestDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		if (!ValidadorConciliacion.validateMovimientoTransaccionalListRequestDTO(movimientos))
+
+		if (!ValidadorConciliacion.validateMovimientoTransaccionalListRequestDTO(movimientos)) {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		}
+
 		movimientosProveedorService.save(movimientos, userRequest);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-				null);
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE, null);
 	}
 
+
 	/**
-	 * Permite dar de alta movimientos resultado de los Procesos Nocturnos.
+	 * Permite consultar los movimientos del proveedor transaccional. (Open Pay)
 	 * 
-	 * @param movimientoProcesosNocturnosDTO
+	 * @param movimientosProveedorSaveDTO
 	 * @param userRequest
 	 * @return
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/movimientos/nocturnos", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Permite dar de alta movimientos resultado de los Procesos Nocturnos.", tags = {
+	@PostMapping(value = "/movimientos/proveedor/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Permite consultar los movimientos del proveedor transaccional. (Open Pay)", tags = {
 			"Movimientos" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta exitosa"),
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta movimientos exitosa."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		if (!ValidadorConciliacion.validateMovimientoProcesosNocturnosListResponseDTO(movimientos))
+	public Response findMovimientosProvedor(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
+		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		movimientosMidasService.save(movimientos, userRequest);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-				null);
+		Long total = movimientosProveedorService.countByConciliacionId(commonConciliacionRequestDTO.getFolio());
+		if (null != total) {
+			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
+			movimientoTransaccionalListDTO.setTotal(total);
+			movimientoTransaccionalListDTO
+					.setMovimientos(movimientosProveedorService.findByFolio(commonConciliacionRequestDTO));
+		} else
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		if (null == movimientoTransaccionalListDTO.getTotal() || null == movimientoTransaccionalListDTO.getMovimientos()
+				|| movimientoTransaccionalListDTO.getMovimientos().isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoTransaccionalListDTO);
 	}
+
+
+
+	// ////////////////////////////////////////////////////////////////////////
+	// ESTADO CUENTA //////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////
+
+
+	/**
+	 * Recibe la solicitud para la consulta del archivo y el alta de los movimientos del estado de cuenta.
+	 * @param saveEstadoCuentaRequestDTO
+	 * @param userRequest
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/movimientos/estadocuenta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Recibe la solicitud para la consulta del archivo y el alta de los movimientos del estado de cuenta.", tags = {
+			"Movimientos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta movimientos exitosa."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response saveMovimientoEsadoCuenta(@RequestBody SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+
+		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+
+		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste los movimientos del estado de cuenta
+		movimientosEstadoCuentaService.procesarConsultaEstadoCuenta(saveEstadoCuentaRequestDTO, userRequest);
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta de estado cuenta exitosa.", null);
+	}
+
+
+	/**
+	 * Consulta movimientos estado de cuneta por filtros de objeto
+	 * CommonConciliacionRequestDTO
+	 * 
+	 * @param commonConciliacionRequestDTO
+	 * @param userRequest
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/movimientos/estadocuenta/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Permite consultar los movimientos del estado de cuenta.", tags = {
+			"Movimientos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta movimientos exitosa."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response findMovimientoEsadoCuenta(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;
+		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		Long total = movimientosEstadoCuentaService
+				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+		if (null != total) {
+			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
+			movimientosEstadoCuentaDTO.setTotal(total);
+			movimientosEstadoCuentaDTO.setMovimientos(
+					movimientosEstadoCuentaService.findByFolioAndPagination(commonConciliacionRequestDTO));
+		} else
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		if (null == movimientosEstadoCuentaDTO.getTotal() || null == movimientosEstadoCuentaDTO.getMovimientos()
+				|| movimientosEstadoCuentaDTO.getMovimientos().isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
+				movimientosEstadoCuentaDTO);
+	}
+
 
 	/**
 	 * Construye una respuesta dummy
