@@ -29,7 +29,31 @@ public class Pago {
 
 	public Pago(Long id, Cliente cliente, Date fechaTarnsaccion, Double monto, String autorizacion, String metodo,
 			String tarjeta, String idOpenPay, Date fechaCreacion, String descripcion, String idOrder,
-			EstatusPago estatusPago, String restResponse, Long idTransaccionMidas, Long folioPartida,
+			EstatusPagos estatusPago, String restResponse, Long idTransaccionMidas, Long folioPartida,
+			Integer idOperacion, Integer idTipoAutorizacion) {
+		super();
+		this.id = id;
+		this.cliente = cliente;
+		this.fechaTarnsaccion = fechaTarnsaccion;
+		this.monto = monto;
+		this.autorizacion = autorizacion;
+		this.metodo = metodo;
+		this.tarjeta = tarjeta;
+		this.idOpenPay = idOpenPay;
+		this.fechaCreacion = fechaCreacion;
+		this.descripcion = descripcion;
+		this.idOrder = idOrder;
+		this.estatusPago = estatusPago;
+		this.restResponse = restResponse;
+		this.idTransaccionMidas = idTransaccionMidas;
+		this.folioPartida = folioPartida;
+		this.idOperacion = idOperacion;
+		this.idTipoAutorizacion = idTipoAutorizacion;
+	}
+
+	public Pago(Long id, Cliente cliente, Date fechaTarnsaccion, Double monto, String autorizacion, String metodo,
+			String tarjeta, String idOpenPay, Date fechaCreacion, String descripcion, String idOrder,
+			EstatusPagos estatusPago, String restResponse, Long idTransaccionMidas, Long folioPartida,
 			Integer idOperacion) {
 		super();
 		this.id = id;
@@ -88,7 +112,7 @@ public class Pago {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "id_estatus_transaccion", nullable = true)
-	private EstatusPago estatusPago;
+	private EstatusPagos estatusPago;
 
 	@Column(name = "rest_response", nullable = true)
 	private String restResponse;
@@ -101,6 +125,9 @@ public class Pago {
 
 	@Column(name = "id_operacion", nullable = true)
 	private Integer idOperacion;
+
+	@Column(name = "id_tipo_autorizacion", nullable = true)
+	private Integer idTipoAutorizacion;
 
 	public Cliente getCliente() {
 		return cliente;
@@ -150,11 +177,11 @@ public class Pago {
 		this.id = id;
 	}
 
-	public EstatusPago getEstatusPago() {
+	public EstatusPagos getEstatusPago() {
 		return estatusPago;
 	}
 
-	public void setEstatusPago(EstatusPago estatusPago) {
+	public void setEstatusPago(EstatusPagos estatusPago) {
 		this.estatusPago = estatusPago;
 	}
 
@@ -230,13 +257,22 @@ public class Pago {
 		this.idOperacion = idOperacion;
 	}
 
+	public Integer getIdTipoAutorizacion() {
+		return idTipoAutorizacion;
+	}
+
+	public void setIdTipoAutorizacion(Integer idTipoAutorizacion) {
+		this.idTipoAutorizacion = idTipoAutorizacion;
+	}
+
 	@Override
 	public String toString() {
 		return "Pago [id=" + id + ", cliente=" + cliente + ", fechaTarnsaccion=" + fechaTarnsaccion + ", monto=" + monto
 				+ ", autorizacion=" + autorizacion + ", metodo=" + metodo + ", tarjeta=" + tarjeta + ", idOpenPay="
 				+ idOpenPay + ", fechaCreacion=" + fechaCreacion + ", descripcion=" + descripcion + ", idOrder="
 				+ idOrder + ", estatusPago=" + estatusPago + ", restResponse=" + restResponse + ", idTransaccionMidas="
-				+ idTransaccionMidas + ", folioPartida=" + folioPartida + ", idOperacion=" + idOperacion + "]";
+				+ idTransaccionMidas + ", folioPartida=" + folioPartida + ", idOperacion=" + idOperacion
+				+ ", idTipoAutorizacion=" + idTipoAutorizacion + "]";
 	}
 
 }

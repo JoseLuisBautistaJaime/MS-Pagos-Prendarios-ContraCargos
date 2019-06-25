@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.sql.SQLException;
@@ -77,21 +81,7 @@ public class PagoController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response post(@RequestBody PagoRequestDTO pagoRequestDTO) {
 		log.debug("Entrando a operacion de servicio PagoController.post()...");
-		log.debug("Received object: " + pagoRequestDTO);
-
-//		// --------------------- Dummy data building begins (SE CONSERVA ESTE COSIGO COMENTADO SOLO COMO PRUEBA DE QUE SE REALIZO LA TRAMA DUMMY PARA EL SERVICIO DE PAGOS) --------------////
-//		log.debug("Intentando registrar el pago de las partidas {}...", "dumie");
-//		EstatusPagoResponseDTO estatusPagoResponseDTO = new EstatusPagoResponseDTO(1, "C12");
-//		EstatusPagoResponseDTO estatusPagoResponseDTO2 = new EstatusPagoResponseDTO(1, "C34");
-//		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
-//		estatusPagos.add(estatusPagoResponseDTO);
-//		estatusPagos.add(estatusPagoResponseDTO2);
-//		// Ahora se obtiene un numero aleatorio, pero ese valor entre 1 y 3 debe estar
-//		// en funcion de unas reglas de negocio
-//		// en el modulo de toma de deciciones
-//		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO(estatusPagos, true, 1);
-//		// --------------------- Dummy data building ends-------------///////
-
+		log.debug("Received object: {}", pagoRequestDTO);
 		log.debug("Inician validaciones iniciales en validacionesInicialesPago(pagoRequestDTO)");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
 		PagoResponseDTO pagoResponseDTO = null;
@@ -100,10 +90,9 @@ public class PagoController {
 			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
 		} catch (DataIntegrityViolationException | SQLException ex) {
 			Log.error("Error guardando el pago");
-			if (ex instanceof DataIntegrityViolationException || ex instanceof SQLException)
-				throw new PagoException(PagoConstants.CONSTRAINT_DATABASE_ERROR);
-			else if (ex instanceof PagoException)
-				throw new PagoException(ex.getMessage());
+			throw new PagoException(PagoConstants.CONSTRAINT_DATABASE_ERROR);
+		} catch (PagoException ex) {
+			throw new PagoException(ex.getMessage());
 		}
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoResponseDTO);

@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.builder;
 
 import java.math.RoundingMode;
@@ -54,7 +58,7 @@ public class PagoBuilder {
 		pago.setCliente(ClienteBuilder.buildClienteFromClienteDTO(clienteDTO));
 		pago.setDescripcion(operacion.getNombreOperacion());
 		pago.setEstatusPago(
-				new mx.com.nmp.pagos.mimonte.model.EstatusPago(EstatusPago.REGISTERED_PAYMENT_STATUS.getId(),
+				new mx.com.nmp.pagos.mimonte.model.EstatusPagos(EstatusPago.REGISTERED_PAYMENT_STATUS.getId(),
 						EstatusPago.REGISTERED_PAYMENT_STATUS.getDescripcionCorta(),
 						EstatusPago.REGISTERED_PAYMENT_STATUS.getDescripcion()));
 		pago.setFechaCreacion(new Date());

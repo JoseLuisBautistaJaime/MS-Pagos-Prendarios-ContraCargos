@@ -1,11 +1,14 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dss;
 
 import java.sql.SQLDataException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +19,9 @@ import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.builder.ReglaNegocioBuilder;
 import mx.com.nmp.pagos.mimonte.constans.DSSConstants;
-import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioDTO;
-import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
+import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.VariableDTO;
 import mx.com.nmp.pagos.mimonte.exception.DSSException;
 import mx.com.nmp.pagos.mimonte.services.DSSService;
@@ -47,23 +49,7 @@ public class DSSModule {
 	 * Propiedad para uso de variable idCliente en consultas de reglas de negocio
 	 */
 	@Value(DSSConstants.ID_CLIENTE_PROP)
-	private String ID_CLIENTE_VAR;
-
-	/**
-	 * Propiedad para uso de variable idReglaNegocio en consultas de reglas de
-	 * negocio
-	 */
-	@Value(DSSConstants.ID_REGLA_PROP)
-	private String ID_REGLA_VAR;
-
-	/**
-	 * Propiedad para uso de variable idAfiliacion en consultas de reglas de negocio
-	 */
-	@Value(DSSConstants.ID_AFILAICION_REGLA_PROP)
-	private String ID_AFILAICION_REGLA_VAR;
-
-	@Value(DSSConstants.ID_TIPO_REGLA_PROP)
-	private String ID_TIPO_REGLA_VAR;
+	private String idClienteVar;
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
@@ -85,17 +71,17 @@ public class DSSModule {
 	 * @throws SQLDataException
 	 * @throws DataIntegrityViolationException
 	 */
-	public Map<String, Object> getNoAfiliacion(PagoRequestDTO pagoRequestDTO)
+	public TipoAutorizacionDTO getNoAfiliacion(PagoRequestDTO pagoRequestDTO)
 			throws DataIntegrityViolationException, SQLDataException, SQLException {
 		LOG.debug("Ingresando al metodo DSSModule.getNoAfiliacion()");
-		Map<String, Object> mapValues = null;
 		List<ReglaNegocioDTO> reglasNegocioDTO = null;
-		Stack<ReglaNegocioResumenDTO> stack = null;
+		Set<TipoAutorizacionDTO> stack = null;
+		TipoAutorizacionDTO tipoAutorizacionDTO = null;
+		TipoAutorizacionDTO tipoAutorizacionDTOFinal = null;
 		validacionesPrincipales(pagoRequestDTO);
 		LOG.debug("Inicia el proceso de obtencion de reglas de negocio");
-		reglasNegocioDTO = ReglaNegocioBuilder
-				.buildReglaNegocioDTOFromReglaNegocioList(dssService.getReglasNegocio(pagoRequestDTO.getIdCliente()));
-		stack = new Stack<>();
+		reglasNegocioDTO = ReglaNegocioBuilder.buildReglaNegocioDTOFromReglaNegocioList(dssService.getReglasNegocio());
+		stack = new TreeSet<>();
 		LOG.debug("Se finalizo el proceso de obtencion de reglas de negocio");
 		if (null == reglasNegocioDTO || reglasNegocioDTO.isEmpty())
 			throw new DSSException(DSSConstants.NO_RULES_FOUND_MESSAGE);
@@ -103,45 +89,36 @@ public class DSSModule {
 		for (ReglaNegocioDTO reglaNegocioDTO : reglasNegocioDTO) {
 			replaceVariablesDB(reglaNegocioDTO);
 			replaceLocalVariables(reglaNegocioDTO, pagoRequestDTO.getIdCliente());
-			ReglaNegocioResumenDTO regla = null;
-			LOG.debug("Inicia ejecucion de query: " + null != reglaNegocioDTO.getConsulta()
-					? reglaNegocioDTO.getConsulta()
-					: null);
-			regla = dssService.execQuery(reglaNegocioDTO.getConsulta());
-			regla.setTipoAfiliacion(reglaNegocioDTO.getAfliacion().getTipo());
-			stack.push(regla);
-		}
-		mapValues = evaluateResultStack(stack);
-		return mapValues;
-	}
-
-	/**
-	 * 
-	 * Metodo que desaplia los resultados de la evaluacion de las reglas de un
-	 * cliente y toma el que tiene prioridad mayor y cuya regla se haya cumplido
-	 * satisfactoriamente
-	 * 
-	 * @param     Stack<ReglaNegocioResumenDTO> stack
-	 * @param Map noAfiliacion
-	 */
-	private static Map<String, Object> evaluateResultStack(Stack<ReglaNegocioResumenDTO> stack) {
-		LOG.debug("Inicia proceso de evaluacion de reglas de negocio");
-		ReglaNegocioResumenDTO reglaNegocioResumenDTO;
-		Map<String, Object> mapValues = null;
-		while (!stack.isEmpty()) {
-			reglaNegocioResumenDTO = stack.pop();
-			if (null == mapValues || mapValues.isEmpty()) {
-				mapValues = new HashMap<String, Object>();
-				mapValues.put(PagoConstants.MapValuesConstants.ID_AFILIACION_MAPPING_NAME, reglaNegocioResumenDTO.getIdAfiliacion());
-				mapValues.put(PagoConstants.MapValuesConstants.TIPO_AUTORIZACION_MAPPING_NAME, reglaNegocioResumenDTO.getTipoAfiliacion());
-			} else if (reglaNegocioResumenDTO.getValido() && reglaNegocioResumenDTO.getIdAfiliacion() > Integer
-					.parseInt(String.valueOf(mapValues.get(PagoConstants.MapValuesConstants.ID_AFILIACION_MAPPING_NAME)))) {
-				mapValues.put(PagoConstants.MapValuesConstants.ID_AFILIACION_MAPPING_NAME, reglaNegocioResumenDTO.getIdAfiliacion());
-				mapValues.put(PagoConstants.MapValuesConstants.TIPO_AUTORIZACION_MAPPING_NAME, reglaNegocioResumenDTO.getTipoAfiliacion());
-
+			Boolean estatus = null;
+			LOG.debug("Inicia ejecucion de query: {}",
+					(null != reglaNegocioDTO.getConsulta() ? reglaNegocioDTO.getConsulta() : null));
+			estatus = (Boolean) dssService.execQuery(reglaNegocioDTO.getConsulta());
+			if (estatus) {
+				tipoAutorizacionDTO = evaluateGreater(reglaNegocioDTO.getTipoAutorizacionSet());
+				if (null != tipoAutorizacionDTO)
+					stack.add(tipoAutorizacionDTO);
 			}
 		}
-		return mapValues;
+		tipoAutorizacionDTOFinal = evaluateGreater(stack);
+		// Si el tipo de autorizacion es nulo se asigna por default el 1: Ningun tipo de
+		// autorizacion
+		if (null == tipoAutorizacionDTOFinal)
+			tipoAutorizacionDTOFinal = dssService.getTipoAutorizacionById(1);
+		return tipoAutorizacionDTOFinal;
+	}
+
+	public static TipoAutorizacionDTO evaluateGreater(Set<TipoAutorizacionDTO> tipoAutorizacionDTOSet) {
+		int max = 0;
+		TipoAutorizacionDTO tDTO = null;
+		if (null != tipoAutorizacionDTOSet) {
+			for (TipoAutorizacionDTO tipoAutorizacionDTO : tipoAutorizacionDTOSet) {
+				if (tipoAutorizacionDTO.getId() > max) {
+					max = tipoAutorizacionDTO.getId();
+					tDTO = tipoAutorizacionDTO;
+				}
+			}
+		}
+		return tDTO;
 	}
 
 	/**
@@ -159,23 +136,20 @@ public class DSSModule {
 	}
 
 	/**
-	 * 
 	 * Metodo que reemplaza las variables de la consulta por los valores reales de
 	 * el objeto en cuestion
 	 * 
 	 * @param reglaNegocioDTO
+	 * @param idCliente
 	 */
 	private void replaceLocalVariables(ReglaNegocioDTO reglaNegocioDTO, Long idCliente) {
-		LOG.debug("Inicia reemplazo de variables de base de datos para query: "
-				+ (null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null));
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Inicia reemplazo de variables de base de datos para query: {}",
+					(null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null));
+		}
 		String str = null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null;
-		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getAfliacion()
-				&& null != reglaNegocioDTO.getAfliacion().getId() && null != reglaNegocioDTO.getAfliacion().getTipo()
-				&& null != reglaNegocioDTO.getId() && null != idCliente && idCliente != 0) {
-			str = str.replace(ID_REGLA_VAR, String.valueOf(reglaNegocioDTO.getId()));
-			str = str.replace(ID_AFILAICION_REGLA_VAR, String.valueOf(reglaNegocioDTO.getAfliacion().getId()));
-			str = str.replace(ID_CLIENTE_VAR, String.valueOf(idCliente));
-			str = str.replace(ID_TIPO_REGLA_VAR, String.valueOf(reglaNegocioDTO.getAfliacion().getTipo()));
+		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getId() && null != idCliente && idCliente != 0) {
+			str = str.replace(idClienteVar, String.valueOf(idCliente));
 			reglaNegocioDTO.setConsulta(str);
 		}
 	}
@@ -188,8 +162,11 @@ public class DSSModule {
 	 * @param reglaNegocioDTO
 	 */
 	private void replaceVariablesDB(ReglaNegocioDTO reglaNegocioDTO) {
-		LOG.debug("Inicia reemplazo de variables de base de datos para query: "
-				+ (null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null));
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Inicia reemplazo de variables de base de datos para query: {}",
+					(null != reglaNegocioDTO && null != reglaNegocioDTO.getConsulta() ? reglaNegocioDTO.getConsulta()
+							: null));
+		}
 		String str = null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null;
 		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getVariables()) {
 			for (VariableDTO variableDTO : reglaNegocioDTO.getVariables()) {

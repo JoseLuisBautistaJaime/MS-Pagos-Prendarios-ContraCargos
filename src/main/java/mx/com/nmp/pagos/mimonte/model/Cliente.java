@@ -11,17 +11,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.config.Constants;
 
 /**
- * Nombre: Cliente
- * Descripcion: Entidad que representa al cliente dentro del
+ * Nombre: Cliente Descripcion: Entidad que representa al cliente dentro del
  * sistema.
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net Fecha: 21/11/2018 17:15 Hrs.
@@ -49,12 +45,6 @@ public class Cliente implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "clientes")
 	private List<Tarjetas> tarjetas;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "tr_cliente_regla_negocio", joinColumns = {
-			@JoinColumn(name = "id_cliente", nullable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "id_regla_negocio", nullable = false) })
-	private Set<ReglaNegocio> reglasNegocio;
-
 	public Cliente() {
 		super();
 	}
@@ -65,16 +55,14 @@ public class Cliente implements Serializable {
 		this.nombreTitular = nombreTitular;
 		this.fechaAlta = fechaAlta;
 	}
-	
-	public Cliente(Long idcliente, String nombreTitular, Date fechaAlta, Set<Pago> pagos, List<Tarjetas> tarjetas,
-			Set<ReglaNegocio> reglasNegocio) {
+
+	public Cliente(Long idcliente, String nombreTitular, Date fechaAlta, Set<Pago> pagos, List<Tarjetas> tarjetas) {
 		super();
 		this.idcliente = idcliente;
 		this.nombreTitular = nombreTitular;
 		this.fechaAlta = fechaAlta;
 		this.pagos = pagos;
 		this.tarjetas = tarjetas;
-		this.reglasNegocio = reglasNegocio;
 	}
 
 	public Long getIdcliente() {
@@ -121,14 +109,6 @@ public class Cliente implements Serializable {
 	public void setTarjetas(List<Tarjetas> tarjetas) {
 		this.tarjetas = tarjetas;
 	}
-	
-	public Set<ReglaNegocio> getReglasNegocio() {
-		return reglasNegocio;
-	}
-
-	public void setReglasNegocio(Set<ReglaNegocio> reglasNegocio) {
-		this.reglasNegocio = reglasNegocio;
-	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -160,7 +140,7 @@ public class Cliente implements Serializable {
 	@Override
 	public String toString() {
 		return "Cliente [idcliente=" + idcliente + ", nombreTitular=" + nombreTitular + ", fechaAlta=" + fechaAlta
-				+ ", pagos=" + pagos + ", tarjetas=" + tarjetas + ", reglasNegocio=" + reglasNegocio + "]";
+				+ ", pagos=" + pagos + ", tarjetas=" + tarjetas + "]";
 	}
 
 }

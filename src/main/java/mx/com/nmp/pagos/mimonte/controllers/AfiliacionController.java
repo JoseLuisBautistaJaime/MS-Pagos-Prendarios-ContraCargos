@@ -282,8 +282,6 @@ public class AfiliacionController {
 		afiliacionDto.setEstatus(true);
 		afiliacionDto.setId(234L);
 		afiliacionDto.setNumero("12345678");
-		afiliacionDto.setTipo(tipo);
-
 		return afiliacionDto;
 	}
 
@@ -300,8 +298,6 @@ public class AfiliacionController {
 		afiliacionDto.setLastModifiedBy("Viktor Reznov");
 		afiliacionDto.setLastModifiedDate(new Date());
 		afiliacionDto.setNumero("12345678");
-		afiliacionDto.setTipo(tipo);
-
 		return afiliacionDto;
 	}
 

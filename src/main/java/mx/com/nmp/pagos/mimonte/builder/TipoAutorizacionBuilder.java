@@ -4,6 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.builder;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.model.TipoAutorizacion;
 
@@ -23,30 +26,13 @@ public class TipoAutorizacionBuilder {
 	}
 
 	/**
-	 * Construye un objeto de tipo TipoAutorizacionDTO de una entidad de tipo
-	 * TipoAutorizacion
-	 * 
-	 * @param tipoAfiliacion
-	 * @return
-	 */
-	public static TipoAutorizacionDTO buildTipoAfilaicionDTOFromTipoAfiliacion(TipoAutorizacion tipoAfiliacion) {
-		TipoAutorizacionDTO tipoAfiliacionDTO = null;
-		if (null != tipoAfiliacion) {
-			tipoAfiliacionDTO = new TipoAutorizacionDTO();
-			tipoAfiliacionDTO.setId(tipoAfiliacion.getId());
-			tipoAfiliacionDTO.setDescripcion(tipoAfiliacion.getDescripcionCorta());
-		}
-		return tipoAfiliacionDTO;
-	}
-
-	/**
 	 * Construye un entity de tipo TipoAutorizacion a partir de un objeto de tipo
 	 * TipoAutorizacionDTO
 	 * 
 	 * @param tipoAfiliacionDTO
 	 * @return
 	 */
-	public static TipoAutorizacion buildTipoAfilaicionFromTipoAfiliacionDTO(TipoAutorizacionDTO tipoAfiliacionDTO) {
+	public static TipoAutorizacion buildTipoAutorizacionFromTipoAutorizacionDTO(TipoAutorizacionDTO tipoAfiliacionDTO) {
 		TipoAutorizacion tipoAfiliacion = null;
 		if (null != tipoAfiliacionDTO) {
 			tipoAfiliacion = new TipoAutorizacion();
@@ -55,4 +41,41 @@ public class TipoAutorizacionBuilder {
 		}
 		return tipoAfiliacion;
 	}
+
+	/**
+	 * Construye un Set de objetos de tipo TipoAutorizacionDTO a partir de un Set de
+	 * entities de tipo TipoAutorizacion
+	 * 
+	 * @param tipoAutorizacionSet
+	 * @return
+	 */
+	public static Set<TipoAutorizacionDTO> buildTipoAutorizacionDTOSetFromTipoAutorizacionSet(
+			Set<TipoAutorizacion> tipoAutorizacionSet) {
+		Set<TipoAutorizacionDTO> tipoAutorizacionDTOSet = null;
+		if (null != tipoAutorizacionSet) {
+			tipoAutorizacionDTOSet = new TreeSet<>();
+			for (TipoAutorizacion tipoAutorizacion : tipoAutorizacionSet) {
+				tipoAutorizacionDTOSet.add(buildTipoAutorizacionDTOFromTipoAutorizacion(tipoAutorizacion));
+			}
+		}
+		return tipoAutorizacionDTOSet;
+	}
+
+	/**
+	 * Construye un objeto de tipo TipoAutorizacionDTO a partir de un entity de tipo
+	 * TipoAutorizacion
+	 * 
+	 * @param tipoAutorizacion
+	 * @return
+	 */
+	public static TipoAutorizacionDTO buildTipoAutorizacionDTOFromTipoAutorizacion(TipoAutorizacion tipoAutorizacion) {
+		TipoAutorizacionDTO tipoAutorizacionDTO = null;
+		if (null != tipoAutorizacion) {
+			tipoAutorizacionDTO = new TipoAutorizacionDTO();
+			tipoAutorizacionDTO.setId(tipoAutorizacion.getId());
+			tipoAutorizacionDTO.setDescripcion(tipoAutorizacion.getDescripcion());
+		}
+		return tipoAutorizacionDTO;
+	}
+
 }

@@ -8,7 +8,7 @@ INSERT INTO tk_estatus_tarjeta(id, descripcion_corta, descripcion) VALUES
 (2, 'Inactiva', 'Tarjeta Inactiva');
 
 -- INSERCION INICIAL EN CATALOGO tk_estatus_transaccion (Estatus Pago)
-INSERT INTO tk_estatus_transaccion(id, descripcion_corta, descripcion) VALUES
+INSERT INTO tk_estatus_pago(id, descripcion_corta, descripcion) VALUES
 (1,'Registrado','Pago Registrado');
 
 -- INSERCION INICIAL EN CATALOGO tk_tipo_tarjeta
@@ -35,8 +35,46 @@ INSERT INTO tk_estatus_operacion(id, descripcion_corta, descripcion) VALUES
 (1, "Operacion Exitosa", "Operacion realizada de manera exitosa"),
 (2, "Operacion Fallida", "Operacion ralizada de manera fallida");
 
+-- ------------------------------------------------------ --
+-- ------------------ MODULO DSS ------------------------ --
+-- ------------------------------------------------------ --
+-- TRUNCATE PARA TABLAS ASOCIADAS A DSS
+TRUNCATE TABLE tr_regla_negocio_variable;
+TRUNCATE TABLE tr_regla_negocio_tipo_autorizacion;
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE tk_regla_negocio;
+TRUNCATE TABLE tk_variable;
+SET FOREIGN_KEY_CHECKS = 1;
+-- FINALIZA TRUNCATE PARA TABLAS ASOCIADAS A DSS
 
+-- INSERCIONES EN CATALGO DE TIPOS (SE USAN EN MODULO DSS)
+INSERT INTO tk_tipo_autorizacion(id, descripcion, descripcion_corta) 
+	VALUES(1, 'Ningun tipo de afiliacion', 'Niguna')
+    , (2, '3D Secure', '3D Secure');
+    
+-- VARIABLES
+-- Insercion Regla Negocio 1
+INSERT INTO tk_variable(id_variable, clave, valor) VALUES(1, '{totalIni}', '10');
+INSERT INTO tk_variable(id_variable, clave, valor) VALUES(2, '{totalFin}', '100');
+-- Insercion Regla Negocio 2
+INSERT INTO tk_variable(id_variable, clave, valor) VALUES(3, '{sumaIni}', '10000');
+INSERT INTO tk_variable(id_variable, clave, valor) VALUES(4, '{sumaFin}', '100000');
+-- Insercion Regla Negocio 3
+INSERT INTO tk_variable(id_variable, clave, valor) VALUES(5, '{idTipoAutorizacion}', '2');
+INSERT INTO tk_variable(id_variable, clave, valor) VALUES(6, '{conteo}', '20');
 
+-- REGLAS DE NEGOCIO
+-- REGLA DE NEGOCIO 1, 2 Y 3
+INSERT INTO tk_regla_negocio(id, nombre, descripcion, consulta) 
+	VALUES(1, 'Regla de Negocio 1', 'Evalua suma de montos con un monto total variable', 'SELECT CASE WHEN (SELECT COUNT(p.id) AS TOTAL FROM to_pagos p WHERE p.id_cliente = {idCliente}) BETWEEN {totalIni} AND {totalFin} THEN TRUE ELSE FALSE END AS ESTATUS')
+		, (2, 'Regla de Negocio 2', 'Evalua cantidad de transacciones con cantidad variable', 'SELECT CASE WHEN (SELECT SUM(p.monto) AS SUMA FROM to_pagos p WHERE p.id_cliente = {idCliente}) BETWEEN {sumaIni} AND {sumaFin} THEN TRUE ELSE FALSE END AS ESTATUS')
+        , (3, 'Regla de Negocio 3', 'Evalua cantidad de transacciones con un determinado id de autorizacion variable', 'SELECT CASE WHEN (SELECT COUNT(p.id) AS CONTEO FROM to_pagos p WHERE p.id_cliente = {idCliente} AND p.id_tipo_autorizacion = {idTipoAutorizacion}) > {conteo} THEN TRUE ELSE FALSE END AS ESTATUS');
+
+-- INSERCION DE ASOCIACION REGLAS DE NEGOCIO - VARIABLE
+INSERT INTO tr_regla_negocio_variable(id_regla_negocio, id_variable) VALUES(1,1), (1,2), (2,3), (2,4), (3,5), (3,6);
+
+-- INSERCION DE ASOCIACION ENTRE REGLAS DE NEGOCIO Y TIPOS DE AUTORIZACION
+INSERT INTO tr_regla_negocio_tipo_autorizacion(id_regla_negocio, id_tipo_autorizacion) VALUES(1,2), (2,2), (3,2);
 
 -- ------------------------------------------------------------------------------------------------------------
 -- FASE 2 CATALOGOS -------------------------------------------------------------------------------------------

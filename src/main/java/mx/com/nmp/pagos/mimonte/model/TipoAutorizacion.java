@@ -1,10 +1,15 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 /**
@@ -17,32 +22,30 @@ import javax.persistence.Table;
  * @version 0.1
  */
 @Entity
-@Table(name = "tk_tipo_afiliacion")
+@Table(name = "tk_tipo_autorizacion")
 public class TipoAutorizacion extends AbstractCatalogo implements Comparable<TipoAutorizacion> {
 
 	public TipoAutorizacion() {
 		super();
 	}
 
-	public TipoAutorizacion(Set<Afiliacion> afiliaciones) {
+	public TipoAutorizacion(Set<ReglaNegocio> reglas) {
 		super();
-		this.afiliaciones = afiliaciones;
+		this.reglas = reglas;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tipo")
-	private Set<Afiliacion> afiliaciones;
+	@ManyToMany
+	@JoinTable(name = "tr_regla_negocio_tipo_autorizacion", joinColumns = {
+			@JoinColumn(name = "id_regla_negocio", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "id_tipo_autorizacion", nullable = false) })
+	private Set<ReglaNegocio> reglas;
 
-	public Set<Afiliacion> getAfiliaciones() {
-		return afiliaciones;
+	public Set<ReglaNegocio> getReglas() {
+		return reglas;
 	}
 
-	public void setAfiliaciones(Set<Afiliacion> afiliaciones) {
-		this.afiliaciones = afiliaciones;
-	}
-
-	@Override
-	public String toString() {
-		return "TipoAutorizacion [afiliaciones=" + afiliaciones + "]";
+	public void setReglas(Set<ReglaNegocio> reglas) {
+		this.reglas = reglas;
 	}
 
 	@Override

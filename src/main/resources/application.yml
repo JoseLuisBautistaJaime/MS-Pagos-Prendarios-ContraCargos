@@ -106,10 +106,6 @@ mimonte:
     iva: 0.16
     dss:
       idcliente: "{idCliente}"
-      idregla: "{idRegla}"
-      idafiliacionregla: "{idAfiliacionRegla}"
-      idtipo: "{idTipo}"
-
 
 openpay:
   wsdlLocation: openpay.wsdl

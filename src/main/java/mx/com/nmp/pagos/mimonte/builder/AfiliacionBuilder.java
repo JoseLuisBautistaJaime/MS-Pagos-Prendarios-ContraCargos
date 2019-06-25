@@ -52,8 +52,6 @@ public class AfiliacionBuilder {
 			afiliacionDTO = new AfiliacionDTO();
 			afiliacionDTO.setNumero(afiliacion.getNumero());
 			afiliacionDTO.setId(afiliacion.getId());
-			afiliacionDTO
-					.setTipo(TipoAutorizacionBuilder.buildTipoAfilaicionDTOFromTipoAfiliacion(afiliacion.getTipo()));
 			afiliacionDTO.setCreatedBy(afiliacion.getCreatedBy());
 			afiliacionDTO.setCreatedDate(afiliacion.getCreatedDate());
 			afiliacionDTO.setLastModifiedBy(afiliacion.getLastModifiedBy());
@@ -77,8 +75,6 @@ public class AfiliacionBuilder {
 			afiliacion = new Afiliacion();
 			afiliacion.setNumero(afiliacionDTO.getNumero());
 			afiliacion.setId(afiliacionDTO.getId());
-			afiliacion
-					.setTipo(TipoAutorizacionBuilder.buildTipoAfilaicionFromTipoAfiliacionDTO(afiliacionDTO.getTipo()));
 			afiliacion.setCreatedBy(afiliacionDTO.getCreatedBy());
 			afiliacion.setCreatedDate(afiliacionDTO.getCreatedDate());
 			afiliacion.setLastModifiedBy(
@@ -90,7 +86,6 @@ public class AfiliacionBuilder {
 			// Por default se agrega el tipo de autorizacion 1 ue es Ninguno
 			TipoAutorizacion tipoAutorizacion = new TipoAutorizacion();
 			tipoAutorizacion.setId(1);
-			afiliacion.setTipo(tipoAutorizacion);
 		}
 		return afiliacion;
 	}
@@ -461,10 +456,6 @@ public class AfiliacionBuilder {
 			afiliacion.setNumero(afiliacionReqDTO.getNumero());
 			afiliacion.setLastModifiedBy(lastModifiedBy);
 			afiliacion.setLastModifiedDate(lastModifiedDate);
-			// Aqui se agrega or default 1 que significa ningun tipo de autoirzacion
-			TipoAutorizacion auth = new TipoAutorizacion();
-			auth.setId(1);
-			afiliacion.setTipo(auth);
 		}
 		return afiliacion;
 	}

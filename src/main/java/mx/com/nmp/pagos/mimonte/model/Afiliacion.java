@@ -7,13 +7,10 @@ package mx.com.nmp.pagos.mimonte.model;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -32,13 +29,6 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 	@Column(name = "numero")
 	private String numero;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tipo")
-	private TipoAutorizacion tipo;
-
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "afiliacion")
-	private Set<ReglaNegocio> reglas;
-
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "afiliaciones")
 	private Set<Cuenta> cuentas;
 
@@ -54,34 +44,21 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 		this.id = id;
 	}
 
-	public Afiliacion(Set<ReglaNegocio> reglas, TipoAutorizacion tipo) {
+	public Afiliacion(Set<Cuenta> cuentas) {
 		super();
-		this.reglas = reglas;
-		this.tipo = tipo;
-	}
-
-	public Afiliacion(TipoAutorizacion tipo, Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
-		super();
-		this.tipo = tipo;
-		this.reglas = reglas;
 		this.cuentas = cuentas;
 	}
 
-	public Afiliacion(String numero, TipoAutorizacion tipo, Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
+	public Afiliacion(String numero, Set<Cuenta> cuentas) {
 		super();
 		this.numero = numero;
-		this.tipo = tipo;
-		this.reglas = reglas;
 		this.cuentas = cuentas;
 	}
 
 	public Afiliacion(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
-			String lastModifiedBy, String description, String shortDescription, String numero, TipoAutorizacion tipo,
-			Set<ReglaNegocio> reglas, Set<Cuenta> cuentas) {
+			String lastModifiedBy, String description, String shortDescription, String numero, Set<Cuenta> cuentas) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
 		this.numero = numero;
-		this.tipo = tipo;
-		this.reglas = reglas;
 		this.cuentas = cuentas;
 	}
 
@@ -91,22 +68,6 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 
 	public void setNumero(String numero) {
 		this.numero = numero;
-	}
-
-	public TipoAutorizacion getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(TipoAutorizacion tipo) {
-		this.tipo = tipo;
-	}
-
-	public Set<ReglaNegocio> getReglas() {
-		return reglas;
-	}
-
-	public void setReglas(Set<ReglaNegocio> reglas) {
-		this.reglas = reglas;
 	}
 
 	public Set<Cuenta> getCuentas() {
@@ -127,7 +88,7 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 
 	@Override
 	public String toString() {
-		return "Afiliacion [numero=" + numero + ", tipo=" + tipo + ", reglas=" + reglas + ", cuentas=" + cuentas + "]";
+		return "Afiliacion [numero=" + numero + ", cuentas=" + cuentas + "]";
 	}
 
 	@Override

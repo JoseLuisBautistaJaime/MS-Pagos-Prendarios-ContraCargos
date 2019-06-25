@@ -23,11 +23,11 @@ DROP TABLE IF EXISTS `to_comision_transaccion`;
 DROP TABLE IF EXISTS `to_conciliacion` ;
 DROP TABLE IF EXISTS `to_merge_conciliacion`;
 DROP TABLE IF EXISTS `tr_regla_negocio_variable` ;
+DROP TABLE IF EXISTS `tr_regla_negocio_tipo_autorizacion`;
 DROP TABLE IF EXISTS `tr_estatus_conciliacion_sub_estatus_conciliacion` ;
 DROP TABLE IF EXISTS `tr_entidad_cuenta_afiliacion` ;
 DROP TABLE IF EXISTS `tr_entidad_contactos` ;
 DROP TABLE IF EXISTS `tr_cuenta_afiliacion` ;
-DROP TABLE IF EXISTS `tr_cliente_regla_negocio` ;
 DROP TABLE IF EXISTS `to_pagos` ;
 DROP TABLE IF EXISTS `tk_regla_negocio` ;
 DROP TABLE IF EXISTS `tc_codigo_estado_cuenta` ;
@@ -36,7 +36,7 @@ DROP TABLE IF EXISTS `tc_contactos` ;
 DROP TABLE IF EXISTS `tc_cuenta` ;
 DROP TABLE IF EXISTS `tc_entidad` ;
 DROP TABLE IF EXISTS `tc_tarjetas` ;
-DROP TABLE IF EXISTS `tk_tipo_afiliacion` ;
+DROP TABLE IF EXISTS `tk_tipo_autorizacion` ;
 DROP TABLE IF EXISTS `tk_categoria` ;
 DROP TABLE IF EXISTS `tk_tipo_contacto` ;
 DROP TABLE IF EXISTS `tk_tipo_tarjeta` ;
@@ -100,9 +100,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `tk_tipo_afiliacion`
+-- Table `tk_tipo_autorizacion`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tk_tipo_afiliacion` (
+CREATE TABLE IF NOT EXISTS `tk_tipo_autorizacion` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `descripcion_corta` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
@@ -119,7 +119,6 @@ CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `numero` VARCHAR(100) NULL DEFAULT NULL,
   `description` VARCHAR(150) NULL DEFAULT NULL,
-  `tipo` INT(11) NOT NULL,
   `estatus` BIT(1) NOT NULL DEFAULT b'1',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
@@ -127,11 +126,7 @@ CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `ca_fk_idx` (`id` ASC),
-  INDEX `´ctr_tipo_afiliacion_afi1´` (`tipo` ASC),
-  CONSTRAINT `´ctr_tipo_afiliacion_afi1´`
-    FOREIGN KEY (`tipo`)
-    REFERENCES `tk_tipo_afiliacion` (`id`))
+  INDEX `ca_fk_idx` (`id` ASC))
 ENGINE = InnoDB
 AUTO_INCREMENT = 15
 DEFAULT CHARACTER SET = latin1;
@@ -145,13 +140,8 @@ CREATE TABLE IF NOT EXISTS `tk_regla_negocio` (
   `nombre` VARCHAR(50) NOT NULL,
   `descripcion` VARCHAR(100) NOT NULL,
   `consulta` VARCHAR(500) NOT NULL,
-  `id_afiliacion` BIGINT(20) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `rn_fk_idx` (`id` ASC),
-  INDEX `ca_fk` (`id_afiliacion` ASC),
-  CONSTRAINT `ctr_afiliacion_fk1`
-    FOREIGN KEY (`id_afiliacion`)
-    REFERENCES `tc_afiliacion` (`id`))
+  INDEX `rn_fk_idx` (`id` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -211,6 +201,16 @@ CREATE TABLE IF NOT EXISTS `tk_tipo_tarjeta` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
+-- -----------------------------------------------------
+-- Table `tk_estatus_pago`
+-- -----------------------------------------------------
+CREATE TABLE `tk_estatus_pago` (
+  `id` int(11) NOT NULL,
+  `descripcion_corta` varchar(45) DEFAULT NULL,
+  `descripcion` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX (id)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 -- -----------------------------------------------------
 -- Table `tk_estatus_transaccion`
@@ -274,18 +274,18 @@ CREATE TABLE IF NOT EXISTS `to_pagos` (
   `id_transaccion_midas` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
   `folio_partida` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
   `id_operacion` INT(11) NULL DEFAULT NULL,
+  `id_tipo_autorizacion` INT(11) NULL,
   PRIMARY KEY (`id`),
-  INDEX `esatus_transaccion_fk_idx` (`id_estatus_transaccion` ASC),
   INDEX `cliente_transacion_fk_idx` (`id_cliente` ASC),
   INDEX `idx_id_transaccion_midas` (`id_transaccion_midas` ASC),
   INDEX `idx_folio_partida` (`folio_partida` ASC),
   INDEX `idx_id_operacion` (`id_operacion` ASC),
-  CONSTRAINT `esatus_transaccion_fk`
-    FOREIGN KEY (`id_estatus_transaccion`)
-    REFERENCES `tk_estatus_transaccion` (`id`),
   CONSTRAINT `fk_cliente_id`
     FOREIGN KEY (`id_cliente`)
-    REFERENCES `tk_cliente` (`id_cliente`))
+    REFERENCES `tk_cliente` (`id_cliente`),
+  CONSTRAINT `ctr_estatus_pago_fk`
+    FOREIGN KEY (`id_estatus_transaccion`)
+    REFERENCES `tk_estatus_pago` (id))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -307,27 +307,17 @@ CREATE TABLE IF NOT EXISTS `tr_regla_negocio_variable` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
-
 -- -----------------------------------------------------
--- Table `tr_cliente_regla_negocio`
+-- Table `tr_regla_negocio_tipo_autorizacion`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tr_cliente_regla_negocio` (
-  `id_cliente` BIGINT(20) UNSIGNED NOT NULL,
-  `id_regla_negocio` INT(11) NOT NULL,
-  INDEX `ic_fk` (`id_cliente` ASC),
-  INDEX `irn_fk` (`id_regla_negocio` ASC),
-  CONSTRAINT `ic_fk`
-    FOREIGN KEY (`id_cliente`)
-    REFERENCES `tk_cliente` (`id_cliente`),
-  CONSTRAINT `irn_fk`
-    FOREIGN KEY (`id_regla_negocio`)
-    REFERENCES `tk_regla_negocio` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
-
-
-
-
+CREATE TABLE `tr_regla_negocio_tipo_autorizacion` (
+  `id_regla_negocio` int(11) NOT NULL,
+  `id_tipo_autorizacion` int(11) NOT NULL,
+  KEY `id_rn_fk` (`id_regla_negocio`),
+  KEY `id_ta_fk` (`id_tipo_autorizacion`),
+  CONSTRAINT `id_rn_fk` FOREIGN KEY (`id_regla_negocio`) REFERENCES `tk_regla_negocio` (`id`),
+  CONSTRAINT `id_ta_fk` FOREIGN KEY (`id_tipo_autorizacion`) REFERENCES `tk_tipo_autorizacion` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 -- ------------------------------------------------------------------------------------------------------------
