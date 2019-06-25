@@ -11,13 +11,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
@@ -68,14 +68,9 @@ public class Conciliacion extends Updatable implements Serializable  {
 	
 	@Column(name = "completed_date")
 	private Date completedDate;
-	
-	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
-	@JoinColumn(name = "id", insertable = false, updatable = false)
-    private Global global;
 
-	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
-	@JoinColumn(name = "id", insertable = false, updatable = false)
-	private Reporte reportes;
+	@OneToOne(mappedBy = "conciliacion", cascade = CascadeType.ALL)
+    private Global global;
 	
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "id_sub_estatus_conciliacion")
@@ -94,8 +89,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 
 	public Conciliacion(Integer id, EstatusConciliacion estatus, Entidad entidad, Cuenta cuenta,
 			String subEstatusDescripcion, Long idPolizaTesoreria, Long idAsientoContable, Date completedDate,
-			Global global, Reporte reportes, Set<MovimientoConciliacion> movimientoConciliacionSet,
-			SubEstatusConciliacion subEstatus) {
+			Global global, SubEstatusConciliacion subEstatus) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
@@ -106,7 +100,6 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.idAsientoContable = idAsientoContable;
 		this.completedDate = completedDate;
 		this.global = global;
-		this.reportes = reportes;
 		this.subEstatus = subEstatus;
 	}
 
@@ -190,14 +183,6 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.global = global;
 	}
 
-	public Reporte getReportes() {
-		return reportes;
-	}
-
-	public void setReportes(Reporte reportes) {
-		this.reportes = reportes;
-	}
-
 	public SubEstatusConciliacion getSubEstatus() {
 		return subEstatus;
 	}
@@ -234,7 +219,6 @@ public class Conciliacion extends Updatable implements Serializable  {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((idAsientoContable == null) ? 0 : idAsientoContable.hashCode());
 		result = prime * result + ((idPolizaTesoreria == null) ? 0 : idPolizaTesoreria.hashCode());
-		result = prime * result + ((reportes == null) ? 0 : reportes.hashCode());
 		result = prime * result + ((subEstatus == null) ? 0 : subEstatus.hashCode());
 		result = prime * result + ((subEstatusDescripcion == null) ? 0 : subEstatusDescripcion.hashCode());
 		result = prime * result + ((merge == null) ? 0 : merge.hashCode());
@@ -258,7 +242,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 		return "Conciliacion [id=" + id + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta=" + cuenta
 				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idPolizaTesoreria=" + idPolizaTesoreria
 				+ ", idAsientoContable=" + idAsientoContable + ", completedDate=" + completedDate + ", global=" + global
-				+ ", reportes=" + reportes + ", subEstatus=" + subEstatus + "]";
+				+ ", subEstatus=" + subEstatus + "]";
 	}
 
 }

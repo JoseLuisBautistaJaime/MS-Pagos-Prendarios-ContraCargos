@@ -42,8 +42,8 @@ public class Reporte extends Updatable {
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
-	@JoinColumn(name = "id_conciliacion",  insertable = false, updatable = false)
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinColumn(name = "id_conciliacion")
 	private Conciliacion conciliacion;
 
 	@Column(name = "tipo", nullable = false)

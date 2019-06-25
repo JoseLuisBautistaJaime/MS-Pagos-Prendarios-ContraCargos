@@ -5,20 +5,21 @@
 package mx.com.nmp.pagos.mimonte.conector;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import mx.com.nmp.pagos.mimonte.conector.ws.EstadoCuentaService;
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * Referencia al servicio web Estado Cuenta
@@ -46,20 +47,21 @@ public class EstadoCuentaProxy implements EstadoCuentaAPI {
 	@Cacheable("EstadoCuentaProxy.consulta")
 	@Override
 	public List<String> consulta(String ruta, String archivo) {
-		LOGGER.info(">> consulta({}, {})", ruta, archivo);
+		LOGGER.info(">> consulta({}{})", ruta, archivo);
 
 		// EstadoCuentaService estadoCuentaService = estadoCuentaConector.getReferenciaWsEstadoCuenta();
 
 		// estadoCuentaService.xxxx();
 
 		// Convertir a lineas
-		List<String> lines = null;
+		List<String> lines = new ArrayList<String>();
 
 		// Dummy
-		try {
-			ClassLoader classLoader = new EstadoCuentaProxy().getClass().getClassLoader();
-			File file = new File(classLoader.getResource("edocuenta/7002.txt").getFile());
-			lines = FileUtils.readLines(file, "UTF-8");
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource("edocuenta/7002.txt").getInputStream()))) {
+			while(reader.ready()) {
+			     String line = reader.readLine();
+			     lines.add(line);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+
 @SuppressWarnings("unchecked")
 public enum EstadoCuentaFileLayoutTipoEnum {
 	DIA_C43_11 {
@@ -12,8 +14,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.OTRO;
 		}
-		public boolean valido(String line) {
-			return false;
+		public void validar(EstadoCuentaLine line) {
+			//
 		}
 	},
 	DIA_C43_22 {
@@ -26,8 +28,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.OTRO;
 		}
-		public boolean valido(String line) {
-			return false;
+		public void validar(EstadoCuentaLine line) {
+			//
 		}
 	},
 	DIA_CUENTA_CONVENIO {
@@ -40,8 +42,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.OTRO;
 		}
-		public boolean valido(String line) {
-			return false;
+		public void validar(EstadoCuentaLine line) {
+			//
 		}
 	},
 	CIE_DIARIO {
@@ -54,8 +56,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.OTRO;
 		}
-		public boolean valido(String line) {
-			return false;
+		public void validar(EstadoCuentaLine line) {
+			//
 		}
 	},
 	C43_11 {
@@ -68,8 +70,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.CUADERNO_43;
 		}
-		public boolean valido(String line) {
-			return line != null && line.length() == 80;
+		public void validar(EstadoCuentaLine line) {
+			validarLongitud(line, 80);
 		}
 	},
 	C43_22 {
@@ -82,8 +84,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.CUADERNO_43;
 		}
-		public boolean valido(String line) {
-			return line != null && line.length() == 80;
+		public void validar(EstadoCuentaLine line) {
+			validarLongitud(line, 80);
 		}
 	},
 	C43_23 {
@@ -96,8 +98,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.CUADERNO_43;
 		}
-		public boolean valido(String line) {
-			return line != null && line.length() == 80;
+		public void validar(EstadoCuentaLine line) {
+			validarLongitud(line, 80);
 		}
 	},
 	C43_32 {
@@ -110,8 +112,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.CUADERNO_43;
 		}
-		public boolean valido(String line) {
-			return line != null && line.length() == 80;
+		public void validar(EstadoCuentaLine line) {
+			validarLongitud(line, 77);
 		}
 	},
 	C43_33 {
@@ -124,8 +126,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.CUADERNO_43;
 		}
-		public boolean valido(String line) {
-			return line != null && line.length() == 77;
+		public void validar(EstadoCuentaLine line) {
+			validarLongitud(line, 76);
 		}
 	},
 	CASH {
@@ -138,8 +140,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.OTRO;
 		}
-		public boolean valido(String line) {
-			return false;
+		public void validar(EstadoCuentaLine line) {
+			//
 		}
 	},
 	HISTORICO {
@@ -152,8 +154,8 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 		public EstadoCuentaImplementacionEnum getImplementacion() {
 			return EstadoCuentaImplementacionEnum.OTRO;
 		}
-		public boolean valido(String line) {
-			return false;
+		public void validar(EstadoCuentaLine line) {
+			//
 		}
 	};
 
@@ -164,6 +166,13 @@ public enum EstadoCuentaFileLayoutTipoEnum {
 
 	public abstract EstadoCuentaImplementacionEnum getImplementacion();
 
-	public abstract boolean valido(String line);
+	public abstract void validar(EstadoCuentaLine line);
+
+	private static void validarLongitud(EstadoCuentaLine line, int longitud) {
+		boolean valido = (line != null && line.getLinea() != null && line.getLinea().length() == longitud);
+		if (!valido) {
+			throw new ConciliacionException("Linea " + line.getIndex() + " con longitud invalida: " + line.getLinea().length() + ", longitud esperada: " + longitud);
+		}
+	}
 
 }

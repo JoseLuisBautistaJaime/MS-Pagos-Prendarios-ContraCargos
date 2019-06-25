@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,18 +37,18 @@ public class EstadoCuenta implements Comparable<EstadoCuenta> {
 	@Column(name = "id", nullable = false, unique = true)
 	private Long id;
 
-	@Column(name = "reporte")
+	@Column(name = "reporte", insertable=true)
 	private Long idReporte;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name = "cabecera", referencedColumnName = "id")
 	private EstadoCuentaCabecera cabecera;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name = "totales", referencedColumnName = "id")
 	private EstadoCuentaTotales totales;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name = "totales_adicional", referencedColumnName = "id")
 	private EstadoCuentaTotalesAdicional totalesAdicional;
 

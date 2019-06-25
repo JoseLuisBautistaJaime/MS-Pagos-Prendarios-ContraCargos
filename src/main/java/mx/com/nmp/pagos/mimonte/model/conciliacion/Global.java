@@ -15,8 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import mx.com.nmp.pagos.mimonte.model.Cuenta;
-
 /**
  * @author Quarksoft
  * @version 1.0

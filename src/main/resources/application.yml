@@ -125,4 +125,4 @@ estadocuenta:
       name: X-Id
       key: 12345
   ruta: c:\Automata SMV\CIE por Convenio\
-  nombre: CLCO{CUENTA}yyMMddHHmm.txt
+  nombre: "'CLCO{CUENTA}'yyMMddHHmm'.txt'"

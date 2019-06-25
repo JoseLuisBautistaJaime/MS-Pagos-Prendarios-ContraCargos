@@ -42,7 +42,7 @@ public class EstadoCuentaTotalesAdicional implements Comparable<EstadoCuentaTota
 	private String cuenta;
 
 	@Column(name = "no_cargos")
-	private String noCargos;
+	private Integer noCargos;
 
 	@Column(name = "importe_total_cargos")
 	private BigDecimal importeTotalCargos;
@@ -94,11 +94,11 @@ public class EstadoCuentaTotalesAdicional implements Comparable<EstadoCuentaTota
 		this.cuenta = cuenta;
 	}
 
-	public String getNoCargos() {
+	public Integer getNoCargos() {
 		return noCargos;
 	}
 
-	public void setNoCargos(String noCargos) {
+	public void setNoCargos(Integer noCargos) {
 		this.noCargos = noCargos;
 	}
 

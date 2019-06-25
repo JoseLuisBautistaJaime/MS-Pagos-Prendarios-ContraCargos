@@ -839,7 +839,7 @@ CREATE TABLE to_estado_cuenta_totales_adicional
 	clave_pais VARCHAR(4),
 	sucursal VARCHAR(4),
 	cuenta VARCHAR(10),
-	no_cargos VARCHAR(5),
+	no_cargos INTEGER,
 	importe_total_cargos DECIMAL(16,2),
 	no_abonos INTEGER,
 	importe_total_abonos DECIMAL(16,2),
@@ -873,6 +873,8 @@ CREATE TABLE to_estado_cuenta_cabecera
 	clave_pais VARCHAR(4),
 	sucursal VARCHAR(4),
 	cuenta VARCHAR(10),
+	fecha_inicial DATE,
+	fecha_final DATE,
 	tipo_saldo TINYINT,
 	saldo_inicial DECIMAL(16,2),
 	moneda_alfabetica VARCHAR(3),
@@ -907,7 +909,7 @@ CREATE TABLE to_estado_cuenta
 	CONSTRAINT FK_to_estado_cuenta_to_movimiento_edo_cta_tot_adicional 
 		FOREIGN KEY (totales_adicional) REFERENCES to_estado_cuenta_totales_adicional (id),
 	CONSTRAINT FK_to_estado_cuenta_to_reporte 
-		FOREIGN KEY (id) REFERENCES to_reporte (id)
+		FOREIGN KEY (reporte) REFERENCES to_reporte (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

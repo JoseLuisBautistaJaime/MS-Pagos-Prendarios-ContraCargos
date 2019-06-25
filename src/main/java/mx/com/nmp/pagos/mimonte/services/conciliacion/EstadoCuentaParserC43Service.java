@@ -55,6 +55,12 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 		if (cabecera == null) {
 			throw new ConciliacionException("Archivo de estado de cuenta contiene cabecera incorrecta");
 		}
+		if (totales == null) {
+			throw new ConciliacionException("Archivo de estado de cuenta con totales incorrectos");
+		}
+		if (totalesAdicional == null) {
+			throw new ConciliacionException("Archivo de estado de cuenta con totales adicionales incorrectos");
+		}
 
 		EstadoCuentaWraper estadoCuenta = new EstadoCuentaWraper();
 		estadoCuenta.cabecera = cabecera;
@@ -73,13 +79,11 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 		for (EstadoCuentaLine line : estadoCuentaFile.getRegistros()) {
 			if (line.getTipo() == EstadoCuentaFileLayoutTipoEnum.C43_11) {
 
-				if (line.getTipo().valido(line.getLinea())) {
-					throw new ConciliacionException("La linea " + line.getIndex() + " tiene una longitud invalida");
-				}
+				line.getTipo().validar(line);
 
 				EstadoCuentaLineQueue lineQueue = new EstadoCuentaLineQueue(line.getLinea());
 				cabecera = new EstadoCuentaCabecera();
-				lineQueue.get(2); // Registro
+				lineQueue.get(2); // Registro se remueve
 				cabecera.setClavePais(lineQueue.get(4)); // Clave Pais
 				cabecera.setSucursal(lineQueue.get(4)); // Sucursal
 				cabecera.setCuenta(lineQueue.get(10)); // Cuenta
@@ -113,9 +117,7 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 		for (EstadoCuentaLine line : estadoCuentaFile.getRegistros()) {
 			if (line.getTipo() == EstadoCuentaFileLayoutTipoEnum.C43_22) {
 
-				if (line.getTipo().valido(line.getLinea())) {
-					throw new ConciliacionException("La linea " + line.getIndex() + " tiene una longitud invalida");
-				}
+				line.getTipo().validar(line);
 
 				EstadoCuentaLineQueue lineQueue = new EstadoCuentaLineQueue(line.getLinea());
 				
@@ -136,9 +138,7 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 			}
 			else if (line.getTipo() == EstadoCuentaFileLayoutTipoEnum.C43_23) { // Linea 23 es inmediatamente despues de la 22
 
-				if (line.getTipo().valido(line.getLinea())) {
-					throw new ConciliacionException("La linea " + line.getIndex() + " tiene una longitud invalida");
-				}
+				line.getTipo().validar(line);
 
 				EstadoCuentaLineQueue lineQueue = new EstadoCuentaLineQueue(line.getLinea());
 				
@@ -161,9 +161,7 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 		for (EstadoCuentaLine line : estadoCuentaFile.getRegistros()) {
 			if (line.getTipo() == EstadoCuentaFileLayoutTipoEnum.C43_32) {
 
-				if (line.getTipo().valido(line.getLinea())) {
-					throw new ConciliacionException("La linea " + line.getIndex() + " tiene una longitud invalida");
-				}
+				line.getTipo().validar(line);
 
 				EstadoCuentaLineQueue lineQueue = new EstadoCuentaLineQueue(line.getLinea());
 				totales = new EstadoCuentaTotales();
@@ -187,9 +185,7 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 		for (EstadoCuentaLine line : estadoCuentaFile.getRegistros()) {
 			if (line.getTipo() == EstadoCuentaFileLayoutTipoEnum.C43_33) {
 
-				if (line.getTipo().valido(line.getLinea())) {
-					throw new ConciliacionException("La linea " + line.getIndex() + " tiene una longitud invalida");
-				}
+				line.getTipo().validar(line);
 
 				EstadoCuentaLineQueue lineQueue = new EstadoCuentaLineQueue(line.getLinea());
 				totalesAdicional = new EstadoCuentaTotalesAdicional();
@@ -197,7 +193,9 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 				totalesAdicional.setClavePais(lineQueue.get(4)); // Clave Pais
 				totalesAdicional.setSucursal(lineQueue.get(4)); // Sucursal Cuenta
 				totalesAdicional.setCuenta(lineQueue.get(10)); // Cuenta
-				totalesAdicional.setNoCargos(lineQueue.get(10)); // No. de Cargos
+				totalesAdicional.setNoCargos(new Integer(lineQueue.get(5))); // No. de Cargos
+				totalesAdicional.setImporteTotalCargos(new BigDecimal(lineQueue.get(14))); // Total cargos
+				totalesAdicional.setNoAbonos(new Integer(lineQueue.get(5))); // No. de abonos
 				totalesAdicional.setImporteTotalAbonos(new BigDecimal(lineQueue.get(14))); // Total abonos
 				totalesAdicional.setTipoSaldo(new Integer(lineQueue.get(1))); // Saldo 2(+) 1(-)
 				totalesAdicional.setSaldoFinal(new BigDecimal(lineQueue.get(14))); // Saldo final

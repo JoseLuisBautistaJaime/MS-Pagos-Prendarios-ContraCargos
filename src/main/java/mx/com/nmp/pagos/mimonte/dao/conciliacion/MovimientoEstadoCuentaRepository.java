@@ -52,7 +52,8 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	 * @param idReporte
 	 * @return
 	 */
-	public List<MovimientoEstadoCuenta> findByReporte(final Long reporteId);
+	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.id = :reporteId")
+	public List<MovimientoEstadoCuenta> findByReporte(@Param("reporteId") final Long reporteId);
 
 	/**
 	 * Regresa los movimientos estado de cuenta por id de reporte y claves leyenda
@@ -60,6 +61,7 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	 * @param clavesLeyenda
 	 * @return
 	 */
-	public List<MovimientoEstadoCuenta> findByReporteAndClaveLeyendaIn(final Long reporteId, List<String> clavesLeyenda);
+	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.id = :reporteId AND mm.claveLeyenda IN (:clavesLeyenda)")
+	public List<MovimientoEstadoCuenta> findByReporteAndClaveLeyendaIn(@Param("reporteId") final Long reporteId, @Param("clavesLeyenda") List<String> clavesLeyenda);
 
 }

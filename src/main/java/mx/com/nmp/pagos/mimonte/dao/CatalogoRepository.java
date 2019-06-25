@@ -57,7 +57,7 @@ public interface CatalogoRepository extends JpaRepository<Catalogo, Integer> {
     		"    catalogo.descripcion_corta as descripcion_corta, \r\n" + 
     		"    catalogo.descripcion as descripcion\r\n" + 
     		"FROM\r\n" + 
-    		"    compose.tk_catalogo as catalogo\r\n" + 
+    		"    tk_catalogo as catalogo\r\n" + 
     		"WHERE\r\n" + 
     		"    catalogo.descripcion_corta like :descripcionCorta ", nativeQuery = true)
 	public List<Object[]> findByDescripcion(@Param("descripcionCorta") String descripcionCorta);

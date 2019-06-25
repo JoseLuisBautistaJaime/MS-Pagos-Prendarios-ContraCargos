@@ -34,9 +34,6 @@ public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "id_reporte", nullable = false)
-	private Long reporte;
-
 	@Column(name = "estado_cuenta")
 	private Long idEstadoCuenta;
 
@@ -199,14 +196,6 @@ public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta
 
 	public void setReferencia(String referencia) {
 		this.referencia = referencia;
-	}
-
-	public Long getReporte() {
-		return reporte;
-	}
-
-	public void setReporte(Long reporte) {
-		this.reporte = reporte;
 	}
 
 	@Override
