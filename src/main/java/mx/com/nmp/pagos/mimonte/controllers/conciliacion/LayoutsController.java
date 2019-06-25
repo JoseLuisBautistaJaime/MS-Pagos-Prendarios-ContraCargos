@@ -133,7 +133,7 @@ public class LayoutsController {
 	public Response saveLayout(@RequestBody LayoutDTO layoutDTOe) {
 		//LOG.error("------" + layoutDTOe.toString());
 		layoutsService.saveLayout(layoutDTOe);
-		LayoutDTO layoutDTOs = layoutsService.consultarUnLayoutR(layoutDTOe.getFolio(), layoutDTOe.getTipoLayout().toString());
+		LayoutDTO layoutDTOs = layoutsService.consultarUnLayout(layoutDTOe.getFolio(), layoutDTOe.getTipoLayout().toString());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layouts agregados con éxito.",
 				layoutDTOs);
 	}

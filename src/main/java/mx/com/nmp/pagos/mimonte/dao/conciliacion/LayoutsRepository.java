@@ -25,7 +25,8 @@ public interface LayoutsRepository extends JpaRepository<Layout,Long>{
 	@Query("delete from LayoutHeader l where l.layout.id = :id")
 	public void  eliminarUnLayoutHeader(@Param("id") final Long id);
 	
-	public List<Layout> findByIdConciliacionAndTipo(@Param("idConciliacion") final Long idConciliacion, @Param("tipo") final String tipo);
+	@Query("from Layout l inner join l.layoutHeader inner join l.layoutLineas where l.idConciliacion = :idConciliacion and l.tipo = :tipo")
+	public List<Object[]> findByIdConciliacionAndTipo(@Param("idConciliacion") final Long idConciliacion, @Param("tipo") final String tipo);
 	
 	public List<Layout> findByIdConciliacion(@Param("idConciliacion") final Long idConciliacion);
 	

@@ -69,67 +69,23 @@ public class LayoutsService {
 	 * @param tipoLayout
 	 */
 	public LayoutDTO consultarUnLayout(Long idConciliacion, String tipoLayout){
-		 List<Layout> layouts = null;
+		 List<Object[]> layouts = null;
 		 Layout layoutNuevo = new Layout();
 		 List<LayoutLinea> layoutLineas = new ArrayList<>();
 		if(validar(idConciliacion, tipoLayout)){
 		      layouts = layoutsRepository.findByIdConciliacionAndTipo(idConciliacion, tipoLayout);
-	    }
-		
+	    }	
 		int x=1;
-		for(Layout layout: layouts){
+		for(Object[] arrayObject: layouts){
 			if(x==1){
-				layoutNuevo.setIdConciliacion(layout.getIdConciliacion());
-				layoutNuevo.setTipo(layout.getTipo());
-				layoutNuevo.setLayoutHeader(layout.getLayoutHeader());
-			}
-			layoutLineas.addAll(layout.getLayoutLineas());
-			
-			x=0;
-		}
-		layoutNuevo.setLayoutLineas(layoutLineas);
-			
-		return LayoutsBuilder.buildLayoutDTOFromLayout(layoutNuevo);			
-	}
-	
-	public LayoutDTO consultarUnLayoutR(Long idConciliacion, String tipoLayout){
-		 List<Layout> layouts = null;
-		 LayoutHeader layoutHeader = null;
-		 LayoutHeaderCatalog layoutHeaderCatalog = null;
-		 Layout layoutNuevo = new Layout();
-		 List<LayoutLinea> layoutLineas = new ArrayList<>();
-		if(validar(idConciliacion, tipoLayout)){
-		      layouts = layoutsRepository.findByIdConciliacionAndTipo(idConciliacion, tipoLayout);
-	    }
-		
-		if(tipoLayout.equals(TipoLayoutEnum.PAGOS.toString())){
-			layoutHeaderCatalog = layoutHeaderCatalogRepository.getOne(1L);//buscarLayoutHeader
-		}
-		if(tipoLayout.equals(TipoLayoutEnum.COMISIONES_MOV.toString())){
-			layoutHeaderCatalog = layoutHeaderCatalogRepository.getOne(2L);
-		}
-		if(tipoLayout.equals(TipoLayoutEnum.COMISIONES_GENERALES.toString())){
-			layoutHeaderCatalog = layoutHeaderCatalogRepository.getOne(3L);
-		}
-		if(tipoLayout.equals(TipoLayoutEnum.DEVOLUCIONES.toString())){
-			layoutHeaderCatalog = layoutHeaderCatalogRepository.getOne(4L);
-		}
-		layoutHeader = new LayoutHeader();
-		layoutHeader.setId(layoutHeaderCatalog.getId());
-		layoutHeader.setCabecera(layoutHeaderCatalog.getCabecera());
-		layoutHeader.setCodigoOrigen(layoutHeaderCatalog.getCodigoOrigen());
-		layoutHeader.setDescripcion(layoutHeaderCatalog.getDescripcion());
-		layoutHeader.setFecha(layoutHeaderCatalog.getFecha());
-		layoutHeader.setUnidadNegocio(layoutHeaderCatalog.getUnidadNegocio());
-		
-		int x=1;
-		for(Layout layout: layouts){
-			if(x==1){
+				Layout layout = (Layout)arrayObject[0];
+				LayoutHeader layoutHeader = (LayoutHeader)arrayObject[1];
 				layoutNuevo.setIdConciliacion(layout.getIdConciliacion());
 				layoutNuevo.setTipo(layout.getTipo());
 				layoutNuevo.setLayoutHeader(layoutHeader);
 			}
-			layoutLineas.addAll(layout.getLayoutLineas());
+			LayoutLinea layoutLinea = (LayoutLinea)arrayObject[2];
+			layoutLineas.add(layoutLinea);
 			
 			x=0;
 		}
