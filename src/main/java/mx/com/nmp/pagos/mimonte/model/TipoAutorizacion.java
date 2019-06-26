@@ -36,8 +36,8 @@ public class TipoAutorizacion extends AbstractCatalogo implements Comparable<Tip
 
 	@ManyToMany
 	@JoinTable(name = "tr_regla_negocio_tipo_autorizacion", joinColumns = {
-			@JoinColumn(name = "id_regla_negocio", nullable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "id_tipo_autorizacion", nullable = false) })
+			@JoinColumn(name = "id_tipo_autorizacion", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "id_regla_negocio", nullable = false) })
 	private Set<ReglaNegocio> reglas;
 
 	public Set<ReglaNegocio> getReglas() {

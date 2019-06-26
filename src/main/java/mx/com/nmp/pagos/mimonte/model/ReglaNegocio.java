@@ -56,7 +56,7 @@ public class ReglaNegocio {
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "reglasNegocio")
 	private Set<Variable> variables;
 
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "reglas")
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "reglas")
 	private Set<TipoAutorizacion> tipoAutorizacion;
 
 	public ReglaNegocio() {
