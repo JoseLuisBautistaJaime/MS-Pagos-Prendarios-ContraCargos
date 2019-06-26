@@ -61,10 +61,10 @@ public class Conciliacion extends Updatable implements Serializable  {
 	private String subEstatusDescripcion;
 
 	@Column(name = "id_poliza_tesoreria")
-	private Long idPolizaTesoreria;
+	private String idPolizaTesoreria;
 	
 	@Column(name = "id_asiento_contable")
-	private Long idAsientoContable;
+	private String idAsientoContable;
 	
 	@Column(name = "completed_date")
 	private Date completedDate;
@@ -88,7 +88,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 	}
 
 	public Conciliacion(Integer id, EstatusConciliacion estatus, Entidad entidad, Cuenta cuenta,
-			String subEstatusDescripcion, Long idPolizaTesoreria, Long idAsientoContable, Date completedDate,
+			String subEstatusDescripcion, String idPolizaTesoreria, String idAsientoContable, Date completedDate,
 			Global global, SubEstatusConciliacion subEstatus) {
 		super();
 		this.id = id;
@@ -151,19 +151,19 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.subEstatusDescripcion = subEstatusDescripcion;
 	}
 
-	public long getIdPolizaTesoreria() {
+	public String getIdPolizaTesoreria() {
 		return idPolizaTesoreria;
 	}
 
-	public void setIdPolizaTesoreria(Long idPolizaTesoreria) {
+	public void setIdPolizaTesoreria(String idPolizaTesoreria) {
 		this.idPolizaTesoreria = idPolizaTesoreria;
 	}
 
-	public Long getIdAsientoContable() {
+	public String getIdAsientoContable() {
 		return idAsientoContable;
 	}
 
-	public void setIdAsientoContable(Long idAsientoContable) {
+	public void setIdAsientoContable(String idAsientoContable) {
 		this.idAsientoContable = idAsientoContable;
 	}
 

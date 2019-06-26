@@ -385,6 +385,7 @@ public interface ValidadorConciliacion {
 		} catch (Exception ex) {
 			return false;
 		}
+		// Al menos un atributo es requerido
 		return !(null == actualizarIdPSRequest.getIdAsientoContable()
 				&& null == actualizarIdPSRequest.getIdPolizaTesoreria());
 	}

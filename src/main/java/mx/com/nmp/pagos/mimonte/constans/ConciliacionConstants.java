@@ -239,6 +239,9 @@ public final class ConciliacionConstants {
 	
 	// Subestatus conciliacion
 	public static final Long SUBESTATUS_CONCILIACION_CREADA = 1L;
+	public static final Long SUBESTATUS_CONCILIACION_ENVIADA = 14L;
+	public static final Long SUBESTATUS_CONCILIACION_ERROR = 15L;
+	public static final Long SUBESTATUS_CONCILIACION_FINALIZADA = 16L;
 	
 	public static final String CONCEPTO_DEVOLUCION = "DEV"; // Pendiente
 	public static final String CONCEPTO_LIQUIDACION = "LIQ"; // Pendiente

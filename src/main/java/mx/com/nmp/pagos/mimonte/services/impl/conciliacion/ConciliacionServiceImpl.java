@@ -59,6 +59,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
+import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
@@ -127,6 +128,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	@Autowired
 	private ReporteObserver reporteObserver;
+
+	@Autowired
+	private ConciliacionHelper conciliacionHelper;
 
 	@Autowired
 	@Qualifier("actividadRepository")
@@ -231,9 +235,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 
 		// Búsqueda del folio en la tabla de to_conciliacion
-		Conciliacion conciliacion = conciliacionRepository.findByFolio(actualizaionConciliacionRequestDTO.getFolio());
-		if (conciliacion == null || conciliacion.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(actualizaionConciliacionRequestDTO.getFolio());
 
 //		// Búsqueda del folio en la tabla de to_movimiento_conciliacion en base al
 //		// folio.
@@ -322,9 +324,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
 		// Búsqueda del folio en la tabla de to_conciliacion
-		Conciliacion conciliacion = conciliacionRepository.findByFolio(consultaConciliacionRequestDTO.getFolio());
-		if (conciliacion == null || conciliacion.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(consultaConciliacionRequestDTO.getFolio());
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(consultaConciliacionRequestDTO.getFolio(), "Consulta de conciliacion",
@@ -352,9 +352,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 
 		// Búsqueda de la conciliación a partir del folio.
-		Conciliacion conciliacion = conciliacionRepository.findByFolio(folio);
-		if (conciliacion == null || conciliacion.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(folio);
 
 		// Búsqueda de los movimientos en devolución a partir del folio
 		List<MovimientoDevolucion> mD = movimientoDevolucionRepository.findByIdConciliacion(folio);
@@ -402,15 +400,47 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		return conciliacionRepository.findByFolio(idConciliacion);
 	}
 
+
 	@Override
 	public void generarConciliacion(Integer idConciliacion, String usuario, String urlCallBack) {
 		// TODO Auto-generated method stub
-
 	}
 
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#enviarConciliacion(java.lang.Integer, java.lang.String)
+	 */
 	@Override
+	@Transactional
 	public void enviarConciliacion(Integer idConciliacion, String usuario) {
-		// TODO Auto-generated method stub
+
+		// Validar conciliacion y actualizar estatus
+		try {
+			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion);
+
+			// Verificar si es al momento de cerrar la conciliacion
+			if (conciliacion.getEstatus() == null || conciliacion.getEstatus().getId() != ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO) {
+				throw new ConciliacionException("La conciliacion tiene un estatus incorrecto");
+			}
+
+			// Verificar que se encuentra en el sub estatus correcto
+			List<Long> idsSubEstatusIncorrectos =  new ArrayList<Long>();
+			idsSubEstatusIncorrectos.add(ConciliacionConstants.SUBESTATUS_CONCILIACION_CREADA.longValue());
+			idsSubEstatusIncorrectos.add(ConciliacionConstants.SUBESTATUS_CONCILIACION_FINALIZADA.longValue());
+			if (conciliacion.getSubEstatus() == null || idsSubEstatusIncorrectos.contains(conciliacion.getSubEstatus().getId())) {
+				throw new ConciliacionException("La conciliacion tiene un sub estatus incorrecto");
+			}
+
+			conciliacion.setSubEstatus(new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_ENVIADA));
+			conciliacion.setLastModifiedBy(usuario);
+			conciliacion.setLastModifiedDate(new Date());
+
+			conciliacionRepository.save(conciliacion);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al actualizar los ids de asiento contable");
+		}
 
 	}
 
@@ -510,8 +540,48 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// TODO Auto-generated method stub
 	}
 
+	@Transactional
 	public void actualizarPS(ActualizarIdPSRequest actualizarIdPSRequest, String usuario) {
-		// TODO
+
+		// Actualizar estatus de la conciliacion
+		// Se valida que se pueda realizar la transicion
+		//ActualizarSubEstatusRequestDTO actualizarRequest = new ActualizarSubEstatusRequestDTO();
+		//actualizarRequest.setIdSubEstatus(ConciliacionConstants.SUBESTATUS_CONCILIACION_CREADA);
+		//actualizarRequest.setFolio(actualizarIdPSRequest.getFolio());
+
+		//actualizaSubEstatusConciliacion(actualizarRequest, usuario);
+		
+		// Actualizar los ids en la conciliacion
+		try {
+			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(actualizarIdPSRequest.getFolio());
+
+			// Verificar si es al momento de cerrar la conciliacion
+			if (conciliacion.getEstatus() == null || conciliacion.getEstatus().getId() != ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO) {
+				throw new ConciliacionException("La conciliacion tiene un estatus incorrecto");
+			}
+
+			// Verificar que se encuentra en el sub estatus correcto
+			List<Long> idsSubEstatusIncorrectos =  new ArrayList<Long>();
+			idsSubEstatusIncorrectos.add(ConciliacionConstants.SUBESTATUS_CONCILIACION_CREADA.longValue());
+			idsSubEstatusIncorrectos.add(ConciliacionConstants.SUBESTATUS_CONCILIACION_FINALIZADA.longValue());
+			if (conciliacion.getSubEstatus() == null || idsSubEstatusIncorrectos.contains(conciliacion.getSubEstatus().getId())) {
+				throw new ConciliacionException("La conciliacion tiene un sub estatus incorrecto");
+			}
+
+			conciliacion.setLastModifiedBy(usuario);
+			conciliacion.setLastModifiedDate(new Date());
+			conciliacion.setIdAsientoContable(actualizarIdPSRequest.getIdAsientoContable());
+			conciliacion.setIdPolizaTesoreria(actualizarIdPSRequest.getIdPolizaTesoreria());
+			
+			// TODO: Al recibir ambos ids , se actualiza la conciliacion a finalizada
+
+			conciliacionRepository.save(conciliacion);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al actualizar los ids de asiento contable");
+		}
+		
 	}
 
 	/*
