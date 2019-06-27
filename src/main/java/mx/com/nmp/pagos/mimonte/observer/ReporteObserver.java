@@ -17,7 +17,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
 
 /**
- * Nombre: ActualizacionReporteObserver
+ * Nombre: ReporteObserver
  * Descripcion: Clase tipo Observer que se encarga de notificar cambios que se han realizado sobre los Reportes
  *
  * @author JGALVEZ
