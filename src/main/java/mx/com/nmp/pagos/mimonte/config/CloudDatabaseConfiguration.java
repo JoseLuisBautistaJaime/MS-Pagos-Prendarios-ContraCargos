@@ -29,7 +29,6 @@ public class CloudDatabaseConfiguration extends AbstractCloudConfig {
         LOGGER.info("Configurando datasource JDBC desde proveedor cloud...");
         PooledServiceConnectorConfig.PoolConfig poolConfig = new PooledServiceConnectorConfig.PoolConfig(10, 50, 3000);
         DataSourceConfig dbConfig = new DataSourceConfig(poolConfig, null);
-        dbConfig.getConnectionProperties().getConnectionProperties().put("zeroDateTimeBehavior", "convertToNull");
         return connectionFactory().dataSource(dbConfig);
     }
 
