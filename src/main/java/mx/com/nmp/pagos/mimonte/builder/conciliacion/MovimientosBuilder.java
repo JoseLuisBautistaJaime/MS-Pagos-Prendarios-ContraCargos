@@ -206,6 +206,13 @@ public abstract class MovimientosBuilder {
 		movimientoMidas.setImporteTransaccion(movimientoMidasDTO.getImporteTransaccion());
 		movimientoMidas.setIdOperacion(movimientoMidasDTO.getIdOperacion());
 		movimientoMidas.setIdTipoContrato(movimientoMidasDTO.getIdTipoContrato());
+		movimientoMidas.setCodigoError(movimientoMidasDTO.getCodigoError());
+		movimientoMidas.setMensajeError(movimientoMidasDTO.getMensajeError());
+		movimientoMidas.setIdTarjeta(movimientoMidasDTO.getIdTarjeta());
+		movimientoMidas.setMarcaTarjeta(movimientoMidasDTO.getMarcaTarjeta());
+		movimientoMidas.setTipoTarjeta(movimientoMidasDTO.getTipoTarjeta());
+		movimientoMidas.setTarjeta(movimientoMidasDTO.getTarjeta());
+		movimientoMidas.setMonedaPago(movimientoMidasDTO.getMonedaPago());
 		return movimientoMidas;
 	}
 

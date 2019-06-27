@@ -86,9 +86,9 @@ INSERT INTO `tk_tipo_contacto` (`id`, `estatus`, `description`, `created_by`, `c
 (2, true, 'Contacto Entidad', 'Quarksoft', now(), null, null, 'Contacto Ent');
 
 -- INSERCION DE TIPOS DE AFILIACION (SE USA EN MODULO DSS)--
-INSERT INTO `tk_tipo_afiliacion` (`id`, `descripcion_corta`, `descripcion`) VALUES
-(1, 'Ninguno', 'Ningun tipo de afiliacion'),
-(2, '3DSecure', '3DSecure');
+-- INSERT INTO `tk_tipo_afiliacion` (`id`, `descripcion_corta`, `descripcion`) VALUES
+-- (1, 'Ninguno', 'Ningun tipo de afiliacion'),
+-- (2, '3DSecure', '3DSecure');
 
 -- INSERCION DE CATEGORIAS DUMMIES --
 INSERT INTO `tk_categoria` (`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `last_modified_date`, `created_by`, `last_modified_by`, `descripcion_corta`) VALUES

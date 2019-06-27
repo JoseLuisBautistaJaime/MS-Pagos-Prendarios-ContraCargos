@@ -97,7 +97,6 @@ public interface ValidadorConciliacion {
 						.getMovimientos()) {
 					assertNotNull(movimientoMidasRequestDTO.getCapitalActual());
 					assertNotNull(movimientoMidasRequestDTO.getFolioPartida());
-					assertNotNull(movimientoMidasRequestDTO.getInteres());
 					assertNotNull(movimientoMidasRequestDTO.getMontoOperacion());
 					assertNotNull(movimientoMidasRequestDTO.getSucursal());
 					assertNotNull(movimientoMidasRequestDTO.getTransaccion());
@@ -108,13 +107,19 @@ public interface ValidadorConciliacion {
 					assertNotNull(movimientoMidasRequestDTO.getOperacionDesc());
 					assertNotNull(movimientoMidasRequestDTO.getTipoContratoAbr());
 					assertNotNull(movimientoMidasRequestDTO.getTipoContratoDesc());
-					assertNotNull(movimientoMidasRequestDTO.getCodigoError());
-					assertNotNull(movimientoMidasRequestDTO.getMensajeError());
-					assertNotNull(movimientoMidasRequestDTO.getIdTarjeta());
-					assertNotNull(movimientoMidasRequestDTO.getMarcaTarjeta());
-					assertNotNull(movimientoMidasRequestDTO.getTipoTarjeta());
-					assertNotNull(movimientoMidasRequestDTO.getTarjeta());
-					assertNotNull(movimientoMidasRequestDTO.getMonedaPago());
+					if (!movimientoMidasRequestDTO.getEstatus()) {
+						assertNotNull(movimientoMidasRequestDTO.getCodigoError());
+						assertNotNull(movimientoMidasRequestDTO.getMensajeError());
+						assertNotNull(movimientoMidasRequestDTO.getIdTarjeta());
+						assertNotNull(movimientoMidasRequestDTO.getMarcaTarjeta());
+						assertNotNull(movimientoMidasRequestDTO.getTipoTarjeta());
+						assertNotNull(movimientoMidasRequestDTO.getTarjeta());
+						assertNotNull(movimientoMidasRequestDTO.getMonedaPago());
+					} else {
+						assertNotNull(movimientoMidasRequestDTO.getComisiones());
+						assertNotNull(movimientoMidasRequestDTO.getInteres());
+					}
+
 					assertNotNull(movimientoMidasRequestDTO.getImporteTransaccion());
 					assertNotNull(movimientoMidasRequestDTO.getIdOperacion());
 					assertNotNull(movimientoMidasRequestDTO.getIdTipoContrato());
@@ -136,7 +141,8 @@ public interface ValidadorConciliacion {
 	 * @param movimientoTransaccionalListRequestDTO
 	 * @return
 	 */
-	public static boolean validateMovimientoTransaccionalListRequestDTO(MovimientoTransaccionalListRequestDTO listRequestDTO) {
+	public static boolean validateMovimientoTransaccionalListRequestDTO(
+			MovimientoTransaccionalListRequestDTO listRequestDTO) {
 		try {
 
 			assertNotNull(listRequestDTO);
