@@ -17,6 +17,11 @@ public final class PagoConstants {
 	}
 
 	/**
+	 * Mensaje que es mostrado cuando se intenta agregar un pago con una cantidad de partidas superior al especificado
+	 */
+	public static final String PARTIDAS_QUANTITY_EXCEDED = "La cantidad de partidas rebasa el limite permitdo";
+	
+	/**
 	 * @description Constantes relacionadas con el tamano de campos de base de datos
 	 *
 	 * @author Ismael Flores iaguilar@quarksoft.net
@@ -76,7 +81,7 @@ public final class PagoConstants {
 		 * dfinido en base de datos
 		 */
 		public static final String OPERATION_AMOUNT_TOO_LONG = "El monto de una operacion es muy grande";
-
+		
 	}
 
 	/**

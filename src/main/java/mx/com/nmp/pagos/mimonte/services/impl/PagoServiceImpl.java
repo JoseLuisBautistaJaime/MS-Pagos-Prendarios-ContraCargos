@@ -90,6 +90,12 @@ public class PagoServiceImpl implements PagoService {
 	private Integer maximumAmountOfCardsPerClient;
 
 	/**
+	 * Propiedad con cantidad maxima posible de partidas a pagar
+	 */
+	@Value("${mimonte.variables.cantidad-maxima-partidas}")
+	private int cantidadMaximaPartidas;
+	
+	/**
 	 * Metodo que se encarga de guardar nuevos pagos, y algunas veces tarjetas y clientes
 	 * 
 	 * @throws SQLException
@@ -114,7 +120,7 @@ public class PagoServiceImpl implements PagoService {
 						: null);
 		pagoResponseDTO.setTipoAutorizacion(tipoAutorizacionDTO);
 		LOG.debug("Se validara objeto pagoRequestDTO");
-		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
+		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO, cantidadMaximaPartidas);
 		try {
 			ValidadorDatosPago.doTypeValidations(pagoRequestDTO);
 			ValidadorDatosPago.doSizeValidations(pagoRequestDTO);

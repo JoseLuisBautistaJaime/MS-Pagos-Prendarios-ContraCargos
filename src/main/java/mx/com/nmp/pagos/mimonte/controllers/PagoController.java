@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -65,6 +66,12 @@ public class PagoController {
 	private final Logger log = LoggerFactory.getLogger(PagoController.class);
 
 	/**
+	 * Propiedad con cantidad maxima posible de partidas a pagar
+	 */
+	@Value("${mimonte.variables.cantidad-maxima-partidas}")
+	private int cantidadMaximaPartidas;
+	
+	/**
 	 * Metodo post que recibe la peticion para guardar un pago
 	 * 
 	 * @param pagoRequestDTO
@@ -83,7 +90,7 @@ public class PagoController {
 		log.debug("Entrando a operacion de servicio PagoController.post()...");
 		log.debug("Received object: {}", pagoRequestDTO);
 		log.debug("Inician validaciones iniciales en validacionesInicialesPago(pagoRequestDTO)");
-		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
+		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO, cantidadMaximaPartidas);
 		PagoResponseDTO pagoResponseDTO = null;
 		log.debug("Invocando servicio pagoService.savePago(pagoRequestDTO)");
 		try {

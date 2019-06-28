@@ -21,7 +21,7 @@ public class ValidadorDatosPago {
 	 * 
 	 * @param pagoRequestDTO
 	 */
-	public static final void validacionesInicialesPago(PagoRequestDTO pagoRequestDTO) {
+	public static final void validacionesInicialesPago(PagoRequestDTO pagoRequestDTO, int cantidadMaximaPartidas) {
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(pagoRequestDTO);
 		vo.noNulo(pagoRequestDTO.getConcepto());
@@ -30,6 +30,8 @@ public class ValidadorDatosPago {
 		vo.noNulo(pagoRequestDTO.getMontoTotal());
 		vo.noNulo(pagoRequestDTO.getIdTransaccionMidas());
 		vo.noNulo(pagoRequestDTO.getOperaciones());
+		if (pagoRequestDTO.getOperaciones().size() > cantidadMaximaPartidas)
+			throw new PagoException(PagoConstants.PARTIDAS_QUANTITY_EXCEDED);
 		for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
 			vo.noNulo(operacion.getFolioContrato());
 			vo.noNulo(operacion.getIdOperacion());

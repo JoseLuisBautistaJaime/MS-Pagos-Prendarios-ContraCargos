@@ -103,6 +103,7 @@ mimonte:
           content-type-value: application/json
         url: https://iamdr.montepiedad.com.mx:4444/NMP/Utileria/EnvioCorreo/v2
     cantidad-maxima-tarjetas: 3
+    cantidad-maxima-partidas: 10
     iva: 0.16
     dss:
       idcliente: "{idCliente}"
