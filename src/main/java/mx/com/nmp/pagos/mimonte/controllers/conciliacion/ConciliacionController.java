@@ -218,33 +218,6 @@ public class ConciliacionController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_UPDATE, null);
 	}
 
-
-	/**
-	 * Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transaccional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.
-	 * Genera la sección global con el resumen de la conciliación, asi como la extracción de movimientos en tránsito y comisiones. 
-	 * 
-	 * @param ActualizaionConciliacionRequestDTO
-	 * @param LastModifiedBy
-	 * @return
-	 */
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/conciliacion/generar/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transaccional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.", tags = {
-			"Conciliación" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Entidad encontrada"),
-			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response generarConciliacion(@PathVariable(value = "folio", required = true) Integer folio,
-										@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-
-		conciliacionServiceImpl.generarConciliacion(folio, lastModifiedBy);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_GENERACION, null);
-	}
-
 	/**
 	 *Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.
 	 * 
@@ -270,7 +243,7 @@ public class ConciliacionController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.CONCILIATION_SENT_SUCCESSFULLY, null);
 	}
 
-	// TODO: Completed
+
 	/**
 	 * Realiza la consulta de los movimientos en transito de la conciliacion (con error).
 	 * 
