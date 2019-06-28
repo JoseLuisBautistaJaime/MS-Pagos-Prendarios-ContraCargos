@@ -76,6 +76,9 @@ INSERT INTO tr_regla_negocio_variable(id_regla_negocio, id_variable) VALUES(1,1)
 -- INSERCION DE ASOCIACION ENTRE REGLAS DE NEGOCIO Y TIPOS DE AUTORIZACION
 INSERT INTO tr_regla_negocio_tipo_autorizacion(id_regla_negocio, id_tipo_autorizacion) VALUES(1,2), (2,2), (3,2);
 
+
+
+
 -- ------------------------------------------------------------------------------------------------------------
 -- FASE 2 CATALOGOS -------------------------------------------------------------------------------------------
 -- ------------------------------------------------------------------------------------------------------------
@@ -90,12 +93,40 @@ INSERT INTO `tk_tipo_contacto` (`id`, `estatus`, `description`, `created_by`, `c
 -- (1, 'Ninguno', 'Ningun tipo de afiliacion'),
 -- (2, '3DSecure', '3DSecure');
 
--- INSERCION DE CATEGORIAS DUMMIES --
+
+-- INSERCION DE CATEGORIAS --
+DELETE FROM `tk_categoria`;
 INSERT INTO `tk_categoria` (`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `last_modified_date`, `created_by`, `last_modified_by`, `descripcion_corta`) VALUES
 (1, 'Ventas', 'Categoria Ventas', true, now(), null, 'Quarksoft', null, 'Cat Vtas'),
 (2, 'Comisiones', 'Categoria Comisiones', true, now(), null, 'Quarksoft', null, 'Cat Com'),
-(3, 'Otra', 'Otra Categoria', true, now(), null, 'Quarksoft', null, 'Otra Cat');
+(3, 'Cargos', 'Categoria Cargos', true, now(), null, 'Quarksoft', null, 'Cat Car'),
+(4, 'Abonos', 'Categoria Abono', true, now(), null, 'Quarksoft', null, 'Cat Abo'),
+(5, 'Iva Comision', 'Iva Comision', true, now(), null, 'Quarksoft', null, 'Cat IC'),
+(6, 'Devolucion', 'Devolucion', true, now(), null, 'Quarksoft', null, 'Cat Dev');
 
+
+-- Insercion de Entidad de prueba para relacionar codigos ---
+DELETE FROM `tc_entidad`;
+INSERT INTO `tc_entidad` (`id`, `nombre`, `description`, `estatus`, `created_date`, `last_modified_date`, `created_by`, `last_modified_by`, `short_description`) VALUES
+(1, "Banco 1", "Banco 1", true, now(), null, "Quarksoft", null, null);
+
+
+-- Insercion codigos de estados de cuenta inicial
+DELETE FROM `tc_codigo_estado_cuenta`;
+INSERT INTO `tc_codigo_estado_cuenta` (`codigo`, `id_categoria`, `id_entidad`, `description`, `estatus`, `created_date`, `last_modified_date`, `created_by`, `last_modified_by`, `short_description`) VALUES
+("V01", 1, 1, "VENTAS TARJETAS BANCARIAS", true, now(), null, "Quarksoft", null, null),
+("V02", 2, 1, "COMISION TARJETAS", true, now(), null, "Quarksoft", null, null),
+("V03", 5, 1, "IVA COMISION TARJETAS", true, now(), null, "Quarksoft", null, null),
+("V04", 6, 1, "DEVOLUCION TARJETAS", true, now(), null, "Quarksoft", null, null),
+("V05", 2, 1, "COMISION DEVOLUCION", true, now(), null, "Quarksoft", null, null),
+("V06", 5, 1, "IVA COMISION DEVOLUCION", true, now(), null, "Quarksoft", null, null),
+("V42", 1, 1, "VENTAS DEBITO", true, now(), null, "Quarksoft", null, null),
+("V43", 2, 1, "COMISION VENTAS DEBITO", true, now(), null, "Quarksoft", null, null),
+("V44", 5, 1, "IVA COM. VENTAS DEBITO", true, now(), null, "Quarksoft", null, null),
+("V45", 1, 1, "VENTAS CREDITO", true, now(), null, "Quarksoft", null, null),
+("V46", 2, 1, "COMISION VENTAS CREDITO", true, now(), null, "Quarksoft", null, null),
+("V47", 5, 1, "IVA COM. VENTAS CREDITO", true, now(), null, "Quarksoft", null, null),
+("V50", 2, 1, "COM DEV TARJETA", true, now(), null, "Quarksoft", null, null);
 
 
 
@@ -182,39 +213,3 @@ INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion(id_estatus, id_sub_
 		(1,14),
 		(1,15),
 		(2,16);
-
-
--- ------------------------------------------------------------------------------------------------------------
--- DUMMIES/ REMOVER ----------------------------------------------------------------------------------------
--- ------------------------------------------------------------------------------------------------------------
-/*
-INSERT INTO `to_conciliacion` (`id`, `id_estatus_conciliacion`, `id_entidad`, `id_cuenta`, `id_sub_estatus_conciliacion`, `created_date`, `created_by`, `last_modified_by`)
-VALUES ('1', '2', '1', '1', '1', '2019-05-08 00:56:15', 'NMP', 'NMP');
-
-INSERT INTO `to_global` (`id`, `id_conciliacion`, `fecha`, `movimientos`, `partidas`, `monto`, `importe_midas`, `importe_proveedor`, `importe_banco`, `devoluciones`, `diferencia_proveedor_midas`)
-VALUES ('1', '1', '2019-05-11', '232', '123', '2323.0000', '32321.0000', '321213.0000', '3213.0000', '213', '213213.0000');
-
-INSERT INTO `to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('1', '1', 'NMP', '2019-05-08 22:53:22', '1');
-INSERT INTO `to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('2', '1', 'NMP', '2019-05-08 22:53:22', '1');
-INSERT INTO `to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('3', '1', 'NMP', '2019-05-08 22:53:22', '1');
-INSERT INTO `to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('4', '1', 'NMP', '2019-05-08 22:53:22', '1');
-INSERT INTO `to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('5', '1', 'NMP', '2019-05-08 22:53:22', '1');
-INSERT INTO `to_movimiento_conciliacion` (`id`, `id_conciliacion`, `created_by`, `created_date`, `nuevo`) VALUES ('6', '1', 'NMP', '2019-05-08 22:53:22', '1');
-
-INSERT INTO `to_movimiento_comision` (`id`, `fecha_operacion`, `fecha_cargo`, `monto`, `descripcion`, `estatus`)
-VALUES ('1', '2019-05-21', '2019-05-08', '123.0000', 'string', '1');
-INSERT INTO `to_movimiento_comision` (`id`, `fecha_operacion`, `fecha_cargo`, `monto`, `descripcion`, `estatus`)
-VALUES ('2', '2019-05-08', '2019-05-08', '123.0000', '123.0000', '1');
-
-INSERT INTO `to_reporte` (`id`, `id_conciliacion`, `tipo`, `disponible`, `fecha_desde`, `fecha_hasta`, `created_date`, `created_by`)
-VALUES ('1', '1', 'MIDAS', '1', '2019-05-18', '2019-05-18', '2019-05-18 20:44:43', 'Sistema');
-INSERT INTO `to_reporte` (`id`, `id_conciliacion`, `tipo`, `disponible`, `fecha_desde`, `fecha_hasta`, `created_date`, `created_by`)
-VALUES ('2', '1', 'PROVEEEDOR', '1', '2019-05-18', '2019-05-18', '2019-05-18 20:44:43', 'Sistema');
-INSERT INTO `to_reporte` (`id`, `id_conciliacion`, `tipo`, `disponible`, `fecha_desde`, `fecha_hasta`, `created_date`, `created_by`)
-VALUES ('3', '1', 'ESTADO_CUENTA', '1', '2019-05-18', '2019-05-18', '2019-05-18 20:44:43', 'Sistema');
-
-INSERT INTO `to_movimiento_devolucion` (`id`, `estatus`, `fecha`, `monto`, `esquema_tarjeta`, `identificador_cuenta`, `titular`, `codigo_autorizacion`, `sucursal`)
-VALUES ('5', true, '2019-05-16', '123.0000', '123', '123', 'dasd', '3123', '3123');
-INSERT INTO `to_movimiento_devolucion` (`id`, `estatus`, `fecha`, `monto`, `esquema_tarjeta`, `identificador_cuenta`, `titular`, `codigo_autorizacion`, `sucursal`)
-VALUES ('6', true, '2019-05-16', '123.0000', '123', '123', 'dasd', '3123', '3123');
-*/

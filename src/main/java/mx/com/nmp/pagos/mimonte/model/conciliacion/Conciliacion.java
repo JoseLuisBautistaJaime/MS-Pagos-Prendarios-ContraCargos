@@ -6,8 +6,6 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,10 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.Updatable;
@@ -75,9 +71,6 @@ public class Conciliacion extends Updatable implements Serializable  {
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "id_sub_estatus_conciliacion")
 	private SubEstatusConciliacion subEstatus;
-	
-	@OneToMany(mappedBy = "conciliacion")
-	private Set<ComisionTransaccion> comisionTransaccionSet;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_merge")
@@ -189,14 +182,6 @@ public class Conciliacion extends Updatable implements Serializable  {
 
 	public void setSubEstatus(SubEstatusConciliacion subEstatus) {
 		this.subEstatus = subEstatus;
-	}
-	
-	public Set<ComisionTransaccion> getComisionTransaccionSet() {
-		return comisionTransaccionSet;
-	}
-
-	public void setComisionTransaccionSet(Set<ComisionTransaccion> comisionTransaccionSet) {
-		this.comisionTransaccionSet = comisionTransaccionSet;
 	}
 
 	public ConciliacionMerge getMerge() {
