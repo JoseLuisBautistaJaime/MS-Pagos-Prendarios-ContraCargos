@@ -153,14 +153,14 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateMovimientoTransaccionalListRequestDTO(
 			MovimientoTransaccionalListRequestDTO listRequestDTO) {
+		Calendar fechaInicial = Calendar.getInstance();
+		Calendar fechaFinal = Calendar.getInstance();
 		try {
-
 			assertNotNull(listRequestDTO);
 			assertNotNull(listRequestDTO.getFolio());
 			assertNotNull(listRequestDTO.getMovimientos());
 			assertNotNull(listRequestDTO.getFechaDesde());
 			assertNotNull(listRequestDTO.getFechaHasta());
-
 			if (CollectionUtils.isNotEmpty(listRequestDTO.getMovimientos())) {
 				for (MovimientoProveedorDTO movimientoProveedorDTO : listRequestDTO.getMovimientos()) {
 					assertNotNull(movimientoProveedorDTO.getAmount());
@@ -198,9 +198,16 @@ public interface ValidadorConciliacion {
 					assertNotNull(movimientoProveedorDTO.getTransactionType());
 					assertNotNull(movimientoProveedorDTO.getIdMovimiento());
 					movimientoProveedorDTO.setId(null);
+					fechaInicial.setTime(listRequestDTO.getFechaDesde());
+					fechaFinal.setTime(listRequestDTO.getFechaHasta());
+					if (fechaInicial.after(fechaFinal)) {
+						return false;
+					}
 				}
 			} else
 				return false;
+		} catch (java.lang.AssertionError ex) {
+			return false;
 		} catch (Exception ex) {
 			return false;
 		}

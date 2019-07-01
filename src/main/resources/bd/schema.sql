@@ -778,7 +778,8 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_movimiento_proveedor`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_movimiento_proveedor` (
-  `id` VARCHAR(100) NOT NULL,
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `id_movimiento` VARCHAR(100) NOT NULL,
   `id_reporte` INT(11) NOT NULL,
   `authorization` VARCHAR(50) NOT NULL,
   `operation_type` VARCHAR(50) NOT NULL,
