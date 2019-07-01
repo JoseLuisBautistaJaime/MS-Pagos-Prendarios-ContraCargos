@@ -32,7 +32,7 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	 * @return
 	 */
 	@Query("SELECT COUNT(mm.id) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
-	public Long countMovimientos(@Param("folioConciliacion") final Long folioConciliacion);
+	public Long countMovimientos(@Param("folioConciliacion") final Integer folioConciliacion);
 
 	/**
 	 * Regresa una lista de objetos de tipo MovimientoEstadoCuentaDBDTO relacionados
@@ -44,7 +44,7 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	 * @return
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO(mm.id, mm.fechaOperacion, mm.concepto, mm.tipoMovimiento, mm.importe, ec.cabecera.saldoInicial, ec.totalesAdicional.saldoFinal) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
-	public List<MovimientoEstadoCuentaDBDTO> listMovimientos(@Param("folioConciliacion") final Long folioConciliacion
+	public List<MovimientoEstadoCuentaDBDTO> listMovimientos(@Param("folioConciliacion") final Integer folioConciliacion
 			/*,Pageable pageable*/);
 
 	/**

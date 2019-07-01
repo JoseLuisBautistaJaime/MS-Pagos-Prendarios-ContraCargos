@@ -73,7 +73,7 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return (commonConciliacionRequestDTO.getFolio() > 0);
@@ -234,7 +234,7 @@ public interface ValidadorConciliacion {
 			fin.setTime(saveEstadoCuentaRequestDTO.getFechaFinal());
 			if (ini.after(fin))
 				throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE);
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return true;
