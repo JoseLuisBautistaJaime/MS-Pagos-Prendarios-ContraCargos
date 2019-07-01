@@ -53,7 +53,6 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
-			assertNotNull(commonConciliacionRequestDTO.getEstatus());
 		} catch (java.lang.AssertionError ex) {
 			return false;
 		} catch (Exception ex) {

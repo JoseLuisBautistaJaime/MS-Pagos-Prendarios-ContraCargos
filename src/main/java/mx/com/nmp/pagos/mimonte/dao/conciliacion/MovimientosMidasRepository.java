@@ -56,19 +56,38 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @return
 	 */
 	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
-	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId,
+	public List<MovimientoMidas> findByReporteConciliacionIdAndEstatus(
+			@Param("conciliacionId") final Integer conciliacionId,
 			@Param("estatus") final Boolean estatus/* , Pageable pageable */);
 
 	/**
-	 * Regresa el total de registros midas por id de conciliacion de acuerdo a
-	 * algunos parametros de busqueda y un rango de fechas
+	 * Regresa una lista de entities de tipo MovimientoMidas por id de conciliacion
+	 * 
+	 * @param conciliacionId
+	 * @return
+	 */
+	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
+	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId);
+
+	/**
+	 * Regresa el total de registros movimientos midas por id de conciliacion y
+	 * estatus
 	 * 
 	 * @param conciliacionId
 	 * @return
 	 */
 	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
-	public Long countByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId,
+	public Long countByReporteConciliacionIdAndEstatus(@Param("conciliacionId") final Integer conciliacionId,
 			@Param("estatus") final Boolean estatus);
+
+	/**
+	 * Regresa el total de registros movimientos midas por id de conciliacion
+	 * 
+	 * @param conciliacionId
+	 * @return
+	 */
+	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
+	public Long countByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId);
 
 	/**
 	 * Regresa un reporte de movimientos de pagos en linea (midas)
@@ -148,8 +167,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoAbr, mm.operacionAbr, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) AND mm.fecha BETWEEN :fechaDesde AND :fechaHasta")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithFechasNS(@Param("fechaDesde") Date fechaDesde,
 			@Param("fechaHasta") Date fechaHasta, @Param("producto") final Integer producto,
-			@Param("operacion") final Integer operacion,
-			@Param("partida") final Long partida);
+			@Param("operacion") final Integer operacion, @Param("partida") final Long partida);
 
 	/**
 	 * Regresa un reporte de movimientos de pagos en linea (midas) de acuerdo a
@@ -181,7 +199,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoAbr, mm.operacionAbr, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) AND mm.fecha <= :fechaHasta")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithFechaHastaNS(@Param("fechaHasta") Date fechaHasta,
 			@Param("producto") final Integer producto, @Param("operacion") final Integer operacion,
-			 @Param("partida") final Long partida);
+			@Param("partida") final Long partida);
 
 	/**
 	 * Regresa un reporte de movimientos de pagos en linea (midas) de acuerdo a
@@ -195,9 +213,8 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoAbr, mm.operacionAbr, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion)")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithoutFechasNS(@Param("producto") final Integer producto,
-			@Param("operacion") final Integer operacion,
-			@Param("partida") final Long partida);
-	
+			@Param("operacion") final Integer operacion, @Param("partida") final Long partida);
+
 	/**
 	 * Regresa un objeto de tipo X (por definir) para envio de correo
 	 * 

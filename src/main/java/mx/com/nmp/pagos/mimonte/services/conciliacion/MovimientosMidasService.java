@@ -9,8 +9,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,7 +74,10 @@ public class MovimientosMidasService {
 	 * @return
 	 */
 	public Long countByConciliacionId(final Integer idConciliacion, final Boolean estatus) {
-		return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion, estatus);
+		if (null != estatus)
+			return movimientosMidasRepository.countByReporteConciliacionIdAndEstatus(idConciliacion, estatus);
+		else
+			return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion);
 	}
 
 	/**
@@ -119,9 +120,13 @@ public class MovimientosMidasService {
 //		@SuppressWarnings("deprecation")
 //		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
 //				commonConciliacionRequestDTO.getResultados());
-		return MovimientosBuilder.buildMovimientoMidasDTOListFromMovimientoMidasList(
-				movimientosMidasRepository.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio(),
-						commonConciliacionRequestDTO.getEstatus()/*, pageable*/));
+		return MovimientosBuilder
+				.buildMovimientoMidasDTOListFromMovimientoMidasList(null != commonConciliacionRequestDTO.getEstatus()
+						? movimientosMidasRepository
+								.findByReporteConciliacionIdAndEstatus(commonConciliacionRequestDTO.getFolio(),
+										commonConciliacionRequestDTO.getEstatus()/* , pageable */)
+						: movimientosMidasRepository
+								.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()));
 	}
 
 	/**
