@@ -53,6 +53,9 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
+			assertNotNull(commonConciliacionRequestDTO.getEstatus());
+		} catch (java.lang.AssertionError ex) {
+			return false;
 		} catch (Exception ex) {
 			return false;
 		}
@@ -86,6 +89,8 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateMovimientoProcesosNocturnosListResponseDTO(
 			MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosListResponseDTO) {
+		Calendar fechaInicio = Calendar.getInstance();
+		Calendar fechaFin = Calendar.getInstance();
 		try {
 			assertNotNull(movimientoProcesosNocturnosListResponseDTO);
 			assertNotNull(movimientoProcesosNocturnosListResponseDTO.getFolio());
@@ -127,6 +132,12 @@ public interface ValidadorConciliacion {
 				}
 			} else
 				return false;
+			fechaInicio.setTime(movimientoProcesosNocturnosListResponseDTO.getFechaDesde());
+			fechaFin.setTime(movimientoProcesosNocturnosListResponseDTO.getFechaHasta());
+			if (fechaInicio.after(fechaFin))
+				throw new ConciliacionException(ConciliacionConstants.FECHA_DESDE_IS_AFTER_FECHA_HASTA);
+		} catch (java.lang.AssertionError ex) {
+			return false;
 		} catch (Exception ex) {
 			return false;
 		}

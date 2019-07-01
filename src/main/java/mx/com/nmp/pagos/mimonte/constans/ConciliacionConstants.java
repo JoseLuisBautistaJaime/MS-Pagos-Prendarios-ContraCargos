@@ -320,7 +320,12 @@ public final class ConciliacionConstants {
 		 * parametros de busqueda ingresados
 		 */
 		public static final String NO_INFORMATION_FOUND_FOR_IDS = "Alguno de los ids ingresados no esta en el estado Solicitada";
-
+		
 	}
+	
+	/**
+	 * Mensaje que es mostrado cuando se intenta ingresar una fecha inicial posterior a la fecha final
+	 */
+	public static final String FECHA_DESDE_IS_AFTER_FECHA_HASTA = "La fecha inicial es posterioro a la fecha final";
 
 }
