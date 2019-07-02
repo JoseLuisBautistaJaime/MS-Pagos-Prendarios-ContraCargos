@@ -305,7 +305,7 @@ public class MovimientosController {
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		Long total = movimientosEstadoCuentaService
-				.countByConciliacionId((long) commonConciliacionRequestDTO.getFolio());
+				.countByConciliacionId(commonConciliacionRequestDTO.getFolio());
 		if (null != total) {
 			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
 			movimientosEstadoCuentaDTO.setTotal(total);

@@ -158,7 +158,7 @@ public class MovimientosEstadoCuentaService {
 	 * @param idConciliacion
 	 * @return
 	 */
-	public Long countByConciliacionId(final Long idConciliacion) {
+	public Long countByConciliacionId(final Integer idConciliacion) {
 		return movimientoEstadoCuentaRepository.countMovimientos(idConciliacion);
 	}
 
@@ -175,7 +175,7 @@ public class MovimientosEstadoCuentaService {
 //		Pageable pageable = PageRequest.of(commonConciliacionRequestDTO.getPagina(),
 //				commonConciliacionRequestDTO.getResultados());
 		movimientoEstadoCuentaDBDTOLst = movimientoEstadoCuentaRepository
-				.listMovimientos((long) commonConciliacionRequestDTO.getFolio()/*, pageable*/);
+				.listMovimientos(commonConciliacionRequestDTO.getFolio()/*, pageable*/);
 		movimientoEstadoCuentaDTOList = MovimientosBuilder
 				.buildMovimientoEstadoCuentaDTOListFromMovimientoEstadoCuentaDBDTOList(movimientoEstadoCuentaDBDTOLst);
 		return movimientoEstadoCuentaDTOList;

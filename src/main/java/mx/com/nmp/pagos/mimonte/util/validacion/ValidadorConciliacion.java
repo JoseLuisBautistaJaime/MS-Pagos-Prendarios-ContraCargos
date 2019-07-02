@@ -53,6 +53,8 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
+		} catch (java.lang.AssertionError ex) {
+			return false;
 		} catch (Exception ex) {
 			return false;
 		}
@@ -71,7 +73,7 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return (commonConciliacionRequestDTO.getFolio() > 0);
@@ -86,6 +88,8 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateMovimientoProcesosNocturnosListResponseDTO(
 			MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosListResponseDTO) {
+		Calendar fechaInicio = Calendar.getInstance();
+		Calendar fechaFin = Calendar.getInstance();
 		try {
 			assertNotNull(movimientoProcesosNocturnosListResponseDTO);
 			assertNotNull(movimientoProcesosNocturnosListResponseDTO.getFolio());
@@ -127,6 +131,12 @@ public interface ValidadorConciliacion {
 				}
 			} else
 				return false;
+			fechaInicio.setTime(movimientoProcesosNocturnosListResponseDTO.getFechaDesde());
+			fechaFin.setTime(movimientoProcesosNocturnosListResponseDTO.getFechaHasta());
+			if (fechaInicio.after(fechaFin))
+				throw new ConciliacionException(ConciliacionConstants.FECHA_DESDE_IS_AFTER_FECHA_HASTA);
+		} catch (java.lang.AssertionError ex) {
+			return false;
 		} catch (Exception ex) {
 			return false;
 		}
@@ -143,14 +153,14 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateMovimientoTransaccionalListRequestDTO(
 			MovimientoTransaccionalListRequestDTO listRequestDTO) {
+		Calendar fechaInicial = Calendar.getInstance();
+		Calendar fechaFinal = Calendar.getInstance();
 		try {
-
 			assertNotNull(listRequestDTO);
 			assertNotNull(listRequestDTO.getFolio());
 			assertNotNull(listRequestDTO.getMovimientos());
 			assertNotNull(listRequestDTO.getFechaDesde());
 			assertNotNull(listRequestDTO.getFechaHasta());
-
 			if (CollectionUtils.isNotEmpty(listRequestDTO.getMovimientos())) {
 				for (MovimientoProveedorDTO movimientoProveedorDTO : listRequestDTO.getMovimientos()) {
 					assertNotNull(movimientoProveedorDTO.getAmount());
@@ -188,9 +198,16 @@ public interface ValidadorConciliacion {
 					assertNotNull(movimientoProveedorDTO.getTransactionType());
 					assertNotNull(movimientoProveedorDTO.getIdMovimiento());
 					movimientoProveedorDTO.setId(null);
+					fechaInicial.setTime(listRequestDTO.getFechaDesde());
+					fechaFinal.setTime(listRequestDTO.getFechaHasta());
+					if (fechaInicial.after(fechaFinal)) {
+						return false;
+					}
 				}
 			} else
 				return false;
+		} catch (java.lang.AssertionError ex) {
+			return false;
 		} catch (Exception ex) {
 			return false;
 		}
@@ -217,7 +234,7 @@ public interface ValidadorConciliacion {
 			fin.setTime(saveEstadoCuentaRequestDTO.getFechaFinal());
 			if (ini.after(fin))
 				throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE);
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return true;
