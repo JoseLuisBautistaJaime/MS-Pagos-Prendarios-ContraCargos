@@ -196,15 +196,15 @@ public class DevolucionesBuilder {
 	/**
 	 * Construye  un objeto de tipo DevolucionEntidadDTO a partir de los entities MovimientoDevolucion y Conciliacion.
 	 * @param movimientosDevolucion
-	 * @param conciliacion
+	 * @param entidad
 	 * @return
 	 */
-	public static DevolucionEntidadDTO buildDevolucionEntidadDTOFromMovimientosDevolucion(MovimientoDevolucion movimientosDevolucion, Conciliacion conciliacion) {
+	public static DevolucionEntidadDTO buildDevolucionEntidadDTOFromMovimientosDevolucion(MovimientoDevolucion movimientosDevolucion, Entidad entidad) {
 		DevolucionEntidadDTO devolucionEntidadDTO = null;
 		if(movimientosDevolucion != null) {
 			devolucionEntidadDTO = new DevolucionEntidadDTO();
 			devolucionEntidadDTO.setId(movimientosDevolucion.getId());
-			devolucionEntidadDTO.setEntidad(EntidadBuilder.buildBaseEntidadDTOFromEntidad(conciliacion.getEntidad()));
+			devolucionEntidadDTO.setEntidad(EntidadBuilder.buildBaseEntidadDTOFromEntidad(entidad));
 			devolucionEntidadDTO.setFecha(movimientosDevolucion.getFecha());
 			devolucionEntidadDTO.setEstatus(buildEstatusDevolucionDTOEstatusDevolucion(movimientosDevolucion.getEstatus()));
 			devolucionEntidadDTO.setSucursal(movimientosDevolucion.getSucursal());
@@ -218,28 +218,15 @@ public class DevolucionesBuilder {
 		return devolucionEntidadDTO;
 	}
 	
-	public static List<DevolucionEntidadDTO> buildDevolucionEntidadDTOListFromMovimientoDevolucionLista(List<MovimientoDevolucion> movimientosDevolucion, Conciliacion conciliacion) {
+	public static List<DevolucionEntidadDTO> buildDevolucionEntidadDTOListFromMovimientoDevolucionLista(List<MovimientoDevolucion> movimientosDevolucion, Entidad entidad) {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = null;
 		if(movimientosDevolucion != null && !movimientosDevolucion.isEmpty()) {
 			devolucionEntidadDTOList = new ArrayList<>();
 			for(MovimientoDevolucion md : movimientosDevolucion) {
-				devolucionEntidadDTOList.add(buildDevolucionEntidadDTOFromMovimientosDevolucion(md, null));
+				devolucionEntidadDTOList.add(buildDevolucionEntidadDTOFromMovimientosDevolucion(md, entidad));
 			}
 		}
 		return devolucionEntidadDTOList;
 	}
-	
-	/*
-	 public static List<DevolucionEntidadDTO> buildDevolucionEntidadDTOListFromConciliacionList(List<Entidad> entidadList){
-		List<DevolucionEntidadDTO> DevolucionEntidadDTOList = null;
-		if(entidadList != null && !entidadList.isEmpty()) {
-			DevolucionEntidadDTOList = new ArrayList<>();
-			for(Entidad entidad : entidadList) {
-				DevolucionEntidadDTOList.add(buildDevolucionEntidadDTOFromConciliacion(entidad));
-			}
-		}
-		return DevolucionEntidadDTOList;
-	}
-	 */
 
 }

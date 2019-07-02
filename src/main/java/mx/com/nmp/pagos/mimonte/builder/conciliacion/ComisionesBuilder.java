@@ -18,7 +18,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionProyeccion
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionReal;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 
 /**
@@ -63,29 +62,6 @@ public abstract class ComisionesBuilder {
 			movimientoComision.setTipo(TipoMovimientoEnum.COMISION);
 		}
 		return movimientoComision;
-	}
-
-	/**
-	 * Construye un entity de tipo MovimientoConciliacion a partir de un id de
-	 * conciliacion y un usuario de request header
-	 * 
-	 * @param conciliacionId
-	 * @param requestUser
-	 * @return
-	 */
-	public static MovimientoConciliacion buildMovimientoConciliacionFromConciliacionIdAndRequestUser(
-			final Integer conciliacionId, final String requestUser) {
-		MovimientoConciliacion movimientoConciliacion = null;
-		if (null != conciliacionId && conciliacionId > 0) {
-			movimientoConciliacion = new MovimientoConciliacion();
-			movimientoConciliacion.setNuevo(true);
-			movimientoConciliacion.setCreatedDate(new Date());
-			movimientoConciliacion.setLastModifiedBy(null);
-			movimientoConciliacion.setLastModifiedDate(null);
-			movimientoConciliacion.setCreatedBy(requestUser);
-			movimientoConciliacion.setIdConciliacion(conciliacionId);
-		}
-		return movimientoConciliacion;
 	}
 
 	/**

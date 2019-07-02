@@ -8,10 +8,14 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import mx.com.nmp.pagos.mimonte.consumer.rest.BusEstadoCuentaRestService;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestEstadoCuentaDTO;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,14 +36,10 @@ public class EstadoCuentaProxy implements EstadoCuentaAPI {
 
 	private Logger LOGGER = LoggerFactory.getLogger(EstadoCuentaProxy.class);
 
-	/**
-	 * Referencia al conector hacia el Servicio Web OpenPay
-	 */
-	//@Inject
-	private EstadoCuentaConector estadoCuentaConector;
+	@Autowired
+	private BusEstadoCuentaRestService busEstadoCuentaRestService;
 
 
-	// METODOS
 
 	/**
 	 * {@inheritDoc}
@@ -49,14 +49,16 @@ public class EstadoCuentaProxy implements EstadoCuentaAPI {
 	public List<String> consulta(String ruta, String archivo) {
 		LOGGER.info(">> consulta({}{})", ruta, archivo);
 
-		// EstadoCuentaService estadoCuentaService = estadoCuentaConector.getReferenciaWsEstadoCuenta();
-
-		// estadoCuentaService.xxxx();
+		BusRestEstadoCuentaDTO body = new BusRestEstadoCuentaDTO(ruta, archivo);
+		String estadoCuentaService = busEstadoCuentaRestService.consultaEstadoCuenta(body);
 
 		// Convertir a lineas
 		List<String> lines = new ArrayList<String>();
 
+		
+		
 		// Dummy
+		/*
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource("edocuenta/7002.txt").getInputStream()))) {
 			while(reader.ready()) {
 			     String line = reader.readLine();
@@ -64,7 +66,7 @@ public class EstadoCuentaProxy implements EstadoCuentaAPI {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 		return lines;
 	}

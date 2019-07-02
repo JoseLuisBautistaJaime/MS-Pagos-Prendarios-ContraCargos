@@ -51,7 +51,7 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @return
 	 */
 	@Query("SELECT mt FROM MovimientoConciliacion mc INNER JOIN MovimientoTransito mt ON mc.id = mt.id WHERE mc.idConciliacion = :folio AND mt.id = :idMovimiento ")
-	public List<MovimientoTransito> findByIdFolioAndIdMovimiento(@Param("folio") final Integer folio,
+	public MovimientoTransito findByIdFolioAndIdMovimiento(@Param("folio") final Integer folio,
 			@Param("idMovimiento") final long idMovimiento);
 
 	/**

@@ -18,7 +18,7 @@ INSERT INTO tk_tipo_tarjeta(id, descripcion_corta, descripcion) VALUES
 
 -- INSERCION INICIAL EN CATALOGO TK_CATALOGO
 INSERT INTO tk_catalogo(id, descripcion_corta,descripcion, nombre_tabla, activo) VALUES
-(1,'Afiliacion','El catalog de afiliaicones','tc_afiliacion',1),
+(1,'Afiliacion','El catalog de afiliaciones','tc_afiliacion',1),
 (2,'Estatus Tarjeta','Catalogo de estatus de tarjeta posibles','tk_estatus_tarjeta',1),
 (3,'Estatus Transaccion','Estatus de transacciones posibles','tk_estatus_transaccion',1),
 (4,'Tipo Tarjeta','Catalogo de tipos de tarjetas','tk_tipo_tarjeta',1),
@@ -39,11 +39,11 @@ INSERT INTO tk_estatus_operacion(id, descripcion_corta, descripcion) VALUES
 -- ------------------ MODULO DSS ------------------------ --
 -- ------------------------------------------------------ --
 -- TRUNCATE PARA TABLAS ASOCIADAS A DSS
-TRUNCATE TABLE tr_regla_negocio_variable;
-TRUNCATE TABLE tr_regla_negocio_tipo_autorizacion;
+DELETE FROM tr_regla_negocio_variable;
+DELETE FROM tr_regla_negocio_tipo_autorizacion;
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE tk_regla_negocio;
-TRUNCATE TABLE tk_variable;
+DELETE FROM tk_regla_negocio;
+DELETE FROM tk_variable;
 SET FOREIGN_KEY_CHECKS = 1;
 -- FINALIZA TRUNCATE PARA TABLAS ASOCIADAS A DSS
 
@@ -85,8 +85,8 @@ INSERT INTO tr_regla_negocio_tipo_autorizacion(id_regla_negocio, id_tipo_autoriz
 
 -- INSERCION INICIAL DE TIPOS DE CONTACTOS --
 INSERT INTO `tk_tipo_contacto` (`id`, `estatus`, `description`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`, `short_description`) VALUES
-(1, true, 'Contacto Midas', 'Quarksoft', now(), null, null, 'Contacto Midas'),
-(2, true, 'Contacto Entidad', 'Quarksoft', now(), null, null, 'Contacto Ent');
+(1, true, 'Contacto Midas', 'Quarksoft', now(), null, null, 'Midas'),
+(2, true, 'Contacto Entidad', 'Quarksoft', now(), null, null, 'Ent');
 
 -- INSERCION DE TIPOS DE AFILIACION (SE USA EN MODULO DSS)--
 -- INSERT INTO `tk_tipo_afiliacion` (`id`, `descripcion_corta`, `descripcion`) VALUES
@@ -145,16 +145,21 @@ INSERT INTO `tk_estatus_transaccion` (`id`, `descripcion_corta`, `descripcion`) 
 (2, 'En Proceso', 'En Proceso'),
 (3, 'Terminada', 'Terminada');
 
-INSERT INTO `tk_estatus_devolucion` (`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`)
-VALUES ('1', 'devolucion', 'devolucion', true, '2019-05-16 16:46:23', 'NMP', 'devolucion');
+INSERT INTO `tk_estatus_devolucion` (`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `created_by`, `descripcion_corta`) VALUES
+('1', 'Pendiente', 'Pendiente', true, now(), 'NMP', 'PND'),
+('2', 'Solicitada', 'Solicitada', true, now(), 'NMP', 'SOL'),
+('3', 'Liquidada', 'Liquidada', true, now(), 'NMP', 'LIQ');
+
+
 
 -- ------------------------------------------------------------------------ --
 -- INSERT PARA CATALOGO NO ADMINISTRABLE tk_estatus_movimientos_en_transito --
 -- ------------------------ [2019-06-07 16:51:31] -------------------------- --
 -- ------------------------------------------------------------------------- --    
 INSERT INTO `tk_estatus_movimientos_en_transito` (`id`, `nombre`, `descripcion`, `estatus`, `created_date`, `last_modified_date`, `created_by`, `last_modified_by`, `descripcion_corta`) VALUES
-(1, 'No identificada en MIDAS', 'No identificada en MIDAS', true, NOW(), NULL, 'Quarksoft', NULL, 'No identificada en MIDAS'),
-(2, 'Solicitada', 'Solicitada', true, NOW(), NULL, 'Quarksoft', NULL, 'Solicitada');
+(1, 'No identificada en MIDAS', 'No identificada en MIDAS', true, NOW(), NULL, 'Quarksoft', NULL, 'NOID'),
+(2, 'Solicitada', 'Solicitada', true, NOW(), NULL, 'Quarksoft', NULL, 'SOL'),
+(4, 'Marcada Devolucion', 'Marcada para Devolucion', true, NOW(), NULL, 'Quarksoft', NULL, 'MDEV');
 
 -- --------------------------------------- --
 -- ----- INSERTS INICIALES EN tk_operacion --

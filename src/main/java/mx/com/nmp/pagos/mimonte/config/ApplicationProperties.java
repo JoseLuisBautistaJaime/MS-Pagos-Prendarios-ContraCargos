@@ -137,4 +137,205 @@ public class ApplicationProperties {
         }
     }
 
+
+    private MiMonte mimonte;
+
+	public MiMonte getMimonte() {
+		return mimonte;
+	}
+
+	public void setMimonte(MiMonte mimonte) {
+		this.mimonte = mimonte;
+	}
+
+    public static class MiMonte {
+  
+    	private Variables variables;
+  
+		public Variables getVariables() {
+			return variables;
+		}
+
+		public void setVariables(Variables variables) {
+			this.variables = variables;
+		}
+
+    	public static class Variables {
+    		
+    		private Mail mail;
+    		private RestTemplate restTemplate;
+    		private ConsultaEstadoCuenta consultaEstadoCuenta;
+    		
+			public Mail getMail() {
+				return mail;
+			}
+
+			public void setMail(Mail mail) {
+				this.mail = mail;
+			}
+
+			public RestTemplate getRestTemplate() {
+				return restTemplate;
+			}
+
+			public void setRestTemplate(RestTemplate restTemplate) {
+				this.restTemplate = restTemplate;
+			}
+
+			public ConsultaEstadoCuenta getConsultaEstadoCuenta() {
+				return consultaEstadoCuenta;
+			}
+
+			public void setConsultaEstadoCuenta(ConsultaEstadoCuenta consultaEstadoCuenta) {
+				this.consultaEstadoCuenta = consultaEstadoCuenta;
+			}
+
+			public static class Mail {
+				
+				private String from;
+				private SolicitudDevolucion solicitudDevolucion;
+
+				public String getFrom() {
+					return from;
+				}
+
+				public void setFrom(String from) {
+					this.from = from;
+				}
+
+				public SolicitudDevolucion getSolicitudDevolucion() {
+					return solicitudDevolucion;
+				}
+
+				public void setSolicitudDevolucion(SolicitudDevolucion solicitudDevolucion) {
+					this.solicitudDevolucion = solicitudDevolucion;
+				}
+
+	    		public static class SolicitudDevolucion {
+
+	    			private String titulo;
+	    			private String velocityTemplate;
+	    			private String bodyText1;
+	    			private String bodyText2;
+
+	    			public String getTitulo() {
+						return titulo;
+					}
+					public void setTitulo(String titulo) {
+						this.titulo = titulo;
+					}
+					public String getVelocityTemplate() {
+						return velocityTemplate;
+					}
+					public void setVelocityTemplate(String velocityTemplate) {
+						this.velocityTemplate = velocityTemplate;
+					}
+					public String getBodyText1() {
+						return bodyText1;
+					}
+					public void setBodyText1(String bodyText1) {
+						this.bodyText1 = bodyText1;
+					}
+					public String getBodyText2() {
+						return bodyText2;
+					}
+					public void setBodyText2(String bodyText2) {
+						this.bodyText2 = bodyText2;
+					}
+	    		}
+
+			}
+			
+			public static class RestTemplate {
+				private int maxAttempt;
+				private int retryTimeInterval;
+
+				public int getMaxAttempt() {
+					return maxAttempt;
+				}
+				public void setMaxAttempt(int maxAttempt) {
+					this.maxAttempt = maxAttempt;
+				}
+				public int getRetryTimeInterval() {
+					return retryTimeInterval;
+				}
+				public void setRetryTimeInterval(int retryTimeInterval) {
+					this.retryTimeInterval = retryTimeInterval;
+				}
+			}
+			
+			public static class ConsultaEstadoCuenta {
+				private String url;
+				private ConsultaEstadoCuentaAuth auth;
+				private ConsultaEstadoCuentaHeader header;
+
+				public String getUrl() {
+					return url;
+				}
+
+				public void setUrl(String url) {
+					this.url = url;
+				}
+
+				public ConsultaEstadoCuentaHeader getHeader() {
+					return header;
+				}
+
+				public void setHeader(ConsultaEstadoCuentaHeader header) {
+					this.header = header;
+				}
+
+				public ConsultaEstadoCuentaAuth getAuth() {
+					return auth;
+				}
+
+				public void setAuth(ConsultaEstadoCuentaAuth auth) {
+					this.auth = auth;
+				}
+
+				public static class ConsultaEstadoCuentaHeader {
+					private String usuario;
+					private String idConsumidor;
+					private String idDestino;
+					public String getUsuario() {
+						return usuario;
+					}
+					public void setUsuario(String usuario) {
+						this.usuario = usuario;
+					}
+					public String getIdConsumidor() {
+						return idConsumidor;
+					}
+					public void setIdConsumidor(String idConsumidor) {
+						this.idConsumidor = idConsumidor;
+					}
+					public String getIdDestino() {
+						return idDestino;
+					}
+					public void setIdDestino(String idDestino) {
+						this.idDestino = idDestino;
+					}
+				}
+
+				public static class ConsultaEstadoCuentaAuth {
+					private String usuario;
+					private String password;
+					public String getUsuario() {
+						return usuario;
+					}
+					public void setUsuario(String usuario) {
+						this.usuario = usuario;
+					}
+					public String getPassword() {
+						return password;
+					}
+					public void setPassword(String password) {
+						this.password = password;
+					}
+				}
+			}
+    	}
+
+    }
+
 }

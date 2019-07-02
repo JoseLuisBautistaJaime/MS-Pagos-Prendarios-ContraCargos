@@ -20,25 +20,22 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
-import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.constans.LayoutMailConstants;
 import mx.com.nmp.pagos.mimonte.constans.MailServiceConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAdjuntoDTO;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
-import mx.com.nmp.pagos.mimonte.dao.TipoContactoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosPagoRepository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.GeneralBusMailDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosAdjuntoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
-import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
@@ -88,12 +85,6 @@ public class SolicitarPagosService {
 	private MovimientoTransitoRepository movimientoTransitoRepository;
 
 	/**
-	 * Repository de tipo contacto
-	 */
-	@Autowired
-	private TipoContactoRepository tipoContactoRepository;
-
-	/**
 	 * Repository de contactos
 	 */
 	@Autowired
@@ -130,18 +121,10 @@ public class SolicitarPagosService {
 	public void solicitarPagosService(final Integer folio, final List<Integer> idsMovimientos, final String createdBy) {
 		// Declaracion de objetos y variables necesarios
 		List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList = null;
-		List<Contactos> contactos = null;
 		List<MovimientoConciliacion> movimientoConciliacionList = null;
 		List<MovimientoTransito> movimientoTransitoList = null;
-		GeneralBusMailDTO generalBusMailDTO = null;
-		StringBuilder contacts = null;
-		TipoContacto tipoContacto = null;
-		StringBuilder dataTable = null;
-		String bearerToken = null;
-		boolean statusResponse = true;
-		String mainHtml = null;
-		String htmlMail = null;
-		int ct = 0;
+		BusRestMailDTO generalBusMailDTO = null;
+		
 		// Consultar datos, actualizacion y generacion de registros en pagos
 		try {
 			// Consulta
@@ -166,15 +149,14 @@ public class SolicitarPagosService {
 			// Construye e-mail
 //			generalBusMailDTO = construyeEMail(contactos, contacts, tipoContacto, dataTable, mainHtml, htmlMail, ct,
 //					solicitarPagosMailDataDTOList, generalBusMailDTO);
-			generalBusMailDTO = construyeEMailVelocity(contactos, contacts, tipoContacto, dataTable, mainHtml, htmlMail,
-					ct, solicitarPagosMailDataDTOList, generalBusMailDTO);
+			generalBusMailDTO = construyeEMailVelocity(solicitarPagosMailDataDTOList);
 
 		} catch (Exception ex) {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL);
 		}
 		try {
 			// Envia e-mail
-			enviaEmail(bearerToken, statusResponse, generalBusMailDTO);
+			this.busMailRestService.enviaEmail(generalBusMailDTO);
 		} catch (Exception ex) {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL);
 		}
@@ -248,83 +230,56 @@ public class SolicitarPagosService {
 	 * @param generalBusMailDTO
 	 * @return
 	 */
-	public GeneralBusMailDTO construyeEMail(List<Contactos> contactos, StringBuilder contacts,
-			TipoContacto tipoContacto, StringBuilder dataTable, String mainHtml, String htmlMail, int ct,
-			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList, GeneralBusMailDTO generalBusMailDTO) {
-		// Se obtienen los contactos de midas
-		tipoContacto = tipoContactoRepository.findByDescriptionContaining("Midas");
-		if (null == tipoContacto || null == tipoContacto.getId())
-			throw new InformationNotFoundException(CatalogConstants.TIPO_CONTACTO_NOT_FOUND);
-		contactos = contactoRespository.findByIdTipoContacto(tipoContacto.getId());
+	public BusRestMailDTO construyeEMail(List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
+		List<Contactos> contactos = contactoRespository.findByIdTipoContacto(ConciliacionConstants.TIPO_CONTACTO_MIDAS);
 		if (null == contactos || contactos.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL);
 		// Construccion de respuesta HTML
-		dataTable = new StringBuilder();
-		mainHtml = LayoutMailConstants.HTML_SOLICITAR_PAGOS_LAYOUT;
+		StringBuilder dataTable = new StringBuilder();
+		String mainHtml = LayoutMailConstants.HTML_SOLICITAR_PAGOS_LAYOUT;
 		dataTable.append("<TABLE>");
 		buildHeaderForSolicitarPagosMailDataDTO(dataTable);
 		for (SolicitarPagosMailDataDTO value : solicitarPagosMailDataDTOList) {
 			buildBodyForSolicitarPagosMailDataDTO(dataTable, value);
 		}
 		dataTable.append("</TABLE>");
-		htmlMail = mainHtml.replace("[bodyContent]", dataTable.toString());
+		String htmlMail = mainHtml.replace("[bodyContent]", dataTable.toString());
 		// Se construye el DTO de request y se invoca el servicio de correo proveido por
 		// BUS
-		contacts = new StringBuilder();
+		StringBuilder contacts = new StringBuilder();
+		int ct = 0;
 		for (Contactos cto : contactos) {
 			if (ct > 0)
 				contacts.append(",");
 			contacts.append(cto.getEmail());
 			ct++;
 		}
-		return new GeneralBusMailDTO(contacts.toString(), mc.mailFrom, mc.subjectMail, htmlMail,
-				new SolicitarPagosAdjuntoDTO(new ArrayList<>()));
+		return new BusRestMailDTO(contacts.toString(), mc.mailFrom, mc.subjectMail, htmlMail,
+				new BusRestAdjuntoDTO(new ArrayList<>()));
 	}
 
-	public GeneralBusMailDTO construyeEMailVelocity(List<Contactos> contactos, StringBuilder contacts,
-			TipoContacto tipoContacto, StringBuilder dataTable, String mainHtml, String htmlMail, int ct,
-			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList, GeneralBusMailDTO generalBusMailDTO) {
+	public BusRestMailDTO construyeEMailVelocity(
+			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
 		Map<String, Object> model;
 		// Se obtienen los contactos de midas
-		tipoContacto = tipoContactoRepository.findByDescriptionContaining("Midas");
-		if (null == tipoContacto || null == tipoContacto.getId())
-			throw new InformationNotFoundException(CatalogConstants.TIPO_CONTACTO_NOT_FOUND);
-		contactos = contactoRespository.findByIdTipoContacto(tipoContacto.getId());
+		List<Contactos> contactos = contactoRespository.findByIdTipoContacto(ConciliacionConstants.TIPO_CONTACTO_MIDAS);
 		if (null == contactos || contactos.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL);
 		// Se constrye el cuerpo de correo HTML
 		model = buildMailModel(solicitarPagosMailDataDTOList);
-		htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, mc.velocityLayout, mc.encodeType, model);
+		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, mc.velocityLayout, mc.encodeType, model);
 		// Se construye el DTO de request y se invoca el servicio de correo proveido por
 		// BUS
-		contacts = new StringBuilder();
+		StringBuilder contacts = new StringBuilder();
+		int ct = 0;
 		for (Contactos cto : contactos) {
 			if (ct > 0)
 				contacts.append(",");
 			contacts.append(cto.getEmail());
 			ct++;
 		}
-		return new GeneralBusMailDTO(contacts.toString(), mc.mailFrom, mc.subjectMail, htmlMail,
-				new SolicitarPagosAdjuntoDTO(new ArrayList<>()));
-	}
-
-	/**
-	 * Envia el correo electronico el atributo bearerToken y statusResponse pueden
-	 * ser enviados nulos o con con valores por deault el unico que debe ir completo
-	 * (o al menos con la informacion real) es el objeto generalBusMailDTO
-	 * 
-	 * @param bearerToken
-	 * @param statusResponse
-	 * @param generalBusMailDTO
-	 */
-	public void enviaEmail(String bearerToken, boolean statusResponse, GeneralBusMailDTO generalBusMailDTO) {
-		bearerToken = busMailRestService.postForGetToken(mc.mailUser, mc.mailPass);
-		if (null == bearerToken || "".equals(bearerToken))
-			throw new ConciliacionException(ConciliacionConstants.CANNOT_GET_MAIL_TOKEN);
-		statusResponse = busMailRestService.postMail(mc.mailUser, mc.mailPass, generalBusMailDTO, bearerToken);
-		LOG.debug(statusResponse ? "Mail enviado correctamente" : "Error al enviar el e-mail");
-		if (!statusResponse)
-			throw new ConciliacionException(ConciliacionConstants.MAIL_CANNOT_BE_SEND);
+		return new BusRestMailDTO(contacts.toString(), mc.mailFrom, mc.subjectMail, htmlMail,
+				new BusRestAdjuntoDTO(new ArrayList<>()));
 	}
 
 	/**

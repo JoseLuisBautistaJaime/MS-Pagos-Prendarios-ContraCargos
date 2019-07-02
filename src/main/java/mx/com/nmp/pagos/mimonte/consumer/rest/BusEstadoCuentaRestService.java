@@ -4,17 +4,19 @@
  */
 package mx.com.nmp.pagos.mimonte.consumer.rest;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+
+import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 
@@ -27,17 +29,19 @@ import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
  * @version 1.0
  * @createdDate 04/06/2019 22:46 hrs.
  */
-@Component("busMailRestService")
-public class BusMailRestService extends AbstractOAuth2RestService {
+@Component("busEstadoCuentaRestService")
+public class BusEstadoCuentaRestService extends AbstractOAuth2RestService {
 
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(SolicitarPagosService.class);
 
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
 
-	public BusMailRestService() {
+	public BusEstadoCuentaRestService() {
 		super();
 	}
 
@@ -47,42 +51,46 @@ public class BusMailRestService extends AbstractOAuth2RestService {
 	 * ser enviados nulos o con con valores por deault el unico que debe ir completo
 	 * (o al menos con la informacion real) es el objeto generalBusMailDTO
 	 * 
-	 * @param generalBusMailDTO
+	 * @param body
 	 */
-	@SuppressWarnings("unchecked")
-	public void enviaEmail(BusRestMailDTO body) {
+	public String consultaEstadoCuenta(BusRestEstadoCuentaDTO body) {
 
 		// Se obtiene el token
-		BusRestAuthDTO auth = new BusRestAuthDTO(mc.mailUser, mc.mailPass);
+		BusRestAuthDTO auth = new BusRestAuthDTO(
+			applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getAuth().getUsuario(),
+			applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getAuth().getPassword()
+		);
 		String bearerToken = postForGetToken(auth, mc.urlGetToken);
 
-		// Se manda el correo usando el token
-		BusRestHeaderDTO header = new BusRestHeaderDTO(bearerToken);
-		Map<String, Object> response = postTo(auth, body, header, mc.urlSendEmail);
+		// Se consulta el archivo de estado de cuenta
+		String url = applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getUrl();
+		BusRestHeaderDTO header = new BusRestHeaderDTO(
+			bearerToken
+		);
 
-		boolean statusResponse = (null != response && null != response.get(mc.responseRespKey)
-				&& null != ((LinkedHashMap<String, Object>) (response.get(mc.responseRespKey))).get(mc.responseCodpKey)
-				&& mc.flagSendingSuccess
-						.equals(((LinkedHashMap<String, Object>) (response.get(mc.responseRespKey))).get(mc.responseCodpKey).toString()));
+		Map<String, Object> response = postTo(auth, body, header, url);
+		LOG.debug(response != null ? "Consulta correcta" : "Error al consulta estado cuenta");
 
-		LOG.debug(statusResponse ? "Mail enviado correctamente" : "Error al enviar el e-mail");
+		if (response == null || response.get("raw") == null)
+			throw new ConciliacionException(ConciliacionConstants.ESTADO_CUENTA_CANNOT_BE_CONSULT);
 
-		if (!statusResponse)
-			throw new ConciliacionException(ConciliacionConstants.MAIL_CANNOT_BE_SEND);
+		return null;
+
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see mx.com.nmp.pagos.mimonte.consumer.rest.AbstractOAuth2RestService#createHeadersPostTo(mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO, mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO)
 	 */
+	@Override
 	protected HttpHeaders createHeadersPostTo(BusRestAuthDTO auth, BusRestHeaderDTO header) {
 		String base64Creds = buildBase64Hash(auth);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(mc.headerAuthKey, mc.headerAuthValue.concat(" ") + base64Creds);
 		headers.add(mc.contentTypeKey, mc.senMailContentTypeValue);
-		headers.add(mc.idConsumidorKey, mc.idConsumidorValue);
-		headers.add(mc.idDestinoKey, mc.idDestinoValue);
-		headers.add(mc.usuarioKey, mc.usuarioValue);
+		headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getHeader().getIdConsumidor());
+		headers.add(mc.idDestinoKey, applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getHeader().getIdDestino());
+		headers.add(mc.usuarioKey, applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getHeader().getUsuario());
 		headers.add(mc.oauthBearer, header.getBearerToken());
 		return headers;
 	}

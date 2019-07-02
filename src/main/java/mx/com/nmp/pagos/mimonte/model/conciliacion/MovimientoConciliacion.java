@@ -12,7 +12,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
@@ -25,7 +24,7 @@ import mx.com.nmp.pagos.mimonte.model.Updatable;
 @Entity
 @Table(name = "to_movimiento_conciliacion")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class MovimientoConciliacion extends Updatable implements Serializable {
+public abstract class MovimientoConciliacion extends Updatable implements Serializable {
 
 	/**
 	 * Serial id.
@@ -46,15 +45,6 @@ public class MovimientoConciliacion extends Updatable implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "id_movimiento_midas")
 	private MovimientoMidas movimientoMidas;
-	
-	@OneToOne(mappedBy="movimientoConciliacion")
-	private MovimientoComision movimientoComision;
-
-	@OneToOne(mappedBy="movimientoConciliacion")
-	private MovimientoDevolucion movimientoDevolucion;
-
-	@OneToOne(mappedBy="movimientoConciliacion")
-	private MovimientoPago movimientoPago;
 
 	public MovimientoConciliacion() {
 		super();

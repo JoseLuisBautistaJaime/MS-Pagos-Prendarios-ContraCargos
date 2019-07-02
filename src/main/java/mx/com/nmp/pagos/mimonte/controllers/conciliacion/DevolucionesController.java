@@ -29,13 +29,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.DevolucionesServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 
@@ -147,7 +144,7 @@ public class DevolucionesController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
 //		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
-		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl.solicitar(devolucionesIdsMovimientosDTO);
+		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl.solicitarDevoluciones(devolucionesIdsMovimientosDTO, userRequest);
 		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Devoluciones Exitosa.",
 				devolucionEntidadDTOList);
