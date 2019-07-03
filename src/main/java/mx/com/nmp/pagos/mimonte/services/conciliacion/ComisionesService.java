@@ -174,11 +174,12 @@ public class ComisionesService {
 				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta(),
 				comisionesTransaccionesRequestDTO.getIdConciliacion());
 		Long transaccionesDevoluciones = (Long) mapResult.get("countId");
-		Long idComision = (Long) mapResult.get("idConciliacion");
+		Optional<Conciliacion> conciliacion = conciliacionRepository
+				.findById(comisionesTransaccionesRequestDTO.getIdConciliacion());
 		if (null == comisionesTransaccionesRequestDTO.getIdConciliacion())
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS);
-		if (null == idComision)
-			throw new ConciliacionException(ConciliacionConstants.COMISION_NOT_FOUND_FOR_SUCH_PARAMS);
+		if (null == conciliacion || !conciliacion.isPresent())
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND);
 		// Construir objeto pagos
 		buildMovimiento(movimientoPagos, OperacionComisionProyeccionEnum.PAGOS.getDescripcion(), transaccionesPagos,
 				comisionesTransaccionesRequestDTO.getComision());
@@ -220,8 +221,7 @@ public class ComisionesService {
 				comisionTransaccionVer = Long.valueOf(val);
 				break;
 			}
-		} else
-			comisionTransaccionVer = 0L;
+		}
 		comisionTransaccion = ComisionesBuilder
 				.buildComisionTransaccionFromComisionesTransDTOAndComisionesTransaccionesRequestDTO(
 						comisionTransaccionVer, comisionesTransDTO, comisionesTransaccionesRequestDTO,
@@ -261,7 +261,7 @@ public class ComisionesService {
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND);
 		if (0 != comisionSaveDTO.getId()) {
 			movimientoComision = comisionesRepository.findById(comisionSaveDTO.getId());
-			if (movimientoComision == null)
+			if (null == movimientoComision || !movimientoComision.isPresent())
 				throw new ConciliacionException(ConciliacionConstants.COMISION_ID_NOT_FOUND);
 			else
 				flagNew = false;

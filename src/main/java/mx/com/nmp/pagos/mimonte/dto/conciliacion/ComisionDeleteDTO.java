@@ -19,13 +19,13 @@ import java.util.Objects;
 public class ComisionDeleteDTO implements Comparable<ComisionDeleteDTO> {
 
 	private Integer folio;
-	private List<Long> idComisiones;
+	private List<Integer> idComisiones;
 
 	public ComisionDeleteDTO() {
 		super();
 	}
 
-	public ComisionDeleteDTO(Integer folio, List<Long> idComisiones) {
+	public ComisionDeleteDTO(Integer folio, List<Integer> idComisiones) {
 		super();
 		this.folio = folio;
 		this.idComisiones = idComisiones;
@@ -39,11 +39,11 @@ public class ComisionDeleteDTO implements Comparable<ComisionDeleteDTO> {
 		this.folio = folio;
 	}
 
-	public List<Long> getIdComisiones() {
+	public List<Integer> getIdComisiones() {
 		return idComisiones;
 	}
 
-	public void setIdComisiones(List<Long> idComisiones) {
+	public void setIdComisiones(List<Integer> idComisiones) {
 		this.idComisiones = idComisiones;
 	}
 
@@ -64,7 +64,7 @@ public class ComisionDeleteDTO implements Comparable<ComisionDeleteDTO> {
 		return (this.hashCode() == other.hashCode());
 
 	}
-	
+
 	@Override
 	public int compareTo(ComisionDeleteDTO o) {
 		return o.folio.compareTo(this.folio);
