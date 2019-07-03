@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,6 +43,7 @@ import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionReal;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.OperacionComisionProyeccionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 
@@ -166,12 +168,13 @@ public class ComisionesService {
 		Long transaccionesPagos = comisionesRepository.findTransaccionesPagosByFechasAndIdConciliacion(
 				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta(),
 				comisionesTransaccionesRequestDTO.getIdConciliacion());
-		// Se obtiene el id de comision, el conteo del mismo y el id de la conciliacion
+		// Se obtiene el id de devolucion, el conteo del mismo y el id de la
+		// conciliacion
 		mapResult = comisionesRepository.findDataByFechasAndIdConciliacion(
 				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta(),
 				comisionesTransaccionesRequestDTO.getIdConciliacion());
 		Long transaccionesDevoluciones = (Long) mapResult.get("countId");
-		Long idComision = (Long) mapResult.get("idComision");
+		Long idComision = (Long) mapResult.get("idConciliacion");
 		if (null == comisionesTransaccionesRequestDTO.getIdConciliacion())
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS);
 		if (null == idComision)
@@ -248,12 +251,28 @@ public class ComisionesService {
 	 * @param requestUser
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public ComisionSaveResponseDTO save(final ComisionSaveDTO comisionSaveDTO, final String requestUser) {
+	public Map<String, Object> save(final ComisionSaveDTO comisionSaveDTO, final String requestUser) {
+		Map<String, Object> result;
 		ComisionSaveResponseDTO comisionSaveResponseDTO = null;
-		comisionesRepository
-				.save(ComisionesBuilder.buildMovimientoComisionFromComisionSaveDTO(comisionSaveDTO, requestUser));
-		comisionSaveResponseDTO = comisionesRepository.findByIdComision(comisionSaveDTO.getId());
-		return comisionSaveResponseDTO;
+		Optional<MovimientoComision> movimientoComision;
+		boolean flagNew = true;
+		Optional<Conciliacion> conciliacion = conciliacionRepository.findById(comisionSaveDTO.getFolio());
+		if (!conciliacion.isPresent())
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND);
+		if (0 != comisionSaveDTO.getId()) {
+			movimientoComision = comisionesRepository.findById(comisionSaveDTO.getId());
+			if (movimientoComision == null)
+				throw new ConciliacionException(ConciliacionConstants.COMISION_ID_NOT_FOUND);
+			else
+				flagNew = false;
+		}
+		result = new HashMap<>();
+		MovimientoComision movimientoComisionRes = comisionesRepository.save(
+				ComisionesBuilder.buildMovimientoComisionFromComisionSaveDTO(comisionSaveDTO, requestUser, flagNew));
+		comisionSaveResponseDTO = comisionesRepository.findByIdComision(movimientoComisionRes.getId());
+		result.put("result", comisionSaveResponseDTO);
+		result.put("flag", flagNew);
+		return result;
 	}
 
 	/**

@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 /**
  * @name MovimientoComision
@@ -47,6 +48,7 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 	@Column(name = "monto")
 	private BigDecimal monto;
 
+	@Size(max = 150, message = "La longitud de la descripcion es muy grande")
 	@Column(name = "descripcion")
 	private String descripcion;
 

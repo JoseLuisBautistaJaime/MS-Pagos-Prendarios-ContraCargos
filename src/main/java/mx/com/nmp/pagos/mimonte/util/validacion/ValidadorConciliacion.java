@@ -290,6 +290,8 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateComisionSaveDTO(ComisionSaveDTO comisionSaveDTO) {
 		Calendar today = Calendar.getInstance();
+		Calendar fCargo = Calendar.getInstance();
+		Calendar fOperacion = Calendar.getInstance();
 		try {
 			assertNotNull(comisionSaveDTO);
 			assertNotNull(comisionSaveDTO.getDescripcion());
@@ -298,12 +300,14 @@ public interface ValidadorConciliacion {
 			assertNotNull(comisionSaveDTO.getFolio());
 			assertNotNull(comisionSaveDTO.getId());
 			assertNotNull(comisionSaveDTO.getMonto());
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
+		fCargo.setTime(comisionSaveDTO.getFechaCargo());
+		fOperacion.setTime(comisionSaveDTO.getFechaOperacion());
 		return (!comisionSaveDTO.getDescripcion().isEmpty() && !"".equals(comisionSaveDTO.getDescripcion())
-				&& !today.before(comisionSaveDTO.getFechaCargo()) && !today.before(comisionSaveDTO.getFechaOperacion())
-				&& comisionSaveDTO.getId() > 0 && comisionSaveDTO.getMonto().compareTo(new BigDecimal("0")) > 0);
+				&& !today.before(fCargo) && !today.before(fOperacion) && comisionSaveDTO.getId() > -1
+				&& comisionSaveDTO.getMonto().compareTo(new BigDecimal("0")) > 0);
 	}
 
 	/**
@@ -324,7 +328,7 @@ public interface ValidadorConciliacion {
 				}
 			} else
 				return false;
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return true;
@@ -348,7 +352,7 @@ public interface ValidadorConciliacion {
 			assertNotNull(comisionesTransaccionesRequestDTO.getFechaDesde());
 			assertNotNull(comisionesTransaccionesRequestDTO.getFechaHasta());
 			assertNotNull(comisionesTransaccionesRequestDTO.getIdConciliacion());
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		desde.setTime(comisionesTransaccionesRequestDTO.getFechaDesde());

@@ -32,7 +32,7 @@ public interface ComisionTransaccionProyeccionRepository extends JpaRepository<C
 	 * @param idComisionTransccion
 	 * @return
 	 */
-	@Query("SELECT ctp.id FROM ComisionTransaccionProyeccion ctp WHERE ctp.comisionTransaccion.id = :idComisionTransccion")
-	public List<Long> findBycomisionTransaccionId(Long idComisionTransccion);
+	@Query("SELECT ctp.id FROM ComisionTransaccionProyeccion ctp WHERE ctp.comisionTransaccion.id = :idComisionTransaccion")
+	public List<Long> findBycomisionTransaccionId(Long idComisionTransaccion);
 
 }

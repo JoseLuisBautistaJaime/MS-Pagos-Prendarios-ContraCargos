@@ -965,9 +965,10 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_comision` (
   `fecha_operacion` DATE NULL DEFAULT NULL,
   `fecha_cargo` DATE NULL DEFAULT NULL,
   `monto` DECIMAL(16,4) NOT NULL,
+  `tipo` VARCHAR(50) NULL DEFAULT NULL,
+  `id_movimiento_estado_cuenta` BIGINT(20) NULL,
   `descripcion` VARCHAR(150) NOT NULL,
   `estatus` TINYINT(4) NULL DEFAULT NULL,
-  `tipo` VARCHAR(50) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_comisiones_to_movimiento_conciliacion`
     FOREIGN KEY (`id`)

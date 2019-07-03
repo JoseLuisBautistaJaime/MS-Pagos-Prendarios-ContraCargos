@@ -44,16 +44,16 @@ public abstract class ComisionesBuilder {
 	 * @return
 	 */
 	public static MovimientoComision buildMovimientoComisionFromComisionSaveDTO(final ComisionSaveDTO comisionSaveDTO,
-			final String requestuser) {
+			final String requestuser, final boolean flagNew) {
 		MovimientoComision movimientoComision = null;
 		if (null != comisionSaveDTO) {
 			movimientoComision = new MovimientoComision();
-			movimientoComision.setCreatedBy(requestuser);
-			movimientoComision.setCreatedDate(new Date());
+			movimientoComision.setCreatedBy(flagNew ? requestuser : null);
+			movimientoComision.setCreatedDate(flagNew ? new Date() : null);
 			movimientoComision.setEstatus(true);
 			movimientoComision.setNuevo(true);
-			movimientoComision.setLastModifiedBy(null);
-			movimientoComision.setLastModifiedDate(null);
+			movimientoComision.setLastModifiedBy(flagNew ? null : requestuser);
+			movimientoComision.setLastModifiedDate(flagNew ? null : new Date());
 			movimientoComision.setDescripcion(comisionSaveDTO.getDescripcion());
 			movimientoComision.setFechaCargo(comisionSaveDTO.getFechaCargo());
 			movimientoComision.setFechaOperacion(comisionSaveDTO.getFechaOperacion());

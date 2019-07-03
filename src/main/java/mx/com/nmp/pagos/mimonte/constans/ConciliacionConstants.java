@@ -19,6 +19,25 @@ public final class ConciliacionConstants {
 		super();
 	}
 
+	/**
+	 * Clase para especificar los valores constantes de tipos de movimientos en consulta de movimientos
+	 * @author user
+	 *
+	 */
+	public static class TipoMovimiento{
+		
+		/**
+		 * Tipo Movimiento de deposito
+		 */
+		public static final int TIPO_DEPOSITO = 1;
+		
+		/**
+		 * Tipo Movimiento de retiro
+		 */
+		public static final int TIPO_RETIRO = 2;
+		
+	}
+	
 	public static final String USER_SYSTEM = "System";
 	
 	/**
@@ -327,5 +346,10 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se intenta ingresar una fecha inicial posterior a la fecha final
 	 */
 	public static final String FECHA_DESDE_IS_AFTER_FECHA_HASTA = "La fecha inicial es posterioro a la fecha final";
-
+	
+	/**
+	 * Mensaje que es mostrado cuando no se encuentra un id de comision especificado
+	 */
+	public static final String COMISION_ID_NOT_FOUND = "El id de comision especificado no fue encontrado";
+	
 }

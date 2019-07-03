@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
@@ -330,13 +331,13 @@ public abstract class MovimientosBuilder {
 		if (null != movimientoEstadoCuentaDBDTO) {
 			movimientoEstadoCuentaDTO = new MovimientoEstadoCuentaDTO();
 			movimientoEstadoCuentaDTO.setDepositos(
-					movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(1) ? movimientoEstadoCuentaDBDTO.getImporte()
+					movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(ConciliacionConstants.TipoMovimiento.TIPO_DEPOSITO) ? movimientoEstadoCuentaDBDTO.getImporte()
 							: null);
 			movimientoEstadoCuentaDTO.setDescripcion(movimientoEstadoCuentaDBDTO.getDescripcion());
 			movimientoEstadoCuentaDTO.setFecha(movimientoEstadoCuentaDBDTO.getFecha());
 			movimientoEstadoCuentaDTO.setId(movimientoEstadoCuentaDBDTO.getId());
 			movimientoEstadoCuentaDTO.setRetiros(
-					movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(2) ? movimientoEstadoCuentaDBDTO.getImporte()
+					movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(ConciliacionConstants.TipoMovimiento.TIPO_RETIRO) ? movimientoEstadoCuentaDBDTO.getImporte()
 							: null);
 			if (pos == 0)
 				movimientoEstadoCuentaDTO.setSaldo(movimientoEstadoCuentaDBDTO.getTotalInicial());

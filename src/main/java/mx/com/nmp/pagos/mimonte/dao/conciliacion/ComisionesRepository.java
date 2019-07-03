@@ -30,7 +30,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
  * @version 0.1
  */
 @Repository("comisionesRepository")
-public interface ComisionesRepository extends JpaRepository<MovimientoComision, Long> {
+public interface ComisionesRepository extends JpaRepository<MovimientoComision, Integer> {
 
 	/**
 	 * Elimina una comision de la entidad de Movimientos Comisiones
@@ -74,7 +74,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("SELECT mc.id AS idComision, COUNT(md.id) AS countId, mc.idConciliacion AS idConciliacion FROM MovimientoDevolucion md INNER JOIN MovimientoConciliacion mc ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta AND mc.idConciliacion = :idConciliacion")
+	@Query("SELECT mc.id AS idConciliacion, COUNT(md.id) AS countId, mc.idConciliacion AS idConciliacion FROM MovimientoDevolucion md INNER JOIN MovimientoConciliacion mc ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta AND mc.idConciliacion = :idConciliacion")
 	public Map<String, Object> findDataByFechasAndIdConciliacion(@Param("fechaDesde") final Date fechaDesde,
 			@Param("fechaHasta") final Date fechaHasta, @Param("idConciliacion") Integer idConciliacion);
 

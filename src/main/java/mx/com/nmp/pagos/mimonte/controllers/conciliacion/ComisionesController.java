@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -33,6 +35,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDeleteDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionSaveResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ComisionesService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
@@ -79,6 +82,7 @@ public class ComisionesController {
 	 * @param userRequest
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/comisiones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -91,11 +95,25 @@ public class ComisionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody ComisionSaveDTO comisionSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		// Declaracion de objetos
+		Map<String, Object> result = null;
 		ComisionSaveResponseDTO comisionSaveResponseDTO = null;
+		String msgResponse = null;
+		// Se realiza validacion de request
 		if (!ValidadorConciliacion.validateComisionSaveDTO(comisionSaveDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		comisionSaveResponseDTO = comisionesService.save(comisionSaveDTO, userRequest);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta Exitosa.", comisionSaveResponseDTO);
+		// Se guarda la comision
+		result = comisionesService.save(comisionSaveDTO, userRequest);
+		// Se valida que el resultado del guardado no sea nulo
+		if (null == result)
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
+		// Se asigna la bandera de registro uevo y el objeto de resultado a un mapa para
+		// saber que mensaje mostrar en el response
+		comisionSaveResponseDTO = (ComisionSaveResponseDTO) result.get("result");
+		msgResponse = null != result.get("flag") && ((Boolean) result.get("flag")) ? "Alta exitosa."
+				: null != result.get("flag") && !((Boolean) result.get("flag")) ? "Actualizacion exitosa."
+						: "Operacion exitosa.";
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), msgResponse, comisionSaveResponseDTO);
 	}
 
 	/**
