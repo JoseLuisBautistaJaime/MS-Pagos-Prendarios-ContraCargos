@@ -8,11 +8,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-
-import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
@@ -36,9 +33,6 @@ public class BusEstadoCuentaRestService extends AbstractOAuth2RestService {
 	 * Instancia que registra los eventos en la bitacora
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(SolicitarPagosService.class);
-
-	@Autowired
-	private ApplicationProperties applicationProperties;
 
 
 	public BusEstadoCuentaRestService() {
@@ -68,14 +62,13 @@ public class BusEstadoCuentaRestService extends AbstractOAuth2RestService {
 			bearerToken
 		);
 
-		Map<String, Object> response = postTo(auth, body, header, url);
+		Map<String, Object> response = getForObject(auth, body, header, url);
 		LOG.debug(response != null ? "Consulta correcta" : "Error al consulta estado cuenta");
 
-		if (response == null || response.get("raw") == null)
+		if (response == null || response.get("documento") == null)
 			throw new ConciliacionException(ConciliacionConstants.ESTADO_CUENTA_CANNOT_BE_CONSULT);
 
-		return null;
-
+		return (String) response.get("documento");
 	}
 
 

@@ -4,23 +4,21 @@
  */
 package mx.com.nmp.pagos.mimonte.conector;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusEstadoCuentaRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestEstadoCuentaDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,19 +44,27 @@ public class EstadoCuentaProxy implements EstadoCuentaAPI {
 	 */
 	@Cacheable("EstadoCuentaProxy.consulta")
 	@Override
-	public List<String> consulta(String ruta, String archivo) {
-		LOGGER.info(">> consulta({}{})", ruta, archivo);
+	public List<String> consulta(String ruta, String archivo) throws ConciliacionException {
+		LOGGER.info(">> consulta({}/{})", ruta, archivo);
 
 		BusRestEstadoCuentaDTO body = new BusRestEstadoCuentaDTO(ruta, archivo);
-		String estadoCuentaService = busEstadoCuentaRestService.consultaEstadoCuenta(body);
+		String edoCuentaStr = busEstadoCuentaRestService.consultaEstadoCuenta(body);
 
 		// Convertir a lineas
 		List<String> lines = new ArrayList<String>();
+		byte[] base64EstadoCuenta = Base64.decodeBase64(edoCuentaStr);
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(base64EstadoCuenta)))) {
+			while(reader.ready()) {
+			     String line = reader.readLine();
+			     lines.add(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new ConciliacionException("Error al recibir el archivo del estado de cuenta");
+		}
 
-		
-		
-		// Dummy
 		/*
+		 * Dummy
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource("edocuenta/7002.txt").getInputStream()))) {
 			while(reader.ready()) {
 			     String line = reader.readLine();
@@ -68,6 +74,7 @@ public class EstadoCuentaProxy implements EstadoCuentaAPI {
 			e.printStackTrace();
 		}*/
 
+		
 		return lines;
 	}
 

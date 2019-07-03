@@ -133,5 +133,5 @@ openpay:
       key: 12345
 
 estadocuenta:
-  ruta: c:\Automata SMV\CIE por Convenio\
-  nombre: "'CLCO{CUENTA}'yyMMddHHmm'.txt'"
+  ruta: "'/'ddMMyy"
+  nombre: "'CLCO{CUENTA}'yyMMdd'.txt'"

@@ -64,11 +64,12 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 		// Consulta el numero de cuenta asignado a la conciliacion
  		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion.intValue());
 
-		// Crea nombre del archivo en base a la fecha
+		// Crea nombre y ruta del archivo en base a la fecha
+ 		String rutaArchivo = EstadoCuentaFileBuilder.buildPath(date, ruta);
 		String nombreArchivo = EstadoCuentaFileBuilder.buildFileName(date, conciliacion.getCuenta().getNumeroCuenta(), nombre);
 
 		// Consulta el archivo
-		List<String> lineasArchivo = estadoCuentaAPI.consulta(ruta, nombreArchivo);
+		List<String> lineasArchivo = estadoCuentaAPI.consulta(rutaArchivo, nombreArchivo);
 		if (lineasArchivo == null || lineasArchivo.size() == 0) {
 			throw new ConciliacionException("No se encontro archivo de estado de cuenta " + nombreArchivo);
 		}

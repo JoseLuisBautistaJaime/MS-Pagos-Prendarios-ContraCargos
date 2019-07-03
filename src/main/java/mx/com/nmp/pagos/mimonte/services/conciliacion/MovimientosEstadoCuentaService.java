@@ -10,14 +10,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.util.Calendar;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
@@ -254,10 +252,21 @@ public class MovimientosEstadoCuentaService {
 	 */
 	private void saveEstadoCuentaMovimientos(long idReporte, EstadoCuentaWraper estadoCuentaWraper) {
 		try {
-			EstadoCuenta estadoCuenta = new EstadoCuenta();
-			estadoCuenta.setIdReporte(idReporte);
-			estadoCuenta.setFechaCarga(new Date());
-			estadoCuenta.setTotalMovimientos(estadoCuentaWraper.movimientos != null ? estadoCuentaWraper.movimientos.size() : 0);
+			
+			// Se crea el nuevo estado de cuenta
+			// TODO: Agregar llave primaria compuesta, un estado de cuenta por dia
+			EstadoCuenta estadoCuenta = this.estadoCuentaRepository.findOneByIdReporte(idReporte);
+			if (estadoCuenta == null) {
+				estadoCuenta = new EstadoCuenta();
+				estadoCuenta.setIdReporte(idReporte);
+				estadoCuenta.setFechaCarga(new Date());
+			}
+
+			int totalMovs = (estadoCuenta.getTotalMovimientos() != null ? estadoCuenta.getTotalMovimientos() : 0);
+			totalMovs += (estadoCuentaWraper.movimientos != null ? estadoCuentaWraper.movimientos.size() : 0);
+			estadoCuenta.setTotalMovimientos(totalMovs);
+
+			// Habilitar soporte para multiples cabecera y totales adicionales
 			estadoCuenta.setCabecera(estadoCuentaWraper.cabecera);
 			estadoCuenta.setTotales(estadoCuentaWraper.totales);
 			estadoCuenta.setTotalesAdicional(estadoCuentaWraper.totalesAdicional);

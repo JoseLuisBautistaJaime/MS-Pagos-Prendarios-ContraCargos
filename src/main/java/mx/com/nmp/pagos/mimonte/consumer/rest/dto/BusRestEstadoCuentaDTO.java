@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.consumer.rest.dto;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @name BusEstadoCuentaDTO
  * @description Clase que encapsula la informacion del servicio que expone BUS
@@ -13,7 +15,7 @@ package mx.com.nmp.pagos.mimonte.consumer.rest.dto;
  * @version 1.0
  * @createdDate 04/06/2019 22:55 hrs.
  */
-public class BusRestEstadoCuentaDTO implements BusRestBodyDTO {
+public class BusRestEstadoCuentaDTO implements BusRestParamDTO {
 
 	private String ruta;
 	private String nombre;
@@ -26,6 +28,11 @@ public class BusRestEstadoCuentaDTO implements BusRestBodyDTO {
 		super();
 		this.ruta = ruta;
 		this.nombre = nombre;
+	}
+
+	public String getUri() {
+		String url = "?ruta=" + (StringUtils.isNotBlank(ruta) ? ruta : "") + "&nombre=" + (StringUtils.isNotBlank(nombre) ? nombre : "");
+		return url;
 	}
 
 	public String getRuta() {

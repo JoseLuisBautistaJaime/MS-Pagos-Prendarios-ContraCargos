@@ -125,11 +125,7 @@ openpay:
       name: X-Id
       key: 12345
 
+
 estadocuenta:
-  wsdlLocation: estadocuenta.wsdl
-  header:
-    api:
-      name: X-Id
-      key: 12345
-  ruta: c:\Automata SMV\CIE por Convenio\
-  nombre: "'CLCO{CUENTA}'yyMMddHHmm'.txt'"
+  ruta: "'/'ddMMyy"
+  nombre: "'CLCO{CUENTA}'yyMMdd'.txt'"

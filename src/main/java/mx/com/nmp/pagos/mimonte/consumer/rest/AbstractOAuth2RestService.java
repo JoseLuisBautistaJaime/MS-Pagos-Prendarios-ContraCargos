@@ -11,10 +11,13 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.RetryCallback;
+import org.springframework.retry.RetryContext;
 import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
@@ -28,6 +31,7 @@ import mx.com.nmp.pagos.mimonte.constans.MailServiceConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestBodyDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestParamDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestTokenReponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
@@ -56,8 +60,10 @@ public abstract class AbstractOAuth2RestService {
 	protected MailServiceConstants mc;
 
 	@Autowired
-	private ApplicationProperties applicationProperties;
+	protected ApplicationProperties applicationProperties;
 
+	@Autowired
+	private RetryTemplate retryTemplate; 
 
 
 	public AbstractOAuth2RestService() {
@@ -71,7 +77,7 @@ public abstract class AbstractOAuth2RestService {
 	 * @param auth
 	 * @return
 	 */
-	public String postForGetToken(final BusRestAuthDTO auth, String url) {
+	public String postForGetToken(final BusRestAuthDTO auth, String url) throws ConciliacionException {
 
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add(mc.headerGrantTypeKey, mc.headerGrantTypeValue);
@@ -81,18 +87,27 @@ public abstract class AbstractOAuth2RestService {
 		HttpEntity<MultiValueMap<String, String>> request2 = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
 		// Retries
-		//RetryTemplate retryTemplate = createRetyTemplate();
-		
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<BusRestTokenReponseDTO> response = restTemplate.exchange(
-			url,
-			HttpMethod.POST,
-			request2,
-			BusRestTokenReponseDTO.class
-		);
+		BusRestTokenReponseDTO obj = retryTemplate.execute(new RetryCallback<BusRestTokenReponseDTO, ConciliacionException>() {
+			public BusRestTokenReponseDTO doWithRetry(RetryContext context) throws ConciliacionException {
+				RestTemplate restTemplate = new RestTemplate();
+				ResponseEntity<BusRestTokenReponseDTO> response = null;
+				LOG.info("postForGetToken: {}, intento: #{}", url, context.getRetryCount());
+				try {
+					response = restTemplate.exchange(
+						url,
+						HttpMethod.POST,
+						request2,
+						BusRestTokenReponseDTO.class
+					);
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+					throw new ConciliacionException(ex.getMessage());
+				}
+				return response.getBody();
+			}
+		});
 
-		BusRestTokenReponseDTO obj = response.getBody();
-		
 		String bearerToken = null != obj && null != obj.getAccess_token() ? obj.getAccess_token() : null;
 
 		if (null == bearerToken || "".equals(bearerToken))
@@ -112,15 +127,72 @@ public abstract class AbstractOAuth2RestService {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends BusRestBodyDTO> Map<String, Object> postTo(final BusRestAuthDTO auth, final T body, final BusRestHeaderDTO header, String url) {
+	public <T extends BusRestBodyDTO> Map<String, Object> postForObject(final BusRestAuthDTO auth, final T body, final BusRestHeaderDTO header, String url) {
 		
 		HttpHeaders headers = createHeadersPostTo(auth, header);
 		HttpEntity<T> request = new HttpEntity<T>(body, headers);
 
-		RestTemplate restTemplate = new RestTemplate();
-		Object resp = restTemplate.postForObject(url, request, Object.class);
+		Object resp = retryTemplate.execute(new RetryCallback<Object, ConciliacionException>() {
+			public Object doWithRetry(RetryContext context) throws ConciliacionException {
+				Object resp = null;
+				LOG.info("postForObject: {}, intento: #{}", url, context.getRetryCount());
+				try {
+					RestTemplate restTemplate = new RestTemplate();
+					resp = restTemplate.postForObject(url, request, Object.class);
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+					throw new ConciliacionException(ex.getMessage());
+				}
+				return resp;
+			}
+		});
 
 		Map<String, Object> obj = (LinkedHashMap<String, Object>) resp;
+
+		return obj;
+	}
+
+
+	/**
+	 * Consume servicio de endpoint
+	 * 
+	 * @param auth
+	 * @param params
+	 * @param header
+	 * @param url
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends BusRestParamDTO> Map<String, Object> getForObject(final BusRestAuthDTO auth, final T params, final BusRestHeaderDTO header, final String url) {
+		
+		HttpHeaders headers = createHeadersPostTo(auth, header);
+		HttpEntity<T> request = new HttpEntity<T>(params, headers);
+
+		Object resp = retryTemplate.execute(new RetryCallback<Object, ConciliacionException>() {
+			public Object doWithRetry(RetryContext context) throws ConciliacionException {
+				ResponseEntity<Object> response = null;
+				String uri = url + params.getUri();
+				LOG.info("getForObject: {}, intento: #{}", uri, context.getRetryCount());
+				try {
+					RestTemplate restTemplate = new RestTemplate();
+					response = restTemplate.exchange(
+						uri,
+						HttpMethod.GET,
+						request,
+						Object.class
+					);
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+					throw new ConciliacionException(ex.getMessage());
+				}
+				return response.getBody();
+			}
+		});
+
+		Map<String, Object> obj = (LinkedHashMap<String, Object>) resp;
+		
 		return obj;
 	}
 
@@ -131,7 +203,8 @@ public abstract class AbstractOAuth2RestService {
 	 * Retry template
 	 * @return
 	 */
-	private RetryTemplate createRetyTemplate() {
+	@Bean
+	private RetryTemplate retryTemplate() {
 		int maxAttempt = applicationProperties.getMimonte().getVariables().getRestTemplate().getMaxAttempt();
 		int retryTimeInterval = applicationProperties.getMimonte().getVariables().getRestTemplate().getRetryTimeInterval();
 		SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();

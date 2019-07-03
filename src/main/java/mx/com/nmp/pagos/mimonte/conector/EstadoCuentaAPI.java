@@ -6,6 +6,8 @@ package mx.com.nmp.pagos.mimonte.conector;
 
 import java.util.List;
 
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+
 /**
  * Referencia al servicio web de Estado Cuenta
  *
@@ -18,6 +20,6 @@ public interface EstadoCuentaAPI {
      * @param fecha
      * @return Lista de estado de cuentas
      */
-	public List<String> consulta(String ruta, String archivo);
+	public List<String> consulta(String ruta, String archivo) throws ConciliacionException;
 
 }

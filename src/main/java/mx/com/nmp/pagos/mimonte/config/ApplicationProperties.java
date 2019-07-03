@@ -4,6 +4,7 @@ package mx.com.nmp.pagos.mimonte.config;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.TimeZone;
@@ -13,8 +14,8 @@ import java.util.TimeZone;
  *
  * @author Javier Hernandez
  */
-
-@ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
+@Configuration
+@ConfigurationProperties(prefix = "", ignoreUnknownFields = true)
 public class ApplicationProperties {
 
     private final CorsConfiguration cors = new CorsConfiguration();

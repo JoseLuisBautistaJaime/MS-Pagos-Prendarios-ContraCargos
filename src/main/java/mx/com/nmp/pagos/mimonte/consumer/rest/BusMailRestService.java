@@ -58,7 +58,7 @@ public class BusMailRestService extends AbstractOAuth2RestService {
 
 		// Se manda el correo usando el token
 		BusRestHeaderDTO header = new BusRestHeaderDTO(bearerToken);
-		Map<String, Object> response = postTo(auth, body, header, mc.urlSendEmail);
+		Map<String, Object> response = postForObject(auth, body, header, mc.urlSendEmail);
 
 		boolean statusResponse = (null != response && null != response.get(mc.responseRespKey)
 				&& null != ((LinkedHashMap<String, Object>) (response.get(mc.responseRespKey))).get(mc.responseCodpKey)

@@ -17,8 +17,14 @@ import mx.com.nmp.pagos.mimonte.util.DateUtil;
  */
 public class EstadoCuentaFileBuilder {
 
+	public static String buildPath(Date fecha, String formato) {
+		return DateUtil.formatDate(fecha, formato);
+	}
+
 	public static String buildFileName(Date fecha, String cuenta, String formato) {
 		return DateUtil.formatDate(fecha, formato.replace("{CUENTA}", cuenta));
 	}
+	
+	
 
 }

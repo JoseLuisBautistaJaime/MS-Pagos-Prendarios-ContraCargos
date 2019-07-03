@@ -45,6 +45,11 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 			ex.printStackTrace();
 			throw new ConciliacionException("No existe conciliacion para el folio " + folio);
 		}
+		
+		if (conciliacion == null) {
+			throw new ConciliacionException("No existe conciliacion para el folio " + folio);
+		}
+		
 		return conciliacion;
 	}
 
