@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 
 /**
@@ -25,11 +23,8 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	 * @param folio
 	 * @return
 	 */
-	@Query("SELECT md FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON mc.id=md.id WHERE md.idConciliacion = :folio")
+	@Query("SELECT md FROM MovimientoDevolucion md WHERE md.idConciliacion = :folio")
 	public List<MovimientoDevolucion> findByIdConciliacion(@Param("folio") Integer folio);
-	
-	@Query("FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON mc.id=md.id WHERE md.id IN :lts")
-	public List<MovimientoDevolucion> findByIds(List<Integer> lts);
 	
 	/**
 	 * Obtiene los movimientos por devolución cuando el parametro ingresado es el folio el identificador del movimiento y la fecha de la devolucion.
@@ -38,30 +33,28 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	 * @param fecha
 	 * @return
 	 */
-	@Query("SELECT md FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON mc.id=md.id WHERE mc.idConciliacion = :folio AND md.id = :idMovimiento AND md.fecha = :fecha ")
-	public List<MovimientoDevolucion> findByIdConciliacionAndIdMovimientoAndFecha(
+	@Query("SELECT md FROM MovimientoDevolucion md WHERE md.idConciliacion = :folio AND md.id = :idMovimiento")
+	public MovimientoDevolucion findByIdConciliacionAndIdMovimiento(
 			@Param("folio") final Integer folio, 
-			@Param("idMovimiento") final Integer idMovimiento,
-			@Param("fecha") final Date fecha);
-	
-	
-	
+			@Param("idMovimiento") final Integer idMovimiento);
+
 	/**
 	 * Busqueda de los movimientos de las devoluciones apartir del folio.
 	 * 
 	 * @param folio
 	 * @return
 	 */
-	@Query("SELECT md FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON mc.id=md.id WHERE md.idConciliacion = :folio")
+	@Query("SELECT md FROM MovimientoDevolucion md WHERE md.idConciliacion = :folio")
 	public List<MovimientoDevolucion> findByFolio(@Param("folio") Integer folio);
 	
 	
-	@Query("SELECT md FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON mc.id=md.id WHERE md.id = :idMovimiento AND md.fecha = :fecha ")
+	@Query("SELECT md FROM MovimientoDevolucion md WHERE md.id = :idMovimiento AND md.fecha = :fecha ")
 	public List<MovimientoDevolucion> findByIdMovimientoAndFecha(
 			@Param("idMovimiento") final Integer idMovimiento,
 			@Param("fecha") final Date fecha);
 	
-	@Query("SELECT md FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON mc.id=md.id WHERE md.id = :idMovimiento ")
-	public List<MovimientoDevolucion> findByIdMovimientos(
+	@Query("SELECT md FROM MovimientoDevolucion md WHERE md.id = :idMovimiento ")
+	public MovimientoDevolucion findByIdMovimiento(
 			@Param("idMovimiento") final Integer idMovimiento);
+
 }

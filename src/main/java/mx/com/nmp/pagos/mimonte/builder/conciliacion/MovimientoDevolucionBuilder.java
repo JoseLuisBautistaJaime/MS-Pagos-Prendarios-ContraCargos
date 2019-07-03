@@ -5,10 +5,13 @@
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
+import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
  * @name MovimientoDevolucionBuilder
@@ -69,4 +72,32 @@ public abstract class MovimientoDevolucionBuilder {
 		}
 		return devolucionConDTOList;
 	}
+
+
+	/**
+	 * Crea el movimiento devolucion en base al movimiento en transito
+	 * @param movimientoTransito
+	 * @return
+	 */
+	public static MovimientoDevolucion buildMovimientoFromMovimientoTransito(MovimientoTransito mt, EstatusDevolucion edPendiente, String createdBy) {
+		MovimientoDevolucion movimientoDevolucion = new MovimientoDevolucion();
+		movimientoDevolucion.setIdConciliacion(mt.getIdConciliacion());
+		movimientoDevolucion.setCreatedBy(createdBy);
+		movimientoDevolucion.setCreatedDate(new Date());
+		movimientoDevolucion.setLastModifiedBy(null);
+		movimientoDevolucion.setLastModifiedDate(null);
+		movimientoDevolucion.setNuevo(true);
+		movimientoDevolucion.setEstatus(edPendiente);
+		movimientoDevolucion.setFecha(mt.getFecha());
+		movimientoDevolucion.setMonto(mt.getMonto());
+		movimientoDevolucion.setEsquemaTarjeta(mt.getEsquemaTarjeta());
+		movimientoDevolucion.setIdentificadorCuenta(null);
+		movimientoDevolucion.setTitular(mt.getTitular());
+		movimientoDevolucion.setCodigoAutorizacion(null);
+		movimientoDevolucion.setSucursal(mt.getSucursal());
+		movimientoDevolucion.setFechaLiquidacion(null);
+
+		return movimientoDevolucion;
+	}
+
 }

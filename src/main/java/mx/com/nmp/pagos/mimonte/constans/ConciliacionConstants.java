@@ -105,21 +105,6 @@ public final class ConciliacionConstants {
 	public static final String AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS = "Ocurrio un error al actualizar el estatus de la devolución";
 
 	/**
-	 * Constante para buscar devoluciones a partir del nombre.
-	 */
-	public static final String PENDING = "Pendiente";
-
-	/**
-	 * Constante para buscar devoluciones a partir del nombre.
-	 */
-	public static final String REQUEST = "Solicitada";
-
-	/**
-	 * Constante para buscar devoluciones a partir del nombre.
-	 */
-	public static final String LIQUIDATE = "Liquidada";
-
-	/**
 	 * Se regresa cuando no se encuentra informacion en una busqueda relacionada con
 	 * los procesos de conciliacion en general
 	 */
@@ -153,13 +138,17 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando no se puede obtener el token en el servicio de
 	 * email
 	 */
-	public static final String CANNOT_GET_MAIL_TOKEN = "No fue posible obtener el token del email";
+	public static final String CANNOT_GET_TOKEN = "No fue posible obtener el token de autorizacion";
 
 	/**
 	 * Mensaje que aparece cuando el email no pudo ser enviado
 	 */
 	public static final String MAIL_CANNOT_BE_SEND = "El e-mail no pudo ser enviado";
 
+	/**
+	 * Mensaje que aparece cuando el email no pudo ser enviado
+	 */
+	public static final String ESTADO_CUENTA_CANNOT_BE_CONSULT = "Estado de cuenta no puede ser consulta";
 	/**
 	 * Mensaje que es mostrado cuando se genera un error durante la consulta de
 	 * movimientos en transito
@@ -249,13 +238,13 @@ public final class ConciliacionConstants {
 	
 
 	// CATALOGOS
-	public static final Long ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS = 1L;
+	
 	public static final Long CATEGORIA_ESTADO_CUENTA_COMISIONES = 2L;
 
 	// Estatus conciliacion
 	public static final Integer ESTATUS_CONCILIACION_EN_PROCESO = 1;
 	public static final Integer ESTATUS_CONCILIACION_FINALIZADA = 2;
-	
+
 	// Subestatus conciliacion
 	public static final Long SUBESTATUS_CONCILIACION_CREADA = 1L;
 	public static final Long SUBESTATUS_CONCILIACION_ENVIADA = 14L;
@@ -265,6 +254,19 @@ public final class ConciliacionConstants {
 	public static final String CONCEPTO_DEVOLUCION = "DEV"; // Pendiente
 	public static final String CONCEPTO_LIQUIDACION = "LIQ"; // Pendiente
 
+	// Estatus devoluciones
+	public static final Integer ESTATUS_DEVOLUCION_PENDIENTE = 1;
+	public static final Integer ESTATUS_DEVOLUCION_SOLICITADA = 2;
+	public static final Integer ESTATUS_DEVOLUCION_LIQUIDADA = 3;
+
+	// Estatus transito
+	public static final Integer ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS = 1;
+	public static final Integer ESTATUS_TRANSITO_SOLICITADA = 2;
+	public static final Integer ESTATUS_TRANSITO_MARCADO_DEVOLUCION = 4;
+
+	// Tipo de contacts
+	public static final Long TIPO_CONTACTO_MIDAS = 1l;
+	public static final Long TIPO_CONTACTO_ENTIDAD = 2l;
 
 	/**
 	 * Valor constante que es enviado como parametro de consulta para discrimnacion por estatus de conciliacion en proceso

@@ -2,7 +2,7 @@
  * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
  * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
  */
-package mx.com.nmp.pagos.mimonte.dto.conciliacion;
+package mx.com.nmp.pagos.mimonte.consumer.rest.dto;
 
 /**
  * @name TokenServiceReponseDTO
@@ -13,18 +13,18 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  * @creationDate 05/06/2019 13:57 hrs.
  * @version 0.1
  */
-public class TokenServiceReponseDTO {
+public class BusRestTokenReponseDTO {
 
 	private String expires_in;
 	private String token_type;
 	private String refresh_token;
 	private String access_token;
 
-	public TokenServiceReponseDTO() {
+	public BusRestTokenReponseDTO() {
 		super();
 	}
 
-	public TokenServiceReponseDTO(String expires_in, String token_type, String refresh_token, String access_token) {
+	public BusRestTokenReponseDTO(String expires_in, String token_type, String refresh_token, String access_token) {
 		super();
 		this.expires_in = expires_in;
 		this.token_type = token_type;

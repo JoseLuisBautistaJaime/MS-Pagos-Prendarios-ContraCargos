@@ -63,7 +63,6 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 
 	public MovimientoTransito() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public MovimientoTransito(EstatusTransito estatus, Integer folio, Integer sucursal, Date fecha,

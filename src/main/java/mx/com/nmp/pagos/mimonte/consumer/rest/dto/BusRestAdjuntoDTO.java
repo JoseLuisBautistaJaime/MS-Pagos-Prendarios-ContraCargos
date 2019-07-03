@@ -2,7 +2,7 @@
  * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
  * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
  */
-package mx.com.nmp.pagos.mimonte.dto.conciliacion;
+package mx.com.nmp.pagos.mimonte.consumer.rest.dto;
 
 import java.util.List;
 
@@ -15,24 +15,24 @@ import java.util.List;
  * @version 1.0
  * @createdDate 04/06/2019 22:57 hrs.
  */
-public class SolicitarPagosAdjuntoDTO {
+public class BusRestAdjuntoDTO {
 
-	List<AdjuntoSolicPagosDTO> adjunto;
+	List<BusRestAdjuntoFileDTO> adjunto;
 
-	public SolicitarPagosAdjuntoDTO() {
+	public BusRestAdjuntoDTO() {
 		super();
 	}
 
-	public SolicitarPagosAdjuntoDTO(List<AdjuntoSolicPagosDTO> adjunto) {
+	public BusRestAdjuntoDTO(List<BusRestAdjuntoFileDTO> adjunto) {
 		super();
 		this.adjunto = adjunto;
 	}
 
-	public List<AdjuntoSolicPagosDTO> getAdjunto() {
+	public List<BusRestAdjuntoFileDTO> getAdjunto() {
 		return adjunto;
 	}
 
-	public void setAdjunto(List<AdjuntoSolicPagosDTO> adjunto) {
+	public void setAdjunto(List<BusRestAdjuntoFileDTO> adjunto) {
 		this.adjunto = adjunto;
 	}
 

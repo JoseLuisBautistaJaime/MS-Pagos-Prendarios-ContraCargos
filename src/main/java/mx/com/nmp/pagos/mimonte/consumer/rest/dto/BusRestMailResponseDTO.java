@@ -2,7 +2,9 @@
  * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
  * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
  */
-package mx.com.nmp.pagos.mimonte.dto.conciliacion;
+package mx.com.nmp.pagos.mimonte.consumer.rest.dto;
+
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.RespuestaMailResponseDTO;
 
 /**
  * @name SendMailResponseDTO
@@ -13,7 +15,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  * @creationDate 05/06/2019 14:01 hrs.
  * @version 0.1
  */
-public class SendMailResponseDTO {
+public class BusRestMailResponseDTO {
 
 	private RespuestaMailResponseDTO respuesta;
 
@@ -25,7 +27,7 @@ public class SendMailResponseDTO {
 		this.respuesta = respuesta;
 	}
 
-	public SendMailResponseDTO(RespuestaMailResponseDTO respuesta) {
+	public BusRestMailResponseDTO(RespuestaMailResponseDTO respuesta) {
 		super();
 		this.respuesta = respuesta;
 	}

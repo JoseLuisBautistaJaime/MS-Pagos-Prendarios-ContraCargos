@@ -4,36 +4,41 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.DevolucionesBuilder;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusDevolucionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarDevolucionesService;
 
 /**
  * @name DevolucionesServiceImpl
@@ -57,8 +62,22 @@ public class DevolucionesServiceImpl implements DevolucionesService{
 	private EstatusDevolucionRepository estatusDevolucionRepository;
 	
 	@Autowired
+	private EstatusTransitoRepository estatusTransitoRepository;
+	
+	@Autowired
 	private MovimientoTransitoRepository movimientoTransitoRepository;
 	
+	@Autowired
+	private EntidadRepository entidadRepository;
+
+	@Autowired
+	private SolicitarDevolucionesService solicitarDevolucionesService;
+
+
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService#consultaDevolucion(java.lang.Integer)
+	 */
 	@Override
 	public List<DevolucionConDTO> consultaDevolucion(Integer folio) {
 
@@ -72,146 +91,93 @@ public class DevolucionesServiceImpl implements DevolucionesService{
 		return DevolucionesBuilder.buildDevolucionConDTOListFromMovimientoDevolucionList(devoluciones);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService#liquidarDevoluciones(mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO, java.lang.String)
+	 */
 	@Override
 	@Transactional
-	public List<DevolucionEntidadDTO> liquidarDevoluciones(LiquidacionMovimientosRequestDTO liquidarDevoluciones,
-			String usuario) {
+	public List<DevolucionEntidadDTO> liquidarDevoluciones(LiquidacionMovimientosRequestDTO liquidarDevoluciones, String usuario) {
 
-		List<DevolucionEntidadDTO> response = null;
+		if (liquidarDevoluciones == null || liquidarDevoluciones.getFolio() == null || liquidarDevoluciones.getMovimientos() == null) {
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		}
+
+		List<DevolucionEntidadDTO> movimientosLiquidados = new ArrayList<DevolucionEntidadDTO>();
 
 		try {
 
+			// Se obtiene el estatus liquidada
+			EstatusDevolucion edLiquidada = estatusDevolucionRepository.getOne(ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
+
+			// Por cada movimiento a liquidar:
 			for (MovimientosDTO movimientos : liquidarDevoluciones.getMovimientos()) {
 
-				if (movimientos != null) {
+				// Se obtiene el movimiento a liquidar
+				MovimientoDevolucion md = movimientoDevolucionRepository.findByIdConciliacionAndIdMovimiento(liquidarDevoluciones.getFolio(), movimientos.getId());
+				if (md == null) {
+					throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+				}
 
-					List<MovimientoDevolucion> movimientosDevolucion = movimientoDevolucionRepository.findByIdConciliacionAndIdMovimientoAndFecha(liquidarDevoluciones.getFolio(), movimientos.getId(), movimientos.getFecha());
+				// Se actualiza el estatus a liquidada unicamente a los movimientos que se encuentran solicitados
+				if (md.getEstatus().getId() == ConciliacionConstants.ESTATUS_DEVOLUCION_SOLICITADA) {
 
-					for (MovimientoDevolucion md : movimientosDevolucion) {
+					md.setEstatus(edLiquidada);
+					md.setLastModifiedDate(new Date());
+					md.setLastModifiedBy(usuario);
+					movimientoDevolucionRepository.saveAndFlush(md);
 
-						if (movimientosDevolucion != null) {
-
-							if (md.getEstatus().getNombre().equals(ConciliacionConstants.REQUEST)) {
-
-								EstatusDevolucion ed = estatusDevolucionRepository.findByNombre(ConciliacionConstants.LIQUIDATE);
-
-								md.setEstatus(ed);
-								md.setLastModifiedDate(new Date());
-								movimientoDevolucionRepository.saveAndFlush(md);
-
-								Conciliacion conciliacion = conciliacionRepository.findById(liquidarDevoluciones.getFolio()).isPresent() ? conciliacionRepository.findById(liquidarDevoluciones.getFolio()).get() : null;
-
-								response = DevolucionesBuilder.buildDevolucionEntidadDTOListFromMovimientoDevolucionLista(movimientosDevolucion, conciliacion);
-
-							}
-
-							throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND_FOR_IDS);
-
-						}
-
-						throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-					}
-
+					Entidad entidad = entidadRepository.findByConciliacion(md.getIdConciliacion());
+					DevolucionEntidadDTO devolucionEntidadDTO = DevolucionesBuilder.buildDevolucionEntidadDTOFromMovimientosDevolucion(md, entidad);
+					movimientosLiquidados.add(devolucionEntidadDTO);
 				}
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS);
 		}
-		return response;
+		return movimientosLiquidados;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService#solicitarDevoluciones(mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO, java.lang.String)
+	 */
 	@Override
 	@Transactional
-	public List<DevolucionEntidadDTO> solicitarDevoluciones(FolioRequestDTO folio, String usuario) {
-		
-		List<DevolucionEntidadDTO> response = null;
-		
-		try {
-			
-			if(folio.getFolio() != null) {
-				
-				List<MovimientoDevolucion> movimientosDevolucion = movimientoDevolucionRepository.findByFolio(folio.getFolio());
-				
-				if(movimientosDevolucion != null) {
-					
-					for(MovimientoDevolucion md : movimientosDevolucion) {
-						
-						if (md.getEstatus().getNombre().equals(ConciliacionConstants.PENDING)) {
-							
-							EstatusDevolucion ed = estatusDevolucionRepository.findByNombre(ConciliacionConstants.REQUEST);
-								
-								md.setEstatus(ed);
-								md.setLastModifiedDate(new Date());
-								movimientoDevolucionRepository.saveAndFlush(md);
-							}
-							
-							Conciliacion conciliacion = conciliacionRepository.findById(md.getIdConciliacion()).isPresent()	? conciliacionRepository.findById(md.getIdConciliacion()).get()	: null;
-							
-							response = DevolucionesBuilder.buildDevolucionEntidadDTOListFromMovimientoDevolucionLista(movimientosDevolucion, conciliacion);
-						}
-					}
-				
-				throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-				
-				}
-			}catch (Exception ex) {
-				
-				throw new ConciliacionException(ConciliacionConstants.AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS);
-				
-				}
-		return response;
-		
+	public List<DevolucionEntidadDTO> solicitarDevoluciones(FolioRequestDTO folio, String modifiedBy) throws ConciliacionException {
+
+		// Se validan parametros
+		if (folio == null) {
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		}
 
-	@Override
-	@Transactional
-	public List<DevolucionEntidadDTO> actualizacionDevoluciones(List<DevolucionUpdtDTO> devoluciones) {
+		if (folio.getFolio() == null || folio.getFolio() <= 0) {
+			throw new ConciliacionException("Folio incorrecto");
+		}
 
-		List<DevolucionEntidadDTO> response = null;
+		List<DevolucionEntidadDTO> movimientosSolicitados = null;
 
 		try {
 
-			for (DevolucionUpdtDTO d : devoluciones) {
-
-				if (d != null) {
-
-					List<MovimientoDevolucion> movimientosDevolucion = movimientoDevolucionRepository.findByIdMovimientoAndFecha(d.getIdMovimiento(), d.getFecha());
-
-					if (movimientosDevolucion != null) {
-
-						if (d.getLiquidar() == true) {
-
-							for (MovimientoDevolucion md : movimientosDevolucion) {
-
-								EstatusDevolucion ed = estatusDevolucionRepository.findByNombre(ConciliacionConstants.LIQUIDATE);
-
-								md.setFecha(d.getFecha());
-								md.setFechaLiquidacion(d.getFecha());
-								md.setEstatus(ed);
-								movimientoDevolucionRepository.saveAndFlush(md);
-
-								Conciliacion conciliacion = conciliacionRepository.findById(md.getIdConciliacion()).isPresent() ? conciliacionRepository.findById(md.getIdConciliacion()).get()	: null;
-
-								response = DevolucionesBuilder.buildDevolucionEntidadDTOListFromMovimientoDevolucionLista(movimientosDevolucion, conciliacion);
-
-							}
-
-						}
-					}
-
-					throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-
-				}
-			}
+			// Se obtienen los movimientos por folio
+			List<MovimientoDevolucion> movimientosDevolucion = movimientoDevolucionRepository.findByFolio(folio.getFolio());
+			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy);
 
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS);
 		}
 
-		return response;
+		return movimientosSolicitados;
+		
 	}
 
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService#consulta(mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO)
+	 */
 	@Override
 	public List<DevolucionEntidadDTO> consulta(DevolucionRequestDTO devoluciones) {
 
@@ -219,6 +185,7 @@ public class DevolucionesServiceImpl implements DevolucionesService{
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		if (devoluciones.getIdEntidad() < 1)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+
 		Calendar ini = Calendar.getInstance();
 		Calendar fin = Calendar.getInstance();
 		ini.setTime(devoluciones.getFechaDesde());
@@ -233,10 +200,14 @@ public class DevolucionesServiceImpl implements DevolucionesService{
 
 	}
 
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService#solicitarDevoluciones(mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO, java.lang.String)
+	 */
 	@Override
 	@Transactional
-	public List<DevolucionEntidadDTO> solicitar(DevolucionesIdsMovimientosDTO solicitar) {
-		
+	public List<DevolucionEntidadDTO> solicitarDevoluciones(DevolucionesIdsMovimientosDTO solicitar, String modifiedBy) {
+
 		if (solicitar == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		
@@ -246,91 +217,131 @@ public class DevolucionesServiceImpl implements DevolucionesService{
 			if (sol < 1)
 				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		}
-		
-		List<DevolucionEntidadDTO> response = null;
+
+		List<DevolucionEntidadDTO> movimientosSolicitados = null;
 		
 		try {
-			for (Integer s : solicitar.getIdsMovimientos()) {
-				if (s != null) {
-					List<MovimientoDevolucion> movimientosDevolucion = movimientoDevolucionRepository.findByIdMovimientos(s);
-					
-					if (movimientosDevolucion != null) {
-						for (MovimientoDevolucion md : movimientosDevolucion) {
-							if (md.getEstatus().getNombre().equals(ConciliacionConstants.PENDING)) {
-								EstatusDevolucion ed = estatusDevolucionRepository.findByNombre(ConciliacionConstants.REQUEST);
-								
-								md.setEstatus(ed);
-								movimientoDevolucionRepository.saveAndFlush(md);
-							}
-							
-							Conciliacion conciliacion = conciliacionRepository.findById(md.getIdConciliacion()).isPresent() ? conciliacionRepository.findById(md.getIdConciliacion()).get() : null;
-
-							response = DevolucionesBuilder.buildDevolucionEntidadDTOListFromMovimientoDevolucionLista(movimientosDevolucion, conciliacion);
-						}
-					}
-					throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-				}
-			}
+			
+			// Se obtienen los movimientos de devolucion usando los ids recibidos
+			List<MovimientoDevolucion> movimientosDevolucion = movimientoDevolucionRepository.findAllById(solicitar.getIdsMovimientos());
+			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy);
+			
 		} catch (Exception ex) {
 			throw new ConciliacionException(ConciliacionConstants.AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS);
 		}
-		return response;
+		return movimientosSolicitados;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService#marcarDevolucion(mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO, java.lang.String)
+	 */
 	@Override
 	@Transactional
 	public List<DevolucionConDTO> marcarDevolucion(SolicitarPagosRequestDTO marcarDevoluciones, String createdBy) {
 
-		List<DevolucionConDTO> response = null;
-		MovimientoDevolucion movimientoDevolucion = null;
+		// Se validan parametros
+		if (marcarDevoluciones == null || marcarDevoluciones.getIdMovimientos() == null) {
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		}
+
+
+		List<DevolucionConDTO> movimientosMarcados = new ArrayList<DevolucionConDTO>();
 
 		try {
 
-			for (Integer marcarDev : marcarDevoluciones.getIdMovimientos()) {
-				if (marcarDev != null) {
+			// Se obtiene el catalogo devolucion pendiente
+			EstatusDevolucion edPendiente = estatusDevolucionRepository.getOne(ConciliacionConstants.ESTATUS_DEVOLUCION_PENDIENTE);
+			
+			// Se obtiene el catalogo de movimiento en transito transferido
+			EstatusTransito etMarcadoDev = estatusTransitoRepository.getOne(ConciliacionConstants.ESTATUS_TRANSITO_MARCADO_DEVOLUCION);
+			
+			// Por cada movimiento en transito:
+			for (Integer idMovimientoTransito : marcarDevoluciones.getIdMovimientos()) {
 
-					List<MovimientoTransito> movimientoTransito = movimientoTransitoRepository.findByIdFolioAndIdMovimiento(marcarDevoluciones.getFolio(), marcarDev);
-
-					if (movimientoTransito != null) {
-
-						EstatusDevolucion ed = estatusDevolucionRepository.findByNombre(ConciliacionConstants.PENDING);
-
-						if (ed != null) {
-
-							for (MovimientoTransito mt : movimientoTransito) {
-
-								movimientoDevolucion = new MovimientoDevolucion();
-								movimientoDevolucion.setIdConciliacion(mt.getIdConciliacion());
-								movimientoDevolucion.setCreatedBy(createdBy);
-								movimientoDevolucion.setCreatedDate(new Date());
-								movimientoDevolucion.setLastModifiedBy(null);
-								movimientoDevolucion.setLastModifiedDate(null);
-								movimientoDevolucion.setNuevo(true);
-								movimientoDevolucion.setEstatus(ed);
-								movimientoDevolucion.setFecha(mt.getFecha());
-								movimientoDevolucion.setMonto(mt.getMonto());
-								movimientoDevolucion.setEsquemaTarjeta(mt.getEsquemaTarjeta());
-								movimientoDevolucion.setIdentificadorCuenta(null);
-								movimientoDevolucion.setTitular(mt.getTitular());
-								movimientoDevolucion.setCodigoAutorizacion(null);
-								movimientoDevolucion.setSucursal(mt.getSucursal());
-								movimientoDevolucion.setFechaLiquidacion(null);
-
-								movimientoDevolucionRepository.save(movimientoDevolucion);
-								movimientoTransitoRepository.deleteById(marcarDev);
-
-								response = MovimientosTransitoBuilder.buildDevolucionConDTOListFromMovimientoTransitoList(movimientoTransito, ed);
-
-							}
-
-						}
-					}
+				// Se obtiene el movimiento en transito asignado al folio y al id
+				MovimientoTransito movimientoTransito = movimientoTransitoRepository.findByIdFolioAndIdMovimiento(marcarDevoluciones.getFolio(), idMovimientoTransito);
+				if (movimientoTransito == null) { // TODO: Validar el estatus del movimiento en transito
 					throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 				}
+
+				// Se crea el movimiento devolucion en base al movimiento en transito
+				MovimientoDevolucion movimientoDevolucion = MovimientoDevolucionBuilder.buildMovimientoFromMovimientoTransito(movimientoTransito, edPendiente, createdBy);
+				movimientoDevolucionRepository.save(movimientoDevolucion);
+				
+				// Se actualiza el estatus del movimiento en transito como marcado para devolucion (borrado logico)
+				movimientoTransito.setLastModifiedBy(createdBy);
+				movimientoTransito.setLastModifiedDate(new Date());
+				movimientoTransito.setEstatus(etMarcadoDev);
+				movimientoTransitoRepository.save(movimientoTransito);
+
+				DevolucionConDTO devolucionConDTO = MovimientosTransitoBuilder.buildDevolucionConDTOFromMovimientoTransito(movimientoTransito, edPendiente);
+				movimientosMarcados.add(devolucionConDTO);
+
 			}
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS);
 		}
-		return response;
+
+		return movimientosMarcados;
 	}
+
+
+
+
+	// PRIVATES /////////////////////////////////////////////
+
+
+	/**
+	 * Se encarga de actualizar el estatus de los movimientos de devoluciones a solicitado y de realizar el envio del email de solicitud
+	 * @param movimientosDevolucion
+	 * @param usuario
+	 * @return
+	 */
+	private List<DevolucionEntidadDTO> solicitarDevoluciones(List<MovimientoDevolucion> movimientosDevolucion, String usuario) {
+		
+		List<DevolucionEntidadDTO> devolucionesSolicitadas = null;
+
+		// Se procede al envio de las devoluciones
+		if (CollectionUtils.isNotEmpty(movimientosDevolucion)) {
+			
+			devolucionesSolicitadas = new ArrayList<DevolucionEntidadDTO>();
+			
+			try {
+				
+				// Se obtiene el catalogo de devolucion solicitada
+				EstatusDevolucion edSolicitada = estatusDevolucionRepository.getOne(ConciliacionConstants.ESTATUS_DEVOLUCION_SOLICITADA);
+
+				// Se filtran unicamente las devoluciones que tienen estatus pendiente
+				// Se actualiza el estatus a solicitada
+				for (MovimientoDevolucion md : movimientosDevolucion) {
+	
+					if (md.getEstatus().getId() == ConciliacionConstants.ESTATUS_DEVOLUCION_PENDIENTE) {
+						md.setEstatus(edSolicitada);
+						md.setLastModifiedDate(new Date());
+						md.setLastModifiedBy(usuario);
+						movimientoDevolucionRepository.saveAndFlush(md);
+	
+						// Se agrega el movimiento a la respuesta
+						Entidad entidad = entidadRepository.findByConciliacion(md.getIdConciliacion());
+						DevolucionEntidadDTO movimientoDTO = DevolucionesBuilder.buildDevolucionEntidadDTOFromMovimientosDevolucion(md, entidad);
+						devolucionesSolicitadas.add(movimientoDTO);
+					}
+				}
+
+				// Se envia el email con la solicitud de devoluciones 
+				if (CollectionUtils.isNotEmpty(devolucionesSolicitadas)) {
+					solicitarDevolucionesService.enviarSolicitudDevoluciones(devolucionesSolicitadas);
+				}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				throw new ConciliacionException(ConciliacionConstants.AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS);
+			}
+		}
+
+		return devolucionesSolicitadas;
+	}
+
 }

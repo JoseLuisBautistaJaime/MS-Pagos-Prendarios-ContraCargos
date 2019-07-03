@@ -2,7 +2,7 @@
  * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
  * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
  */
-package mx.com.nmp.pagos.mimonte.dto.conciliacion;
+package mx.com.nmp.pagos.mimonte.consumer.rest.dto;
 
 /**
  * @name GeneralBusMailDTO
@@ -13,20 +13,20 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  * @version 1.0
  * @createdDate 04/06/2019 22:55 hrs.
  */
-public class GeneralBusMailDTO {
+public class BusRestMailDTO implements BusRestBodyDTO {
 
 	private String para;
 	private String de;
 	private String asunto;
 	private String contenidoHTML;
-	private SolicitarPagosAdjuntoDTO adjuntos;
+	private BusRestAdjuntoDTO adjuntos;
 
-	public GeneralBusMailDTO() {
+	public BusRestMailDTO() {
 		super();
 	}
 
-	public GeneralBusMailDTO(String para, String de, String asunto, String contenidoHTML,
-			SolicitarPagosAdjuntoDTO adjuntos) {
+	public BusRestMailDTO(String para, String de, String asunto, String contenidoHTML,
+			BusRestAdjuntoDTO adjuntos) {
 		super();
 		this.para = para;
 		this.de = de;
@@ -67,11 +67,11 @@ public class GeneralBusMailDTO {
 		this.contenidoHTML = contenidoHTML;
 	}
 
-	public SolicitarPagosAdjuntoDTO getAdjuntos() {
+	public BusRestAdjuntoDTO getAdjuntos() {
 		return adjuntos;
 	}
 
-	public void setAdjuntos(SolicitarPagosAdjuntoDTO adjuntos) {
+	public void setAdjuntos(BusRestAdjuntoDTO adjuntos) {
 		this.adjuntos = adjuntos;
 	}
 
