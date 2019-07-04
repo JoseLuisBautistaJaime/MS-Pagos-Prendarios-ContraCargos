@@ -52,6 +52,7 @@ DROP TABLE IF EXISTS `tk_operacion` ;
 DROP TABLE IF EXISTS `tk_sub_estatus_conciliacion` ;
 DROP TABLE IF EXISTS `tk_variable` ;
 DROP TABLE IF EXISTS `tk_tipo_contrato` ;
+DROP TABLE IF EXISTS `tk_estatus_pago` ;
 
 
 
@@ -204,7 +205,7 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 -- Table `tk_estatus_pago`
 -- -----------------------------------------------------
-CREATE TABLE `tk_estatus_pago` (
+CREATE TABLE IF NOT EXISTS `tk_estatus_pago` (
   `id` int(11) NOT NULL,
   `descripcion_corta` varchar(45) DEFAULT NULL,
   `descripcion` varchar(100) DEFAULT NULL,
