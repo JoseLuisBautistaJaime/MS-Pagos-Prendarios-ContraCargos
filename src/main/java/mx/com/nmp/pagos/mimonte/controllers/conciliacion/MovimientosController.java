@@ -4,11 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -32,9 +27,6 @@ import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoIDDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListDTO;
@@ -97,13 +89,9 @@ public class MovimientosController {
 	@Qualifier("movimientosEstadoCuentaService")
 	private MovimientosEstadoCuentaService movimientosEstadoCuentaService;
 
-
-
-
 	// ////////////////////////////////////////////////////////////////////////
 	// PROCESOS NOCTURNOS (MIDAS) /////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////
-
 
 	/**
 	 * Permite dar de alta movimientos resultado de los Procesos Nocturnos.
@@ -130,7 +118,6 @@ public class MovimientosController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 	}
-
 
 	/**
 	 * Permite consultar los movimientos del resultado de los procesos nocturnos.
@@ -171,13 +158,9 @@ public class MovimientosController {
 				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoProcesosNocturnosListDTO);
 	}
 
-
-
-
 	// ////////////////////////////////////////////////////////////////////////
 	// PROVEEDOR TRANSACCIONAL ////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////
-
 
 	/**
 	 * Permite dar de alta movimientos que provienen del Proveedor Transaccional
@@ -206,9 +189,9 @@ public class MovimientosController {
 
 		movimientosProveedorService.save(movimientos, userRequest);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE, null);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+				null);
 	}
-
 
 	/**
 	 * Permite consultar los movimientos del proveedor transaccional. (Open Pay)
@@ -246,15 +229,14 @@ public class MovimientosController {
 				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoTransaccionalListDTO);
 	}
 
-
-
 	// ////////////////////////////////////////////////////////////////////////
 	// ESTADO CUENTA //////////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////
 
-
 	/**
-	 * Recibe la solicitud para la consulta del archivo y el alta de los movimientos del estado de cuenta.
+	 * Recibe la solicitud para la consulta del archivo y el alta de los movimientos
+	 * del estado de cuenta.
+	 * 
 	 * @param saveEstadoCuentaRequestDTO
 	 * @param userRequest
 	 * @return
@@ -275,12 +257,12 @@ public class MovimientosController {
 		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 
-		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste los movimientos del estado de cuenta
+		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste
+		// los movimientos del estado de cuenta
 		movimientosEstadoCuentaService.procesarConsultaEstadoCuenta(saveEstadoCuentaRequestDTO, userRequest);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta de estado cuenta exitosa.", null);
 	}
-
 
 	/**
 	 * Consulta movimientos estado de cuneta por filtros de objeto
@@ -304,8 +286,7 @@ public class MovimientosController {
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		Long total = movimientosEstadoCuentaService
-				.countByConciliacionId(commonConciliacionRequestDTO.getFolio());
+		Long total = movimientosEstadoCuentaService.countByConciliacionId(commonConciliacionRequestDTO.getFolio());
 		if (null != total) {
 			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
 			movimientosEstadoCuentaDTO.setTotal(total);
@@ -317,128 +298,8 @@ public class MovimientosController {
 				|| movimientosEstadoCuentaDTO.getMovimientos().isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta movimientos exitosa.",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta de movimientos exitosa.",
 				movimientosEstadoCuentaDTO);
-	}
-
-
-	/**
-	 * Construye una respuesta dummy
-	 * 
-	 * @return
-	 */
-	// Old dummy, not used any more
-//	public static MovimientoTransaccionalListDTO buildDummyX1() {
-//		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
-//		MovimientoProveedorDTO movimientoTransaccionalDTO = new MovimientoProveedorDTO();
-//		movimientoTransaccionalDTO.setCodigoAutorizacion("67032");
-//		movimientoTransaccionalDTO.setCodigoPuertaEnlace("Aprobado");
-//		movimientoTransaccionalDTO.setCodigoRespuesta("0");
-//		movimientoTransaccionalDTO.setEntidadGestora("EGLOBAL");
-//		movimientoTransaccionalDTO.setEsquemaTarjeta("Visa");
-//		movimientoTransaccionalDTO.setFecha(new Date());
-//		movimientoTransaccionalDTO.setId(1L);
-//		movimientoTransaccionalDTO.setIdComerciante("1063488");
-//		movimientoTransaccionalDTO.setIdentificadorBanco("");
-//		movimientoTransaccionalDTO.setIdentificadorCuenta("481515xxxxxx6567");
-//		movimientoTransaccionalDTO.setIdPedido("6ae26139-6b12-4050-8c2b-2de6319487b3");
-//		movimientoTransaccionalDTO.setIdTransaccion("1");
-//		movimientoTransaccionalDTO.setMetodoPago("Tarjeta");
-//		movimientoTransaccionalDTO.setMoneda("MXN");
-//		movimientoTransaccionalDTO.setMonto(new BigDecimal("406.45"));
-//		movimientoTransaccionalDTO.setNumeroLotePago("20181001");
-//		movimientoTransaccionalDTO.setOrigenTransaccion("Internet");
-//		movimientoTransaccionalDTO.setReciboTransaccion("827412214425");
-//		movimientoTransaccionalDTO.setRecomendacionRiesgo("");
-//		movimientoTransaccionalDTO.setReferenciaPedido("148341390002");
-//		movimientoTransaccionalDTO.setReferenciaTransaccion("");
-//		movimientoTransaccionalDTO.setRespuesta3DS("");
-//		movimientoTransaccionalDTO.setRespuestaAVS("");
-//		movimientoTransaccionalDTO.setRespuestaCSC("");
-//		movimientoTransaccionalDTO.setResultado("Exito");
-//		movimientoTransaccionalDTO.setResultadoRevisionRiesgo("");
-//		movimientoTransaccionalDTO.setT3dsECI("");
-//		movimientoTransaccionalDTO.setTipoTransaccion("Pago");
-//		movimientoTransaccionalDTO.setTitularCuenta("Eduardo Lopez Lopez");
-//		movimientoTransaccionalListDTO.setTotal(406L);
-//		List<MovimientoProveedorDTO> lst = new ArrayList<>();
-//		lst.add(movimientoTransaccionalDTO);
-//		movimientoTransaccionalListDTO.setMovimientos(lst);
-//		return movimientoTransaccionalListDTO;
-//	}
-
-	/**
-	 * Construye una respuesta dummy
-	 * 
-	 * @return
-	 */
-	public static MovimientoProcesosNocturnosListDTO buildDummyX2() {
-		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
-		MovimientoMidasDTO movimientoProcesosNocturnosDTO = new MovimientoMidasDTO();
-		movimientoProcesosNocturnosDTO.setId(1L);
-		movimientoProcesosNocturnosDTO.setTransaccion(1L);
-		movimientoProcesosNocturnosDTO.setCapitalActual(new BigDecimal("400.12"));
-		movimientoProcesosNocturnosDTO.setComisiones(new BigDecimal("10.23"));
-		movimientoProcesosNocturnosDTO.setEstatus(true);
-		movimientoProcesosNocturnosDTO.setFecha(new Date());
-		movimientoProcesosNocturnosDTO.setFolioPartida(12345L);
-		movimientoProcesosNocturnosDTO.setInteres(new BigDecimal("24.52"));
-		movimientoProcesosNocturnosDTO.setMontoOperacion(new BigDecimal("123.45"));
-		movimientoProcesosNocturnosDTO.setNumAutorizacion("12345");
-		movimientoProcesosNocturnosDTO.setOperacionAbr("APL");
-		movimientoProcesosNocturnosDTO.setOperacionDesc("Abonos Pagos-Libres");
-		movimientoProcesosNocturnosDTO.setSucursal(12);
-		movimientoProcesosNocturnosDTO.setTipoContratoAbr("PL");
-		movimientoProcesosNocturnosDTO.setTipoContratoDesc("Pagos Libres");
-		movimientoProcesosNocturnosDTO.setEstadoTransaccion("Activo");
-		movimientoProcesosNocturnosDTO.setConsumidor("Mobile");
-		movimientoProcesosNocturnosListDTO.setTotal(400L);
-		List<MovimientoMidasDTO> lst = new ArrayList<>();
-		lst.add(movimientoProcesosNocturnosDTO);
-		movimientoProcesosNocturnosListDTO.setMovimientos(lst);
-		return movimientoProcesosNocturnosListDTO;
-	}
-
-	/**
-	 * Construye una respuesta dummy
-	 * 
-	 * @return
-	 */
-	public static MovimientoIDDTO buildDummyX3() {
-		MovimientoIDDTO movimientoIDDTO = new MovimientoIDDTO();
-		List<Long> lst = new ArrayList<>();
-		lst.add(1L);
-		movimientoIDDTO.setIdsMovimientos(lst);
-		return movimientoIDDTO;
-	}
-
-	/**
-	 * Construye una respuesta dummy
-	 * 
-	 * @return
-	 */
-	public static MovimientosEstadoCuentaDTO buildDummy1() {
-		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
-		List<MovimientoEstadoCuentaDTO> movimientoEstadoCuentaDTOList = new ArrayList<>();
-		movimientosEstadoCuentaDTO.setTotal(10L);
-		MovimientoEstadoCuentaDTO movimientoEstadoCuentaDTO1 = new MovimientoEstadoCuentaDTO();
-		movimientoEstadoCuentaDTO1.setDepositos(new BigDecimal("0.0"));
-		movimientoEstadoCuentaDTO1.setDescripcion("Ventas netas tarjeta …");
-		movimientoEstadoCuentaDTO1.setFecha(new Date());
-		movimientoEstadoCuentaDTO1.setRetiros(new BigDecimal("12882.62"));
-		movimientoEstadoCuentaDTO1.setSaldo(new BigDecimal("0.00"));
-		movimientoEstadoCuentaDTO1.setId(1L);
-		MovimientoEstadoCuentaDTO movimientoEstadoCuentaDTO2 = new MovimientoEstadoCuentaDTO();
-		movimientoEstadoCuentaDTO2.setDepositos(new BigDecimal("0.0"));
-		movimientoEstadoCuentaDTO2.setDescripcion("Cargos…");
-		movimientoEstadoCuentaDTO2.setFecha(new Date());
-		movimientoEstadoCuentaDTO2.setRetiros(new BigDecimal("245.00"));
-		movimientoEstadoCuentaDTO2.setSaldo(new BigDecimal("0.0"));
-		movimientoEstadoCuentaDTO2.setId(2L);
-		movimientoEstadoCuentaDTOList.add(movimientoEstadoCuentaDTO1);
-		movimientoEstadoCuentaDTOList.add(movimientoEstadoCuentaDTO2);
-		movimientosEstadoCuentaDTO.setMovimientos(movimientoEstadoCuentaDTOList);
-		return movimientosEstadoCuentaDTO;
 	}
 
 }

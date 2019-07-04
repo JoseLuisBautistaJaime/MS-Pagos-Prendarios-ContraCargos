@@ -4,11 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -29,7 +24,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -100,22 +94,4 @@ public class ReportesController {
 				reportePagosEnLineaOuterDTO);
 	}
 
-	/**
-	 * Construye un objeto dummy
-	 * 
-	 * @return
-	 */
-	public static List<ReportePagosEnLineaDTO> buildDummy1() {
-		List<ReportePagosEnLineaDTO> reportePagosLibresDTOList = new ArrayList<>();
-		ReportePagosEnLineaDTO reportePagosLibresDTO = new ReportePagosEnLineaDTO();
-		reportePagosLibresDTO.setCanal("Portal NMP");
-		reportePagosLibresDTO.setFecha(new Date());
-		reportePagosLibresDTO.setMonto(new BigDecimal("17000"));
-		reportePagosLibresDTO.setOperacion("Cobro Desempenio en Linea");
-		reportePagosLibresDTO.setPartida(12345678L);
-		reportePagosLibresDTO.setSucursal(1);
-		reportePagosLibresDTO.setTipoProducto("Clasico");
-		reportePagosLibresDTOList.add(reportePagosLibresDTO);
-		return reportePagosLibresDTOList;
-	}
 }

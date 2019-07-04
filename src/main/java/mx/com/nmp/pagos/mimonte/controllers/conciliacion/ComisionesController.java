@@ -82,7 +82,6 @@ public class ComisionesController {
 	 * @param userRequest
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/comisiones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -140,8 +139,8 @@ public class ComisionesController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		try {
 			comisionesService.delete(comisionDeleteDTO, userRequest);
-		} catch (ConciliacionException cex) {
-			throw cex;
+		} catch (ConciliacionException ex) {
+			throw ex;
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
@@ -192,7 +191,7 @@ public class ComisionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaComisiones(@PathVariable(value = "folio", required = true) Integer folio) {
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa.",
 				comisionesService.findByFolio(folio));
 	}
 

@@ -46,6 +46,7 @@ public class LayoutHeader extends Updatable implements Serializable{
 	private Layout layout;
 
 	public LayoutHeader() {
+		super();
 	}
 
 	public Long getId() {

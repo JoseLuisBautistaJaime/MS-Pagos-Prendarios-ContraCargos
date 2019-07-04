@@ -21,11 +21,10 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.constans.LayoutMailConstants;
 import mx.com.nmp.pagos.mimonte.constans.MailServiceConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAdjuntoDTO;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
@@ -54,6 +53,7 @@ public class SolicitarPagosService {
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
+	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(SolicitarPagosService.class);
 
 	/**
@@ -124,7 +124,7 @@ public class SolicitarPagosService {
 		List<MovimientoConciliacion> movimientoConciliacionList = null;
 		List<MovimientoTransito> movimientoTransitoList = null;
 		BusRestMailDTO generalBusMailDTO = null;
-		
+
 		// Consultar datos, actualizacion y generacion de registros en pagos
 		try {
 			// Consulta
@@ -146,9 +146,6 @@ public class SolicitarPagosService {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_INSERT_MOVIMIENTOS_PAGO);
 		}
 		try {
-			// Construye e-mail
-//			generalBusMailDTO = construyeEMail(contactos, contacts, tipoContacto, dataTable, mainHtml, htmlMail, ct,
-//					solicitarPagosMailDataDTOList, generalBusMailDTO);
 			generalBusMailDTO = construyeEMailVelocity(solicitarPagosMailDataDTOList);
 
 		} catch (Exception ex) {
@@ -216,50 +213,7 @@ public class SolicitarPagosService {
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
 	}
 
-	/**
-	 * Construye el correo electronico a ser enviado a los contactos de midas
-	 * 
-	 * @param contactos
-	 * @param contacts
-	 * @param tipoContacto
-	 * @param dataTable
-	 * @param mainHtml
-	 * @param htmlMail
-	 * @param ct
-	 * @param solicitarPagosMailDataDTOList
-	 * @param generalBusMailDTO
-	 * @return
-	 */
-	public BusRestMailDTO construyeEMail(List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
-		List<Contactos> contactos = contactoRespository.findByIdTipoContacto(ConciliacionConstants.TIPO_CONTACTO_MIDAS);
-		if (null == contactos || contactos.isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL);
-		// Construccion de respuesta HTML
-		StringBuilder dataTable = new StringBuilder();
-		String mainHtml = LayoutMailConstants.HTML_SOLICITAR_PAGOS_LAYOUT;
-		dataTable.append("<TABLE>");
-		buildHeaderForSolicitarPagosMailDataDTO(dataTable);
-		for (SolicitarPagosMailDataDTO value : solicitarPagosMailDataDTOList) {
-			buildBodyForSolicitarPagosMailDataDTO(dataTable, value);
-		}
-		dataTable.append("</TABLE>");
-		String htmlMail = mainHtml.replace("[bodyContent]", dataTable.toString());
-		// Se construye el DTO de request y se invoca el servicio de correo proveido por
-		// BUS
-		StringBuilder contacts = new StringBuilder();
-		int ct = 0;
-		for (Contactos cto : contactos) {
-			if (ct > 0)
-				contacts.append(",");
-			contacts.append(cto.getEmail());
-			ct++;
-		}
-		return new BusRestMailDTO(contacts.toString(), mc.mailFrom, mc.subjectMail, htmlMail,
-				new BusRestAdjuntoDTO(new ArrayList<>()));
-	}
-
-	public BusRestMailDTO construyeEMailVelocity(
-			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
+	public BusRestMailDTO construyeEMailVelocity(List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
 		Map<String, Object> model;
 		// Se obtienen los contactos de midas
 		List<Contactos> contactos = contactoRespository.findByIdTipoContacto(ConciliacionConstants.TIPO_CONTACTO_MIDAS);
@@ -267,7 +221,8 @@ public class SolicitarPagosService {
 			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL);
 		// Se constrye el cuerpo de correo HTML
 		model = buildMailModel(solicitarPagosMailDataDTOList);
-		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, mc.velocityLayout, mc.encodeType, model);
+		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, mc.velocityLayout, mc.encodeType,
+				model);
 		// Se construye el DTO de request y se invoca el servicio de correo proveido por
 		// BUS
 		StringBuilder contacts = new StringBuilder();
@@ -280,69 +235,6 @@ public class SolicitarPagosService {
 		}
 		return new BusRestMailDTO(contacts.toString(), mc.mailFrom, mc.subjectMail, htmlMail,
 				new BusRestAdjuntoDTO(new ArrayList<>()));
-	}
-
-	/**
-	 * Construye las cabeceras de la tabla html
-	 * 
-	 * @param str
-	 */
-	public void buildHeaderForSolicitarPagosMailDataDTO(StringBuilder str) {
-		str.append("<tr>");
-		str.append("<th>");
-		str.append("Folio");
-		str.append("</th>");
-		str.append("<th>");
-		str.append("Sucursal");
-		str.append("</th>");
-		str.append("<th>");
-		str.append("Fecha");
-		str.append("</th>");
-		str.append("<th>");
-		str.append("Monto");
-		str.append("</th>");
-		str.append("<th>");
-		str.append("Tipo Contrato Desc");
-		str.append("</th>");
-		str.append("<th>");
-		str.append("Cuenta");
-		str.append("</th>");
-		str.append("<th>");
-		str.append("Titular");
-		str.append("</th>");
-		str.append("</tr>");
-	}
-
-	/**
-	 * Construye las celdas de la tabla
-	 * 
-	 * @param str
-	 * @param value
-	 */
-	public void buildBodyForSolicitarPagosMailDataDTO(StringBuilder str, SolicitarPagosMailDataDTO value) {
-//		str.append("<tr>");
-//		str.append("<td>");
-//		str.append(value.getFolio());
-//		str.append("</td>");
-//		str.append("<td>");
-//		str.append(value.getSucursal());
-//		str.append("</td>");
-//		str.append("<td>");
-//		str.append(value.getFecha());
-//		str.append("</td>");
-//		str.append("<td>");
-//		str.append(value.getMonto());
-//		str.append("</td>");
-//		str.append("<td>");
-//		str.append(value.getTipoContratoDesc());
-//		str.append("</td>");
-//		str.append("<td>");
-//		str.append(value.getCuenta());
-//		str.append("</td>");
-//		str.append("<td>");
-//		str.append(value.getTitular());
-//		str.append("</td>");
-//		str.append("</tr>");
 	}
 
 	/**

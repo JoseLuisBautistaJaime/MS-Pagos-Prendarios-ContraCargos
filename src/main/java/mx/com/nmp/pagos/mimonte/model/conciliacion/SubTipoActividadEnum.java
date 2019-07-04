@@ -19,20 +19,20 @@ public enum SubTipoActividadEnum {
 			"Registro de una actividad relacionada con la generacion de una Conciliacion", TipoActividadEnum.ACTIVIDAD),
 
 	ACTUALIZACION_ESTATUS_CONCILIACION(2, "Actualizacion de estatus de Conciliacion",
-			"Registro de una operacion relacionada con la actualizacion de sub esttus y tal vez estatus de Conciliacion",
+			"Registro de una operacion relacionada con la actualizacion de sub estatus y tal vez estatus de una Conciliacion",
 			TipoActividadEnum.ACTIVIDAD),
 
 	ACTUALIZAR_CONCILIACION(3, "Actualizacion de Conciliacion",
-			"Registro un evento relacionado con la actualizacion de una Conciliacion", TipoActividadEnum.ACTIVIDAD),
+			"Registra un evento relacionado con la actualizacion de una Conciliacion", TipoActividadEnum.ACTIVIDAD),
 
-	SOLICITAR_PAGO(4, "Solicitu de Pagos", "Registra un evento relacionado con la solicitud de pagos",
+	SOLICITAR_PAGO(4, "Solicitud de Pagos", "Registra un evento relacionado con la solicitud de pagos",
 			TipoActividadEnum.ACTIVIDAD),
 
 	ENVIO_DE_PLANTILLA(5, "Envio de Plantilla", "Registra un evento relacionado con el envio de plantillas.",
 			TipoActividadEnum.ACTIVIDAD),
-	
-	CONSULTA_CONCILIACION(6, "Consulta de Conciliacion", "Registra un evento relacionado con la consulta de Conciliacion.",
-			TipoActividadEnum.ACTIVIDAD);
+
+	CONSULTA_CONCILIACION(6, "Consulta de Conciliacion",
+			"Registra un evento relacionado con la consulta de Conciliacion.", TipoActividadEnum.ACTIVIDAD);
 
 	private Integer id;
 	private String nombre;

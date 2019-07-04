@@ -12,6 +12,11 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
 @Repository("estadoCuentaRepository")
 public interface EstadoCuentaRepository extends PagingAndSortingRepository<EstadoCuenta, Long> {
 
+	/**
+	 * Regresa un estado de cuenta por id de reporte
+	 * @param idReporte
+	 * @return
+	 */
 	public EstadoCuenta findOneByIdReporte(Long idReporte);
 
 }

@@ -48,6 +48,7 @@ public class LayoutHeaderCatalog extends Updatable implements Serializable{
 	private String unidadNegocio;
 
 	public LayoutHeaderCatalog() {
+		super();
 	}
 
 	public Long getId() {

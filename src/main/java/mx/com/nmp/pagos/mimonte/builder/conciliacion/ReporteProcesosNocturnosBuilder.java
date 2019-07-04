@@ -5,10 +5,7 @@
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteProcesosNocturnosDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
@@ -25,9 +22,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 public abstract class ReporteProcesosNocturnosBuilder {
 	
 	
-	public ReporteProcesosNocturnosBuilder() {
+	private ReporteProcesosNocturnosBuilder() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

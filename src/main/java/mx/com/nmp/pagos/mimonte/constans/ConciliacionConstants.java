@@ -20,26 +20,98 @@ public final class ConciliacionConstants {
 	}
 
 	/**
-	 * Clase para especificar los valores constantes de tipos de movimientos en consulta de movimientos
+	 * Subclase de cosntantes que se mapearan de propiedades del archivo de
+	 * configuracion de spring
+	 * 
 	 * @author user
 	 *
 	 */
-	public static class TipoMovimiento{
-		
+	public static final class ConstantProperties {
+		private ConstantProperties() {
+			super();
+		}
+
+		/**
+		 * Valor del iva (IMPUESTO AL VALOR AGREGADO)
+		 */
+		public static final String IVA = "${mimonte.variables.iva}";
+	}
+
+	/**
+	 * Clase para especificar los valores constantes de tipos de movimientos en
+	 * consulta de movimientos
+	 * 
+	 * @author user
+	 *
+	 */
+	public static class TipoMovimiento {
+
+		private TipoMovimiento() {
+			super();
+		}
+
 		/**
 		 * Tipo Movimiento de deposito
 		 */
 		public static final int TIPO_DEPOSITO = 1;
-		
+
 		/**
 		 * Tipo Movimiento de retiro
 		 */
 		public static final int TIPO_RETIRO = 2;
-		
+
 	}
-	
+
+	/**
+	 * Subclase de constantes utiles para mostrar mensajes y tamanios de campos en
+	 * validaciones
+	 * 
+	 * @author user
+	 *
+	 */
+	public static final class Validation {
+
+		private Validation() {
+			super();
+		}
+
+		/**
+		 * Mensaje que es mostrado cuando se intenta ingresar una fecha inicial
+		 * posterior a la fecha final
+		 */
+		public static final String INITIAL_DATE_AFTER_FINAL_DATE = "La fecha inicial es posterior a la fecha final";
+
+		/**
+		 * Mensaje que es mostrado cuando no se encuentra informacion para los
+		 * parametros de busqueda ingresados
+		 */
+		public static final String NO_INFORMATION_FOUND = "No se encontro informacion para los parametros ingresados";
+
+		/**
+		 * Mensaje que es mostrado cuando no se encuentra una abreviatura y/o
+		 * coincidencia con un id de catalogo
+		 */
+		public static final String NO_CATALOG_INFORMATION = "No se encontro informacion de uno o mas catalogos";
+
+		/**
+		 * Mensaje que es mostrado cuando no se encuentra informacion para los
+		 * parametros de busqueda ingresados
+		 */
+		public static final String NO_INFORMATION_FOUND_FOR_IDS = "Alguno de los ids ingresados no se encuentra en el estado Solicitada";
+
+		/**
+		 * Mensaje que es mostrado cuando se genera un error de validacion de parametros
+		 * de entrada
+		 */
+		public static final String VALIDATION_PARAM_ERROR = "Se genero un error de validacion";
+
+	}
+
+	/**
+	 * User
+	 */
 	public static final String USER_SYSTEM = "System";
-	
+
 	/**
 	 * Valor estatico para un tamanio de 10 caracteres
 	 */
@@ -71,7 +143,7 @@ public final class ConciliacionConstants {
 	/**
 	 * Mensaje que es mostrado cuando se realiza una consulta de manera exitosa
 	 */
-	public static final String MSG_SUCCESSFUL_MOVIMIENTOS_QUERY = "Consulta movimientos exitosa.";
+	public static final String MSG_SUCCESSFUL_MOVIMIENTOS_QUERY = "Consulta de movimientos exitosa.";
 
 	/**
 	 * Mensaje mostrado para un alta exitosa.
@@ -132,7 +204,7 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando no se encuentran contactos a los cuales enviar
 	 * el email
 	 */
-	public static final String THERE_IS_NO_CONTACTS_TO_SEND_MAIL = "No existen contactos a los cuales enviar email";
+	public static final String THERE_IS_NO_CONTACTS_TO_SEND_MAIL = "No existen contactos a los cuales enviar e-mail";
 
 	/**
 	 * Mensaje que es mostrado cuando no se puede obtener el token en el servicio de
@@ -148,7 +220,7 @@ public final class ConciliacionConstants {
 	/**
 	 * Mensaje que aparece cuando el email no pudo ser enviado
 	 */
-	public static final String ESTADO_CUENTA_CANNOT_BE_CONSULT = "Estado de cuenta no puede ser consulta";
+	public static final String ESTADO_CUENTA_CANNOT_BE_CONSULT = "Estado de cuenta no puede ser consultado";
 	/**
 	 * Mensaje que es mostrado cuando se genera un error durante la consulta de
 	 * movimientos en transito
@@ -171,74 +243,75 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se genera un error durante la construccion del
 	 * email de movimientos en transito
 	 */
-	public static final String ERROR_ON_BUILD_EMAIL = "Se genero un error durante la creacion del email";
+	public static final String ERROR_ON_BUILD_EMAIL = "Se genero un error durante la creacion del e-mail";
 
 	/**
 	 * Mensaje que es mostrado cuando se genera un error durante el envio de emial
 	 * de movimientos en transito
 	 */
-	public static final String ERROR_ON_SENDING_EMAIL = "Se genero un error durante el envio del email";
+	public static final String ERROR_ON_SENDING_EMAIL = "Se genero un error durante el envio del e-mail";
 
 	/**
 	 * Mensaje que es mostrado cuando se inicia procesos de conciliación.
 	 */
 	public static final String CONCILIATION_PROCESS_BEGINS = "Se inicia proceso de conciliacion.";
-	
-	
+
 	/**
 	 * Mensaje que es mostrado cuando se envia de forma exitosa la conciliación.
 	 */
 	public static final String CONCILIATION_SENT_SUCCESSFULLY = "Conciliacion Enviada de forma Exitosa.";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se actualiza correctamente el sub estatus de la conciliación.
+	 * Mensaje que es mostrado cuando se actualiza correctamente el sub estatus de
+	 * la conciliación.
 	 */
 	public static final String SUB_STATUS_RECONCILIATION_UPDATED_CORRECTLY = "Sub Estatus Conciliacion actualizado correctamente.";
-	
-	
+
 	/**
 	 * Mensaje que es mostrado cuando se actualiza correctamente el proceso.
 	 */
 	public static final String STATUS_PROCESS_CORRECTLY_UPDATED = "Estatus Proceso actualizado correctamente.";
-	
+
 	/**
 	 * Mensaje que es mostrado cuando solicitud de pago es exitosa.
 	 */
 	public static final String SUCCESSFUL_PAYMENT_APPLICATION = "Solicitud Pago Exitosa.";
-	
+
 	/**
 	 * Mensaje que es mostrado cuando al marcar la solicitud es exitosa.
 	 */
 	public static final String MARK_AS_SUCCESSFUL_RETURN = "Marcar como Devolucion Exitosa.";
-	
+
 	/**
 	 * Mensaje que es mostrado cuando la consulta de la devolución es exitosa.
 	 */
 	public static final String SUCCESSFUL_RETURNS_CONSULTATION = "Consulta Devoluciones Exitosa.";
-	
+
 	/**
 	 * Mensaje que es mostrado cuando la solicitud de la devolución es exitosa.
 	 */
 	public static final String REQUEST_SUCCESSFUL_RETURN = "Solicitud Devolucion Exitosa.";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando la solicitud de la devolución es liquidada correctamente.
+	 * Mensaje que es mostrado cuando la solicitud de la devolución es liquidada
+	 * correctamente.
 	 */
-	public static final String  SUCCESSFUL_CLEARANCE_REQUEST = "Solicitud Liquidacion Exitosa.";
-	
+	public static final String SUCCESSFUL_CLEARANCE_REQUEST = "Solicitud Liquidacion Exitosa.";
+
 	/**
-	 * Mensaje que es mostrado cuando el identificador peoplesoft es actualizado correctamente.
+	 * Mensaje que es mostrado cuando el identificador peoplesoft es actualizado
+	 * correctamente.
 	 */
 	public static final String IDENTIFIER_PS_UPDATED_IN_THE_CONCILIATION = "Identificador PS actualizado en la conciliación.";
 
 	/**
-	 * Mensaje que es mostrado cuando se desea actualizar a un sub estatus con un orden inferior al actual
+	 * Mensaje que es mostrado cuando se desea actualizar a un sub estatus con un
+	 * orden inferior al actual
 	 */
 	public static final String WRONG_ORDER_SUB_STATUS = "El subestatus que desea actualizar tiene un orden incorrecto";
-	
 
 	// CATALOGOS
-	
+
 	public static final Long CATEGORIA_ESTADO_CUENTA_COMISIONES = 2L;
 
 	// Estatus conciliacion
@@ -250,7 +323,7 @@ public final class ConciliacionConstants {
 	public static final Long SUBESTATUS_CONCILIACION_ENVIADA = 14L;
 	public static final Long SUBESTATUS_CONCILIACION_ERROR = 15L;
 	public static final Long SUBESTATUS_CONCILIACION_FINALIZADA = 16L;
-	
+
 	public static final String CONCEPTO_DEVOLUCION = "DEV"; // Pendiente
 	public static final String CONCEPTO_LIQUIDACION = "LIQ"; // Pendiente
 
@@ -269,89 +342,38 @@ public final class ConciliacionConstants {
 	public static final Long TIPO_CONTACTO_ENTIDAD = 2l;
 
 	/**
-	 * Valor constante que es enviado como parametro de consulta para discrimnacion por estatus de conciliacion en proceso
+	 * Valor constante que es enviado como parametro de consulta para discrimnacion
+	 * por estatus de conciliacion en proceso
 	 */
 	public static final String CONCILIACION_EN_PROCESO_VALUE = "proceso";
-	
+
 	/**
-	 * Valor constante que es enviado como parametro de consulta para discrimnacion por estatus de devolucioniquidada
+	 * Valor constante que es enviado como parametro de consulta para discrimnacion
+	 * por estatus de devolucioniquidada
 	 */
 	public static final String DEVOLUCION_LIQUIDAD_VALUE = "liquidada";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se desea actualizar un sub estatus que no tiene asociado nungun estatus
+	 * Mensaje que es mostrado cuando se desea actualizar un sub estatus que no
+	 * tiene asociado nungun estatus
 	 */
 	public static final String NO_STATUS_FOR_SUCH_SUB_STATUS = "No se encontro un estatus asociado al id de subestatus especificado";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se genera un error obteniendo el actual sub estatus de conciliacion
+	 * Mensaje que es mostrado cuando se genera un error obteniendo el actual sub
+	 * estatus de conciliacion
 	 */
 	public static final String ERROR_GETTING_CURRENT_SUB_STATUS = "Error obteniendo el sub estatus de conciliacion actual";
-	
+
 	/**
-	 * Subclase de cosntantes que se mapearan de propiedades del archivo de
-	 * configuracion de spring
-	 * 
-	 * @author user
-	 *
-	 */
-	public static final class ConstantProperties {
-		private ConstantProperties() {
-			super();
-		}
-
-		/**
-		 * Valor del iva (IMPUESTO AL VALOR AGREGADO)
-		 */
-		public static final String IVA = "${mimonte.variables.iva}";
-	}
-
-	public static final class Validation {
-
-		private Validation() {
-			super();
-		}
-
-		/**
-		 * Mensaje que es mostrado cuando no se encuentra informacion para los
-		 * parametros de busqueda ingresados
-		 */
-		public static final String NO_INFORMATION_FOUND = "No se encontro informacion para los parametros ingresados";
-
-		/**
-		 * Mensaje que es mostrado cuando se genera un error de validacion de parametros
-		 * de entrada
-		 */
-		public static final String VALIDATION_PARAM_ERROR = "Se genero un error de validacion";
-
-		/**
-		 * Mensaje que es mostrado cuando se intenta ingresar una fecha inicial
-		 * posterior a la fecha final
-		 */
-		public static final String INITIAL_DATE_AFTER_FINAL_DATE = "La fecah inicial es posterior a la fecha final";
-
-		/**
-		 * Mensaje que es mostrado cuando no se encuentra una abreviatura y/o
-		 * coincidencia con un id de catalogo
-		 */
-		public static final String NO_CATALOG_INFORMATION = "No se encontro informacion de uno o mas catalogos";
-
-		/**
-		 * Mensaje que es mostrado cuando no se encuentra informacion para los
-		 * parametros de busqueda ingresados
-		 */
-		public static final String NO_INFORMATION_FOUND_FOR_IDS = "Alguno de los ids ingresados no esta en el estado Solicitada";
-		
-	}
-	
-	/**
-	 * Mensaje que es mostrado cuando se intenta ingresar una fecha inicial posterior a la fecha final
+	 * Mensaje que es mostrado cuando se intenta ingresar una fecha inicial
+	 * posterior a la fecha final
 	 */
 	public static final String FECHA_DESDE_IS_AFTER_FECHA_HASTA = "La fecha inicial es posterioro a la fecha final";
-	
+
 	/**
 	 * Mensaje que es mostrado cuando no se encuentra un id de comision especificado
 	 */
 	public static final String COMISION_ID_NOT_FOUND = "El id de comision especificado no fue encontrado";
-	
+
 }

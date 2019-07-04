@@ -37,7 +37,7 @@ public class MovimientoProveedor implements MovimientoReporte {
 	private String idMovimiento;
 
 	@Column(name = "id_reporte", nullable = false)
-	private Long reporte;
+	private Integer reporte;
 
 	@Column(name = "authorization", nullable = false)
 	private String authorization;
@@ -242,11 +242,11 @@ public class MovimientoProveedor implements MovimientoReporte {
 		this.tarjetaMovimientosProveedor = tarjetaMovimientosProveedor;
 	}
 
-	public Long getReporte() {
+	public Integer getReporte() {
 		return reporte;
 	}
 
-	public void setReporte(Long reporte) {
+	public void setReporte(Integer reporte) {
 		this.reporte = reporte;
 	}
 

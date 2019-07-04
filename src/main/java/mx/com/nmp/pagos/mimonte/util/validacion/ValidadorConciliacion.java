@@ -53,9 +53,7 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
-		} catch (java.lang.AssertionError ex) {
-			return false;
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return (commonConciliacionRequestDTO.getFolio() > 0);
@@ -135,9 +133,7 @@ public interface ValidadorConciliacion {
 			fechaFin.setTime(movimientoProcesosNocturnosListResponseDTO.getFechaHasta());
 			if (fechaInicio.after(fechaFin))
 				throw new ConciliacionException(ConciliacionConstants.FECHA_DESDE_IS_AFTER_FECHA_HASTA);
-		} catch (java.lang.AssertionError ex) {
-			return false;
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return true;
@@ -206,12 +202,9 @@ public interface ValidadorConciliacion {
 				}
 			} else
 				return false;
-		} catch (java.lang.AssertionError ex) {
-			return false;
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
-
 		return true;
 	}
 

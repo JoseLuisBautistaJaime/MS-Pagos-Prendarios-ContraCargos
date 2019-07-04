@@ -250,7 +250,7 @@ public abstract class MovimientosBuilder {
 	 * @return
 	 */
 	public static MovimientoProveedor buildMovimientoProveedorFromMovimientoProveedorDTO(
-			MovimientoProveedorDTO movimientoProveedorDTO, final long idReporte) {
+			MovimientoProveedorDTO movimientoProveedorDTO, final int idReporte) {
 		MovimientoProveedor movimientoProveedor = new MovimientoProveedor();
 		movimientoProveedor.setId(null);
 		movimientoProveedor.setReporte(idReporte);
@@ -301,7 +301,7 @@ public abstract class MovimientosBuilder {
 	 * @return
 	 */
 	public static List<MovimientoProveedor> buildMovimientoProveedorListFromMovimientoTransaccionalListRequestDTO(
-			MovimientoTransaccionalListRequestDTO movimientoTransaccionalListRequestDTO, final long idReporte) {
+			MovimientoTransaccionalListRequestDTO movimientoTransaccionalListRequestDTO, final int idReporte) {
 		List<MovimientoProveedor> movimientoProveedorList = null;
 		MovimientoProveedor movimientoProveedor = null;
 		if (null != movimientoTransaccionalListRequestDTO && null != movimientoTransaccionalListRequestDTO.getFolio()

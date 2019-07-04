@@ -88,11 +88,8 @@ public class DevolucionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultar(@RequestBody DevolucionRequestDTO devolucionDTO) {
-		
-		
-//		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
 		List<DevolucionEntidadDTO> respuesta = devolucionesServiceImpl.consulta(devolucionDTO);
-		
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Devoluciones Exitosa.",
 				respuesta);
 	}
@@ -110,7 +107,8 @@ public class DevolucionesController {
 	@PutMapping(value = "/devoluciones/actualizacion", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Realiza la administración de devoluciones a nivel entidad - Actualización de la fecha y liquidación para las devoluciones.", tags = {
 			"Devoluciones" })
-	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Actualización Devoluciones Exitosa."),
+	@ApiResponses({
+			@ApiResponse(code = 200, response = Response.class, message = "Actualización Devoluciones Exitosa."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
@@ -142,10 +140,10 @@ public class DevolucionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response solicitar(@RequestBody DevolucionesIdsMovimientosDTO devolucionesIdsMovimientosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		
-//		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
-		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl.solicitarDevoluciones(devolucionesIdsMovimientosDTO, userRequest);
-		
+
+		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl
+				.solicitarDevoluciones(devolucionesIdsMovimientosDTO, userRequest);
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Devoluciones Exitosa.",
 				devolucionEntidadDTOList);
 	}

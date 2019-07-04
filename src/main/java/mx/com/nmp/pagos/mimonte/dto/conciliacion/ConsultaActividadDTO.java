@@ -15,15 +15,14 @@ import java.util.Date;
  * @creationDate 15/05/2019 22:18 hrs.
  * @version 0.1
  */
-public class ConsultaActividadDTO implements Comparable<ConsultaActividadDTO>{
-	
+public class ConsultaActividadDTO implements Comparable<ConsultaActividadDTO> {
+
 	private Integer folio;
 	private Date fecha;
 	private String descripcion;
 
 	public ConsultaActividadDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ConsultaActividadDTO(Integer folio, Date fecha, String descripcion) {
@@ -64,7 +63,6 @@ public class ConsultaActividadDTO implements Comparable<ConsultaActividadDTO>{
 
 	@Override
 	public int compareTo(ConsultaActividadDTO o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

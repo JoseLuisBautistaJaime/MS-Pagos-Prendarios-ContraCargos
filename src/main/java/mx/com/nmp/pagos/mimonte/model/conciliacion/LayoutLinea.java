@@ -52,6 +52,7 @@ public class LayoutLinea extends Updatable implements Serializable {
 	private Layout layout;
 
 	public LayoutLinea() {
+		super();
 	}
 
 	public Long getId() {

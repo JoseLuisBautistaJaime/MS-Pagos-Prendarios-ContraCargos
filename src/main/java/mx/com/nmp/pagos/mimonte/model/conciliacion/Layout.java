@@ -31,6 +31,7 @@ public class Layout implements Serializable {
 	private List<LayoutLinea> layoutLineas;
 
 	public Layout() {
+		super();
 	}
 
 	public Long getId() {

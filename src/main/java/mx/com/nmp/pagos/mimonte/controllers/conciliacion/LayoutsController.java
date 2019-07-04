@@ -88,7 +88,7 @@ public class LayoutsController {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				layoutDTO);
 	}
-	
+
 	/**
 	 * Permite consultar todos los layouts de una conciliación.
 	 * 
@@ -118,7 +118,7 @@ public class LayoutsController {
 	 * 
 	 * @param layoutSaveDTO
 	 * @param userRequest
-	 * @return  
+	 * @return
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
@@ -131,9 +131,9 @@ public class LayoutsController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveLayout(@RequestBody LayoutDTO layoutDTOe) {
-		//LOG.error("------" + layoutDTOe.toString());
 		layoutsService.saveLayout(layoutDTOe);
-		LayoutDTO layoutDTOs = layoutsService.consultarUnLayout(layoutDTOe.getFolio(), layoutDTOe.getTipoLayout().toString());
+		LayoutDTO layoutDTOs = layoutsService.consultarUnLayout(layoutDTOe.getFolio(),
+				layoutDTOe.getTipoLayout().toString());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layouts agregados con éxito.",
 				layoutDTOs);
 	}
@@ -161,42 +161,5 @@ public class LayoutsController {
 		layoutsService.eliminarUnLayout(folio, idLayout);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layout eliminado con éxito.", null);
 	}
-
-	/**
-	 * Construye un objeto dummy
-	 * 
-	 * @return
-	 */
-//	  public static LayoutDTO buildDummy1() { LayoutDTO layoutDTO = new
-//	  LayoutDTO(); LayoutCabeceraDTO layoutCabeceraDTO = new LayoutCabeceraDTO();
-//	  List<LayoutLineaDTO> layoutLineaDTOList = new ArrayList<>(); LayoutLineaDTO
-//	  layoutLineaDTO1 = new LayoutLineaDTO(); LayoutLineaDTO layoutLineaDTO2 = new
-//	  LayoutLineaDTO(); 
-//	  layoutCabeceraDTO.setCabecera("H");
-//	  layoutCabeceraDTO.setCodigoOrigen("B");
-//	  layoutCabeceraDTO.setDescripcion("COMISION ECOMM 14122018");
-//	  layoutCabeceraDTO.setFecha(new Date());
-//	  layoutCabeceraDTO.setUnidadNegocio("NMP01"); 
-//    layoutCabeceraDTO.setId(1L);
-//	  layoutLineaDTO1.setCuenta("6402001001"); 
-//    layoutLineaDTO1.setDepId("");
-//	  layoutLineaDTO1.setId(1L); 
-//    layoutLineaDTO1.setLinea("L");
-//	  layoutLineaDTO1.setMonto(30.00); 
-//    layoutLineaDTO1.setNegocio("PRENDA");
-//	  layoutLineaDTO1.setProyectoNMP("SUCS_NB");
-//	  layoutLineaDTO1.setUnidadOperativa("13000");
-//	  layoutLineaDTO2.setCuenta("6402001001"); layoutLineaDTO2.setDepId("");
-//	  layoutLineaDTO2.setId(2L); layoutLineaDTO2.setLinea("L");
-//	  layoutLineaDTO2.setMonto(90.00); layoutLineaDTO2.setNegocio("PRENDA");
-//	  layoutLineaDTO2.setProyectoNMP("SUCS_NB");
-//	  layoutLineaDTO2.setUnidadOperativa("13001");
-//	  layoutLineaDTOList.add(layoutLineaDTO1);
-//	  layoutLineaDTOList.add(layoutLineaDTO2);
-//	  layoutDTO.setCabecera(layoutCabeceraDTO);
-//	  layoutDTO.setLineas(layoutLineaDTOList);
-//	  layoutDTO.setTipoLayout(TipoLayoutEnum.PAGOS); layoutDTO.setFolio(1); return
-//	  layoutDTO; }
-	 
 
 }

@@ -73,7 +73,6 @@ public class Global implements Serializable{
 
 	public Global() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Global(Long id, Date fecha, Integer movmientos, Integer partidas, BigDecimal monto, BigDecimal importeMidas,

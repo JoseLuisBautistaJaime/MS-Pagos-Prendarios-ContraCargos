@@ -184,7 +184,13 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query(nativeQuery = true, value = "SELECT ec.order_number AS estatus_order, sc.order_number AS sub_estatus_order FROM tk_estatus_conciliacion ec INNER JOIN to_conciliacion c ON c.id_estatus_conciliacion = ec.id INNER JOIN tk_sub_estatus_conciliacion sc ON sc.id = c.id_sub_estatus_conciliacion where C.ID = :folio")
 	public Map<String, Object> findOrderSubstatusAndStatusByFolio(@Param("folio") final Integer folio);
 
-	
+	/**
+	 * Regresa una conciliacion por id de entidad, id de cuenta y fecha creacion
+	 * @param entidadId
+	 * @param cuentaId
+	 * @param createdDate
+	 * @return
+	 */
 	public Conciliacion findByEntidadIdAndCuentaIdAndCreatedDate(Long entidadId, Long cuentaId, Date createdDate);
 
 }
