@@ -6,6 +6,7 @@ applications:
   timeout: 460
   path: target/mimonte-0.0.1.war
   env:
+    spring.profiles.active: cloud,swagger
     TZ: America/Mexico_City
   services:
     - 1775-conciliacion-db
