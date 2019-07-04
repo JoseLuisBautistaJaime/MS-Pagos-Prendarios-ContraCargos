@@ -23,7 +23,6 @@ public class ActualizaionConciliacionRequestDTO implements Comparable<Actualizai
 
 	public ActualizaionConciliacionRequestDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ActualizaionConciliacionRequestDTO(Integer folio, List<MovTransitoRequestDTO> movimientosTransito,

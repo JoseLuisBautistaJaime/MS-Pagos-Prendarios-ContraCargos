@@ -213,7 +213,7 @@ public class ConciliacionController {
 	public Response actualizaConciliacion(@RequestBody ActualizaionConciliacionRequestDTO actualizaionConciliacionRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String LastModifiedBy) {
 		
-		  ActualizaionConciliacionRequestDTO actualizaConciliacion = conciliacionServiceImpl.actualizaConciliacion(actualizaionConciliacionRequestDTO);
+		  conciliacionServiceImpl.actualizaConciliacion(actualizaionConciliacionRequestDTO);
 		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_UPDATE, null);
 	}

@@ -62,17 +62,7 @@ public interface ConciliacionService {
 	 * @return
 	 */
 	public ConciliacionDTOList consultaFolio(Integer folio);
-	
-	
-// ITERACION 2	
-	/**
-	 * Servicio que permite generar la conciliación usando los movimientos de procesos nocturnos, del proveedor transacional (open pay) y de estado de cuenta de acuerdo a su disponibilidad.
-	 * @param idConciliacion
-	 * @param usuario
-	 * @param urlCallBack
-	 */
-	public void generarConciliacion(Integer idConciliacion, String usuario, String urlCallBack);
-	
+
 	
 	/**
 	 * Servicio que permite enviar la conciliación.

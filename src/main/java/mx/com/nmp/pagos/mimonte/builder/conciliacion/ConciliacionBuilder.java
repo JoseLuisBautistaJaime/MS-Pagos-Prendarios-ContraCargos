@@ -19,7 +19,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 
 /**
@@ -228,7 +227,7 @@ public abstract class ConciliacionBuilder {
 	 * @return conciliacionDTOList
 	 */
 	public static ConciliacionDTOList buildConciliacionDTOListFromConciliacion(Conciliacion conciliacion,
-			List<Reporte> reporte, Global global, List<DevolucionConDTO> devolucionConDTOList,
+			List<Reporte> reporte, List<DevolucionConDTO> devolucionConDTOList,
 			List<MovTransitoDTO> movTransitoDTOList, List<ComisionesDTO> comisionesDTOList) {
 		ConciliacionDTOList conciliacionDTOList = null;
 		if (conciliacion != null) {
@@ -246,7 +245,7 @@ public abstract class ConciliacionBuilder {
 					.buildReporteProveedorTransaccionalDTOFromReporteList(reporte));
 			conciliacionDTOList.setReporteEstadoCuenta(
 					ReporteEstadoCuentaBuilder.buildReporteEstadoCuentaDTOFromReporteList(reporte));
-			conciliacionDTOList.setGlobal(GlobalBuilder.buildGlobalDTOFromGlobal(global));
+			conciliacionDTOList.setGlobal(GlobalBuilder.buildGlobalDTOFromGlobal(conciliacion.getGlobal()));
 			conciliacionDTOList.setDevoluciones(devolucionConDTOList);
 			conciliacionDTOList.setMovimientosTransito(movTransitoDTOList);
 			conciliacionDTOList.setComisiones(comisionesDTOList);

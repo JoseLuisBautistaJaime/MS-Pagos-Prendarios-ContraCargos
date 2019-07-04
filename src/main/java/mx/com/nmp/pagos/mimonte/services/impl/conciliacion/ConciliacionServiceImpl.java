@@ -36,7 +36,6 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.GlobalRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoComisionRepository;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
@@ -104,9 +103,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
-
-	@Autowired
-	private MovimientoConciliacionRepository movimientoConciliacionRepository;
 
 	@Autowired
 	private MovimientoComisionRepository movimientoComisionRepository;
@@ -188,9 +184,23 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		conciliacionRequestDTO.setEstatus(EstatusConciliacionBuilder.buildEstatusConciliacionDTOFromEstatusConciliacion(estatusConciliacion.get()));
 		conciliacionRequestDTO.setSubEstatus(SubEstatusConciliacionBuilder.buildSubEstatusConciliacionDTOFromSubEstatusConciliacion(subEstatusConciliacion.get()));
 
+		// Se valida que la conciliacion no exista
+		Conciliacion conciliacionBD = conciliacionRepository.findByEntidadIdAndCuentaIdAndCreatedDate(entidad.get().getId(), cuenta.get().getId(), new Date());
+		if (conciliacionBD != null) {
+			throw new ConciliacionException("Ya existe una conciliacion para la entidad, cuenta para la fecha actual");
+		}
+
+		log.debug("Creando conciliacion...");
+
 		// Se construye la conciliacion y se guarda
 		Conciliacion conciliacion = ConciliacionBuilder.buildConciliacionFromConciliacionResponseSaveDTO(conciliacionRequestDTO);
 		conciliacion = conciliacionRepository.save(conciliacion);
+
+		// Se crea el objeto global vacio
+		Global global = new Global();
+		global.setConciliacion(conciliacion);
+		global.setFecha(new Date());
+		globalRepository.save(global);
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(conciliacion.getId(), "Alta de conciliacion",
@@ -216,22 +226,25 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		if (actualizaionConciliacionRequestDTO.getFolio() < 1)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 
-		if (actualizaionConciliacionRequestDTO.getComisiones() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		//if (actualizaionConciliacionRequestDTO.getComisiones() == null)
+		//	throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 
-		for (ComisionesRequestDTO comisiones : actualizaionConciliacionRequestDTO.getComisiones()) {
-			if (comisiones.getDescripcion() == null || comisiones.getDescripcion().isEmpty()
-					|| comisiones.getDescripcion().equals("") || comisiones.getEstatus() == null
-					|| comisiones.getFecha() == null || comisiones.getId() < 1 || comisiones.getMonto() == null)
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		if (actualizaionConciliacionRequestDTO.getComisiones() != null) {
+			for (ComisionesRequestDTO comisiones : actualizaionConciliacionRequestDTO.getComisiones()) {
+				if (comisiones.getDescripcion() == null || comisiones.getDescripcion().isEmpty()
+						|| comisiones.getDescripcion().equals("") || comisiones.getEstatus() == null
+						|| comisiones.getFecha() == null || comisiones.getId() < 1 || comisiones.getMonto() == null)
+					throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			}
 		}
 
-		if (actualizaionConciliacionRequestDTO.getMovimientosTransito() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-
-		for (MovTransitoRequestDTO movimientosTransito : actualizaionConciliacionRequestDTO.getMovimientosTransito()) {
-			if (movimientosTransito.getId() < 1 || movimientosTransito.getTipo() == null)
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		//if (actualizaionConciliacionRequestDTO.getMovimientosTransito() == null)
+		//	throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		if (actualizaionConciliacionRequestDTO.getMovimientosTransito() != null) {
+			for (MovTransitoRequestDTO movimientosTransito : actualizaionConciliacionRequestDTO.getMovimientosTransito()) {
+				if (movimientosTransito.getId() < 1 || movimientosTransito.getTipo() == null)
+					throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			}
 		}
 
 		// Búsqueda del folio en la tabla de to_conciliacion
@@ -258,7 +271,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		for (MovimientoTransito mT : movimientoTransito) {
 			mT.setTipoContratoDesc(map.get(mT.getId()).getTipo());
 		}
-		movimientoTransitoRepository.flush();
+		movimientoTransitoRepository.saveAll(movimientoTransito);
 
 		List<Integer> lstC = new ArrayList<>();
 		Map<Integer, ComisionesRequestDTO> mapC = new HashMap<>();
@@ -277,7 +290,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			mC.setFechaOperacion(mapC.get(mC.getId()).getFecha());
 			mC.setMonto(mapC.get(mC.getId()).getMonto());
 		}
-		movimientoComisionRepository.flush();
+		movimientoComisionRepository.saveAll(movimientosComision);
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(conciliacion.getId(), "Actualizacion de conciliacion",
@@ -295,36 +308,27 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public List<ConsultaConciliacionDTO> consulta(ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
 
-		// Validacion del objeto request de tipo ConsultaConciliacionRequestDTO
-		if (consultaConciliacionRequestDTO.getIdEntidad() == null || consultaConciliacionRequestDTO.getIdEntidad() < 1
-				|| consultaConciliacionRequestDTO.getIdEstatus() == null
-				|| consultaConciliacionRequestDTO.getIdEstatus() < 1
-				|| consultaConciliacionRequestDTO.getFolio() == null || consultaConciliacionRequestDTO.getFolio() < 1
-				|| consultaConciliacionRequestDTO.getFechaDesde() == null
-				|| consultaConciliacionRequestDTO.getFechaHasta() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-
 		// Validación de la fecha final no sea menor que la fecha inicial.
-		if (consultaConciliacionRequestDTO.getFechaHasta().before(consultaConciliacionRequestDTO.getFechaDesde()))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		if (consultaConciliacionRequestDTO.getFechaDesde() != null && consultaConciliacionRequestDTO.getFechaHasta() != null) {
+			if (consultaConciliacionRequestDTO.getFechaHasta().before(consultaConciliacionRequestDTO.getFechaDesde()))
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+		}
 
 		// Búsqueda y validación del idEntidad.
-		Entidad entidad = entidadRepository.findById(consultaConciliacionRequestDTO.getIdEntidad()).isPresent()
-				? entidadRepository.findById(consultaConciliacionRequestDTO.getIdEntidad()).get()
-				: null;
-		if (entidad == null || entidad.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		if (consultaConciliacionRequestDTO.getIdEntidad() != null && consultaConciliacionRequestDTO.getIdEntidad() > 0) {
+			Optional<Entidad> entidad = entidadRepository.findById(consultaConciliacionRequestDTO.getIdEntidad());
+			if (!entidad.isPresent()) {
+				throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+			}
+		}
 
 		// Búsqueda del estatus de la conciliacion a partir de idEstatus.
-		EstatusConciliacion estatusConciliacion = estatusConciliacionRepository
-				.findById(consultaConciliacionRequestDTO.getIdEstatus()).isPresent()
-						? estatusConciliacionRepository.findById(consultaConciliacionRequestDTO.getIdEstatus()).get()
-						: null;
-		if (estatusConciliacion.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-
-		// Búsqueda del folio en la tabla de to_conciliacion
-		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(consultaConciliacionRequestDTO.getFolio());
+		if (consultaConciliacionRequestDTO.getIdEstatus() != null && consultaConciliacionRequestDTO.getIdEstatus() > 0) {
+			Optional<EstatusConciliacion> estatusConciliacion = estatusConciliacionRepository
+					.findById(consultaConciliacionRequestDTO.getIdEstatus());
+			if (!estatusConciliacion.isPresent())
+				throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
+		}
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(consultaConciliacionRequestDTO.getFolio(), "Consulta de conciliacion",
@@ -356,34 +360,21 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Búsqueda de los movimientos en devolución a partir del folio
 		List<MovimientoDevolucion> mD = movimientoDevolucionRepository.findByIdConciliacion(folio);
-		if (mD == null || mD.isEmpty())
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
 		// Búsqueda de los movimientos en transito a partir del folio.
 		List<MovimientoTransito> mT = movimientoTransitoRepository.findByIdConciliacion(folio);
-		if (mT == null || mT.isEmpty())
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
 		// Búsqueda de los movimientos en comisión a partir del folio.
 		List<MovimientoComision> mC = movimientoComisionRepository.findByIdConciliacion(folio);
-		if (mC == null || mC.isEmpty())
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
 		// Búsqueda de los reporte a partir del folio.
 		List<Reporte> reporte = reporteRepository.findByIdConciliacion(folio);
-		if (reporte == null || reporte.isEmpty())
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
-
-		// Búsqueda de los globales a partir del folio.
-		Global global = globalRepository.findByIdConciliacion(folio);
-		if (global == null || global.getId() == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND);
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(folio, "Consulta de folio conciliacion", TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.CONSULTA_CONCILIACION, conciliacion.toString());
 
-		return ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(conciliacion, reporte, global,
+		return ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(conciliacion, reporte,
 				MovimientoDevolucionBuilder.buildDevolucionConDTOListFromMovimientoDevolucionList(mD),
 				MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(mT),
 				MovimientoComisionBuilder.buildComisionesDTOListFromMovimientoComisionList(mC));
@@ -397,13 +388,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 * java.lang.Integer)
 	 */
 	public Conciliacion getById(Integer idConciliacion) {
-		return conciliacionRepository.findByFolio(idConciliacion);
-	}
-
-
-	@Override
-	public void generarConciliacion(Integer idConciliacion, String usuario, String urlCallBack) {
-		// TODO Auto-generated method stub
+		return conciliacionHelper.getConciliacionByFolio(idConciliacion);
 	}
 
 
