@@ -682,7 +682,7 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_global`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_global` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_conciliacion` BIGINT(20) NOT NULL,
   `fecha` DATE NOT NULL,
   `movimientos` INT(11) NULL DEFAULT NULL,

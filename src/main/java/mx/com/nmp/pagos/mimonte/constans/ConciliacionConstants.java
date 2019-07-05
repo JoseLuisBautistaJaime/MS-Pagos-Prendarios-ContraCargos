@@ -79,31 +79,31 @@ public final class ConciliacionConstants {
 		 * Mensaje que es mostrado cuando se intenta ingresar una fecha inicial
 		 * posterior a la fecha final
 		 */
-		public static final String INITIAL_DATE_AFTER_FINAL_DATE = "La fecha inicial es posterior a la fecha final";
+		public static final String INITIAL_DATE_AFTER_FINAL_DATE = "La fecha inicial es posterior a la fecha final.";
 
 		/**
 		 * Mensaje que es mostrado cuando no se encuentra informacion para los
 		 * parametros de busqueda ingresados
 		 */
-		public static final String NO_INFORMATION_FOUND = "No se encontro informacion para los parametros ingresados";
+		public static final String NO_INFORMATION_FOUND = "No se encontro informacion para los parametros ingresados.";
 
 		/**
 		 * Mensaje que es mostrado cuando no se encuentra una abreviatura y/o
 		 * coincidencia con un id de catalogo
 		 */
-		public static final String NO_CATALOG_INFORMATION = "No se encontro informacion de uno o mas catalogos";
+		public static final String NO_CATALOG_INFORMATION = "No se encontro informacion de uno o mas catalogos.";
 
 		/**
 		 * Mensaje que es mostrado cuando no se encuentra informacion para los
 		 * parametros de busqueda ingresados
 		 */
-		public static final String NO_INFORMATION_FOUND_FOR_IDS = "Alguno de los ids ingresados no se encuentra en el estado Solicitada";
+		public static final String NO_INFORMATION_FOUND_FOR_IDS = "Alguno de los ids ingresados no se encuentra en el estado Solicitada.";
 
 		/**
 		 * Mensaje que es mostrado cuando se genera un error de validacion de parametros
 		 * de entrada
 		 */
-		public static final String VALIDATION_PARAM_ERROR = "Se genero un error de validacion";
+		public static final String VALIDATION_PARAM_ERROR = "Se genero un error de validacion.";
 
 	}
 
@@ -126,19 +126,19 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando s intenta ingresar una cadena de caracteres
 	 * mayor a 10
 	 */
-	public static final String ENTITY_VALIDATION_SIZE_MESSAGE_10 = "Debe ingresar maximo 10 caracteres";
+	public static final String ENTITY_VALIDATION_SIZE_MESSAGE_10 = "Debe ingresar maximo 10 caracteres.";
 
 	/**
 	 * Mensaje que es mostrado cuando s intenta ingresar una cadena de caracteres
 	 * mayor a 45
 	 */
-	public static final String ENTITY_VALIDATION_SIZE_MESSAGE_45 = "Debe ingresar maximo 45 caracteres";
+	public static final String ENTITY_VALIDATION_SIZE_MESSAGE_45 = "Debe ingresar maximo 45 caracteres.";
 
 	/**
 	 * Mensaje que es mostrado si se genera un error en la creacion del objeto
 	 * reporte en BD
 	 */
-	public static final String REPORT_GENERATION_ERROR_MESSAGE = "Se ha generado un error durante la generacion del reporte";
+	public static final String REPORT_GENERATION_ERROR_MESSAGE = "Se ha generado un error durante la generacion del reporte.";
 
 	/**
 	 * Mensaje que es mostrado cuando se realiza una consulta de manera exitosa
@@ -169,30 +169,30 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se intenta buscar o asociar un id de
 	 * conciliacion que no existe
 	 */
-	public static final String CONCILIACION_ID_NOT_FOUND = "No se encontro el id de conciliacion ingresado";
+	public static final String CONCILIACION_ID_NOT_FOUND = "No se encontro el id de conciliacion ingresado.";
 
 	/**
 	 * Mensaje mostrado cuando se ocurre un error al cambiar el estatus.
 	 */
-	public static final String AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS = "Ocurrio un error al actualizar el estatus de la devolución";
+	public static final String AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS = "Ocurrio un error al actualizar el estatus de la devolución.";
 
 	/**
 	 * Se regresa cuando no se encuentra informacion en una busqueda relacionada con
 	 * los procesos de conciliacion en general
 	 */
-	public static final String INFORMATION_NOT_FOUND = "No se encontro informacion relacionada con los parametros de busqueda";
+	public static final String INFORMATION_NOT_FOUND = "No se encontro informacion relacionada con los parametros de busqueda.";
 
 	/**
 	 * Mensaje que es mostrado cuando no es posible obtener una conciliacion de
 	 * acuerdo a los parametros recibidos
 	 */
-	public static final String CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados";
+	public static final String CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados.";
 
 	/**
 	 * Mensaje que es mostrado cuando no es posible obtener una comision de acuerdo
 	 * a los parametros recibidos
 	 */
-	public static final String COMISION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados";
+	public static final String COMISION_NOT_FOUND_FOR_SUCH_PARAMS = "No se encontro una conciliacion para los parametros especificados.";
 
 	/**
 	 * Mensaje que es mostrado cuando se intenta eliminar una comision y esta no
@@ -204,52 +204,52 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando no se encuentran contactos a los cuales enviar
 	 * el email
 	 */
-	public static final String THERE_IS_NO_CONTACTS_TO_SEND_MAIL = "No existen contactos a los cuales enviar e-mail";
+	public static final String THERE_IS_NO_CONTACTS_TO_SEND_MAIL = "No existen contactos a los cuales enviar e-mail.";
 
 	/**
 	 * Mensaje que es mostrado cuando no se puede obtener el token en el servicio de
 	 * email
 	 */
-	public static final String CANNOT_GET_TOKEN = "No fue posible obtener el token de autorizacion";
+	public static final String CANNOT_GET_TOKEN = "No fue posible obtener el token de autorizacion.";
 
 	/**
 	 * Mensaje que aparece cuando el email no pudo ser enviado
 	 */
-	public static final String MAIL_CANNOT_BE_SEND = "El e-mail no pudo ser enviado";
+	public static final String MAIL_CANNOT_BE_SEND = "El e-mail no pudo ser enviado.";
 
 	/**
 	 * Mensaje que aparece cuando el email no pudo ser enviado
 	 */
-	public static final String ESTADO_CUENTA_CANNOT_BE_CONSULT = "Estado de cuenta no puede ser consultado";
+	public static final String ESTADO_CUENTA_CANNOT_BE_CONSULT = "Estado de cuenta no puede ser consultado.";
 	/**
 	 * Mensaje que es mostrado cuando se genera un error durante la consulta de
 	 * movimientos en transito
 	 */
-	public static final String ERROR_ON_GET_MOVIMIENTOS_TRANSITO = "Se genero un error al consultar los movimientos en transito";
+	public static final String ERROR_ON_GET_MOVIMIENTOS_TRANSITO = "Se genero un error al consultar los movimientos en transito.";
 
 	/**
 	 * Mensaje que es mostrado cuando se genera un error durante la actualizacion de
 	 * movimientos en transito
 	 */
-	public static final String ERROR_ON_UPDATE_MOVIMIENTOS_TRANSITO = "Se genero un error al consultar los movimientos en transito";
+	public static final String ERROR_ON_UPDATE_MOVIMIENTOS_TRANSITO = "Se genero un error al consultar los movimientos en transito.";
 
 	/**
 	 * Mensaje que es mostrado cuando se genera un error durante la insercion de
 	 * movimientos pago
 	 */
-	public static final String ERROR_ON_INSERT_MOVIMIENTOS_PAGO = "Se genero un error al insertar los movimientos pago";
+	public static final String ERROR_ON_INSERT_MOVIMIENTOS_PAGO = "Se genero un error al insertar los movimientos pago.";
 
 	/**
 	 * Mensaje que es mostrado cuando se genera un error durante la construccion del
 	 * email de movimientos en transito
 	 */
-	public static final String ERROR_ON_BUILD_EMAIL = "Se genero un error durante la creacion del e-mail";
+	public static final String ERROR_ON_BUILD_EMAIL = "Se genero un error durante la creacion del e-mail.";
 
 	/**
 	 * Mensaje que es mostrado cuando se genera un error durante el envio de emial
 	 * de movimientos en transito
 	 */
-	public static final String ERROR_ON_SENDING_EMAIL = "Se genero un error durante el envio del e-mail";
+	public static final String ERROR_ON_SENDING_EMAIL = "Se genero un error durante el envio del e-mail.";
 
 	/**
 	 * Mensaje que es mostrado cuando se inicia procesos de conciliación.
@@ -259,44 +259,44 @@ public final class ConciliacionConstants {
 	/**
 	 * Mensaje que es mostrado cuando se envia de forma exitosa la conciliación.
 	 */
-	public static final String CONCILIATION_SENT_SUCCESSFULLY = "Conciliacion Enviada de forma Exitosa.";
+	public static final String CONCILIATION_SENT_SUCCESSFULLY = "Conciliacion enviada de forma exitosa.";
 
 	/**
 	 * Mensaje que es mostrado cuando se actualiza correctamente el sub estatus de
 	 * la conciliación.
 	 */
-	public static final String SUB_STATUS_RECONCILIATION_UPDATED_CORRECTLY = "Sub Estatus Conciliacion actualizado correctamente.";
+	public static final String SUB_STATUS_RECONCILIATION_UPDATED_CORRECTLY = "Sub estatus conciliacion actualizado correctamente.";
 
 	/**
 	 * Mensaje que es mostrado cuando se actualiza correctamente el proceso.
 	 */
-	public static final String STATUS_PROCESS_CORRECTLY_UPDATED = "Estatus Proceso actualizado correctamente.";
+	public static final String STATUS_PROCESS_CORRECTLY_UPDATED = "Estatus proceso actualizado correctamente.";
 
 	/**
 	 * Mensaje que es mostrado cuando solicitud de pago es exitosa.
 	 */
-	public static final String SUCCESSFUL_PAYMENT_APPLICATION = "Solicitud Pago Exitosa.";
+	public static final String SUCCESSFUL_PAYMENT_APPLICATION = "Solicitud pago exitosa.";
 
 	/**
 	 * Mensaje que es mostrado cuando al marcar la solicitud es exitosa.
 	 */
-	public static final String MARK_AS_SUCCESSFUL_RETURN = "Marcar como Devolucion Exitosa.";
+	public static final String MARK_AS_SUCCESSFUL_RETURN = "Marcar como devolucion exitosa.";
 
 	/**
 	 * Mensaje que es mostrado cuando la consulta de la devolución es exitosa.
 	 */
-	public static final String SUCCESSFUL_RETURNS_CONSULTATION = "Consulta Devoluciones Exitosa.";
+	public static final String SUCCESSFUL_RETURNS_CONSULTATION = "Consulta devoluciones exitosa.";
 
 	/**
 	 * Mensaje que es mostrado cuando la solicitud de la devolución es exitosa.
 	 */
-	public static final String REQUEST_SUCCESSFUL_RETURN = "Solicitud Devolucion Exitosa.";
+	public static final String REQUEST_SUCCESSFUL_RETURN = "Solicitud devolucion exitosa.";
 
 	/**
 	 * Mensaje que es mostrado cuando la solicitud de la devolución es liquidada
 	 * correctamente.
 	 */
-	public static final String SUCCESSFUL_CLEARANCE_REQUEST = "Solicitud Liquidacion Exitosa.";
+	public static final String SUCCESSFUL_CLEARANCE_REQUEST = "Solicitud liquidacion exitosa.";
 
 	/**
 	 * Mensaje que es mostrado cuando el identificador peoplesoft es actualizado
@@ -308,7 +308,7 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se desea actualizar a un sub estatus con un
 	 * orden inferior al actual
 	 */
-	public static final String WRONG_ORDER_SUB_STATUS = "El subestatus que desea actualizar tiene un orden incorrecto";
+	public static final String WRONG_ORDER_SUB_STATUS = "El subestatus que desea actualizar tiene un orden incorrecto.";
 
 	// CATALOGOS
 
@@ -357,23 +357,28 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se desea actualizar un sub estatus que no
 	 * tiene asociado nungun estatus
 	 */
-	public static final String NO_STATUS_FOR_SUCH_SUB_STATUS = "No se encontro un estatus asociado al id de subestatus especificado";
+	public static final String NO_STATUS_FOR_SUCH_SUB_STATUS = "No se encontro un estatus asociado al id de subestatus especificado.";
 
 	/**
 	 * Mensaje que es mostrado cuando se genera un error obteniendo el actual sub
 	 * estatus de conciliacion
 	 */
-	public static final String ERROR_GETTING_CURRENT_SUB_STATUS = "Error obteniendo el sub estatus de conciliacion actual";
+	public static final String ERROR_GETTING_CURRENT_SUB_STATUS = "Error obteniendo el sub estatus de conciliacion actual.";
 
 	/**
 	 * Mensaje que es mostrado cuando se intenta ingresar una fecha inicial
 	 * posterior a la fecha final
 	 */
-	public static final String FECHA_DESDE_IS_AFTER_FECHA_HASTA = "La fecha inicial es posterioro a la fecha final";
+	public static final String FECHA_DESDE_IS_AFTER_FECHA_HASTA = "La fecha inicial es posterioro a la fecha final.";
 
 	/**
 	 * Mensaje que es mostrado cuando no se encuentra un id de comision especificado
 	 */
-	public static final String COMISION_ID_NOT_FOUND = "El id de comision especificado no fue encontrado";
+	public static final String COMISION_ID_NOT_FOUND = "El id de comision especificado no fue encontrado.";
 
+	/**
+	 * Mensaje que es mostrado cuando se intenta asociar una cuenta con una entidad que no estan relacionadas en base de datos
+	 */
+	public static final String THERE_IS_NO_SUCH_CUENTA_ENTIDAD_RELATIONSHIP = "No existe relacion entre la cuenta y la entidad especificada.";
+	
 }

@@ -90,7 +90,7 @@ public class DevolucionesController {
 	public Response consultar(@RequestBody DevolucionRequestDTO devolucionDTO) {
 		List<DevolucionEntidadDTO> respuesta = devolucionesServiceImpl.consulta(devolucionDTO);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Devoluciones Exitosa.",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta devoluciones exitosa.",
 				respuesta);
 	}
 
@@ -116,7 +116,7 @@ public class DevolucionesController {
 	public Response actualizar(@RequestBody List<DevolucionUpdtDTO> devolucionUpdtDTOList,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = buildDummy1();
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualización Devoluciones Exitosa.",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualización devoluciones exitosa.",
 				devolucionEntidadDTOList);
 	}
 
@@ -144,7 +144,7 @@ public class DevolucionesController {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl
 				.solicitarDevoluciones(devolucionesIdsMovimientosDTO, userRequest);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud Devoluciones Exitosa.",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud devoluciones exitosa.",
 				devolucionEntidadDTOList);
 	}
 

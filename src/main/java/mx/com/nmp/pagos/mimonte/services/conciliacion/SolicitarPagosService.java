@@ -145,6 +145,7 @@ public class SolicitarPagosService {
 		} catch (Exception ex) {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_INSERT_MOVIMIENTOS_PAGO);
 		}
+		// Construye e-mail
 		try {
 			generalBusMailDTO = construyeEMailVelocity(solicitarPagosMailDataDTOList);
 

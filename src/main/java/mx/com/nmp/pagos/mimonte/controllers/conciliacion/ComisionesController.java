@@ -169,7 +169,7 @@ public class ComisionesController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		if (!ValidadorConciliacion.validateComisionesTransaccionesRequestDTO(comisionesTransaccionesRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta Exitosa.",
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa.",
 				comisionesService.findByFechasAndComision(comisionesTransaccionesRequestDTO, userRequest));
 	}
 

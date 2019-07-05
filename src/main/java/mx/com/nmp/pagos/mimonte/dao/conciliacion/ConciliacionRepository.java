@@ -193,4 +193,13 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 */
 	public Conciliacion findByEntidadIdAndCuentaIdAndCreatedDate(Long entidadId, Long cuentaId, Date createdDate);
 
+	/**
+	 * Regresa un valor booleano indicando si una cuenta esta relacionada con una entidad por sus ids
+	 * @param idCuenta
+	 * @param idEntidad
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(*) FROM tr_entidad_cuenta_afiliacion tec where tec.id_entidad = :idEntidad AND tec.id_cuenta = :idCuenta ) > 0 THEN TRUE ELSE FALSE END AS result")
+	public Object checkCuentaEntidadRelationship(@Param("idCuenta") final Long idCuenta, @Param("idEntidad") final Long idEntidad);
+	
 }

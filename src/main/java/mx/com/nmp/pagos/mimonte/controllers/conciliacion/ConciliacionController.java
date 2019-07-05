@@ -122,7 +122,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveConciliacion(@RequestBody ConciliacionRequestDTO conciliacionRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-
+		
 		ConciliacionResponseSaveDTO conciliacionResponseSaveDTO = ConciliacionBuilder
 				.buildConciliacionResponseSaveDTOFromConciliacionRequestDTO(conciliacionRequestDTO, new Date(), null,
 						createdBy);
@@ -295,7 +295,7 @@ public class ConciliacionController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
 		solicitarPagosService.solicitarPagosService(solicitarPagosRequestDTO.getFolio(),
 				solicitarPagosRequestDTO.getIdMovimientos(), createdBy);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud de Pago Exitosa.", null);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud de pago exitosa.", null);
 
 	}
 
