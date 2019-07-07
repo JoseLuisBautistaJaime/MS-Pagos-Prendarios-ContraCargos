@@ -69,7 +69,7 @@ DROP TABLE IF EXISTS `tk_estatus_pago` ;
 CREATE TABLE IF NOT EXISTS `tk_catalogo` (
   `id` SMALLINT(6) NOT NULL,
   `descripcion_corta` VARCHAR(50) NULL DEFAULT NULL,
-  `descripcion` VARCHAR(50) NULL DEFAULT NULL,
+  `descripcion` VARCHAR(70) NULL DEFAULT NULL,
   `nombre_tabla` VARCHAR(50) NOT NULL,
   `activo` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`))
