@@ -1,0 +1,13 @@
+USE compose;
+
+-- INSERCION INICIAL EN CATALOGO tc_layout_header
+INSERT INTO `tc_layout_header` (`id`, `id_layout`, `cabecera`, `unidad_negocio`, `descripcion`, `codigo_origen`, `fecha`, `created_date`, `last_modified_date`) VALUES ('1', '1', 'H', 'NMP01', 'COB RF Y DS EN L', 'B', '0000-00-00', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `tc_layout_header` (`id`, `id_layout`, `cabecera`, `unidad_negocio`, `descripcion`, `codigo_origen`, `fecha`, `created_date`, `last_modified_date`) VALUES ('2', '2', 'H', 'NMP01', 'COMISIÓN', 'B', '0000-00-00', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `tc_layout_header` (`id`, `id_layout`, `cabecera`, `unidad_negocio`, `descripcion`, `codigo_origen`, `fecha`, `created_date`, `last_modified_date`) VALUES ('3', '1', 'H', 'NMP01', 'COMISIÓN', 'B', '0000-00-00', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `tc_layout_header` (`id`, `id_layout`, `cabecera`, `unidad_negocio`, `descripcion`, `codigo_origen`, `fecha`, `created_date`, `last_modified_date`) VALUES ('4', '2', 'H', 'NMP01', 'DEV RF Y DS EN LINEA', 'B', '0000-00-00', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+
+-- INSERCION INICIAL EN CATALOGO tc_layout_linea
+INSERT INTO `tc_layout_linea` (`id`, `id_layout`, `linea`, `cuenta`, `dep_id`, `unidad_operativa`, `negocio`, `proyecto_nmp`, `monto`, `created_date`, `created_by`, `last_modified_by`, `last_modified_date`) VALUES ('1', '558', 'L', '1011001063', '15000', '13324', '', '', '-3000.5670', '2019-07-02 00:00:00', 'NULL', 'NULL', '2019-07-02 00:00:00');
+INSERT INTO `tc_layout_linea` (`id`, `id_layout`, `linea`, `cuenta`, `dep_id`, `unidad_operativa`, `negocio`, `proyecto_nmp`, `monto`, `created_date`, `created_by`, `last_modified_by`, `last_modified_date`) VALUES ('2', '557', 'L', '1219001003', '', '13 000 13000', 'PRENDA', ' SUCS_NB ', '8000.5670', '2019-07-02 00:00:00', 'NULL', 'NULL', '2019-07-02 00:00:00');
+INSERT INTO `tc_layout_linea` (`id`, `id_layout`, `linea`, `cuenta`, `dep_id`, `unidad_operativa`, `negocio`, `proyecto_nmp`, `monto`, `created_date`, `created_by`, `last_modified_by`, `last_modified_date`) VALUES ('3', '556', 'L', '6402001001', '', '', '', '', '5000.5670', '2019-07-02 00:00:00', 'NULL', 'NULL', '2019-07-02 00:00:00');
+INSERT INTO `tc_layout_linea` (`id`, `id_layout`, `linea`, `cuenta`, `dep_id`, `unidad_operativa`, `negocio`, `proyecto_nmp`, `monto`, `created_date`, `created_by`, `last_modified_by`, `last_modified_date`) VALUES ('4', '559', 'L', '1220001013 ', '', '13 000 1300', '', '', '-5000.5670', '2019-07-02 00:00:00', 'NULL', 'NULL', '2019-07-02 00:00:00');

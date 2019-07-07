@@ -20,5 +20,5 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
  * @version 0.1
  */
 @Repository("movimientosPagoRepository")
-public interface MovimientosPagoRepository extends JpaRepository<MovimientoPago, Long> {
+public interface MovimientosPagoRepository extends JpaRepository<MovimientoPago, Integer> {
 }

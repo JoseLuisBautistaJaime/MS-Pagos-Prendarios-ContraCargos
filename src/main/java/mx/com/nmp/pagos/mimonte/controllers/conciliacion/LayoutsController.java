@@ -138,6 +138,23 @@ public class LayoutsController {
 				layoutDTOs);
 	}
 
+	//Enviar conciliación
+		@ResponseBody
+		@ResponseStatus(HttpStatus.OK)
+		@PostMapping(value = "/layouts/enviar/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
+		@ApiOperation(httpMethod = "POST", value = "Permite consultar los layouts para Pagos, Comisiones y Devoluciones.", tags = {
+				"Layouts" })
+		@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
+				@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+				@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+				@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+				@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+		public Response enviarConciliacion(@PathVariable(value = "folio", required = true) Long folio) {
+			String respuesta = layoutsService.enviarConciliacion(folio);
+			return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), respuesta,
+					null);
+		}
+	
 	/**
 	 * Permite eliminar layouts para Pagos, Comisiones y Devoluciones
 	 * 
@@ -158,8 +175,8 @@ public class LayoutsController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteLayout(@PathVariable(name = "folio", required = true) Long folio,
 			@PathVariable(name = "idLayout", required = true) Long idLayout) {
-		layoutsService.eliminarUnLayout(folio, idLayout);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layout eliminado con éxito.", null);
+		String respuesta = layoutsService.eliminarUnLayout(folio, idLayout);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), respuesta, null);
 	}
 
 }

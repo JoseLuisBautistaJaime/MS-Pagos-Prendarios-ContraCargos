@@ -10,6 +10,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 
 public abstract class LayoutsBuilder {
@@ -46,26 +47,21 @@ public abstract class LayoutsBuilder {
 	}
 	
 	public static List<LayoutLineaDTO> buildLayoutLineaDTOFromLayoutLinea(List<LayoutLinea> layoutLineas) {
-		LayoutLineaDTO layoutLineaDTO = null;
 		List<LayoutLineaDTO> layoutLineaDTOs = new ArrayList<>();
 		
-		if (layoutLineas != null) {
-			if(layoutLineas != null) {
-				for(LayoutLinea layoutLinea : layoutLineas) {
-					layoutLineaDTO = new LayoutLineaDTO();
-					layoutLineaDTO.setId(layoutLinea.getId());
-					layoutLineaDTO.setLinea(layoutLinea.getLinea());
-					layoutLineaDTO.setCuenta(layoutLinea.getCuenta());
-					layoutLineaDTO.setDepId(layoutLinea.getDepId());
-					layoutLineaDTO.setUnidadOperativa(layoutLinea.getUnidadOperativa());
-					layoutLineaDTO.setNegocio(layoutLinea.getNegocio());
-					layoutLineaDTO.setProyectoNMP(layoutLinea.getProyectoNmp());
-					layoutLineaDTO.setMonto(layoutLinea.getMonto());			
+				layoutLineas.forEach(l -> {
+					LayoutLineaDTO layoutLineaDTO = new LayoutLineaDTO();
+					layoutLineaDTO.setId(l.getId());
+					layoutLineaDTO.setLinea(l.getLinea());
+					layoutLineaDTO.setCuenta(l.getCuenta());
+					layoutLineaDTO.setDepId(l.getDepId());
+					layoutLineaDTO.setUnidadOperativa(l.getUnidadOperativa());
+					layoutLineaDTO.setNegocio(l.getNegocio());
+					layoutLineaDTO.setProyectoNMP(l.getProyectoNmp());
+					layoutLineaDTO.setMonto(l.getMonto());			
 					layoutLineaDTOs.add(layoutLineaDTO);
 					
-				}
-			}
-		}
+				});
 		
 		return layoutLineaDTOs;
 	}
@@ -99,13 +95,44 @@ public abstract class LayoutsBuilder {
 		return layoutHeader;
 	}
 	
-	public static List<LayoutLinea> buildLayoutLineaFromLayoutLineaDTO(List<LayoutLineaDTO> layoutLineaDTOs) {
-		LayoutLinea layoutLinea = null;
-		List<LayoutLinea> layoutLineas = new ArrayList<>();
+	public static LayoutLineaDTO buildLayoutLineaDTOFromLayoutLineaCatalog(LayoutLineaCatalog layoutLineaCatalog, BigDecimal monto) {
 		
-		if (layoutLineaDTOs != null) {
+		LayoutLineaDTO layoutLineaDTO = new LayoutLineaDTO();
+		  layoutLineaDTO.setCuenta(layoutLineaCatalog.getCuenta()); 
+	      layoutLineaDTO.setDepId(layoutLineaCatalog.getDepId());
+		  layoutLineaDTO.setId(0L); 
+	      layoutLineaDTO.setLinea(layoutLineaCatalog.getLinea());
+		  layoutLineaDTO.setMonto(monto); 
+	      layoutLineaDTO.setNegocio(layoutLineaCatalog.getNegocio());
+		  layoutLineaDTO.setProyectoNMP(layoutLineaCatalog.getProyectoNmp());
+		  layoutLineaDTO.setUnidadOperativa(layoutLineaCatalog.getUnidadOperativa());			
+		
+		return layoutLineaDTO;
+	}
+	
+	public static List<LayoutLinea> buildLayoutLineaFromLayoutLineaDTO(List<LayoutLineaDTO> layoutLineaDTOs) {
+		List<LayoutLinea> layoutLineas = new ArrayList<>();
+				layoutLineaDTOs.forEach(l -> {
+					    LayoutLinea layoutLinea = new LayoutLinea();
+						layoutLinea.setId(l.getId());
+						layoutLinea.setLinea(l.getLinea());
+						layoutLinea.setCuenta(l.getCuenta());
+						layoutLinea.setDepId(l.getDepId());
+						layoutLinea.setUnidadOperativa(l.getUnidadOperativa());
+						layoutLinea.setNegocio(l.getNegocio());
+						layoutLinea.setProyectoNmp(l.getProyectoNMP());
+						layoutLinea.setMonto(l.getMonto());		
+						layoutLineas.add(layoutLinea);
+				});
+		
+		return layoutLineas;
+	}
+	public static boolean validaLineas(List<LayoutLineaDTO> layoutLineaDTOs) {
+		LayoutLinea layoutLinea = null;
+		boolean valor = true;
+		List<LayoutLinea> layoutLineas = new ArrayList<>();
 				for(LayoutLineaDTO layoutLineaDTO : layoutLineaDTOs) {
-					if(validar(layoutLineaDTO)){
+					if(validar(layoutLineaDTO)) {
 						layoutLinea = new LayoutLinea();
 						layoutLinea.setId(layoutLineaDTO.getId());
 						layoutLinea.setLinea(layoutLineaDTO.getLinea());
@@ -117,42 +144,19 @@ public abstract class LayoutsBuilder {
 						layoutLinea.setMonto(layoutLineaDTO.getMonto());			
 						layoutLineas.add(layoutLinea);
 					}
+					else {
+						valor = false;
+						break;
+					}
 				}
-		}
 		
-		return layoutLineas;
+		return valor;
 	}
-	public static List<LayoutLinea> buildLayoutLineaFromLayoutLineaDTOC(List<LayoutLineaDTO> layoutLineaDTOs) {
-		LayoutLinea layoutLinea = null;
-		List<LayoutLinea> layoutLineas = new ArrayList<>();
-		
-		if (layoutLineaDTOs != null) {
-				for(LayoutLineaDTO layoutLineaDTO : layoutLineaDTOs) {
-						layoutLinea = new LayoutLinea();
-						layoutLinea.setId(layoutLineaDTO.getId());
-						layoutLinea.setLinea(layoutLineaDTO.getLinea());
-						layoutLinea.setCuenta(layoutLineaDTO.getCuenta());
-						layoutLinea.setDepId(layoutLineaDTO.getDepId());
-						layoutLinea.setUnidadOperativa(layoutLineaDTO.getUnidadOperativa());
-						layoutLinea.setNegocio(layoutLineaDTO.getNegocio());
-						layoutLinea.setProyectoNmp(layoutLineaDTO.getProyectoNMP());
-						layoutLinea.setMonto(layoutLineaDTO.getMonto());			
-						layoutLineas.add(layoutLinea);
-				}
-		}
-		
-		return layoutLineas;
-	}
-	//Layout layout
 	public static boolean validar(LayoutLineaDTO layoutLineaDTO) {
 		return layoutLineaDTO.getId()>=0L && 
 				!layoutLineaDTO.getLinea().equals("") && 
 				!layoutLineaDTO.getCuenta().equals("")&& 
-				!layoutLineaDTO.getDepId().equals("") && 
-			   !layoutLineaDTO.getUnidadOperativa().equals("") &&
-			   !layoutLineaDTO.getNegocio().equals("") && 
-			   !layoutLineaDTO.getProyectoNMP().equals("") &&
-			   layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) > 0;
+			   layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0;
 	}
 	
 }

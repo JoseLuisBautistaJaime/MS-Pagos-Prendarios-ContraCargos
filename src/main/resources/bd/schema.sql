@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `tc_layout_linea` ;
+DROP TABLE IF EXISTS `tc_layout_header` ;
 DROP TABLE IF EXISTS `to_global` ;
 DROP TABLE IF EXISTS `tb_actividad` ;
 DROP TABLE IF EXISTS `to_layout_linea` ;
@@ -1100,14 +1102,56 @@ CREATE TABLE to_comision_transaccion_proyeccion (
 		FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- -----------------------------------------------------
+-- Table `compose`.`tc_layout_header`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tc_layout_header` (
+  `id` INT(11) NOT NULL,
+  `id_layout` INT(11) NOT NULL,
+  `cabecera` VARCHAR(10) NOT NULL,
+  `unidad_negocio` VARCHAR(45) NULL DEFAULT NULL,
+  `descripcion` VARCHAR(150) NULL DEFAULT NULL,
+  `codigo_origen` VARCHAR(45) NULL DEFAULT NULL,
+  `fecha` DATE NULL DEFAULT NULL,
+  `campo1` VARCHAR(45) NULL DEFAULT NULL,
+  `campo2` VARCHAR(45) NULL DEFAULT NULL,
+  `created_date` DATETIME NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `compose`.`tc_layout_linea`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tc_layout_linea` (
+  `id` INT(11) NOT NULL,
+  `id_layout` INT(11) NOT NULL,
+  `linea` VARCHAR(10) NOT NULL,
+  `cuenta` VARCHAR(45) NULL DEFAULT NULL,
+  `dep_id` VARCHAR(45) NULL DEFAULT NULL,
+  `unidad_operativa` VARCHAR(50) NULL DEFAULT NULL,
+  `negocio` VARCHAR(45) NULL DEFAULT NULL,
+  `proyecto_nmp` VARCHAR(45) NULL DEFAULT NULL,
+  `monto` DECIMAL(16,4) NOT NULL,
+  `created_date` DATETIME NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
 
 -- -----------------------------------------------------
 -- Table `to_layout`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_layout` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_conciliacion` BIGINT(20) NOT NULL,
-  `tipo` VARCHAR(20) NOT NULL,
+  `tipo` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `FK_to_layout_to_conciliacion_idx` (`id_conciliacion` ASC),
   CONSTRAINT `FK_to_layout_to_conciliacion`
@@ -1121,7 +1165,7 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_layout_header`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_layout_header` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_layout` INT(11) NOT NULL,
   `cabecera` VARCHAR(10) NOT NULL,
   `unidad_negocio` VARCHAR(45) NULL DEFAULT NULL,
@@ -1147,12 +1191,12 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_layout_linea`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_layout_linea` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_layout` INT(11) NOT NULL,
   `linea` VARCHAR(10) NOT NULL,
   `cuenta` VARCHAR(45) NULL DEFAULT NULL,
   `dep_id` VARCHAR(45) NULL DEFAULT NULL,
-  `unidad_operativa` VARCHAR(10) NULL DEFAULT NULL,
+  `unidad_operativa` VARCHAR(50) NULL DEFAULT NULL,
   `negocio` VARCHAR(45) NULL DEFAULT NULL,
   `proyecto_nmp` VARCHAR(45) NULL DEFAULT NULL,
   `monto` DECIMAL(16,4) NOT NULL,

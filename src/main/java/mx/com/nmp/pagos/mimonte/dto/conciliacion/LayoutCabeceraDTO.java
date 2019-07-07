@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -21,14 +22,14 @@ public class LayoutCabeceraDTO implements Comparable<LayoutCabeceraDTO> {
 	private String unidadNegocio;
 	private String descripcion;
 	private String codigoOrigen;
-	private Date fecha;
+	private LocalDate fecha;
 
 	public LayoutCabeceraDTO() {
 		super();
 	}
 
 	public LayoutCabeceraDTO(Long id, String cabecera, String unidadNegocio, String descripcion, String codigoOrigen,
-			Date fecha) {
+			LocalDate fecha) {
 		super();
 		this.id = id;
 		this.cabecera = cabecera;
@@ -78,11 +79,11 @@ public class LayoutCabeceraDTO implements Comparable<LayoutCabeceraDTO> {
 		this.codigoOrigen = codigoOrigen;
 	}
 
-	public Date getFecha() {
+	public LocalDate getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 

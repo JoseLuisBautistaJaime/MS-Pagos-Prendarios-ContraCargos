@@ -1,6 +1,8 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+
 import javax.persistence.*;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
@@ -35,8 +37,7 @@ public class LayoutHeader extends Updatable implements Serializable{
 
 	private String descripcion;
 
-	@Temporal(TemporalType.DATE)
-	private Date fecha;
+	private LocalDate fecha;
 
 	@Column(name="unidad_negocio")
 	private String unidadNegocio;
@@ -105,11 +106,11 @@ public class LayoutHeader extends Updatable implements Serializable{
 		this.descripcion = descripcion;
 	}
 
-	public Date getFecha() {
+	public LocalDate getFecha() {
 		return this.fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 
