@@ -233,21 +233,21 @@ INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_operacion
 -- ------------------------------------------------------------------------------------------------------------------ --
-INSERT INTO tk_operacion (id, tipo, abreviatura, descripcion, inddep) VALUES
-(8, 1, 'RF', 'Cobro Refrendo', 0);
-INSERT INTO tk_operacion (id, tipo, abreviatura, descripcion, inddep) VALUES
-(116, 1, 'APL', 'Abono - Pagos Libres', 0);
-INSERT INTO tk_operacion (id, tipo, abreviatura, descripcion, inddep) VALUES
-(148, 1, 'DSO', 'Cobro Desempeño en Linea', 0);
+INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
+(8, 'RF', 'Cobro Refrendo');
+INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
+(116, 'APL', 'Abono - Pagos Libres');
+INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
+(148, 'DSO', 'Cobro Desempeño en Linea');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_tipo_contrato
 -- ------------------------------------------------------------------------------------------------------------------ --
-INSERT INTO tk_tipo_contrato (id, descripcion, baja_logica, abreviatura, inddep) VALUES
-(145, 'CLASICO', 'f', 'CL', 0);
-INSERT INTO tk_tipo_contrato (id, descripcion, baja_logica, abreviatura, inddep) VALUES
-(146, 'PAGOS LIBRES', 'f', 'PL', 0);
+INSERT INTO tk_tipo_contrato (id, abreviatura, descripcion) VALUES
+(145, 'CL', 'CLASICO');
+INSERT INTO tk_tipo_contrato (id, abreviatura, descripcion) VALUES
+(146, 'PL', 'PAGOS LIBRES');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --

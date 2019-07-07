@@ -506,10 +506,8 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tk_tipo_contrato` (
   `id` INT(11) NOT NULL,
-  `descripcion` VARCHAR(100) NOT NULL,
-  `baja_logica` VARCHAR(1) NOT NULL,
   `abreviatura` VARCHAR(10) NOT NULL,
-  `inddep` INT(11) NOT NULL,
+  `descripcion` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
@@ -520,10 +518,8 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tk_operacion` (
   `id` INT(11) NOT NULL,
-  `tipo` INT(11) NOT NULL,
   `abreviatura` VARCHAR(10) NOT NULL,
   `descripcion` VARCHAR(100) NOT NULL,
-  `inddep` INT(11) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
