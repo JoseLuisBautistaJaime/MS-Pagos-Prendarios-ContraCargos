@@ -5,7 +5,6 @@ DROP TABLE IF EXISTS `tb_actividad` ;
 DROP TABLE IF EXISTS `to_layout_linea` ;
 DROP TABLE IF EXISTS `to_layout_header` ;
 DROP TABLE IF EXISTS `to_layout` ;
-DROP TABLE IF EXISTS `tc_layout_header` ;
 DROP TABLE IF EXISTS `to_movimiento_devolucion` ;
 DROP TABLE IF EXISTS `to_movimiento_comision` ;
 DROP TABLE IF EXISTS `to_movimiento_pago` ;
@@ -599,28 +598,6 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `tc_layout_header`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tc_layout_header` (
-  `id` INT(11) NOT NULL,
-  `id_layout` INT(11) NOT NULL,
-  `cabecera` VARCHAR(10) NOT NULL,
-  `unidad_negocio` VARCHAR(45) NULL DEFAULT NULL,
-  `descripcion` VARCHAR(150) NULL DEFAULT NULL,
-  `codigo_origen` VARCHAR(45) NULL DEFAULT NULL,
-  `fecha` DATE NULL DEFAULT NULL,
-  `campo1` VARCHAR(45) NULL DEFAULT NULL,
-  `campo2` VARCHAR(45) NULL DEFAULT NULL,
-  `created_date` DATETIME NULL DEFAULT NULL,
-  `created_by` VARCHAR(100) NULL DEFAULT NULL,
-  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
-  `last_modified_date` DATETIME NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
 -- Table `to_merge_conciliacion`
 -- -----------------------------------------------------
 CREATE TABLE `to_merge_conciliacion` (
@@ -1097,6 +1074,7 @@ CREATE TABLE to_comision_transaccion_proyeccion (
 	CONSTRAINT FK_to_comision_transaccion_proyeccion_to_comision_transaccion 
 		FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- -----------------------------------------------------
 -- Table `compose`.`tc_layout_header`
