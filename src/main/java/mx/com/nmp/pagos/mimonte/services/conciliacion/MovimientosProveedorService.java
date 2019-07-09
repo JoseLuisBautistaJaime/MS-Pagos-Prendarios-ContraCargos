@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
@@ -134,7 +135,7 @@ public class MovimientosProveedorService {
 
 		Conciliacion conciliacion = this.conciliacionRepository.findByFolio(listRequestDTO.getFolio());
 		if (conciliacion == null) {
-			throw new ConciliacionException("Conciliacion con el folio " + listRequestDTO.getFolio() + " no existe");
+			throw new ConciliacionException("Conciliacion con el folio " + listRequestDTO.getFolio() + " no existe", CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
 
 		// Obtiene el reporte del proveedor transaccional
@@ -172,7 +173,7 @@ public class MovimientosProveedorService {
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE, CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		}
 	}
 
@@ -184,12 +185,9 @@ public class MovimientosProveedorService {
 	 * @return
 	 */
 	public List<MovimientoProveedorDTO> findByFolio(final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
-//		@SuppressWarnings("deprecation")
-//		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
-//				commonConciliacionRequestDTO.getResultados());
 		return MovimientosBuilder
 				.buildMovimientoProveedorDTOListFromMovimientoProveedorList(movimientoProveedorRepository
-						.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()/*, pageable*/));
+						.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()));
 	}
 
 }

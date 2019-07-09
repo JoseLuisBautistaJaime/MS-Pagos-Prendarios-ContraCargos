@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaFileBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaLineBuilder;
 import mx.com.nmp.pagos.mimonte.conector.EstadoCuentaAPI;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout43;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaImplementacionEnum;
@@ -71,11 +72,11 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 		// Consulta el archivo
 		List<String> lineasArchivo = estadoCuentaAPI.consulta(rutaArchivo, nombreArchivo);
 		if (lineasArchivo == null || lineasArchivo.size() == 0) {
-			throw new ConciliacionException("No se encontro archivo de estado de cuenta " + nombreArchivo);
+			throw new ConciliacionException("No se encontro archivo de estado de cuenta " + nombreArchivo, CodigoError.NMP_PMIMONTE_BUSINESS_054);
 		}
 
 		if (implementacion != EstadoCuentaImplementacionEnum.CUADERNO_43) {
-			throw new ConciliacionException("Implementacion " + implementacion + " no definida");
+			throw new ConciliacionException("Implementacion " + implementacion + " no definida", CodigoError.NMP_PMIMONTE_BUSINESS_055);
 		}
 
 		// Crea implementacion cuaderno 43

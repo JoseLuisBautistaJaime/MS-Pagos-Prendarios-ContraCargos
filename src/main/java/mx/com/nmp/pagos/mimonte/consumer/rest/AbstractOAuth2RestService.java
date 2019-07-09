@@ -26,6 +26,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.constans.MailServiceConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
@@ -63,13 +64,11 @@ public abstract class AbstractOAuth2RestService {
 	protected ApplicationProperties applicationProperties;
 
 	@Autowired
-	private RetryTemplate retryTemplate; 
-
+	private RetryTemplate retryTemplate;
 
 	public AbstractOAuth2RestService() {
 		super();
 	}
-
 
 	/**
 	 * Consume servicio de endpoint para obtencion de token
@@ -84,38 +83,35 @@ public abstract class AbstractOAuth2RestService {
 		map.add(mc.headerScopeKey, mc.headerScopeValue);
 
 		HttpHeaders headers = createHeadersToken(auth);
-		HttpEntity<MultiValueMap<String, String>> request2 = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		HttpEntity<MultiValueMap<String, String>> request2 = new HttpEntity<MultiValueMap<String, String>>(map,
+				headers);
 
 		// Retries
-		BusRestTokenReponseDTO obj = retryTemplate.execute(new RetryCallback<BusRestTokenReponseDTO, ConciliacionException>() {
-			public BusRestTokenReponseDTO doWithRetry(RetryContext context) throws ConciliacionException {
-				RestTemplate restTemplate = new RestTemplate();
-				ResponseEntity<BusRestTokenReponseDTO> response = null;
-				LOG.info("postForGetToken: {}, intento: #{}", url, context.getRetryCount());
-				try {
-					response = restTemplate.exchange(
-						url,
-						HttpMethod.POST,
-						request2,
-						BusRestTokenReponseDTO.class
-					);
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-					throw new ConciliacionException(ex.getMessage());
-				}
-				return response.getBody();
-			}
-		});
+		BusRestTokenReponseDTO obj = retryTemplate
+				.execute(new RetryCallback<BusRestTokenReponseDTO, ConciliacionException>() {
+					public BusRestTokenReponseDTO doWithRetry(RetryContext context) throws ConciliacionException {
+						RestTemplate restTemplate = new RestTemplate();
+						ResponseEntity<BusRestTokenReponseDTO> response = null;
+						LOG.info("postForGetToken: {}, intento: #{}", url, context.getRetryCount());
+						try {
+							response = restTemplate.exchange(url, HttpMethod.POST, request2,
+									BusRestTokenReponseDTO.class);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+							throw ex;
+						}
+						return response.getBody();
+					}
+				});
 
 		String bearerToken = null != obj && null != obj.getAccess_token() ? obj.getAccess_token() : null;
 
 		if (null == bearerToken || "".equals(bearerToken))
-			throw new ConciliacionException(ConciliacionConstants.CANNOT_GET_TOKEN);
+			throw new ConciliacionException(ConciliacionConstants.CANNOT_GET_TOKEN,
+					CodigoError.NMP_PMIMONTE_BUSINESS_064);
 
 		return bearerToken;
 	}
-
 
 	/**
 	 * Consume servicio de endpoint
@@ -127,8 +123,9 @@ public abstract class AbstractOAuth2RestService {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends BusRestBodyDTO> Map<String, Object> postForObject(final BusRestAuthDTO auth, final T body, final BusRestHeaderDTO header, String url) {
-		
+	public <T extends BusRestBodyDTO> Map<String, Object> postForObject(final BusRestAuthDTO auth, final T body,
+			final BusRestHeaderDTO header, String url) {
+
 		HttpHeaders headers = createHeadersPostTo(auth, header);
 		HttpEntity<T> request = new HttpEntity<T>(body, headers);
 
@@ -139,10 +136,9 @@ public abstract class AbstractOAuth2RestService {
 				try {
 					RestTemplate restTemplate = new RestTemplate();
 					resp = restTemplate.postForObject(url, request, Object.class);
-				}
-				catch (Exception ex) {
+				} catch (Exception ex) {
 					ex.printStackTrace();
-					throw new ConciliacionException(ex.getMessage());
+					throw ex;
 				}
 				return resp;
 			}
@@ -152,7 +148,6 @@ public abstract class AbstractOAuth2RestService {
 
 		return obj;
 	}
-
 
 	/**
 	 * Consume servicio de endpoint
@@ -164,8 +159,9 @@ public abstract class AbstractOAuth2RestService {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends BusRestParamDTO> Map<String, Object> getForObject(final BusRestAuthDTO auth, final T params, final BusRestHeaderDTO header, final String url) {
-		
+	public <T extends BusRestParamDTO> Map<String, Object> getForObject(final BusRestAuthDTO auth, final T params,
+			final BusRestHeaderDTO header, final String url) {
+
 		HttpHeaders headers = createHeadersPostTo(auth, header);
 		HttpEntity<T> request = new HttpEntity<T>(params, headers);
 
@@ -176,42 +172,37 @@ public abstract class AbstractOAuth2RestService {
 				LOG.info("getForObject: {}, intento: #{}", uri, context.getRetryCount());
 				try {
 					RestTemplate restTemplate = new RestTemplate();
-					response = restTemplate.exchange(
-						uri,
-						HttpMethod.GET,
-						request,
-						Object.class
-					);
-				}
-				catch (Exception ex) {
+					response = restTemplate.exchange(uri, HttpMethod.GET, request, Object.class);
+				} catch (Exception ex) {
 					ex.printStackTrace();
-					throw new ConciliacionException(ex.getMessage());
+					throw ex;
 				}
 				return response.getBody();
 			}
 		});
 
 		Map<String, Object> obj = (LinkedHashMap<String, Object>) resp;
-		
+
 		return obj;
 	}
-
 
 	// PRIVATES //////////////////////////////////
 
 	/**
 	 * Retry template
+	 * 
 	 * @return
 	 */
 	@Bean
 	private RetryTemplate retryTemplate() {
 		int maxAttempt = applicationProperties.getMimonte().getVariables().getRestTemplate().getMaxAttempt();
-		int retryTimeInterval = applicationProperties.getMimonte().getVariables().getRestTemplate().getRetryTimeInterval();
+		int retryTimeInterval = applicationProperties.getMimonte().getVariables().getRestTemplate()
+				.getRetryTimeInterval();
 		SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
 		retryPolicy.setMaxAttempts(maxAttempt);
 		FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
 		backOffPolicy.setBackOffPeriod(retryTimeInterval);
-		 
+
 		RetryTemplate template = new RetryTemplate();
 		template.setRetryPolicy(retryPolicy);
 		template.setBackOffPolicy(backOffPolicy);
@@ -219,9 +210,9 @@ public abstract class AbstractOAuth2RestService {
 		return template;
 	}
 
-
 	/**
 	 * Construye los headers para el endpoint de obtencion del token
+	 * 
 	 * @param auth
 	 * @return
 	 */
@@ -236,17 +227,17 @@ public abstract class AbstractOAuth2RestService {
 		return headers;
 	}
 
-
 	/**
 	 * Construye los headers para el consumo del enpoint
+	 * 
 	 * @param auth
 	 * @return
 	 */
 	protected abstract HttpHeaders createHeadersPostTo(BusRestAuthDTO auth, BusRestHeaderDTO headers);
 
-
 	/**
 	 * Build base 64 hash para autenticacion basic
+	 * 
 	 * @param auth
 	 * @return
 	 */

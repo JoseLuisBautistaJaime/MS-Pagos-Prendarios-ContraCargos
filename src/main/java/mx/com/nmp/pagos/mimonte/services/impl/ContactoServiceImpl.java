@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dao.TipoContactoRepository;
@@ -67,12 +68,14 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 	public <T extends AbstractCatalogoDTO> T save(ContactoBaseDTO e, String createdBy) {
 		// Valida que el contacto no exista
 		if (!validaEmailExistente(e))
-			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_EXISTS);
+			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_EXISTS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_015);
 		if (null != e)
 			e.setCreatedBy(createdBy);
 		// Valida que el tipo de contacto exista
 		if (validaTipoContacto(e))
-			throw new CatalogoException(CatalogConstants.CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST);
+			throw new CatalogoException(CatalogConstants.CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST,
+					CodigoError.NMP_PMIMONTE_BUSINESS_011);
 		// Construye y regresa la respuesta
 		return (T) ContactosBuilder.buildContactosDTOFromContactos(
 				contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTO(e)));
@@ -86,15 +89,18 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 	public <T extends AbstractCatalogoDTO> T update(ContactoBaseDTO e, String lastModifiedBy) {
 		// Valida que el email no exista
 		if (!validaEmailExistente(e))
-			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_UPDT_ALREADY_EXISTS);
+			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_UPDT_ALREADY_EXISTS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_015);
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
 		// Valida que el contacto exista
 		if (validaContacto(e))
-			throw new CatalogoException(CatalogConstants.CATALOG_THE_ID_TO_UPDATE_DOES_NOT_EXIST);
+			throw new CatalogoException(CatalogConstants.CATALOG_THE_ID_TO_UPDATE_DOES_NOT_EXIST,
+					CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		// Valida que el tipo de contacto exista
 		if (validaTipoContacto(e))
-			throw new CatalogoException(CatalogConstants.CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST);
+			throw new CatalogoException(CatalogConstants.CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST,
+					CodigoError.NMP_PMIMONTE_BUSINESS_011);
 		// Construye y regresa el objeto de respuesta
 		return (T) ContactosBuilder.buildContactosDTOFromContactos(
 				contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTOupdt(e)));
@@ -133,11 +139,12 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 		// Valida por id que el contacto exista
 		contacto = contactoRespository.findById(id);
 		if (!contacto.isPresent())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		// Valida sie l contacto tiene entidades asociadas
 		List<Entidad> entidades = entidadRepository.findByContactos_Id(id);
 		if (null != entidades && !entidades.isEmpty())
-			throw new CatalogoException(CatalogConstants.CONTACTO_HAS_ENTIDADES_ASSOCIATED);
+			throw new CatalogoException(CatalogConstants.CONTACTO_HAS_ENTIDADES_ASSOCIATED,
+					CodigoError.NMP_PMIMONTE_BUSINESS_016);
 		contactoRespository.deleteById(id);
 	}
 

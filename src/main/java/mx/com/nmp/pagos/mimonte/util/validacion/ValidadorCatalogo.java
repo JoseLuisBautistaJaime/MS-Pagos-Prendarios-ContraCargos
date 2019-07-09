@@ -96,7 +96,7 @@ public interface ValidadorCatalogo {
 	public static boolean validateAfilacionUpdt(AfiliacionReqDTO afiliacionReqDTO) {
 		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero()
 				&& !afiliacionReqDTO.getNumero().equals("0") && null != afiliacionReqDTO.getId()
-				&& afiliacionReqDTO.getId() > 0 /* && null != afiliacionReqDTO.getEstatus() */);
+				&& afiliacionReqDTO.getId() > 0);
 	}
 
 	/**

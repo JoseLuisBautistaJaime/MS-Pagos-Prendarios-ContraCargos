@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
@@ -84,12 +85,14 @@ public class ReportesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getReportePagosEnLinea(@RequestBody ReporteRequestDTO reporteRequestDTO) {
 		if (!ValidadorConciliacion.validateReporteRequestDTO(reporteRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		ReportePagosEnLineaOuterDTO reportePagosEnLineaOuterDTO = reportePagosService
 				.getReportePagosEnLinea(reporteRequestDTO);
 		if (null == reportePagosEnLineaOuterDTO || null == reportePagosEnLineaOuterDTO.getMovimientos()
 				|| reportePagosEnLineaOuterDTO.getMovimientos().isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				reportePagosEnLineaOuterDTO);
 	}

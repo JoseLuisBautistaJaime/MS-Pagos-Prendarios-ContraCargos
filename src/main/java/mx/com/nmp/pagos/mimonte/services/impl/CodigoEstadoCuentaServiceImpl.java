@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.CodigoEstadoCuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.CategoriaRepository;
 import mx.com.nmp.pagos.mimonte.dao.CodigoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
@@ -79,15 +80,15 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 		codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaIdAndCodigo(e.getEntidad().getId(),
 				e.getCategoria().getId(), e.getCodigo());
 		if (null != codigoEC)
-			throw new CatalogoException(CatalogConstants.CODIGO_ALREADY_EXISTS);
+			throw new CatalogoException(CatalogConstants.CODIGO_ALREADY_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_059);
 		else {
 			// Valida que la entidad y la categoria existan
 			entidad = entidadRepository.findById(e.getEntidad().getId());
 			categoria = categoriaRepository.findById(e.getCategoria().getId());
 			if (!entidad.isPresent())
-				throw new CatalogoException(CatalogConstants.NO_ENTIDAD_FOUND);
+				throw new CatalogoException(CatalogConstants.NO_ENTIDAD_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_060);
 			if (!categoria.isPresent())
-				throw new CatalogoException(CatalogConstants.NO_CATEGORIA_FOUND);
+				throw new CatalogoException(CatalogConstants.NO_CATEGORIA_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_061);
 			if (null != e)
 				e.setCreatedBy(createdBy);
 			CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
@@ -120,19 +121,20 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 		entidad = entidadRepository.findById(e.getEntidad().getId());
 		categoria = categoriaRepository.findById(e.getCategoria().getId());
 		if (!entidad.isPresent())
-			throw new CatalogoException(CatalogConstants.NO_ENTIDAD_FOUND);
+			throw new CatalogoException(CatalogConstants.NO_ENTIDAD_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_060);
 		if (!categoria.isPresent())
-			throw new CatalogoException(CatalogConstants.NO_CATEGORIA_FOUND);
+			throw new CatalogoException(CatalogConstants.NO_CATEGORIA_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_061);
 		// Valida que el id de codigo estado cuenta existe
 		codigoEstadoCuenta = codigoEstadoCuentaRepository.findById(e.getId());
 		if (!codigoEstadoCuenta.isPresent())
-			throw new CatalogoException(CatalogConstants.CODIGO_E_C_DOESNT_EXISTS);
+			throw new CatalogoException(CatalogConstants.CODIGO_E_C_DOESNT_EXISTS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_062);
 		// Valida que el codigo no se repita, por su id de entidad, id de categoria y
 		// codigo
 		codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaIdAndCodigo(e.getEntidad().getId(),
 				e.getCategoria().getId(), e.getCodigo());
 		if (null != codigoEC && !codigoEC.getId().equals(e.getId())) {
-			throw new CatalogoException(CatalogConstants.CODIGO_ALREADY_EXISTS);
+			throw new CatalogoException(CatalogConstants.CODIGO_ALREADY_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_059);
 		}
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
@@ -155,7 +157,7 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 		// Valida por id que el codigo exista
 		codigoEstadoCuenta = codigoEstadoCuentaRepository.findById(id);
 		if (!codigoEstadoCuenta.isPresent())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		// Construye el objeto de respuesta y lo regresa
 		codigoEstadoCuentaDTO = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(codigoEstadoCuenta.get());

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
@@ -149,17 +150,20 @@ public class MovimientosMidasService {
 				movimientoProcesosNocturnosDTOList.getFechaDesde(), movimientoProcesosNocturnosDTOList.getFechaHasta(),
 				userRequest);
 		if (null == reporte)
-			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
+					CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		try {
 			reporte = reporteRepository.save(reporte);
 			if (0 == reporte.getId())
-				throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+				throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
+						CodigoError.NMP_PMIMONTE_BUSINESS_044);
 			List<MovimientoMidas> movimientoMidasList = MovimientosBuilder
 					.buildMovimientoMidasListFromMovimientoProcesosNocturnosListResponseDTO(
 							movimientoProcesosNocturnosDTOList, reporte.getId());
 			movimientosMidasRepository.saveAll(movimientoMidasList);
 		} catch (Exception ex) {
-			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
+					CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		}
 	}
 

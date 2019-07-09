@@ -1221,3 +1221,39 @@ CREATE TABLE IF NOT EXISTS `tb_actividad` (
   INDEX `idx_fecha_actividades` (`fecha` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
+
+-- ------------------------------------------------------- --
+-- -------- REINICIO DE CLAVES AUTO INCREMENTALES A 1----- --
+-- ------------------------------------------------------- --
+ALTER TABLE `tc_layout_linea` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_layout_header` AUTO_INCREMENT = 1;
+ALTER TABLE `to_global` AUTO_INCREMENT = 1;
+ALTER TABLE `tb_actividad` AUTO_INCREMENT = 1;
+ALTER TABLE `to_layout_linea` AUTO_INCREMENT = 1;
+ALTER TABLE `to_layout_header` AUTO_INCREMENT = 1;
+ALTER TABLE `to_layout` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_devolucion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_comision` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_pago` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_transito` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_conciliacion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_midas` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_proveedor` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_estado_cuenta` AUTO_INCREMENT = 1;
+ALTER TABLE `to_estado_cuenta` AUTO_INCREMENT = 1;
+ALTER TABLE `to_estado_cuenta_totales_adicional` AUTO_INCREMENT = 1;
+ALTER TABLE `to_estado_cuenta_totales` AUTO_INCREMENT = 1;
+ALTER TABLE `to_estado_cuenta_cabecera` AUTO_INCREMENT = 1;
+ALTER TABLE `to_reporte` AUTO_INCREMENT = 1;
+ALTER TABLE `to_comision_transaccion_real` AUTO_INCREMENT = 1;
+ALTER TABLE `to_comision_transaccion_proyeccion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_comision_transaccion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_conciliacion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_merge_conciliacion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_pagos` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_codigo_estado_cuenta` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_afiliacion` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_contactos` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_cuenta` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_entidad` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_tarjetas` AUTO_INCREMENT = 1;

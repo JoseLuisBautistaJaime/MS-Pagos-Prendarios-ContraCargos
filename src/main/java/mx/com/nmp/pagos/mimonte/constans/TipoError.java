@@ -1,13 +1,14 @@
-
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.constans;
-
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-
 /**
- * Nombre: TipoError
- * Descripcion: Enumeración que enlista los tipo de errores
+ * @name TipoError
+ * @description Enumeración que enlista los tipo de errores
  * @author: Javier Hernandez Barraza jhernandez@quarksoft.net
  * @version: 0.1
  */

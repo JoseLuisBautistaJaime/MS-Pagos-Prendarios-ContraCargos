@@ -10,10 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 
@@ -34,11 +36,9 @@ public class BusEstadoCuentaRestService extends AbstractOAuth2RestService {
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(SolicitarPagosService.class);
 
-
 	public BusEstadoCuentaRestService() {
 		super();
 	}
-
 
 	/**
 	 * Envia el correo electronico el atributo bearerToken y statusResponse pueden
@@ -51,29 +51,30 @@ public class BusEstadoCuentaRestService extends AbstractOAuth2RestService {
 
 		// Se obtiene el token
 		BusRestAuthDTO auth = new BusRestAuthDTO(
-			applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getAuth().getUsuario(),
-			applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getAuth().getPassword()
-		);
+				applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getAuth().getUsuario(),
+				applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getAuth().getPassword());
 		String bearerToken = postForGetToken(auth, mc.urlGetToken);
 
 		// Se consulta el archivo de estado de cuenta
 		String url = applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getUrl();
-		BusRestHeaderDTO header = new BusRestHeaderDTO(
-			bearerToken
-		);
+		BusRestHeaderDTO header = new BusRestHeaderDTO(bearerToken);
 
 		Map<String, Object> response = getForObject(auth, body, header, url);
 		LOG.debug(response != null ? "Consulta correcta" : "Error al consulta estado cuenta");
 
 		if (response == null || response.get("documento") == null)
-			throw new ConciliacionException(ConciliacionConstants.ESTADO_CUENTA_CANNOT_BE_CONSULT);
+			throw new ConciliacionException(ConciliacionConstants.ESTADO_CUENTA_CANNOT_BE_CONSULT,
+					CodigoError.NMP_PMIMONTE_BUSINESS_065);
 
 		return (String) response.get("documento");
 	}
 
-
-	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.consumer.rest.AbstractOAuth2RestService#createHeadersPostTo(mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO, mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see mx.com.nmp.pagos.mimonte.consumer.rest.AbstractOAuth2RestService#
+	 * createHeadersPostTo(mx.com.nmp.pagos.mimonte.consumer.rest.dto.
+	 * BusRestAuthDTO, mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO)
 	 */
 	@Override
 	protected HttpHeaders createHeadersPostTo(BusRestAuthDTO auth, BusRestHeaderDTO header) {
@@ -81,9 +82,12 @@ public class BusEstadoCuentaRestService extends AbstractOAuth2RestService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(mc.headerAuthKey, mc.headerAuthValue.concat(" ") + base64Creds);
 		headers.add(mc.contentTypeKey, mc.senMailContentTypeValue);
-		headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getHeader().getIdConsumidor());
-		headers.add(mc.idDestinoKey, applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getHeader().getIdDestino());
-		headers.add(mc.usuarioKey, applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getHeader().getUsuario());
+		headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta()
+				.getHeader().getIdConsumidor());
+		headers.add(mc.idDestinoKey,
+				applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getHeader().getIdDestino());
+		headers.add(mc.usuarioKey,
+				applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getHeader().getUsuario());
 		headers.add(mc.oauthBearer, header.getBearerToken());
 		return headers;
 	}

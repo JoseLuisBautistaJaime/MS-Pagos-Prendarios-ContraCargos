@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.exception;
 
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+
 /**
  * @name InformationNotFoundException
  * @description Clase de excepcion lanzada cuando no se encuentran resultados de
@@ -20,8 +22,22 @@ public class InformationNotFoundException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Codigo de error
+	 */
+	private CodigoError codigoError;
+
 	public InformationNotFoundException(String message) {
 		super(message);
+	}
+
+	public InformationNotFoundException(String message, CodigoError codigoError) {
+		super(message);
+		this.codigoError = codigoError;
+	}
+
+	public CodigoError getCodigoError() {
+		return codigoError;
 	}
 
 }

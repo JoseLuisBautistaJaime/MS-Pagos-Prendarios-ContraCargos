@@ -7,15 +7,16 @@ package mx.com.nmp.pagos.mimonte.helper.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 
-
 /**
  * @name ConciliacionHelperImpl
- * @description Clase helper con metodos comunes usados para validacion y acciones comunes
+ * @description Clase helper con metodos comunes usados para validacion y
+ *              acciones comunes
  *
  * @author Jorge Galvez
  * @creationDate 16/20/2019 17:34 hrs.
@@ -24,32 +25,35 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 @Component
 public class ConciliacionHelperImpl implements ConciliacionHelper {
 
-
 	/**
 	 * Conciliacion repository
 	 */
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
 
-
-	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#getConciliacionByFolio(java.lang.Integer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#getConciliacionByFolio(
+	 * java.lang.Integer)
 	 */
 	public Conciliacion getConciliacionByFolio(Integer folio) throws ConciliacionException {
 
 		Conciliacion conciliacion = null;
 		try {
 			conciliacion = this.conciliacionRepository.findByFolio(folio);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("No existe conciliacion para el folio " + folio);
+			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
+					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
-		
+
 		if (conciliacion == null) {
-			throw new ConciliacionException("No existe conciliacion para el folio " + folio);
+			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
+					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
-		
+
 		return conciliacion;
 	}
 

@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.processor;
 
 import java.util.List;
 
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
@@ -15,11 +16,10 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 
 /**
- * Nombre: ConciliacionMergeProcessorChain
- * Descripcion: Clase obstracta que representa un proceso dentro de la cadena de procesamiento de la conciliacion
+ * Nombre: ConciliacionMergeProcessorChain Descripcion: Clase obstracta que
+ * representa un proceso dentro de la cadena de procesamiento de la conciliacion
  *
- * @author JGALVEZ
- * Fecha: 04/06/2019 9:44 PM
+ * @author JGALVEZ Fecha: 04/06/2019 9:44 PM
  * @version 0.1
  */
 public abstract class ConciliacionProcessorChain {
@@ -27,22 +27,22 @@ public abstract class ConciliacionProcessorChain {
 	protected MergeReporteHandler mergeReporteHandler;
 	protected ConciliacionProcessorChain next;
 
-
 	public ConciliacionProcessorChain(MergeReporteHandler mergeReporteHandler) {
 		this.mergeReporteHandler = mergeReporteHandler;
 	}
 
 	/**
 	 * Setea el siguiente procesador dentro de la cadena
+	 * 
 	 * @param next
 	 */
 	public void setNextProcessor(ConciliacionProcessorChain next) {
 		this.next = next;
 	}
 
-
 	/**
 	 * Se encarga de procesar los reportes
+	 * 
 	 * @param reportesWrapper
 	 * @throws ConciliacionException
 	 */
@@ -57,23 +57,25 @@ public abstract class ConciliacionProcessorChain {
 	protected List<MovimientoMidas> getMovimientosMidas(Long idReporte) throws ConciliacionException {
 		List<MovimientoMidas> movimientosMidas = null;
 		try {
-			movimientosMidas = this.mergeReporteHandler.getMovimientosMidasRepository().findByReporteId(idReporte.intValue());
-		}
-		catch (Exception ex) {
+			movimientosMidas = this.mergeReporteHandler.getMovimientosMidasRepository()
+					.findByReporteId(idReporte.intValue());
+		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al consultar movimientos midas");
+			throw new ConciliacionException("Error al consultar movimientos midas",
+					CodigoError.NMP_PMIMONTE_BUSINESS_068);
 		}
 		return movimientosMidas;
 	}
-	
+
 	protected List<MovimientoProveedor> getMovimientosProveedor(Long idReporte) throws ConciliacionException {
 		List<MovimientoProveedor> movimientosProveedor = null;
 		try {
-			movimientosProveedor = this.mergeReporteHandler.getMovimientoProveedorRepository().findByReporte(idReporte.intValue());
-		}
-		catch (Exception ex) {
+			movimientosProveedor = this.mergeReporteHandler.getMovimientoProveedorRepository()
+					.findByReporte(idReporte.intValue());
+		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al consultar movimientos proveedor");
+			throw new ConciliacionException("Error al consultar movimientos proveedor",
+					CodigoError.NMP_PMIMONTE_BUSINESS_069);
 		}
 		return movimientosProveedor;
 	}
@@ -81,11 +83,12 @@ public abstract class ConciliacionProcessorChain {
 	protected List<MovimientoEstadoCuenta> getMovimientosEstadoCuenta(Long idReporte) throws ConciliacionException {
 		List<MovimientoEstadoCuenta> movimientosEstadoCuenta = null;
 		try {
-			movimientosEstadoCuenta = this.mergeReporteHandler.getMovimientoEstadoCuentaRepository().findByReporte(idReporte);
-		}
-		catch (Exception ex) {
+			movimientosEstadoCuenta = this.mergeReporteHandler.getMovimientoEstadoCuentaRepository()
+					.findByReporte(idReporte);
+		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al consultar movimientos estado cuenta");
+			throw new ConciliacionException("Error al consultar movimientos estado cuenta",
+					CodigoError.NMP_PMIMONTE_BUSINESS_070);
 		}
 		return movimientosEstadoCuenta;
 	}
@@ -94,10 +97,9 @@ public abstract class ConciliacionProcessorChain {
 		EstadoCuenta estadoCuenta = null;
 		try {
 			estadoCuenta = this.mergeReporteHandler.getEstadoCuentaRepository().findOneByIdReporte(idReporte);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al consultar estado cuenta");
+			throw new ConciliacionException("Error al consultar estado cuenta", CodigoError.NMP_PMIMONTE_BUSINESS_071);
 		}
 		return estadoCuenta;
 	}

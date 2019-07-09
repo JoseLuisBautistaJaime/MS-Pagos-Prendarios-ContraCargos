@@ -31,6 +31,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
@@ -83,7 +84,6 @@ public class ConciliacionController {
 	private ConciliacionServiceImpl conciliacionServiceImpl;
 
 	@Autowired
-//	@Qualifier("conciliacionService")
 	private ConciliacionService conciliacionService;
 
 	@Autowired
@@ -122,7 +122,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveConciliacion(@RequestBody ConciliacionRequestDTO conciliacionRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		
+
 		ConciliacionResponseSaveDTO conciliacionResponseSaveDTO = ConciliacionBuilder
 				.buildConciliacionResponseSaveDTOFromConciliacionRequestDTO(conciliacionRequestDTO, new Date(), null,
 						createdBy);
@@ -241,7 +241,8 @@ public class ConciliacionController {
 	public Response enviaConciliacion(@PathVariable(value = "folio", required = true) Integer folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		if (!ValidadorConciliacion.validateInteger(folio))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		conciliacionServiceImpl.enviarConciliacion(folio, createdBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.CONCILIATION_SENT_SUCCESSFULLY, null);
@@ -292,7 +293,8 @@ public class ConciliacionController {
 	public Response solicitarPagos(@RequestBody SolicitarPagosRequestDTO solicitarPagosRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		if (!ValidadorConciliacion.validateSolicitarPagosRequestDTO(solicitarPagosRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		solicitarPagosService.solicitarPagosService(solicitarPagosRequestDTO.getFolio(),
 				solicitarPagosRequestDTO.getIdMovimientos(), createdBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud de pago exitosa.", null);
@@ -435,7 +437,8 @@ public class ConciliacionController {
 																	 */,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		if (!ValidadorConciliacion.validateActualizarIdPSRequest(actualizarIdPSRequest))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		// Comentado por ahora, hasta que la funcionalidad de la capa de servicio este
 		// completa
 		conciliacionServiceImpl.actualizarPS(actualizarIdPSRequest, lastModifiedBy);
@@ -465,7 +468,8 @@ public class ConciliacionController {
 	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Integer folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {
 		if (!ValidadorConciliacion.validateInteger(folio))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		conciliacionServiceImpl.generarConciliacion(folio, requestUser);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.CONCILIATION_PROCESS_BEGINS, null);
@@ -490,10 +494,12 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaActividades(@RequestBody ConsultaActividadesRequest consultaActividadesRequest) {
 		if (!ValidadorConciliacion.validateConsultaActividadesRequest(consultaActividadesRequest))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		List<ConsultaActividadDTO> response = conciliacionService.consultaActividades(consultaActividadesRequest);
 		if (null == response || response.isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				response);
 	}
@@ -519,7 +525,8 @@ public class ConciliacionController {
 	public Response actualizaSubEstatus(@RequestBody ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			@RequestHeader(name = CatalogConstants.REQUEST_USER_HEADER, required = true) String requestUser) {
 		if (!ValidadorConciliacion.validateActualizarSubEstatusRequestDTO(actualizarSubEstatusRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		conciliacionServiceImpl.actualizaSubEstatusConciliacion(actualizarSubEstatusRequestDTO, requestUser);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualizacion de sub estatus correcta.",
 				null);
@@ -545,7 +552,8 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response resumenConciliaciones(@RequestBody ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
 		if (!ValidadorConciliacion.validateResumenConciliacionRequestDTO(resumenConciliacionRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				conciliacionServiceImpl.resumenConciliaciones(resumenConciliacionRequestDTO));
 	}

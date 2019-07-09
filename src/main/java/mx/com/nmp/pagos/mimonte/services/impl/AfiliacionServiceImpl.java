@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.AfiliacionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.AfiliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
@@ -56,7 +57,7 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 		// Valida si ya existe una afiliacion con el numeroe specificado
 		afiliacion = afiliacionRepository.findByNumero(e.getNumero());
 		if (null != afiliacion)
-			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS);
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_004);
 		if (null != e)
 			e.setCreatedBy(createdBy);
 		// Crea una entidad afiliacion, la guarda y crea una afiliacion DTO para
@@ -79,12 +80,12 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 		// Valida si existe una afiliacion con el id especificado
 		afiliacion = afiliacionRepository.findById(e.getId());
 		if (!afiliacion.isPresent())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		Afiliacion afiliacionByNum = null;
 		// Valida que no exista ya una afiliacion con ese numero
 		afiliacionByNum = afiliacionRepository.findByNumero(e.getNumero());
 		if (null != afiliacionByNum)
-			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS);
+			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_004);
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
 		// Crea una entidad afiliacion la guarda y crea una entidad DTO para regresar
@@ -141,7 +142,7 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 		afiliacion = afiliacionRepository.findById(id);
 		// Valida si la afiliacion existe
 		if (!afiliacion.isPresent())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		afiliacionRepository.deleteById(id);
 	}
 

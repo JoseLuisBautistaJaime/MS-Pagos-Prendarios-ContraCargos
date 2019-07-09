@@ -34,6 +34,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
@@ -97,7 +98,7 @@ public class EntidadController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateEntidadBaseDTOSave(entidadBaseSaveDTO))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTO = null;
 		EntidadDTO entidadDTOResp = null;
@@ -132,18 +133,14 @@ public class EntidadController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateEntidadBaseDTOUpdt(entidadDTOReq))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		EntidadDTO entidadDTO = null;
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTOResp = null;
 		// Construye un objeto DTO estandar a partir del objeto recibido
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, null, new Date());
 		// Actualiza una entidad
-		try {
 			entidadDTOResp = entidadServiceImpl.update(entidadDTO, lastModifiedBy);
-		} catch (CatalogoException ce) {
-			throw ce;
-		}
 		// SETEO DE USUARIO Y FECHA CREACION YA QUE NO SE HACE EL FETCH AL GUARDAR NI
 		// DENTRO DEL METODO DE GUARDADO NI TAMPOCO OBTENIENDO LA ENTIDAD COMPLETEA
 		// DESDE
@@ -188,7 +185,7 @@ public class EntidadController {
 			entidadDTO = entidadServiceImpl.findById(idEntidad);
 			entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTO);
 		} catch (EmptyResultDataAccessException erdex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		// Se regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
@@ -219,7 +216,7 @@ public class EntidadController {
 		try {
 			entidadResponseDTOList = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
 		} catch (EmptyResultDataAccessException erdex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != entidadResponseDTOList ? entidadResponseDTOList : new ArrayList<>());
@@ -248,7 +245,7 @@ public class EntidadController {
 		try {
 			entidadServiceImpl.updateEstatusById(false, idEntidad, lastModifiedBy, new Date());
 		} catch (EmptyResultDataAccessException erdex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);

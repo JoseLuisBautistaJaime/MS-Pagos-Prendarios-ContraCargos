@@ -29,6 +29,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDeleteDTO;
@@ -100,12 +101,12 @@ public class ComisionesController {
 		String msgResponse = null;
 		// Se realiza validacion de request
 		if (!ValidadorConciliacion.validateComisionSaveDTO(comisionSaveDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		// Se guarda la comision
 		result = comisionesService.save(comisionSaveDTO, userRequest);
 		// Se valida que el resultado del guardado no sea nulo
 		if (null == result)
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND, CodigoError.NMP_PMIMONTE_0009);
 		// Se asigna la bandera de registro uevo y el objeto de resultado a un mapa para
 		// saber que mensaje mostrar en el response
 		comisionSaveResponseDTO = (ComisionSaveResponseDTO) result.get("result");
@@ -136,7 +137,7 @@ public class ComisionesController {
 	public Response delete(@RequestBody ComisionDeleteDTO comisionDeleteDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		if (!ValidadorConciliacion.validateComisionDeleteDTO(comisionDeleteDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		try {
 			comisionesService.delete(comisionDeleteDTO, userRequest);
 		} catch (ConciliacionException ex) {
@@ -168,7 +169,7 @@ public class ComisionesController {
 			@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		if (!ValidadorConciliacion.validateComisionesTransaccionesRequestDTO(comisionesTransaccionesRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa.",
 				comisionesService.findByFechasAndComision(comisionesTransaccionesRequestDTO, userRequest));
 	}

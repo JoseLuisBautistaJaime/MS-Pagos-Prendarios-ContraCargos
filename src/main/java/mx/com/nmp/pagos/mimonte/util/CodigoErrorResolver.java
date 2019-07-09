@@ -1,4 +1,7 @@
-
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.util;
 
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
@@ -18,11 +21,11 @@ import java.util.stream.Stream;
 
 
 /**
- * Nombre: CodigoErrorResolver
- * Descripcion:  Se encarga de buscar el codigo de error que le corresponde a un excepción
+ * @name CodigoErrorResolver
+ * @description  Se encarga de buscar el codigo de error que le corresponde a un excepción
  *
- * @author: Javier Hernandez Barraza jhernandez@quarksoft.net
- * @version: 0.1
+ * @author Javier Hernandez Barraza jhernandez@quarksoft.net
+ * @version 0.1
  */
 public class CodigoErrorResolver {
 

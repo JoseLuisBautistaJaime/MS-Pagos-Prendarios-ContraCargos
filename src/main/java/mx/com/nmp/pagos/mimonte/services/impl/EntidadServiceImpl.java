@@ -24,6 +24,7 @@ import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
 import mx.com.nmp.pagos.mimonte.builder.EntidadCuentaAfiliacionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.AfiliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
@@ -151,9 +152,9 @@ public class EntidadServiceImpl implements EntidadService {
 			}
 		}
 		if (!flag)
-			throw new CatalogoException(CatalogConstants.CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS);
+			throw new CatalogoException(CatalogConstants.CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_009);
 		if (null != entidades && !entidades.isEmpty())
-			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS);
+			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_010);
 		if (null != e)
 			e.setCreatedBy(createdBy);
 		Entidad entidad = null;
@@ -163,7 +164,7 @@ public class EntidadServiceImpl implements EntidadService {
 		TipoContacto tipoContacto = tipoContactoRepository
 				.findByDescription(CatalogConstants.ENTIDAD_TIPO_CONTACTO_NAME);
 		if (null == tipoContacto)
-			throw new CatalogoException(CatalogConstants.TIPO_CONTACTO_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.TIPO_CONTACTO_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_011);
 		entidad = EntidadBuilder.buildEntidadFromEntidadDTONEW(e, tipoContacto.getId());
 		entidadResp = entidadRepository.save(entidad);
 		e.setId(entidadResp.getId());
@@ -216,7 +217,7 @@ public class EntidadServiceImpl implements EntidadService {
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e, String lastModifiedBy) throws CatalogoException {
+	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e, String lastModifiedBy){
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
 		Entidad entidad = null;
@@ -228,7 +229,7 @@ public class EntidadServiceImpl implements EntidadService {
 		entidad = EntidadBuilder.buildEntidadFromEntidadDTO(e, tipoContacto.getId());
 		Optional<Entidad> entidadTest = entidadRepository.findById(e.getId());
 		if (!entidadTest.isPresent())
-			throw new CatalogoException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		// Se valida que los id's de las cuentas existan
 		// Se valida que los id's de los contactos existan
 		List<Contactos> contactosList = contactoRespository.findAll();
@@ -242,7 +243,7 @@ public class EntidadServiceImpl implements EntidadService {
 			// No action required here, application continues normally
 		}
 		if (null != entidades && !entidades.isEmpty() && !entidades.get(0).getId().equals(e.getId()))
-			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS);
+			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_010);
 		List<EntidadCuentaAfiliacion> lst = null;
 		List<EntidadCuentaAfiliacionDTO> lst2 = null;
 		try {
@@ -268,7 +269,7 @@ public class EntidadServiceImpl implements EntidadService {
 				}
 			}
 			if (!flag)
-				throw new CatalogoException(CatalogConstants.CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS);
+				throw new CatalogoException(CatalogConstants.CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_009);
 			entidadResp = entidadRepository.save(entidad);
 			e.setId(entidadResp.getId());
 			int cnt = 0;
@@ -306,7 +307,7 @@ public class EntidadServiceImpl implements EntidadService {
 			}
 
 		} catch (ConstraintViolationException cve) {
-			throw new CatalogoException(CatalogConstants.CONSTRAINT_ERROR_MESSAGE);
+			throw new CatalogoException(CatalogConstants.CONSTRAINT_ERROR_MESSAGE, CodigoError.NMP_PMIMONTE_BUSINESS_012);
 		}
 
 		// INICIA COMPROBACION DE CUENTAS A ELIMINAR
@@ -368,7 +369,7 @@ public class EntidadServiceImpl implements EntidadService {
 		// Valida por id que la entidad exista
 		entidadResp = entidadRepository.findById(id);
 		if (!entidadResp.isPresent())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		// Construye el objeto de respuesta
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp.get());
 		// Valida que el objeto de respuesta no sea nulo para setearle las cuentas y
@@ -404,7 +405,7 @@ public class EntidadServiceImpl implements EntidadService {
 		// Valida que la entidad exista por su nombre y estatus
 		entidadList = entidadRepository.findByNombreAndEstatus(nombre, estatus);
 		if (null == entidadList || entidadList.isEmpty())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		// Crea la lista de entidades de respuesta
 		entidadResponseDTOList = EntidadBuilder.buildEntidadResponseDTOListFromEntidadList(entidadList);
 		// Valida que la lista no sea vacia para setearle las entidades y las
@@ -451,7 +452,7 @@ public class EntidadServiceImpl implements EntidadService {
 		Optional<Entidad> entidad = null;
 		entidad = entidadRepository.findById(id);
 		if (!entidad.isPresent())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		entidadRepository.setEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
 	}
 

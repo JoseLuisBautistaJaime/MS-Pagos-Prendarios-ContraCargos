@@ -36,6 +36,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.AfiliacionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqSaveDTO;
@@ -100,7 +101,7 @@ public class AfiliacionController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		// Valida que el objeto y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateAfilacionSave(afiliacionReqSaveDTO))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		// Realiza el alta
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
 				(AfiliacionDTO) afiliacionServiceImpl.save(AfiliacionBuilder.buildAfiliacionDTOFromAfiliacionSaveReqDTO(
@@ -129,7 +130,7 @@ public class AfiliacionController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		// Valida que el objeto y sus atributos
 		if (!ValidadorCatalogo.validateAfilacionUpdt(afiliacionDTOReq))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		// Realiza la actualizacion
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder
 				.buildAfiliacionRespPostDTOfromAfiliacionDTO((AfiliacionDTO) afiliacionServiceImpl.update(
@@ -162,12 +163,12 @@ public class AfiliacionController {
 			afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
 					(AfiliacionDTO) afiliacionServiceImpl.findByNumero(numeroAfiliacion));
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		} catch (javax.persistence.NonUniqueResultException nuex) {
-			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION);
+			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION, CodigoError.NMP_PMIMONTE_BUSINESS_002);
 		}
 		if (null == afiliacionDTO)
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				afiliacionDTO);
 	}
@@ -195,10 +196,10 @@ public class AfiliacionController {
 			afiliacionDTOSet = AfiliacionBuilder.buildAfiliacionRespPostDTOSetfromAfiliacionDTOSet(
 					(Set<AfiliacionDTO>) afiliacionServiceImpl.findByCuentasId(idCuenta));
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		if (null == afiliacionDTOSet || afiliacionDTOSet.isEmpty())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				afiliacionDTOSet);
 	}
@@ -226,11 +227,11 @@ public class AfiliacionController {
 		try {
 			afiliacionServiceImpl.deleteById(idAfiliacion);
 		} catch (EmptyResultDataAccessException ex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		} catch (DataIntegrityViolationException ex) {
-			throw new CatalogoException(CatalogConstants.AFILIACION_HAS_CUENTAS_ASSOCIATES);
+			throw new CatalogoException(CatalogConstants.AFILIACION_HAS_CUENTAS_ASSOCIATES, CodigoError.NMP_PMIMONTE_BUSINESS_003);
 		} catch (Exception ex) {
-			throw new CatalogoException(ex.getMessage());
+			throw ex;
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);

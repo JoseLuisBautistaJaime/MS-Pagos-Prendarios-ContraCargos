@@ -34,6 +34,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.CodigoEstadoCuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaReqUpdtDTO;
@@ -98,7 +99,7 @@ public class CodigoEstadoCuentaController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateCodigoEstadoCuentaSave(codigoEstadoCuentaReqSaveDTO))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		CodigoEstadoCuentaUpdtDTO codigo = null;
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTOSave = null;
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTOResp = null;
@@ -113,7 +114,7 @@ public class CodigoEstadoCuentaController {
 			codigo = CodigoEstadoCuentaBuilder
 					.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(codigoEstadoCuentaDTOResp);
 		} catch (EmptyResultDataAccessException ex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		} catch (RuntimeException rex) {
 			throw rex;
 		}
@@ -145,7 +146,7 @@ public class CodigoEstadoCuentaController {
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTOResp = null;
 		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateCodigoEstadoCuentaUpdate(codigoEstadoCuentaDTOReq))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		// Construye un DTO estandar
 		codigoEstadoCuentaDTO = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqUpdtDTO(codigoEstadoCuentaDTOReq, null, new Date());
@@ -186,7 +187,7 @@ public class CodigoEstadoCuentaController {
 			codigo = CodigoEstadoCuentaBuilder
 					.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(codigoEstadoCuentaDTO);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, codigo);
 	}
@@ -214,7 +215,7 @@ public class CodigoEstadoCuentaController {
 		try {
 			lst = codigoEstadoCuentaServiceImpl.findByEntidadId(idEntidad);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		// Regresa el resultado
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,

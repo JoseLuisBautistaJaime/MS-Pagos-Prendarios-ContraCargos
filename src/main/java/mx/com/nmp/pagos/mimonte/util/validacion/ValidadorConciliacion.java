@@ -11,6 +11,7 @@ import java.util.Calendar;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
@@ -132,7 +133,8 @@ public interface ValidadorConciliacion {
 			fechaInicio.setTime(movimientoProcesosNocturnosListResponseDTO.getFechaDesde());
 			fechaFin.setTime(movimientoProcesosNocturnosListResponseDTO.getFechaHasta());
 			if (fechaInicio.after(fechaFin))
-				throw new ConciliacionException(ConciliacionConstants.FECHA_DESDE_IS_AFTER_FECHA_HASTA);
+				throw new ConciliacionException(ConciliacionConstants.FECHA_DESDE_IS_AFTER_FECHA_HASTA,
+						CodigoError.NMP_PMIMONTE_BUSINESS_037);
 		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
@@ -226,7 +228,8 @@ public interface ValidadorConciliacion {
 			ini.setTime(saveEstadoCuentaRequestDTO.getFechaInicial());
 			fin.setTime(saveEstadoCuentaRequestDTO.getFechaFinal());
 			if (ini.after(fin))
-				throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE);
+				throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE,
+						CodigoError.NMP_PMIMONTE_BUSINESS_037);
 		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
@@ -249,7 +252,8 @@ public interface ValidadorConciliacion {
 				ini.setTime(reporteRequestDTO.getFechaDesde());
 				fin.setTime(reporteRequestDTO.getFechaHasta());
 				if (fin.before(ini))
-					throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+					throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+							CodigoError.NMP_PMIMONTE_0008);
 			}
 		} catch (Exception ex) {
 			return false;
@@ -263,11 +267,14 @@ public interface ValidadorConciliacion {
 			assertNotNull(conciliacionRequestDTO.getCuenta().getId());
 			assertNotNull(conciliacionRequestDTO.getEntidad().getId());
 			if (conciliacionRequestDTO.getCuenta().getId() < 1)
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+						CodigoError.NMP_PMIMONTE_0008);
 			if (conciliacionRequestDTO.getEntidad().getId() < 1)
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+						CodigoError.NMP_PMIMONTE_0008);
 			if (createdBy == null || createdBy.isEmpty() || createdBy.equals(""))
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+						CodigoError.NMP_PMIMONTE_0008);
 		} catch (Exception ex) {
 			return false;
 		}

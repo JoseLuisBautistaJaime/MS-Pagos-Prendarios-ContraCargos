@@ -34,6 +34,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
@@ -97,9 +98,9 @@ public class ContactosController {
 	public Response saveContacto(@RequestBody ContactoRequestDTO contacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		if (!ValidadorCatalogo.validaContactoReqSaveDTO(contacto))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		if (!ValidadorGenerico.validateEmail2(contacto.getEmail()))
-			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT, CodigoError.NMP_PMIMONTE_BUSINESS_013);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				(ContactoRespDTO) ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.save(
 						ContactosBuilder.buildContactoBaseDTOFromContactoRequestDTO(contacto, new Date(), null),
@@ -125,9 +126,9 @@ public class ContactosController {
 	public Response updateContacto(@RequestBody ContactoReqUpdateDTO contacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		if (!ValidadorCatalogo.validaContactoReqUpdateDTO(contacto))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		if (!ValidadorGenerico.validateEmail2(contacto.getEmail()))
-			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT, CodigoError.NMP_PMIMONTE_BUSINESS_013);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				(ContactoRespDTO) ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.update(
 						ContactosBuilder.buildContactoRespDTOFromContactoReqUpdateDTO(contacto, new Date(), null),
@@ -152,7 +153,7 @@ public class ContactosController {
 		try {
 			contactoServiceImpl.deleteById(idContacto);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
@@ -178,10 +179,10 @@ public class ContactosController {
 		try {
 			contactoRespDTO = contactoServiceImpl.findById(idContacto);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		if (contactoRespDTO == null)
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				contactoRespDTO);
 	}
@@ -206,10 +207,10 @@ public class ContactosController {
 		try {
 			lst = contactoServiceImpl.findByIdTipoContacto(idTipoContacto);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		if (lst == null || lst.isEmpty())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
 	}
 
@@ -235,16 +236,16 @@ public class ContactosController {
 			@RequestParam(name = "email", required = false) String email,
 			@PathVariable(name = "idTipoContacto", required = true) Long idTipoContacto) {
 		if (email != null && !ValidadorGenerico.validateEmail2(email)) {
-			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT, CodigoError.NMP_PMIMONTE_BUSINESS_013);
 		}
 		List<ContactoRespDTO> lst = null;
 		try {
 			lst = contactoServiceImpl.findByIdTipoContactoAndNombreAndEmail(idTipoContacto, nombre, email);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_AND_NAME_AND_EMAIL_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_AND_NAME_AND_EMAIL_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_014);
 		}
 		if (lst == null || lst.isEmpty())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
 	}
 

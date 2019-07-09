@@ -16,6 +16,7 @@ import com.ibm.icu.util.Calendar;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
@@ -197,7 +198,7 @@ public class MovimientosEstadoCuentaService {
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al guardar la solicitud de consulta de estado de cuenta");
+			throw new ConciliacionException("Error al guardar la solicitud de consulta de estado de cuenta", CodigoError.NMP_PMIMONTE_BUSINESS_046);
 		}
 
 		return reporte;
@@ -224,13 +225,13 @@ public class MovimientosEstadoCuentaService {
 			// Lee el archivo usando la implementacion cuaderno 43
 			EstadoCuentaFileLayout estadoCuentaFileLayout = estadoCuentaReaderService.read(fechaEstadoCuenta, idConciliacion, EstadoCuentaImplementacionEnum.CUADERNO_43);
 			if (estadoCuentaFileLayout == null) {
-				throw new ConciliacionException("Error al leer el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "");
+				throw new ConciliacionException("Error al leer el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "", CodigoError.NMP_PMIMONTE_BUSINESS_047);
 			}
 
 			// Parsea el archivo
 			EstadoCuentaWraper estadoCuentaWraper = estadoCuentaParserService.extract(estadoCuentaFileLayout);
 			if (estadoCuentaWraper == null) {
-				throw new ConciliacionException("Error al parsear el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "");
+				throw new ConciliacionException("Error al parsear el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "", CodigoError.NMP_PMIMONTE_BUSINESS_048);
 			}
 
 			saveEstadoCuentaMovimientos(idReporte, estadoCuentaWraper);
@@ -285,7 +286,7 @@ public class MovimientosEstadoCuentaService {
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al persistir los movimientos del archivo del estado de cuenta");
+			throw new ConciliacionException("Error al persistir los movimientos del archivo del estado de cuenta", CodigoError.NMP_PMIMONTE_BUSINESS_049);
 		}
 	}
 

@@ -33,11 +33,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaSaveDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.impl.CuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
@@ -96,15 +98,11 @@ public class CuentasController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		// Valida que el objeto de request y sus atributos sean validos
 		if (!ValidadorCatalogo.validateCuentaSave(cuentaSaveDTO))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		CuentaEntDTO cuentaEntDTO = null;
 		// Guarda una cuenta
-		try {
-			cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl.save(
-					CuentaBuilder.buildCuentaBaseDTOFromCuentaSaveDTO(cuentaSaveDTO, new Date(), null), createdBy));
-		} catch (CatalogoException ex) {
-			throw ex;
-		}
+		cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
+				.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaSaveDTO(cuentaSaveDTO, new Date(), null), createdBy));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				cuentaEntDTO);
 	}
@@ -129,15 +127,11 @@ public class CuentasController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		// Valida que el objeto de request y sus atributos sean validos
 		if (!ValidadorCatalogo.validateCuentaUpdate(cuentaDTOReq))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		CuentaEntDTO cuentaEntDTO = null;
 		// Actualiza una cuenta
-		try {
-			cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl.update(
-					CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));
-		} catch (CatalogoException ex) {
-			throw ex;
-		}
+		cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
+				.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				cuentaEntDTO);
 	}
@@ -165,11 +159,11 @@ public class CuentasController {
 			if (null != numeroCuenta && !numeroCuenta.equals(""))
 				cuentaEntDTO = cuentaServiceImpl.findByNumeroCuenta(numeroCuenta);
 			else
-				throw new CatalogoException(CatalogConstants.CATALOG_NOT_FOUND);
+				throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		} catch (EmptyResultDataAccessException erdaex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		} catch (javax.persistence.NonUniqueResultException nuex) {
-			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION);
+			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION, CodigoError.NMP_PMIMONTE_BUSINESS_002);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				cuentaEntDTO);
@@ -196,7 +190,7 @@ public class CuentasController {
 		try {
 			cuentaEntDTOList = cuentaServiceImpl.findByEntidadId(idEntidad);
 		} catch (EmptyResultDataAccessException erdaex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				cuentaEntDTOList);
@@ -224,7 +218,7 @@ public class CuentasController {
 		try {
 			cuentaServiceImpl.updateEstatusById(false, idCuenta, lastModifiedBy, new Date());
 		} catch (EmptyResultDataAccessException erdaex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.constans.MailServiceConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
@@ -130,33 +131,38 @@ public class SolicitarPagosService {
 			// Consulta
 			solicitarPagosMailDataDTOList = consultarMovimientos(solicitarPagosMailDataDTOList, folio, idsMovimientos);
 		} catch (Exception ex) {
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_GET_MOVIMIENTOS_TRANSITO);
+			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_GET_MOVIMIENTOS_TRANSITO,
+					CodigoError.NMP_PMIMONTE_BUSINESS_038);
 		}
 		try {
 			// Actualiza
 			actualizarMovimientosTransito(movimientoTransitoList, folio, idsMovimientos);
 		} catch (Exception ex) {
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_UPDATE_MOVIMIENTOS_TRANSITO);
+			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_UPDATE_MOVIMIENTOS_TRANSITO,
+					CodigoError.NMP_PMIMONTE_BUSINESS_039);
 		}
 		try {
 			// Inserta
 			insertaMovimientosPago(movimientoConciliacionList, folio, idsMovimientos, solicitarPagosMailDataDTOList,
 					createdBy);
 		} catch (Exception ex) {
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_INSERT_MOVIMIENTOS_PAGO);
+			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_INSERT_MOVIMIENTOS_PAGO,
+					CodigoError.NMP_PMIMONTE_BUSINESS_040);
 		}
 		// Construye e-mail
 		try {
 			generalBusMailDTO = construyeEMailVelocity(solicitarPagosMailDataDTOList);
 
 		} catch (Exception ex) {
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL);
+			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL,
+					CodigoError.NMP_PMIMONTE_BUSINESS_041);
 		}
 		try {
 			// Envia e-mail
 			this.busMailRestService.enviaEmail(generalBusMailDTO);
 		} catch (Exception ex) {
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL);
+			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL,
+					CodigoError.NMP_PMIMONTE_BUSINESS_042);
 		}
 	}
 
@@ -185,7 +191,8 @@ public class SolicitarPagosService {
 			List<Integer> idsMovimientos) {
 		movimientoTransitoList = movimientoTransitoRepository.findByFolioAndIds(folio, idsMovimientos);
 		if (null == movimientoTransitoList || movimientoTransitoList.isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
 		for (MovimientoTransito mt : movimientoTransitoList) {
 			mt.setEstatus(new EstatusTransito(2));
 		}
@@ -207,11 +214,13 @@ public class SolicitarPagosService {
 			String createdBy) {
 		movimientoConciliacionList = movimientoConciliacionRepository.findByFolioAndIds(folio, idsMovimientos);
 		if (null == movimientoConciliacionList || movimientoConciliacionList.isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
 		movimientosPagoRepository.saveAll(MovimientosBuilder
 				.buildMovimientoPagoListFromMovimientoConciliacionList(movimientoConciliacionList, createdBy));
 		if (null == solicitarPagosMailDataDTOList || solicitarPagosMailDataDTOList.isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND);
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
 	}
 
 	public BusRestMailDTO construyeEMailVelocity(List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
@@ -219,7 +228,8 @@ public class SolicitarPagosService {
 		// Se obtienen los contactos de midas
 		List<Contactos> contactos = contactoRespository.findByIdTipoContacto(ConciliacionConstants.TIPO_CONTACTO_MIDAS);
 		if (null == contactos || contactos.isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL);
+			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL,
+					CodigoError.NMP_PMIMONTE_BUSINESS_043);
 		// Se constrye el cuerpo de correo HTML
 		model = buildMailModel(solicitarPagosMailDataDTOList);
 		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, mc.velocityLayout, mc.encodeType,

@@ -5,7 +5,7 @@
 package mx.com.nmp.pagos.mimonte.constans;
 
 /**
- * Nombre: CatalogConstants
+ * @name CatalogConstants
  * 
  * @author: Javier Hernandez Barraza jhernandez@quarksoft.net
  * @version: 0.1
