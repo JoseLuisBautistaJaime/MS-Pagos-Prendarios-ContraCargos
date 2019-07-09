@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +51,20 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	@Override
 	public <T extends AbstractCatalogoDTO> T save(AfiliacionDTO e, String createdBy) {
 		Afiliacion afiliacion = null;
+		Afiliacion afiliacionSave = null;
+		AfiliacionDTO afiliacionDTO = null;
+		// Valida si ya existe una afiliacion con el numeroe specificado
 		afiliacion = afiliacionRepository.findByNumero(e.getNumero());
 		if (null != afiliacion)
 			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS);
 		if (null != e)
 			e.setCreatedBy(createdBy);
-		return (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(
-				afiliacionRepository.save(AfiliacionBuilder.buildAfiliacionFromAfiliacionDTO(e, null, null)));
+		// Crea una entidad afiliacion, la guarda y crea una afiliacion DTO para
+		// regresar
+		afiliacionSave = AfiliacionBuilder.buildAfiliacionFromAfiliacionDTO(e, null, null);
+		afiliacionSave = afiliacionRepository.save(afiliacionSave);
+		afiliacionDTO = AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(afiliacionSave);
+		return (T) afiliacionDTO;
 	}
 
 	/**
@@ -65,19 +73,25 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T update(AfiliacionDTO e, String lastModifiedBy) {
-		Afiliacion afiliacion = afiliacionRepository.findById(e.getId()).isPresent()
-				? afiliacionRepository.findById(e.getId()).get()
-				: null;
-		if (null == afiliacion)
+		Optional<Afiliacion> afiliacion = null;
+		Afiliacion afiliacionUpdt = null;
+		AfiliacionDTO afiliacionDTO = null;
+		// Valida si existe una afiliacion con el id especificado
+		afiliacion = afiliacionRepository.findById(e.getId());
+		if (!afiliacion.isPresent())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		Afiliacion afiliacionByNum = null;
+		// Valida que no exista ya una afiliacion con ese numero
 		afiliacionByNum = afiliacionRepository.findByNumero(e.getNumero());
 		if (null != afiliacionByNum)
 			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS);
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
-		return (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(
-				afiliacionRepository.save(AfiliacionBuilder.buildAfiliacionFromAfiliacionDTO(e, null, null)));
+		// Crea una entidad afiliacion la guarda y crea una entidad DTO para regresar
+		afiliacionUpdt = AfiliacionBuilder.buildAfiliacionFromAfiliacionDTO(e, null, null);
+		afiliacionUpdt = afiliacionRepository.save(afiliacionUpdt);
+		afiliacionDTO = AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(afiliacionUpdt);
+		return (T) afiliacionDTO;
 	}
 
 	/**
@@ -86,9 +100,14 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T findById(Long id) throws EmptyResultDataAccessException {
-		return afiliacionRepository.findById(id).isPresent()
-				? (T) AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(afiliacionRepository.findById(id).get())
-				: null;
+		AfiliacionDTO afiliacionDTO = null;
+		Optional<Afiliacion> afiliacion = null;
+		// Encuentra una afiliacion por id
+		afiliacion = afiliacionRepository.findById(id);
+		// Si la afiliacion existe crea un DTO de dicha afiliacion
+		if (afiliacion.isPresent())
+			afiliacionDTO = AfiliacionBuilder.buildAfiliacionDTOFromAfiliacion(afiliacion.get());
+		return (T) afiliacionDTO;
 	}
 
 	/**
@@ -109,8 +128,7 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 */
 	@Override
 	public List<? extends AbstractCatalogoDTO> findAll() {
-		return (List<AfiliacionDTO>) AfiliacionBuilder
-				.buildAfiliacionDTOListFromAfiliacionList(afiliacionRepository.findAll());
+		return AfiliacionBuilder.buildAfiliacionDTOListFromAfiliacionList(afiliacionRepository.findAll());
 	}
 
 	/**
@@ -118,9 +136,11 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 	 */
 	@Override
 	public void deleteById(Long id) throws EmptyResultDataAccessException, DataIntegrityViolationException {
-		Afiliacion afiliacion = afiliacionRepository.findById(id).isPresent() ? afiliacionRepository.findById(id).get()
-				: null;
-		if (null == afiliacion)
+		Optional<Afiliacion> afiliacion = null;
+		// Busca una afiliacion por id
+		afiliacion = afiliacionRepository.findById(id);
+		// Valida si la afiliacion existe
+		if (!afiliacion.isPresent())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		afiliacionRepository.deleteById(id);
 	}

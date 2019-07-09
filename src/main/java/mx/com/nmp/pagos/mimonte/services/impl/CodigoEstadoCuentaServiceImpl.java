@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -71,34 +72,36 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	public <T extends AbstractCatalogoDTO> T save(CodigoEstadoCuentaDTO e, String createdBy)
 			throws EmptyResultDataAccessException, CatalogoException {
 		CodigoEstadoCuenta codigoEC = null;
+		Optional<Entidad> entidad = null;
+		Optional<Categoria> categoria = null;
+		// Valida por id de entidad, id categoria y codigo que el codigo estado cuenta
+		// no exista
 		codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaIdAndCodigo(e.getEntidad().getId(),
 				e.getCategoria().getId(), e.getCodigo());
-		if (null == codigoEC) {
-			Entidad entidad = entidadRepository.findById(e.getEntidad().getId()).isPresent()
-					? entidadRepository.findById(e.getEntidad().getId()).get()
-					: null;
-			Categoria categoria = categoriaRepository.findById(e.getCategoria().getId()).isPresent()
-					? categoriaRepository.findById(e.getCategoria().getId()).get()
-					: null;
-			if (null == entidad)
+		if (null != codigoEC)
+			throw new CatalogoException(CatalogConstants.CODIGO_ALREADY_EXISTS);
+		else {
+			// Valida que la entidad y la categoria existan
+			entidad = entidadRepository.findById(e.getEntidad().getId());
+			categoria = categoriaRepository.findById(e.getCategoria().getId());
+			if (!entidad.isPresent())
 				throw new CatalogoException(CatalogConstants.NO_ENTIDAD_FOUND);
-			if (null == categoria)
+			if (!categoria.isPresent())
 				throw new CatalogoException(CatalogConstants.NO_CATEGORIA_FOUND);
 			if (null != e)
 				e.setCreatedBy(createdBy);
 			CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
+			// Construye la entidad persistente del codigo estado cuenta
 			CodigoEstadoCuenta ent = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTO(e);
+			// Guarda el codigo estado cuenta
 			codigoEstadoCuentaRepository.save(ent);
-			ent.setEntidad(entidadRepository.findById(ent.getEntidad().getId()).isPresent()
-					? entidadRepository.findById(ent.getEntidad().getId()).get()
-					: null);
-			ent.setCategoria(categoriaRepository.findById(ent.getCategoria().getId()).isPresent()
-					? categoriaRepository.findById(ent.getCategoria().getId()).get()
-					: null);
+			// Setea los objetos entidad y la categoria a el objeto principal
+			ent.setEntidad(entidad.get());
+			ent.setCategoria(categoria.get());
+			// Construye el DTO de respuesta y lo regresa
 			codigoEstadoCuentaDTO = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(ent);
 			return (T) codigoEstadoCuentaDTO;
-		} else
-			throw new CatalogoException(CatalogConstants.CODIGO_ALREADY_EXISTS);
+		}
 	}
 
 	/**
@@ -107,30 +110,35 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T update(CodigoEstadoCuentaDTO e, String lastModifiedBy) {
-		Entidad entidad = entidadRepository.findById(e.getEntidad().getId()).isPresent()
-				? entidadRepository.findById(e.getEntidad().getId()).get()
-				: null;
-		Categoria categoria = categoriaRepository.findById(e.getCategoria().getId()).isPresent()
-				? categoriaRepository.findById(e.getCategoria().getId()).get()
-				: null;
-		if (null == entidad)
+		CodigoEstadoCuenta ent = null;
+		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
+		Optional<CodigoEstadoCuenta> codigoEstadoCuenta = null;
+		CodigoEstadoCuenta codigoEC = null;
+		Optional<Entidad> entidad = null;
+		Optional<Categoria> categoria = null;
+		// Valida si la entidad y categoria existen
+		entidad = entidadRepository.findById(e.getEntidad().getId());
+		categoria = categoriaRepository.findById(e.getCategoria().getId());
+		if (!entidad.isPresent())
 			throw new CatalogoException(CatalogConstants.NO_ENTIDAD_FOUND);
-		if (null == categoria)
+		if (!categoria.isPresent())
 			throw new CatalogoException(CatalogConstants.NO_CATEGORIA_FOUND);
-		CodigoEstadoCuenta codigoEstadoCuenta = codigoEstadoCuentaRepository.findById(e.getId()).isPresent()
-				? codigoEstadoCuentaRepository.findById(e.getId()).get()
-				: null;
-		if (null == codigoEstadoCuenta)
+		// Valida que el id de codigo estado cuenta existe
+		codigoEstadoCuenta = codigoEstadoCuentaRepository.findById(e.getId());
+		if (!codigoEstadoCuenta.isPresent())
 			throw new CatalogoException(CatalogConstants.CODIGO_E_C_DOESNT_EXISTS);
-		CodigoEstadoCuenta codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaIdAndCodigo(e.getEntidad().getId(),
+		// Valida que el codigo no se repita, por su id de entidad, id de categoria y
+		// codigo
+		codigoEC = codigoEstadoCuentaRepository.findByEntidadIdAndCategoriaIdAndCodigo(e.getEntidad().getId(),
 				e.getCategoria().getId(), e.getCodigo());
-		if(null != codigoEC && !codigoEC.getId().equals(e.getId())) {
+		if (null != codigoEC && !codigoEC.getId().equals(e.getId())) {
 			throw new CatalogoException(CatalogConstants.CODIGO_ALREADY_EXISTS);
 		}
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
-		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
-		CodigoEstadoCuenta ent = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTOUpdt(e);
+		// Construye el objeto a guardar
+		ent = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaFromCodigoEstadoCuentaDTOUpdt(e);
+		// Guarda y al mismo tiempo construye el objeto de respuesta
 		codigoEstadoCuentaDTO = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(codigoEstadoCuentaRepository.save(ent));
 		return (T) codigoEstadoCuentaDTO;
@@ -143,13 +151,14 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	@Override
 	public <T extends AbstractCatalogoDTO> T findById(Long id) throws EmptyResultDataAccessException {
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
-		CodigoEstadoCuenta codigoEstadoCuenta = codigoEstadoCuentaRepository.findById(id).isPresent()
-				? codigoEstadoCuentaRepository.findById(id).get()
-				: null;
-		if (null == codigoEstadoCuenta)
+		Optional<CodigoEstadoCuenta> codigoEstadoCuenta = null;
+		// Valida por id que el codigo exista
+		codigoEstadoCuenta = codigoEstadoCuentaRepository.findById(id);
+		if (!codigoEstadoCuenta.isPresent())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		// Construye el objeto de respuesta y lo regresa
 		codigoEstadoCuentaDTO = CodigoEstadoCuentaBuilder
-				.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(codigoEstadoCuenta);
+				.buildCodigoEstadoCuentaDTOFromCodigoEstadoCuenta(codigoEstadoCuenta.get());
 		return (T) codigoEstadoCuentaDTO;
 	}
 
@@ -163,9 +172,13 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	 */
 	public List<CodigoEstadoCuentaUpdtDTO> findByEntidadId(Long idEntidad) throws EmptyResultDataAccessException {
 		List<CodigoEstadoCuentaUpdtDTO> lst = null;
-		List<CodigoEstadoCuenta> codigoEstadoCuentaList = codigoEstadoCuentaRepository.findByEntidad_Id(idEntidad);
+		List<CodigoEstadoCuenta> codigoEstadoCuentaList = null;
+		// Encuentra una lista de codigos por ud de entidad asociada
+		codigoEstadoCuentaList = codigoEstadoCuentaRepository.findByEntidad_Id(idEntidad);
+		// Valida que la lista no sea nula o vacia
 		if (null == codigoEstadoCuentaList || codigoEstadoCuentaList.isEmpty())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		// Construye una lista de respuesta y la regresa
 		lst = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaUpdtDTOListFromCodigoEstadoCuentaList(codigoEstadoCuentaList);
 		return null != lst ? lst : new ArrayList<>();
@@ -177,6 +190,7 @@ public class CodigoEstadoCuentaServiceImpl implements CatalogoAdmService<CodigoE
 	@Override
 	public List<? extends AbstractCatalogoDTO> findAll() {
 		List<CodigoEstadoCuentaDTO> lst = null;
+		// Consulta todos los codigos y los regresa
 		lst = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaDTOListFromCodigoEstadoCuentaList(codigoEstadoCuentaRepository.findAll());
 		return null != lst ? lst : new ArrayList<>();

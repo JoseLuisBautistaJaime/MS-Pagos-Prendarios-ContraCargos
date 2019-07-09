@@ -20,13 +20,7 @@ import mx.com.nmp.pagos.mimonte.constans.RegexConstants;
  * @creationDate 07/03/2019 16:42 hrs.
  * @version 0.1
  */
-public abstract class ValidadorGenerico {
-
-	private ValidadorGenerico() {
-		/**
-		 * hidden constructor
-		 */
-	}
+public interface ValidadorGenerico {
 
 	/**
 	 * Evalua si una direccion de email es correcta en base a un patron y regresa un
@@ -37,7 +31,7 @@ public abstract class ValidadorGenerico {
 	 * @throws PatternSyntaxException
 	 */
 	public static boolean validateEmail(final String email) throws PatternSyntaxException {
-		return null != email ? email.matches(RegexConstants.REGEX_EMAIL) : false;
+		return null != email && email.matches(RegexConstants.REGEX_EMAIL);
 	}
 
 	/**
@@ -75,7 +69,7 @@ public abstract class ValidadorGenerico {
 	 * @throws PatternSyntaxException
 	 */
 	public static boolean validatePhoneNumber(final String phoneNumber) throws PatternSyntaxException {
-		return null != phoneNumber ? phoneNumber.matches(RegexConstants.REGEX_PHONE_NUMBER) : false;
+		return null != phoneNumber && phoneNumber.matches(RegexConstants.REGEX_PHONE_NUMBER);
 	}
 
 	/**
@@ -87,7 +81,7 @@ public abstract class ValidadorGenerico {
 	 * @throws PatternSyntaxException
 	 */
 	public static boolean validateNoSpecialChars(final String str) throws PatternSyntaxException {
-		return null != str ? str.matches(RegexConstants.REGEX_NO_SPECIAL_CHARACTERS) : false;
+		return null != str && str.matches(RegexConstants.REGEX_NO_SPECIAL_CHARACTERS);
 	}
 
 }

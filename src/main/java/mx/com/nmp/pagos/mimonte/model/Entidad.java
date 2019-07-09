@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -35,12 +36,17 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 @NamedQueries(value = {
 		@NamedQuery(name = "Entidad.findByNombreAndEstatus", query = "SELECT ent FROM Entidad ent WHERE (:nombre IS NULL OR ent.nombre = :nombre) AND (:estatus IS NULL OR ent.estatus = :estatus)"),
 		@NamedQuery(name = "Entidad.setEstatusById", query = "UPDATE Entidad ent set ent.estatus = :estatus, ent.lastModifiedBy = :lastModifiedBy, ent.lastModifiedDate = :lastModifiedDate WHERE ent.id = :id") })
-public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> {
+public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad>, java.io.Serializable {
+
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
 	@JoinTable(name = "tr_entidad_contactos", joinColumns = {
 			@JoinColumn(name = "id_entidad", referencedColumnName = "id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "id_contacto", referencedColumnName = "id", nullable = false, updatable = false) })
@@ -50,8 +56,8 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	private Set<CodigoEstadoCuenta> codigoEstadoCuentaSet;
 
 	@OneToMany(mappedBy = "entidad", fetch = FetchType.LAZY)
-	private Set<EntidadCuentaAfiliacion> EntidadCuentaAfiliacionSet;
-	
+	private Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet;
+
 	@OneToMany(mappedBy = "entidad", fetch = FetchType.LAZY)
 	private Set<Conciliacion> conciliacionSet;
 
@@ -64,15 +70,13 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 		this.id = id;
 	}
 
-	public Entidad(String nombre, Set<Cuenta> cuentas, Set<Contactos> contactos,
-			Set<CodigoEstadoCuenta> codigoEstadoCuentaSet) {
+	public Entidad(String nombre, Set<Contactos> contactos) {
 		super();
 		this.nombre = nombre;
 		this.contactos = contactos;
 	}
 
-	public Entidad(String nombre, Set<Cuenta> cuentas, Set<Contactos> contactos,
-			Set<CodigoEstadoCuenta> codigoEstadoCuentaSet, Long id, Boolean estatus, Date createdDate,
+	public Entidad(String nombre, Set<Contactos> contactos, Long id, Boolean estatus, Date createdDate,
 			Date lastModifiedDate, String createdBy, String lastModifiedBy, String description,
 			String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
@@ -105,11 +109,11 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 	}
 
 	public Set<EntidadCuentaAfiliacion> getEntidadCuentaAfiliacionSet() {
-		return EntidadCuentaAfiliacionSet;
+		return entidadCuentaAfiliacionSet;
 	}
 
 	public void setEntidadCuentaAfiliacionSet(Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet) {
-		EntidadCuentaAfiliacionSet = entidadCuentaAfiliacionSet;
+		this.entidadCuentaAfiliacionSet = entidadCuentaAfiliacionSet;
 	}
 
 	public Set<Conciliacion> getConciliacionSet() {
@@ -118,6 +122,31 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad> 
 
 	public void setConciliacionSet(Set<Conciliacion> conciliacionSet) {
 		this.conciliacionSet = conciliacionSet;
+	}
+
+	@Override
+	public String toString() {
+		return "Entidad [nombre=" + nombre + ", contactos=" + contactos + ", codigoEstadoCuentaSet="
+				+ codigoEstadoCuentaSet + ", entidadCuentaAfiliacionSet=" + entidadCuentaAfiliacionSet
+				+ ", conciliacionSet=" + conciliacionSet + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof Entidad))
+			return false;
+
+		final Entidad other = (Entidad) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

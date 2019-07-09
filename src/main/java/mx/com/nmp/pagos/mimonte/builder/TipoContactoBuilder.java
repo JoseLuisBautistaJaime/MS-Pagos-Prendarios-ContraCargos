@@ -7,22 +7,18 @@ package mx.com.nmp.pagos.mimonte.builder;
 import mx.com.nmp.pagos.mimonte.dto.TipoContactoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoContactoReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.TipoContactoRespDTO;
-import mx.com.nmp.pagos.mimonte.dto.TipoContactoResponseDTO;
 import mx.com.nmp.pagos.mimonte.model.TipoContacto;
 
 /**
- * Nombre: TipoContactoBuilder Descripcion: clase de capa de builder que se
- * encarga de convertir difrentes tipos de objetos y entidades relacionadas con
- * el catalogo TipoContacto
+ * @name TipoContactoBuilder Descripcion: clase de capa de builder que se
+ *       encarga de convertir difrentes tipos de objetos y entidades
+ *       relacionadas con el catalogo TipoContacto
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net Fecha: 05/03/2019 12:16 Hrs.
  * @version 0.1
  */
 public abstract class TipoContactoBuilder {
 
-	/**
-	 * 
-	 */
 	private TipoContactoBuilder() {
 		super();
 	}
@@ -32,7 +28,7 @@ public abstract class TipoContactoBuilder {
 	 * TipoContactoDTO
 	 * 
 	 * @param tipoContactoDTO
-	 * @return tipoContacto
+	 * @return
 	 */
 	public static TipoContacto builTipoContactoFromContactoBaseDTO(TipoContactoDTO tipoContactoDTO) {
 		TipoContacto tipoContacto = null;
@@ -54,7 +50,7 @@ public abstract class TipoContactoBuilder {
 	 * TipoContacto
 	 * 
 	 * @param tipoContacto
-	 * @return tipoContactoDTO
+	 * @return
 	 */
 	public static TipoContactoDTO builTipoContactoBaseDTOFromContacto(TipoContacto tipoContacto) {
 		TipoContactoDTO tipoContactoDTO = null;
@@ -76,7 +72,7 @@ public abstract class TipoContactoBuilder {
 	 * TipoContacto
 	 * 
 	 * @param tipoContacto
-	 * @return tipoContactoResDTO
+	 * @return
 	 */
 	public static TipoContactoDTO buildTipoContactoResDTOFromTipoContacto(TipoContacto tipoContacto) {
 		TipoContactoDTO tipoContactoResDTO = null;
@@ -93,7 +89,7 @@ public abstract class TipoContactoBuilder {
 	 * TipoContactoDTO
 	 * 
 	 * @param tipoContactoDTO
-	 * @return tipoContactoRespDTO
+	 * @return
 	 */
 	public static TipoContactoRespDTO builTipoTipoContactoRespDTOFromTipoContactoDTO(TipoContactoDTO tipoContactoDTO) {
 		TipoContactoRespDTO tipoContactoRespDTO = null;
@@ -110,7 +106,7 @@ public abstract class TipoContactoBuilder {
 	 * tipo TipoContacto
 	 * 
 	 * @param tipoContacto
-	 * @return tipoContactoRespDTO
+	 * @return
 	 */
 	public static TipoContactoRespDTO buildTipoContactoRespDTOFormTipoContacto(TipoContacto tipoContacto) {
 		TipoContactoRespDTO tipoContactoRespDTO = null;
@@ -127,7 +123,7 @@ public abstract class TipoContactoBuilder {
 	 * TipoContactoRespDTO
 	 * 
 	 * @param tipoContactoRespDTO
-	 * @return tipoContacto
+	 * @return
 	 */
 	public static TipoContactoDTO buildTipoContactoDTOFromTipoContactoRespDTO(TipoContactoRespDTO tipoContactoRespDTO) {
 		TipoContactoDTO tipoContacto = null;
@@ -144,7 +140,7 @@ public abstract class TipoContactoBuilder {
 	 * TipoContactoReqDTO
 	 * 
 	 * @param tipoContactoReqDTO
-	 * @return tipoContactoDTO
+	 * @return
 	 */
 	public static TipoContactoDTO buildTipoContactoDTOFromTipoContactoReqDTO(TipoContactoReqDTO tipoContactoReqDTO) {
 		TipoContactoDTO tipoContactoDTO = null;
@@ -154,13 +150,13 @@ public abstract class TipoContactoBuilder {
 		}
 		return tipoContactoDTO;
 	}
-	
+
 	/**
 	 * Construye un objeto de tipo TipoContactoDTO a partir de un objeto de tipo
 	 * TipoContactoReqDTO
 	 * 
-	 * @param tipoContactoReqDTO
-	 * @return tipoContactoDTO
+	 * @param tipoContactoDTO2
+	 * @return
 	 */
 	public static TipoContactoDTO buildTipoContactoDTOFromTipoContactoResponseDTO(TipoContactoDTO tipoContactoDTO2) {
 		TipoContactoDTO tipoContactoDTO = null;

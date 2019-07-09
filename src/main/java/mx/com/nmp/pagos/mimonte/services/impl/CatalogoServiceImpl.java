@@ -4,14 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
-import mx.com.nmp.pagos.mimonte.dao.CatalogoRepository;
-import mx.com.nmp.pagos.mimonte.dto.CatalogoDTO;
-import mx.com.nmp.pagos.mimonte.dto.EntradaCatalogo;
-import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
-import mx.com.nmp.pagos.mimonte.model.Catalogo;
-import mx.com.nmp.pagos.mimonte.model.extrafilter.Filtro;
-import mx.com.nmp.pagos.mimonte.services.CatalogoService;
-import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCadena;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +17,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.*;
+import mx.com.nmp.pagos.mimonte.dao.CatalogoRepository;
+import mx.com.nmp.pagos.mimonte.dto.CatalogoDTO;
+import mx.com.nmp.pagos.mimonte.dto.EntradaCatalogo;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
+import mx.com.nmp.pagos.mimonte.model.Catalogo;
+import mx.com.nmp.pagos.mimonte.model.extrafilter.Filtro;
+import mx.com.nmp.pagos.mimonte.services.CatalogoService;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCadena;
 
 /**
- * Nombre: CatalogoServiceImpl Descripcion: Clase que implementa la operacion
- * que obtiene los registros de un catalogo definido
+ * @name CatalogoServiceImpl
+ * @description Clase que implementa la operacion que obtiene los registros de
+ *              un catalogo definido
  *
- * @author Javier Hernandez jhernandez@quarksoft.net Fecha: 07/02/2018 08:02 PM
+ * @author Javier Hernandez jhernandez@quarksoft.net
+ * @date 07/02/2018 08:02 PM
  * @version 0.1
  */
 @Service
@@ -60,13 +64,13 @@ public class CatalogoServiceImpl implements CatalogoService {
 	 */
 	@Override
 	public List<String> getCatalogosSistema() {
-		
+
 		log.info("Consultando registros de extrafilter del sistema...");
 		List<Catalogo> results = catalogoRepository.findAllByActivoIsTrue();
 
 		log.info("Generando lista de nombres de extrafilter encontrados...");
 		List<String> registrosCatalogos = new ArrayList<>();
-		results.forEach(item -> registrosCatalogos.add(item.getDescripcionCorta())); 
+		results.forEach(item -> registrosCatalogos.add(item.getDescripcionCorta()));
 
 		log.debug("Validando la lista de registros...");
 		if (registrosCatalogos.isEmpty()) {
@@ -78,6 +82,9 @@ public class CatalogoServiceImpl implements CatalogoService {
 		return registrosCatalogos;
 	}
 
+	/**
+	 * Obtiene un catalogo por nombre
+	 */
 	@Override
 	public CatalogoDTO getRegistrosCatalogo(String nombreCatalogo) {
 		Catalogo catalogo = getCatalogo(nombreCatalogo);
@@ -114,6 +121,9 @@ public class CatalogoServiceImpl implements CatalogoService {
 	}
 
 	/**
+	 * Obtiene un catalogo por nombre, un campo filtro y una lista de parametros
+	 * extra
+	 * 
 	 * {@inheritDoc}
 	 */
 	@Override

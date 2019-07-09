@@ -39,12 +39,11 @@ public class AfiliacionBuilder {
 	}
 
 	/**
-	 * 
 	 * Metodo que convierte de un entity tipo Afiliacion a un objeto de tipo
 	 * AfiliacionDTO
 	 * 
-	 * @param AfiliacionController afiliacion
-	 * @return AfiliacionDTO
+	 * @param afiliacion
+	 * @return
 	 */
 	public static AfiliacionDTO buildAfiliacionDTOFromAfiliacion(Afiliacion afiliacion) {
 		AfiliacionDTO afiliacionDTO = null;
@@ -66,6 +65,8 @@ public class AfiliacionBuilder {
 	 * AfiliacionDTO
 	 * 
 	 * @param afiliacionDTO
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
 	 * @return
 	 */
 	public static Afiliacion buildAfiliacionFromAfiliacionDTO(AfiliacionDTO afiliacionDTO, String lastModifiedBy,
@@ -113,6 +114,8 @@ public class AfiliacionBuilder {
 	 * de tipo AfiliacionDTO
 	 * 
 	 * @param afiliacionDTOSet
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
 	 * @return
 	 */
 	public static Set<Afiliacion> buildAfiliacionSetFromAfiliacionDTOSet(Set<AfiliacionDTO> afiliacionDTOSet,
@@ -283,7 +286,7 @@ public class AfiliacionBuilder {
 	 * Construye un objeto de tipo AfiliacionRespPostDTO a partir de un objeto de
 	 * tipo AfiliacionDTO
 	 * 
-	 * @param afiliacionRespPostDTO
+	 * @param afiliacionDTO
 	 * @return
 	 */
 	public static AfiliacionRespPostDTO buildAfiliacionRespPostDTOfromAfiliacionDTO(AfiliacionDTO afiliacionDTO) {
@@ -444,6 +447,8 @@ public class AfiliacionBuilder {
 	 * AfiliacionReqDTO
 	 * 
 	 * @param afiliacionReqDTO
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
 	 * @return
 	 */
 	public static Afiliacion buildAfiliacionFromAfiliacionReqDTO(AfiliacionReqDTO afiliacionReqDTO,
@@ -465,6 +470,8 @@ public class AfiliacionBuilder {
 	 * de tipo AfiliacionReqDTO
 	 * 
 	 * @param afiliacionReqDTOList
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
 	 * @return
 	 */
 	public static Set<Afiliacion> buildAfiliacionSetFromAfiliacionReqDTOList(
@@ -552,8 +559,6 @@ public class AfiliacionBuilder {
 	}
 
 	/**
-	 * Construye un Set de objetos de tipo AfiliacionRespPostDTO a partir de un Set
-	 * de objetos de tipo AfiliacionDTO
 	 * 
 	 * @param afiliacionDTOSet
 	 * @return

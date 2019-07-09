@@ -177,6 +177,8 @@ public class CodigoEstadoCuentaBuilder {
 	 * tipo CodigoEstadoCuentaDTO
 	 * 
 	 * @param codigoEstadoCuentaReqDTO
+	 * @param createdDate
+	 * @param lastModifiedDate
 	 * @return
 	 */
 	public static CodigoEstadoCuentaDTO buildCodigoEstadoCuentaDTOFromCodigoEstadoCuentaReqDTO(

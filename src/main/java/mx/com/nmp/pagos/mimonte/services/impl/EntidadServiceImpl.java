@@ -6,7 +6,10 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -98,10 +101,22 @@ public class EntidadServiceImpl implements EntidadService {
 	@Qualifier("afiliacionRepository")
 	private AfiliacionRepository afiliacionRepository;
 
+	/**
+	 * Encuentra el suaurio creador de una entidad por id
+	 * 
+	 * @param idEntidad
+	 * @return
+	 */
 	public String findCreatedByByEntidadId(final Long idEntidad) {
 		return cuentaRepository.findCreatedByByEntidadId(idEntidad);
 	}
 
+	/**
+	 * Encuentra la fecha creacion de una entidad por id
+	 * 
+	 * @param idEntidad
+	 * @return
+	 */
 	public Date findCreatedDateByEntidadId(final Long idEntidad) {
 		return cuentaRepository.findCreatedDateByEntidadId(idEntidad);
 	}
@@ -122,30 +137,21 @@ public class EntidadServiceImpl implements EntidadService {
 		}
 		// Validar que las relaciones cuenta-afiliacion sean correctas
 		List<Cuenta> cuentasComp = cuentaRepository.findAll();
-		int c = 0;
-		int c2 = 0;
-		if (null != cuentasComp && !cuentasComp.isEmpty()) {
-			for (Cuenta cuentaI : cuentasComp) {
-				for (Afiliacion afiliacionI : cuentaI.getAfiliaciones()) {
-					for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
-						for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-							if (cuentaI.getId().equals(cuentaReqDTO.getId())
-									&& afiliacionI.getId().equals(afiliacionReqDTO.getId())) {
-								c++;
-							}
-						}
+		boolean flag = true;
+		Map<Long, Long> map = getMapFromEntity(cuentasComp);
+		if (null != map) {
+			for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
+				for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
+					if (!map.containsKey(afiliacionReqDTO.getId())
+							|| !map.get(afiliacionReqDTO.getId()).equals(cuentaReqDTO.getId())) {
+						flag = false;
+						break;
 					}
 				}
 			}
-		} else {
-			throw new CatalogoException(CatalogConstants.THERE_ARE_NO_ACCOUNTS);
 		}
-		for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
-			c2 += cuentaReqDTO.getAfiliaciones().size();
-		}
-		if (c != c2) {
+		if (!flag)
 			throw new CatalogoException(CatalogConstants.CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS);
-		}
 		if (null != entidades && !entidades.isEmpty())
 			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS);
 		if (null != e)
@@ -156,6 +162,8 @@ public class EntidadServiceImpl implements EntidadService {
 		// Poner el tipo de contacto a los contactos
 		TipoContacto tipoContacto = tipoContactoRepository
 				.findByDescription(CatalogConstants.ENTIDAD_TIPO_CONTACTO_NAME);
+		if (null == tipoContacto)
+			throw new CatalogoException(CatalogConstants.TIPO_CONTACTO_NOT_FOUND);
 		entidad = EntidadBuilder.buildEntidadFromEntidadDTONEW(e, tipoContacto.getId());
 		entidadResp = entidadRepository.save(entidad);
 		e.setId(entidadResp.getId());
@@ -164,7 +172,9 @@ public class EntidadServiceImpl implements EntidadService {
 		int cnt = 0;
 		List<Cuenta> cuentas = null;
 		List<Afiliacion> afiliaciones = null;
-		Entidad entidadval = null;
+		Optional<Entidad> entidadval = null;
+		Optional<Cuenta> cuenta = null;
+		Optional<Afiliacion> afiliacion = null;
 		EntidadCuentaAfiliacion entidadCuentaAfiliacion = null;
 		if (null != e && null != e.getCuentas() && !e.getCuentas().isEmpty()) {
 			lst = new ArrayList<>();
@@ -180,17 +190,13 @@ public class EntidadServiceImpl implements EntidadService {
 						entidadCuentaAfiliacion.setEntidad(new Entidad(e.getId()));
 						entidadCuentaAfiliacionRepository.save(entidadCuentaAfiliacion);
 						lst.add(entidadCuentaAfiliacion);
-						entidadval = entidadRepository.findById(entidadCuentaAfiliacion.getEntidad().getId())
-								.isPresent()
-										? entidadRepository.findById(entidadCuentaAfiliacion.getEntidad().getId()).get()
-										: null;
-						cuentas.add(cuentaRepository.findById(cuentaReqDTO.getId()).isPresent()
-								? cuentaRepository.findById(cuentaReqDTO.getId()).get()
-								: null);
-						afiliaciones.add(afiliacionRepository.findById(afiliacionReqDTO.getId()).isPresent()
-								? afiliacionRepository.findById(afiliacionReqDTO.getId()).get()
-								: null);
-						lst2.add(new EntidadCuentaAfiliacionDTO(entidadval, cuentas.get(cnt), afiliaciones.get(cnt)));
+						entidadval = entidadRepository.findById(entidadCuentaAfiliacion.getEntidad().getId());
+						cuenta = cuentaRepository.findById(cuentaReqDTO.getId());
+						cuentas.add(cuenta.isPresent() ? cuenta.get() : null);
+						afiliacion = afiliacionRepository.findById(afiliacionReqDTO.getId());
+						afiliaciones.add(afiliacion.isPresent() ? afiliacion.get() : null);
+						lst2.add(new EntidadCuentaAfiliacionDTO(entidadval.isPresent() ? entidadval.get() : null,
+								cuentas.get(cnt), afiliaciones.get(cnt)));
 						cnt++;
 					}
 				}
@@ -220,10 +226,8 @@ public class EntidadServiceImpl implements EntidadService {
 		TipoContacto tipoContacto = tipoContactoRepository
 				.findByDescription(CatalogConstants.ENTIDAD_TIPO_CONTACTO_NAME);
 		entidad = EntidadBuilder.buildEntidadFromEntidadDTO(e, tipoContacto.getId());
-		Entidad entidadTest = entidadRepository.findById(e.getId()).isPresent()
-				? entidadRepository.findById(e.getId()).get()
-				: null;
-		if (null == entidadTest)
+		Optional<Entidad> entidadTest = entidadRepository.findById(e.getId());
+		if (!entidadTest.isPresent())
 			throw new CatalogoException(CatalogConstants.CATALOG_NOT_FOUND);
 		// Se valida que los id's de las cuentas existan
 		// Se valida que los id's de los contactos existan
@@ -237,7 +241,7 @@ public class EntidadServiceImpl implements EntidadService {
 		} catch (EmptyResultDataAccessException erdaex) {
 			// No action required here, application continues normally
 		}
-		if (null != entidades && !entidades.isEmpty() && entidades.get(0).getId() != e.getId())
+		if (null != entidades && !entidades.isEmpty() && !entidades.get(0).getId().equals(e.getId()))
 			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS);
 		List<EntidadCuentaAfiliacion> lst = null;
 		List<EntidadCuentaAfiliacionDTO> lst2 = null;
@@ -250,36 +254,29 @@ public class EntidadServiceImpl implements EntidadService {
 				}
 			}
 			List<Cuenta> cuentasComp = cuentaRepository.findAll();
-			int c = 0;
-			int c2 = 0;
-			if (null != cuentasComp && !cuentasComp.isEmpty()) {
-				for (Cuenta cuentaI : cuentasComp) {
-					for (Afiliacion afiliacionI : cuentaI.getAfiliaciones()) {
-						for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
-							for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-								if (cuentaI.getId().equals(cuentaReqDTO.getId())
-										&& afiliacionI.getId().equals(afiliacionReqDTO.getId())) {
-									c++;
-								}
-							}
+			boolean flag = true;
+			Map<Long, Long> map = getMapFromEntity(cuentasComp);
+			if (null != map) {
+				for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
+					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
+						if (!map.containsKey(afiliacionReqDTO.getId())
+								|| !map.get(afiliacionReqDTO.getId()).equals(cuentaReqDTO.getId())) {
+							flag = false;
+							break;
 						}
 					}
 				}
-			} else {
-				throw new CatalogoException(CatalogConstants.THERE_ARE_NO_ACCOUNTS);
 			}
-			for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
-				c2 += cuentaReqDTO.getAfiliaciones().size();
-			}
-			if (c != c2) {
+			if (!flag)
 				throw new CatalogoException(CatalogConstants.CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS);
-			}
 			entidadResp = entidadRepository.save(entidad);
 			e.setId(entidadResp.getId());
 			int cnt = 0;
 			List<Cuenta> cuentas = null;
 			List<Afiliacion> afiliaciones = null;
-			Entidad entidadval = null;
+			Optional<Entidad> entidadval = null;
+			Optional<Cuenta> cuenta;
+			Optional<Afiliacion> afiliacion = null;
 			EntidadCuentaAfiliacion entidadCuentaAfiliacion = null;
 			if (null != e && null != e.getCuentas() && !e.getCuentas().isEmpty()) {
 				lst = new ArrayList<>();
@@ -295,19 +292,13 @@ public class EntidadServiceImpl implements EntidadService {
 							entidadCuentaAfiliacion.setEntidad(new Entidad(e.getId()));
 							entidadCuentaAfiliacionRepository.save(entidadCuentaAfiliacion);
 							lst.add(entidadCuentaAfiliacion);
-							entidadval = entidadRepository.findById(entidadCuentaAfiliacion.getEntidad().getId())
-									.isPresent()
-											? entidadRepository.findById(entidadCuentaAfiliacion.getEntidad().getId())
-													.get()
-											: null;
-							cuentas.add(cuentaRepository.findById(cuentaReqDTO.getId()).isPresent()
-									? cuentaRepository.findById(cuentaReqDTO.getId()).get()
-									: null);
-							afiliaciones.add(afiliacionRepository.findById(afiliacionReqDTO.getId()).isPresent()
-									? afiliacionRepository.findById(afiliacionReqDTO.getId()).get()
-									: null);
-							lst2.add(new EntidadCuentaAfiliacionDTO(entidadval, cuentas.get(cnt),
-									afiliaciones.get(cnt)));
+							entidadval = entidadRepository.findById(entidadCuentaAfiliacion.getEntidad().getId());
+							cuenta = cuentaRepository.findById(cuentaReqDTO.getId());
+							cuentas.add(cuenta.isPresent() ? cuenta.get() : null);
+							afiliacion = afiliacionRepository.findById(afiliacionReqDTO.getId());
+							afiliaciones.add(afiliacion.isPresent() ? afiliacion.get() : null);
+							lst2.add(new EntidadCuentaAfiliacionDTO(entidadval.isPresent() ? entidadval.get() : null,
+									cuentas.get(cnt), afiliaciones.get(cnt)));
 							cnt++;
 						}
 					}
@@ -330,7 +321,6 @@ public class EntidadServiceImpl implements EntidadService {
 			ids[pos][2] = 0;
 			pos++;
 		}
-		pos = 0;
 		if (null != entidadCuentaAfiliacionExt && !entidadCuentaAfiliacionExt.isEmpty()) {
 			if (null != e.getCuentas()) {
 				for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
@@ -371,17 +361,27 @@ public class EntidadServiceImpl implements EntidadService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T findById(Long id) throws EmptyResultDataAccessException {
-		Entidad entidadResp = null;
+		Optional<Entidad> entidadResp = null;
 		EntidadDTO entidadDTO = null;
-		entidadResp = entidadRepository.findById(id).isPresent() ? entidadRepository.findById(id).get() : null;
-		if (null == entidadResp)
+		List<EntidadCuentaAfiliacion> lstECA = null;
+		List<EntidadCuentaAfiliacionDTO> lstECADTO = null;
+		// Valida por id que la entidad exista
+		entidadResp = entidadRepository.findById(id);
+		if (!entidadResp.isPresent())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
-		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp);
-
+		// Construye el objeto de respuesta
+		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidad(entidadResp.get());
+		// Valida que el objeto de respuesta no sea nulo para setearle las cuentas y
+		// afiliaciones asociadas
 		if (null != entidadDTO) {
-			entidadDTO.setCuentas(EntidadCuentaAfiliacionBuilder.buildCuentaReqDTOSetFromEntidadCuentaAfiliacionDTOList(
-					EntidadCuentaAfiliacionBuilder.buildEntidadCuentaAfiliacionDTOListFromEntidadCuentaAfiliacionList(
-							entidadCuentaAfiliacionRepository.findByEntidad_Id(entidadDTO.getId()))));
+			// Obtiene la lista de asociaciones entidad - cuenta - afiliacion
+			lstECA = entidadCuentaAfiliacionRepository.findByEntidad_Id(entidadDTO.getId());
+			// Construye el objeto DTO de la asociacion previa
+			lstECADTO = EntidadCuentaAfiliacionBuilder
+					.buildEntidadCuentaAfiliacionDTOListFromEntidadCuentaAfiliacionList(lstECA);
+			// Setea las cuentas a la entidad
+			entidadDTO.setCuentas(
+					EntidadCuentaAfiliacionBuilder.buildCuentaReqDTOSetFromEntidadCuentaAfiliacionDTOList(lstECADTO));
 		}
 
 		return (T) entidadDTO;
@@ -400,16 +400,22 @@ public class EntidadServiceImpl implements EntidadService {
 			throws EmptyResultDataAccessException {
 		List<Entidad> entidadList = null;
 		List<EntidadResponseDTO> entidadResponseDTOList = null;
+		List<EntidadCuentaAfiliacion> lstECA = null;
+		// Valida que la entidad exista por su nombre y estatus
 		entidadList = entidadRepository.findByNombreAndEstatus(nombre, estatus);
 		if (null == entidadList || entidadList.isEmpty())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		// Crea la lista de entidades de respuesta
 		entidadResponseDTOList = EntidadBuilder.buildEntidadResponseDTOListFromEntidadList(entidadList);
-
+		// Valida que la lista no sea vacia para setearle las entidades y las
+		// afiliaciones
 		if (null != entidadResponseDTOList && !entidadResponseDTOList.isEmpty()) {
 			for (EntidadResponseDTO entidadResponseDTO : entidadResponseDTOList) {
-				entidadResponseDTO
-						.setCuentas(EntidadCuentaAfiliacionBuilder.buildCuentaEntDTOSetFromEntidadCuentaAfiliacionList(
-								entidadCuentaAfiliacionRepository.findByEntidad_Id(entidadResponseDTO.getId())));
+				// Obtiene la lista de asociaciones entre entidad - cuenta - afiliacion
+				lstECA = entidadCuentaAfiliacionRepository.findByEntidad_Id(entidadResponseDTO.getId());
+				// Construye el objeto de respuesta
+				entidadResponseDTO.setCuentas(
+						EntidadCuentaAfiliacionBuilder.buildCuentaEntDTOSetFromEntidadCuentaAfiliacionList(lstECA));
 			}
 		}
 		return entidadResponseDTOList;
@@ -422,9 +428,9 @@ public class EntidadServiceImpl implements EntidadService {
 	public List<? extends AbstractCatalogoDTO> findAll() {
 		List<Entidad> entidadList = null;
 		List<EntidadDTO> entidadDTOList = null;
-		entidadList = (List<Entidad>) entidadRepository.findAll();
+		entidadList = entidadRepository.findAll();
 		entidadDTOList = EntidadBuilder.buildEntidadDTOListFromEntidadList(entidadList);
-		return (List<EntidadDTO>) entidadDTOList;
+		return entidadDTOList;
 	}
 
 	/**
@@ -442,8 +448,9 @@ public class EntidadServiceImpl implements EntidadService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateEstatusById(final Boolean estatus, final Long id, final String lastModifiedBy,
 			final Date lastModifiedDate) throws EmptyResultDataAccessException {
-		Entidad entidad = entidadRepository.findById(id).isPresent() ? entidadRepository.findById(id).get() : null;
-		if (null == entidad)
+		Optional<Entidad> entidad = null;
+		entidad = entidadRepository.findById(id);
+		if (!entidad.isPresent())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		entidadRepository.setEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
 	}
@@ -466,6 +473,26 @@ public class EntidadServiceImpl implements EntidadService {
 							lst.add(afiliacionReqDTO.getId());
 		}
 		return lst;
+	}
+
+	/**
+	 * Mapea una serie de cuentas y afiliaciones a una estructura HashMasp de java
+	 * para evaluarlas mas facil y rapido
+	 * 
+	 * @param cuentas
+	 * @return
+	 */
+	private Map<Long, Long> getMapFromEntity(List<Cuenta> cuentas) {
+		Map<Long, Long> map = null;
+		if (null != cuentas && !cuentas.isEmpty()) {
+			map = new HashMap<>();
+			for (Cuenta cuentaI : cuentas) {
+				for (Afiliacion afiliacionI : cuentaI.getAfiliaciones()) {
+					map.put(afiliacionI.getId(), cuentaI.getId());
+				}
+			}
+		}
+		return map;
 	}
 
 }

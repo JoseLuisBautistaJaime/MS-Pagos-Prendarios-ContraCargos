@@ -101,8 +101,6 @@ public abstract class CuentaBuilder {
 					AfiliacionBuilder.buildAfiliacionReqNNListFromAfiliacionDTOSet(cuentaBaseDTO.getAfiliaciones()));
 			cuentaDTO.setEstatus(cuentaBaseDTO.getEstatus());
 			cuentaDTO.setId(cuentaBaseDTO.getId());
-//			cuentaDTO.setNumero(cuentaBaseDTO.getNumeroCuenta());
-
 		}
 		return cuentaDTO;
 	}
@@ -112,6 +110,8 @@ public abstract class CuentaBuilder {
 	 * CuentaDTO
 	 * 
 	 * @param cuentaDTO
+	 * @param createdDate
+	 * @param lastModifiedDate
 	 * @return
 	 */
 	public static CuentaBaseDTO buildCuentaBaseDTOFromCuentaDTO(CuentaDTO cuentaDTO, Date createdDate,
@@ -167,7 +167,6 @@ public abstract class CuentaBuilder {
 					AfiliacionBuilder.buildAfiliacionReqNNListFromAfiliacionSet(cuenta.getAfiliaciones()));
 			cuentaDTO.setEstatus(cuenta.getEstatus());
 			cuentaDTO.setId(cuenta.getId());
-//			cuentaDTO.setNumero(cuenta.getNumeroCuenta());
 		}
 		return cuentaDTO;
 	}
@@ -307,6 +306,8 @@ public abstract class CuentaBuilder {
 	 * Construye un objeto Cuenta a partir de un objeto de tipo CuentaReqDTO
 	 * 
 	 * @param cuentaReqDTO
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
 	 * @return
 	 */
 	public static Cuenta buildCuentaFromCuentaReqDTO(CuentaReqDTO cuentaReqDTO, String lastModifiedBy,
@@ -330,6 +331,8 @@ public abstract class CuentaBuilder {
 	 * tipo CuentaReqDTO
 	 * 
 	 * @param cuentaReqDTOSet
+	 * @param lastModifiedBy
+	 * @param lastModifiedDate
 	 * @return
 	 */
 	public static Set<Cuenta> buildCuentaSetFromCuentaReqDTOSet(Set<CuentaReqDTO> cuentaReqDTOSet,
@@ -377,7 +380,6 @@ public abstract class CuentaBuilder {
 					AfiliacionBuilder.buildAfiliacionEntDTOListFromAfiliacionReqNNList(cuentaDTO.getAfiliaciones()));
 			cuentaEntDTO.setEstatus(cuentaDTO.getEstatus());
 			cuentaEntDTO.setId(cuentaDTO.getId());
-//			cuentaEntDTO.setNumero(cuentaDTO.getNumero());
 		}
 		return cuentaEntDTO;
 	}

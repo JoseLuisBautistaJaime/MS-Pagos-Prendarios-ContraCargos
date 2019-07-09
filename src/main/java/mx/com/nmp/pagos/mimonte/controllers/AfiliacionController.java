@@ -40,7 +40,6 @@ import mx.com.nmp.pagos.mimonte.dto.AfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespPostDTO;
-import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.impl.AfiliacionServiceImpl;
@@ -84,7 +83,8 @@ public class AfiliacionController {
 	/**
 	 * Guarda un nuevo catalogo Afiliacion
 	 * 
-	 * @param pagoRequestDTO
+	 * @param afiliacionReqSaveDTO
+	 * @param createdBy
 	 * @return
 	 */
 	@ResponseBody
@@ -98,8 +98,10 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody AfiliacionReqSaveDTO afiliacionReqSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		// Valida que el objeto y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateAfilacionSave(afiliacionReqSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+		// Realiza el alta
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
 				(AfiliacionDTO) afiliacionServiceImpl.save(AfiliacionBuilder.buildAfiliacionDTOFromAfiliacionSaveReqDTO(
 						afiliacionReqSaveDTO, new Date(), null), createdBy));
@@ -110,7 +112,8 @@ public class AfiliacionController {
 	/**
 	 * Actualiza un catalogo Afiliacion
 	 * 
-	 * @param AfiliacionDTO
+	 * @param afiliacionDTOReq
+	 * @param createdBy
 	 * @return
 	 */
 	@ResponseBody
@@ -124,8 +127,10 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody AfiliacionReqDTO afiliacionDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		// Valida que el objeto y sus atributos
 		if (!ValidadorCatalogo.validateAfilacionUpdt(afiliacionDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+		// Realiza la actualizacion
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder
 				.buildAfiliacionRespPostDTOfromAfiliacionDTO((AfiliacionDTO) afiliacionServiceImpl.update(
 						AfiliacionBuilder.buildAfiliacionDTOFromAfiliacionReqDTO(afiliacionDTOReq, null, new Date()),
@@ -135,9 +140,9 @@ public class AfiliacionController {
 	}
 
 	/**
-	 * Obtiene un catalogo afiliacion por su id
+	 * Obtiene un catalogo afiliacion por su numero
 	 * 
-	 * @param idAfiliacion
+	 * @param numeroAfiliacion
 	 * @return
 	 */
 	@ResponseBody
@@ -152,6 +157,7 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "numeroAfiliacion", required = true) String numeroAfiliacion) {
 		AfiliacionRespPostDTO afiliacionDTO = null;
+		// Realiza la consulta
 		try {
 			afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
 					(AfiliacionDTO) afiliacionServiceImpl.findByNumero(numeroAfiliacion));
@@ -167,10 +173,9 @@ public class AfiliacionController {
 	}
 
 	/**
-	 * Obtiene uno o mas catalogos de afiliacion por su nombre y estatus
+	 * Obtiene uno o mas catalogos de afiliacion por su numero de cuenta asociada
 	 * 
-	 * @param nombre
-	 * @param estatus
+	 * @param idCuenta
 	 * @return
 	 */
 	@ResponseBody
@@ -185,6 +190,7 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta) {
 		Set<AfiliacionRespPostDTO> afiliacionDTOSet = null;
+		// Realiza la consulta
 		try {
 			afiliacionDTOSet = AfiliacionBuilder.buildAfiliacionRespPostDTOSetfromAfiliacionDTOSet(
 					(Set<AfiliacionDTO>) afiliacionServiceImpl.findByCuentasId(idCuenta));
@@ -197,6 +203,13 @@ public class AfiliacionController {
 				afiliacionDTOSet);
 	}
 
+	/**
+	 * Elimina fisicamente una afiliacion por id
+	 * 
+	 * @param idAfiliacion
+	 * @param createdBy
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = "/catalogos/afiliaciones/{idAfiliacion}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -209,20 +222,25 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteByidAfiliacion(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		// Realiza la eliminacion
 		try {
 			afiliacionServiceImpl.deleteById(idAfiliacion);
-		} catch (EmptyResultDataAccessException | DataIntegrityViolationException ex) {
-			if (ex instanceof EmptyResultDataAccessException)
-				throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
-			else if (ex instanceof DataIntegrityViolationException)
-				throw new CatalogoException(CatalogConstants.AFILIACION_HAS_CUENTAS_ASSOCIATES);
-			else
-				throw new CatalogoException(ex.getMessage());
+		} catch (EmptyResultDataAccessException ex) {
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+		} catch (DataIntegrityViolationException ex) {
+			throw new CatalogoException(CatalogConstants.AFILIACION_HAS_CUENTAS_ASSOCIATES);
+		} catch (Exception ex) {
+			throw new CatalogoException(ex.getMessage());
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
 	}
 
+	/**
+	 * Regresa todas las afiliaciones
+	 * 
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/afiliaciones", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -233,86 +251,13 @@ public class AfiliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findAll() {
+		// Realiza la consulta
 		@SuppressWarnings("unchecked")
 		List<AfiliacionRespPostDTO> afiliacionDTOList = AfiliacionBuilder
 				.buildAfiliacionRespPostDTOListfromAfiliacionDTOList(
 						(List<AfiliacionDTO>) afiliacionServiceImpl.findAll());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != afiliacionDTOList ? afiliacionDTOList : new ArrayList<>());
-	}
-
-	/**
-	 * Crea un objeto de respuesta dummy
-	 * 
-	 * @return
-	 */
-	public static AfiliacionRespPostDTO buildDummyPost() {
-		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
-		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero("12345678");
-		return afiliacionDto;
-	}
-
-	public static List<AfiliacionRespPostDTO> buildDummyLst() {
-		List<AfiliacionRespPostDTO> lst = new ArrayList<>();
-		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
-		afiliacionDto.setId(9987L);
-		afiliacionDto.setNumero("990088");
-		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
-		afiliacionDto2.setId(234L);
-		afiliacionDto2.setNumero("12345678");
-		lst.add(afiliacionDto);
-		lst.add(afiliacionDto2);
-		return lst;
-	}
-
-	/**
-	 * Crea un objeto de respuesta dummy
-	 * 
-	 * @return
-	 */
-	public static AfiliacionDTO buildDummy() {
-
-		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
-		TipoAutorizacionDTO tipo = new TipoAutorizacionDTO();
-		tipo.setDescripcion("3d secure ");
-		tipo.setId(2);
-		afiliacionDto.setCreatedBy("Victor Moran");
-		afiliacionDto.setCreatedDate(new Date());
-		afiliacionDto.setEstatus(true);
-		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero("12345678");
-		return afiliacionDto;
-	}
-
-	public static AfiliacionDTO buildDummyUP() {
-
-		AfiliacionDTO afiliacionDto = new AfiliacionDTO();
-		TipoAutorizacionDTO tipo = new TipoAutorizacionDTO();
-		tipo.setDescripcion("3d secure ");
-		tipo.setId(2);
-		afiliacionDto.setCreatedBy("Victor Moran");
-		afiliacionDto.setCreatedDate(new Date());
-		afiliacionDto.setEstatus(true);
-		afiliacionDto.setId(234L);
-		afiliacionDto.setLastModifiedBy("Viktor Reznov");
-		afiliacionDto.setLastModifiedDate(new Date());
-		afiliacionDto.setNumero("12345678");
-		return afiliacionDto;
-	}
-
-	public static List<AfiliacionRespPostDTO> buildDummyList() {
-
-		List<AfiliacionRespPostDTO> afiliaciones = new ArrayList<>();
-		AfiliacionRespPostDTO afiliacionDto = new AfiliacionRespPostDTO();
-		AfiliacionRespPostDTO afiliacionDto2 = new AfiliacionRespPostDTO();
-		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero("12345678");
-		afiliaciones.add(afiliacionDto);
-		afiliacionDto2.setId(6789L);
-		afiliacionDto2.setNumero("987654");
-		afiliaciones.add(afiliacionDto2);
-		return afiliaciones;
 	}
 
 }

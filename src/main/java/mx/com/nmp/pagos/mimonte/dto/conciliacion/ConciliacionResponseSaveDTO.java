@@ -1,9 +1,20 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.Date;
 
-import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
-
+/**
+ * @name ConciliacionResponseSaveDTO
+ * @description Clase que encapsula la información de una respuesta al guardar
+ *              una conciliacion.
+ *
+ * @author unknown
+ * @creationDate unknown.
+ * @version 0.1
+ */
 public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 		implements Comparable<ConciliacionResponseSaveDTO> {
 
@@ -30,18 +41,17 @@ public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 
 	public ConciliacionResponseSaveDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ConciliacionResponseSaveDTO(Date createdDate, Date lastModifiedDate, String createdBy,
 			String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
-		// TODO Auto-generated constructor stub
 	}
 
-	public ConciliacionResponseSaveDTO(Integer folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
-			String subEstatusDescripcion, Long idTesoreria, Long idAsientoContable, EntidadDTO entidad,
-			CuentaDTO cuenta, ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
+	public ConciliacionResponseSaveDTO(Integer folio, EstatusConciliacionDTO estatus,
+			SubEstatusConciliacionDTO subEstatus, String subEstatusDescripcion, Long idTesoreria,
+			Long idAsientoContable, EntidadDTO entidad, CuentaDTO cuenta,
+			ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
 			GlobalDTO global, DevolucionConDTO devoluciones, MovTransitoDTO movimientosTransito,
 			ComisionesDTO comisiones) {

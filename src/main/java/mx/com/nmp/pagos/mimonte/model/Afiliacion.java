@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -24,7 +25,12 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tc_afiliacion")
-public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afiliacion> {
+public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afiliacion>, java.io.Serializable {
+
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Column(name = "numero")
 	private String numero;
@@ -89,6 +95,24 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 	@Override
 	public String toString() {
 		return "Afiliacion [numero=" + numero + ", cuentas=" + cuentas + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(numero);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof Afiliacion))
+			return false;
+
+		final Afiliacion other = (Afiliacion) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

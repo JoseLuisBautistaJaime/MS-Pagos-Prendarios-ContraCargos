@@ -6,9 +6,7 @@ package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +34,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
-import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
-import mx.com.nmp.pagos.mimonte.dto.ContactoEntDTO;
-import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
@@ -85,7 +80,8 @@ public class EntidadController {
 	/**
 	 * Guarda un nuevo catalogo Entidad
 	 * 
-	 * @param pagoRequestDTO
+	 * @param entidadBaseSaveDTO
+	 * @param createdBy
 	 * @return
 	 */
 	@ResponseBody
@@ -99,13 +95,18 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody EntidadBaseSaveDTO entidadBaseSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateEntidadBaseDTOSave(entidadBaseSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTO = null;
 		EntidadDTO entidadDTOResp = null;
+		// Construye un DTO estandar para el alta de la entidad a partir del objeto
+		// recibido
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseSaveDTO(entidadBaseSaveDTO, new Date(), null);
+		// Guarda una entidad
 		entidadDTOResp = entidadServiceImpl.save(entidadDTO, createdBy);
+		// Construye el objeto de respuesta
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				entidadResponseDTO);
@@ -114,7 +115,8 @@ public class EntidadController {
 	/**
 	 * Actualiza un catalogo Entidad
 	 * 
-	 * @param pagoRequestDTO
+	 * @param entidadDTOReq
+	 * @param lastModifiedBy
 	 * @return
 	 */
 	@ResponseBody
@@ -128,12 +130,15 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody EntidadBaseDTO entidadDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateEntidadBaseDTOUpdt(entidadDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
 		EntidadDTO entidadDTO = null;
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTOResp = null;
+		// Construye un objeto DTO estandar a partir del objeto recibido
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, null, new Date());
+		// Actualiza una entidad
 		try {
 			entidadDTOResp = entidadServiceImpl.update(entidadDTO, lastModifiedBy);
 		} catch (CatalogoException ce) {
@@ -144,6 +149,8 @@ public class EntidadController {
 		// DESDE
 		// ESTA CAPA NI EXISTE LA POSIBILIDAD DE IMPLEMENTAR REFRESH POR LA INTERFAZ
 		// JpaRepository (POSIBLEMENTE UN BUG DE SPRING DATA REPOSITORY)
+		// Se obtiene el usuario creador y la fecha creacion respectivamente de una
+		// entidad por id
 		String usr = entidadServiceImpl.findCreatedByByEntidadId(entidadDTOResp.getId());
 		Date fec = entidadServiceImpl.findCreatedDateByEntidadId(entidadDTOResp.getId());
 		if (null != usr && null != fec) {
@@ -151,6 +158,7 @@ public class EntidadController {
 			entidadDTOResp.setCreatedDate(fec);
 		}
 		// FIN DE SETEO DE USUARIO Y FECHA CREACION
+		// Se constriye el objeto de respuesta y se regresa
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				entidadResponseDTO);
@@ -175,12 +183,14 @@ public class EntidadController {
 	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTO = null;
+		// Se obtiene una entidad por id y se construye el objeto de respuesta
 		try {
-			entidadDTO = (EntidadDTO) entidadServiceImpl.findById(idEntidad);
+			entidadDTO = entidadServiceImpl.findById(idEntidad);
 			entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTO);
 		} catch (EmptyResultDataAccessException erdex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
 		}
+		// Se regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				entidadResponseDTO);
 	}
@@ -205,6 +215,7 @@ public class EntidadController {
 	public Response findByNombreAndEstatus(@RequestParam(name = "nombre", required = false) String nombre,
 			@RequestParam(name = "estatus", required = false) Boolean estatus) {
 		List<EntidadResponseDTO> entidadResponseDTOList = null;
+		// Se encuentra una lista de entidades por nombre y estatus
 		try {
 			entidadResponseDTOList = entidadServiceImpl.findByNombreAndEstatus(nombre, estatus);
 		} catch (EmptyResultDataAccessException erdex) {
@@ -218,6 +229,7 @@ public class EntidadController {
 	 * Realiza eliimado logico de una entidad
 	 * 
 	 * @param idEntidad
+	 * @param lastModifiedBy
 	 * @return
 	 */
 	@ResponseBody
@@ -232,6 +244,7 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteById(@PathVariable(value = "idEntidad", required = true) Long idEntidad,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		// Se elimina una entidad de manera logica (cambio de estatus a false) por id
 		try {
 			entidadServiceImpl.updateEstatusById(false, idEntidad, lastModifiedBy, new Date());
 		} catch (EmptyResultDataAccessException erdex) {
@@ -239,65 +252,6 @@ public class EntidadController {
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
-	}
-
-	/**
-	 * Crea un objeto de respuesta dummy
-	 * 
-	 * @return
-	 */
-	public static EntidadResponseDTO buildDummy() {
-		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
-		afiliaciones.add(new AfiliacionEntDTO(1L, "12345678L"));
-		afiliaciones.add(new AfiliacionEntDTO(2L, "44423699L"));
-		List<AfiliacionEntDTO> afiliaciones2 = new ArrayList<>();
-		afiliaciones2.add(new AfiliacionEntDTO(3L, "88345670L"));
-		afiliaciones2.add(new AfiliacionEntDTO(4L, "33423699L"));
-		Set<CuentaEntDTO> set = new HashSet<>();
-		set.add(new CuentaEntDTO(1L, "123456789", true, afiliaciones));
-		set.add(new CuentaEntDTO(2L, "999456770", true, afiliaciones2));
-		Set<ContactoEntDTO> set2 = new HashSet<>();
-		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com"));
-		set2.add(new ContactoEntDTO(2L, "Maria Fernandez", "mari_fer@gmail.com"));
-		EntidadResponseDTO entidadResoponseDTO = new EntidadResponseDTO(1L, "Banamex", "Banco banamex", true,
-				new Date(), "Bill Gates", set, set2);
-		return entidadResoponseDTO;
-	}
-
-	public static List<EntidadResponseDTO> buildDummyList() {
-		List<EntidadResponseDTO> lst = new ArrayList<>();
-		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
-		afiliaciones.add(new AfiliacionEntDTO(1L, "12345678L"));
-		afiliaciones.add(new AfiliacionEntDTO(2L, "44423699L"));
-		List<AfiliacionEntDTO> afiliaciones2 = new ArrayList<>();
-		afiliaciones2.add(new AfiliacionEntDTO(3L, "88345670L"));
-		afiliaciones2.add(new AfiliacionEntDTO(4L, "33423699L"));
-		Set<CuentaEntDTO> set = new HashSet<>();
-		set.add(new CuentaEntDTO(1L, "123456789", true, afiliaciones));
-		set.add(new CuentaEntDTO(2L, "999456770", true, afiliaciones2));
-		Set<ContactoEntDTO> set2 = new HashSet<>();
-		set2.add(new ContactoEntDTO(1L, "Juan Bautista", "josua@gmail.com"));
-		set2.add(new ContactoEntDTO(2L, "Maria Fernandez", "mari_fer@gmail.com"));
-		EntidadResponseDTO entidadResoponseDTO = new EntidadResponseDTO(1L, "Bancomer", "Banco Bancomer", true,
-				new Date(), "Steve P Jobs", set, set2);
-
-		List<AfiliacionEntDTO> afiliaciones3 = new ArrayList<>();
-		afiliaciones3.add(new AfiliacionEntDTO(5L, "127897897678L"));
-		afiliaciones3.add(new AfiliacionEntDTO(6L, "2244789999L"));
-		List<AfiliacionEntDTO> afiliaciones4 = new ArrayList<>();
-		afiliaciones4.add(new AfiliacionEntDTO(7L, "99000L"));
-		afiliaciones4.add(new AfiliacionEntDTO(8L, "9011221L"));
-		Set<CuentaEntDTO> set3 = new HashSet<>();
-		set3.add(new CuentaEntDTO(3L, "8999777", true, afiliaciones3));
-		set3.add(new CuentaEntDTO(4L, "900087111", true, afiliaciones4));
-		Set<ContactoEntDTO> set4 = new HashSet<>();
-		set4.add(new ContactoEntDTO(5L, "Jesus Saavedra", "@bank.com"));
-		set4.add(new ContactoEntDTO(6L, "Maria Isabel Duran", "duran@banco.com"));
-		EntidadResponseDTO entidadResoponseDTO2 = new EntidadResponseDTO(1L, "Bancomer", "Banco Bancomer", true,
-				new Date(), "Steve P Jobs", set3, set4);
-		lst.add(entidadResoponseDTO);
-		lst.add(entidadResoponseDTO2);
-		return lst;
 	}
 
 }

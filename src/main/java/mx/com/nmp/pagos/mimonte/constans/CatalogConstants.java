@@ -53,7 +53,7 @@ public final class CatalogConstants {
 	 * la operacion
 	 */
 	public static final String REQUEST_USER_HEADER = "requestUser";
-	
+
 	/**
 	 * El nombre del header donde se especificara el nombre de usuario qque realiza
 	 * la operacion
@@ -82,7 +82,7 @@ public final class CatalogConstants {
 	 * cuenta con una entidad y categoria repetida
 	 */
 	public static final String CODIGO_E_C_ALREADY_EXISTS = "Ya existe un codigo con esa entidad y esa categoria";
-	
+
 	/**
 	 * Mensaje que es lanzado cuando se intenta dar de alta un codigo de estado de
 	 * cuenta con una entidad, categoria y codigo repetido
@@ -145,7 +145,7 @@ public final class CatalogConstants {
 	/**
 	 * Mensaje que es mostrado si el correo electronico a actualizar ya existe.
 	 */
-	public static final String CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_NOT_EXISTS = "El correo electronico que desea actualizar ya existe.";
+	public static final String CATALOG_THE_EMAIL_THAT_WANTS_TO_UPDT_ALREADY_EXISTS = "El correo electronico que desea actualizar ya existe.";
 
 	/**
 	 * Mensaje que es mostrado si el id a actualizar no existe.
@@ -229,7 +229,7 @@ public final class CatalogConstants {
 	 * Mensaje que es mostrado cuando se desea eliminar un contacto que esta
 	 * asociado a una entidad
 	 */
-	public static final String CONTCATO_HAS_ENTIDADES_ASSOCIATED = "El contacto esta asociado a una entidad";
+	public static final String CONTACTO_HAS_ENTIDADES_ASSOCIATED = "El contacto esta asociado a una entidad";
 
 	/**
 	 * Mensaje que es mostrado cuando se genera un error de tipo no resultado unico
@@ -243,10 +243,16 @@ public final class CatalogConstants {
 	public static final String THERE_ARE_NO_ACCOUNTS = "No existen cuentas en el catalogo";
 
 	/**
-	 * mensaje que es mostrado cuando el tipo de contacto no es encontrado en el catalogo
+	 * mensaje que es mostrado cuando el tipo de contacto no es encontrado en el
+	 * catalogo
 	 */
 	public static final String TIPO_CONTACTO_NOT_FOUND = "El tipo de contacto no existe en el catalogo";
-	
+
+	/**
+	 * Mensaje que es mostrado cuando el objeto cuenta es nulo
+	 */
+	public static final String CUENTA_IS_NULL = "La cuenta es nula";
+
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.

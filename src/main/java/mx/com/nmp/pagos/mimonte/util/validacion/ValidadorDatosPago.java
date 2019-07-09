@@ -7,21 +7,22 @@ import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
 
 /**
- * Nombre: ValidadorDatosPago Descripcion: Validador de Datos de Pago
+ * @name ValidadorDatosPago
+ * @description Validador de Datos de Pago
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 30/11/2018 14:16 hrs.
  * @version 0.1
  */
-public class ValidadorDatosPago {
+public interface ValidadorDatosPago {
 
 	/**
-	 * 
 	 * Metodo que valida el objeto PagoRequestDTO para que no haya datos nulos
 	 * 
 	 * @param pagoRequestDTO
+	 * @param cantidadMaximaPartidas
 	 */
-	public static final void validacionesInicialesPago(PagoRequestDTO pagoRequestDTO, int cantidadMaximaPartidas) {
+	public static void validacionesInicialesPago(PagoRequestDTO pagoRequestDTO, int cantidadMaximaPartidas) {
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(pagoRequestDTO);
 		vo.noNulo(pagoRequestDTO.getConcepto());
@@ -43,12 +44,11 @@ public class ValidadorDatosPago {
 	}
 
 	/**
-	 * 
 	 * Metodo que valida un objeto TarjetaPagoDTO para que no contenga valores nulos
 	 * 
 	 * @param tarjeta
 	 */
-	public static final void validacionesTrajeta(TarjetaPagoDTO tarjeta) {
+	public static void validacionesTrajeta(TarjetaPagoDTO tarjeta) {
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(tarjeta);
 		vo.noNulo(tarjeta.getAlias());
@@ -56,6 +56,12 @@ public class ValidadorDatosPago {
 		vo.noNulo(tarjeta.getToken());
 	}
 
+	/**
+	 * Valida que un objeto de tipo PagoRequestDTO y sus atributos sean correctos
+	 * 
+	 * @param pagoRequestDTO
+	 * @throws PagoException
+	 */
 	public static void doTypeValidations(PagoRequestDTO pagoRequestDTO) throws PagoException {
 		if (pagoRequestDTO.getIdCliente() <= 0) {
 			throw new PagoException(PagoConstants.FieldSizeConstants.CLIENT_ID_LESS_OR_EQUAL_THAN_0);
@@ -76,7 +82,7 @@ public class ValidadorDatosPago {
 				throw new PagoException(PagoConstants.NUMBER_FORMAT_IN_FOLIO_CONTRATO);
 			}
 		}
-		if (!Double.valueOf(pagoRequestDTO.getMontoTotal()).equals(sum))
+		if (!pagoRequestDTO.getMontoTotal().equals(sum))
 			throw new PagoException(PagoConstants.IRREGULAR_OPERATIONS_AMOUNT);
 		try {
 			Long.parseLong(pagoRequestDTO.getIdTransaccionMidas());

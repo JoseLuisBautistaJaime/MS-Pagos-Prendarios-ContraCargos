@@ -17,8 +17,8 @@ import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 
 /**
- * Nombre: PagoBuilder Descripcion: Builder que se encaraga de fabricar objetos
- * entity a partir de objetos DTO y viceversa
+ * @name PagoBuilder Descripcion: Builder que se encaraga de fabricar objetos
+ *       entity a partir de objetos DTO y viceversa
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 21/11/2018 17:30 hrs.
@@ -72,7 +72,7 @@ public class PagoBuilder {
 		pago.setMonto(new Double(DF.format(operacion.getMonto())));
 		pago.setFolioPartida(Long.parseLong(operacion.getFolioContrato()));
 		pago.setIdOperacion(operacion.getIdOperacion());
-		pago.setTarjeta(null != tarjeta ? null != tarjeta.getDigitos() ? tarjeta.getDigitos() : null : null);
+		pago.setTarjeta(null != tarjeta && null != tarjeta.getDigitos() ? tarjeta.getDigitos() : null);
 		return pago;
 	}
 

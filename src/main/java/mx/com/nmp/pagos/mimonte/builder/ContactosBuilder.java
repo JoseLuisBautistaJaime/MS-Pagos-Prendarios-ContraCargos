@@ -44,8 +44,8 @@ public abstract class ContactosBuilder {
 	 * Construye una entidad de tipo Contacto a partir de un objeto de tipo
 	 * ContactosDTO
 	 * 
-	 * @param contactosDTO
-	 * @return contactos
+	 * @param contactoBaseDTO
+	 * @return
 	 */
 	public static Contactos buildContactosFromContactosDTO(ContactoBaseDTO contactoBaseDTO) {
 		Contactos contactos = null;
@@ -70,8 +70,8 @@ public abstract class ContactosBuilder {
 	 * Construye una entidad de tipo Contacto a partir de un objeto de tipo
 	 * ContactosDTO
 	 * 
-	 * @param contactosDTO
-	 * @return contactos
+	 * @param contactoBaseDTO
+	 * @return
 	 */
 	public static Contactos buildContactosFromContactosDTOupdt(ContactoBaseDTO contactoBaseDTO) {
 		Contactos contactos = null;
@@ -98,7 +98,7 @@ public abstract class ContactosBuilder {
 	 * Contactos
 	 * 
 	 * @param contactos
-	 * @return contactosDTO
+	 * @return
 	 */
 	public static ContactoBaseDTO buildContactosDTOFromContactos(Contactos contactos) {
 		ContactoBaseDTO contactosDTO = null;
@@ -124,7 +124,7 @@ public abstract class ContactosBuilder {
 	 * Contactos
 	 * 
 	 * @param contactos
-	 * @return contactoRespDTO
+	 * @return
 	 */
 	public static ContactoRespDTO buildContactoRespDTOFromContactos(Contactos contactos) {
 		ContactoRespDTO contactoRespDTO = null;
@@ -153,7 +153,7 @@ public abstract class ContactosBuilder {
 	 * @param contactoReqUpdateDTO
 	 * @param createdDate
 	 * @param lastModifiedDate
-	 * @return contactoRespDTO
+	 * @return
 	 */
 	public static ContactoBaseDTO buildContactoRespDTOFromContactoReqUpdateDTO(
 			ContactoReqUpdateDTO contactoReqUpdateDTO, Date createdDate, Date lastModifiedDate) {
@@ -168,11 +168,8 @@ public abstract class ContactosBuilder {
 			contactoRespDTO.setNombre(contactoReqUpdateDTO.getNombre());
 			contactoRespDTO.setTipoContacto(TipoContactoBuilder
 					.buildTipoContactoDTOFromTipoContactoReqDTO(contactoReqUpdateDTO.getTipoContacto()));
-//			contactoRespDTO.setCreatedBy(createdBy);
 			contactoRespDTO.setCreatedDate(createdDate);
-//			contactoRespDTO.setLastModifiedBy(lastModifiedBy);
 			contactoRespDTO.setLastModifiedDate(lastModifiedDate);
-//			contactoRespDTO.setEstatus(contactoReqUpdateDTO.get);
 		}
 
 		return contactoRespDTO;
@@ -183,7 +180,7 @@ public abstract class ContactosBuilder {
 	 * ContactoBaseDTO
 	 * 
 	 * @param contactoBaseDTO
-	 * @return contactosDTO
+	 * @return
 	 */
 	public static ContactoRespDTO buildContactoRespDTOFromContactoBaseDTO(ContactoBaseDTO contactoBaseDTO) {
 		ContactoRespDTO contactosDTO = null;
@@ -209,14 +206,13 @@ public abstract class ContactosBuilder {
 	 * Contactos
 	 * 
 	 * @param contacto
-	 * @return contactoEntDTO
+	 * @return
 	 */
 	public static ContactoEntDTO buildContactoEntDTOFromContacto(Contactos contacto) {
 		ContactoEntDTO contactoEntDTO = null;
 		if (null != contacto) {
 			contactoEntDTO = new ContactoEntDTO();
 			contactoEntDTO.setEmail(contacto.getEmail());
-//			contactoEntDTO.setEstatus(contacto.getEstatus());
 			contactoEntDTO.setId(contacto.getId());
 			contactoEntDTO.setNombre(contacto.getNombre());
 		}
@@ -253,7 +249,6 @@ public abstract class ContactosBuilder {
 		if (null != contactoReqDTO) {
 			contactoEntDTO = new ContactoEntDTO();
 			contactoEntDTO.setEmail(contactoReqDTO.getEmail());
-//			contactoEntDTO.setEstatus(contactoReqDTO.getEstatus());
 			contactoEntDTO.setId(contactoReqDTO.getId());
 			contactoEntDTO.setNombre(contactoReqDTO.getNombre());
 		}
@@ -265,7 +260,7 @@ public abstract class ContactosBuilder {
 	 * objetos de tipo ContactoReqDTO
 	 * 
 	 * @param contactoReqDTOSet
-	 * @return contactoEntDTOSet
+	 * @return
 	 */
 	public static Set<ContactoEntDTO> buildContactoEntDTOSetFromContactoReqDTOSet(
 			Set<ContactoReqDTO> contactoReqDTOSet) {
@@ -280,7 +275,7 @@ public abstract class ContactosBuilder {
 	}
 
 	/**
-	 * * Construye un entity de tipo Contactos a partir de un objeto de tipo
+	 * Construye un entity de tipo Contactos a partir de un objeto de tipo
 	 * ContactoReqDTO
 	 * 
 	 * @param contactoReqDTO
@@ -301,8 +296,6 @@ public abstract class ContactosBuilder {
 			contacto.setLastModifiedBy(lastModifiedBy);
 			contacto.setLastModifiedDate(lastModifiedDate);
 			contacto.setTipoContacto(new TipoContacto(idTipoContacto));
-//			contacto.setCreatedBy(createdBy);
-//			contacto.setCreatedDate(createdDate);
 		}
 		return contacto;
 	}
@@ -334,8 +327,8 @@ public abstract class ContactosBuilder {
 	}
 
 	/**
-	 * * Construye un Set de entities de tipo Contactos a partir de in Set de
-	 * objetos de tipo ContactoReqDTO
+	 * Construye un Set de entities de tipo Contactos a partir de in Set de objetos
+	 * de tipo ContactoReqDTO
 	 * 
 	 * @param contactoReqDTOSet
 	 * @param lastModifiedBy
@@ -384,7 +377,7 @@ public abstract class ContactosBuilder {
 	 * Contactos
 	 * 
 	 * @param contacto
-	 * @return contactoReqDTO
+	 * @return
 	 */
 	public static ContactoReqDTO buildContactoReqDTOFromContacto(Contactos contacto) {
 		ContactoReqDTO contactoReqDTO = null;
@@ -421,7 +414,7 @@ public abstract class ContactosBuilder {
 	 * tipo List<ContactoRespDTO>
 	 * 
 	 * @param contactoRespDTOList
-	 * @return contactoBaseDTOList
+	 * @return
 	 */
 	public static List<ContactoRespDTO> buildContactoBaseDTOListFromContactoRespDTOList(
 			List<ContactoRespDTO> contactoRespDTOList) {
@@ -440,7 +433,7 @@ public abstract class ContactosBuilder {
 	 * ContactoRespDTO
 	 * 
 	 * @param contactoRespDTO
-	 * @return contactoBaseDTO
+	 * @return
 	 */
 	public static ContactoBaseDTO buildContactoBaseDTOFromContactoRespDTO(ContactoRespDTO contactoRespDTO) {
 		ContactoBaseDTO contactoBaseDTO = null;
@@ -483,7 +476,7 @@ public abstract class ContactosBuilder {
 	 * tipo List<Contactos>
 	 * 
 	 * @param contactosList
-	 * @return contactoRespDTOList
+	 * @return
 	 */
 	public static List<ContactoRespDTO> buildContactoRespDTOListFromContactosList(List<Contactos> contactosList) {
 		List<ContactoRespDTO> contactoRespDTOList = null;
@@ -501,7 +494,7 @@ public abstract class ContactosBuilder {
 	 * Contactos
 	 * 
 	 * @param contactos
-	 * @return contactoRespDTO
+	 * @return
 	 */
 	public static ContactoRespDTO buildContactoRespDTOFormContactos(Contactos contactos) {
 		ContactoRespDTO contactoRespDTO = null;
@@ -548,7 +541,7 @@ public abstract class ContactosBuilder {
 	 * @param contactoRequestDTO
 	 * @param createdDate
 	 * @param lastModifiedDate
-	 * @return contactoBaseDTO
+	 * @return
 	 */
 	public static ContactoBaseDTO buildContactoBaseDTOFromContactoRequestDTO(ContactoRequestDTO contactoRequestDTO,
 			Date createdDate, Date lastModifiedDate) {
@@ -563,10 +556,7 @@ public abstract class ContactosBuilder {
 			contactoBaseDTO.setNombre(contactoRequestDTO.getNombre());
 			contactoBaseDTO.setTipoContacto(TipoContactoBuilder
 					.buildTipoContactoDTOFromTipoContactoReqDTO(contactoRequestDTO.getTipoContacto()));
-//			contactoBaseDTO.setCreatedBy(contactoRequestDTO.get);
-//			contactoBaseDTO.setLastModifiedBy(lastModifiedBy);
 		}
-
 		return contactoBaseDTO;
 	}
 
@@ -606,7 +596,7 @@ public abstract class ContactosBuilder {
 	}
 
 	/**
-	 * Cinstruye un Set de objetos de tipo ContactoReqDTO a partir de un Set de
+	 * Construye un Set de objetos de tipo ContactoReqDTO a partir de un Set de
 	 * objetos de tipo ContactoReqSaveDTO
 	 * 
 	 * @param contactoReqSaveDTOSet

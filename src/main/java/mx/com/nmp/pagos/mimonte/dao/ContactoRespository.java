@@ -31,7 +31,7 @@ public interface ContactoRespository extends JpaRepository<Contactos, Long> {
 	 * idTipoContacto.
 	 * 
 	 * @param idTipoContacto
-	 * @return List<Contactos>
+	 * @return
 	 */
 	@Query("FROM Contactos c WHERE c.tipoContacto.id = :idTipoContacto")
 	public List<Contactos> findByIdTipoContacto(@Param("idTipoContacto") final Long idTipoContacto);
@@ -43,16 +43,25 @@ public interface ContactoRespository extends JpaRepository<Contactos, Long> {
 	 * @param idTipoContacto
 	 * @param nombre
 	 * @param email
-	 * @return List<Contactos>
+	 * @return
 	 */
 	@Query("FROM Contactos c WHERE (:idTipoContacto IS NULL OR c.tipoContacto.id = :idTipoContacto) AND "
 			+ "(:nombre IS NULL OR c.nombre = :nombre) AND " + "(:email IS NULL OR c.email = :email)")
 	public List<Contactos> findByIdTipoContactoOrNombreOrEmail(@Param("idTipoContacto") final Long idTipoContacto,
 			@Param("nombre") final String nombre, @Param("email") final String email);
 
+	/**
+	 * Regresa un contacto por email
+	 * 
+	 * @param email
+	 * @return
+	 */
 	@Query("SELECT c FROM Contactos c WHERE c.email = :email")
 	public Contactos findByEmail(@Param("email") final String email);
 
+	/**
+	 * Regresa un contacto por id
+	 */
 	public Optional<Contactos> findById(final Long idContacto);
 
 	/**
@@ -68,7 +77,6 @@ public interface ContactoRespository extends JpaRepository<Contactos, Long> {
 	 * entidad
 	 * 
 	 * @param idTipoContacto
-	 * @return
 	 */
 	@Modifying
 	@Query(nativeQuery = true, value = "DELETE FROM tc_contactos WHERE id NOT IN(SELECT DISTINCT cto.id FROM (SELECT * FROM tc_contactos) cto INNER JOIN tr_entidad_contactos eco ON cto.id = eco.id_contacto) AND id_tipo_contacto = :idTipoContacto")

@@ -31,6 +31,7 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * 
 	 * @param idEntidad
 	 * @return
+	 * @throws EmptyResultDataAccessException
 	 */
 	public List<CodigoEstadoCuenta> findByEntidad_Id(final Long idEntidad) throws EmptyResultDataAccessException;
 
@@ -50,11 +51,12 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * Regresa el listado de codigos de estado de cuenta por id categoria
 	 * 
 	 * @param idCategoria
-	 * @param estatus
+	 * @param status
 	 * @return
 	 * @throws EmptyResultDataAccessException
 	 */
-	public List<CodigoEstadoCuenta> findByCategoriaIdAndEstatus(final Long idCategoria, final boolean status) throws EmptyResultDataAccessException;
+	public List<CodigoEstadoCuenta> findByCategoriaIdAndEstatus(final Long idCategoria, final boolean status)
+			throws EmptyResultDataAccessException;
 
 	/**
 	 * Regresa un codigo de estado de cuenta por id
@@ -63,8 +65,6 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 
 	/**
 	 * Regresa todos los codigos de estado de cuenta
-	 * 
-	 * @return
 	 */
 	public List<CodigoEstadoCuenta> findAll();
 }

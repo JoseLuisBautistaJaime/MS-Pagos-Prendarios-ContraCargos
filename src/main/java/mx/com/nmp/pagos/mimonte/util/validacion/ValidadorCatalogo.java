@@ -36,11 +36,7 @@ import mx.com.nmp.pagos.mimonte.dto.EntidadBaseSaveDTO;
  * @creationDate 21/03/2019 18:07 hrs.
  * @version 0.1
  */
-public abstract class ValidadorCatalogo {
-
-	private ValidadorCatalogo() {
-		super();
-	}
+public interface ValidadorCatalogo {
 
 	/**
 	 * Valida que los atributos que deben estar en el objeto de la peticion de alta
@@ -63,7 +59,7 @@ public abstract class ValidadorCatalogo {
 	 * Valida que el todos los atributos de el objeto de la peticion de
 	 * actualizacion no sean nulos y sean los correctos ademas
 	 * 
-	 * @param codigoEstadoCuentaReqDTO
+	 * @param codigoEstadoCuentaReqUpdtDTO
 	 * @return
 	 */
 	public static boolean validateCodigoEstadoCuentaUpdate(CodigoEstadoCuentaReqUpdtDTO codigoEstadoCuentaReqUpdtDTO) {
@@ -345,7 +341,8 @@ public abstract class ValidadorCatalogo {
 	 */
 	public static boolean validateCuentaUpdate(CuentaDTO cuentaDTO) {
 		if (null != cuentaDTO && null != cuentaDTO.getId() && null != cuentaDTO.getAfiliaciones()
-				&& !cuentaDTO.getAfiliaciones().isEmpty() && null != cuentaDTO.getNumero() && !cuentaDTO.getNumero().equals("")) {
+				&& !cuentaDTO.getAfiliaciones().isEmpty() && null != cuentaDTO.getNumero()
+				&& !cuentaDTO.getNumero().equals("")) {
 			for (AfiliacionReqNN afiliacionRespDTO : cuentaDTO.getAfiliaciones()) {
 				if (null == afiliacionRespDTO.getId()) {
 					return false;

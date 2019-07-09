@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -43,15 +44,15 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 	@Column(name = "numero_cuenta", nullable = false)
 	private String numeroCuenta;
 
-	@ManyToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = { CascadeType.REMOVE }, fetch = FetchType.EAGER)
 	@JoinTable(name = "tr_cuenta_afiliacion", joinColumns = {
 			@JoinColumn(name = "id_cuenta", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_afiliacion", referencedColumnName = "id") })
 	private Set<Afiliacion> afiliaciones;
 
 	@OneToMany(mappedBy = "cuenta", fetch = FetchType.LAZY)
-	private Set<EntidadCuentaAfiliacion> EntidadCuentaAfiliacionSet;
-	
+	private Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet;
+
 	@OneToMany(mappedBy = "cuenta", fetch = FetchType.LAZY)
 	private Set<Conciliacion> conciliacionSet;
 
@@ -95,11 +96,11 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 	}
 
 	public Set<EntidadCuentaAfiliacion> getEntidadCuentaAfiliacionSet() {
-		return EntidadCuentaAfiliacionSet;
+		return entidadCuentaAfiliacionSet;
 	}
 
 	public void setEntidadCuentaAfiliacionSet(Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet) {
-		EntidadCuentaAfiliacionSet = entidadCuentaAfiliacionSet;
+		this.entidadCuentaAfiliacionSet = entidadCuentaAfiliacionSet;
 	}
 
 	public Set<Conciliacion> getConciliacionSet() {
@@ -108,6 +109,31 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 
 	public void setConciliacionSet(Set<Conciliacion> conciliacionSet) {
 		this.conciliacionSet = conciliacionSet;
+	}
+
+	@Override
+	public String toString() {
+		return "Cuenta [numeroCuenta=" + numeroCuenta + ", afiliaciones=" + afiliaciones
+				+ ", entidadCuentaAfiliacionSet=" + entidadCuentaAfiliacionSet + ", conciliacionSet=" + conciliacionSet
+				+ "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(numeroCuenta);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof Cuenta))
+			return false;
+
+		final Cuenta other = (Cuenta) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

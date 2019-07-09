@@ -3,8 +3,6 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
-
 public class DevolucionEntidadDetalleDTO {
 	
 	private Integer id;
@@ -25,7 +23,6 @@ public class DevolucionEntidadDetalleDTO {
 	
 	public DevolucionEntidadDetalleDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public DevolucionEntidadDetalleDTO(Integer id, Long idEntidad, String nombreEntidad, String descripcionEntidad,
