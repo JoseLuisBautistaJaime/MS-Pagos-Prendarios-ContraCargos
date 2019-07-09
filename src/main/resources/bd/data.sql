@@ -27,21 +27,13 @@ INSERT INTO tk_tipo_tarjeta (id, descripcion_corta, descripcion) VALUES (2, 'Mas
 -- INSERTS INICIALES EN TABLA - tk_catalogo
 -- ------------------------------------------------------------------------------------------------------------------ --
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
-(1, 'Afiliacion', 'Catalogo de afiliaciones', 'tc_afiliacion', 1);
+(1, 'Estatus Tarjeta', 'Catalogo de estatus de tarjetas', 'tk_estatus_tarjeta', 1);
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
-(2, 'Estatus Tarjeta', 'Catalogo de estatus de tarjetas', 'tk_estatus_tarjeta', 1);
+(2, 'Estatus Transaccion', 'Catalogo de estatus de transacciones', 'tk_estatus_transaccion', 1);
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
-(3, 'Estatus Transaccion', 'Catalogo de estatus de transacciones', 'tk_estatus_transaccion', 1);
+(3, 'Tipo Tarjeta', 'Catalogo de tipos de tarjetas', 'tk_tipo_tarjeta', 1);
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
-(4, 'Tipo Tarjeta', 'Catalogo de tipos de tarjetas', 'tk_tipo_tarjeta', 1);
-INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
-(5, 'Categoria', 'Catalogo de categorias de codigos de estados de cuenta', 'tk_categoria', 1);
--- // TODO - OJO:: CHECAR LOS SIGUIENTES
-/*(3, 'Afiliacion', 'Catalogo de afiliaciones', 'tc_afiliacion', 1),
-(4, 'EstatusPago', 'Estatus de las transacciones o pagos', 'tk_estatus_transaccion', 1),
-(5, 'ReglaNegocio', 'Reglas de negocio', 'tk_regla_negocio', 1),
-(6, 'Variable', 'Variables para la aplicacion', 'tk_variable', 1),
-(7, 'Categoria', 'Categorias de los codigos de estado de cuenta', 'tk_categoria', 1);*/
+(4, 'Categoria', 'Catalogo de categorias de codigos de estados de cuenta', 'tk_categoria', 1);
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -56,16 +48,6 @@ INSERT INTO tk_estatus_operacion (id, descripcion_corta, descripcion) VALUES
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- MODULO DSS
 -- ------------------------------------------------------------------------------------------------------------------ --
--- // TODO - Revisar si esta parte no se debe mover al script del schema.sql
--- TRUNCATE PARA TABLAS ASOCIADAS A DSS --
-DELETE FROM tr_regla_negocio_variable;
-DELETE FROM tr_regla_negocio_tipo_autorizacion;
-SET FOREIGN_KEY_CHECKS = 0;
-DELETE FROM tk_regla_negocio;
-DELETE FROM tk_variable;
-SET FOREIGN_KEY_CHECKS = 1;
--- FINALIZA TRUNCATE PARA TABLAS ASOCIADAS A DSS --
-
 
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_tipo_autorizacion - SE USAN EN MODULO DSS
@@ -75,7 +57,7 @@ INSERT INTO tk_tipo_autorizacion (id, descripcion, descripcion_corta) VALUES (2,
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
--- INSERTS INICIALES EN TABLA - tk_variable
+-- INSERTS INICIALES EN TABLA - tk_variable - SE USAN EN MODULO DSS
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- REGLA NEGOCIO - 1
 INSERT INTO tk_variable (id_variable, clave, valor) VALUES (1, '{totalIni}', '10');
