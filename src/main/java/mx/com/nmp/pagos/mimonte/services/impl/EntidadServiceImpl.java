@@ -464,6 +464,10 @@ public class EntidadServiceImpl implements EntidadService {
 		entidad = entidadRepository.findById(id);
 		if (!entidad.isPresent())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
+		// Valida si la entidad ya fue dada de baja previamente
+		else if (!entidad.get().getEstatus())
+			throw new CatalogoException(CatalogConstants.ENTIDAD_HAS_ALREADY_DELETED,
+					CodigoError.NMP_PMIMONTE_BUSINESS_076);
 		entidadRepository.setEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
 	}
 

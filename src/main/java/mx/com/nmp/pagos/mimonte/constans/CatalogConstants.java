@@ -254,10 +254,23 @@ public final class CatalogConstants {
 	public static final String CUENTA_IS_NULL = "La cuenta es nula";
 
 	/**
-	 * Mensaje que es mostrado cuando se intenta enviar informacion de contactos inconsistente en la actualizacion de una entidad
+	 * Mensaje que es mostrado cuando se intenta enviar informacion de contactos
+	 * inconsistente en la actualizacion de una entidad
 	 */
 	public static final String INCONSISTENT_CONTACTS_DATA = "Los datos de uno o mas contactos son inconsistentes";
-	
+
+	/**
+	 * Mensaje que es mostrado cuando se desea dar de baja una cuenta que ya ha sido
+	 * dada de baja
+	 */
+	public static final String CUENTA_HAS_ALREADY_DELETED = "La cuenta ya ha sido dada de baja";
+
+	/**
+	 * Mensaje que es mostrado cuando se desea dar de baja una entidad que ya ha
+	 * sido dada de baja
+	 */
+	public static final String ENTIDAD_HAS_ALREADY_DELETED = "La entidad ya ha sido dada de baja";
+
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.

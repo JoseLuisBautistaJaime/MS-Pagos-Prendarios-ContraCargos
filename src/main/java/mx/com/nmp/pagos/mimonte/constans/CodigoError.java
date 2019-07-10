@@ -50,6 +50,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_062("El codigo de estado de cuenta no existe", TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_074("Los datos de uno o mas contactos es inconsistente", TipoError.CLIENTE,
 			SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_075("La cuenta ya ha sido dada de baja", TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_076("La entidad ya ha sido dada de baja", TipoError.CLIENTE, SeveridadError.MEDIA),
 	// CONCILIACION
 	NMP_PMIMONTE_BUSINESS_017("No se encontraron conciliaciones para los parametros especificados", TipoError.CLIENTE,
 			SeveridadError.MEDIA),

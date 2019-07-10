@@ -208,8 +208,13 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 		Optional<Cuenta> cuenta = null;
 		// Encuentra una cuenta por id
 		cuenta = cuentaRepository.findById(id);
+		// Valida que la cuenta existe
 		if (!cuenta.isPresent())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
+		// Valida si la cuenta ya fue dada de baja previamente
+		else if (!cuenta.get().getEstatus())
+			throw new CatalogoException(CatalogConstants.CUENTA_HAS_ALREADY_DELETED,
+					CodigoError.NMP_PMIMONTE_BUSINESS_075);
 		// Actualiza el estatus de una cuenta
 		cuentaRepository.updateEstatusById(estatus, id, lastModifiedBy, lastModifiedDate);
 	}
