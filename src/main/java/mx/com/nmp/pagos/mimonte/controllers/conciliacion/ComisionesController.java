@@ -151,8 +151,8 @@ public class ComisionesController {
 	 * Realiza la consulta de transacciones realizadas en un periodo de tiempo
 	 * marcado.
 	 * 
-	 * @param SolicitarPagosRequestDTO
-	 * @param createdBy
+	 * @param comisionesTransaccionesRequestDTO
+	 * @param userRequest
 	 * @return
 	 */
 	@ResponseBody

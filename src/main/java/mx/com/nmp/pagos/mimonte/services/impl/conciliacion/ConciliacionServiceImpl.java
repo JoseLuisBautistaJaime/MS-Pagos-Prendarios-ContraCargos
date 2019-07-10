@@ -56,7 +56,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
@@ -72,8 +71,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
-import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
-import mx.com.nmp.pagos.mimonte.observer.ReporteObserver;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 
 /**
@@ -122,9 +119,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	@Autowired
 	private GlobalRepository globalRepository;
-
-	@Autowired
-	private ReporteObserver reporteObserver;
 
 	@Autowired
 	private ConciliacionHelper conciliacionHelper;
@@ -575,17 +569,30 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		return consultaActividadDTOList;
 	}
 
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#consultaMovimientosTransito(java.lang.Integer)
+	 */
 	@Override
 	public List<MovTransitoDTO> consultaMovimientosTransito(Integer folio) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(folio);
+		
+		List<MovimientoTransito> movsTransito = null;
+		try {
+			movsTransito = this.movimientoTransitoRepository.findByIdConciliacion(conciliacion.getId());
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar los movimientos en transito", CodigoError.NMP_PMIMONTE_9999);
+		}
+
+		return MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(movsTransito);
 	}
 
-	@Override
-	public void solicitarPagos(SolicitarPagosRequestDTO solicitarPagosRequestDTO, String usuario) {
-		// TODO Auto-generated method stub
-	}
 
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#actualizarPS(mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest, java.lang.String)
+	 */
 	@Transactional
 	public void actualizarPS(ActualizarIdPSRequest actualizarIdPSRequest, String usuario) {
 
@@ -669,9 +676,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 
 		// Notificar cambios o alta de reportes, si existen...
-		ReporteObservable reporteObservable = new ReporteObservable(reportes, idConciliacion);
-		reporteObservable.addObserver(reporteObserver);
-		reporteObservable.notifyObservers();
+		this.conciliacionHelper.generarConciliacion(idConciliacion, reportes);
 
 		// Registro de actividad
 		// TODO: Remover comentario

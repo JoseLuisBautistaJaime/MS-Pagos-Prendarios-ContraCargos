@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.helper.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,9 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
+import mx.com.nmp.pagos.mimonte.observer.ReporteObserver;
 
 /**
  * @name ConciliacionHelperImpl
@@ -30,6 +35,10 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 	 */
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
+
+	@Autowired
+	private ReporteObserver reporteObserver;
+
 
 	/*
 	 * (non-Javadoc)
@@ -55,6 +64,16 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 		}
 
 		return conciliacion;
+	}
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#generarConciliacion(java.lang.Integer, mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte[])
+	 */
+	@Override
+	public void generarConciliacion(Integer folio, List<Reporte> reportes) throws ConciliacionException {
+		ReporteObservable reporteObservable = new ReporteObservable(reportes, folio);
+		reporteObservable.addObserver(reporteObserver);
+		reporteObservable.notifyObservers();
 	}
 
 }

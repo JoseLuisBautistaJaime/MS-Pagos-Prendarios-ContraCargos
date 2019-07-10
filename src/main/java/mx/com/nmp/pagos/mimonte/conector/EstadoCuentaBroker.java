@@ -13,7 +13,7 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
  *
  * @author jgalvez
  */
-public interface EstadoCuentaAPI {
+public interface EstadoCuentaBroker {
 
     /**
      * Consulta el estado de cuenta para un dia

@@ -21,7 +21,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 
@@ -106,40 +105,6 @@ public interface ConciliacionService {
 	 * @return
 	 */
 	public List<MovTransitoDTO> consultaMovimientosTransito(Integer folio);
-	
-	/**
-	 * Permite realizar la solicitud de pagos no reflejados en MIDAS de los movimientos que se encuentran en transito.
-	 * @param solicitarPagosRequestDTO
-	 * @param usuario
-	 */
-	public void solicitarPagos(SolicitarPagosRequestDTO solicitarPagosRequestDTO, String usuario);
-
-//	public ConciliacionService(){
-//
-//	}
-//
-//	public void finalize() throws Throwable {
-//
-//	}
-//
-//	/**
-//	 * 
-//	 * @param idEntidad
-//	 * @param idCuenta
-//	 * @param usuario
-//	 */
-//	public ConciliacionDTO altaConciliacion(Long idEntidad, Long idCuenta, String usuario){
-//		return null;
-//	}
-//
-//	/**
-//	 * 
-//	 * @param idConciliacion
-//	 * @param usuario
-//	 */
-//	public void generarConciliacion(Long idConciliacion, String usuario){
-//
-//	}
 
 	/**
 	 * 
@@ -155,33 +120,5 @@ public interface ConciliacionService {
 	 * @throws ConciliacionException
 	 */
 	public void generarConciliacion(Integer folio, String lastModifiedBy) throws ConciliacionException;
-
-//
-//	/**
-//	 * 
-//	 * @param consulta
-//	 * @param page
-//	 * @param pageSize
-//	 */
-//	public List<ConsultaConciliacionDTO> search(ConsultaConciliacionRequestDTO consulta, Integer page, Integer pageSize){
-//		return null;
-//	}
-//
-//	/**
-//	 * 
-//	 * @param criterios
-//	 */
-//	public Integer count(ConsultaConciliacionRequestDTO criterios){
-//		return 0;
-//	}
-//
-//	/**
-//	 * 
-//	 * @param idConciliacion
-//	 * @param usuario
-//	 */
-//	public void enviarConciliacion(Long idConciliacion, String usuario){
-//
-//	}
 
 }

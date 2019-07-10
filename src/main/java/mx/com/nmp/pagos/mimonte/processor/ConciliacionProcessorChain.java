@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.processor;
 
+import java.util.Date;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
@@ -93,10 +94,18 @@ public abstract class ConciliacionProcessorChain {
 		return movimientosEstadoCuenta;
 	}
 
-	protected EstadoCuenta getEstadoCuenta(Long idReporte) throws ConciliacionException {
+
+	/**
+	 * Obtiene el estado de cuenta por id reporte y fecha estado cuenta
+	 * @param idReporte
+	 * @param fechaEstadoCuenta
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	protected EstadoCuenta getEstadoCuenta(Long idReporte, Date fechaEstadoCuenta) throws ConciliacionException {
 		EstadoCuenta estadoCuenta = null;
 		try {
-			estadoCuenta = this.mergeReporteHandler.getEstadoCuentaRepository().findOneByIdReporte(idReporte);
+			estadoCuenta = this.mergeReporteHandler.getEstadoCuentaRepository().findOneByIdReporteAndFechaCarga(idReporte, fechaEstadoCuenta);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ConciliacionException("Error al consultar estado cuenta", CodigoError.NMP_PMIMONTE_BUSINESS_071);

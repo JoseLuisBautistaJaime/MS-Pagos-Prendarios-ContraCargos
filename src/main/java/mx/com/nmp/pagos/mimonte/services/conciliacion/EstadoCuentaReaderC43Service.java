@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaFileBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaLineBuilder;
-import mx.com.nmp.pagos.mimonte.conector.EstadoCuentaAPI;
+import mx.com.nmp.pagos.mimonte.conector.EstadoCuentaBroker;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout43;
@@ -37,7 +37,7 @@ import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
 public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 
 	@Inject
-	private EstadoCuentaAPI estadoCuentaAPI;
+	private EstadoCuentaBroker estadoCuentaBrokerBus;
 
 	@Inject
 	private ConciliacionHelper conciliacionHelper;
@@ -70,7 +70,7 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 		String nombreArchivo = EstadoCuentaFileBuilder.buildFileName(date, conciliacion.getCuenta().getNumeroCuenta(), nombre);
 
 		// Consulta el archivo
-		List<String> lineasArchivo = estadoCuentaAPI.consulta(rutaArchivo, nombreArchivo);
+		List<String> lineasArchivo = estadoCuentaBrokerBus.consulta(rutaArchivo, nombreArchivo);
 		if (lineasArchivo == null || lineasArchivo.size() == 0) {
 			throw new ConciliacionException("No se encontro archivo de estado de cuenta " + nombreArchivo, CodigoError.NMP_PMIMONTE_BUSINESS_054);
 		}

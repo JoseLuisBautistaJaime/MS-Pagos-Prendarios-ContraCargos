@@ -234,7 +234,7 @@ public class MovimientosEstadoCuentaService {
 				throw new ConciliacionException("Error al parsear el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "", CodigoError.NMP_PMIMONTE_BUSINESS_048);
 			}
 
-			saveEstadoCuentaMovimientos(idReporte, estadoCuentaWraper);
+			saveEstadoCuentaMovimientos(idReporte, fechaEstadoCuenta, estadoCuentaWraper);
 
 			// Se mueve al siguiente dia para consultar el estado de cuenta
 			Calendar cal = Calendar.getInstance();
@@ -249,18 +249,18 @@ public class MovimientosEstadoCuentaService {
 	/**
 	 * Guarda el archivo de estado de cuenta y los movimientos
 	 * @param idReporte
+	 * @param fechaEstadoCuenta
 	 * @param estadoCuentaWraper
 	 */
-	private void saveEstadoCuentaMovimientos(long idReporte, EstadoCuentaWraper estadoCuentaWraper) {
+	private void saveEstadoCuentaMovimientos(long idReporte, Date fechaEstadoCuenta, EstadoCuentaWraper estadoCuentaWraper) {
 		try {
 			
 			// Se crea el nuevo estado de cuenta
 			// TODO: Agregar llave primaria compuesta, un estado de cuenta por dia
-			EstadoCuenta estadoCuenta = this.estadoCuentaRepository.findOneByIdReporte(idReporte);
+			EstadoCuenta estadoCuenta = this.estadoCuentaRepository.findOneByIdReporteAndFechaCarga(idReporte, fechaEstadoCuenta);
 			if (estadoCuenta == null) {
 				estadoCuenta = new EstadoCuenta();
 				estadoCuenta.setIdReporte(idReporte);
-				estadoCuenta.setFechaCarga(new Date());
 			}
 
 			int totalMovs = (estadoCuenta.getTotalMovimientos() != null ? estadoCuenta.getTotalMovimientos() : 0);
@@ -271,6 +271,7 @@ public class MovimientosEstadoCuentaService {
 			estadoCuenta.setCabecera(estadoCuentaWraper.cabecera);
 			estadoCuenta.setTotales(estadoCuentaWraper.totales);
 			estadoCuenta.setTotalesAdicional(estadoCuentaWraper.totalesAdicional);
+			estadoCuenta.setFechaCarga(fechaEstadoCuenta);
 			estadoCuentaRepository.save(estadoCuenta);
 
 			// Se persisten los movimientos

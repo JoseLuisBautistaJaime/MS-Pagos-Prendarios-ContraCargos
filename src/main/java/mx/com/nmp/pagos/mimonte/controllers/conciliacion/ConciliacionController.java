@@ -295,8 +295,7 @@ public class ConciliacionController {
 		if (!ValidadorConciliacion.validateSolicitarPagosRequestDTO(solicitarPagosRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-		solicitarPagosService.solicitarPagosService(solicitarPagosRequestDTO.getFolio(),
-				solicitarPagosRequestDTO.getIdMovimientos(), createdBy);
+		solicitarPagosService.solicitarPagos(solicitarPagosRequestDTO, createdBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud de pago exitosa.", null);
 
 	}

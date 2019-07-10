@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.observable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 
@@ -30,10 +31,16 @@ public class ReporteObservable extends Observable {
 		verifyReportes(reportes);
 	}
 
+	public ReporteObservable(Reporte reporte, Integer idConciliacion) {
+		this.reportes = null;
+		this.idConciliacion = idConciliacion;
+		verifyReportes(Arrays.asList(reporte));
+	}
+
 	private void verifyReportes(List<Reporte> reportes) {
 		if (CollectionUtils.isNotEmpty(reportes)) {
 			this.reportes = new ArrayList<Reporte>();
-			for (Reporte reporte : this.reportes) {
+			for (Reporte reporte : reportes) {
 				if (!reporte.isMergeUpdated()) { // El merge no ha sido actualizado (el reporte es mas nuevo)
 					this.reportes.add(reporte);
 				}

@@ -32,6 +32,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosPagoRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
@@ -119,7 +120,7 @@ public class SolicitarPagosService {
 	 * @param idsComisiones
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void solicitarPagosService(final Integer folio, final List<Integer> idsMovimientos, final String createdBy) {
+	public void solicitarPagos(SolicitarPagosRequestDTO requestDTO, final String createdBy) {
 		// Declaracion de objetos y variables necesarios
 		List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList = null;
 		List<MovimientoConciliacion> movimientoConciliacionList = null;
@@ -129,22 +130,22 @@ public class SolicitarPagosService {
 		// Consultar datos, actualizacion y generacion de registros en pagos
 		try {
 			// Consulta
-			solicitarPagosMailDataDTOList = consultarMovimientos(solicitarPagosMailDataDTOList, folio, idsMovimientos);
+			solicitarPagosMailDataDTOList = consultarMovimientos(solicitarPagosMailDataDTOList, requestDTO.getFolio(), requestDTO.getIdMovimientos());
 		} catch (Exception ex) {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_GET_MOVIMIENTOS_TRANSITO,
 					CodigoError.NMP_PMIMONTE_BUSINESS_038);
 		}
 		try {
 			// Actualiza
-			actualizarMovimientosTransito(movimientoTransitoList, folio, idsMovimientos);
+			actualizarMovimientosTransito(movimientoTransitoList, requestDTO.getFolio(), requestDTO.getIdMovimientos());
 		} catch (Exception ex) {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_UPDATE_MOVIMIENTOS_TRANSITO,
 					CodigoError.NMP_PMIMONTE_BUSINESS_039);
 		}
 		try {
 			// Inserta
-			insertaMovimientosPago(movimientoConciliacionList, folio, idsMovimientos, solicitarPagosMailDataDTOList,
-					createdBy);
+			insertaMovimientosPago(movimientoConciliacionList, requestDTO.getFolio(),
+					requestDTO.getIdMovimientos(), solicitarPagosMailDataDTOList, createdBy);
 		} catch (Exception ex) {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_INSERT_MOVIMIENTOS_PAGO,
 					CodigoError.NMP_PMIMONTE_BUSINESS_040);

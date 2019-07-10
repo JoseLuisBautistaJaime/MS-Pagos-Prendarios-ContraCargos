@@ -4,9 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
+import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
@@ -61,6 +62,12 @@ public class MovimientosProveedorService {
 	 */
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
+
+	/**
+	 * Conciliacion Helper
+	 */
+	@Autowired
+	private ConciliacionHelper conciliacionHelper;
 
 
 
@@ -170,6 +177,10 @@ public class MovimientosProveedorService {
 
 			// Verificar si se guarda en batch
 			movimientoProveedorRepository.saveAll(movimientoProveedorList);
+
+
+			// Notificar cambios o alta de reportes, si existen...
+			this.conciliacionHelper.generarConciliacion(conciliacion.getId(), Arrays.asList(reporte));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -2,7 +2,7 @@
  * Proyecto:        NMP - Microservicio Mi Monte Conciliacion
  * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
  */
-package mx.com.nmp.pagos.mimonte.conector;
+package mx.com.nmp.pagos.mimonte.conector.impl;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -19,6 +19,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.conector.EstadoCuentaBroker;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusEstadoCuentaRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestEstadoCuentaDTO;
@@ -30,10 +31,10 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
  * @author jgalvez
  */
 @Component
-@Service("estadoCuentaAPI")
-public class EstadoCuentaProxy implements EstadoCuentaAPI {
+@Service("estadoCuentaBrokerBus")
+public class EstadoCuentaBrokerBus implements EstadoCuentaBroker {
 
-	private Logger LOGGER = LoggerFactory.getLogger(EstadoCuentaProxy.class);
+	private Logger LOGGER = LoggerFactory.getLogger(EstadoCuentaBrokerBus.class);
 
 	@Autowired
 	private BusEstadoCuentaRestService busEstadoCuentaRestService;
@@ -41,7 +42,7 @@ public class EstadoCuentaProxy implements EstadoCuentaAPI {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Cacheable("EstadoCuentaProxy.consulta")
+	@Cacheable("EstadoCuentaBroker.consulta")
 	@Override
 	public List<String> consulta(String ruta, String archivo) throws ConciliacionException {
 		LOGGER.info(">> consulta({}/{})", ruta, archivo);
