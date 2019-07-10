@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 
 @Repository
-public interface LayoutHeadersRepository extends JpaRepository<LayoutHeader, Integer>{
+public interface LayoutHeadersRepository extends JpaRepository<LayoutHeader, Long>{
 
 }
 

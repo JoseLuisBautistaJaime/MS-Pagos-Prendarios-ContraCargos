@@ -23,10 +23,13 @@ public class LayoutHeader extends Updatable implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name="cabecera")
 	private String cabecera;
 
+	@Column(name="campo1")
 	private String campo1;
 
+	@Column(name="campo2")
 	private String campo2;
 
 	@Column(name="codigo_origen")
@@ -35,8 +38,10 @@ public class LayoutHeader extends Updatable implements Serializable{
 	@Column(name="created_by")
 	private String createdBy;
 
+	@Column(name="descripcion")
 	private String descripcion;
 
+	@Column(name="fecha")
 	private LocalDate fecha;
 
 	@Column(name="unidad_negocio")
@@ -112,22 +117,6 @@ public class LayoutHeader extends Updatable implements Serializable{
 
 	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
-	}
-
-	public String getLastModifiedBy() {
-		return this.lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public Date getLastModifiedDate() {
-		return this.lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
 	}
 
 	public String getUnidadNegocio() {
