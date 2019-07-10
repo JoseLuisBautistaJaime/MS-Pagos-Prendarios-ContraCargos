@@ -152,7 +152,8 @@ public class EntidadServiceImpl implements EntidadService {
 			}
 		}
 		if (!flag)
-			throw new CatalogoException(CatalogConstants.CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_009);
+			throw new CatalogoException(CatalogConstants.CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_009);
 		if (null != entidades && !entidades.isEmpty())
 			throw new CatalogoException(CatalogConstants.ENTIDAD_ALREADY_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_010);
 		if (null != e)
@@ -164,7 +165,8 @@ public class EntidadServiceImpl implements EntidadService {
 		TipoContacto tipoContacto = tipoContactoRepository
 				.findByDescription(CatalogConstants.ENTIDAD_TIPO_CONTACTO_NAME);
 		if (null == tipoContacto)
-			throw new CatalogoException(CatalogConstants.TIPO_CONTACTO_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_011);
+			throw new CatalogoException(CatalogConstants.TIPO_CONTACTO_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_011);
 		entidad = EntidadBuilder.buildEntidadFromEntidadDTONEW(e, tipoContacto.getId());
 		entidadResp = entidadRepository.save(entidad);
 		e.setId(entidadResp.getId());
@@ -217,7 +219,7 @@ public class EntidadServiceImpl implements EntidadService {
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e, String lastModifiedBy){
+	public <T extends AbstractCatalogoDTO> T update(EntidadDTO e, String lastModifiedBy) {
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
 		Entidad entidad = null;
@@ -269,7 +271,8 @@ public class EntidadServiceImpl implements EntidadService {
 				}
 			}
 			if (!flag)
-				throw new CatalogoException(CatalogConstants.CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_009);
+				throw new CatalogoException(CatalogConstants.CUENTA_AFILIACION_RELATIONSHIP_DOESNT_EXISTS,
+						CodigoError.NMP_PMIMONTE_BUSINESS_009);
 			entidadResp = entidadRepository.save(entidad);
 			e.setId(entidadResp.getId());
 			int cnt = 0;
@@ -307,13 +310,21 @@ public class EntidadServiceImpl implements EntidadService {
 			}
 
 		} catch (ConstraintViolationException cve) {
-			throw new CatalogoException(CatalogConstants.CONSTRAINT_ERROR_MESSAGE, CodigoError.NMP_PMIMONTE_BUSINESS_012);
+			throw new CatalogoException(CatalogConstants.CONSTRAINT_ERROR_MESSAGE,
+					CodigoError.NMP_PMIMONTE_BUSINESS_012);
 		}
 
 		// INICIA COMPROBACION DE CUENTAS A ELIMINAR
 
-		List<EntidadCuentaAfiliacion> entidadCuentaAfiliacionExt = entidadCuentaAfiliacionRepository
-				.findByEntidad_Id(entidadResp.getId());
+		List<EntidadCuentaAfiliacion> entidadCuentaAfiliacionExt = null;
+		try {
+			entidadCuentaAfiliacionExt = entidadCuentaAfiliacionRepository.findByEntidad_Id(entidadResp.getId());
+		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
+			throw new CatalogoException(CatalogConstants.INCONSISTENT_CONTACTS_DATA,
+					CodigoError.NMP_PMIMONTE_BUSINESS_074);
+		} catch (Exception ex) {
+			throw ex;
+		}
 		long[][] ids = new long[entidadCuentaAfiliacionExt.size()][3];
 		int pos = 0;
 		for (EntidadCuentaAfiliacion entidadCuentaAfiliacion : entidadCuentaAfiliacionExt) {

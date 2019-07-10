@@ -95,8 +95,8 @@ public interface ValidadorCatalogo {
 	 */
 	public static boolean validateAfilacionUpdt(AfiliacionReqDTO afiliacionReqDTO) {
 		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero()
-				&& !afiliacionReqDTO.getNumero().equals("0") && null != afiliacionReqDTO.getId()
-				&& afiliacionReqDTO.getId() > 0);
+				&& !afiliacionReqDTO.getNumero().equals("0") && !afiliacionReqDTO.getNumero().equals("")
+				&& null != afiliacionReqDTO.getId() && afiliacionReqDTO.getId() > 0);
 	}
 
 	/**
@@ -114,8 +114,7 @@ public interface ValidadorCatalogo {
 		if (null != entidadBaseSaveDTO.getContactos() && !entidadBaseSaveDTO.getContactos().isEmpty()) {
 			for (ContactoReqSaveNewDTO contactoReqSaveNewDTO : entidadBaseSaveDTO.getContactos()) {
 				if (null == contactoReqSaveNewDTO.getEmail() || contactoReqSaveNewDTO.getEmail().equals("")
-						|| null == contactoReqSaveNewDTO.getNombre() || contactoReqSaveNewDTO.getNombre().equals("")
-						|| !ValidadorGenerico.validateEmail2(contactoReqSaveNewDTO.getEmail())) {
+						|| null == contactoReqSaveNewDTO.getNombre() || contactoReqSaveNewDTO.getNombre().equals("")) {
 					return false;
 				}
 			}
@@ -155,8 +154,7 @@ public interface ValidadorCatalogo {
 			for (ContactoReqDTONE contactoReqDTO : entidadBaseDTO.getContactos()) {
 				if (null == contactoReqDTO.getId() || null == contactoReqDTO.getEmail()
 						|| contactoReqDTO.getEmail().equals("") || null == contactoReqDTO.getNombre()
-						|| contactoReqDTO.getNombre().equals("")
-						|| !ValidadorGenerico.validateEmail2(contactoReqDTO.getEmail())) {
+						|| contactoReqDTO.getNombre().equals("")) {
 					return false;
 				}
 			}

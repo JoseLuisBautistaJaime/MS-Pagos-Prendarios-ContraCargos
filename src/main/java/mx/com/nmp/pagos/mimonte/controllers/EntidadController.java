@@ -35,6 +35,8 @@ import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.EntidadBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTONE;
+import mx.com.nmp.pagos.mimonte.dto.ContactoReqSaveNewDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadBaseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
@@ -43,6 +45,7 @@ import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.services.impl.EntidadServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorGenerico;
 
 /**
  * @name EntidadController
@@ -99,6 +102,13 @@ public class EntidadController {
 		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateEntidadBaseDTOSave(entidadBaseSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
+		// Valida que el o los e-mails de contactos tengan un formato correcto
+		for (ContactoReqSaveNewDTO cto : entidadBaseSaveDTO.getContactos()) {
+			if (!ValidadorGenerico.validateEmail2(cto.getEmail())) {
+				throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT,
+						CodigoError.NMP_PMIMONTE_BUSINESS_013);
+			}
+		}
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTO = null;
 		EntidadDTO entidadDTOResp = null;
@@ -134,13 +144,20 @@ public class EntidadController {
 		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateEntidadBaseDTOUpdt(entidadDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
+		// Valida que el o los e-mails de contactos tengan un formato correcto
+		for (ContactoReqDTONE cto : entidadDTOReq.getContactos()) {
+			if (!ValidadorGenerico.validateEmail2(cto.getEmail())) {
+				throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT,
+						CodigoError.NMP_PMIMONTE_BUSINESS_013);
+			}
+		}
 		EntidadDTO entidadDTO = null;
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTOResp = null;
 		// Construye un objeto DTO estandar a partir del objeto recibido
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, null, new Date());
 		// Actualiza una entidad
-			entidadDTOResp = entidadServiceImpl.update(entidadDTO, lastModifiedBy);
+		entidadDTOResp = entidadServiceImpl.update(entidadDTO, lastModifiedBy);
 		// SETEO DE USUARIO Y FECHA CREACION YA QUE NO SE HACE EL FETCH AL GUARDAR NI
 		// DENTRO DEL METODO DE GUARDADO NI TAMPOCO OBTENIENDO LA ENTIDAD COMPLETEA
 		// DESDE

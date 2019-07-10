@@ -254,6 +254,11 @@ public final class CatalogConstants {
 	public static final String CUENTA_IS_NULL = "La cuenta es nula";
 
 	/**
+	 * Mensaje que es mostrado cuando se intenta enviar informacion de contactos inconsistente en la actualizacion de una entidad
+	 */
+	public static final String INCONSISTENT_CONTACTS_DATA = "Los datos de uno o mas contactos son inconsistentes";
+	
+	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.
 	 */

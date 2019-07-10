@@ -39,7 +39,7 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_010("La entidad ingresada ya existe", TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_011("El tipo de contacto no fue encontrado", TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_012("Uno o mas ids especificados no existen", TipoError.CLIENTE, SeveridadError.MEDIA),
-	NMP_PMIMONTE_BUSINESS_013("El formato del email es incorrecto", TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_013("El formato del e-mail es incorrecto", TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_014("No hay resultados para el id, nombre y e-mail ingresados", TipoError.CLIENTE,
 			SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_015("El e-mail ingresado ya existe", TipoError.CLIENTE, SeveridadError.MEDIA),
@@ -48,6 +48,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_060("la entidad especificada no existe", TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_061("la categoria especificada no existe", TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_062("El codigo de estado de cuenta no existe", TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_074("Los datos de uno o mas contactos es inconsistente", TipoError.CLIENTE,
+			SeveridadError.MEDIA),
 	// CONCILIACION
 	NMP_PMIMONTE_BUSINESS_017("No se encontraron conciliaciones para los parametros especificados", TipoError.CLIENTE,
 			SeveridadError.MEDIA),

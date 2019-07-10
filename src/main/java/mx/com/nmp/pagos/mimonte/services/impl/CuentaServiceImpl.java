@@ -107,8 +107,7 @@ public class CuentaServiceImpl implements CatalogoAdmService<CuentaBaseDTO> {
 		// Valida si el id de la cuenta existe
 		Optional<Cuenta> cta = cuentaRepository.findById(e.getId());
 		if (!cta.isPresent())
-			throw new CatalogoException(CatalogConstants.ID_CUENTA_DOES_NOT_EXISTS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_001);
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		// Valida si ya existe una cuenta con el numeroe specificado
 		Cuenta ctaByNum = cuentaRepository.findByNumeroCuenta(e.getNumeroCuenta());
 		if (null != ctaByNum && null != ctaByNum.getId() && null != e.getId() && !ctaByNum.getId().equals(e.getId()))

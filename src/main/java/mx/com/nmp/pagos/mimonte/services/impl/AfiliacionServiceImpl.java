@@ -83,7 +83,7 @@ public class AfiliacionServiceImpl implements CatalogoAdmService<AfiliacionDTO> 
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		Afiliacion afiliacionByNum = null;
 		// Valida que no exista ya una afiliacion con ese numero
-		afiliacionByNum = afiliacionRepository.findByNumero(e.getNumero());
+		afiliacionByNum = afiliacionRepository.findByNumeroAndNotId(e.getNumero(), e.getId());
 		if (null != afiliacionByNum)
 			throw new CatalogoException(CatalogConstants.NUMERO_AFILIACION_ALREADY_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_004);
 		if (null != e)
