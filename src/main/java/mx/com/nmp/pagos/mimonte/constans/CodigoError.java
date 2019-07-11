@@ -77,6 +77,8 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_076("La entidad ya ha sido dada de baja",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_077("El nombre del catalogo no fue encontrado",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
 
 	// CONCILIACION
 	NMP_PMIMONTE_BUSINESS_017("No se encontraron conciliaciones para los parametros especificados",

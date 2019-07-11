@@ -33,8 +33,11 @@ INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activ
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
 (3, 'Tipo Tarjeta', 'Catalogo de tipos de tarjetas', 'tk_tipo_tarjeta', 1);
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
-(4, 'Categoria', 'Catalogo de categorias de codigos de estados de cuenta', 'tk_categoria', 1);
-
+(4, 'Categoria', 'Catalogo de categorias de codigos de edos. de cta.', 'tk_categoria', 1);
+INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
+(5, 'Estatus Pago', 'Catalogo de estatus de pagos', 'tk_estatus_pago', 1);
+INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
+(6, 'Tipo Autorizacion', 'Catalogo de tipos de autorizacion', 'tk_tipo_autorizacion', 1);
 
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_estatus_operacion
@@ -121,17 +124,17 @@ INSERT INTO tk_tipo_contacto (id, estatus, description, created_by, created_date
 -- ------------------------------------------------------------------------------------------------------------------ --
 DELETE FROM tk_categoria;
 INSERT INTO tk_categoria (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(1, 'Ventas', 'Categoria Ventas', true, now(), null, 'Sistema', null, 'CAT_VTAS');
+(1, 'Ventas', 'Categoria Ventas', true, now(), null, 'Sistema', null, 'Ventas');
 INSERT INTO tk_categoria (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(2, 'Comisiones', 'Categoria Comisiones', true, now(), null, 'Sistema', null, 'CAT_COM');
+(2, 'Comisiones', 'Categoria Comisiones', true, now(), null, 'Sistema', null, 'Comisiones');
 INSERT INTO tk_categoria (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(3, 'Cargos', 'Categoria Cargos', true, now(), null, 'Sistema', null, 'CAT_CAR');
+(3, 'Cargos', 'Categoria Cargos', true, now(), null, 'Sistema', null, 'Cargos');
 INSERT INTO tk_categoria (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(4, 'Abonos', 'Categoria Abonos', true, now(), null, 'Sistema', null, 'CAT_ABO');
+(4, 'Abonos', 'Categoria Abonos', true, now(), null, 'Sistema', null, 'Abonos');
 INSERT INTO tk_categoria (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(5, 'IVA Comision', 'IVA Comision', true, now(), null, 'Sistema', null, 'CAT_ICOM');
+(5, 'IVA Comision', 'IVA Comision', true, now(), null, 'Sistema', null, 'IVA Comision');
 INSERT INTO tk_categoria (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(6, 'Devolucion', 'Devolucion', true, now(), null, 'Sistema', null, 'CAT_DEV');
+(6, 'Devolucion', 'Devolucion', true, now(), null, 'Sistema', null, 'Devolucion');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --

@@ -75,7 +75,7 @@ public final class CatalogConstants {
 	 * Mensaje que es mostrado cuando un nombre especificado como parametro ya sea
 	 * para una peticion no es encontrado
 	 */
-	public static final String CATALOG_NOMBRE_NOT_FOUND = "El id ingresado no fue encontrado";
+	public static final String CATALOG_NOMBRE_NOT_FOUND = "El nombre ingresado no fue encontrado";
 
 	/**
 	 * Mensaje que es lanzado cuando se intenta dar de alta un codigo de estado de
@@ -270,6 +270,46 @@ public final class CatalogConstants {
 	 * sido dada de baja
 	 */
 	public static final String ENTIDAD_HAS_ALREADY_DELETED = "La entidad ya ha sido dada de baja";
+
+	/**
+	 * Mensaje que es mostrado cuando la tabla solicitada no cuenta con un valor en
+	 * el campo nombre
+	 */
+	public static final String CATALOG_NOMBRE_TABLA_NOT_FOUND = "La tabla no cuenta con un valor de nombre";
+
+	/**
+	 * Clase interna que encapsula las constantes de la consulta de catalogos
+	 * 
+	 * @author user
+	 *
+	 */
+	public static final class Consulta {
+		private Consulta() {
+			super();
+		}
+
+		/**
+		 * Valor para el campo id
+		 */
+		public static final String ID_VALUE = "ID";
+
+		/**
+		 * Valor para el campo descripcion corta
+		 */
+		public static final String DESCRIPCION_CORTA_VALUE = "DESCRIPCION_CORTA";
+
+		/**
+		 * Valor para el campo descripcion
+		 */
+		public static final String DESCRIPCION_VALUE = "DESCRIPCION";
+
+		/**
+		 * Valor de el query (SELECT)
+		 */
+		public static final String QUERY_VALUE = "SELECT id AS " + ID_VALUE + ", descripcion_corta AS "
+				+ DESCRIPCION_CORTA_VALUE + ", descripcion AS " + DESCRIPCION_VALUE + " FROM ";
+
+	}
 
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no

@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.CatalogoRepository;
 import mx.com.nmp.pagos.mimonte.dto.CatalogoDTO;
@@ -76,7 +78,8 @@ public class CatalogoServiceImpl implements CatalogoService {
 		log.debug("Validando la lista de registros...");
 		if (registrosCatalogos.isEmpty()) {
 			log.error("No se encontraron registros de extrafilter del sistema...");
-			throw new CatalogoNotFoundException("No se encontraron registros de extrafilter del sistema...", CodigoError.NMP_PMIMONTE_0005);
+			throw new CatalogoNotFoundException("No se encontraron registros de extrafilter del sistema...",
+					CodigoError.NMP_PMIMONTE_0005);
 		}
 
 		log.info("Regresando lista de extrafilter: {}", registrosCatalogos);
@@ -89,21 +92,24 @@ public class CatalogoServiceImpl implements CatalogoService {
 	@Override
 	public CatalogoDTO getRegistrosCatalogo(String nombreCatalogo) {
 		Catalogo catalogo = getCatalogo(nombreCatalogo);
-
+		if (null == catalogo)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOMBRE_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_077);
+		else if (null == catalogo.getNombreTabla())
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOMBRE_TABLA_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_002);
 		log.info("Consultando la base de datos para la tabla: {}", catalogo.getNombreTabla());
-		List<EntradaCatalogo> resultados = new ArrayList<>();
+		List<EntradaCatalogo> resultados = null;
 		try {
-			List<Object[]> listaBD = new ArrayList<>();
-			listaBD = catalogoRepository.findByDescripcion(nombreCatalogo);
-			EntradaCatalogo entradaCatalogo;
-			if (listaBD != null) {
-				for (Object[] obj : listaBD) {
-					entradaCatalogo = new EntradaCatalogo();
-					entradaCatalogo.setId(obj[0] != null ? (Integer.parseInt(obj[0].toString())) : null);
-					entradaCatalogo.setDescripcionCorta(obj[1] != null ? obj[1].toString() : null);
-					entradaCatalogo.setDescripcion(obj[2] != null ? obj[2].toString() : null);
-					resultados.add(entradaCatalogo);
-				}
+			resultados = new ArrayList<>();
+			List<Map<String, Object>> rows = jdbcTemplate
+					.queryForList(CatalogConstants.Consulta.QUERY_VALUE + catalogo.getNombreTabla());
+			for (Map<String, Object> row : rows) {
+				EntradaCatalogo catalogoResult = new EntradaCatalogo();
+				catalogoResult.setId(Integer.parseInt(((row.get(CatalogConstants.Consulta.ID_VALUE))).toString()));
+				catalogoResult.setDescripcionCorta((String) row.get(CatalogConstants.Consulta.DESCRIPCION_CORTA_VALUE));
+				catalogoResult.setDescripcion((String) row.get(CatalogConstants.Consulta.DESCRIPCION_VALUE));
+				resultados.add(catalogoResult);
 			}
 		} catch (DataAccessException dae) {
 			log.error("Ocurrio un error al intentar obtener los registros del catalogo: {}. Mensaje de error: {}",
@@ -114,7 +120,8 @@ public class CatalogoServiceImpl implements CatalogoService {
 
 		log.debug("Validando la lista de registros...");
 		if (resultados.isEmpty()) {
-			throw new CatalogoNotFoundException("No se encontraron registros para el catalogo especificado", CodigoError.NMP_PMIMONTE_0005);
+			throw new CatalogoNotFoundException("No se encontraron registros para el catalogo especificado",
+					CodigoError.NMP_PMIMONTE_0005);
 		}
 
 		log.info("Generando objeto de tipo CatalogoDTO...");
@@ -167,10 +174,12 @@ public class CatalogoServiceImpl implements CatalogoService {
 		log.info("Validando si el catalogo existe...");
 		if (catalogo == null) {
 			log.error("El catalogo especificado no existe dentro del sistema...");
-			throw new CatalogoNotFoundException("El catalogo especificado no existe dentro del sistema...", CodigoError.NMP_PMIMONTE_0005);
+			throw new CatalogoNotFoundException("El catalogo especificado no existe dentro del sistema...",
+					CodigoError.NMP_PMIMONTE_0005);
 		} else if (!catalogo.isActivo()) {
 			log.error("El catalogo especificado se encuentra inactivo dentro del sistema...");
-			throw new CatalogoNotFoundException("El catalogo especificado se encuentra inactivo dentro del sistema...", CodigoError.NMP_PMIMONTE_0005);
+			throw new CatalogoNotFoundException("El catalogo especificado se encuentra inactivo dentro del sistema...",
+					CodigoError.NMP_PMIMONTE_0005);
 		}
 		return catalogo;
 	}
