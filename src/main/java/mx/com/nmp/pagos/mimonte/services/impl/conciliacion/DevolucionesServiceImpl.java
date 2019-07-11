@@ -28,6 +28,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
@@ -325,6 +326,46 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 		return movimientosMarcados;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService#actualizar(java.util.List, java.lang.String)
+	 */
+	@Transactional
+	public List<DevolucionEntidadDTO> actualizar(List<DevolucionUpdtDTO> devolucionUpdtDTOList, String modifiedBy) throws ConciliacionException {
+
+		List<DevolucionEntidadDTO> devolucionesDTO = new ArrayList<DevolucionEntidadDTO>();
+		
+		// Validar que las conciliaciones asociadas a los movimientos aun estan en proceso ...
+		for (DevolucionUpdtDTO devolucionDTO : devolucionUpdtDTOList) {
+
+			// Se obtiene el movimiento devolucion por id
+			MovimientoDevolucion devolucion = this.movimientoDevolucionRepository.findByIdMovimiento(devolucionDTO.getIdMovimiento());
+			if (devolucion == null) {
+				throw new ConciliacionException("No existe el movimiento con id " + devolucionDTO.getIdMovimiento(), CodigoError.NMP_PMIMONTE_0008);
+			}
+
+			if (devolucion.getEstatus().getId() == ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA) { // Ya fue liquidado no se pueden realizar mas acciones
+				throw new ConciliacionException("Estatus del movimiento " + devolucionDTO.getIdMovimiento() + " es incorrecto ");
+			}
+
+			// Se actualiza el estatus de la devolucion a liquidada
+			devolucion.setFechaLiquidacion(devolucionDTO.getFecha());
+			if (devolucionDTO.getLiquidar() != null && devolucionDTO.getLiquidar()) {
+				devolucion.setEstatus(new EstatusDevolucion(ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA));
+			}
+			devolucion.setLastModifiedBy(modifiedBy);
+			devolucion.setLastModifiedDate(new Date());
+			this.movimientoDevolucionRepository.save(devolucion);
+			
+			// Se agrega al response
+			devolucionesDTO.add(DevolucionesBuilder.buildDevolucionEntidadDTOFromMovimientoDevolucion(devolucion));
+		}
+
+		return devolucionesDTO;
+	}
+
+
 
 	// PRIVATES /////////////////////////////////////////////
 

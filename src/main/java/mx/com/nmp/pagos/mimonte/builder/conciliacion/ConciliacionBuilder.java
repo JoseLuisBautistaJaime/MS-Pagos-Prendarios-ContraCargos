@@ -268,7 +268,7 @@ public abstract class ConciliacionBuilder {
 	 * @return conciliacionDTOList
 	 */
 	public static ConciliacionDTOList buildConciliacionDTOListFromConciliacion(Conciliacion conciliacion,
-			List<Reporte> reporte, List<DevolucionConDTO> devolucionConDTOList, List<MovTransitoDTO> movTransitoDTOList,
+			List<Reporte> reportes, List<DevolucionConDTO> devolucionConDTOList, List<MovTransitoDTO> movTransitoDTOList,
 			List<ComisionesDTO> comisionesDTOList) {
 		ConciliacionDTOList conciliacionDTOList = null;
 		if (conciliacion != null) {
@@ -281,11 +281,11 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTOList.setEntidad(EntidadBuilder.buildEntidadDTOFromEntidad(conciliacion.getEntidad()));
 			conciliacionDTOList.setCuenta(CuentaBuilder.buildCuentaDTOFromCuenta(conciliacion.getCuenta()));
 			conciliacionDTOList.setReporteProcesosNocturnos(
-					ReporteProcesosNocturnosBuilder.buildReporteProcesosNocturnosDTOSetFromReporteSet(reporte));
+					ReporteProcesosNocturnosBuilder.buildReporteProcesosNocturnosDTOSetFromReporteSet(reportes));
 			conciliacionDTOList.setReporteProveedorTransaccional(
-					ReporteProveedorTransaccionalBuilder.buildReporteProveedorTransaccionalDTOFromReporteList(reporte));
+					ReporteProveedorTransaccionalBuilder.buildReporteProveedorTransaccionalDTOFromReporteList(reportes));
 			conciliacionDTOList.setReporteEstadoCuenta(
-					ReporteEstadoCuentaBuilder.buildReporteEstadoCuentaDTOFromReporteList(reporte));
+					ReporteEstadoCuentaBuilder.buildReporteEstadoCuentaDTOFromReporteList(reportes));
 			conciliacionDTOList.setGlobal(GlobalBuilder.buildGlobalDTOFromGlobal(conciliacion.getGlobal()));
 			conciliacionDTOList.setDevoluciones(devolucionConDTOList);
 			conciliacionDTOList.setMovimientosTransito(movTransitoDTOList);

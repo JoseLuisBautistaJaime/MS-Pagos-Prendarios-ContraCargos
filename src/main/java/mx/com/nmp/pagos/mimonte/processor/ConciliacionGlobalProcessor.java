@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.processor;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.GlobalBuilder;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
@@ -45,8 +46,10 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 		List<MovimientoProveedor> movsProveedor = getMovimientosProveedor(reportesWrapper.getIdReporte(TipoReporteEnum.PROVEEDOR));
 		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuenta(reportesWrapper.getIdReporte(TipoReporteEnum.ESTADO_CUENTA));
 
+		List<String> codigosDevoluciones = getCodigosEstadoCuenta(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_COMISIONES);
+		
 		// Actualizar seccion global
-		global = GlobalBuilder.updateGlobal(global, reportesWrapper, movsMidas, movsProveedor, movsEstadoCuenta);
+		global = GlobalBuilder.updateGlobal(global, reportesWrapper, movsMidas, movsProveedor, movsEstadoCuenta, codigosDevoluciones);
 
 		// Guardar global en la bd
 		this.mergeReporteHandler.getGlobalRepository().saveAndFlush(global);

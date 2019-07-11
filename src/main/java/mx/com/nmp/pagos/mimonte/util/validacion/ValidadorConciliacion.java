@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -23,6 +24,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
@@ -499,6 +501,27 @@ public interface ValidadorConciliacion {
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Valida que los datos para la actualizacion de la devolucion son correctos
+	 * @param devolucionUpdtDTOList
+	 * @return
+	 */
+	public static boolean validateActualizarDevolucionRequest(List<DevolucionUpdtDTO> devolucionUpdtDTOList) {
+		boolean valido = false;
+		if (devolucionUpdtDTOList != null && devolucionUpdtDTOList.size() > 0) {
+			valido = true;
+			for (DevolucionUpdtDTO dto : devolucionUpdtDTOList) {
+				if (dto.getFecha() == null) {
+					valido = false;
+				}
+				else if (dto.getIdMovimiento() == null || dto.getIdMovimiento() <= 0) {
+					valido = false;
+				}
+			}
+		}
+		return valido;
 	}
 
 }

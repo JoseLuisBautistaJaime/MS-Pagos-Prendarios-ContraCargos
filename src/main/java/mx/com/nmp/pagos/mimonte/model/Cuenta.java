@@ -113,8 +113,9 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 
 	@Override
 	public String toString() {
-		return "Cuenta [numeroCuenta=" + numeroCuenta + ", afiliaciones=" + afiliaciones
-				+ ", entidadCuentaAfiliacionSet=" + entidadCuentaAfiliacionSet + ", conciliacionSet=" + conciliacionSet
+		return "Cuenta [numeroCuenta=" + numeroCuenta + ", afiliaciones=" + (afiliaciones != null ? afiliaciones.size() : 0)
+				+ ", entidadCuentaAfiliacionSet=" + (entidadCuentaAfiliacionSet != null ? entidadCuentaAfiliacionSet.size() : 0)
+				+ ", conciliacionSet=" + (conciliacionSet != null ? conciliacionSet.size() : 0)
 				+ "]";
 	}
 

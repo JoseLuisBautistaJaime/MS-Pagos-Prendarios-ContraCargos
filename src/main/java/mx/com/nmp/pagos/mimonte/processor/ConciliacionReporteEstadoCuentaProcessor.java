@@ -13,11 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoComisionBuilder;
-import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
@@ -113,7 +111,7 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 			throws ConciliacionException {
 
 		// Codigos de Estado de Cuenta
-		List<String> codigosEstadoCuenta = getCodigosEstadoCuentaComisiones();
+		List<String> codigosEstadoCuenta = getCodigosEstadoCuenta(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_COMISIONES);
 
 		// Obtiene los movimientos de estado de cuenta que contiene el codigo
 		// correspondiente
@@ -121,38 +119,6 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 				.getMovimientoEstadoCuentaRepository().findByReporteAndClaveLeyendaIn(idReporte, codigosEstadoCuenta);
 
 		return movimientosEstadoCuenta;
-	}
-
-	/**
-	 * Regresa el listado de codigos de estado de cuenta para comisiones
-	 * 
-	 * @return
-	 */
-	private List<String> getCodigosEstadoCuentaComisiones() throws ConciliacionException {
-
-		List<CodigoEstadoCuenta> codigosComisiones = null;
-		try {
-			codigosComisiones = this.mergeReporteHandler.getCodigoEstadoCuentaRepository()
-					.findByCategoriaIdAndEstatus(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_COMISIONES, true);
-		} catch (Exception ex) {
-			throw new ConciliacionException("Error al obtener los codigos de estado de cuenta",
-					CodigoError.NMP_PMIMONTE_BUSINESS_072);
-		}
-
-		if (CollectionUtils.isEmpty(codigosComisiones)) {
-			throw new ConciliacionException(
-					"No existen codigos de estado de cuenta para la categoria de comisiones configurados",
-					CodigoError.NMP_PMIMONTE_BUSINESS_073);
-		}
-
-		List<String> codigosEstadoCuenta = new ArrayList<String>();
-		if (CollectionUtils.isNotEmpty(codigosComisiones)) {
-			for (CodigoEstadoCuenta codigoComision : codigosComisiones) {
-				codigosEstadoCuenta.add(codigoComision.getCodigo());
-			}
-		}
-
-		return codigosEstadoCuenta;
 	}
 
 }

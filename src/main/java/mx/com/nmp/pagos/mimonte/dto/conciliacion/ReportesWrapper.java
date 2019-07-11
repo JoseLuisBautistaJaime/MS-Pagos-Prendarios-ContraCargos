@@ -45,8 +45,8 @@ public class ReportesWrapper {
 		return contains;
 	}
 
-	public long getIdReporte(TipoReporteEnum tipoReporte) {
-		long idReporte = 0;
+	public Integer getIdReporte(TipoReporteEnum tipoReporte) {
+		Integer idReporte = null;
 		switch (tipoReporte) {
 			case MIDAS:
 				idReporte = this.reporteMidas != null ? this.reporteMidas.getId() : 0;

@@ -126,9 +126,10 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad>,
 
 	@Override
 	public String toString() {
-		return "Entidad [nombre=" + nombre + ", contactos=" + contactos + ", codigoEstadoCuentaSet="
-				+ codigoEstadoCuentaSet + ", entidadCuentaAfiliacionSet=" + entidadCuentaAfiliacionSet
-				+ ", conciliacionSet=" + conciliacionSet + "]";
+		return "Entidad [nombre=" + nombre + ", contactos=" + (contactos != null ? contactos.size() : 0) +
+				", codigoEstadoCuentaSet=" + (codigoEstadoCuentaSet != null ? codigoEstadoCuentaSet.size() : 0) +
+				", entidadCuentaAfiliacionSet=" + (entidadCuentaAfiliacionSet != null ? entidadCuentaAfiliacionSet.size() : 0) +
+				", conciliacionSet=" + (conciliacionSet != null ? conciliacionSet.size() : 0) + "]";
 	}
 
 	@Override

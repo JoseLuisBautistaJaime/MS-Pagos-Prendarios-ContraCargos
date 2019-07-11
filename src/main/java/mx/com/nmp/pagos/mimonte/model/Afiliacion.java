@@ -94,7 +94,7 @@ public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afilia
 
 	@Override
 	public String toString() {
-		return "Afiliacion [numero=" + numero + ", cuentas=" + cuentas + "]";
+		return "Afiliacion [numero=" + numero + ", cuentas=" + (cuentas != null ? cuentas.size() : 0) + "]";
 	}
 
 	@Override

@@ -23,7 +23,6 @@ public abstract class ReporteProveedorTransaccionalBuilder {
 
 	public ReporteProveedorTransaccionalBuilder() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -33,14 +32,14 @@ public abstract class ReporteProveedorTransaccionalBuilder {
 	 * @param reporteSet
 	 * @return reporteProveedorTransaccionalDTO
 	 */
-	@SuppressWarnings("unlikely-arg-type")
 	public static ReporteProveedorTransaccionalDTO buildReporteProveedorTransaccionalDTOFromReporteList(
 			List<Reporte> reporteList) {
-		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = null;
+		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO();
+		reporteProveedorTransaccionalDTO.setDisponible(false);
 		if (reporteList != null && !reporteList.isEmpty()) {
 			reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO();
 			for (Reporte reporte : reporteList) {
-				if (reporte.getTipo().equals(TipoReporteEnum.PROVEEDOR.name())) {
+				if (reporte.getTipo() == TipoReporteEnum.PROVEEDOR) {
 					reporteProveedorTransaccionalDTO.setFechaHasta(reporte.getFechaHasta());
 					reporteProveedorTransaccionalDTO.setFechaDesde(reporte.getFechaDesde());
 					reporteProveedorTransaccionalDTO.setDisponible(reporte.getDisponible());

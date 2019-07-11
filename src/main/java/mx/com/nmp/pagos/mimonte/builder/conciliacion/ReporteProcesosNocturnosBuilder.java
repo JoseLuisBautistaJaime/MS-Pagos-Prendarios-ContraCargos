@@ -31,13 +31,13 @@ public abstract class ReporteProcesosNocturnosBuilder {
 	 * @param reporteSet
 	 * @return
 	 */              
-	@SuppressWarnings("unlikely-arg-type")
 	public static ReporteProcesosNocturnosDTO buildReporteProcesosNocturnosDTOSetFromReporteSet(List<Reporte> reporteSet){
-		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = null;
+		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO();
+		reporteProcesosNocturnosDTO.setDisponible(false);
 		if(reporteSet != null && !reporteSet.isEmpty()) {
 			reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO();
 			for(Reporte reporte : reporteSet) {
-				if(reporte.getTipo().equals(TipoReporteEnum.MIDAS.name())) {
+				if(reporte.getTipo() == TipoReporteEnum.MIDAS) {
 					reporteProcesosNocturnosDTO.setFechaDesde(reporte.getFechaDesde());
 					reporteProcesosNocturnosDTO.setFechaHasta(reporte.getFechaHasta());
 					reporteProcesosNocturnosDTO.setDisponible(reporte.getDisponible());

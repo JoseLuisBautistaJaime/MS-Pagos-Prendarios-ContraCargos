@@ -313,6 +313,7 @@ public final class ConciliacionConstants {
 	// CATALOGOS
 
 	public static final Long CATEGORIA_ESTADO_CUENTA_COMISIONES = 2L;
+	public static final Long CATEGORIA_ESTADO_CUENTA_IVA = 4L;
 
 	// Estatus conciliacion
 	public static final Integer ESTATUS_CONCILIACION_EN_PROCESO = 1;
@@ -324,8 +325,7 @@ public final class ConciliacionConstants {
 	public static final Long SUBESTATUS_CONCILIACION_ERROR = 15L;
 	public static final Long SUBESTATUS_CONCILIACION_FINALIZADA = 16L;
 
-	public static final String CONCEPTO_DEVOLUCION = "DEV"; // Pendiente
-	public static final String CONCEPTO_LIQUIDACION = "LIQ"; // Pendiente
+	public static final String CONCEPTO_LIQUIDACION = "LIQ"; // TODO: Pendiente
 
 	// Estatus devoluciones
 	public static final Integer ESTATUS_DEVOLUCION_PENDIENTE = 1;

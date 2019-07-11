@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstatusConciliacionBuilder;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.GlobalBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoComisionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
@@ -214,9 +215,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		conciliacion = conciliacionRepository.save(conciliacion);
 
 		// Se crea el objeto global vacio
-		Global global = new Global();
-		global.setConciliacion(conciliacion);
-		global.setFecha(new Date());
+		Global global = GlobalBuilder.buildGlobalDTOFromConciliacion(conciliacion);
 		globalRepository.save(global);
 
 		// Registro de actividad
@@ -403,13 +402,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		List<MovimientoComision> mC = movimientoComisionRepository.findByIdConciliacion(folio);
 
 		// Búsqueda de los reporte a partir del folio.
-		List<Reporte> reporte = reporteRepository.findByIdConciliacion(folio);
+		List<Reporte> reportes = reporteRepository.findByIdConciliacion(folio);
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(folio, "Consulta de folio conciliacion", TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.CONSULTA_CONCILIACION, conciliacion.toString());
 
-		return ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(conciliacion, reporte,
+		return ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(conciliacion, reportes,
 				MovimientoDevolucionBuilder.buildDevolucionConDTOListFromMovimientoDevolucionList(mD),
 				MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(mT),
 				MovimientoComisionBuilder.buildComisionesDTOListFromMovimientoComisionList(mC));

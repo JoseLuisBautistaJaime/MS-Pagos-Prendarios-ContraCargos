@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasBatchDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
+import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
@@ -53,6 +55,14 @@ public class MovimientosMidasService {
 	@Autowired
 	@Qualifier("reporteRepository")
 	private ReporteRepository reporteRepository;
+
+	/**
+	 * Conciliacion Helper
+	 */
+	@Autowired
+	private ConciliacionHelper conciliacionHelper;
+
+
 
 	public MovimientosMidasService() {
 		super();
@@ -165,6 +175,9 @@ public class MovimientosMidasService {
 			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
 					CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		}
+
+		// Notificar cambios o alta de reportes, si existen...
+		this.conciliacionHelper.generarConciliacion(movimientoProcesosNocturnosDTOList.getFolio(), Arrays.asList(reporte));
 	}
 
 	/**
