@@ -139,12 +139,13 @@ public class EntidadServiceImpl implements EntidadService {
 		// Validar que las relaciones cuenta-afiliacion sean correctas
 		List<Cuenta> cuentasComp = cuentaRepository.findAll();
 		boolean flag = true;
-		Map<Long, Long> map = getMapFromEntity(cuentasComp);
+		Map<String, Map<Long, Long>> map = getMapFromEntity(cuentasComp);
+		String key = null;
 		if (null != map) {
 			for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
 				for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-					if (!map.containsKey(afiliacionReqDTO.getId())
-							|| !map.get(afiliacionReqDTO.getId()).equals(cuentaReqDTO.getId())) {
+					key = afiliacionReqDTO.getId().toString().concat(cuentaReqDTO.getId().toString());
+					if (!map.containsKey(key)) {
 						flag = false;
 						break;
 					}
@@ -258,12 +259,13 @@ public class EntidadServiceImpl implements EntidadService {
 			}
 			List<Cuenta> cuentasComp = cuentaRepository.findAll();
 			boolean flag = true;
-			Map<Long, Long> map = getMapFromEntity(cuentasComp);
+			Map<String, Map<Long, Long>> map = getMapFromEntity(cuentasComp);
+			String key = null;
 			if (null != map) {
 				for (CuentaReqDTO cuentaReqDTO : e.getCuentas()) {
 					for (AfiliacionReqDTO afiliacionReqDTO : cuentaReqDTO.getAfiliaciones()) {
-						if (!map.containsKey(afiliacionReqDTO.getId())
-								|| !map.get(afiliacionReqDTO.getId()).equals(cuentaReqDTO.getId())) {
+						key = afiliacionReqDTO.getId().toString().concat(cuentaReqDTO.getId().toString());
+						if (!map.containsKey(key)) {
 							flag = false;
 							break;
 						}
@@ -498,17 +500,22 @@ public class EntidadServiceImpl implements EntidadService {
 	 * @param cuentas
 	 * @return
 	 */
-	private Map<Long, Long> getMapFromEntity(List<Cuenta> cuentas) {
+	private Map<String, Map<Long, Long>> getMapFromEntity(List<Cuenta> cuentas) {
+		Map<String, Map<Long, Long>> resultMap = null;
 		Map<Long, Long> map = null;
+		String key = null;
 		if (null != cuentas && !cuentas.isEmpty()) {
-			map = new HashMap<>();
+			resultMap = new HashMap<>();
 			for (Cuenta cuentaI : cuentas) {
 				for (Afiliacion afiliacionI : cuentaI.getAfiliaciones()) {
+					key = afiliacionI.getId().toString().concat(cuentaI.getId().toString());
+					map = new HashMap<>();
 					map.put(afiliacionI.getId(), cuentaI.getId());
+					resultMap.put(key, map);
 				}
 			}
 		}
-		return map;
+		return resultMap;
 	}
 
 }

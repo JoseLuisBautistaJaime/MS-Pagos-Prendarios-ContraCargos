@@ -44,6 +44,7 @@ spring:
 #Pagos
 mimonte:
   variables:
+    actividades-max-default: 10
     mail:
       solicitud-pagos:
         title: "Solicitud de Pagos"
