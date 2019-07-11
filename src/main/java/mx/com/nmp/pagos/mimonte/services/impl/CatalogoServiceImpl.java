@@ -113,7 +113,7 @@ public class CatalogoServiceImpl implements CatalogoService {
 		}
 
 		log.debug("Validando la lista de registros...");
-		if (resultados == null || resultados.isEmpty()) {
+		if (resultados.isEmpty()) {
 			throw new CatalogoNotFoundException("No se encontraron registros para el catalogo especificado", CodigoError.NMP_PMIMONTE_0005);
 		}
 
@@ -167,7 +167,7 @@ public class CatalogoServiceImpl implements CatalogoService {
 		log.info("Validando si el catalogo existe...");
 		if (catalogo == null) {
 			log.error("El catalogo especificado no existe dentro del sistema...");
-			throw new IllegalArgumentException("El catalogo especificado no existe dentro del sistema...");
+			throw new CatalogoNotFoundException("El catalogo especificado no existe dentro del sistema...", CodigoError.NMP_PMIMONTE_0005);
 		} else if (!catalogo.isActivo()) {
 			log.error("El catalogo especificado se encuentra inactivo dentro del sistema...");
 			throw new CatalogoNotFoundException("El catalogo especificado se encuentra inactivo dentro del sistema...", CodigoError.NMP_PMIMONTE_0005);

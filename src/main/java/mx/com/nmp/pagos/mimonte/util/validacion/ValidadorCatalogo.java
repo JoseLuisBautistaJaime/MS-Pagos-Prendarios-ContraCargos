@@ -47,6 +47,7 @@ public interface ValidadorCatalogo {
 	 */
 	public static boolean validateCodigoEstadoCuentaSave(CodigoEstadoCuentaReqSaveDTO codigoEstadoCuentaReqSaveDTO) {
 		return (null != codigoEstadoCuentaReqSaveDTO) && (null != codigoEstadoCuentaReqSaveDTO.getCodigo())
+				&& (!"".equals(codigoEstadoCuentaReqSaveDTO.getCodigo()))
 				&& (null != codigoEstadoCuentaReqSaveDTO.getCategoria()
 						&& null != codigoEstadoCuentaReqSaveDTO.getCategoria().getId()
 						&& (codigoEstadoCuentaReqSaveDTO.getCategoria().getId() > 0))
@@ -66,6 +67,7 @@ public interface ValidadorCatalogo {
 		return (null != codigoEstadoCuentaReqUpdtDTO)
 				&& (null != codigoEstadoCuentaReqUpdtDTO.getCodigo() && null != codigoEstadoCuentaReqUpdtDTO.getId()
 						&& (codigoEstadoCuentaReqUpdtDTO.getId() > 0))
+				&& (!"".equals(codigoEstadoCuentaReqUpdtDTO.getCodigo()))
 				&& (null != codigoEstadoCuentaReqUpdtDTO.getCategoria()
 						&& null != codigoEstadoCuentaReqUpdtDTO.getCategoria().getId()
 						&& (codigoEstadoCuentaReqUpdtDTO.getCategoria().getId() > 0))
