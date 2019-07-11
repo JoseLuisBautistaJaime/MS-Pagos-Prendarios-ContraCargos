@@ -33,11 +33,12 @@ INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activ
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
 (3, 'Tipo Tarjeta', 'Catalogo de tipos de tarjetas', 'tk_tipo_tarjeta', 1);
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
-(4, 'Categoria', 'Catalogo de categorias de codigos de edos. de cta.', 'tk_categoria', 1);
+(4, 'Categoria', 'Catalogo de categorias de codigos de estados de cuenta', 'tk_categoria', 1);
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
 (5, 'Estatus Pago', 'Catalogo de estatus de pagos', 'tk_estatus_pago', 1);
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
 (6, 'Tipo Autorizacion', 'Catalogo de tipos de autorizacion', 'tk_tipo_autorizacion', 1);
+
 
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_estatus_operacion
@@ -208,11 +209,11 @@ INSERT INTO tk_estatus_devolucion (id, nombre, descripcion, estatus, created_dat
 -- INSERTS INICIALES EN TABLA - tk_estatus_movimientos_en_transito
 -- ------------------------------------------------------------------------------------------------------------------ --
 INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(1, 'No identificada en MIDAS', 'No identificada en MIDAS', true, now(), NULL, 'Sistema', NULL, 'NOID');
+(1, 'No identificada en MIDAS', 'No identificada en MIDAS', true, now(), null, 'Sistema', null, 'NOID');
 INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(2, 'Solicitada', 'Solicitada', true, now(), NULL, 'Sistema', NULL, 'SOL');
+(2, 'Solicitada', 'Solicitada', true, now(), null, 'Sistema', null, 'SOL');
 INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(4, 'Marcada devolucion', 'Marcada para devolucion', true, now(), NULL, 'Sistema', NULL, 'MDEV');
+(4, 'Marcada devolucion', 'Marcada para devolucion', true, now(), null, 'Sistema', null, 'MDEV');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -300,3 +301,29 @@ INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus) VALUES (1, 14);
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus) VALUES (1, 15);
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus) VALUES (2, 16);
+
+
+-- ------------------------------------------------------------------------------------------------------------------ --
+-- INSERTS INICIALES EN TABLA - tc_layout_header
+-- ------------------------------------------------------------------------------------------------------------------ --
+INSERT INTO tc_layout_header (id, id_layout, cabecera, unidad_negocio, descripcion, codigo_origen, fecha, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('1', '1', 'H', 'NMP01', 'COB RF Y DS EN L', 'B', '0000-00-00', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, id_layout, cabecera, unidad_negocio, descripcion, codigo_origen, fecha, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('2', '2', 'H', 'NMP01', 'COMISIÓN', 'B', '0000-00-00', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, id_layout, cabecera, unidad_negocio, descripcion, codigo_origen, fecha, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('3', '1', 'H', 'NMP01', 'COMISIÓN', 'B', '0000-00-00', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, id_layout, cabecera, unidad_negocio, descripcion, codigo_origen, fecha, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('4', '2', 'H', 'NMP01', 'DEV RF Y DS EN LINEA', 'B', '0000-00-00', now(), null, 'Sistema', null);
+
+
+-- ------------------------------------------------------------------------------------------------------------------ --
+-- INSERTS INICIALES EN TABLA - tc_layout_linea
+-- ------------------------------------------------------------------------------------------------------------------ --
+INSERT INTO tc_layout_linea (id, id_layout, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, monto, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('1', '558', 'L', '1011001063', '15000', '13324', '', '', '-3000.5670', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_linea (id, id_layout, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, monto, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('2', '557', 'L', '1219001003', '', '13 000 13000', 'PRENDA', ' SUCS_NB ', '8000.5670', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_linea (id, id_layout, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, monto, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('3', '556', 'L', '6402001001', '', '', '', '', '5000.5670', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_linea (id, id_layout, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, monto, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('4', '559', 'L', '1220001013 ', '', '13 000 1300', '', '', '-5000.5670', now(), null, 'Sistema', null);
