@@ -8,9 +8,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuentaCabecera;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
@@ -96,6 +99,33 @@ public abstract class MovimientoDevolucionBuilder {
 		movimientoDevolucion.setCodigoAutorizacion(null);
 		movimientoDevolucion.setSucursal(mt.getSucursal());
 		movimientoDevolucion.setFechaLiquidacion(null);
+
+		return movimientoDevolucion;
+	}
+
+
+	/**
+	 * Crea el movimiento devolucion en base al movimiento estado cuenta
+	 * @param movEstadoCuenta
+	 * @return
+	 */
+	public static MovimientoDevolucion buildMovimientoFromMovEstadoCuenta(MovimientoEstadoCuenta movEstadoCuenta, Integer idConciliacion, String createdBy, EstadoCuentaCabecera cabecera) {
+		MovimientoDevolucion movimientoDevolucion = new MovimientoDevolucion();
+		movimientoDevolucion.setIdConciliacion(idConciliacion);
+		movimientoDevolucion.setCreatedDate(new Date());
+		movimientoDevolucion.setCreatedBy(createdBy);
+		movimientoDevolucion.setLastModifiedBy(null);
+		movimientoDevolucion.setLastModifiedDate(null);
+		movimientoDevolucion.setNuevo(false);
+		movimientoDevolucion.setEstatus(new EstatusDevolucion(ConciliacionConstants.ESTATUS_DEVOLUCION_PENDIENTE));
+		movimientoDevolucion.setFecha(movEstadoCuenta.getFechaOperacion());
+		movimientoDevolucion.setMonto(movEstadoCuenta.getImporte());
+		movimientoDevolucion.setEsquemaTarjeta(""); // TODO: Estado de cuenta no cuenta con esquema
+		movimientoDevolucion.setIdentificadorCuenta(""); // TODO: Identificador de la cuenta es = no cuenta ?
+		movimientoDevolucion.setTitular(cabecera.getTitularCuenta());
+		movimientoDevolucion.setCodigoAutorizacion(null); // TODO: ??
+		//movimientoDevolucion.setSucursal(); // TODO: 
+		movimientoDevolucion.setFechaLiquidacion(movEstadoCuenta.getFechaOperacion());
 
 		return movimientoDevolucion;
 	}

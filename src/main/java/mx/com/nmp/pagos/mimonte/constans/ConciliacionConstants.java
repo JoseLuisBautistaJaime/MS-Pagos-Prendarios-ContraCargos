@@ -314,6 +314,7 @@ public final class ConciliacionConstants {
 
 	public static final Long CATEGORIA_ESTADO_CUENTA_COMISIONES = 2L;
 	public static final Long CATEGORIA_ESTADO_CUENTA_IVA = 4L;
+	public static final Long CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES = 6L;
 
 	// Estatus conciliacion
 	public static final Integer ESTATUS_CONCILIACION_EN_PROCESO = 1;

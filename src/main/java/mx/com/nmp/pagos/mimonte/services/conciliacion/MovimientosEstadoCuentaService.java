@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -217,7 +218,7 @@ public class MovimientosEstadoCuentaService {
 
 		// Consulta los diferentes estados de cuenta por cada fecha
 		Date fechaEstadoCuenta = reporte.getFechaDesde();
-		long idConciliacion = reporte.getConciliacion().getId().longValue();
+		Long idConciliacion = reporte.getConciliacion().getId().longValue();
 		long idReporte = reporte.getId();
 		
 		while (!fechaEstadoCuenta.after(reporte.getFechaHasta())) {
@@ -242,6 +243,9 @@ public class MovimientosEstadoCuentaService {
 			cal.add(Calendar.DAY_OF_YEAR, 1);
 			fechaEstadoCuenta = cal.getTime();
 		}
+
+		// Se regenera la conciliacion
+		this.conciliacionHelper.generarConciliacion(idConciliacion.intValue(), Arrays.asList(reporte));
 		
 	}
 
