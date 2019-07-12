@@ -59,7 +59,16 @@ public class BusEstadoCuentaRestService extends AbstractOAuth2RestService {
 		String url = applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getUrl();
 		BusRestHeaderDTO header = new BusRestHeaderDTO(bearerToken);
 
-		Map<String, Object> response = getForObject(auth, body, header, url);
+		Map<String, Object> response = null;
+		try {
+			response = getForObject(auth, body, header, url);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException(ConciliacionConstants.ESTADO_CUENTA_CANNOT_BE_CONSULT,
+					CodigoError.NMP_PMIMONTE_BUSINESS_065);
+		}
+
 		LOG.debug(response != null ? "Consulta correcta" : "Error al consulta estado cuenta");
 
 		if (response == null || response.get("documento") == null)

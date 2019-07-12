@@ -35,9 +35,11 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDT
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService;
@@ -76,6 +78,10 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	@Autowired
 	private SolicitarDevolucionesService solicitarDevolucionesService;
 
+	@Autowired
+	private ConciliacionHelper conciliacionHelper;
+
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -89,13 +95,16 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 
-		List<MovimientoDevolucion> devoluciones = movimientoDevolucionRepository.findByIdConciliacion(folio);
+		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio);
+		
+		List<MovimientoDevolucion> devoluciones = movimientoDevolucionRepository.findByIdConciliacion(conciliacion.getId());
 		if (devoluciones == null || devoluciones.isEmpty())
 			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
 
 		return DevolucionesBuilder.buildDevolucionConDTOListFromMovimientoDevolucionList(devoluciones);
 	}
+
 
 	/*
 	 * (non-Javadoc)

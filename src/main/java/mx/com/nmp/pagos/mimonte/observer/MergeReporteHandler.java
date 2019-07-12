@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.dao.CodigoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaCabeceraRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.GlobalRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoComisionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
@@ -50,10 +52,16 @@ public class MergeReporteHandler {
 	private MovimientoEstadoCuentaRepository movimientoEstadoCuentaRepository;
 
 	@Inject
+	private EstadoCuentaCabeceraRepository estadoCuentaCabeceraRepository;
+
+	@Inject
 	private MovimientoTransitoRepository movimientoTransitoRepository;
 
 	@Inject
 	private MovimientoComisionRepository movimientoComisionRepository;
+
+	@Inject
+	private MovimientoDevolucionRepository movimientoDevolucionRepository;
 
 	@Inject
 	private ReporteRepository reporteRepository;
@@ -168,6 +176,18 @@ public class MergeReporteHandler {
 
 	public EstadoCuentaRepository getEstadoCuentaRepository() {
 		return estadoCuentaRepository;
+	}
+
+
+
+	public MovimientoDevolucionRepository getMovimientoDevolucionRepository() {
+		return movimientoDevolucionRepository;
+	}
+
+
+
+	public EstadoCuentaCabeceraRepository getEstadoCuentaCabeceraRepository() {
+		return estadoCuentaCabeceraRepository;
 	}
 
 }
