@@ -18,7 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ActividadPaginRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ActividadRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusConciliacionRepository;
@@ -126,9 +128,19 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Autowired
 	private ConciliacionHelper conciliacionHelper;
 
+	/**
+	 * Repository de Actividad
+	 */
 	@Autowired
 	@Qualifier("actividadRepository")
 	ActividadRepository actividadRepository;
+
+	/**
+	 * Repository de Actividad con paginacion
+	 */
+	@Autowired
+	@Qualifier("actividadPaginRepository")
+	ActividadPaginRepository actividadPaginRepository;
 
 	/**
 	 * Registro de actividades
@@ -579,12 +591,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				consultaActividadDTOList = actividadRepository.findByFolio(consultaActividadesRequest.getFolio());
 			// Todos los atributos son nulos se consultan los ultimos 10 por default
 			else {
-				Pageable pageable = new Pageable();
-				pageable.setMaxPageSize(null != actividadesMaxDefaultValue ? actividadesMaxDefaultValue : 10);
-				consultaActividadDTOList = actividadRepository.nGetTopXActividades(pageable);
+				Pageable pageable = PageRequest.of(0,null != actividadesMaxDefaultValue ? actividadesMaxDefaultValue : 10);
+				consultaActividadDTOList = actividadPaginRepository.nGetTopXActividades(pageable);
 			}
 		} catch (java.lang.IllegalArgumentException ex) {
-			throw new ConciliacionException(ConciliacionConstants.ENUM_TYPE_OR_SUB_TYPE_INCONCISTENCY, CodigoError.NMP_PMIMONTE_BUSINESS_002);
+			throw new ConciliacionException(ConciliacionConstants.ENUM_TYPE_OR_SUB_TYPE_INCONCISTENCY,
+					CodigoError.NMP_PMIMONTE_BUSINESS_002);
 		} catch (Exception ex) {
 			throw ex;
 		}

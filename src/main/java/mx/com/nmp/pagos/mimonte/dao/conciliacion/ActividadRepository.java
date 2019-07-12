@@ -7,7 +7,6 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -75,14 +74,5 @@ public interface ActividadRepository extends JpaRepository<Actividad, Long> {
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio")
 	public List<ConsultaActividadDTO> findByFolio(@Param("folio") final Integer folio);
-
-	/**
-	 * Regresa una lista de objetos de tipo ConsultaActividadDTO con los ultimos 10
-	 * registros
-	 * 
-	 * @return
-	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act ORDER BY act.fecha DESC")
-	public List<ConsultaActividadDTO> nGetTopXActividades(Pageable pageable);
 
 }
