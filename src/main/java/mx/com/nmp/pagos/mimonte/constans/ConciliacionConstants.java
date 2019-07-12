@@ -377,8 +377,20 @@ public final class ConciliacionConstants {
 	public static final String COMISION_ID_NOT_FOUND = "El id de comision especificado no fue encontrado.";
 
 	/**
-	 * Mensaje que es mostrado cuando se intenta asociar una cuenta con una entidad que no estan relacionadas en base de datos
+	 * Mensaje que es mostrado cuando se intenta asociar una cuenta con una entidad
+	 * que no estan relacionadas en base de datos
 	 */
 	public static final String THERE_IS_NO_SUCH_CUENTA_ENTIDAD_RELATIONSHIP = "No existe relacion entre la cuenta y la entidad especificada.";
-	
+
+	/**
+	 * Mensaje que es mostrado cuando los datos de tipos y/o subtipos de base de
+	 * datos son incongruentes con los del ENUM
+	 */
+	public static final String ENUM_TYPE_OR_SUB_TYPE_INCONCISTENCY = "Ocurrio un error con el tipo y/o sub tipo de las actividades";
+
+	/**
+	 * Mensaje que es mostrado cuando hay inconsistencia en una o mas fechas
+	 */
+	public static final String WRONG_OR_INCONSISTENT_FECHAS = "Hay inconsistencia en una o mas fechas";
+
 }

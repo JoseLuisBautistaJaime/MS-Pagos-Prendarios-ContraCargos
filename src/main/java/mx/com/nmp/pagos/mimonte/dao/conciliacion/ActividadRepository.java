@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -81,6 +82,7 @@ public interface ActividadRepository extends JpaRepository<Actividad, Long> {
 	 * 
 	 * @return
 	 */
-	public List<ConsultaActividadDTO> nGetTopXActividades(@Param("limitValue") final Integer limit);
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act ORDER BY act.fecha DESC")
+	public List<ConsultaActividadDTO> nGetTopXActividades(Pageable pageable);
 
 }

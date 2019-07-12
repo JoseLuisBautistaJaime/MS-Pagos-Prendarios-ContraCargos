@@ -489,7 +489,7 @@ public interface ValidadorConciliacion {
 	 * @param consultaActividadesRequest
 	 * @return
 	 */
-	public static boolean validateConsultaActividadesRequest(ConsultaActividadesRequest consultaActividadesRequest) {
+	public static boolean validateConsultaActividadesDatesRequest(ConsultaActividadesRequest consultaActividadesRequest) {
 		Calendar ini = Calendar.getInstance();
 		Calendar fin = Calendar.getInstance();
 		Calendar hoy = Calendar.getInstance();

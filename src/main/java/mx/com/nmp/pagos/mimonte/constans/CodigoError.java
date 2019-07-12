@@ -186,7 +186,9 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_072("Error al obtener los codigos de estado cuenta",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_073("No existen codigos de estado de cuenta para la categoria de comisiones configurada",
-			TipoError.CLIENTE, SeveridadError.MEDIA);
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_078("Hay incongruencia en una o mas fechas",
+			TipoError.CLIENTE, SeveridadError.MEDIA),;
 
 	/**
 	 * Descripción del error

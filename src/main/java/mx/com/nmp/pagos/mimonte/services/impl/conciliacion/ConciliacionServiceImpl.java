@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,6 +135,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 */
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
+
+	/**
+	 * Valor maximo por default para resultados de actividades cuando no se
+	 * especifica folio
+	 */
+	@Value("${mimonte.variables.actividades-max-default}")
+	private Integer actividadesMaxDefaultValue;
 
 	/**
 	 * Metodo que da de alta una conciliación regresando un folio a partir de un
@@ -442,7 +451,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			// Verificar si es al momento de cerrar la conciliacion
 			if (conciliacion.getEstatus() == null
 					|| conciliacion.getEstatus().getId() != ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO) {
-				throw new ConciliacionException("La conciliacion tiene un estatus incorrecto", CodigoError.NMP_PMIMONTE_BUSINESS_034);
+				throw new ConciliacionException("La conciliacion tiene un estatus incorrecto",
+						CodigoError.NMP_PMIMONTE_BUSINESS_034);
 			}
 
 			// Verificar que se encuentra en el sub estatus correcto
@@ -451,7 +461,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			idsSubEstatusIncorrectos.add(ConciliacionConstants.SUBESTATUS_CONCILIACION_FINALIZADA.longValue());
 			if (conciliacion.getSubEstatus() == null
 					|| idsSubEstatusIncorrectos.contains(conciliacion.getSubEstatus().getId())) {
-				throw new ConciliacionException("La conciliacion tiene un sub estatus incorrecto", CodigoError.NMP_PMIMONTE_BUSINESS_030);
+				throw new ConciliacionException("La conciliacion tiene un sub estatus incorrecto",
+						CodigoError.NMP_PMIMONTE_BUSINESS_030);
 			}
 
 			conciliacion
@@ -463,7 +474,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al actualizar los ids de asiento contable", CodigoError.NMP_PMIMONTE_BUSINESS_031);
+			throw new ConciliacionException("Error al actualizar los ids de asiento contable",
+					CodigoError.NMP_PMIMONTE_BUSINESS_031);
 		}
 
 	}
@@ -545,52 +557,69 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public List<ConsultaActividadDTO> consultaActividades(ConsultaActividadesRequest consultaActividadesRequest) {
 		List<ConsultaActividadDTO> consultaActividadDTOList = null;
-		// Ningun atributo es nulo
-		if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
-				&& null != consultaActividadesRequest.getFechaHasta())
-			consultaActividadDTOList = actividadRepository.findByFolioFechaDesdeAndFechaHasta(
-					consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde(),
-					consultaActividadesRequest.getFechaHasta());
-		// La fechaHasta es nula
-		else if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde())
-			consultaActividadDTOList = actividadRepository.findByFolioAndFechaDesde(
-					consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde());
-		// La fechaDesde es nula
-		else if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaHasta())
-			consultaActividadDTOList = actividadRepository.findByFolioAndFechaHasta(
-					consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaHasta());
-		// Ambas fechas son nulas
-		else if (null != consultaActividadesRequest.getFolio())
-			consultaActividadDTOList = actividadRepository.findByFolio(consultaActividadesRequest.getFolio());
-		// Todos los atributos son nulos se consultan los ultimos 10 por default
-		else
-			consultaActividadDTOList = actividadRepository.nGetTopXActividades(10);
+		try {
+			// Ningun atributo es nulo
+			if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
+					&& null != consultaActividadesRequest.getFechaHasta())
+				consultaActividadDTOList = actividadRepository.findByFolioFechaDesdeAndFechaHasta(
+						consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde(),
+						consultaActividadesRequest.getFechaHasta());
+			// La fechaHasta es nula
+			else if (null != consultaActividadesRequest.getFolio()
+					&& null != consultaActividadesRequest.getFechaDesde())
+				consultaActividadDTOList = actividadRepository.findByFolioAndFechaDesde(
+						consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde());
+			// La fechaDesde es nula
+			else if (null != consultaActividadesRequest.getFolio()
+					&& null != consultaActividadesRequest.getFechaHasta())
+				consultaActividadDTOList = actividadRepository.findByFolioAndFechaHasta(
+						consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaHasta());
+			// Ambas fechas son nulas
+			else if (null != consultaActividadesRequest.getFolio())
+				consultaActividadDTOList = actividadRepository.findByFolio(consultaActividadesRequest.getFolio());
+			// Todos los atributos son nulos se consultan los ultimos 10 por default
+			else {
+				Pageable pageable = new Pageable();
+				pageable.setMaxPageSize(null != actividadesMaxDefaultValue ? actividadesMaxDefaultValue : 10);
+				consultaActividadDTOList = actividadRepository.nGetTopXActividades(pageable);
+			}
+		} catch (java.lang.IllegalArgumentException ex) {
+			throw new ConciliacionException(ConciliacionConstants.ENUM_TYPE_OR_SUB_TYPE_INCONCISTENCY, CodigoError.NMP_PMIMONTE_BUSINESS_002);
+		} catch (Exception ex) {
+			throw ex;
+		}
 		return consultaActividadDTOList;
 	}
 
-	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#consultaMovimientosTransito(java.lang.Integer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#
+	 * consultaMovimientosTransito(java.lang.Integer)
 	 */
 	@Override
 	public List<MovTransitoDTO> consultaMovimientosTransito(Integer folio) {
 
 		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(folio);
-		
+
 		List<MovimientoTransito> movsTransito = null;
 		try {
 			movsTransito = this.movimientoTransitoRepository.findByIdConciliacion(conciliacion.getId());
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al consultar los movimientos en transito", CodigoError.NMP_PMIMONTE_9999);
+			throw new ConciliacionException("Error al consultar los movimientos en transito",
+					CodigoError.NMP_PMIMONTE_9999);
 		}
 
 		return MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(movsTransito);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#actualizarPS(mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#
+	 * actualizarPS(mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest,
+	 * java.lang.String)
 	 */
 	@Transactional
 	public void actualizarPS(ActualizarIdPSRequest actualizarIdPSRequest, String usuario) {
@@ -611,7 +640,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			// Verificar si es al momento de cerrar la conciliacion
 			if (conciliacion.getEstatus() == null
 					|| conciliacion.getEstatus().getId() != ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO) {
-				throw new ConciliacionException("La conciliacion tiene un estatus incorrecto", CodigoError.NMP_PMIMONTE_BUSINESS_034);
+				throw new ConciliacionException("La conciliacion tiene un estatus incorrecto",
+						CodigoError.NMP_PMIMONTE_BUSINESS_034);
 			}
 
 			// Verificar que se encuentra en el sub estatus correcto
