@@ -25,6 +25,7 @@ import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.TipoContacto;
@@ -95,8 +96,8 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 			e.setLastModifiedBy(lastModifiedBy);
 		// Valida que el contacto exista
 		if (validaContacto(e))
-			throw new CatalogoException(CatalogConstants.CATALOG_THE_ID_TO_UPDATE_DOES_NOT_EXIST,
-					CodigoError.NMP_PMIMONTE_BUSINESS_001);
+			throw new InformationNotFoundException(CatalogConstants.CATALOG_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0005);
 		// Valida que el tipo de contacto exista
 		if (validaTipoContacto(e))
 			throw new CatalogoException(CatalogConstants.CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST,
