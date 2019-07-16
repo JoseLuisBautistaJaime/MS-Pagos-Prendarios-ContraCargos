@@ -241,7 +241,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(conciliacion.getId(), "Alta de conciliacion",
-				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.GENERACION_CONCILIACION, conciliacion.toString());
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.GENERACION_CONCILIACION);
 
 		return ConciliacionBuilder.buildConciliacionDTOFromConciliacionCuentaAndEntidad(conciliacion, cuenta.get(),
 				entidad.get());
@@ -342,8 +342,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(conciliacion.getId(), "Actualizacion de conciliacion",
-				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZAR_CONCILIACION,
-				actualizaionConciliacionRequestDTO.toString());
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZAR_CONCILIACION);
 
 		return actualizaionConciliacionRequestDTO;
 	}
@@ -384,11 +383,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 						CodigoError.NMP_PMIMONTE_0009);
 		}
 
-		// Registro de actividad
-		actividadGenericMethod.registroActividad(consultaConciliacionRequestDTO.getFolio(), "Consulta de conciliacion",
-				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.CONSULTA_CONCILIACION,
-				consultaConciliacionRequestDTO.toString());
-
 		return ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
 				conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFecha(
 						consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
@@ -424,10 +418,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Búsqueda de los reporte a partir del folio.
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(folio);
-
-		// Registro de actividad
-		actividadGenericMethod.registroActividad(folio, "Consulta de folio conciliacion", TipoActividadEnum.ACTIVIDAD,
-				SubTipoActividadEnum.CONSULTA_CONCILIACION, conciliacion.toString());
 
 		return ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(conciliacion, reportes,
 				MovimientoDevolucionBuilder.buildDevolucionConDTOListFromMovimientoDevolucionList(mD),
@@ -528,7 +518,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
 				"Actualizacion de subEstatus de conciliacion", TipoActividadEnum.ACTIVIDAD,
-				SubTipoActividadEnum.ACTUALIZACION_ESTATUS_CONCILIACION, actualizarSubEstatusRequestDTO.toString());
+				SubTipoActividadEnum.ACTUALIZACION_ESTATUS_CONCILIACION);
 	}
 
 	/**
@@ -720,9 +710,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		this.conciliacionHelper.generarConciliacion(idConciliacion, reportes);
 
 		// Registro de actividad
-		// TODO: Remover comentario
-//		actividadGenericMethod.registroActividad(folio, "Generar conciliacion", TipoActividadEnum.ACTIVIDAD,
-//				SubTipoActividadEnum.ACTIVIDAD_CONCILIACION, folio.toString());
+		actividadGenericMethod.registroActividad(idConciliacion, "Generar conciliacion", TipoActividadEnum.ACTIVIDAD,
+				SubTipoActividadEnum.GENERACION_CONCILIACION);
 
 	}
 

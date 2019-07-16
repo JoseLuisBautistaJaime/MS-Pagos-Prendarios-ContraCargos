@@ -66,8 +66,7 @@ public class EventAspect {
 			if (null != actividad)
 				actividadRepository.save(actividad);
 		}
-		Object proceed = joinPoint.proceed();
-		return proceed;
+		return joinPoint.proceed();
 	}
 
 	/**
@@ -77,7 +76,6 @@ public class EventAspect {
 	 * @param descripcion
 	 * @param tipo
 	 * @param subTipo
-	 * @param argArray
 	 * @return
 	 */
 	private Actividad buildActividad(final Integer folio, final String descripcion, final TipoActividadEnum tipo,
