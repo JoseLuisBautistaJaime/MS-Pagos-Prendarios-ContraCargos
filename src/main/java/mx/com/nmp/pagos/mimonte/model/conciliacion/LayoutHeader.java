@@ -7,8 +7,6 @@ import javax.persistence.*;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
 
-import java.util.Date;
-
 
 /**
  * The persistent class for the to_layout_header database table.
@@ -34,9 +32,6 @@ public class LayoutHeader extends Updatable implements Serializable{
 
 	@Column(name="codigo_origen")
 	private String codigoOrigen;
-
-	@Column(name="created_by")
-	private String createdBy;
 
 	@Column(name="descripcion")
 	private String descripcion;
@@ -93,14 +88,6 @@ public class LayoutHeader extends Updatable implements Serializable{
 
 	public void setCodigoOrigen(String codigoOrigen) {
 		this.codigoOrigen = codigoOrigen;
-	}
-
-	public String getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
 	}
 
 	public String getDescripcion() {
