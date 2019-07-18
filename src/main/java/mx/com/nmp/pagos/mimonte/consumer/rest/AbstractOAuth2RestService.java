@@ -38,7 +38,7 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 
 /**
- * @name BusMailRestService
+ * @name AbstractOAuth2RestService
  * @description Clase para consumir servicios rest relacionados con el envio de
  *              e-mail y que son expuestos por BUS
  * 

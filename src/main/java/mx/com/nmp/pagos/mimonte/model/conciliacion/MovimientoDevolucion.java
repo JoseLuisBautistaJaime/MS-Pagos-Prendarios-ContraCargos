@@ -9,10 +9,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -38,7 +37,7 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	 */
 	private static final long serialVersionUID = 8987562819738981175L;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "estatus")
 	private EstatusDevolucion estatus;
 	

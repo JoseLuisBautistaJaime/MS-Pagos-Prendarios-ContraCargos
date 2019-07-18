@@ -153,17 +153,29 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateMovimientoTransaccionalListRequestDTO(
 			MovimientoTransaccionalListRequestDTO listRequestDTO) {
-		Calendar fechaInicial = Calendar.getInstance();
-		Calendar fechaFinal = Calendar.getInstance();
+
+		boolean valido = false;
 		try {
 			assertNotNull(listRequestDTO);
 			assertNotNull(listRequestDTO.getFolio());
-			assertNotNull(listRequestDTO.getMovimientos());
+
 			assertNotNull(listRequestDTO.getFechaDesde());
 			assertNotNull(listRequestDTO.getFechaHasta());
+
+			Calendar fechaInicial = Calendar.getInstance();
+			Calendar fechaFinal = Calendar.getInstance();
+			fechaInicial.setTime(listRequestDTO.getFechaDesde());
+			fechaFinal.setTime(listRequestDTO.getFechaHasta());
+			if (fechaInicial.after(fechaFinal)) {
+				throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE,
+						CodigoError.NMP_PMIMONTE_BUSINESS_037);
+			}
+
+			assertNotNull(listRequestDTO.getMovimientos());
+
 			if (CollectionUtils.isNotEmpty(listRequestDTO.getMovimientos())) {
 				for (MovimientoProveedorDTO movimientoProveedorDTO : listRequestDTO.getMovimientos()) {
-					assertNotNull(movimientoProveedorDTO.getAmount());
+					/*assertNotNull(movimientoProveedorDTO.getAmount());
 					assertNotNull(movimientoProveedorDTO.getAuthorization());
 					assertNotNull(movimientoProveedorDTO.getCard());
 					assertNotNull(movimientoProveedorDTO.getCard().getAddress());
@@ -196,21 +208,16 @@ public interface ValidadorConciliacion {
 					assertNotNull(movimientoProveedorDTO.getOrderId());
 					assertNotNull(movimientoProveedorDTO.getStatus());
 					assertNotNull(movimientoProveedorDTO.getTransactionType());
-					assertNotNull(movimientoProveedorDTO.getIdMovimiento());
+					assertNotNull(movimientoProveedorDTO.getIdMovimiento());*/
 					movimientoProveedorDTO.setId(null);
-					fechaInicial.setTime(listRequestDTO.getFechaDesde());
-					fechaFinal.setTime(listRequestDTO.getFechaHasta());
-					if (fechaInicial.after(fechaFinal)) {
-						return false;
-					}
 				}
-			} else
-				return false;
+				valido = true;
+			}
 		} catch (java.lang.AssertionError | Exception ex) {
-			return false;
 		}
-		return true;
+		return valido;
 	}
+
 
 	/**
 	 * Valida que la informacion dentro de un objeto de tipo
@@ -233,6 +240,7 @@ public interface ValidadorConciliacion {
 				throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE,
 						CodigoError.NMP_PMIMONTE_BUSINESS_037);
 		} catch (java.lang.AssertionError | Exception ex) {
+			ex.printStackTrace();
 			return false;
 		}
 		return true;
