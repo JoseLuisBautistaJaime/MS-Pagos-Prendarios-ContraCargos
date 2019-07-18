@@ -294,7 +294,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Búsqueda del folio en la tabla de to_conciliacion
 		Conciliacion conciliacion = conciliacionHelper
-				.getConciliacionByFolio(actualizaionConciliacionRequestDTO.getFolio());
+				.getConciliacionByFolio(actualizaionConciliacionRequestDTO.getFolio(), ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 //		// Búsqueda del folio en la tabla de to_movimiento_conciliacion en base al
 //		// folio.
@@ -405,7 +405,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					CodigoError.NMP_PMIMONTE_0008);
 
 		// Búsqueda de la conciliación a partir del folio.
-		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(folio);
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(folio, null);
 
 		// Búsqueda de los movimientos en devolución a partir del folio
 		List<MovimientoDevolucion> mD = movimientoDevolucionRepository.findByIdConciliacion(folio);
@@ -433,7 +433,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 * java.lang.Integer)
 	 */
 	public Conciliacion getById(Integer idConciliacion) {
-		return conciliacionHelper.getConciliacionByFolio(idConciliacion);
+		return conciliacionHelper.getConciliacionByFolio(idConciliacion, null);
 	}
 
 	/*
@@ -448,14 +448,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Validar conciliacion y actualizar estatus
 		try {
-			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion);
-
-			// Verificar si es al momento de cerrar la conciliacion
-			if (conciliacion.getEstatus() == null
-					|| conciliacion.getEstatus().getId() != ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO) {
-				throw new ConciliacionException("La conciliacion tiene un estatus incorrecto",
-						CodigoError.NMP_PMIMONTE_BUSINESS_034);
-			}
+			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion, ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 			// Verificar que se encuentra en el sub estatus correcto
 			List<Long> idsSubEstatusIncorrectos = new ArrayList<Long>();
@@ -602,7 +595,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public List<MovTransitoDTO> consultaMovimientosTransito(Integer folio) {
 
-		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(folio);
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(folio, null);
 
 		List<MovimientoTransito> movsTransito = null;
 		try {
@@ -637,14 +630,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Actualizar los ids en la conciliacion
 		try {
-			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(actualizarIdPSRequest.getFolio());
-
-			// Verificar si es al momento de cerrar la conciliacion
-			if (conciliacion.getEstatus() == null
-					|| conciliacion.getEstatus().getId() != ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO) {
-				throw new ConciliacionException("La conciliacion tiene un estatus incorrecto",
-						CodigoError.NMP_PMIMONTE_BUSINESS_034);
-			}
+			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(actualizarIdPSRequest.getFolio(), ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 			// Verificar que se encuentra en el sub estatus correcto
 			List<Long> idsSubEstatusIncorrectos = new ArrayList<Long>();

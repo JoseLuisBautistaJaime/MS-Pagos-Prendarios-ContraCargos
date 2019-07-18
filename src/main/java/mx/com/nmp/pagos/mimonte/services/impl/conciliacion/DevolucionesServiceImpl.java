@@ -96,7 +96,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 
-		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio);
+		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio, null);
 		
 		List<MovimientoDevolucion> devoluciones = movimientoDevolucionRepository.findByIdConciliacion(conciliacion.getId());
 		if (devoluciones == null || devoluciones.isEmpty())

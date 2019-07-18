@@ -18,6 +18,7 @@ import com.ibm.icu.util.Calendar;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
@@ -189,7 +190,7 @@ public class MovimientosEstadoCuentaService {
 	@Transactional
 	public Reporte save(final SaveEstadoCuentaRequestDTO request, final String userRequest) {
 
-		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(request.getFolio());
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(request.getFolio(), ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 		// Insertar el nuevo reporte (este reporte sera el nuevo reporte a considerar)
 		Reporte reporte = null;

@@ -63,7 +63,7 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 	public EstadoCuentaFileLayout read(Date date, Long idConciliacion, EstadoCuentaImplementacionEnum implementacion) {
 
 		// Consulta el numero de cuenta asignado a la conciliacion
- 		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion.intValue());
+ 		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion.intValue(), null);
 
 		// Crea nombre y ruta del archivo en base a la fecha
  		String rutaArchivo = EstadoCuentaFileBuilder.buildPath(date, ruta);

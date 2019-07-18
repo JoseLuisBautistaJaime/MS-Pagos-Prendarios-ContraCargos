@@ -59,7 +59,7 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
 		if (idStatusConciliacion != null && conciliacion.getEstatus().getId() != idStatusConciliacion) {
-			throw new ConciliacionException("Conciliacion con estado incorrecto", CodigoError.NMP_PMIMONTE_BUSINESS_045);
+			throw new ConciliacionException("Conciliacion con estado incorrecto", CodigoError.NMP_PMIMONTE_BUSINESS_034);
 		}
 
 		return conciliacion;
