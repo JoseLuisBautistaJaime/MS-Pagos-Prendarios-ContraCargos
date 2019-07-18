@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ibm.icu.util.Calendar;
+
 import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstatusConciliacionBuilder;
@@ -293,8 +295,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 
 		// Búsqueda del folio en la tabla de to_conciliacion
-		Conciliacion conciliacion = conciliacionHelper
-				.getConciliacionByFolio(actualizaionConciliacionRequestDTO.getFolio(), ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(
+				actualizaionConciliacionRequestDTO.getFolio(), ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 //		// Búsqueda del folio en la tabla de to_movimiento_conciliacion en base al
 //		// folio.
@@ -355,6 +357,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public List<ConsultaConciliacionDTO> consulta(ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
 
+		List<ConsultaConciliacionDTO> result = null;
+
 		// Validación de la fecha final no sea menor que la fecha inicial.
 		if (consultaConciliacionRequestDTO.getFechaDesde() != null
 				&& consultaConciliacionRequestDTO.getFechaHasta() != null) {
@@ -383,11 +387,36 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 						CodigoError.NMP_PMIMONTE_0009);
 		}
 
-		return ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
-				conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFecha(
-						consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
-						consultaConciliacionRequestDTO.getIdEstatus(), consultaConciliacionRequestDTO.getFechaDesde(),
-						consultaConciliacionRequestDTO.getFechaHasta()));
+		if (null != consultaConciliacionRequestDTO.getFechaDesde()
+				&& null != consultaConciliacionRequestDTO.getFechaHasta()) {
+			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
+					conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFechas(
+							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
+							consultaConciliacionRequestDTO.getIdEstatus(),
+							consultaConciliacionRequestDTO.getFechaDesde(),
+							consultaConciliacionRequestDTO.getFechaHasta()));
+		} else if (null != consultaConciliacionRequestDTO.getFechaDesde()
+				&& null == consultaConciliacionRequestDTO.getFechaHasta()) {
+			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
+					conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFechaDesde(
+							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
+							consultaConciliacionRequestDTO.getIdEstatus(),
+							consultaConciliacionRequestDTO.getFechaDesde()));
+		} else if (null == consultaConciliacionRequestDTO.getFechaDesde()
+				&& null != consultaConciliacionRequestDTO.getFechaHasta()) {
+			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
+					conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFechaHasta(
+							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
+							consultaConciliacionRequestDTO.getIdEstatus(),
+							consultaConciliacionRequestDTO.getFechaHasta()));
+		} else {
+			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
+					conciliacionRepository.findByFolioAndIdEntidadAndIdEstatus(
+							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
+							consultaConciliacionRequestDTO.getIdEstatus()));
+		}
+
+		return result;
 	}
 
 	/**
@@ -448,7 +477,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Validar conciliacion y actualizar estatus
 		try {
-			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion, ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
+			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
+					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 			// Verificar que se encuentra en el sub estatus correcto
 			List<Long> idsSubEstatusIncorrectos = new ArrayList<Long>();
@@ -482,6 +512,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			String usuario) {
+		// Se valida si la conciliacion existe
+		Optional<Conciliacion> conciliaicion = conciliacionRepository
+				.findById(actualizarSubEstatusRequestDTO.getFolio());
+		if (!conciliaicion.isPresent())
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_018);
 		// Se obtienen: El id del estatus conciliacion el orden del mismo y el roden del
 		// subestatus de acuerdo al id de subestatus especificado como parametro
 		// mediante un query nativo
@@ -526,13 +562,41 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Se compara si la fecha inicial y final son nulas para plicar una consulta sin
 		// argumentos de rango de fechas o de lo contrario aplicar una consulta con
 		// argumentos de rango de fechas
+		if (null == resumenConciliacionRequestDTO.getFechaInicial()
+				&& null != resumenConciliacionRequestDTO.getFechaFinal()) {
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.YEAR, 1975);
+			cal.set(Calendar.MONTH, 1);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			resumenConciliacionRequestDTO.setFechaInicial(cal.getTime());
+		}
+		if (null != resumenConciliacionRequestDTO.getFechaInicial()
+				&& null == resumenConciliacionRequestDTO.getFechaFinal()) {
+			Calendar cal = Calendar.getInstance();
+			resumenConciliacionRequestDTO.setFechaFinal(cal.getTime());
+		}
 		if (null != resumenConciliacionRequestDTO.getFechaInicial()
 				&& null != resumenConciliacionRequestDTO.getFechaFinal()) {
+			Calendar ini = Calendar.getInstance();
+			Calendar fin = Calendar.getInstance();
+			ini.setTime(resumenConciliacionRequestDTO.getFechaInicial());
+			fin.setTime(resumenConciliacionRequestDTO.getFechaFinal());
+			ini.set(Calendar.HOUR_OF_DAY, 0);
+			ini.set(Calendar.MINUTE, 0);
+			ini.set(Calendar.SECOND, 0);
+			ini.set(Calendar.MILLISECOND, 0);
+			fin.set(Calendar.HOUR_OF_DAY, 23);
+			fin.set(Calendar.MINUTE, 59);
+			fin.set(Calendar.SECOND, 59);
+			fin.set(Calendar.MILLISECOND, 59);
+			resumenConciliacionRequestDTO.setFechaInicial(ini.getTime());
+			resumenConciliacionRequestDTO.setFechaFinal(fin.getTime());
 			res = conciliacionRepository.resumenConciliaciones(resumenConciliacionRequestDTO.getFechaInicial(),
-					resumenConciliacionRequestDTO.getFechaFinal(), ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
+					resumenConciliacionRequestDTO.getFechaFinal(),
+					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
 					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
 		} else {
-			conciliacionRepository.resumenConciliaciones(ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
+			res = conciliacionRepository.resumenConciliaciones(ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
 					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
 		}
 		if (null != res && !res.isEmpty())
@@ -553,12 +617,40 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	public List<ConsultaActividadDTO> consultaActividades(ConsultaActividadesRequest consultaActividadesRequest) {
 		List<ConsultaActividadDTO> consultaActividadDTOList = null;
 		try {
+			if (null == consultaActividadesRequest.getFechaDesde()
+					&& null != consultaActividadesRequest.getFechaHasta()) {
+				Calendar cal = Calendar.getInstance();
+				cal.set(Calendar.YEAR, 1975);
+				cal.set(Calendar.MONTH, 1);
+				cal.set(Calendar.DAY_OF_MONTH, 1);
+				consultaActividadesRequest.setFechaDesde(cal.getTime());
+			}
+			if (null != consultaActividadesRequest.getFechaDesde()
+					&& null == consultaActividadesRequest.getFechaHasta()) {
+				Calendar cal = Calendar.getInstance();
+				consultaActividadesRequest.setFechaHasta(cal.getTime());
+			}
 			// Ningun atributo es nulo
 			if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
-					&& null != consultaActividadesRequest.getFechaHasta())
+					&& null != consultaActividadesRequest.getFechaHasta()) {
+				Calendar ini = Calendar.getInstance();
+				Calendar fin = Calendar.getInstance();
+				ini.setTime(consultaActividadesRequest.getFechaDesde());
+				fin.setTime(consultaActividadesRequest.getFechaHasta());
+				ini.set(Calendar.HOUR_OF_DAY, 0);
+				ini.set(Calendar.MINUTE, 0);
+				ini.set(Calendar.SECOND, 0);
+				ini.set(Calendar.MILLISECOND, 0);
+				fin.set(Calendar.HOUR_OF_DAY, 23);
+				fin.set(Calendar.MINUTE, 59);
+				fin.set(Calendar.SECOND, 59);
+				fin.set(Calendar.MILLISECOND, 59);
+				consultaActividadesRequest.setFechaDesde(ini.getTime());
+				consultaActividadesRequest.setFechaHasta(fin.getTime());
 				consultaActividadDTOList = actividadRepository.findByFolioFechaDesdeAndFechaHasta(
 						consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde(),
 						consultaActividadesRequest.getFechaHasta());
+			}
 			// La fechaHasta es nula
 			else if (null != consultaActividadesRequest.getFolio()
 					&& null != consultaActividadesRequest.getFechaDesde())
@@ -574,7 +666,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				consultaActividadDTOList = actividadRepository.findByFolio(consultaActividadesRequest.getFolio());
 			// Todos los atributos son nulos se consultan los ultimos 10 por default
 			else {
-				Pageable pageable = PageRequest.of(0,null != actividadesMaxDefaultValue ? actividadesMaxDefaultValue : 10);
+				Pageable pageable = PageRequest.of(0,
+						null != actividadesMaxDefaultValue ? actividadesMaxDefaultValue : 10);
 				consultaActividadDTOList = actividadPaginRepository.nGetTopXActividades(pageable);
 			}
 		} catch (java.lang.IllegalArgumentException ex) {
@@ -630,7 +723,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Actualizar los ids en la conciliacion
 		try {
-			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(actualizarIdPSRequest.getFolio(), ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
+			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(actualizarIdPSRequest.getFolio(),
+					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 			// Verificar que se encuentra en el sub estatus correcto
 			List<Long> idsSubEstatusIncorrectos = new ArrayList<Long>();

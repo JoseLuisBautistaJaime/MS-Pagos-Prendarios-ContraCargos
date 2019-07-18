@@ -50,13 +50,15 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 			conciliacion = this.conciliacionRepository.findByFolio(folio);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
-					CodigoError.NMP_PMIMONTE_BUSINESS_045);
+//			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
+//					CodigoError.NMP_PMIMONTE_BUSINESS_045);
+			throw new ConciliacionException("Conciliacion con el folio " + folio + " no existe", CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
 
 		if (conciliacion == null) {
-			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
-					CodigoError.NMP_PMIMONTE_BUSINESS_045);
+//			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
+//					CodigoError.NMP_PMIMONTE_BUSINESS_045);
+			throw new ConciliacionException("Conciliacion con el folio " + folio + " no existe", CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
 		if (idStatusConciliacion != null && conciliacion.getEstatus().getId() != idStatusConciliacion) {
 			throw new ConciliacionException("Conciliacion con estado incorrecto", CodigoError.NMP_PMIMONTE_BUSINESS_034);

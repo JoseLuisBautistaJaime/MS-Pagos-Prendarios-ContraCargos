@@ -492,7 +492,14 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaActividades(@RequestBody ConsultaActividadesRequest consultaActividadesRequest) {
-		if (!ValidadorConciliacion.validateConsultaActividadesDatesRequest(consultaActividadesRequest))
+		if (((null != consultaActividadesRequest && null != consultaActividadesRequest.getFechaDesde()
+				&& null != consultaActividadesRequest.getFechaHasta())
+				&& (!ValidadorConciliacion.validateFechas(consultaActividadesRequest.getFechaDesde(),
+						consultaActividadesRequest.getFechaHasta())))
+				|| (null != consultaActividadesRequest && null != consultaActividadesRequest.getFechaDesde()
+						&& !ValidadorConciliacion.validateFecha(consultaActividadesRequest.getFechaDesde()))
+				|| (null != consultaActividadesRequest && null != consultaActividadesRequest.getFechaHasta()
+						&& !ValidadorConciliacion.validateFecha(consultaActividadesRequest.getFechaHasta())))
 			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_078);
 		List<ConsultaActividadDTO> response = conciliacionService.consultaActividades(consultaActividadesRequest);
@@ -550,9 +557,16 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response resumenConciliaciones(@RequestBody ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
-		if (!ValidadorConciliacion.validateResumenConciliacionRequestDTO(resumenConciliacionRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
+		if (((null != resumenConciliacionRequestDTO && null != resumenConciliacionRequestDTO.getFechaInicial()
+				&& null != resumenConciliacionRequestDTO.getFechaFinal())
+				&& (!ValidadorConciliacion.validateFechas(resumenConciliacionRequestDTO.getFechaInicial(),
+						resumenConciliacionRequestDTO.getFechaFinal())))
+				|| (null != resumenConciliacionRequestDTO && null != resumenConciliacionRequestDTO.getFechaInicial()
+						&& !ValidadorConciliacion.validateFecha(resumenConciliacionRequestDTO.getFechaInicial()))
+				|| (null != resumenConciliacionRequestDTO && null != resumenConciliacionRequestDTO.getFechaFinal()
+						&& !ValidadorConciliacion.validateFecha(resumenConciliacionRequestDTO.getFechaFinal())))
+			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_078);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				conciliacionServiceImpl.resumenConciliaciones(resumenConciliacionRequestDTO));
 	}

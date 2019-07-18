@@ -783,7 +783,7 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_proveedor` (
   `currency` VARCHAR(50) NOT NULL,
   `amount` DECIMAL(16,4) NOT NULL,
   `payment_method_type` VARCHAR(50) DEFAULT NULL,
-  `payment_method_url` VARCHAR(50) DEFAULT NULL,
+  `payment_method_url` VARCHAR(1024) DEFAULT NULL,
   `card_id` VARCHAR(50) DEFAULT NULL,
   `card_type` VARCHAR(50) DEFAULT NULL,
   `card_brand` VARCHAR(50) DEFAULT NULL,
