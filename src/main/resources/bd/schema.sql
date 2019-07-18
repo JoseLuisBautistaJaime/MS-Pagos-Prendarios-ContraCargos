@@ -29,6 +29,7 @@ DROP TABLE IF EXISTS `tr_estatus_conciliacion_sub_estatus_conciliacion` ;
 DROP TABLE IF EXISTS `tr_entidad_cuenta_afiliacion` ;
 DROP TABLE IF EXISTS `tr_entidad_contactos` ;
 DROP TABLE IF EXISTS `tr_cuenta_afiliacion` ;
+DROP TABLE IF EXISTS `to_pagos_partidas` ;
 DROP TABLE IF EXISTS `to_pagos` ;
 DROP TABLE IF EXISTS `tk_regla_negocio` ;
 DROP TABLE IF EXISTS `tc_codigo_estado_cuenta` ;
