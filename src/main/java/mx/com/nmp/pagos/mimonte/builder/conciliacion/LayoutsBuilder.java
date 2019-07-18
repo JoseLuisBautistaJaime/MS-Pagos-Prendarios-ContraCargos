@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.math.BigDecimal;
@@ -13,9 +17,25 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 
+/**
+ * @name LayoutsBuilder
+ * @description Clase que construye objetos en base a otros relacionados con
+ *              Layouts en general
+ *
+ * @author Quarksoft
+ * @creationDate 27/05/2019 05:07:09 PM
+ * @version 0.1
+ */
 public abstract class LayoutsBuilder {
 
 	/*Conversión de Entity a DTO*/
+	/**
+	 * Construye un objeto de tipo LayoutDTO a partir de un entity de tipo
+	 * Layout
+	 * 
+	 * @param layout
+	 * @return
+	 */
 	public static LayoutDTO buildLayoutDTOFromLayout(Layout layout) {
 		LayoutDTO layoutDTO = null;
 		
@@ -29,7 +49,13 @@ public abstract class LayoutsBuilder {
 		
 		return layoutDTO;
 	}
-	
+	/**
+	 * Construye un objeto de tipo LayoutCabeceraDTO a partir de un entity de tipo
+	 * LayoutHeader
+	 * 
+	 * @param layoutHeader
+	 * @return
+	 */
 	public static LayoutCabeceraDTO buildLayoutCabeceraDTOFromLayoutHeader(LayoutHeader layoutHeader) {
 		LayoutCabeceraDTO layoutCabeceraDTO = null;
 		
@@ -45,7 +71,13 @@ public abstract class LayoutsBuilder {
 		
 		return layoutCabeceraDTO;
 	}
-	
+	/**
+	 * Construye una lista de objetos de tipo LayoutLineaDTO a partir de una
+	 * lista de objetos de tipo LayoutLinea
+	 * 
+	 * @param layoutLineas
+	 * @return
+	 */
 	public static List<LayoutLineaDTO> buildLayoutLineaDTOFromLayoutLinea(List<LayoutLinea> layoutLineas) {
 		List<LayoutLineaDTO> layoutLineaDTOs = new ArrayList<>();
 		
@@ -67,6 +99,13 @@ public abstract class LayoutsBuilder {
 	}
 	
 	/*Conversión de DTO a Entity*/
+	/**
+	 * Construye un entity de tipo Layout apartir de un objeto de tipo
+	 * LayoutDTO
+	 * 
+	 * @param layoutDTO
+	 * @return
+	 */
 	public static Layout buildLayoutDTOFromLayout(LayoutDTO layoutDTO) {
 		Layout layout = null;
 		
@@ -80,6 +119,13 @@ public abstract class LayoutsBuilder {
 		return layout;
 	}
 	
+	/**
+	 * Construye un entity de tipo LayoutHeader apartir de un objeto de tipo
+	 * LayoutDTO
+	 * 
+	 * @param layoutDTO
+	 * @return
+	 */
 	public static LayoutHeader buildLayoutHeaderFromLayoutCabeceraDTO(LayoutDTO layoutDTO) {
 		LayoutHeader layoutHeader = null;
 		
@@ -95,6 +141,14 @@ public abstract class LayoutsBuilder {
 		return layoutHeader;
 	}
 	
+	/**
+	 * Construye un objeto de tipo LayoutLineaDTO a partir de un entity de tipo
+	 * LayoutLineaCatalog
+	 * 
+	 * @param layoutLineaCatalog
+	 * @param monto
+	 * @return
+	 */
 	public static LayoutLineaDTO buildLayoutLineaDTOFromLayoutLineaCatalog(LayoutLineaCatalog layoutLineaCatalog, BigDecimal monto) {
 		
 		LayoutLineaDTO layoutLineaDTO = new LayoutLineaDTO();
@@ -110,6 +164,13 @@ public abstract class LayoutsBuilder {
 		return layoutLineaDTO;
 	}
 	
+	/**
+	 * Construye una lista de entities de tipo LayoutLinea a partir de una lista
+	 * de objetos de tipo LayoutLineaDTO
+	 * 
+	 * @param layoutLineaDTOs
+	 * @return
+	 */
 	public static List<LayoutLinea> buildLayoutLineaFromLayoutLineaDTO(List<LayoutLineaDTO> layoutLineaDTOs) {
 		List<LayoutLinea> layoutLineas = new ArrayList<>();
 				layoutLineaDTOs.forEach(l -> {
@@ -127,6 +188,13 @@ public abstract class LayoutsBuilder {
 		
 		return layoutLineas;
 	}
+	
+	/**
+	 * Valida las líneas de un Layout
+	 * 
+	 * @param layoutLineaDTOs
+	 * @return
+	 */
 	public static boolean validaLineas(List<LayoutLineaDTO> layoutLineaDTOs) {
 		LayoutLinea layoutLinea = null;
 		boolean valor = true;
@@ -152,6 +220,12 @@ public abstract class LayoutsBuilder {
 		
 		return valor;
 	}
+	/**
+	 * Valida los campos requeridos de LayoutLineaDTO
+	 *  
+	 * @param layoutLineaDTO
+	 * @return
+	 */
 	public static boolean validar(LayoutLineaDTO layoutLineaDTO) {
 		return layoutLineaDTO.getId()>=0L && 
 				!layoutLineaDTO.getLinea().equals("") && 

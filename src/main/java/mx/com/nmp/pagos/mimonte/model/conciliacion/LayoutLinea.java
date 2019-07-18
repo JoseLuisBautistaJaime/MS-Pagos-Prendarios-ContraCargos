@@ -2,13 +2,10 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 import javax.persistence.*;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
-
-import java.util.Date;
 
 
 /**
