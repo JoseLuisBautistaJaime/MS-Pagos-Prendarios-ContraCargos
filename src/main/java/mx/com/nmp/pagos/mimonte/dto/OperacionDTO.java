@@ -1,11 +1,18 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.math.BigDecimal;
+
 /**
- * Nombre: Operacion
- * Descripcion: Clase que encapsula la informacion perteneciente a una Operacion.
+ * @name Operacion
+ * @description Clase que encapsula la informacion perteneciente a una
+ *              Operacion.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
- * Fecha: 16/11/2018 13:10 hrs.
+ * @creationDate 16/11/2018 13:10 hrs.
  * @version 0.1
  */
 public class OperacionDTO {
@@ -13,13 +20,13 @@ public class OperacionDTO {
 	private Integer idOperacion;
 	private String nombreOperacion;
 	private String folioContrato;
-	private Double monto;
-	
+	private BigDecimal monto;
+
 	public OperacionDTO() {
 		super();
 	}
 
-	public OperacionDTO(Integer idOperacion, String nombreOperacion, String folioContrato, Double monto) {
+	public OperacionDTO(Integer idOperacion, String nombreOperacion, String folioContrato, BigDecimal monto) {
 		this.idOperacion = idOperacion;
 		this.nombreOperacion = nombreOperacion;
 		this.folioContrato = folioContrato;
@@ -50,11 +57,11 @@ public class OperacionDTO {
 		this.folioContrato = folioContrato;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 

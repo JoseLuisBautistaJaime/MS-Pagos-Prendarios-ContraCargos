@@ -28,7 +28,6 @@ import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
 import mx.com.nmp.pagos.mimonte.dss.DSSModule;
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
-import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
@@ -37,6 +36,7 @@ import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.exception.TarjetaException;
 import mx.com.nmp.pagos.mimonte.exception.TarjetaIdentifierException;
 import mx.com.nmp.pagos.mimonte.model.Pago;
+import mx.com.nmp.pagos.mimonte.model.PagoPartidas;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
@@ -94,9 +94,10 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	@Value("${mimonte.variables.cantidad-maxima-partidas}")
 	private int cantidadMaximaPartidas;
-	
+
 	/**
-	 * Metodo que se encarga de guardar nuevos pagos, y algunas veces tarjetas y clientes
+	 * Metodo que se encarga de guardar nuevos pagos, y algunas veces tarjetas y
+	 * clientes
 	 * 
 	 * @throws SQLException
 	 * @throws NumberFormatException
@@ -111,7 +112,7 @@ public class PagoServiceImpl implements PagoService {
 			throws DataIntegrityViolationException, NumberFormatException, SQLDataException, SQLException {
 		LOG.debug("Ingreso al servicio: savePago(PagoRequestDTO pagoRequestDTO)");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
-		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
+		List<EstatusPagoResponseDTO> estatus;
 		LOG.debug("Intentando obtener un numero de afiliacion");
 		// DSS invocation
 		TipoAutorizacionDTO tipoAutorizacionDTO = dssModule.getNoAfiliacion(pagoRequestDTO);
@@ -170,29 +171,14 @@ public class PagoServiceImpl implements PagoService {
 		if (null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty()) {
 			LOG.debug("Se iteraran operaciones dentro de pagoRequestDTO");
 			if (null != flag && flag == 0) {
-				for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
-					try {
-						pago = PagoBuilder.buildPagoFromObject(operacion,
-								(null != pagoRequestDTO && null != pagoRequestDTO.getGuardaTarjeta()
-										&& pagoRequestDTO.getGuardaTarjeta()) ? pagoRequestDTO.getTarjeta() : null,
-								cl, pagoRequestDTO.getIdTransaccionMidas());
-						pago.setIdTipoAutorizacion(pagoResponseDTO.getIdTipoAfiliacion());
-						pagoRepository.save(pago);
-						// Los estatus siguientes EstatusOperacion.XXXX son identicos a los del catalogo
-						// de estatus de transaccion de la base de datos, se hace por medio de un enum
-						// para
-						// quitar carga de trabajo al servidor
-						estatusPagos.add(new EstatusPagoResponseDTO(
-								EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
-						LOG.debug("Se agrego operacion correcta: {}", operacion);
-					} catch (Exception ex) {
-						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(),
-								operacion.getFolioContrato()));
-						LOG.error("Se agrego operacion fallida: {}", operacion);
-						LOG.warn(PagoConstants.ROLL_BACK_EXCEPCION_MESSAGE.concat(" : ").concat(ex.getMessage()));
-						globalStatus = false;
-						throw new PagoException(PagoConstants.ROLL_BACK_EXCEPCION_MESSAGE);
-					}
+				try {
+					pago = PagoBuilder.buildPagoFromPagoRequestDTO(pagoRequestDTO, cl);
+					pago.setIdTipoAutorizacion(pagoResponseDTO.getIdTipoAfiliacion());
+					pagoRepository.save(pago);
+				} catch (Exception ex) {
+					LOG.warn(PagoConstants.ROLL_BACK_EXCEPCION_MESSAGE.concat(" : ").concat(ex.getMessage()));
+					globalStatus = false;
+					throw new PagoException(PagoConstants.ROLL_BACK_EXCEPCION_MESSAGE);
 				}
 			} else if (null == flag) {
 				throw new PagoException(PagoConstants.MSG_CAN_NO_CHECK_IF_PAGO_EXISTS);
@@ -200,13 +186,19 @@ public class PagoServiceImpl implements PagoService {
 				throw new PagoException(PagoConstants.TRANSACTION_ID_ALREADY_EXISTS);
 			}
 			pagoResponseDTO.setExitoso(globalStatus);
+			if (globalStatus) {
+				estatus = new ArrayList<>();
+				for (PagoPartidas partidas : pago.getPagoPartidasList()) {
+					estatus.add(new EstatusPagoResponseDTO(EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(),
+							partidas.getFolioPartida().toString()));
+				}
+				pagoResponseDTO.setEstatusPagos(estatus);
+			}
 		} else {
 			LOG.error("Objeto pagoRequestDTO.getOperaciones() es nulo o es vacio!");
 			pagoResponseDTO.setExitoso(false);
 			throw new PagoException(PagoConstants.NO_OPERATIONS_MESSAGE);
 		}
-
-		pagoResponseDTO.setEstatusPagos(estatusPagos);
 		return pagoResponseDTO;
 	}
 

@@ -1,59 +1,48 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Nombre: PagoDTO Descripcion: Clase que encapsula la informacion perteneciente
- * a un pago.
+ * @name PagoDTO
+ * @description Clase que encapsula la informacion perteneciente a un pago.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
- * @Fecha 21/11/2018 13:25 hrs.
+ * @creationDate 21/11/2018 13:25 hrs.
  * @version 0.1
  */
 public class PagoDTO {
 
+	private Long id;
 	private ClienteDTO cliente;
 	private TarjetaDTO tarjeta;
 	private EstatusPagoDTO estatusPago;
 	private Date fechaCreacion;
 	private Date fechaTarnsaccion;
-	private Double monto;
-	private Long id;
-	private String autorizacion;
-	private String metodo;
-	private String idOpenPay;
-	private String descripcion;
-	private String idOrder;
-	private String restResponse;
+	private BigDecimal monto;
+	private String concepto;
 	private Long idTransaccionMidas;
-	private Long folioPartida;
-	private Long idOperacion;
 
 	public PagoDTO() {
 		super();
 	}
 
-	public PagoDTO(ClienteDTO cliente, TarjetaDTO tarjeta, EstatusPagoDTO estatusPago, Date fechaCreacion,
-			Date fechaTarnsaccion, Double monto, Long id, String autorizacion, String metodo, String idOpenPay,
-			String descripcion, String idOrder, String restResponse, Long idTransaccionMidas, Long folioPartida,
-			Long idOperacion) {
+	public PagoDTO(Long id, ClienteDTO cliente, TarjetaDTO tarjeta, EstatusPagoDTO estatusPago, Date fechaCreacion,
+			Date fechaTarnsaccion, BigDecimal monto, String concepto, Long idTransaccionMidas) {
 		super();
+		this.id = id;
 		this.cliente = cliente;
 		this.tarjeta = tarjeta;
 		this.estatusPago = estatusPago;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaTarnsaccion = fechaTarnsaccion;
 		this.monto = monto;
-		this.id = id;
-		this.autorizacion = autorizacion;
-		this.metodo = metodo;
-		this.idOpenPay = idOpenPay;
-		this.descripcion = descripcion;
-		this.idOrder = idOrder;
-		this.restResponse = restResponse;
+		this.concepto = concepto;
 		this.idTransaccionMidas = idTransaccionMidas;
-		this.folioPartida = folioPartida;
-		this.idOperacion = idOperacion;
 	}
 
 	public ClienteDTO getCliente() {
@@ -88,11 +77,11 @@ public class PagoDTO {
 		this.fechaTarnsaccion = fechaTarnsaccion;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 
@@ -112,54 +101,6 @@ public class PagoDTO {
 		this.estatusPago = estatusPago;
 	}
 
-	public String getAutorizacion() {
-		return autorizacion;
-	}
-
-	public void setAutorizacion(String autorizacion) {
-		this.autorizacion = autorizacion;
-	}
-
-	public String getMetodo() {
-		return metodo;
-	}
-
-	public void setMetodo(String metodo) {
-		this.metodo = metodo;
-	}
-
-	public String getIdOpenPay() {
-		return idOpenPay;
-	}
-
-	public void setIdOpenPay(String idOpenPay) {
-		this.idOpenPay = idOpenPay;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getIdOrder() {
-		return idOrder;
-	}
-
-	public void setIdOrder(String idOrder) {
-		this.idOrder = idOrder;
-	}
-
-	public String getRestResponse() {
-		return restResponse;
-	}
-
-	public void setRestResponse(String restResponse) {
-		this.restResponse = restResponse;
-	}
-
 	public Long getIdTransaccionMidas() {
 		return idTransaccionMidas;
 	}
@@ -168,29 +109,19 @@ public class PagoDTO {
 		this.idTransaccionMidas = idTransaccionMidas;
 	}
 
-	public Long getFolioPartida() {
-		return folioPartida;
+	public String getConcepto() {
+		return concepto;
 	}
 
-	public void setFolioPartida(Long folioPartida) {
-		this.folioPartida = folioPartida;
-	}
-
-	public Long getIdOperacion() {
-		return idOperacion;
-	}
-
-	public void setIdOperacion(Long idOperacion) {
-		this.idOperacion = idOperacion;
+	public void setConcepto(String concepto) {
+		this.concepto = concepto;
 	}
 
 	@Override
 	public String toString() {
-		return "PagoDTO [cliente=" + cliente + ", tarjeta=" + tarjeta + ", estatusPago=" + estatusPago
+		return "PagoDTO [id=" + id + ", cliente=" + cliente + ", tarjeta=" + tarjeta + ", estatusPago=" + estatusPago
 				+ ", fechaCreacion=" + fechaCreacion + ", fechaTarnsaccion=" + fechaTarnsaccion + ", monto=" + monto
-				+ ", id=" + id + ", autorizacion=" + autorizacion + ", metodo=" + metodo + ", idOpenPay=" + idOpenPay
-				+ ", descripcion=" + descripcion + ", idOrder=" + idOrder + ", restResponse=" + restResponse
-				+ ", idTransaccionMidas=" + idTransaccionMidas + ", folioPartida=" + folioPartida + ", idOperacion="
-				+ idOperacion + "]";
+				+ ", concepto=" + concepto + ", idTransaccionMidas=" + idTransaccionMidas + "]";
 	}
+
 }

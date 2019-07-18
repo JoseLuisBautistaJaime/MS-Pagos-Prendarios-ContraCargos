@@ -1,19 +1,25 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Nombre: PagoRequestDTO Descripcion: Clase que encapsula la informacion
- * perteneciente a un pago.
+ * @name PagoRequestDTO
+ * @description Clase que encapsula la informacion perteneciente a un pago.
  *
- * @author Ismael Flores iaguilar@quarksoft.net Fecha: 20/11/2018 12:56 hrs.
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 20/11/2018 12:56 hrs.
  * @version 0.1
  */
 public class PagoRequestDTO {
 
 	private List<OperacionDTO> operaciones;
 	private TarjetaPagoDTO tarjeta;
-	private Double montoTotal;
+	private BigDecimal montoTotal;
 	private Boolean guardaTarjeta;
 	private Long idCliente;
 	private String concepto;
@@ -23,7 +29,7 @@ public class PagoRequestDTO {
 		super();
 	}
 
-	public PagoRequestDTO(List<OperacionDTO> operaciones, TarjetaPagoDTO tarjeta, Double montoTotal,
+	public PagoRequestDTO(List<OperacionDTO> operaciones, TarjetaPagoDTO tarjeta, BigDecimal montoTotal,
 			Boolean guardaTarjeta, Long idCliente, String concepto, String idTransaccionMidas) {
 		super();
 		this.operaciones = operaciones;
@@ -51,11 +57,11 @@ public class PagoRequestDTO {
 		this.tarjeta = tarjeta;
 	}
 
-	public Double getMontoTotal() {
+	public BigDecimal getMontoTotal() {
 		return montoTotal;
 	}
 
-	public void setMontoTotal(Double montoTotal) {
+	public void setMontoTotal(BigDecimal montoTotal) {
 		this.montoTotal = montoTotal;
 	}
 

@@ -259,38 +259,48 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 -- Table `to_pagos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `to_pagos` (
+CREATE TABLE `to_pagos` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_cliente` BIGINT(20) UNSIGNED NOT NULL,
-  `fecha_transaccion` DATETIME NULL DEFAULT NULL,
-  `monto` DOUBLE NULL DEFAULT NULL,
-  `autorizacion` VARCHAR(100) NULL DEFAULT NULL,
-  `metodo` VARCHAR(45) NULL DEFAULT NULL,
-  `tarjeta` VARCHAR(4) NULL DEFAULT NULL,
-  `id_openpay` VARCHAR(100) NULL DEFAULT NULL,
-  `fecha_creacion` DATETIME NULL DEFAULT NULL,
-  `descripcion` VARCHAR(200) NULL DEFAULT NULL,
-  `id_order` VARCHAR(100) NULL DEFAULT NULL,
-  `id_estatus_transaccion` INT(11) NULL DEFAULT NULL,
-  `rest_response` VARCHAR(400) NULL DEFAULT NULL,
-  `id_transaccion_midas` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
-  `folio_partida` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
-  `id_operacion` INT(11) NULL DEFAULT NULL,
-  `id_tipo_autorizacion` INT(11) NULL,
+  `fecha_transaccion` DATETIME DEFAULT NULL,
+  `monto_total` DECIMAL(16,4) DEFAULT NULL,
+  `tarjeta` VARCHAR(4) DEFAULT NULL,
+  `fecha_creacion` DATETIME DEFAULT NULL,
+  `concepto` VARCHAR(200) DEFAULT NULL,
+  `id_estatus_transaccion` INT(11) DEFAULT NULL,
+  `id_transaccion_midas` BIGINT(20) UNSIGNED DEFAULT NULL,
+  `id_tipo_autorizacion` INT(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `cliente_transacion_fk_idx` (`id_cliente` ASC),
-  INDEX `idx_id_transaccion_midas` (`id_transaccion_midas` ASC),
-  INDEX `idx_folio_partida` (`folio_partida` ASC),
-  INDEX `idx_id_operacion` (`id_operacion` ASC),
-  CONSTRAINT `fk_cliente_id`
-    FOREIGN KEY (`id_cliente`)
-    REFERENCES `tk_cliente` (`id_cliente`),
+  INDEX `cliente_transacion_fk_idx` (`id_cliente`),
+  INDEX `idx_id_transaccion_midas` (`id_transaccion_midas`),
+  INDEX `ctr_estatus_pago_fk` (`id_estatus_transaccion`),
   CONSTRAINT `ctr_estatus_pago_fk`
-    FOREIGN KEY (`id_estatus_transaccion`)
-    REFERENCES `tk_estatus_pago` (id))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
+	FOREIGN KEY (`id_estatus_transaccion`)
+    REFERENCES `tk_estatus_pago` (`id`),
+  CONSTRAINT `fk_cliente_id`
+	FOREIGN KEY (`id_cliente`)
+	REFERENCES `tk_cliente` (`id_cliente`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- -----------------------------------------------------
+-- Table `to_pagos_partidas`
+-- -----------------------------------------------------
+CREATE TABLE `to_pagos_partidas` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `folio_partida` BIGINT(20) UNSIGNED NOT NULL,
+  `id_operacion` INT(11) NOT NULL,
+  `nombre_operacion` VARCHAR(200) DEFAULT NULL,
+  `id_pago` BIGINT(20) UNSIGNED NOT NULL,
+  `monto` DECIMAL(16,4) NOT NULL,
+ PRIMARY KEY (`id`),
+ INDEX `idx_pagos_partidas_id` (`id`),
+ INDEX `idx_pagos_partidas_folio_partida` (`folio_partida`),
+ INDEX `idx_pagos_partidas_id_operacion` (`id_operacion`),
+ INDEX `idx_pagos_partidas_id_pago` (`id_pago`),
+ CONSTRAINT `ctr_id_pago`
+	FOREIGN KEY (`id_pago`)
+    REFERENCES `to_pagos` (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- -----------------------------------------------------
 -- Table `tr_regla_negocio_variable`

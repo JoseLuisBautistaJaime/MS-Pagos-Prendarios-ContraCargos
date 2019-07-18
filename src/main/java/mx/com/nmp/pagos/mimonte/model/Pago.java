@@ -4,7 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,12 +17,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Nombre: Pago Descripcion: Entidad que representa un pago dentro del sistema.
+ * @name Pago
+ * @description Entidad que representa un pago dentro del sistema.
  *
- * @author Ismael Flores iaguilar@quarksoft.net Fecha: 21/11/2018 13:36 hrs.
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 21/11/2018 13:36 hrs.
  * @version 0.1
  */
 @Entity
@@ -29,53 +34,6 @@ public class Pago {
 
 	public Pago() {
 		super();
-	}
-
-	public Pago(Long id, Cliente cliente, Date fechaTarnsaccion, Double monto, String autorizacion, String metodo,
-			String tarjeta, String idOpenPay, Date fechaCreacion, String descripcion, String idOrder,
-			EstatusPagos estatusPago, String restResponse, Long idTransaccionMidas, Long folioPartida,
-			Integer idOperacion, Integer idTipoAutorizacion) {
-		super();
-		this.id = id;
-		this.cliente = cliente;
-		this.fechaTarnsaccion = fechaTarnsaccion;
-		this.monto = monto;
-		this.autorizacion = autorizacion;
-		this.metodo = metodo;
-		this.tarjeta = tarjeta;
-		this.idOpenPay = idOpenPay;
-		this.fechaCreacion = fechaCreacion;
-		this.descripcion = descripcion;
-		this.idOrder = idOrder;
-		this.estatusPago = estatusPago;
-		this.restResponse = restResponse;
-		this.idTransaccionMidas = idTransaccionMidas;
-		this.folioPartida = folioPartida;
-		this.idOperacion = idOperacion;
-		this.idTipoAutorizacion = idTipoAutorizacion;
-	}
-
-	public Pago(Long id, Cliente cliente, Date fechaTarnsaccion, Double monto, String autorizacion, String metodo,
-			String tarjeta, String idOpenPay, Date fechaCreacion, String descripcion, String idOrder,
-			EstatusPagos estatusPago, String restResponse, Long idTransaccionMidas, Long folioPartida,
-			Integer idOperacion) {
-		super();
-		this.id = id;
-		this.cliente = cliente;
-		this.fechaTarnsaccion = fechaTarnsaccion;
-		this.monto = monto;
-		this.autorizacion = autorizacion;
-		this.metodo = metodo;
-		this.tarjeta = tarjeta;
-		this.idOpenPay = idOpenPay;
-		this.fechaCreacion = fechaCreacion;
-		this.descripcion = descripcion;
-		this.idOrder = idOrder;
-		this.estatusPago = estatusPago;
-		this.restResponse = restResponse;
-		this.idTransaccionMidas = idTransaccionMidas;
-		this.folioPartida = folioPartida;
-		this.idOperacion = idOperacion;
 	}
 
 	@Id
@@ -90,48 +48,55 @@ public class Pago {
 	@Column(name = "fecha_transaccion", nullable = true)
 	private Date fechaTarnsaccion;
 
-	@Column(name = "monto", nullable = true)
-	private Double monto;
-
-	@Column(name = "autorizacion", nullable = true)
-	private String autorizacion;
-
-	@Column(name = "metodo", nullable = true)
-	private String metodo;
+	@Column(name = "monto_total", nullable = true)
+	private BigDecimal monto;
 
 	@Column(name = "tarjeta", nullable = true)
 	private String tarjeta;
 
-	@Column(name = "id_openpay", nullable = true)
-	private String idOpenPay;
-
 	@Column(name = "fecha_creacion", nullable = true)
 	private Date fechaCreacion;
 
-	@Column(name = "descripcion", nullable = true)
-	private String descripcion;
-
-	@Column(name = "id_order", nullable = true)
-	private String idOrder;
+	@Column(name = "concepto", nullable = true)
+	private String concepto;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "id_estatus_transaccion", nullable = true)
 	private EstatusPagos estatusPago;
 
-	@Column(name = "rest_response", nullable = true)
-	private String restResponse;
-
 	@Column(name = "id_transaccion_midas", nullable = true)
 	private Long idTransaccionMidas;
 
-	@Column(name = "folio_partida", nullable = true)
-	private Long folioPartida;
-
-	@Column(name = "id_operacion", nullable = true)
-	private Integer idOperacion;
-
 	@Column(name = "id_tipo_autorizacion", nullable = true)
 	private Integer idTipoAutorizacion;
+
+	@OneToMany(mappedBy = "pagos", cascade = CascadeType.PERSIST)
+	private List<PagoPartidas> pagoPartidasList;
+
+	public Pago(Long id, Cliente cliente, Date fechaTarnsaccion, BigDecimal monto, String tarjeta, Date fechaCreacion,
+			String concepto, EstatusPagos estatusPago, Long idTransaccionMidas, Integer idTipoAutorizacion,
+			List<PagoPartidas> pagoPartidasList) {
+		super();
+		this.id = id;
+		this.cliente = cliente;
+		this.fechaTarnsaccion = fechaTarnsaccion;
+		this.monto = monto;
+		this.tarjeta = tarjeta;
+		this.fechaCreacion = fechaCreacion;
+		this.concepto = concepto;
+		this.estatusPago = estatusPago;
+		this.idTransaccionMidas = idTransaccionMidas;
+		this.idTipoAutorizacion = idTipoAutorizacion;
+		this.pagoPartidasList = pagoPartidasList;
+	}
+
+	public List<PagoPartidas> getPagoPartidasList() {
+		return pagoPartidasList;
+	}
+
+	public void setPagoPartidasList(List<PagoPartidas> pagoPartidasList) {
+		this.pagoPartidasList = pagoPartidasList;
+	}
 
 	public Cliente getCliente() {
 		return cliente;
@@ -165,11 +130,11 @@ public class Pago {
 		this.fechaTarnsaccion = fechaTarnsaccion;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 
@@ -189,52 +154,12 @@ public class Pago {
 		this.estatusPago = estatusPago;
 	}
 
-	public String getAutorizacion() {
-		return autorizacion;
+	public String getConcepto() {
+		return concepto;
 	}
 
-	public void setAutorizacion(String autorizacion) {
-		this.autorizacion = autorizacion;
-	}
-
-	public String getMetodo() {
-		return metodo;
-	}
-
-	public void setMetodo(String metodo) {
-		this.metodo = metodo;
-	}
-
-	public String getIdOpenPay() {
-		return idOpenPay;
-	}
-
-	public void setIdOpenPay(String idOpenPay) {
-		this.idOpenPay = idOpenPay;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getIdOrder() {
-		return idOrder;
-	}
-
-	public void setIdOrder(String idOrder) {
-		this.idOrder = idOrder;
-	}
-
-	public String getRestResponse() {
-		return restResponse;
-	}
-
-	public void setRestResponse(String restResponse) {
-		this.restResponse = restResponse;
+	public void setConcepto(String concepto) {
+		this.concepto = concepto;
 	}
 
 	public Long getIdTransaccionMidas() {
@@ -243,22 +168,6 @@ public class Pago {
 
 	public void setIdTransaccionMidas(Long idTransaccionMidas) {
 		this.idTransaccionMidas = idTransaccionMidas;
-	}
-
-	public Long getFolioPartida() {
-		return folioPartida;
-	}
-
-	public void setFolioPartida(Long folioPartida) {
-		this.folioPartida = folioPartida;
-	}
-
-	public Integer getIdOperacion() {
-		return idOperacion;
-	}
-
-	public void setIdOperacion(Integer idOperacion) {
-		this.idOperacion = idOperacion;
 	}
 
 	public Integer getIdTipoAutorizacion() {
@@ -272,11 +181,9 @@ public class Pago {
 	@Override
 	public String toString() {
 		return "Pago [id=" + id + ", cliente=" + cliente + ", fechaTarnsaccion=" + fechaTarnsaccion + ", monto=" + monto
-				+ ", autorizacion=" + autorizacion + ", metodo=" + metodo + ", tarjeta=" + tarjeta + ", idOpenPay="
-				+ idOpenPay + ", fechaCreacion=" + fechaCreacion + ", descripcion=" + descripcion + ", idOrder="
-				+ idOrder + ", estatusPago=" + estatusPago + ", restResponse=" + restResponse + ", idTransaccionMidas="
-				+ idTransaccionMidas + ", folioPartida=" + folioPartida + ", idOperacion=" + idOperacion
-				+ ", idTipoAutorizacion=" + idTipoAutorizacion + "]";
+				+ ", tarjeta=" + tarjeta + ", fechaCreacion=" + fechaCreacion + ", concepto=" + concepto
+				+ ", estatusPago=" + estatusPago + ", idTransaccionMidas=" + idTransaccionMidas
+				+ ", idTipoAutorizacion=" + idTipoAutorizacion + ", pagoPartidasList=" + pagoPartidasList + "]";
 	}
 
 }
