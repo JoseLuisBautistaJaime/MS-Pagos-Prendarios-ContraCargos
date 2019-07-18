@@ -40,14 +40,10 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 	private ReporteObserver reporteObserver;
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#getConciliacionByFolio(
-	 * java.lang.Integer)
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#getConciliacionByFolio(java.lang.Integer, java.lang.Integer)
 	 */
-	public Conciliacion getConciliacionByFolio(Integer folio) throws ConciliacionException {
+	public Conciliacion getConciliacionByFolio(Integer folio, Integer idStatusConciliacion) throws ConciliacionException {
 
 		Conciliacion conciliacion = null;
 		try {
@@ -61,6 +57,9 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 		if (conciliacion == null) {
 			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
 					CodigoError.NMP_PMIMONTE_BUSINESS_045);
+		}
+		if (idStatusConciliacion != null && conciliacion.getEstatus().getId() != idStatusConciliacion) {
+			throw new ConciliacionException("Conciliacion con estado incorrecto", CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
 
 		return conciliacion;

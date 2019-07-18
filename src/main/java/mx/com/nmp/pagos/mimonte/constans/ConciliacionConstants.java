@@ -326,8 +326,6 @@ public final class ConciliacionConstants {
 	public static final Long SUBESTATUS_CONCILIACION_ERROR = 15L;
 	public static final Long SUBESTATUS_CONCILIACION_FINALIZADA = 16L;
 
-	public static final String CONCEPTO_LIQUIDACION = "LIQ"; // TODO: Pendiente
-
 	// Estatus devoluciones
 	public static final Integer ESTATUS_DEVOLUCION_PENDIENTE = 1;
 	public static final Integer ESTATUS_DEVOLUCION_SOLICITADA = 2;
@@ -341,18 +339,6 @@ public final class ConciliacionConstants {
 	// Tipo de contacts
 	public static final Long TIPO_CONTACTO_MIDAS = 1l;
 	public static final Long TIPO_CONTACTO_ENTIDAD = 2l;
-
-	/**
-	 * Valor constante que es enviado como parametro de consulta para discrimnacion
-	 * por estatus de conciliacion en proceso
-	 */
-	public static final String CONCILIACION_EN_PROCESO_VALUE = "proceso";
-
-	/**
-	 * Valor constante que es enviado como parametro de consulta para discrimnacion
-	 * por estatus de devolucioniquidada
-	 */
-	public static final String DEVOLUCION_LIQUIDAD_VALUE = "liquidada";
 
 	/**
 	 * Mensaje que es mostrado cuando se desea actualizar un sub estatus que no

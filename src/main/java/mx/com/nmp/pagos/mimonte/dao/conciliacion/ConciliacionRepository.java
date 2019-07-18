@@ -120,7 +120,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query(nativeQuery = true, value= "SELECT " + 
 			"(SELECT COUNT(*) " + 
 			"FROM to_conciliacion " + 
-			"	WHERE id_estatus_conciliacion LIKE '%:estatusConcProcesada%' " + 
+			"	WHERE id_estatus_conciliacion = :estatusConcProcesada " + 
 			"		AND " + 
 			"			CASE " + 
 			"				WHEN last_modified_date IS NOT NULL " + 
@@ -129,13 +129,13 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			"	) AS en_proceso, " + 
 			"(SELECT COUNT(*) " + 
 			"	FROM to_movimiento_devolucion " + 
-			"	WHERE estatus LIKE '%:estatusDevLiquidada%' " + 
+			"	WHERE estatus = :estatusDevLiquidada " + 
 			"		AND fecha BETWEEN :fechaIncial AND :fechaFinal " + 
 			"    ) AS dev_liquidadas, " + 
 			"(SELECT COUNT(*) " + 
 			"	FROM to_conciliacion " + 
 			"    ) AS conc_totales;")
-	public Map<String, BigInteger> resumenConciliaciones(@Param("fechaIncial") Date fechaIncial, @Param("fechaFinal") Date fechaFinal, @Param("estatusConcProcesada") final String estatusConcProcesada, @Param("estatusDevLiquidada") final String estatusDevLiquidada);
+	public Map<String, BigInteger> resumenConciliaciones(@Param("fechaIncial") Date fechaIncial, @Param("fechaFinal") Date fechaFinal, @Param("estatusConcProcesada") final Integer estatusConcProcesada, @Param("estatusDevLiquidada") final Integer estatusDevLiquidada);
 	
 	/**
 	 * Regresa un mapa con tres valores, [en_proceso]: Con el total de las conciliaciones en proceso, [dev_liquidadas]: Con el total de las devoluciones liquidadas y [conc_totales]: Con el total de conciliaciones
@@ -146,16 +146,16 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query(nativeQuery = true, value = "SELECT " + 
 			"(SELECT COUNT(*) " + 
 			"FROM to_conciliacion " + 
-			"	WHERE id_estatus_conciliacion LIKE '%:estatusConcProcesada%' " + 
+			"	WHERE id_estatus_conciliacion = :estatusConcProcesada " + 
 			"	) AS en_proceso, " + 
 			"(SELECT COUNT(*) " + 
 			"	FROM to_movimiento_devolucion " + 
-			"	WHERE estatus LIKE '%:estatusDevLiquidada%' " + 
+			"	WHERE estatus = :estatusDevLiquidada " + 
 			"    ) AS dev_liquidadas, " + 
 			"(SELECT COUNT(*) " + 
 			"	FROM to_conciliacion " + 
 			"    ) AS conc_totales;")
-	public Map<String, BigInteger> resumenConciliaciones(@Param("folio") final String estatusConcProcesada, @Param("estatusDevLiquidada") final String estatusDevLiquidada);
+	public Map<String, BigInteger> resumenConciliaciones(@Param("estatusConcProcesada") final Integer estatusConcProcesada, @Param("estatusDevLiquidada") final Integer estatusDevLiquidada);
 	
 	/**
 	 * Regresa el id de estatus de una conciliacion dependiendo de su id de subestatus

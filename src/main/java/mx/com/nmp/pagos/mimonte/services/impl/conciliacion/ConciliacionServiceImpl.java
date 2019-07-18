@@ -536,11 +536,11 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		if (null != resumenConciliacionRequestDTO.getFechaInicial()
 				&& null != resumenConciliacionRequestDTO.getFechaFinal()) {
 			res = conciliacionRepository.resumenConciliaciones(resumenConciliacionRequestDTO.getFechaInicial(),
-					resumenConciliacionRequestDTO.getFechaFinal(), ConciliacionConstants.CONCILIACION_EN_PROCESO_VALUE,
-					ConciliacionConstants.DEVOLUCION_LIQUIDAD_VALUE);
+					resumenConciliacionRequestDTO.getFechaFinal(), ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
+					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
 		} else {
-			conciliacionRepository.resumenConciliaciones(ConciliacionConstants.CONCILIACION_EN_PROCESO_VALUE,
-					ConciliacionConstants.DEVOLUCION_LIQUIDAD_VALUE);
+			conciliacionRepository.resumenConciliaciones(ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
+					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
 		}
 		if (null != res && !res.isEmpty())
 			resumenConciliacionDTO = new ResumenConciliacionDTO(res.get("en_proceso").longValue(),

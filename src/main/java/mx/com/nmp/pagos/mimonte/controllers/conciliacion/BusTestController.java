@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.soap.MessageFactory;
@@ -158,9 +156,7 @@ public class BusTestController {
 		movsTransaccion.setFolio(request.getFolio() != null ? request.getFolio().intValue() : 0);
 		movsTransaccion.setMovimientos(movimientos);
 		
-		movimientosController.saveMovimientosProvedor(movsTransaccion, userRequest);
-		
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", null);
+		return movimientosController.saveMovimientosProvedor(movsTransaccion, userRequest);
 	}
 
 
@@ -219,8 +215,34 @@ public class BusTestController {
 		List<MovimientoMidasRequestDTO> movimientos = new ArrayList<MovimientoMidasRequestDTO>();
 		if (CollectionUtils.isNotEmpty(movsMidas)) {
 			for (MovimientoConciliacionNocturna movMidas : movsMidas) {
-				MovimientoMidasRequestDTO moMidasDTO = new MovimientoMidasRequestDTO();
-				movsMidas.add(movMidas);
+				MovimientoMidasRequestDTO movMidasDTO = new MovimientoMidasRequestDTO();
+				movMidasDTO.setCapitalActual(movMidas.getCapitalActual().getValue());
+				movMidasDTO.setCodigoError(movMidas.getCodigoError().getValue());
+				movMidasDTO.setComisiones(movMidas.getComisiones().getValue());
+				movMidasDTO.setConsumidor(movMidas.getIdConsumidor().getValue() != null ? movMidas.getIdConsumidor().getValue().toString() : null);
+				movMidasDTO.setEstadoTransaccion(movMidas.getEstadoTransaccion().getValue());
+				//movMidasDTO.setEstatus(movMidas.getE); // TODO: Status
+				movMidasDTO.setFecha(movMidas.getFecha().getValue().toGregorianCalendar().getTime());
+				movMidasDTO.setFolioPartida(movMidas.getFolioPartida().getValue());
+				movMidasDTO.setIdOperacion(movMidas.getIdOperacion().getValue());
+				movMidasDTO.setIdTarjeta(movMidas.getIdTarjeta().getValue());
+				movMidasDTO.setIdTipoContrato(movMidas.getIdTipoContrato().getValue());
+				movMidasDTO.setImporteTransaccion(movMidas.getImporteTransaccion().getValue());
+				movMidasDTO.setInteres(movMidas.getInteres().getValue());
+				movMidasDTO.setMarcaTarjeta(movMidas.getMarcaTarjeta().getValue());
+				movMidasDTO.setMensajeError(movMidas.getMensajeError().getValue());
+				movMidasDTO.setMonedaPago(movMidas.getMonedaPago().getValue());
+				movMidasDTO.setMontoOperacion(movMidas.getMontoOperacion().getValue());
+				movMidasDTO.setNumAutorizacion(movMidas.getNumAutorizacion().getValue());
+				movMidasDTO.setOperacionAbr(movMidas.getOperacionAbr().getValue());
+				movMidasDTO.setOperacionDesc(movMidas.getOperacionDesc().getValue());
+				movMidasDTO.setSucursal(movMidas.getSucursal().getValue());
+				movMidasDTO.setTarjeta(movMidas.getTarjeta().getValue());
+				movMidasDTO.setTipoContratoAbr(movMidas.getTipoContratoAbr().getValue());
+				movMidasDTO.setTipoContratoDesc(movMidas.getTipoContratoDesc().getValue());
+				movMidasDTO.setTipoTarjeta(movMidas.getTipoTarjeta().getValue());
+				movMidasDTO.setTransaccion(movMidas.getTransaccion().getValue());
+				movimientos.add(movMidasDTO);
 			}
 		}
 
@@ -231,9 +253,7 @@ public class BusTestController {
 		movsDTO.setMovimientos(movimientos);
 		
 		
-		this.movimientosController.saveMovimientosNocturnos(movsDTO, userRequest);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta exitosa", null);
+		return this.movimientosController.saveMovimientosNocturnos(movsDTO, userRequest);
 	}
 
 

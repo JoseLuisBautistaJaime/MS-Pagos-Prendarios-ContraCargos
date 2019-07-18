@@ -23,10 +23,11 @@ public interface ConciliacionHelper {
 	/**
 	 * Obtiene y valida si la conciliacion existe
 	 * @param folio
+	 * @param idEstatusConciliacion
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public Conciliacion getConciliacionByFolio(Integer folio) throws ConciliacionException;
+	public Conciliacion getConciliacionByFolio(Integer folio, Integer idEstatusConciliacion) throws ConciliacionException;
 
 	/**
 	 * Se encarga de generar/regenerar la conciliacion en base a el(los) reporte(s) recibido(s)

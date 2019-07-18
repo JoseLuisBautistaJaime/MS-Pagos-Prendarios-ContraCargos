@@ -156,7 +156,12 @@ public class MovimientosMidasService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void save(MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosDTOList,
 			String userRequest) {
-		Reporte reporte = buildReporte(movimientoProcesosNocturnosDTOList.getFolio(),
+		
+		// Se valida que exista la conciliacion
+		Integer folio = movimientoProcesosNocturnosDTOList.getFolio();
+		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio, ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
+
+		Reporte reporte = buildReporte(conciliacion.getId(),
 				movimientoProcesosNocturnosDTOList.getFechaDesde(), movimientoProcesosNocturnosDTOList.getFechaHasta(),
 				userRequest);
 		if (null == reporte)
@@ -172,12 +177,13 @@ public class MovimientosMidasService {
 							movimientoProcesosNocturnosDTOList, reporte.getId());
 			movimientosMidasRepository.saveAll(movimientoMidasList);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
 					CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		}
 
 		// Notificar cambios o alta de reportes, si existen...
-		this.conciliacionHelper.generarConciliacion(movimientoProcesosNocturnosDTOList.getFolio(), Arrays.asList(reporte));
+		this.conciliacionHelper.generarConciliacion(folio, Arrays.asList(reporte));
 	}
 
 	/**
