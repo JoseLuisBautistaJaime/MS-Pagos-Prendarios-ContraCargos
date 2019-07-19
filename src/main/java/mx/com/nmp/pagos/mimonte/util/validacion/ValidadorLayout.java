@@ -4,10 +4,11 @@
  */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
-
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 
 /**
@@ -49,7 +50,7 @@ public interface ValidadorLayout {
 	 * @return
 	 */
 	public static boolean validateLong(Long folio) {
-		return folio > 0L;
+		return null != folio && folio > 0L;
 	}
 	/**
 	 * Valida que la lista de layoutDTOs sea mayor a cero
@@ -67,7 +68,15 @@ public interface ValidadorLayout {
 	 * @return
 	 */
 	public static boolean validateSaveLayout(LayoutDTO layoutDTO) {
-		return layoutDTO.getFolio() > 0L && !layoutDTO.getTipoLayout().toString().equals("") && layoutDTO.getLineas().size() > 0;
+		return null != layoutDTO &&
+				(null != layoutDTO.getFolio() && layoutDTO.getFolio()>0L) &&
+				(null != layoutDTO.getTipoLayout() && layoutDTO.getTipoLayout().toString().length()!=0) &&
+				((layoutDTO.getTipoLayout().toString().equals(TipoLayoutEnum.PAGOS.toString())) ||
+				(layoutDTO.getTipoLayout().toString().equals(TipoLayoutEnum.COMISIONES_MOV.toString())) ||
+				(layoutDTO.getTipoLayout().toString().equals(TipoLayoutEnum.COMISIONES_GENERALES.toString())) ||
+				(layoutDTO.getTipoLayout().toString().equals(TipoLayoutEnum.DEVOLUCIONES.toString()))) &&
+				validaLineas(layoutDTO.getLineas());
+				
 	}
     /**
      *Valida que el folio e idLayout sea mayor a cero
@@ -78,6 +87,45 @@ public interface ValidadorLayout {
      */
 	public static boolean validateDeleteLayout(Long folio, Long idLayout) {
 		return folio > 0L && idLayout > 0L;
+    }
+	
+	/**
+	 * Valida las líneas de un Layout
+	 * 
+	 * @param layoutLineaDTOs
+	 * @return
+	 */
+	public static boolean validaLineas(List<LayoutLineaDTO> layoutLineaDTOs) {
+		boolean valor = false;
+		if(null != layoutLineaDTOs && layoutLineaDTOs.size()>0) {
+				for(LayoutLineaDTO layoutLineaDTO : layoutLineaDTOs) {
+					if(validar(layoutLineaDTO)) {
+						valor = true;
+					}
+					else {
+						valor = false;
+						break;
+					}
+				}
+		}
+		return valor;
 	}
 	
+	/**
+	 * Valida los campos requeridos de LayoutLineaDTO
+	 *  
+	 * @param layoutLineaDTO
+	 * @return
+	 */
+	public static boolean validar(LayoutLineaDTO layoutLineaDTO) {
+		return null != layoutLineaDTO &&
+			   (null != layoutLineaDTO.getId() && layoutLineaDTO.getId()>=0L) && 
+			   (null != layoutLineaDTO.getLinea() && layoutLineaDTO.getLinea().length()!=0) && 
+			   (null != layoutLineaDTO.getCuenta() && layoutLineaDTO.getCuenta().length()!=0) && 
+			   (null != layoutLineaDTO.getMonto() && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0);
+	}
+	
+	
 }
+
+
