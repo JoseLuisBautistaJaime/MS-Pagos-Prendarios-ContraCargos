@@ -59,6 +59,45 @@ public abstract class ConciliacionProcessorChain {
 		}
 	}
 
+	protected List<MovimientoMidas> getMovimientosMidasByConciliacion(Integer idConciliacion) throws ConciliacionException {
+		List<MovimientoMidas> movimientosMidas = null;
+		try {
+			movimientosMidas = this.mergeReporteHandler.getMovimientosMidasRepository()
+					.findByConciliacionId(idConciliacion);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar movimientos midas",
+					CodigoError.NMP_PMIMONTE_BUSINESS_068);
+		}
+		return movimientosMidas;
+	}
+
+	protected List<MovimientoProveedor> getMovimientosProveedorByConciliacion(Integer idConciliacion) throws ConciliacionException {
+		List<MovimientoProveedor> movimientosProveedor = null;
+		try {
+			movimientosProveedor = this.mergeReporteHandler.getMovimientoProveedorRepository()
+					.findByReporteConciliacionId(idConciliacion);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar movimientos proveedor",
+					CodigoError.NMP_PMIMONTE_BUSINESS_069);
+		}
+		return movimientosProveedor;
+	}
+
+	protected List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByConciliacion(Integer idConciliacion) throws ConciliacionException {
+		List<MovimientoEstadoCuenta> movimientosEstadoCuenta = null;
+		try {
+			movimientosEstadoCuenta = this.mergeReporteHandler.getMovimientoEstadoCuentaRepository()
+					.findByConciliacion(idConciliacion);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar movimientos estado cuenta",
+					CodigoError.NMP_PMIMONTE_BUSINESS_070);
+		}
+		return movimientosEstadoCuenta;
+	}
+
 	protected List<MovimientoMidas> getMovimientosMidas(Integer idReporte) throws ConciliacionException {
 		List<MovimientoMidas> movimientosMidas = null;
 		try {

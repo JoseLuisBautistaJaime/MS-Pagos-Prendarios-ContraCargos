@@ -14,7 +14,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 
 /**
@@ -41,12 +40,12 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 		// Obtener seccion global
 		Global global = this.mergeReporteHandler.getGlobalRepository().findByIdConciliacion(reportesWrapper.getIdConciliacion());
 		
-		// Obtiene los movimientos de los reportes
-		List<MovimientoMidas> movsMidas = getMovimientosMidas(reportesWrapper.getIdReporte(TipoReporteEnum.MIDAS));
-		List<MovimientoProveedor> movsProveedor = getMovimientosProveedor(reportesWrapper.getIdReporte(TipoReporteEnum.PROVEEDOR));
-		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuenta(reportesWrapper.getIdReporte(TipoReporteEnum.ESTADO_CUENTA));
+		// Obtiene los movimientos de los reportes en base a la conciliacion
+		List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(reportesWrapper.getIdConciliacion());
+		List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(reportesWrapper.getIdConciliacion());
+		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByConciliacion(reportesWrapper.getIdConciliacion());
 
-		List<String> codigosDevoluciones = getCodigosEstadoCuenta(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_COMISIONES);
+		List<String> codigosDevoluciones = getCodigosEstadoCuenta(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES);
 		
 		// Actualizar seccion global
 		global = GlobalBuilder.updateGlobal(global, reportesWrapper, movsMidas, movsProveedor, movsEstadoCuenta, codigosDevoluciones);

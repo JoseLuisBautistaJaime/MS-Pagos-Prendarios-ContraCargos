@@ -57,7 +57,9 @@ public abstract class GlobalBuilder {
 	}
 
 
-	public static Global updateGlobal(Global global, ReportesWrapper reportesWrapper, List<MovimientoMidas> movsMidas, List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta, List<String> clavesDevolucion) {
+	public static Global updateGlobal(Global global, ReportesWrapper reportesWrapper, List<MovimientoMidas> movsMidas,
+			List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta, List<String> clavesDevolucion) {
+
 		if (global == null) {
 			global = new Global();
 			global.setConciliacion(new Conciliacion(reportesWrapper.getIdConciliacion()));
@@ -72,7 +74,7 @@ public abstract class GlobalBuilder {
 			// Reporte de proveedor transaccional / Consulta reporte de procesos nocturnos - formato: DD/MM/AA)
 			global.setFecha(reporteProveedor.getCreatedDate());
 			//(Total de movimientos reportados en el reporte del proveedor transaccional)
-			global.setMovimientos(movsMidas.size());
+			global.setMovimientos(movsProveedor.size());
 		}
 		
 		if (reporteMidas != null) {

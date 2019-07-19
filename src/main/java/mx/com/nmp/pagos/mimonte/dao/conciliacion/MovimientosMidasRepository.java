@@ -43,9 +43,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param conciliacionId
 	 * @return
 	 */
-	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND r.id = (SELECT MAX(r1.id) FROM Reporte r1 WHERE r1.conciliacion.id = con.id)") // Obtiene
-																																																										// ultimo
-																																																										// reporte
+	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
 	public List<MovimientoMidas> findByConciliacionId(@Param("conciliacionId") final Integer conciliacionId);
 
 	/**
