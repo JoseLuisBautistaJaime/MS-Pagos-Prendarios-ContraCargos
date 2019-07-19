@@ -126,9 +126,13 @@ public class MovimientosController {
 		if (!ValidadorConciliacion.validateMovimientoProcesosNocturnosListResponseDTO(movimientos))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-		if (!ValidadorConciliacion.validateFechas(movimientos.getFechaDesde(), movimientos.getFechaHasta()))
+		if (!ValidadorConciliacion.validateFechasWithThemselves(movimientos.getFechaDesde(),
+				movimientos.getFechaHasta()))
 			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_078);
+		if (!ValidadorConciliacion.validateFechasWithCurrent(movimientos.getFechaDesde(), movimientos.getFechaHasta()))
+			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_082);
 		movimientosMidasService.save(movimientos, userRequest);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
@@ -209,9 +213,13 @@ public class MovimientosController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		}
-		if (!ValidadorConciliacion.validateFechas(movimientos.getFechaDesde(), movimientos.getFechaHasta()))
+		if (!ValidadorConciliacion.validateFechasWithThemselves(movimientos.getFechaDesde(),
+				movimientos.getFechaHasta()))
 			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_078);
+		if (!ValidadorConciliacion.validateFechasWithCurrent(movimientos.getFechaDesde(), movimientos.getFechaHasta()))
+			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_082);
 		movimientosProveedorService.save(movimientos, userRequest);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,

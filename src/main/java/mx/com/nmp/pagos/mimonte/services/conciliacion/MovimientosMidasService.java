@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -29,6 +30,8 @@ import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
@@ -62,7 +65,11 @@ public class MovimientosMidasService {
 	@Autowired
 	private ConciliacionHelper conciliacionHelper;
 
-
+	/**
+	 * Registro de actividades
+	 */
+	@Autowired
+	private ActividadGenericMethod actividadGenericMethod;
 
 	public MovimientosMidasService() {
 		super();
@@ -156,14 +163,14 @@ public class MovimientosMidasService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void save(MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosDTOList,
 			String userRequest) {
-		
+
 		// Se valida que exista la conciliacion
 		Integer folio = movimientoProcesosNocturnosDTOList.getFolio();
-		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio, ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
+		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio,
+				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
-		Reporte reporte = buildReporte(conciliacion.getId(),
-				movimientoProcesosNocturnosDTOList.getFechaDesde(), movimientoProcesosNocturnosDTOList.getFechaHasta(),
-				userRequest);
+		Reporte reporte = buildReporte(conciliacion.getId(), movimientoProcesosNocturnosDTOList.getFechaDesde(),
+				movimientoProcesosNocturnosDTOList.getFechaHasta(), userRequest);
 		if (null == reporte)
 			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
 					CodigoError.NMP_PMIMONTE_BUSINESS_044);
@@ -176,6 +183,11 @@ public class MovimientosMidasService {
 					.buildMovimientoMidasListFromMovimientoProcesosNocturnosListResponseDTO(
 							movimientoProcesosNocturnosDTOList, reporte.getId());
 			movimientosMidasRepository.saveAll(movimientoMidasList);
+			// Registro de actividad
+			actividadGenericMethod.registroActividad(movimientoProcesosNocturnosDTOList.getFolio(),
+					"Se dan de alta " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
+							+ " movimientos nocturnos, para  el folio " + movimientoProcesosNocturnosDTOList.getFolio(),
+					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,

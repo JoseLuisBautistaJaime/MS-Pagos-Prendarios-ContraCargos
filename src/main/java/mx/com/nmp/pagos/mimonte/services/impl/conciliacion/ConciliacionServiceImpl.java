@@ -242,7 +242,17 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		globalRepository.save(global);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(conciliacion.getId(), "Alta de conciliacion",
+		actividadGenericMethod.registroActividad(conciliacion.getId(),
+				"Se guarda la conciliacion con el folio " + conciliacion.getId() + " con la cuenta "
+						+ (null != conciliacionRequestDTO && null != conciliacionRequestDTO.getCuenta()
+								&& null != conciliacionRequestDTO.getCuenta().getId()
+										? conciliacionRequestDTO.getCuenta().getId()
+										: "")
+						+ " y la entidad "
+						+ (null != conciliacionRequestDTO && null != conciliacionRequestDTO.getEntidad()
+								&& null != conciliacionRequestDTO.getEntidad().getId()
+										? conciliacionRequestDTO.getEntidad().getId()
+										: ""),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.GENERACION_CONCILIACION);
 
 		return ConciliacionBuilder.buildConciliacionDTOFromConciliacionCuentaAndEntidad(conciliacion, cuenta.get(),
@@ -343,7 +353,18 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		movimientoComisionRepository.saveAll(movimientosComision);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(conciliacion.getId(), "Actualizacion de conciliacion",
+		actividadGenericMethod.registroActividad(conciliacion.getId(),
+				"Se actualiza la conciliacion con el folio " + conciliacion.getId() + " con "
+						+ (null != actualizaionConciliacionRequestDTO
+								&& null != actualizaionConciliacionRequestDTO.getMovimientosTransito()
+										? actualizaionConciliacionRequestDTO.getMovimientosTransito().size()
+										: 0)
+						+ " movimientos transito y "
+						+ (null != actualizaionConciliacionRequestDTO
+								&& null != actualizaionConciliacionRequestDTO.getComisiones()
+										? actualizaionConciliacionRequestDTO.getComisiones().size()
+										: 0)
+						+ " comisiones",
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZAR_CONCILIACION);
 
 		return actualizaionConciliacionRequestDTO;
@@ -546,8 +567,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())));
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
-				"Actualizacion de subEstatus de conciliacion", TipoActividadEnum.ACTIVIDAD,
-				SubTipoActividadEnum.ACTUALIZACION_ESTATUS_CONCILIACION);
+				"Se actualiza el subestatus de la conciliacion " + actualizarSubEstatusRequestDTO.getFolio()
+						+ " a un subestatus: " + actualizarSubEstatusRequestDTO.getIdSubEstatus(),
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZACION_ESTATUS_CONCILIACION);
 	}
 
 	/**
@@ -790,7 +812,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		this.conciliacionHelper.generarConciliacion(idConciliacion, reportes);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(idConciliacion, "Generar conciliacion", TipoActividadEnum.ACTIVIDAD,
+		actividadGenericMethod.registroActividad(idConciliacion, "Se genera la conciliacion con el folio " + idConciliacion, TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.GENERACION_CONCILIACION);
 
 	}

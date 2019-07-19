@@ -431,14 +431,30 @@ public interface ValidadorConciliacion {
 	}
 
 	/**
-	 * Valida que dos fechas recibidas inicial y final sean congruentes o vaidad
-	 * entre ellas y comparadas con la fecha actual
+	 * Valida que dos fechas recibidas inicial y final sean congruentes o vaidas
+	 * entre ellas
 	 * 
 	 * @param fechaInicial
 	 * @param fechaFinal
 	 * @return
 	 */
-	public static boolean validateFechas(Date fechaInicial, Date fechaFinal) {
+	public static boolean validateFechasWithThemselves(Date fechaInicial, Date fechaFinal) {
+		Calendar ini = Calendar.getInstance();
+		Calendar fin = Calendar.getInstance();
+		ini.setTime(fechaInicial);
+		fin.setTime(fechaFinal);
+		return ((fin.after(ini) || ini.equals(fin)));
+	}
+
+	/**
+	 * Valida que dos fechas recibidas inicial y final sean congruentes respecto a
+	 * la fecha actual
+	 * 
+	 * @param fechaInicial
+	 * @param fechaFinal
+	 * @return
+	 */
+	public static boolean validateFechasWithCurrent(Date fechaInicial, Date fechaFinal) {
 		Calendar ini = Calendar.getInstance();
 		Calendar fin = Calendar.getInstance();
 		Calendar hoy = Calendar.getInstance();
@@ -450,8 +466,7 @@ public interface ValidadorConciliacion {
 		hoy.set(Calendar.MINUTE, 0);
 		hoy.set(Calendar.SECOND, 0);
 		hoy.set(Calendar.MILLISECOND, 0);
-		return ((fin.after(ini) || ini.equals(fin)) && (hoy.after(ini) || hoy.equals(ini))
-				&& (hoy.after(fin) || hoy.equals(fin)));
+		return ((hoy.after(ini) || hoy.equals(ini)) && (hoy.after(fin) || hoy.equals(fin)));
 	}
 
 	/**
