@@ -221,7 +221,7 @@ public class BusTestController {
 				movMidasDTO.setComisiones(movMidas.getComisiones().getValue());
 				movMidasDTO.setConsumidor(movMidas.getIdConsumidor().getValue() != null ? movMidas.getIdConsumidor().getValue().toString() : null);
 				movMidasDTO.setEstadoTransaccion(movMidas.getEstadoTransaccion().getValue());
-				//movMidasDTO.setEstatus(movMidas.getE); // TODO: Status
+				movMidasDTO.setEstatus(movMidas.isEstatus());
 				movMidasDTO.setFecha(movMidas.getFecha().getValue().toGregorianCalendar().getTime());
 				movMidasDTO.setFolioPartida(movMidas.getFolioPartida().getValue());
 				movMidasDTO.setIdOperacion(movMidas.getIdOperacion().getValue());

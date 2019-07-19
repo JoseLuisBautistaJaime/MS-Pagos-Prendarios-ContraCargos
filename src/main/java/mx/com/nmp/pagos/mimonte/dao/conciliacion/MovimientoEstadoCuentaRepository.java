@@ -64,4 +64,7 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.id = :reporteId AND mm.claveLeyenda IN (:clavesLeyenda)")
 	public List<MovimientoEstadoCuenta> findByReporteAndClaveLeyendaIn(@Param("reporteId") final Integer reporteId, @Param("clavesLeyenda") List<String> clavesLeyenda);
 
+	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte INNER JOIN r.conciliacion con WHERE con.id = :idConciliacion")
+	public List<MovimientoEstadoCuenta> findByConciliacion(@Param("idConciliacion") final Integer idConciliacion);
+
 }
