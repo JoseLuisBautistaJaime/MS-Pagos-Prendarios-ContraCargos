@@ -28,8 +28,10 @@ public interface ValidadorLayout {
 	 * @return
 	 */
 	public static boolean validateConsultaUnLayout(Long folio, String tipoLayout) {
-			return folio>0L && tipoLayout.equals(TipoLayoutEnum.PAGOS.toString()) || tipoLayout.equals(TipoLayoutEnum.COMISIONES_MOV.toString())
-					|| tipoLayout.equals(TipoLayoutEnum.COMISIONES_GENERALES.toString()) || tipoLayout.equals(TipoLayoutEnum.DEVOLUCIONES.toString());
+			return validateLong(folio) &&  
+					(null != tipoLayout && tipoLayout.length()!=0) &&
+					(tipoLayout.equals(TipoLayoutEnum.PAGOS.toString()) || tipoLayout.equals(TipoLayoutEnum.COMISIONES_MOV.toString())
+					|| tipoLayout.equals(TipoLayoutEnum.COMISIONES_GENERALES.toString()) || tipoLayout.equals(TipoLayoutEnum.DEVOLUCIONES.toString()));
 		
 	}
 	
@@ -40,7 +42,7 @@ public interface ValidadorLayout {
 	 * @return
 	 */
 	public static boolean validateLayoutDTO(LayoutDTO layoutDTO) {
-		return layoutDTO != null && !layoutDTO.toString().equals("");
+		return null != layoutDTO && layoutDTO.toString().length()!=0;
 	}
 	
 	/**
@@ -59,7 +61,7 @@ public interface ValidadorLayout {
 	 * @return
 	 */
 	public static boolean validateLayoutDTOs(List<LayoutDTO> layoutDTOs) {
-		return layoutDTOs.size() > 0;
+		return null != layoutDTOs && layoutDTOs.size() > 0;
 	}
 	/**
 	 * Valida parámetros requeridos del LayoutDTO
@@ -86,7 +88,7 @@ public interface ValidadorLayout {
      * @return
      */
 	public static boolean validateDeleteLayout(Long folio, Long idLayout) {
-		return folio > 0L && idLayout > 0L;
+		return validateLong(folio) && validateLong(idLayout);
     }
 	
 	/**
