@@ -194,6 +194,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_081("Hay un problema con la fecha final",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_082("Hay un problema de incongruencia entre fecha inicial y/o final y la fecha actual",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_083("Se genero un problema durante la validacion del subestatus",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

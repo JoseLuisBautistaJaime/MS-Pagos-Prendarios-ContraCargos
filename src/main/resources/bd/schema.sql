@@ -55,6 +55,7 @@ DROP TABLE IF EXISTS `tk_sub_estatus_conciliacion` ;
 DROP TABLE IF EXISTS `tk_variable` ;
 DROP TABLE IF EXISTS `tk_tipo_contrato` ;
 DROP TABLE IF EXISTS `tk_estatus_pago` ;
+DROP TABLE IF EXISTS `tk_maquina_estados_subestatus_conciliacion` ;
 
 
 
@@ -114,6 +115,22 @@ ENGINE = InnoDB
 AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = latin1;
 
+-- -----------------------------------------------------
+-- Table `tk_maquina_estados_subestatus_conciliacion`
+-- -----------------------------------------------------
+CREATE TABLE `tk_maquina_estados_subestatus_conciliacion` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nombre_proceso` VARCHAR(100) NOT NULL,
+  `id_sub_estatus_inicial` BIGINT(11) NOT NULL,
+  `id_sub_estatus_posible` BIGINT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_me_id` (`id`),
+  INDEX `idx_me_nombre_proceso` (`nombre_proceso`),
+  CONSTRAINT FOREIGN KEY `fk_id_subestatus_inicial` (`id_sub_estatus_inicial`) 
+	REFERENCES tk_sub_estatus_conciliacion (`id`),
+  CONSTRAINT FOREIGN KEY `fk_id_subestatus_posible` (`id_sub_estatus_posible`)
+	REFERENCES tk_sub_estatus_conciliacion (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- -----------------------------------------------------
 -- Table `tc_afiliacion`
@@ -1262,6 +1279,7 @@ ALTER TABLE `to_comision_transaccion` AUTO_INCREMENT = 1;
 ALTER TABLE `to_conciliacion` AUTO_INCREMENT = 1;
 ALTER TABLE `to_merge_conciliacion` AUTO_INCREMENT = 1;
 ALTER TABLE `to_pagos` AUTO_INCREMENT = 1;
+ALTER TABLE `to_pagos_partidas` AUTO_INCREMENT = 1;
 ALTER TABLE `tc_codigo_estado_cuenta` AUTO_INCREMENT = 1;
 ALTER TABLE `tc_afiliacion` AUTO_INCREMENT = 1;
 ALTER TABLE `tc_contactos` AUTO_INCREMENT = 1;
