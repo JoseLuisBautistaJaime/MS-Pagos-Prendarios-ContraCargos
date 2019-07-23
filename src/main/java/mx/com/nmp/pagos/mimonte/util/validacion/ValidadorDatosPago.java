@@ -28,18 +28,26 @@ public interface ValidadorDatosPago {
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(pagoRequestDTO);
 		vo.noNulo(pagoRequestDTO.getConcepto());
+		if("".equals(pagoRequestDTO.getConcepto()))
+			throw new PagoException(PagoConstants.CONCEPTO_PAGO_CANT_BE_EMPTY);
 		vo.noNulo(pagoRequestDTO.getGuardaTarjeta());
 		vo.noNulo(pagoRequestDTO.getIdCliente());
 		vo.noNulo(pagoRequestDTO.getMontoTotal());
 		vo.noNulo(pagoRequestDTO.getIdTransaccionMidas());
+		if("".equals(pagoRequestDTO.getIdTransaccionMidas()))
+			throw new PagoException(PagoConstants.ID_TRANSACCION_MIDAS_CANT_BE_EMPTY);
 		vo.noNulo(pagoRequestDTO.getOperaciones());
 		if (pagoRequestDTO.getOperaciones().size() > cantidadMaximaPartidas)
 			throw new PagoException(PagoConstants.PARTIDAS_QUANTITY_EXCEDED);
 		for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
 			vo.noNulo(operacion.getFolioContrato());
+			if("".equals(operacion.getFolioContrato()))
+				throw new PagoException(PagoConstants.FOLIO_CONTRATO_CANT_BE_EMPTY);
 			vo.noNulo(operacion.getIdOperacion());
 			vo.noNulo(operacion.getMonto());
 			vo.noNulo(operacion.getNombreOperacion());
+			if("".equals(operacion.getNombreOperacion()))
+				throw new PagoException(PagoConstants.NOMBRE_OPERACION_CANT_BE_EMPTY);
 			vo.noNulo(operacion.getFolioContrato());
 			vo.noNulo(operacion.getIdOperacion());
 		}

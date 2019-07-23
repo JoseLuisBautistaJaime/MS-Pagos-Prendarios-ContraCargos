@@ -294,4 +294,25 @@ public final class PagoConstants {
 	 * y se realiza un rollback
 	 */
 	public static final String ROLL_BACK_EXCEPCION_MESSAGE = "Ocurrio un error insesperado y no se realizo ninguna accion, por favor revize los datos del request";
+	
+	/**
+	 * Mensaje que es mostrado cuando el concepto del pago es vacio
+	 */
+	public static final String CONCEPTO_PAGO_CANT_BE_EMPTY = "El concepto del pago no puede ser vacio";
+
+	/**
+	 * Mensaje que es mostrado cuando el id de transaccion midas es vacio
+	 */
+	public static final String ID_TRANSACCION_MIDAS_CANT_BE_EMPTY = "El id de transaccion midas no puede ser vacio";
+	
+	/**
+	 * Mensaje que es mostrado cuando el folio del contrato es vacio
+	 */
+	public static final String FOLIO_CONTRATO_CANT_BE_EMPTY = "El folio del contrato no puede ser vacio";
+	
+	/**
+	 * Mensaje que es mostrado cuando el nombre de la operacion es vacio
+	 */
+	public static final String NOMBRE_OPERACION_CANT_BE_EMPTY = "El nombre de la operacion no puede ser vacio";
+	
 }

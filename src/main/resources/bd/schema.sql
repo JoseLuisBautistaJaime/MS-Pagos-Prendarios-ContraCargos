@@ -629,7 +629,7 @@ CREATE TABLE IF NOT EXISTS `to_conciliacion` (
   `id_entidad` BIGINT(20) NOT NULL,
   `id_cuenta` BIGINT(20) NOT NULL,
   `id_sub_estatus_conciliacion` BIGINT(20) NOT NULL,
-  `sub_estatus_descripcion` VARCHAR(100) NULL DEFAULT NULL,
+  `sub_estatus_descripcion` VARCHAR(250) NULL DEFAULT NULL,
   `id_poliza_tesoreria` VARCHAR(20) NULL DEFAULT NULL,
   `id_asiento_contable` VARCHAR(20) NULL DEFAULT NULL,
   `id_merge` BIGINT(20) NULL DEFAULT NULL,

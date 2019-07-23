@@ -564,7 +564,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// parametro, adicionalmente se actualizan los campos createdBy y createdDate
 		conciliacionRepository.actualizaSubEstatusConciliacion(actualizarSubEstatusRequestDTO.getFolio(),
 				new SubEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus()), usuario, new Date(),
-				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())));
+				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())), actualizarSubEstatusRequestDTO.getDescripcion());
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
 				"Se actualiza el subestatus de la conciliacion " + actualizarSubEstatusRequestDTO.getFolio()

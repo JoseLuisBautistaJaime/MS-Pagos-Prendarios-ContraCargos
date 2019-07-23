@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.config.Constants;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
 import mx.com.nmp.pagos.mimonte.controllers.TarjetasController;
@@ -204,6 +205,12 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		if (tarjeta.getTipo().getId() == null || tarjeta.getTipo().getId() < 1)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_ID_TIPO_SHOULD_NOT_BE_NULL_OR_VOID);
+		
+		if(null != tarjeta.getToken() && tarjeta.getToken().length() > Constants.LONGITUD_TOKEN)
+			throw new TarjetaException(TarjetaConstants.MSG_TOKEN_VALUE_TOO_LONG);
+		
+		if(null != tarjeta.getId_openpay() && tarjeta.getId_openpay().length() > Constants.LONGITUD_ID_OPENPAY)
+			throw new TarjetaException(TarjetaConstants.MSG_ID_OPENPAY_VALUE_TOO_LONG);
 		
 		doTypeValidations(tarjeta);
 

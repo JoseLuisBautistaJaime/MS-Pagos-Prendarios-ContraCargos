@@ -1,48 +1,52 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import mx.com.nmp.pagos.mimonte.model.Updatable;
-
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import mx.com.nmp.pagos.mimonte.model.Updatable;
 
 /**
  * The persistent class for the tc_layout_linea database table.
  * 
  */
 @Entity
-@Table(name="tc_layout_linea")
+@Table(name = "tc_layout_linea")
 public class LayoutLineaCatalog extends Updatable implements Serializable {
 	private static final long serialVersionUID = -5776981826554339715L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name="cuenta")
+	@Column(name = "cuenta")
 	private String cuenta;
 
-	@Column(name="dep_id")
+	@Column(name = "dep_id")
 	private String depId;
 
-	@Column(name="id_layout")
+	@Column(name = "id_layout")
 	private Long idLayout;
 
-	@Column(name="linea")
+	@Column(name = "linea")
 	private String linea;
 
-	@Column(name="monto")
+	@Column(name = "monto")
 	private Double monto;
 
-	@Column(name="negocio")
+	@Column(name = "negocio")
 	private String negocio;
 
-	@Column(name="proyecto_nmp")
+	@Column(name = "proyecto_nmp")
 	private String proyectoNmp;
 
-	@Column(name="unidad_operativa")
+	@Column(name = "unidad_operativa")
 	private String unidadOperativa;
 
 	public LayoutLineaCatalog() {
@@ -176,6 +180,6 @@ public class LayoutLineaCatalog extends Updatable implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}	
-	
+	}
+
 }

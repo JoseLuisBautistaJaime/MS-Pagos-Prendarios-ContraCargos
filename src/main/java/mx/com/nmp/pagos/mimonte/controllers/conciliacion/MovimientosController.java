@@ -164,7 +164,7 @@ public class MovimientosController {
 		Optional<Conciliacion> conciliacion = conciliacionRepository.findById(commonConciliacionRequestDTO.getFolio());
 		if (!conciliacion.isPresent())
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_BUSINESS_036);
+					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		Long total = movimientosMidasService.countByConciliacionId(commonConciliacionRequestDTO.getFolio(),
 				commonConciliacionRequestDTO.getEstatus());
 		if (null != total) {
@@ -251,7 +251,7 @@ public class MovimientosController {
 		Optional<Conciliacion> conciliacion = conciliacionRepository.findById(commonConciliacionRequestDTO.getFolio());
 		if (!conciliacion.isPresent())
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_BUSINESS_036);
+					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		Long total = movimientosProveedorService.countByConciliacionId(commonConciliacionRequestDTO.getFolio());
 		if (null != total) {
 			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
@@ -328,6 +328,11 @@ public class MovimientosController {
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
+		// Se valida que la conciliacion exista
+		Optional<Conciliacion> conciliacion = conciliacionRepository.findById(commonConciliacionRequestDTO.getFolio());
+		if (!conciliacion.isPresent())
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		Long total = movimientosEstadoCuentaService.countByConciliacionId(commonConciliacionRequestDTO.getFolio());
 		if (null != total) {
 			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();

@@ -209,10 +209,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param fecha
 	 */
 	@Modifying
-	@Query(nativeQuery = true, value = "UPDATE to_conciliacion SET id_sub_estatus_conciliacion = :subEstatus, id_estatus_conciliacion = :estatusConciliacion, last_modified_by = :usuario, last_modified_date = :fecha WHERE id = :folio")
+	@Query(nativeQuery = true, value = "UPDATE to_conciliacion SET id_sub_estatus_conciliacion = :subEstatus, id_estatus_conciliacion = :estatusConciliacion, sub_estatus_descripcion = :descripcion, last_modified_by = :usuario, last_modified_date = :fecha WHERE id = :folio")
 	public void actualizaSubEstatusConciliacion(@Param("folio") final Integer folio,
 			@Param("subEstatus") SubEstatusConciliacion subEstatus, @Param("usuario") final String usuario,
-			@Param("fecha") Date fecha, @Param("estatusConciliacion") final EstatusConciliacion estatusConciliacion);
+			@Param("fecha") Date fecha, @Param("estatusConciliacion") final EstatusConciliacion estatusConciliacion, @Param("descripcion") final String descripcion);
 
 	/**
 	 * Regresa el orden de sub estatus y estatus de conciliaicon en un mapa por
