@@ -20,6 +20,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
  * @version 0.1
  */
 @Repository
-public interface LayoutLineaCatalogRepository extends JpaRepository<LayoutLineaCatalog, Long>{
+public interface LayoutLineaCatalogRepository extends JpaRepository<LayoutLineaCatalog, Long> {
 
 }

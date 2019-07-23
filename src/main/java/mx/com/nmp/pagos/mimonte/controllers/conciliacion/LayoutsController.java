@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -63,7 +64,8 @@ public class LayoutsController {
 	private LayoutsService layoutsService;
 
 	/**
-	 * Permite consultar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y DEVOLUCIONES.
+	 * Permite consultar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES
+	 * y DEVOLUCIONES.
 	 * 
 	 * @param folio
 	 * @param tipoLayout
@@ -83,12 +85,12 @@ public class LayoutsController {
 	public Response findByFolioAndTipoLayout(@PathVariable(value = "folio", required = true) Long folio,
 			@PathVariable(value = "tipoLayout", required = true) String tipoLayout) {
 		if (!ValidadorLayout.validateConsultaUnLayout(folio, tipoLayout))
-		throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-				CodigoError.NMP_PMIMONTE_0008);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		LayoutDTO layoutDTO = layoutsService.consultarUnLayout(folio, tipoLayout);
 		if (!ValidadorLayout.validateLayoutDTO(layoutDTO))
-		throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-				CodigoError.NMP_PMIMONTE_0005);
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				layoutDTO);
 	}
@@ -124,7 +126,8 @@ public class LayoutsController {
 	}
 
 	/**
-	 * Permite agregar y editar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y DEVOLUCIONES.
+	 * Permite agregar y editar un layout, como PAGOS, COMISIONES_MOV,
+	 * COMISIONES_GENERALES y DEVOLUCIONES.
 	 * 
 	 * @param layoutSaveDTO
 	 * @param userRequest
@@ -140,19 +143,21 @@ public class LayoutsController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveLayout(@RequestBody LayoutDTO layoutDTOe) {
+	public Response saveLayout(@RequestBody LayoutDTO layoutDTOe,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {
 		if (!ValidadorLayout.validateSaveLayout(layoutDTOe))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-		layoutsService.saveLayout(layoutDTOe);
+		layoutsService.saveLayout(layoutDTOe, requestUser);
 		LayoutDTO layoutDTOs = layoutsService.consultarUnLayout(layoutDTOe.getFolio(),
 				layoutDTOe.getTipoLayout().toString());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layouts agregados con éxito.",
 				layoutDTOs);
 	}
-	
+
 	/**
-	 * Permite eliminar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y DEVOLUCIONES.
+	 * Permite eliminar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES
+	 * y DEVOLUCIONES.
 	 * 
 	 * @param folio
 	 * @param idLayout
@@ -175,7 +180,8 @@ public class LayoutsController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		boolean respuesta = layoutsService.eliminarUnLayout(folio, idLayout);
-		if(respuesta)throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
+		if (respuesta)
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layout eliminado con éxito.", null);
 	}
 

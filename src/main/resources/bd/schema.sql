@@ -51,6 +51,7 @@ DROP TABLE IF EXISTS `tk_estatus_movimientos_en_transito` ;
 DROP TABLE IF EXISTS `tk_estatus_operacion` ;
 DROP TABLE IF EXISTS `tk_estatus_transaccion` ;
 DROP TABLE IF EXISTS `tk_operacion` ;
+DROP TABLE IF EXISTS `tk_maquina_estados_subestatus_conciliacion` ;
 DROP TABLE IF EXISTS `tk_sub_estatus_conciliacion` ;
 DROP TABLE IF EXISTS `tk_variable` ;
 DROP TABLE IF EXISTS `tk_tipo_contrato` ;
@@ -62,6 +63,7 @@ DROP TABLE IF EXISTS `tk_estatus_pago` ;
 -- ------------------------------------------------------------------------------------------------------------
 -- FASE 1 PAGOS ------------------------------------------------------------------------------------------------------
 -- ------------------------------------------------------------------------------------------------------------
+
 
 -- -----------------------------------------------------
 -- Table `tk_catalogo`
@@ -204,6 +206,7 @@ CREATE TABLE IF NOT EXISTS `tk_tipo_tarjeta` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
+
 -- -----------------------------------------------------
 -- Table `tk_estatus_pago`
 -- -----------------------------------------------------
@@ -214,6 +217,7 @@ CREATE TABLE IF NOT EXISTS `tk_estatus_pago` (
   PRIMARY KEY (`id`),
   INDEX (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
 
 -- -----------------------------------------------------
 -- Table `tk_estatus_transaccion`
@@ -283,6 +287,7 @@ CREATE TABLE IF NOT EXISTS `to_pagos` (
 	REFERENCES `tk_cliente` (`id_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
 -- -----------------------------------------------------
 -- Table `to_pagos_partidas`
 -- -----------------------------------------------------
@@ -303,6 +308,7 @@ CREATE TABLE `to_pagos_partidas` (
     REFERENCES `to_pagos` (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
 -- -----------------------------------------------------
 -- Table `tr_regla_negocio_variable`
 -- -----------------------------------------------------
@@ -320,6 +326,7 @@ CREATE TABLE IF NOT EXISTS `tr_regla_negocio_variable` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
+
 -- -----------------------------------------------------
 -- Table `tr_regla_negocio_tipo_autorizacion`
 -- -----------------------------------------------------
@@ -333,9 +340,13 @@ CREATE TABLE `tr_regla_negocio_tipo_autorizacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+
+
+
 -- ------------------------------------------------------------------------------------------------------------
 -- FASE 2 CATALOGOS -------------------------------------------------------------------------------------------
 -- ------------------------------------------------------------------------------------------------------------
+
 
 -- -----------------------------------------------------
 -- Table `tk_tipo_contacto`
@@ -506,10 +517,10 @@ DEFAULT CHARACTER SET = latin1;
 
 
 
-
 -- ------------------------------------------------------------------------------------------------------------
 -- FASE 3 CONCILIACION ----------------------------------------------------------------------------------------
 -- ------------------------------------------------------------------------------------------------------------
+
 
 -- -----------------------------------------------------
 -- Table `tk_tipo_contrato`
@@ -533,6 +544,7 @@ CREATE TABLE IF NOT EXISTS `tk_operacion` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
+
 
 -- -----------------------------------------------------
 -- Table `tk_estatus_conciliacion`
@@ -609,6 +621,24 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
+-- Table `tk_maquina_estados_subestatus_conciliacion`
+-- -----------------------------------------------------
+CREATE TABLE `tk_maquina_estados_subestatus_conciliacion` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nombre_proceso` VARCHAR(100) NOT NULL,
+  `id_sub_estatus_inicial` BIGINT(11) NOT NULL,
+  `id_sub_estatus_posible` BIGINT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_me_id` (`id`),
+  INDEX `idx_me_nombre_proceso` (`nombre_proceso`),
+  CONSTRAINT FOREIGN KEY `fk_id_subestatus_inicial` (`id_sub_estatus_inicial`) 
+	REFERENCES tk_sub_estatus_conciliacion (`id`),
+  CONSTRAINT FOREIGN KEY `fk_id_subestatus_posible` (`id_sub_estatus_posible`)
+	REFERENCES tk_sub_estatus_conciliacion (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- -----------------------------------------------------
 -- Table `to_merge_conciliacion`
 -- -----------------------------------------------------
 CREATE TABLE `to_merge_conciliacion` (
@@ -629,7 +659,7 @@ CREATE TABLE IF NOT EXISTS `to_conciliacion` (
   `id_entidad` BIGINT(20) NOT NULL,
   `id_cuenta` BIGINT(20) NOT NULL,
   `id_sub_estatus_conciliacion` BIGINT(20) NOT NULL,
-  `sub_estatus_descripcion` VARCHAR(100) NULL DEFAULT NULL,
+  `sub_estatus_descripcion` VARCHAR(250) NULL DEFAULT NULL,
   `id_poliza_tesoreria` VARCHAR(20) NULL DEFAULT NULL,
   `id_asiento_contable` VARCHAR(20) NULL DEFAULT NULL,
   `id_merge` BIGINT(20) NULL DEFAULT NULL,
@@ -1130,6 +1160,7 @@ CREATE TABLE IF NOT EXISTS `tc_layout_linea` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
+
 -- -----------------------------------------------------
 -- Table `to_layout`
 -- -----------------------------------------------------
@@ -1233,6 +1264,7 @@ CREATE TABLE IF NOT EXISTS `tb_actividad` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
+
 -- ------------------------------------------------------- --
 -- -------- REINICIO DE CLAVES AUTO INCREMENTALES A 1----- --
 -- ------------------------------------------------------- --
@@ -1262,6 +1294,7 @@ ALTER TABLE `to_comision_transaccion` AUTO_INCREMENT = 1;
 ALTER TABLE `to_conciliacion` AUTO_INCREMENT = 1;
 ALTER TABLE `to_merge_conciliacion` AUTO_INCREMENT = 1;
 ALTER TABLE `to_pagos` AUTO_INCREMENT = 1;
+ALTER TABLE `to_pagos_partidas` AUTO_INCREMENT = 1;
 ALTER TABLE `tc_codigo_estado_cuenta` AUTO_INCREMENT = 1;
 ALTER TABLE `tc_afiliacion` AUTO_INCREMENT = 1;
 ALTER TABLE `tc_contactos` AUTO_INCREMENT = 1;

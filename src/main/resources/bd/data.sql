@@ -53,6 +53,7 @@ INSERT INTO tk_estatus_operacion (id, descripcion_corta, descripcion) VALUES
 -- MODULO DSS
 -- ------------------------------------------------------------------------------------------------------------------ --
 
+
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_tipo_autorizacion - SE USAN EN MODULO DSS
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -123,7 +124,6 @@ INSERT INTO tk_tipo_contacto (id, estatus, description, created_by, created_date
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_categoria
 -- ------------------------------------------------------------------------------------------------------------------ --
-DELETE FROM tk_categoria;
 INSERT INTO tk_categoria (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
 (1, 'Ventas', 'Categoria Ventas', true, now(), null, 'Sistema', null, 'Ventas');
 INSERT INTO tk_categoria (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
@@ -141,7 +141,6 @@ INSERT INTO tk_categoria (id, nombre, descripcion, estatus, created_date, last_m
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tc_entidad - PARA PODER RELACIONAR LOS CODIGOS
 -- ------------------------------------------------------------------------------------------------------------------ --
-DELETE FROM tc_entidad;
 INSERT INTO tc_entidad (id, nombre, description, estatus, created_date, last_modified_date, created_by, last_modified_by, short_description) VALUES
 (1, 'Entidad Default', 'Entidad default', true, now(), null, 'Sistema', null, null);
 
@@ -149,7 +148,6 @@ INSERT INTO tc_entidad (id, nombre, description, estatus, created_date, last_mod
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tc_codigo_estado_cuenta
 -- ------------------------------------------------------------------------------------------------------------------ --
-DELETE FROM tc_codigo_estado_cuenta;
 INSERT INTO tc_codigo_estado_cuenta (codigo, id_categoria, id_entidad, description, estatus, created_date, last_modified_date, created_by, last_modified_by, short_description) VALUES
 ('V01', 1, 1, 'VENTAS TARJETAS BANCARIAS', true, now(), null, 'Sistema', null, null);
 INSERT INTO tc_codigo_estado_cuenta (codigo, id_categoria, id_entidad, description, estatus, created_date, last_modified_date, created_by, last_modified_by, short_description) VALUES
@@ -188,7 +186,6 @@ INSERT INTO tc_codigo_estado_cuenta (codigo, id_categoria, id_entidad, descripti
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_estatus_transaccion
 -- ------------------------------------------------------------------------------------------------------------------ --
--- // TODO - VERIFICAR ESTE CATALOGO (EstatusPago = tk_estatus_transaccion)
 INSERT INTO tk_estatus_transaccion (id, descripcion_corta, descripcion) VALUES (1, 'Solicitada', 'Solicitada');
 INSERT INTO tk_estatus_transaccion (id, descripcion_corta, descripcion) VALUES (2, 'En Proceso', 'En Proceso');
 INSERT INTO tk_estatus_transaccion (id, descripcion_corta, descripcion) VALUES (3, 'Terminada', 'Terminada');

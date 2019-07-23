@@ -380,4 +380,18 @@ public final class ConciliacionConstants {
 	 */
 	public static final String WRONG_OR_INCONSISTENT_FECHAS = "Hay inconsistencia en una o mas fechas";
 
+	/**
+	 * Longitud maxima permitida para la actualizacion de la descripcion del subestatus de conciliacion
+	 */
+	public static final Integer SUB_ESTATUS_DESCRIPCION_MAX_PERM_LENGHT = 250;
+	
+	/**
+	 * Mensaje que es mostrado cuando el estatus de la conciliacion se actualiza exitosamente
+	 */
+	public static final String SUB_ESTATUS_UPDATED_OK = "Actualizacion de sub estatus correcta.";
+	
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la validacion del sub estatus de conciliacion
+	 */
+	public static final String ERROR_WHILE_VALIDATING_SUB_ESTAUS = "Se genero un error durante la validacion del sub-estatus";
 }

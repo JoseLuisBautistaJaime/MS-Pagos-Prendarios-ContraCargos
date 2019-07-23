@@ -74,6 +74,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ProcesosMaquinaEstadosConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -533,6 +534,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			String usuario) {
+		Object meRes = null;
+		BigInteger meFlag = null;
 		// Se valida si la conciliacion existe
 		Optional<Conciliacion> conciliaicion = conciliacionRepository
 				.findById(actualizarSubEstatusRequestDTO.getFolio());
@@ -560,11 +563,28 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				.parseInt(map.get("estatus_order").toString()))
 			throw new ConciliacionException(ConciliacionConstants.WRONG_ORDER_SUB_STATUS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_029);
+
+		// Se valida que el estatus al que se quiere actualizar sea correcto en base a
+		// la maquina de estados de sub-estatus conciliacion
+		meRes = conciliacionRepository.checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(
+				actualizarSubEstatusRequestDTO.getFolio(),
+				ProcesosMaquinaEstadosConciliacion.ALTA_CONCILIACION.toString(),
+				actualizarSubEstatusRequestDTO.getIdSubEstatus());
+		if (null != meRes)
+			meFlag = (BigInteger) meRes;
+		if (null != meFlag && meFlag.compareTo(BigInteger.ONE) != 0)
+			throw new ConciliacionException(ConciliacionConstants.WRONG_ORDER_SUB_STATUS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_029);
+		else if(null == meFlag)
+			throw new ConciliacionException(ConciliacionConstants.ERROR_WHILE_VALIDATING_SUB_ESTAUS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_083);
+
 		// Se actualiza el sub estatus de la conciliacion al que se recibio como
 		// parametro, adicionalmente se actualizan los campos createdBy y createdDate
 		conciliacionRepository.actualizaSubEstatusConciliacion(actualizarSubEstatusRequestDTO.getFolio(),
 				new SubEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus()), usuario, new Date(),
-				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())));
+				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())),
+				actualizarSubEstatusRequestDTO.getDescripcion());
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
 				"Se actualiza el subestatus de la conciliacion " + actualizarSubEstatusRequestDTO.getFolio()
@@ -812,7 +832,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		this.conciliacionHelper.generarConciliacion(idConciliacion, reportes);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(idConciliacion, "Se genera la conciliacion con el folio " + idConciliacion, TipoActividadEnum.ACTIVIDAD,
+		actividadGenericMethod.registroActividad(idConciliacion,
+				"Se genera la conciliacion con el folio " + idConciliacion, TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.GENERACION_CONCILIACION);
 
 	}

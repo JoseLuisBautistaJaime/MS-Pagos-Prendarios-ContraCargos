@@ -20,6 +20,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
  * @version 0.1
  */
 @Repository
-public interface LayoutHeaderCatalogRepository extends JpaRepository<LayoutHeaderCatalog, Long>{
-         
+public interface LayoutHeaderCatalogRepository extends JpaRepository<LayoutHeaderCatalog, Long> {
+
 }

@@ -4,9 +4,13 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutEditionValidationDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
 
 /**
@@ -20,6 +24,16 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
  * @version 0.1
  */
 @Repository
-public interface LayoutLineasRepository extends JpaRepository<LayoutLinea, Long>{
+public interface LayoutLineasRepository extends JpaRepository<LayoutLinea, Long> {
+
+	/**
+	 * Regresa una lista de objetos de tipo LayoutEditionValidationDTO con los ids
+	 * solicitados
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutEditionValidationDTO(ll.id, ll.createdBy) FROM LayoutLinea ll WHERE ll.id IN(:ids)")
+	public List<LayoutEditionValidationDTO> getIdsDataValidateCreateOrUpdate(final List<Long> ids);
 
 }

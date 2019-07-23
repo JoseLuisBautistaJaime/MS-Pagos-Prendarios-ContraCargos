@@ -209,10 +209,11 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param fecha
 	 */
 	@Modifying
-	@Query(nativeQuery = true, value = "UPDATE to_conciliacion SET id_sub_estatus_conciliacion = :subEstatus, id_estatus_conciliacion = :estatusConciliacion, last_modified_by = :usuario, last_modified_date = :fecha WHERE id = :folio")
+	@Query(nativeQuery = true, value = "UPDATE to_conciliacion SET id_sub_estatus_conciliacion = :subEstatus, id_estatus_conciliacion = :estatusConciliacion, sub_estatus_descripcion = :descripcion, last_modified_by = :usuario, last_modified_date = :fecha WHERE id = :folio")
 	public void actualizaSubEstatusConciliacion(@Param("folio") final Integer folio,
 			@Param("subEstatus") SubEstatusConciliacion subEstatus, @Param("usuario") final String usuario,
-			@Param("fecha") Date fecha, @Param("estatusConciliacion") final EstatusConciliacion estatusConciliacion);
+			@Param("fecha") Date fecha, @Param("estatusConciliacion") final EstatusConciliacion estatusConciliacion,
+			@Param("descripcion") final String descripcion);
 
 	/**
 	 * Regresa el orden de sub estatus y estatus de conciliaicon en un mapa por
@@ -245,5 +246,18 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(*) FROM tr_entidad_cuenta_afiliacion tec where tec.id_entidad = :idEntidad AND tec.id_cuenta = :idCuenta ) > 0 THEN TRUE ELSE FALSE END AS result")
 	public Object checkCuentaEntidadRelationship(@Param("idCuenta") final Long idCuenta,
 			@Param("idEntidad") final Long idEntidad);
+
+	/**
+	 * Regresa un valor verdadero (numero 1) si el subestatus recibido es valido
+	 * para el proceso y subestatus inicial indicado
+	 * 
+	 * @param folio
+	 * @param nombreProceso
+	 * @param idSubEstatus
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN :idSubEstatus IN (SELECT id_sub_estatus_posible FROM tk_maquina_estados_subestatus_conciliacion WHERE nombre_proceso = :nombreProceso AND id_sub_estatus_inicial = (SELECT id_sub_estatus_conciliacion FROM to_conciliacion WHERE id = :folio)) THEN TRUE ELSE FALSE END AS RESULT")
+	public Object checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(@Param("folio") final Integer folio,
+			@Param("nombreProceso") final String nombreProceso, @Param("idSubEstatus") final Long idSubEstatus);
 
 }
