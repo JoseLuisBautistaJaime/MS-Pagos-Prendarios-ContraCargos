@@ -9,4 +9,4 @@ applications:
     spring.profiles.active: cloud,swagger
     TZ: America/Mexico_City
   services:
-    - 1775-conciliacion-db
+    - 1775-pagosdb
