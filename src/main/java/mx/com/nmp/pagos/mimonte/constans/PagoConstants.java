@@ -37,9 +37,14 @@ public final class PagoConstants {
 		}
 
 		/**
-		 * Mensaje que es mostrado cuando se revasa el tamano de la descripcion
+		 * Mensaje que es mostrado cuando se revasa la longitud del concepto del pago
 		 */
-		public static final String DESCRIPTION_SIZE_TOO_LONG = "El tamano de la descripcion es muy grande";
+		public static final String CONCEPTO_SIZE_TOO_LONG = "La longitud del concepto es muy grande";
+		
+		/**
+		 * Mensaje que es mostrado cuando se revasa la longitud del nombre de la operacion
+		 */
+		public static final String NOMBRE_OPERACION_SIZE_TOO_LONG = "La longitud del nombre de la operacion es muy grande";
 
 		/**
 		 * Mensaje que es mostrado cuando se intenta guardar un id de transaccion midas

@@ -23,16 +23,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import mx.com.nmp.pagos.mimonte.config.Constants;
 import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
 import mx.com.nmp.pagos.mimonte.dto.AliasDTO;
-import mx.com.nmp.pagos.mimonte.dto.CatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjeDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaDTO;
 import mx.com.nmp.pagos.mimonte.dto.TokenDTO;
 import mx.com.nmp.pagos.mimonte.model.Tarjetas;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
-import mx.com.nmp.pagos.mimonte.services.impl.TarjetasServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCadena;
 

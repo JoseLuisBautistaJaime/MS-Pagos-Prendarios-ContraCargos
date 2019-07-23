@@ -152,7 +152,7 @@ public class Reporte extends Updatable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, conciliacion, tipo, disponible, fechaDesde, fechaHasta);
+		return Objects.hash(id, (conciliacion != null ? conciliacion.getId() : 0), tipo, disponible, fechaDesde, fechaHasta);
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class Reporte extends Updatable {
 
 	@Override
 	public String toString() {
-		return "Reporte [id=" + id + ", conciliacion=" + conciliacion + ", tipo=" + tipo + ", disponible=" + disponible
+		return "Reporte [id=" + id + ", conciliacion=" + (conciliacion != null ? conciliacion.getId() : 0) + ", tipo=" + tipo + ", disponible=" + disponible
 				+ ", fechaDesde=" + fechaDesde + ", fechaHasta=" + fechaHasta + "]";
 	}
 

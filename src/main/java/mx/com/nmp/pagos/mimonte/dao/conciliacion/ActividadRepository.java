@@ -37,7 +37,7 @@ public interface ActividadRepository extends JpaRepository<Actividad, Long> {
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio AND act.fecha BETWEEN :fechaDesde AND :fechaHasta")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio AND act.fecha BETWEEN :fechaDesde AND :fechaHasta  ORDER BY act.fecha DESC")
 	public List<ConsultaActividadDTO> findByFolioFechaDesdeAndFechaHasta(@Param("folio") final Integer folio,
 			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta);
 
@@ -49,7 +49,7 @@ public interface ActividadRepository extends JpaRepository<Actividad, Long> {
 	 * @param fechaDesde
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio AND act.fecha >= :fechaDesde")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio AND act.fecha >= :fechaDesde  ORDER BY act.fecha DESC")
 	public List<ConsultaActividadDTO> findByFolioAndFechaDesde(@Param("folio") final Integer folio,
 			@Param("fechaDesde") final Date fechaDesde);
 
@@ -61,7 +61,7 @@ public interface ActividadRepository extends JpaRepository<Actividad, Long> {
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio AND act.fecha <= :fechaHasta")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio AND act.fecha <= :fechaHasta  ORDER BY act.fecha DESC")
 	public List<ConsultaActividadDTO> findByFolioAndFechaHasta(@Param("folio") final Integer folio,
 			@Param("fechaHasta") final Date fechaHasta);
 
@@ -72,15 +72,7 @@ public interface ActividadRepository extends JpaRepository<Actividad, Long> {
 	 * @param folio
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio ORDER BY act.fecha DESC")
 	public List<ConsultaActividadDTO> findByFolio(@Param("folio") final Integer folio);
-
-	/**
-	 * Regresa una lista de objetos de tipo ConsultaActividadDTO con los ultimos 10
-	 * registros
-	 * 
-	 * @return
-	 */
-	public List<ConsultaActividadDTO> nGetTopXActividades(@Param("limitValue") final Integer limit);
 
 }

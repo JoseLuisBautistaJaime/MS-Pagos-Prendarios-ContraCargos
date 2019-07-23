@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.exception;
 
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+
 /**
  * @name ConciliacionException
  * @description Clase de excepcion lanzada cuando se egenra un error de
@@ -20,8 +22,22 @@ public class ConciliacionException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Codigo de error
+	 */
+	private CodigoError codigoError;
+
 	public ConciliacionException(String message) {
 		super(message);
+	}
+
+	public ConciliacionException(String message, CodigoError codigoError) {
+		super(message);
+		this.codigoError = codigoError;
+	}
+
+	public CodigoError getCodigoError() {
+		return codigoError;
 	}
 
 }

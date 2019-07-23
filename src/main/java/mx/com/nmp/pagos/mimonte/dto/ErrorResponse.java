@@ -1,5 +1,7 @@
-
-
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dto;
 
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
@@ -9,11 +11,11 @@ import mx.com.nmp.pagos.mimonte.constans.TipoError;
 
 
 /**
- * Nombre: ErrorResponse
- * Descripcion: Representa la respuesta cuando genera algun error
+ * @name ErrorResponse
+ * @description Representa la respuesta cuando genera algun error
  *
- * @author: Javier Hernandez Barraza jhernandez@quarksoft.net
- * @version: 0.1
+ * @author Javier Hernandez Barraza jhernandez@quarksoft.net
+ * @version 0.1
  */
 public class ErrorResponse {
     /**

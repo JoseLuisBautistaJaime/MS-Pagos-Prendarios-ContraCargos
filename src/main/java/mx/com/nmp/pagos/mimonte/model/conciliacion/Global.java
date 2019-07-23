@@ -3,8 +3,6 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,7 +36,7 @@ public class Global implements Serializable{
 	private Date fecha;
 	
 	@Column(name = "movimientos")
-	private Integer movmientos;
+	private Integer movimientos;
 	
 	@Column(name = "partidas")
 	private Integer partidas;
@@ -67,23 +65,22 @@ public class Global implements Serializable{
 	@Column(name = "diferencia_proveedor_banco")
 	private BigDecimal diferenciaProveedorBanco;
 	
-	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
-	@JoinColumn(name = "id_conciliacion",  insertable = false, updatable = false)
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name = "id_conciliacion")
 	private Conciliacion conciliacion;
 
 	public Global() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public Global(Long id, Date fecha, Integer movmientos, Integer partidas, BigDecimal monto, BigDecimal importeMidas,
+	public Global(Long id, Date fecha, Integer movimientos, Integer partidas, BigDecimal monto, BigDecimal importeMidas,
 			BigDecimal importeProveedor, BigDecimal importeBanco, BigDecimal importeDevoluciones, Integer devoluciones,
 			BigDecimal diferenciaProveedorMidas, BigDecimal diferenciaProveedorBanco, Conciliacion conciliacion
 			) {
 		super();
 		this.id = id;
 		this.fecha = fecha;
-		this.movmientos = movmientos;
+		this.movimientos = movimientos;
 		this.partidas = partidas;
 		this.monto = monto;
 		this.importeMidas = importeMidas;
@@ -112,12 +109,12 @@ public class Global implements Serializable{
 		this.fecha = fecha;
 	}
 
-	public Integer getMovmientos() {
-		return movmientos;
+	public Integer getMovimientos() {
+		return movimientos;
 	}
 
-	public void setMovmientos(Integer movmientos) {
-		this.movmientos = movmientos;
+	public void setMovimientos(Integer movimientos) {
+		this.movimientos = movimientos;
 	}
 
 	public Integer getPartidas() {
@@ -204,7 +201,7 @@ public class Global implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((conciliacion == null) ? 0 : conciliacion.hashCode());
+		result = prime * result + ((conciliacion == null || conciliacion.getId() == null) ? 0 : conciliacion.getId().hashCode());
 		result = prime * result + ((devoluciones == null) ? 0 : devoluciones.hashCode());
 		result = prime * result + ((diferenciaProveedorBanco == null) ? 0 : diferenciaProveedorBanco.hashCode());
 		result = prime * result + ((diferenciaProveedorMidas == null) ? 0 : diferenciaProveedorMidas.hashCode());
@@ -215,95 +212,30 @@ public class Global implements Serializable{
 		result = prime * result + ((importeMidas == null) ? 0 : importeMidas.hashCode());
 		result = prime * result + ((importeProveedor == null) ? 0 : importeProveedor.hashCode());
 		result = prime * result + ((monto == null) ? 0 : monto.hashCode());
-		result = prime * result + ((movmientos == null) ? 0 : movmientos.hashCode());
+		result = prime * result + ((movimientos == null) ? 0 : movimientos.hashCode());
 		result = prime * result + ((partidas == null) ? 0 : partidas.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj) {		
 		if (this == obj)
 			return true;
-		if (obj == null)
+
+		if (!(obj instanceof Global))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Global other = (Global) obj;
-		if (conciliacion == null) {
-			if (other.conciliacion != null)
-				return false;
-		} else if (!conciliacion.equals(other.conciliacion))
-			return false;
-		if (devoluciones == null) {
-			if (other.devoluciones != null)
-				return false;
-		} else if (!devoluciones.equals(other.devoluciones))
-			return false;
-		if (diferenciaProveedorBanco == null) {
-			if (other.diferenciaProveedorBanco != null)
-				return false;
-		} else if (!diferenciaProveedorBanco.equals(other.diferenciaProveedorBanco))
-			return false;
-		if (diferenciaProveedorMidas == null) {
-			if (other.diferenciaProveedorMidas != null)
-				return false;
-		} else if (!diferenciaProveedorMidas.equals(other.diferenciaProveedorMidas))
-			return false;
-		if (fecha == null) {
-			if (other.fecha != null)
-				return false;
-		} else if (!fecha.equals(other.fecha))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (importeBanco == null) {
-			if (other.importeBanco != null)
-				return false;
-		} else if (!importeBanco.equals(other.importeBanco))
-			return false;
-		if (importeDevoluciones == null) {
-			if (other.importeDevoluciones != null)
-				return false;
-		} else if (!importeDevoluciones.equals(other.importeDevoluciones))
-			return false;
-		if (importeMidas == null) {
-			if (other.importeMidas != null)
-				return false;
-		} else if (!importeMidas.equals(other.importeMidas))
-			return false;
-		if (importeProveedor == null) {
-			if (other.importeProveedor != null)
-				return false;
-		} else if (!importeProveedor.equals(other.importeProveedor))
-			return false;
-		if (monto == null) {
-			if (other.monto != null)
-				return false;
-		} else if (!monto.equals(other.monto))
-			return false;
-		if (movmientos == null) {
-			if (other.movmientos != null)
-				return false;
-		} else if (!movmientos.equals(other.movmientos))
-			return false;
-		if (partidas == null) {
-			if (other.partidas != null)
-				return false;
-		} else if (!partidas.equals(other.partidas))
-			return false;
-		return true;
+
+		final Global other = (Global) obj;
+		return (this.hashCode() == other.hashCode());
 	}
 
 	@Override
 	public String toString() {
-		return "Global [id=" + id + ", fecha=" + fecha + ", movmientos=" + movmientos + ", partidas=" + partidas
+		return "Global [id=" + id + ", fecha=" + fecha + ", movimientos=" + movimientos + ", partidas=" + partidas
 				+ ", monto=" + monto + ", importeMidas=" + importeMidas + ", importeProveedor=" + importeProveedor
 				+ ", importeBanco=" + importeBanco + ", importeDevoluciones=" + importeDevoluciones + ", devoluciones="
 				+ devoluciones + ", diferenciaProveedorMidas=" + diferenciaProveedorMidas
-				+ ", diferenciaProveedorBanco=" + diferenciaProveedorBanco + ", conciliacion=" + conciliacion + "]";
+				+ ", diferenciaProveedorBanco=" + diferenciaProveedorBanco + ", conciliacion=" + (conciliacion != null ? conciliacion.getId() : 0) + "]";
 	}
 
 	

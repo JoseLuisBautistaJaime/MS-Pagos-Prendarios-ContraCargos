@@ -226,7 +226,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 	public String toString() {
 		return "Conciliacion [id=" + id + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta=" + cuenta
 				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idPolizaTesoreria=" + idPolizaTesoreria
-				+ ", idAsientoContable=" + idAsientoContable + ", completedDate=" + completedDate + ", global=" + global
+				+ ", idAsientoContable=" + idAsientoContable + ", completedDate=" + completedDate + ", global=" + (global != null ? global.getId() : 0)
 				+ ", subEstatus=" + subEstatus + "]";
 	}
 

@@ -15,11 +15,6 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class EstatusConciliacionDTO implements Comparable<EstatusConciliacionDTO> {
 
-	/**
-	 * Serial id.
-	 */
-	private static final long serialVersionUID = 6207923110827146624L;
-
 	private Integer id;
 	private String descripcion;
 	private Boolean estatus;

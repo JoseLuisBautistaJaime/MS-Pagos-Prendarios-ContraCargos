@@ -15,18 +15,12 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class EstatusDevolucionDTO implements Comparable<EstatusDevolucionDTO> {
 
-	/**
-	 * Serial id.
-	 */
-	private static final long serialVersionUID = 3417477420340701274L;
-
 	private Integer id;
 	private String descripcion;
 	private Boolean estatus;
 
 	public EstatusDevolucionDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public EstatusDevolucionDTO(Integer id, String descripcion, Boolean estatus) {

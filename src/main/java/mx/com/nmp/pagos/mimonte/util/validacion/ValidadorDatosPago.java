@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
+import java.math.BigDecimal;
+
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
@@ -7,21 +9,22 @@ import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
 
 /**
- * Nombre: ValidadorDatosPago Descripcion: Validador de Datos de Pago
+ * @name ValidadorDatosPago
+ * @description Validador de Datos de Pago
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 30/11/2018 14:16 hrs.
  * @version 0.1
  */
-public class ValidadorDatosPago {
+public interface ValidadorDatosPago {
 
 	/**
-	 * 
 	 * Metodo que valida el objeto PagoRequestDTO para que no haya datos nulos
 	 * 
 	 * @param pagoRequestDTO
+	 * @param cantidadMaximaPartidas
 	 */
-	public static final void validacionesInicialesPago(PagoRequestDTO pagoRequestDTO, int cantidadMaximaPartidas) {
+	public static void validacionesInicialesPago(PagoRequestDTO pagoRequestDTO, int cantidadMaximaPartidas) {
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(pagoRequestDTO);
 		vo.noNulo(pagoRequestDTO.getConcepto());
@@ -43,12 +46,11 @@ public class ValidadorDatosPago {
 	}
 
 	/**
-	 * 
 	 * Metodo que valida un objeto TarjetaPagoDTO para que no contenga valores nulos
 	 * 
 	 * @param tarjeta
 	 */
-	public static final void validacionesTrajeta(TarjetaPagoDTO tarjeta) {
+	public static void validacionesTrajeta(TarjetaPagoDTO tarjeta) {
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(tarjeta);
 		vo.noNulo(tarjeta.getAlias());
@@ -56,18 +58,24 @@ public class ValidadorDatosPago {
 		vo.noNulo(tarjeta.getToken());
 	}
 
+	/**
+	 * Valida que un objeto de tipo PagoRequestDTO y sus atributos sean correctos
+	 * 
+	 * @param pagoRequestDTO
+	 * @throws PagoException
+	 */
 	public static void doTypeValidations(PagoRequestDTO pagoRequestDTO) throws PagoException {
 		if (pagoRequestDTO.getIdCliente() <= 0) {
 			throw new PagoException(PagoConstants.FieldSizeConstants.CLIENT_ID_LESS_OR_EQUAL_THAN_0);
 		}
-		if (pagoRequestDTO.getMontoTotal() <= 0)
+		if (pagoRequestDTO.getMontoTotal().compareTo(BigDecimal.ZERO) <= 0)
 			throw new PagoException(PagoConstants.TOTAL_AMOUNT_LESS_OR_EQUAL_THAN_0);
-		Double sum = 0D;
+		BigDecimal sum = new BigDecimal("0");
 		for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
-			sum = Double.sum(operacion.getMonto(), sum);
+			sum = operacion.getMonto().add(sum);
 			if (operacion.getIdOperacion() <= 0)
 				throw new PagoException(PagoConstants.OPERATION_ID_LESS_OR_EQUAL_THAN_0);
-			if (operacion.getMonto() <= 0)
+			if (operacion.getMonto().compareTo(BigDecimal.ZERO) < 0)
 				throw new PagoException(PagoConstants.OPERATION_AMOUNT_LESS_OR_EQUAL_THAN_0);
 
 			try {
@@ -76,7 +84,7 @@ public class ValidadorDatosPago {
 				throw new PagoException(PagoConstants.NUMBER_FORMAT_IN_FOLIO_CONTRATO);
 			}
 		}
-		if (!Double.valueOf(pagoRequestDTO.getMontoTotal()).equals(sum))
+		if (!pagoRequestDTO.getMontoTotal().equals(sum))
 			throw new PagoException(PagoConstants.IRREGULAR_OPERATIONS_AMOUNT);
 		try {
 			Long.parseLong(pagoRequestDTO.getIdTransaccionMidas());
@@ -98,13 +106,10 @@ public class ValidadorDatosPago {
 		if (null != pagoRequestDTO) {
 			if (null != pagoRequestDTO.getConcepto()
 					&& pagoRequestDTO.getConcepto().length() > PagoConstants.DataBaseFieldType.PAGO_DESCRIPCION_FIELD)
-				throw new PagoException(PagoConstants.FieldSizeConstants.DESCRIPTION_SIZE_TOO_LONG);
+				throw new PagoException(PagoConstants.FieldSizeConstants.CONCEPTO_SIZE_TOO_LONG);
 			if (null != pagoRequestDTO.getIdTransaccionMidas() && Long.parseLong(pagoRequestDTO
 					.getIdTransaccionMidas()) > PagoConstants.DataBaseFieldType.PAGO_ID_TRANSACCION_MIDAS_FIELD)
 				throw new PagoException(PagoConstants.FieldSizeConstants.MIDAS_TRANSACTION_ID_TOO_LONG);
-			if (null != pagoRequestDTO.getMontoTotal()
-					&& pagoRequestDTO.getMontoTotal() > PagoConstants.DataBaseFieldType.PAGO_MONTO_TOTAL_FIELD)
-				throw new PagoException(PagoConstants.FieldSizeConstants.TOTAL_AMOUNT_TOO_LONG);
 			if (null != pagoRequestDTO.getGuardaTarjeta() && pagoRequestDTO.getGuardaTarjeta()
 					&& null == pagoRequestDTO.getTarjeta())
 				throw new PagoException(PagoConstants.CARD_OBJECT_IS_NULL_OR_EMPTY);
@@ -123,10 +128,7 @@ public class ValidadorDatosPago {
 						throw new PagoException(PagoConstants.FieldSizeConstants.OPERATION_ID_TOO_LONG);
 					if (null != operacionDTO.getNombreOperacion() && operacionDTO.getNombreOperacion()
 							.length() > PagoConstants.DataBaseFieldType.PAGO_NOMBRE_OPERACION_FIELD)
-						throw new PagoException(PagoConstants.FieldSizeConstants.DESCRIPTION_SIZE_TOO_LONG);
-					if (null != operacionDTO.getMonto()
-							&& operacionDTO.getMonto() > PagoConstants.DataBaseFieldType.PAGO_MONTO_OPERACION_FIELD)
-						throw new PagoException(PagoConstants.FieldSizeConstants.OPERATION_AMOUNT_TOO_LONG);
+						throw new PagoException(PagoConstants.FieldSizeConstants.NOMBRE_OPERACION_SIZE_TOO_LONG);
 				}
 			}
 		} else

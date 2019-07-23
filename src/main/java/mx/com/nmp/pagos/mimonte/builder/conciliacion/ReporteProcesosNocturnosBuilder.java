@@ -5,10 +5,7 @@
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteProcesosNocturnosDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
@@ -25,9 +22,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 public abstract class ReporteProcesosNocturnosBuilder {
 	
 	
-	public ReporteProcesosNocturnosBuilder() {
+	private ReporteProcesosNocturnosBuilder() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -35,13 +31,13 @@ public abstract class ReporteProcesosNocturnosBuilder {
 	 * @param reporteSet
 	 * @return
 	 */              
-	@SuppressWarnings("unlikely-arg-type")
 	public static ReporteProcesosNocturnosDTO buildReporteProcesosNocturnosDTOSetFromReporteSet(List<Reporte> reporteSet){
-		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = null;
+		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO();
+		reporteProcesosNocturnosDTO.setDisponible(false);
 		if(reporteSet != null && !reporteSet.isEmpty()) {
 			reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO();
 			for(Reporte reporte : reporteSet) {
-				if(reporte.getTipo().equals(TipoReporteEnum.MIDAS.name())) {
+				if(reporte.getTipo() == TipoReporteEnum.MIDAS) {
 					reporteProcesosNocturnosDTO.setFechaDesde(reporte.getFechaDesde());
 					reporteProcesosNocturnosDTO.setFechaHasta(reporte.getFechaHasta());
 					reporteProcesosNocturnosDTO.setDisponible(reporte.getDisponible());

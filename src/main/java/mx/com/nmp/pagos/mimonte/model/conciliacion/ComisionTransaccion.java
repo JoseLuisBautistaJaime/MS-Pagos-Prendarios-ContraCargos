@@ -153,7 +153,7 @@ public class ComisionTransaccion extends Updatable implements java.io.Serializab
 
 	@Override
 	public String toString() {
-		return "ComisionTransaccion [id=" + id + ", conciliacion=" + conciliacion + ", fechaDesde=" + fechaDesde
+		return "ComisionTransaccion [id=" + id + ", conciliacion=" + (conciliacion != null ? conciliacion.getId() : 0) + ", fechaDesde=" + fechaDesde
 				+ ", fechaHasta=" + fechaHasta + ", comision=" + comision + "]";
 	}
 

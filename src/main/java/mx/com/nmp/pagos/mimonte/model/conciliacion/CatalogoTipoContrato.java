@@ -28,17 +28,11 @@ public class CatalogoTipoContrato {
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@Column(name = "descripcion", nullable = false)
-	private String descripcion;
-
-	@Column(name = "baja_Logica", nullable = false)
-	private String bajaLogica;
-
 	@Column(name = "abreviatura", nullable = false)
 	private String abreviatura;
 
-	@Column(name = "inddep", nullable = false)
-	private Integer inddep;
+	@Column(name = "descripcion", nullable = false)
+	private String descripcion;
 
 	public Integer getId() {
 		return id;
@@ -46,22 +40,6 @@ public class CatalogoTipoContrato {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getBajaLogica() {
-		return bajaLogica;
-	}
-
-	public void setBajaLogica(String bajaLogica) {
-		this.bajaLogica = bajaLogica;
 	}
 
 	public String getAbreviatura() {
@@ -72,23 +50,26 @@ public class CatalogoTipoContrato {
 		this.abreviatura = abreviatura;
 	}
 
-	public Integer getInddep() {
-		return inddep;
+	public String getDescripcion() {
+		return descripcion;
 	}
 
-	public void setInddep(Integer inddep) {
-		this.inddep = inddep;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	@Override
 	public String toString() {
-		return "CatalogoTipoContrato [id=" + id + ", descripcion=" + descripcion + ", bajaLogica=" + bajaLogica
-				+ ", abreviatura=" + abreviatura + ", inddep=" + inddep + "]";
+		return "CatalogoTipoContrato{" +
+				"id=" + id +
+				", abreviatura='" + abreviatura + '\'' +
+				", descripcion='" + descripcion + '\'' +
+				'}';
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, descripcion, bajaLogica, abreviatura, inddep);
+		return Objects.hash(id, abreviatura, descripcion);
 	}
 
 	@Override

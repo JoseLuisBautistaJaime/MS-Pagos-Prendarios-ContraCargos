@@ -7,8 +7,6 @@ import javax.persistence.*;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
 
-import java.util.Date;
-
 
 /**
  * The persistent class for the to_layout_linea database table.
@@ -22,9 +20,6 @@ public class LayoutLinea extends Updatable implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-
-	@Column(name="created_by")
-	private String createdBy;
 
 	@Column(name="cuenta")
 	private String cuenta;
@@ -43,7 +38,7 @@ public class LayoutLinea extends Updatable implements Serializable {
 
 	@Column(name="proyecto_nmp")
 	private String proyectoNmp;
-
+	
 	@Column(name="unidad_operativa")
 	private String unidadOperativa;
 
@@ -52,6 +47,7 @@ public class LayoutLinea extends Updatable implements Serializable {
 	private Layout layout;
 
 	public LayoutLinea() {
+		super();
 	}
 
 	public Long getId() {
@@ -60,14 +56,6 @@ public class LayoutLinea extends Updatable implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
 	}
 
 	public String getCuenta() {
@@ -84,22 +72,6 @@ public class LayoutLinea extends Updatable implements Serializable {
 
 	public void setDepId(String depId) {
 		this.depId = depId;
-	}
-
-	public String getLastModifiedBy() {
-		return this.lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public Date getLastModifiedDate() {
-		return this.lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
 	}
 
 	public String getLinea() {
@@ -148,13 +120,12 @@ public class LayoutLinea extends Updatable implements Serializable {
 
 	public void setLayout(Layout layout) {
 		this.layout = layout;
-	}
+	}	
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((createdBy == null) ? 0 : createdBy.hashCode());
 		result = prime * result + ((cuenta == null) ? 0 : cuenta.hashCode());
 		result = prime * result + ((depId == null) ? 0 : depId.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());

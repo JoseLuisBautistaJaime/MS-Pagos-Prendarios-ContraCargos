@@ -23,7 +23,6 @@ public abstract class ReporteEstadoCuentaBuilder {
 
 	public ReporteEstadoCuentaBuilder() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -33,13 +32,14 @@ public abstract class ReporteEstadoCuentaBuilder {
 	 * @param reporteSet
 	 * @return reporteEstadoCuentaDTOSet
 	 */
-	@SuppressWarnings("unlikely-arg-type")
 	public static ReporteEstadoCuentaDTO buildReporteEstadoCuentaDTOFromReporteList(List<Reporte> reporteList) {
-		ReporteEstadoCuentaDTO reporteEstadoCuentaDTO = null;
+		ReporteEstadoCuentaDTO reporteEstadoCuentaDTO = new ReporteEstadoCuentaDTO();
+		reporteEstadoCuentaDTO.setDisponible(false);
+
 		if (reporteList != null && !reporteList.isEmpty()) {
 			reporteEstadoCuentaDTO = new ReporteEstadoCuentaDTO();
 			for (Reporte reporte : reporteList) {
-				if (reporte.getTipo().equals(TipoReporteEnum.ESTADO_CUENTA.name())) {
+				if (reporte.getTipo() == TipoReporteEnum.ESTADO_CUENTA) {
 					reporteEstadoCuentaDTO.setFechaDesde(reporte.getFechaDesde());
 					reporteEstadoCuentaDTO.setFechaHasta(reporte.getFechaHasta());
 					reporteEstadoCuentaDTO.setDisponible(reporte.getDisponible());

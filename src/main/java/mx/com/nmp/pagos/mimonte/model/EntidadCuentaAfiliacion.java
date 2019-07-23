@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.model;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -27,7 +29,12 @@ import javax.persistence.Table;
 @Table(name = "tr_entidad_cuenta_afiliacion")
 @IdClass(ECACompositeKey.class)
 @NamedQueries(value = @NamedQuery(name = "EntidadCuentaAfiliacion.dropEntidadCuentaAfiliacioneRelationship", query = "DELETE FROM EntidadCuentaAfiliacion eca WHERE eca.entidad.id = :idEntidad AND eca.cuenta.id = :idCuenta AND eca.afiliacion.id = :idAfiliacion"))
-public class EntidadCuentaAfiliacion implements Comparable<EntidadCuentaAfiliacion> {
+public class EntidadCuentaAfiliacion implements Comparable<EntidadCuentaAfiliacion>, java.io.Serializable {
+
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -87,7 +94,20 @@ public class EntidadCuentaAfiliacion implements Comparable<EntidadCuentaAfiliaci
 
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		return Objects.hash(entidad, cuenta, afiliacion);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof EntidadCuentaAfiliacion))
+			return false;
+
+		final EntidadCuentaAfiliacion other = (EntidadCuentaAfiliacion) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

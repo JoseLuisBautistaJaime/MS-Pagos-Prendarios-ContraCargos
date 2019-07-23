@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
@@ -26,9 +29,12 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
+import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 
 /**
  * @name MovimientosProveedorService
@@ -61,7 +67,17 @@ public class MovimientosProveedorService {
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
 
+	/**
+	 * Conciliacion Helper
+	 */
+	@Autowired
+	private ConciliacionHelper conciliacionHelper;
 
+	/**
+	 * Registro de actividades
+	 */
+	@Autowired
+	private ActividadGenericMethod actividadGenericMethod;
 
 	public MovimientosProveedorService() {
 		super();
@@ -130,49 +146,58 @@ public class MovimientosProveedorService {
 	 * @param listRequestDTO
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void save(MovimientoTransaccionalListRequestDTO listRequestDTO, final String userRequest) throws ConciliacionException {
+	public void save(MovimientoTransaccionalListRequestDTO listRequestDTO, final String userRequest)
+			throws ConciliacionException {
 
 		Conciliacion conciliacion = this.conciliacionRepository.findByFolio(listRequestDTO.getFolio());
 		if (conciliacion == null) {
-			throw new ConciliacionException("Conciliacion con el folio " + listRequestDTO.getFolio() + " no existe");
+			throw new ConciliacionException("Conciliacion con el folio " + listRequestDTO.getFolio() + " no existe",
+					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
 
 		// Obtiene el reporte del proveedor transaccional
 		Reporte reporte = null;
-		/*try {
-			reporte = reporteRepository.findLastByIdConciliacionAndTipo(listRequestDTO.getFolio(), TipoReporteEnum.PROVEEDOR);
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException(ex.getMessage());
-		}*/
+		/*
+		 * try { reporte =
+		 * reporteRepository.findLastByIdConciliacionAndTipo(listRequestDTO.getFolio(),
+		 * TipoReporteEnum.PROVEEDOR); } catch (Exception ex) { ex.printStackTrace();
+		 * throw new ConciliacionException(ex.getMessage()); }
+		 */
 
 		// Si no existe el reporte se crea uno nuevo
 		if (reporte == null) {
-			reporte = ReporteBuilder.buildReporte(conciliacion,
-					listRequestDTO.getFechaDesde(),
+			reporte = ReporteBuilder.buildReporte(conciliacion, listRequestDTO.getFechaDesde(),
 					listRequestDTO.getFechaHasta(), userRequest);
 		}
 		// En caso de existir se actualiza la fecha de la ultima modificacion
-		/*else {
-			reporte.setLastModifiedBy(userRequest);
-			reporte.setLastModifiedDate(new Date());
-		}*/
+		/*
+		 * else { reporte.setLastModifiedBy(userRequest);
+		 * reporte.setLastModifiedDate(new Date()); }
+		 */
 
 		// Se guarda el reporte y los movimientos
 		try {
 
 			reporte = reporteRepository.save(reporte);
 			List<MovimientoProveedor> movimientoProveedorList = MovimientosBuilder
-					.buildMovimientoProveedorListFromMovimientoTransaccionalListRequestDTO(
-							listRequestDTO, reporte.getId());
+					.buildMovimientoProveedorListFromMovimientoTransaccionalListRequestDTO(listRequestDTO,
+							reporte.getId());
 
 			// Verificar si se guarda en batch
 			movimientoProveedorRepository.saveAll(movimientoProveedorList);
+			// Registro de actividad
+			actividadGenericMethod.registroActividad(listRequestDTO.getFolio(),
+					"Se dan de alta " + listRequestDTO.getMovimientos().size()
+							+ " movimientos de proveedor transaccional, para  el folio " + listRequestDTO.getFolio(),
+					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+
+			// Notificar cambios o alta de reportes, si existen...
+			this.conciliacionHelper.generarConciliacion(conciliacion.getId(), Arrays.asList(reporte));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE);
+			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
+					CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		}
 	}
 
@@ -184,12 +209,8 @@ public class MovimientosProveedorService {
 	 * @return
 	 */
 	public List<MovimientoProveedorDTO> findByFolio(final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
-//		@SuppressWarnings("deprecation")
-//		Pageable pageable = new PageRequest(commonConciliacionRequestDTO.getPagina(),
-//				commonConciliacionRequestDTO.getResultados());
-		return MovimientosBuilder
-				.buildMovimientoProveedorDTOListFromMovimientoProveedorList(movimientoProveedorRepository
-						.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()/*, pageable*/));
+		return MovimientosBuilder.buildMovimientoProveedorDTOListFromMovimientoProveedorList(
+				movimientoProveedorRepository.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()));
 	}
 
 }

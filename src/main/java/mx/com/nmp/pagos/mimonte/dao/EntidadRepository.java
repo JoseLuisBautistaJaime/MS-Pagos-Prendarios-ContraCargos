@@ -94,6 +94,12 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	 */
 	public List<Entidad> findByContactos_Id(final Long idContacto);
 
+	/**
+	 * Encuentra una entidad por id de conciliacion asociado
+	 * 
+	 * @param idConciliacion
+	 * @return
+	 */
 	@Query("SELECT e FROM Entidad e, Conciliacion c WHERE c.entidad.id = e.id AND c.id = :idConciliacion")
 	public Entidad findByConciliacion(@Param("idConciliacion") Integer idConciliacion);
 

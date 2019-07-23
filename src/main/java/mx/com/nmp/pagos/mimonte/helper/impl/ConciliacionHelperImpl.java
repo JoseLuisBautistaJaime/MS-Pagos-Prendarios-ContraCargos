@@ -4,18 +4,24 @@
  */
 package mx.com.nmp.pagos.mimonte.helper.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
-
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
+import mx.com.nmp.pagos.mimonte.observer.ReporteObserver;
 
 /**
  * @name ConciliacionHelperImpl
- * @description Clase helper con metodos comunes usados para validacion y acciones comunes
+ * @description Clase helper con metodos comunes usados para validacion y
+ *              acciones comunes
  *
  * @author Jorge Galvez
  * @creationDate 16/20/2019 17:34 hrs.
@@ -24,33 +30,51 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 @Component
 public class ConciliacionHelperImpl implements ConciliacionHelper {
 
-
 	/**
 	 * Conciliacion repository
 	 */
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
 
+	@Autowired
+	private ReporteObserver reporteObserver;
+
 
 	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#getConciliacionByFolio(java.lang.Integer)
+	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#getConciliacionByFolio(java.lang.Integer, java.lang.Integer)
 	 */
-	public Conciliacion getConciliacionByFolio(Integer folio) throws ConciliacionException {
+	public Conciliacion getConciliacionByFolio(Integer folio, Integer idStatusConciliacion) throws ConciliacionException {
 
 		Conciliacion conciliacion = null;
 		try {
 			conciliacion = this.conciliacionRepository.findByFolio(folio);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("No existe conciliacion para el folio " + folio);
+//			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
+//					CodigoError.NMP_PMIMONTE_BUSINESS_045);
+			throw new ConciliacionException("Conciliacion con el folio " + folio + " no existe", CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
-		
+
 		if (conciliacion == null) {
-			throw new ConciliacionException("No existe conciliacion para el folio " + folio);
+//			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
+//					CodigoError.NMP_PMIMONTE_BUSINESS_045);
+			throw new ConciliacionException("Conciliacion con el folio " + folio + " no existe", CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
-		
+		if (idStatusConciliacion != null && conciliacion.getEstatus().getId() != idStatusConciliacion) {
+			throw new ConciliacionException("Conciliacion con estado incorrecto", CodigoError.NMP_PMIMONTE_BUSINESS_034);
+		}
+
 		return conciliacion;
+	}
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#generarConciliacion(java.lang.Integer, mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte[])
+	 */
+	@Override
+	public void generarConciliacion(Integer folio, List<Reporte> reportes) throws ConciliacionException {
+		ReporteObservable reporteObservable = new ReporteObservable(reportes, folio);
+		reporteObservable.addObserver(reporteObserver);
+		reporteObservable.notifyObservers();
 	}
 
 }

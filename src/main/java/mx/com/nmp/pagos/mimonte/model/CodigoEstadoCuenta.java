@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -89,6 +90,24 @@ public class CodigoEstadoCuenta extends AbstractCatalogoAdm implements Comparabl
 	@Override
 	public String toString() {
 		return "CodigoEstadoCuenta [codigo=" + codigo + ", entidad=" + entidad + ", categoria=" + categoria + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(codigo, entidad, categoria);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof CodigoEstadoCuenta))
+			return false;
+
+		final CodigoEstadoCuenta other = (CodigoEstadoCuenta) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

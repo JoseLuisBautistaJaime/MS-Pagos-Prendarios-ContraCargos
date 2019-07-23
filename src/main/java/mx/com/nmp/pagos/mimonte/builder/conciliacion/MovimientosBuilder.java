@@ -250,7 +250,7 @@ public abstract class MovimientosBuilder {
 	 * @return
 	 */
 	public static MovimientoProveedor buildMovimientoProveedorFromMovimientoProveedorDTO(
-			MovimientoProveedorDTO movimientoProveedorDTO, final long idReporte) {
+			MovimientoProveedorDTO movimientoProveedorDTO, final int idReporte) {
 		MovimientoProveedor movimientoProveedor = new MovimientoProveedor();
 		movimientoProveedor.setId(null);
 		movimientoProveedor.setReporte(idReporte);
@@ -270,26 +270,33 @@ public abstract class MovimientosBuilder {
 		movimientoProveedor.setOrderId(movimientoProveedorDTO.getOrderId());
 		movimientoProveedor.setStatus(movimientoProveedorDTO.getStatus());
 		movimientoProveedor.setTransactionType(movimientoProveedorDTO.getTransactionType());
-		MetodoPagoMovimientosProveedor metodoPagoMovimientosProveedor = new MetodoPagoMovimientosProveedor();
-		metodoPagoMovimientosProveedor.setType(movimientoProveedorDTO.getPaymentMethod().getType());
-		metodoPagoMovimientosProveedor.setUrl(movimientoProveedorDTO.getPaymentMethod().getUrl());
-		movimientoProveedor.setMetodoPagoMovimientosProveedor(metodoPagoMovimientosProveedor);
-		TarjetaMovimientosProveedor tarjetaMovimientosProveedor = new TarjetaMovimientosProveedor();
-		tarjetaMovimientosProveedor.setAddress(movimientoProveedorDTO.getCard().getAddress());
-		tarjetaMovimientosProveedor.setAllowsCharges(movimientoProveedorDTO.getCard().getAllowsCharges());
-		tarjetaMovimientosProveedor.setAllowsPayouts(movimientoProveedorDTO.getCard().getAllowsPayouts());
-		tarjetaMovimientosProveedor.setBankCode(movimientoProveedorDTO.getCard().getBankCode());
-		tarjetaMovimientosProveedor.setBankName(movimientoProveedorDTO.getCard().getBankName());
-		tarjetaMovimientosProveedor.setBrand(movimientoProveedorDTO.getCard().getBrand());
-		tarjetaMovimientosProveedor.setCardNumber(movimientoProveedorDTO.getCard().getCardNumber());
-		tarjetaMovimientosProveedor.setCreationDate(movimientoProveedorDTO.getCard().getCreationDate());
-		tarjetaMovimientosProveedor.setCustomerId(movimientoProveedorDTO.getCard().getCustomerId());
-		tarjetaMovimientosProveedor.setExpirationMonth(movimientoProveedorDTO.getCard().getExpirationMonth());
-		tarjetaMovimientosProveedor.setExpirationYear(movimientoProveedorDTO.getCard().getExpirationYear());
-		tarjetaMovimientosProveedor.setHolderName(movimientoProveedorDTO.getCard().getHolderName());
-		tarjetaMovimientosProveedor.setId(movimientoProveedorDTO.getCard().getId());
-		tarjetaMovimientosProveedor.setType(movimientoProveedorDTO.getCard().getType());
-		movimientoProveedor.setTarjetaMovimientosProveedor(tarjetaMovimientosProveedor);
+
+		if (movimientoProveedorDTO.getPaymentMethod() != null) {
+			MetodoPagoMovimientosProveedor metodoPagoMovimientosProveedor = new MetodoPagoMovimientosProveedor();
+			metodoPagoMovimientosProveedor.setType(movimientoProveedorDTO.getPaymentMethod().getType());
+			metodoPagoMovimientosProveedor.setUrl(movimientoProveedorDTO.getPaymentMethod().getUrl());
+			movimientoProveedor.setMetodoPagoMovimientosProveedor(metodoPagoMovimientosProveedor);
+		}
+
+		if (movimientoProveedorDTO.getCard() != null) {
+			TarjetaMovimientosProveedor tarjetaMovimientosProveedor = new TarjetaMovimientosProveedor();
+			tarjetaMovimientosProveedor.setAddress(movimientoProveedorDTO.getCard().getAddress());
+			tarjetaMovimientosProveedor.setAllowsCharges(movimientoProveedorDTO.getCard().getAllowsCharges());
+			tarjetaMovimientosProveedor.setAllowsPayouts(movimientoProveedorDTO.getCard().getAllowsPayouts());
+			tarjetaMovimientosProveedor.setBankCode(movimientoProveedorDTO.getCard().getBankCode());
+			tarjetaMovimientosProveedor.setBankName(movimientoProveedorDTO.getCard().getBankName());
+			tarjetaMovimientosProveedor.setBrand(movimientoProveedorDTO.getCard().getBrand());
+			tarjetaMovimientosProveedor.setCardNumber(movimientoProveedorDTO.getCard().getCardNumber());
+			tarjetaMovimientosProveedor.setCreationDate(movimientoProveedorDTO.getCard().getCreationDate());
+			tarjetaMovimientosProveedor.setCustomerId(movimientoProveedorDTO.getCard().getCustomerId());
+			tarjetaMovimientosProveedor.setExpirationMonth(movimientoProveedorDTO.getCard().getExpirationMonth());
+			tarjetaMovimientosProveedor.setExpirationYear(movimientoProveedorDTO.getCard().getExpirationYear());
+			tarjetaMovimientosProveedor.setHolderName(movimientoProveedorDTO.getCard().getHolderName());
+			tarjetaMovimientosProveedor.setId(movimientoProveedorDTO.getCard().getId());
+			tarjetaMovimientosProveedor.setType(movimientoProveedorDTO.getCard().getType());
+			movimientoProveedor.setTarjetaMovimientosProveedor(tarjetaMovimientosProveedor);
+		}
+
 		return movimientoProveedor;
 	}
 
@@ -301,7 +308,7 @@ public abstract class MovimientosBuilder {
 	 * @return
 	 */
 	public static List<MovimientoProveedor> buildMovimientoProveedorListFromMovimientoTransaccionalListRequestDTO(
-			MovimientoTransaccionalListRequestDTO movimientoTransaccionalListRequestDTO, final long idReporte) {
+			MovimientoTransaccionalListRequestDTO movimientoTransaccionalListRequestDTO, final int idReporte) {
 		List<MovimientoProveedor> movimientoProveedorList = null;
 		MovimientoProveedor movimientoProveedor = null;
 		if (null != movimientoTransaccionalListRequestDTO && null != movimientoTransaccionalListRequestDTO.getFolio()

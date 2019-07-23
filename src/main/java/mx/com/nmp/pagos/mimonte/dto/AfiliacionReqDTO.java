@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.util.Objects;
+
 /**
  * @name AfiliacionReqDTO
  * @description Clase que encapsula la informacion sobre una afiliacion en el
@@ -51,7 +53,20 @@ public class AfiliacionReqDTO implements Comparable<AfiliacionReqDTO> {
 
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		return Objects.hash(id, numero);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof AfiliacionReqDTO))
+			return false;
+
+		final AfiliacionReqDTO other = (AfiliacionReqDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

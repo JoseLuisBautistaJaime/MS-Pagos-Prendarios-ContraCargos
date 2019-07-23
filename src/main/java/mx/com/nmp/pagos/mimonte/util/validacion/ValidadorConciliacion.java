@@ -8,9 +8,12 @@ import static org.junit.Assert.assertNotNull;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
@@ -20,14 +23,13 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestD
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -53,9 +55,7 @@ public interface ValidadorConciliacion {
 		try {
 			assertNotNull(commonConciliacionRequestDTO);
 			assertNotNull(commonConciliacionRequestDTO.getFolio());
-		} catch (java.lang.AssertionError ex) {
-			return false;
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return (commonConciliacionRequestDTO.getFolio() > 0);
@@ -88,8 +88,6 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateMovimientoProcesosNocturnosListResponseDTO(
 			MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosListResponseDTO) {
-		Calendar fechaInicio = Calendar.getInstance();
-		Calendar fechaFin = Calendar.getInstance();
 		try {
 			assertNotNull(movimientoProcesosNocturnosListResponseDTO);
 			assertNotNull(movimientoProcesosNocturnosListResponseDTO.getFolio());
@@ -104,25 +102,25 @@ public interface ValidadorConciliacion {
 					assertNotNull(movimientoMidasRequestDTO.getMontoOperacion());
 					assertNotNull(movimientoMidasRequestDTO.getSucursal());
 					assertNotNull(movimientoMidasRequestDTO.getTransaccion());
-					assertNotNull(movimientoMidasRequestDTO.getEstatus());
+					// assertNotNull(movimientoMidasRequestDTO.getEstatus());
 					assertNotNull(movimientoMidasRequestDTO.getFecha());
 					assertNotNull(movimientoMidasRequestDTO.getNumAutorizacion());
 					assertNotNull(movimientoMidasRequestDTO.getOperacionAbr());
 					assertNotNull(movimientoMidasRequestDTO.getOperacionDesc());
 					assertNotNull(movimientoMidasRequestDTO.getTipoContratoAbr());
 					assertNotNull(movimientoMidasRequestDTO.getTipoContratoDesc());
-					if (!movimientoMidasRequestDTO.getEstatus()) {
-						assertNotNull(movimientoMidasRequestDTO.getCodigoError());
-						assertNotNull(movimientoMidasRequestDTO.getMensajeError());
-						assertNotNull(movimientoMidasRequestDTO.getIdTarjeta());
-						assertNotNull(movimientoMidasRequestDTO.getMarcaTarjeta());
-						assertNotNull(movimientoMidasRequestDTO.getTipoTarjeta());
-						assertNotNull(movimientoMidasRequestDTO.getTarjeta());
-						assertNotNull(movimientoMidasRequestDTO.getMonedaPago());
-					} else {
-						assertNotNull(movimientoMidasRequestDTO.getComisiones());
-						assertNotNull(movimientoMidasRequestDTO.getInteres());
-					}
+					// if (!movimientoMidasRequestDTO.getEstatus()) {
+					// assertNotNull(movimientoMidasRequestDTO.getCodigoError());
+					// assertNotNull(movimientoMidasRequestDTO.getMensajeError());
+					// assertNotNull(movimientoMidasRequestDTO.getIdTarjeta());
+					// assertNotNull(movimientoMidasRequestDTO.getMarcaTarjeta());
+					// assertNotNull(movimientoMidasRequestDTO.getTipoTarjeta());
+					// assertNotNull(movimientoMidasRequestDTO.getTarjeta());
+					// assertNotNull(movimientoMidasRequestDTO.getMonedaPago());
+					// } else {
+					// assertNotNull(movimientoMidasRequestDTO.getComisiones());
+					// assertNotNull(movimientoMidasRequestDTO.getInteres());
+					// }
 
 					assertNotNull(movimientoMidasRequestDTO.getImporteTransaccion());
 					assertNotNull(movimientoMidasRequestDTO.getIdOperacion());
@@ -131,13 +129,7 @@ public interface ValidadorConciliacion {
 				}
 			} else
 				return false;
-			fechaInicio.setTime(movimientoProcesosNocturnosListResponseDTO.getFechaDesde());
-			fechaFin.setTime(movimientoProcesosNocturnosListResponseDTO.getFechaHasta());
-			if (fechaInicio.after(fechaFin))
-				throw new ConciliacionException(ConciliacionConstants.FECHA_DESDE_IS_AFTER_FECHA_HASTA);
-		} catch (java.lang.AssertionError ex) {
-			return false;
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return true;
@@ -153,66 +145,62 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateMovimientoTransaccionalListRequestDTO(
 			MovimientoTransaccionalListRequestDTO listRequestDTO) {
-		Calendar fechaInicial = Calendar.getInstance();
-		Calendar fechaFinal = Calendar.getInstance();
+
+		boolean valido = false;
 		try {
 			assertNotNull(listRequestDTO);
 			assertNotNull(listRequestDTO.getFolio());
-			assertNotNull(listRequestDTO.getMovimientos());
+
 			assertNotNull(listRequestDTO.getFechaDesde());
 			assertNotNull(listRequestDTO.getFechaHasta());
+
+			assertNotNull(listRequestDTO.getMovimientos());
+
 			if (CollectionUtils.isNotEmpty(listRequestDTO.getMovimientos())) {
 				for (MovimientoProveedorDTO movimientoProveedorDTO : listRequestDTO.getMovimientos()) {
-					assertNotNull(movimientoProveedorDTO.getAmount());
-					assertNotNull(movimientoProveedorDTO.getAuthorization());
-					assertNotNull(movimientoProveedorDTO.getCard());
-					assertNotNull(movimientoProveedorDTO.getCard().getAddress());
-					assertNotNull(movimientoProveedorDTO.getCard().getAllowsCharges());
-					assertNotNull(movimientoProveedorDTO.getCard().getAllowsPayouts());
-					assertNotNull(movimientoProveedorDTO.getCard().getBankCode());
-					assertNotNull(movimientoProveedorDTO.getCard().getBankName());
-					assertNotNull(movimientoProveedorDTO.getCard().getBrand());
-					assertNotNull(movimientoProveedorDTO.getCard().getCreationDate());
-					assertNotNull(movimientoProveedorDTO.getCard().getCustomerId());
-					assertNotNull(movimientoProveedorDTO.getCard().getExpirationMonth());
-					assertNotNull(movimientoProveedorDTO.getCard().getExpirationYear());
-					assertNotNull(movimientoProveedorDTO.getCard().getHolderName());
-					assertNotNull(movimientoProveedorDTO.getCard().getId());
-					assertNotNull(movimientoProveedorDTO.getCard().getCardNumber());
-					assertNotNull(movimientoProveedorDTO.getCard().getType());
-					assertNotNull(movimientoProveedorDTO.getConciliated());
-					assertNotNull(movimientoProveedorDTO.getCreationDate());
-					assertNotNull(movimientoProveedorDTO.getCurrency());
-					assertNotNull(movimientoProveedorDTO.getCustomerId());
-					assertNotNull(movimientoProveedorDTO.getDescription());
-					assertNotNull(movimientoProveedorDTO.getErrorCode());
-					assertNotNull(movimientoProveedorDTO.getErrorMessage());
-					assertNotNull(movimientoProveedorDTO.getMethod());
-					assertNotNull(movimientoProveedorDTO.getPaymentMethod());
-					assertNotNull(movimientoProveedorDTO.getPaymentMethod().getType());
-					assertNotNull(movimientoProveedorDTO.getPaymentMethod().getUrl());
-					assertNotNull(movimientoProveedorDTO.getOperationDate());
-					assertNotNull(movimientoProveedorDTO.getOperationType());
-					assertNotNull(movimientoProveedorDTO.getOrderId());
-					assertNotNull(movimientoProveedorDTO.getStatus());
-					assertNotNull(movimientoProveedorDTO.getTransactionType());
-					assertNotNull(movimientoProveedorDTO.getIdMovimiento());
+					/*
+					 * assertNotNull(movimientoProveedorDTO.getAmount());
+					 * assertNotNull(movimientoProveedorDTO.getAuthorization());
+					 * assertNotNull(movimientoProveedorDTO.getCard());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getAddress());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getAllowsCharges());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getAllowsPayouts());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getBankCode());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getBankName());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getBrand());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getCreationDate());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getCustomerId());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getExpirationMonth());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getExpirationYear());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getHolderName());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getId());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getCardNumber());
+					 * assertNotNull(movimientoProveedorDTO.getCard().getType());
+					 * assertNotNull(movimientoProveedorDTO.getConciliated());
+					 * assertNotNull(movimientoProveedorDTO.getCreationDate());
+					 * assertNotNull(movimientoProveedorDTO.getCurrency());
+					 * assertNotNull(movimientoProveedorDTO.getCustomerId());
+					 * assertNotNull(movimientoProveedorDTO.getDescription());
+					 * assertNotNull(movimientoProveedorDTO.getErrorCode());
+					 * assertNotNull(movimientoProveedorDTO.getErrorMessage());
+					 * assertNotNull(movimientoProveedorDTO.getMethod());
+					 * assertNotNull(movimientoProveedorDTO.getPaymentMethod());
+					 * assertNotNull(movimientoProveedorDTO.getPaymentMethod().getType());
+					 * assertNotNull(movimientoProveedorDTO.getPaymentMethod().getUrl());
+					 * assertNotNull(movimientoProveedorDTO.getOperationDate());
+					 * assertNotNull(movimientoProveedorDTO.getOperationType());
+					 * assertNotNull(movimientoProveedorDTO.getOrderId());
+					 * assertNotNull(movimientoProveedorDTO.getStatus());
+					 * assertNotNull(movimientoProveedorDTO.getTransactionType());
+					 * assertNotNull(movimientoProveedorDTO.getIdMovimiento());
+					 */
 					movimientoProveedorDTO.setId(null);
-					fechaInicial.setTime(listRequestDTO.getFechaDesde());
-					fechaFinal.setTime(listRequestDTO.getFechaHasta());
-					if (fechaInicial.after(fechaFinal)) {
-						return false;
-					}
 				}
-			} else
-				return false;
-		} catch (java.lang.AssertionError ex) {
-			return false;
-		} catch (Exception ex) {
-			return false;
+				valido = true;
+			}
+		} catch (java.lang.AssertionError | Exception ex) {
 		}
-
-		return true;
+		return valido;
 	}
 
 	/**
@@ -233,8 +221,10 @@ public interface ValidadorConciliacion {
 			ini.setTime(saveEstadoCuentaRequestDTO.getFechaInicial());
 			fin.setTime(saveEstadoCuentaRequestDTO.getFechaFinal());
 			if (ini.after(fin))
-				throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE);
+				throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE,
+						CodigoError.NMP_PMIMONTE_BUSINESS_037);
 		} catch (java.lang.AssertionError | Exception ex) {
+			ex.printStackTrace();
 			return false;
 		}
 		return true;
@@ -256,7 +246,8 @@ public interface ValidadorConciliacion {
 				ini.setTime(reporteRequestDTO.getFechaDesde());
 				fin.setTime(reporteRequestDTO.getFechaHasta());
 				if (fin.before(ini))
-					throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+					throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+							CodigoError.NMP_PMIMONTE_0008);
 			}
 		} catch (Exception ex) {
 			return false;
@@ -270,11 +261,14 @@ public interface ValidadorConciliacion {
 			assertNotNull(conciliacionRequestDTO.getCuenta().getId());
 			assertNotNull(conciliacionRequestDTO.getEntidad().getId());
 			if (conciliacionRequestDTO.getCuenta().getId() < 1)
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+						CodigoError.NMP_PMIMONTE_0008);
 			if (conciliacionRequestDTO.getEntidad().getId() < 1)
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+						CodigoError.NMP_PMIMONTE_0008);
 			if (createdBy == null || createdBy.isEmpty() || createdBy.equals(""))
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR);
+				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+						CodigoError.NMP_PMIMONTE_0008);
 		} catch (Exception ex) {
 			return false;
 		}
@@ -430,32 +424,62 @@ public interface ValidadorConciliacion {
 			assertNotNull(actualizarSubEstatusRequestDTO);
 			assertNotNull(actualizarSubEstatusRequestDTO.getFolio());
 			assertNotNull(actualizarSubEstatusRequestDTO.getIdSubEstatus());
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return true;
 	}
 
 	/**
-	 * Valida un objeto de tipo ResumenConciliacionRequestDTO para que contenga
-	 * todos los campos requeridos y estaos a su vez sean valores validos
+	 * Valida que dos fechas recibidas inicial y final sean congruentes o vaidas
+	 * entre ellas
 	 * 
-	 * @param resumenConciliacionRequestDTO
+	 * @param fechaInicial
+	 * @param fechaFinal
 	 * @return
 	 */
-	public static boolean validateResumenConciliacionRequestDTO(
-			ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
+	public static boolean validateFechasWithThemselves(Date fechaInicial, Date fechaFinal) {
+		Calendar ini = Calendar.getInstance();
+		Calendar fin = Calendar.getInstance();
+		ini.setTime(fechaInicial);
+		fin.setTime(fechaFinal);
+		return ((fin.after(ini) || ini.equals(fin)));
+	}
+
+	/**
+	 * Valida que dos fechas recibidas inicial y final sean congruentes respecto a
+	 * la fecha actual
+	 * 
+	 * @param fechaInicial
+	 * @param fechaFinal
+	 * @return
+	 */
+	public static boolean validateFechasWithCurrent(Date fechaInicial, Date fechaFinal) {
 		Calendar ini = Calendar.getInstance();
 		Calendar fin = Calendar.getInstance();
 		Calendar hoy = Calendar.getInstance();
-		if (null != resumenConciliacionRequestDTO && null != resumenConciliacionRequestDTO.getFechaInicial()
-				&& null != resumenConciliacionRequestDTO.getFechaFinal()) {
-			ini.setTime(resumenConciliacionRequestDTO.getFechaInicial());
-			fin.setTime(resumenConciliacionRequestDTO.getFechaFinal());
-			if (ini.after(fin) || hoy.before(ini))
-				return false;
-		}
-		return true;
+		Date current = new Date();
+		ini.setTime(fechaInicial);
+		fin.setTime(fechaFinal);
+		hoy.setTime(current);
+		hoy.set(Calendar.HOUR_OF_DAY, 0);
+		hoy.set(Calendar.MINUTE, 0);
+		hoy.set(Calendar.SECOND, 0);
+		hoy.set(Calendar.MILLISECOND, 0);
+		return ((hoy.after(ini) || hoy.equals(ini)) && (hoy.after(fin) || hoy.equals(fin)));
+	}
+
+	/**
+	 * Valida que una fecha no sea mayor a la fecha actual
+	 * 
+	 * @param fecha
+	 * @return
+	 */
+	public static boolean validateFecha(Date fecha) {
+		Calendar date = Calendar.getInstance();
+		Calendar hoy = Calendar.getInstance();
+		date.setTime(fecha);
+		return (hoy.equals(date) || date.before(hoy));
 	}
 
 	/**
@@ -481,24 +505,24 @@ public interface ValidadorConciliacion {
 	}
 
 	/**
-	 * Valida un objeto de tipo ConsultaActividadesRequest para que contenga todos
-	 * los atributos requeridos y que esteos tengan valores validos
+	 * Valida que los datos para la actualizacion de la devolucion son correctos
 	 * 
-	 * @param consultaActividadesRequest
+	 * @param devolucionUpdtDTOList
 	 * @return
 	 */
-	public static boolean validateConsultaActividadesRequest(ConsultaActividadesRequest consultaActividadesRequest) {
-		Calendar ini = Calendar.getInstance();
-		Calendar fin = Calendar.getInstance();
-		Calendar hoy = Calendar.getInstance();
-		if (null != consultaActividadesRequest && null != consultaActividadesRequest.getFechaDesde()
-				&& null != consultaActividadesRequest.getFechaHasta()) {
-			ini.setTime(consultaActividadesRequest.getFechaDesde());
-			fin.setTime(consultaActividadesRequest.getFechaHasta());
-			if (ini.after(fin) || hoy.before(ini))
-				return false;
+	public static boolean validateActualizarDevolucionRequest(List<DevolucionUpdtDTO> devolucionUpdtDTOList) {
+		boolean valido = false;
+		if (devolucionUpdtDTOList != null && devolucionUpdtDTOList.size() > 0) {
+			valido = true;
+			for (DevolucionUpdtDTO dto : devolucionUpdtDTOList) {
+				if (dto.getFecha() == null) {
+					valido = false;
+				} else if (dto.getIdMovimiento() == null || dto.getIdMovimiento() <= 0) {
+					valido = false;
+				}
+			}
 		}
-		return true;
+		return valido;
 	}
 
 }

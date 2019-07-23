@@ -46,6 +46,7 @@ public class LayoutLineaCatalog extends Updatable implements Serializable {
 	private String unidadOperativa;
 
 	public LayoutLineaCatalog() {
+		super();
 	}
 
 	public Long getId() {

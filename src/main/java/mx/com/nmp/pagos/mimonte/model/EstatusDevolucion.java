@@ -7,8 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import mx.com.nmp.pagos.mimonte.config.Constants;
-
 /**
  * @name EstatusOperacion
  * @description Clase que mapea el catalogo de operaciones

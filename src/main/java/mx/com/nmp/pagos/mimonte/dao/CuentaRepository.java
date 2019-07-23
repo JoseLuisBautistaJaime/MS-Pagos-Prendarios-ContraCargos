@@ -28,9 +28,21 @@ import mx.com.nmp.pagos.mimonte.model.Cuenta;
 @Repository("cuentaRepository")
 public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 
+	/**
+	 * Regresa el usuario creador de una entidad por su id
+	 * 
+	 * @param idEntidad
+	 * @return
+	 */
 	@Query("SELECT ent.createdBy FROM Entidad ent WHERE ent.id = :idEntidad")
 	public String findCreatedByByEntidadId(@Param("idEntidad") Long idEntidad);
 
+	/**
+	 * Regresa la fecha de creacion de una entidad por su id
+	 * 
+	 * @param idEntidad
+	 * @return
+	 */
 	@Query("SELECT ent.createdDate FROM Entidad ent WHERE ent.id = :idEntidad")
 	public Date findCreatedDateByEntidadId(@Param("idEntidad") Long idEntidad);
 
@@ -72,7 +84,6 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	/**
 	 * Regesa todas las cuentas
 	 */
-	@Query("SELECT cta FROM Cuenta cta ORDER BY cta.createdDate DESC")
 	public List<Cuenta> findAll();
 
 }

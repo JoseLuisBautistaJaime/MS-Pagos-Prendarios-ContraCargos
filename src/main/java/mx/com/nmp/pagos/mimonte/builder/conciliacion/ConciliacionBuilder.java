@@ -18,6 +18,8 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
+import mx.com.nmp.pagos.mimonte.model.Cuenta;
+import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 
@@ -142,6 +144,45 @@ public abstract class ConciliacionBuilder {
 	}
 
 	/**
+	 * Construye un objeto de tipo ConciliacionDTO a partir de los entities de tipo
+	 * Conciliacion, Cuenta y Entidad
+	 * 
+	 * @param conciliacion
+	 * @param cuenta
+	 * @param entidad
+	 * @return
+	 */
+	public static ConciliacionDTO buildConciliacionDTOFromConciliacionCuentaAndEntidad(Conciliacion conciliacion, Cuenta cuenta,
+			Entidad entidad) {
+		ConciliacionDTO conciliacionDTO = null;
+		if (conciliacion != null) {
+			conciliacionDTO = new ConciliacionDTO();
+			conciliacionDTO.setFolio(conciliacion.getId());
+			conciliacionDTO.setCreatedDate(conciliacion.getCreatedDate());
+			conciliacionDTO.setLastModifiedDate(conciliacion.getLastModifiedDate());
+			conciliacionDTO.setCreatedBy(conciliacion.getCreatedBy());
+			conciliacionDTO.setLastModifiedBy(conciliacion.getLastModifiedBy());
+			conciliacionDTO.setEstatus(EstatusConciliacionBuilder
+					.buildEstatusConciliacionDTOFromEstatusConciliacion(conciliacion.getEstatus()));
+			conciliacionDTO.setEntidad(EntidadBuilder.buildEntidadDTOFromEntidad(entidad));
+			conciliacionDTO.setCuenta(CuentaBuilder.buildCuentaDTOFromCuenta(cuenta));
+			conciliacionDTO.setSubEstatus(SubEstatusConciliacionBuilder
+					.buildSubEstatusConciliacionDTOFromSubEstatusConciliacion(conciliacion.getSubEstatus()));
+			conciliacionDTO.setSubEstatusDescripcion(null);
+			conciliacionDTO.setIdAsientoContable(null);
+			conciliacionDTO.setIdPolizaTesoreria(null);
+			conciliacionDTO.setReporteProcesosNocturnos(null);
+			conciliacionDTO.setReporteProveedorTransaccional(null);
+			conciliacionDTO.setReporteEstadoCuenta(null);
+			conciliacionDTO.setGlobal(null);
+			conciliacionDTO.setDevoluciones(null);
+			conciliacionDTO.setMovimientosTransito(null);
+			conciliacionDTO.setComisiones(null);
+		}
+		return conciliacionDTO;
+	}
+
+	/**
 	 * 
 	 * Construye un objeto tipo Conciliacion a partir de un objeto de tipo
 	 * ConciliacionDTO.
@@ -227,8 +268,8 @@ public abstract class ConciliacionBuilder {
 	 * @return conciliacionDTOList
 	 */
 	public static ConciliacionDTOList buildConciliacionDTOListFromConciliacion(Conciliacion conciliacion,
-			List<Reporte> reporte, List<DevolucionConDTO> devolucionConDTOList,
-			List<MovTransitoDTO> movTransitoDTOList, List<ComisionesDTO> comisionesDTOList) {
+			List<Reporte> reportes, List<DevolucionConDTO> devolucionConDTOList, List<MovTransitoDTO> movTransitoDTOList,
+			List<ComisionesDTO> comisionesDTOList) {
 		ConciliacionDTOList conciliacionDTOList = null;
 		if (conciliacion != null) {
 			conciliacionDTOList = new ConciliacionDTOList();
@@ -240,11 +281,11 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTOList.setEntidad(EntidadBuilder.buildEntidadDTOFromEntidad(conciliacion.getEntidad()));
 			conciliacionDTOList.setCuenta(CuentaBuilder.buildCuentaDTOFromCuenta(conciliacion.getCuenta()));
 			conciliacionDTOList.setReporteProcesosNocturnos(
-					ReporteProcesosNocturnosBuilder.buildReporteProcesosNocturnosDTOSetFromReporteSet(reporte));
-			conciliacionDTOList.setReporteProveedorTransaccional(ReporteProveedorTransaccionalBuilder
-					.buildReporteProveedorTransaccionalDTOFromReporteList(reporte));
+					ReporteProcesosNocturnosBuilder.buildReporteProcesosNocturnosDTOSetFromReporteSet(reportes));
+			conciliacionDTOList.setReporteProveedorTransaccional(
+					ReporteProveedorTransaccionalBuilder.buildReporteProveedorTransaccionalDTOFromReporteList(reportes));
 			conciliacionDTOList.setReporteEstadoCuenta(
-					ReporteEstadoCuentaBuilder.buildReporteEstadoCuentaDTOFromReporteList(reporte));
+					ReporteEstadoCuentaBuilder.buildReporteEstadoCuentaDTOFromReporteList(reportes));
 			conciliacionDTOList.setGlobal(GlobalBuilder.buildGlobalDTOFromGlobal(conciliacion.getGlobal()));
 			conciliacionDTOList.setDevoluciones(devolucionConDTOList);
 			conciliacionDTOList.setMovimientosTransito(movTransitoDTOList);

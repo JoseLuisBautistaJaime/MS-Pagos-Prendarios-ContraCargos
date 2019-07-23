@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.exception;
 
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+
 /**
  * @name MovimientosException
  * @description Clase de excepcion para encapsular excepciones lanzadas durante
@@ -19,8 +21,22 @@ public class MovimientosException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * El codigo del error a mostrar
+	 */
+	private CodigoError codigoError;
+	
 	public MovimientosException(String message) {
 		super(message);
 	}
+	
+	public MovimientosException(String message, CodigoError codigoError) {
+		super(message);
+		this.codigoError = codigoError;
+	}
 
+	public CodigoError getCodigoError() {
+		return codigoError;
+	}
+	
 }

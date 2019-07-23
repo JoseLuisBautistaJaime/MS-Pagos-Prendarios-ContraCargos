@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.util.Calendar;
 
+import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
@@ -34,6 +38,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaParserService;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
 
@@ -90,6 +96,11 @@ public class MovimientosEstadoCuentaService {
 	@Qualifier("estadoCuentaParserC43Service")
 	private EstadoCuentaParserService estadoCuentaParserService;
 
+	/**
+	 * Registro de actividades
+	 */
+	@Autowired
+	private ActividadGenericMethod actividadGenericMethod;
 
 	public MovimientosEstadoCuentaService() {
 		super();
@@ -173,7 +184,7 @@ public class MovimientosEstadoCuentaService {
 //		Pageable pageable = PageRequest.of(commonConciliacionRequestDTO.getPagina(),
 //				commonConciliacionRequestDTO.getResultados());
 		movimientoEstadoCuentaDBDTOLst = movimientoEstadoCuentaRepository
-				.listMovimientos(commonConciliacionRequestDTO.getFolio()/*, pageable*/);
+				.listMovimientos(commonConciliacionRequestDTO.getFolio()/* , pageable */);
 		movimientoEstadoCuentaDTOList = MovimientosBuilder
 				.buildMovimientoEstadoCuentaDTOListFromMovimientoEstadoCuentaDBDTOList(movimientoEstadoCuentaDBDTOLst);
 		return movimientoEstadoCuentaDTOList;
@@ -181,23 +192,25 @@ public class MovimientosEstadoCuentaService {
 
 	/**
 	 * Guarda un reporte relacionado con un movimiento de estado de cuenta
+	 * 
 	 * @param request
 	 * @param userRequest
 	 */
 	@Transactional
 	public Reporte save(final SaveEstadoCuentaRequestDTO request, final String userRequest) {
 
-		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(request.getFolio());
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(request.getFolio(),
+				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 		// Insertar el nuevo reporte (este reporte sera el nuevo reporte a considerar)
 		Reporte reporte = null;
 		try {
 			reporte = ReporteBuilder.buildReporteFromSaveEstadoCuentaRequestDTO(request, conciliacion, userRequest);
 			reporte = reporteRepository.save(reporte);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al guardar la solicitud de consulta de estado de cuenta");
+			throw new ConciliacionException("Error al guardar la solicitud de consulta de estado de cuenta",
+					CodigoError.NMP_PMIMONTE_BUSINESS_046);
 		}
 
 		return reporte;
@@ -210,30 +223,36 @@ public class MovimientosEstadoCuentaService {
 	 * @param userRequest
 	 */
 	@Transactional
-	public void procesarConsultaEstadoCuenta(SaveEstadoCuentaRequestDTO request, final String userRequest) throws ConciliacionException {
+	public void procesarConsultaEstadoCuenta(SaveEstadoCuentaRequestDTO request, final String userRequest)
+			throws ConciliacionException {
 
 		Reporte reporte = save(request, userRequest);
 
 		// Consulta los diferentes estados de cuenta por cada fecha
 		Date fechaEstadoCuenta = reporte.getFechaDesde();
-		long idConciliacion = reporte.getConciliacion().getId().longValue();
+		Long idConciliacion = reporte.getConciliacion().getId().longValue();
 		long idReporte = reporte.getId();
-		
+
 		while (!fechaEstadoCuenta.after(reporte.getFechaHasta())) {
 
 			// Lee el archivo usando la implementacion cuaderno 43
-			EstadoCuentaFileLayout estadoCuentaFileLayout = estadoCuentaReaderService.read(fechaEstadoCuenta, idConciliacion, EstadoCuentaImplementacionEnum.CUADERNO_43);
+			EstadoCuentaFileLayout estadoCuentaFileLayout = estadoCuentaReaderService.read(fechaEstadoCuenta,
+					idConciliacion, EstadoCuentaImplementacionEnum.CUADERNO_43);
 			if (estadoCuentaFileLayout == null) {
-				throw new ConciliacionException("Error al leer el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "");
+				throw new ConciliacionException(
+						"Error al leer el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "",
+						CodigoError.NMP_PMIMONTE_BUSINESS_047);
 			}
 
 			// Parsea el archivo
 			EstadoCuentaWraper estadoCuentaWraper = estadoCuentaParserService.extract(estadoCuentaFileLayout);
 			if (estadoCuentaWraper == null) {
-				throw new ConciliacionException("Error al parsear el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "");
+				throw new ConciliacionException(
+						"Error al parsear el archivo de estado de cuenta para la fecha " + fechaEstadoCuenta + "",
+						CodigoError.NMP_PMIMONTE_BUSINESS_048);
 			}
 
-			saveEstadoCuentaMovimientos(idReporte, estadoCuentaWraper);
+			saveEstadoCuentaMovimientos(idReporte, fechaEstadoCuenta, estadoCuentaWraper);
 
 			// Se mueve al siguiente dia para consultar el estado de cuenta
 			Calendar cal = Calendar.getInstance();
@@ -241,25 +260,33 @@ public class MovimientosEstadoCuentaService {
 			cal.add(Calendar.DAY_OF_YEAR, 1);
 			fechaEstadoCuenta = cal.getTime();
 		}
-		
-	}
 
+		// Se regenera la conciliacion
+		this.conciliacionHelper.generarConciliacion(idConciliacion.intValue(), Arrays.asList(reporte));
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(idConciliacion,
+				"Se procesa la consulta del estado de cuenta para la conciliacion con folio " + idConciliacion,
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+	}
 
 	/**
 	 * Guarda el archivo de estado de cuenta y los movimientos
+	 * 
 	 * @param idReporte
+	 * @param fechaEstadoCuenta
 	 * @param estadoCuentaWraper
 	 */
-	private void saveEstadoCuentaMovimientos(long idReporte, EstadoCuentaWraper estadoCuentaWraper) {
+	private void saveEstadoCuentaMovimientos(long idReporte, Date fechaEstadoCuenta,
+			EstadoCuentaWraper estadoCuentaWraper) {
 		try {
-			
+
 			// Se crea el nuevo estado de cuenta
 			// TODO: Agregar llave primaria compuesta, un estado de cuenta por dia
-			EstadoCuenta estadoCuenta = this.estadoCuentaRepository.findOneByIdReporte(idReporte);
+			EstadoCuenta estadoCuenta = this.estadoCuentaRepository.findOneByIdReporteAndFechaCarga(idReporte,
+					fechaEstadoCuenta);
 			if (estadoCuenta == null) {
 				estadoCuenta = new EstadoCuenta();
 				estadoCuenta.setIdReporte(idReporte);
-				estadoCuenta.setFechaCarga(new Date());
 			}
 
 			int totalMovs = (estadoCuenta.getTotalMovimientos() != null ? estadoCuenta.getTotalMovimientos() : 0);
@@ -270,6 +297,7 @@ public class MovimientosEstadoCuentaService {
 			estadoCuenta.setCabecera(estadoCuentaWraper.cabecera);
 			estadoCuenta.setTotales(estadoCuentaWraper.totales);
 			estadoCuenta.setTotalesAdicional(estadoCuentaWraper.totalesAdicional);
+			estadoCuenta.setFechaCarga(fechaEstadoCuenta);
 			estadoCuentaRepository.save(estadoCuenta);
 
 			// Se persisten los movimientos
@@ -282,10 +310,10 @@ public class MovimientosEstadoCuentaService {
 
 				movimientoEstadoCuentaRepository.saveAll(movimientos);
 			}
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al persistir los movimientos del archivo del estado de cuenta");
+			throw new ConciliacionException("Error al persistir los movimientos del archivo del estado de cuenta",
+					CodigoError.NMP_PMIMONTE_BUSINESS_049);
 		}
 	}
 

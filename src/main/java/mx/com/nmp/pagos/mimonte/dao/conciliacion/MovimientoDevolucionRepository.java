@@ -57,4 +57,12 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	public MovimientoDevolucion findByIdMovimiento(
 			@Param("idMovimiento") final Integer idMovimiento);
 
+	/**
+	 * Obtiene los movimientos devolucion por folio y estatus
+	 * @param folio
+	 * @param ids
+	 * @return
+	 */
+	public List<MovimientoDevolucion> findByIdConciliacionAndEstatusIdIn(Integer folio, List<Integer> ids);
+
 }

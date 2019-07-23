@@ -1,11 +1,11 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+
 import javax.persistence.*;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
-
-import java.util.Date;
 
 
 /**
@@ -21,22 +21,23 @@ public class LayoutHeader extends Updatable implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name="cabecera")
 	private String cabecera;
 
+	@Column(name="campo1")
 	private String campo1;
 
+	@Column(name="campo2")
 	private String campo2;
 
 	@Column(name="codigo_origen")
 	private String codigoOrigen;
 
-	@Column(name="created_by")
-	private String createdBy;
-
+	@Column(name="descripcion")
 	private String descripcion;
 
-	@Temporal(TemporalType.DATE)
-	private Date fecha;
+	@Column(name="fecha")
+	private LocalDate fecha;
 
 	@Column(name="unidad_negocio")
 	private String unidadNegocio;
@@ -46,6 +47,7 @@ public class LayoutHeader extends Updatable implements Serializable{
 	private Layout layout;
 
 	public LayoutHeader() {
+		super();
 	}
 
 	public Long getId() {
@@ -88,14 +90,6 @@ public class LayoutHeader extends Updatable implements Serializable{
 		this.codigoOrigen = codigoOrigen;
 	}
 
-	public String getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
 	public String getDescripcion() {
 		return this.descripcion;
 	}
@@ -104,28 +98,12 @@ public class LayoutHeader extends Updatable implements Serializable{
 		this.descripcion = descripcion;
 	}
 
-	public Date getFecha() {
+	public LocalDate getFecha() {
 		return this.fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
-	}
-
-	public String getLastModifiedBy() {
-		return this.lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public Date getLastModifiedDate() {
-		return this.lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
 	}
 
 	public String getUnidadNegocio() {

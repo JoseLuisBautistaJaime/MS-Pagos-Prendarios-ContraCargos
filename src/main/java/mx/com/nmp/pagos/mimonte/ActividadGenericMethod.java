@@ -30,11 +30,10 @@ public class ActividadGenericMethod {
 	 * @param descripcion
 	 * @param tipo
 	 * @param subTipo
-	 * @param argArray
 	 */
 	@ApplicationEvents
-	public void registroActividad(Object obj, String descripcion, TipoActividadEnum tipo, SubTipoActividadEnum subTipo,
-			String argArray) {
+	public void registroActividad(Object obj, String descripcion, TipoActividadEnum tipo,
+			SubTipoActividadEnum subTipo) {
 		/**
 		 * No hay cuerpo para este metodo los argumentos son tomados por el interceptor
 		 */

@@ -36,11 +36,7 @@ import mx.com.nmp.pagos.mimonte.dto.EntidadBaseSaveDTO;
  * @creationDate 21/03/2019 18:07 hrs.
  * @version 0.1
  */
-public abstract class ValidadorCatalogo {
-
-	private ValidadorCatalogo() {
-		super();
-	}
+public interface ValidadorCatalogo {
 
 	/**
 	 * Valida que los atributos que deben estar en el objeto de la peticion de alta
@@ -51,6 +47,7 @@ public abstract class ValidadorCatalogo {
 	 */
 	public static boolean validateCodigoEstadoCuentaSave(CodigoEstadoCuentaReqSaveDTO codigoEstadoCuentaReqSaveDTO) {
 		return (null != codigoEstadoCuentaReqSaveDTO) && (null != codigoEstadoCuentaReqSaveDTO.getCodigo())
+				&& (!"".equals(codigoEstadoCuentaReqSaveDTO.getCodigo()))
 				&& (null != codigoEstadoCuentaReqSaveDTO.getCategoria()
 						&& null != codigoEstadoCuentaReqSaveDTO.getCategoria().getId()
 						&& (codigoEstadoCuentaReqSaveDTO.getCategoria().getId() > 0))
@@ -63,13 +60,14 @@ public abstract class ValidadorCatalogo {
 	 * Valida que el todos los atributos de el objeto de la peticion de
 	 * actualizacion no sean nulos y sean los correctos ademas
 	 * 
-	 * @param codigoEstadoCuentaReqDTO
+	 * @param codigoEstadoCuentaReqUpdtDTO
 	 * @return
 	 */
 	public static boolean validateCodigoEstadoCuentaUpdate(CodigoEstadoCuentaReqUpdtDTO codigoEstadoCuentaReqUpdtDTO) {
 		return (null != codigoEstadoCuentaReqUpdtDTO)
 				&& (null != codigoEstadoCuentaReqUpdtDTO.getCodigo() && null != codigoEstadoCuentaReqUpdtDTO.getId()
 						&& (codigoEstadoCuentaReqUpdtDTO.getId() > 0))
+				&& (!"".equals(codigoEstadoCuentaReqUpdtDTO.getCodigo()))
 				&& (null != codigoEstadoCuentaReqUpdtDTO.getCategoria()
 						&& null != codigoEstadoCuentaReqUpdtDTO.getCategoria().getId()
 						&& (codigoEstadoCuentaReqUpdtDTO.getCategoria().getId() > 0))
@@ -99,8 +97,8 @@ public abstract class ValidadorCatalogo {
 	 */
 	public static boolean validateAfilacionUpdt(AfiliacionReqDTO afiliacionReqDTO) {
 		return (null != afiliacionReqDTO && null != afiliacionReqDTO.getNumero()
-				&& !afiliacionReqDTO.getNumero().equals("0") && null != afiliacionReqDTO.getId()
-				&& afiliacionReqDTO.getId() > 0 /* && null != afiliacionReqDTO.getEstatus() */);
+				&& !afiliacionReqDTO.getNumero().equals("0") && !afiliacionReqDTO.getNumero().equals("")
+				&& null != afiliacionReqDTO.getId() && afiliacionReqDTO.getId() > 0);
 	}
 
 	/**
@@ -118,8 +116,7 @@ public abstract class ValidadorCatalogo {
 		if (null != entidadBaseSaveDTO.getContactos() && !entidadBaseSaveDTO.getContactos().isEmpty()) {
 			for (ContactoReqSaveNewDTO contactoReqSaveNewDTO : entidadBaseSaveDTO.getContactos()) {
 				if (null == contactoReqSaveNewDTO.getEmail() || contactoReqSaveNewDTO.getEmail().equals("")
-						|| null == contactoReqSaveNewDTO.getNombre() || contactoReqSaveNewDTO.getNombre().equals("")
-						|| !ValidadorGenerico.validateEmail2(contactoReqSaveNewDTO.getEmail())) {
+						|| null == contactoReqSaveNewDTO.getNombre() || contactoReqSaveNewDTO.getNombre().equals("")) {
 					return false;
 				}
 			}
@@ -159,8 +156,7 @@ public abstract class ValidadorCatalogo {
 			for (ContactoReqDTONE contactoReqDTO : entidadBaseDTO.getContactos()) {
 				if (null == contactoReqDTO.getId() || null == contactoReqDTO.getEmail()
 						|| contactoReqDTO.getEmail().equals("") || null == contactoReqDTO.getNombre()
-						|| contactoReqDTO.getNombre().equals("")
-						|| !ValidadorGenerico.validateEmail2(contactoReqDTO.getEmail())) {
+						|| contactoReqDTO.getNombre().equals("")) {
 					return false;
 				}
 			}
@@ -345,7 +341,8 @@ public abstract class ValidadorCatalogo {
 	 */
 	public static boolean validateCuentaUpdate(CuentaDTO cuentaDTO) {
 		if (null != cuentaDTO && null != cuentaDTO.getId() && null != cuentaDTO.getAfiliaciones()
-				&& !cuentaDTO.getAfiliaciones().isEmpty() && null != cuentaDTO.getNumero() && !cuentaDTO.getNumero().equals("")) {
+				&& !cuentaDTO.getAfiliaciones().isEmpty() && null != cuentaDTO.getNumero()
+				&& !cuentaDTO.getNumero().equals("")) {
 			for (AfiliacionReqNN afiliacionRespDTO : cuentaDTO.getAfiliaciones()) {
 				if (null == afiliacionRespDTO.getId()) {
 					return false;

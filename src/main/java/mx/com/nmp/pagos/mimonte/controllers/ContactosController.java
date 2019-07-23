@@ -34,6 +34,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
@@ -45,9 +46,10 @@ import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorGenerico;
 
 /**
- * Nombre: CatalogoController Descripcion: Controllador que expone los servicios
- * REST por medio de las cuales se realiza la administración y consulta del
- * catálogo de contactos.
+ * @name CatalogoController
+ * @description Controllador que expone los servicios REST por medio de las
+ *              cuales se realiza la administracion y consulta del catalogo de
+ *              contactos.
  *
  * @author José Rodríguez jgrodriguez@quarksoft.net
  * @version 0.1
@@ -68,7 +70,6 @@ public class ContactosController {
 	/**
 	 * Bean de la capa service para obtener los resultados
 	 */
-	@SuppressWarnings("unused")
 	@Autowired
 	private ContactoServiceImpl contactoServiceImpl;
 
@@ -78,6 +79,13 @@ public class ContactosController {
 	@SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(ContactosController.class);
 
+	/**
+	 * Realiza el alta de un contacto
+	 * 
+	 * @param contacto
+	 * @param createdBy
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/catalogos/contactos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -89,19 +97,23 @@ public class ContactosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveContacto(@RequestBody ContactoRequestDTO contacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		if(!ValidadorCatalogo.validaContactoReqSaveDTO(contacto))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
-		if(!ValidadorGenerico.validateEmail2(contacto.getEmail()))
-			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
+		if (!ValidadorCatalogo.validaContactoReqSaveDTO(contacto))
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
+		if (!ValidadorGenerico.validateEmail2(contacto.getEmail()))
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT, CodigoError.NMP_PMIMONTE_BUSINESS_013);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-				(ContactoRespDTO) ContactosBuilder
-				.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.save(
+				(ContactoRespDTO) ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.save(
 						ContactosBuilder.buildContactoBaseDTOFromContactoRequestDTO(contacto, new Date(), null),
 						createdBy)));
-		
-		
 	}
 
+	/**
+	 * Realiza la actualizacion de un contacto
+	 * 
+	 * @param contacto
+	 * @param lastModifiedBy
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = "/catalogos/contactos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -113,17 +125,22 @@ public class ContactosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response updateContacto(@RequestBody ContactoReqUpdateDTO contacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-		if(!ValidadorCatalogo.validaContactoReqUpdateDTO(contacto))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
-		if(!ValidadorGenerico.validateEmail2(contacto.getEmail()))
-			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
+		if (!ValidadorCatalogo.validaContactoReqUpdateDTO(contacto))
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
+		if (!ValidadorGenerico.validateEmail2(contacto.getEmail()))
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT, CodigoError.NMP_PMIMONTE_BUSINESS_013);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
-				(ContactoRespDTO) ContactosBuilder
-				.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.update(
+				(ContactoRespDTO) ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.update(
 						ContactosBuilder.buildContactoRespDTOFromContactoReqUpdateDTO(contacto, new Date(), null),
 						lastModifiedBy)));
 	}
 
+	/**
+	 * Realiza la eliminacion de un contacto por id
+	 * 
+	 * @param idContacto
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = "/catalogos/contactos/{idContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -132,16 +149,22 @@ public class ContactosController {
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response DeleteContacto(@PathVariable("idContacto") Long idContacto) {
+	public Response deleteContacto(@PathVariable("idContacto") Long idContacto) {
 		try {
 			contactoServiceImpl.deleteById(idContacto);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
 	}
 
+	/**
+	 * Realiza la consulta de contactos por id
+	 * 
+	 * @param idContacto
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/contactos/{idContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -156,14 +179,20 @@ public class ContactosController {
 		try {
 			contactoRespDTO = contactoServiceImpl.findById(idContacto);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
-		if(contactoRespDTO == null)
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
+		if (contactoRespDTO == null)
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				contactoRespDTO);
 	}
 
+	/**
+	 * Realiza la consulta de contactos por id de tipo de contacto
+	 * 
+	 * @param idTipoContacto
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/contactos/tipocontacto/{idTipoContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -178,14 +207,22 @@ public class ContactosController {
 		try {
 			lst = contactoServiceImpl.findByIdTipoContacto(idTipoContacto);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
-		if(lst == null || lst.isEmpty())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-				null != lst ? lst : new ArrayList<>());
+		if (lst == null || lst.isEmpty())
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
 	}
 
+	/**
+	 * Realiza la consulta de contactos por nombre, email e id de tipo de contacto
+	 * (todos opcionales)
+	 * 
+	 * @param nombre
+	 * @param email
+	 * @param idTipoContacto
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/contactos/consultas/{idTipoContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -198,22 +235,25 @@ public class ContactosController {
 	public Response getNombreEmailContacto(@RequestParam(name = "nombre", required = false) String nombre,
 			@RequestParam(name = "email", required = false) String email,
 			@PathVariable(name = "idTipoContacto", required = true) Long idTipoContacto) {
-		if(email != null) {
-			if(!ValidadorGenerico.validateEmail2(email))
-				throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT);
+		if (email != null && !ValidadorGenerico.validateEmail2(email)) {
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT, CodigoError.NMP_PMIMONTE_BUSINESS_013);
 		}
 		List<ContactoRespDTO> lst = null;
 		try {
 			lst = contactoServiceImpl.findByIdTipoContactoAndNombreAndEmail(idTipoContacto, nombre, email);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_AND_NAME_AND_EMAIL_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_AND_NAME_AND_EMAIL_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_014);
 		}
-		if(lst == null|| lst.isEmpty())
-			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-				null != lst ? lst : new ArrayList<>());
+		if (lst == null || lst.isEmpty())
+			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
 	}
 
+	/**
+	 * Realiza la consulta de todos los contactos
+	 * 
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/contactos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -227,7 +267,6 @@ public class ContactosController {
 		@SuppressWarnings("unchecked")
 		List<ContactoRespDTO> lst = ContactosBuilder
 				.buildContactoBaseDTOListFromContactoRespDTOList((List<ContactoRespDTO>) contactoServiceImpl.findAll());
-
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
 	}

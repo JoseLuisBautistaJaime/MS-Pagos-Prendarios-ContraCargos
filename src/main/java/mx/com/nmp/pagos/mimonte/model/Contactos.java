@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -92,40 +93,26 @@ public class Contactos extends AbstractCatalogoAdm implements Serializable, Comp
 	}
 
 	@Override
+	public String toString() {
+		return "Contactos [nombre=" + nombre + ", email=" + email + ", tipoContacto=" + tipoContacto + "]";
+	}
+
+	@Override
 	public int hashCode() {
-		return Objects.hash(nombre, email, tipoContacto);
+		return Objects.hash(nombre, email);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Contactos other = (Contactos) obj;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (nombre == null) {
-			if (other.nombre != null)
-				return false;
-		} else if (!nombre.equals(other.nombre))
-			return false;
-		if (tipoContacto == null) {
-			if (other.tipoContacto != null)
-				return false;
-		} else if (!tipoContacto.equals(other.tipoContacto))
-			return false;
-		return true;
-	}
 
-	@Override
-	public String toString() {
-		return "Contactos [nombre=" + nombre + ", email=" + email + ", tipoContacto=" + tipoContacto + "]";
+		if (!(obj instanceof Contactos))
+			return false;
+
+		final Contactos other = (Contactos) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 	@Override

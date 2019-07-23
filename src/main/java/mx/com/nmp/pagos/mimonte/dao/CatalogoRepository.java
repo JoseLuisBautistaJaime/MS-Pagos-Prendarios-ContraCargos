@@ -62,5 +62,4 @@ public interface CatalogoRepository extends JpaRepository<Catalogo, Integer> {
     		"    catalogo.descripcion_corta like :descripcionCorta ", nativeQuery = true)
 	public List<Object[]> findByDescripcion(@Param("descripcionCorta") String descripcionCorta);
 
-
 }

@@ -6,8 +6,6 @@ package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,9 +25,15 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.LayoutsService;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorLayout;
 
 /**
  * @name LayoutsController
@@ -53,19 +57,13 @@ public class LayoutsController {
 	private BeanFactory beanFactory;
 
 	/**
-	 * Instancia que imprime logs de los eventos
-	 */
-	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(LayoutsController.class);
-
-	/**
 	 * Service para Layouts
 	 */
 	@Autowired
 	private LayoutsService layoutsService;
 
 	/**
-	 * Permite consultar los layouts para Pagos, Comisiones y Devoluciones.
+	 * Permite consultar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y DEVOLUCIONES.
 	 * 
 	 * @param folio
 	 * @param tipoLayout
@@ -75,7 +73,7 @@ public class LayoutsController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/layouts/{folio}/{tipoLayout}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Permite consultar los layouts para Pagos, Comisiones y Devoluciones.", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Permite consultar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y DEVOLUCIONES.", tags = {
 			"Layouts" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
@@ -84,11 +82,17 @@ public class LayoutsController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByFolioAndTipoLayout(@PathVariable(value = "folio", required = true) Long folio,
 			@PathVariable(value = "tipoLayout", required = true) String tipoLayout) {
+		if (!ValidadorLayout.validateConsultaUnLayout(folio, tipoLayout))
+		throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+				CodigoError.NMP_PMIMONTE_0008);
 		LayoutDTO layoutDTO = layoutsService.consultarUnLayout(folio, tipoLayout);
+		if (!ValidadorLayout.validateLayoutDTO(layoutDTO))
+		throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+				CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				layoutDTO);
 	}
-	
+
 	/**
 	 * Permite consultar todos los layouts de una conciliación.
 	 * 
@@ -100,7 +104,7 @@ public class LayoutsController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/layouts/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Permite consultar los layouts para Pagos, Comisiones y Devoluciones.", tags = {
+	@ApiOperation(httpMethod = "GET", value = "Permite consultar todos los layouts de una conciliación.", tags = {
 			"Layouts" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
@@ -108,22 +112,28 @@ public class LayoutsController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByFolio(@PathVariable(value = "folio", required = true) Long folio) {
+		if (!ValidadorLayout.validateLong(folio))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		List<LayoutDTO> layoutDTOs = layoutsService.consultarLayouts(folio);
+		if (!ValidadorLayout.validateLayoutDTOs(layoutDTOs))
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				layoutDTOs);
 	}
 
 	/**
-	 * Permite agregar layouts para Pagos, Comisiones y Devoluciones.
+	 * Permite agregar y editar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y DEVOLUCIONES.
 	 * 
 	 * @param layoutSaveDTO
 	 * @param userRequest
-	 * @return  
+	 * @return
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/layouts", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Permite agregar layouts para Pagos, Comisiones y Devoluciones.", tags = {
+	@ApiOperation(httpMethod = "POST", value = "Permite agregar y editar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y DEVOLUCIONES.", tags = {
 			"Layouts" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Layouts agregados con éxito."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
@@ -131,15 +141,18 @@ public class LayoutsController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveLayout(@RequestBody LayoutDTO layoutDTOe) {
-		//LOG.error("------" + layoutDTOe.toString());
+		if (!ValidadorLayout.validateSaveLayout(layoutDTOe))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		layoutsService.saveLayout(layoutDTOe);
-		LayoutDTO layoutDTOs = layoutsService.consultarUnLayout(layoutDTOe.getFolio(), layoutDTOe.getTipoLayout().toString());
+		LayoutDTO layoutDTOs = layoutsService.consultarUnLayout(layoutDTOe.getFolio(),
+				layoutDTOe.getTipoLayout().toString());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layouts agregados con éxito.",
 				layoutDTOs);
 	}
-
+	
 	/**
-	 * Permite eliminar layouts para Pagos, Comisiones y Devoluciones
+	 * Permite eliminar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y DEVOLUCIONES.
 	 * 
 	 * @param folio
 	 * @param idLayout
@@ -149,7 +162,7 @@ public class LayoutsController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = "/layouts/{folio}/{idLayout}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "DELETE", value = "Permite eliminar layouts para Pagos, Comisiones y Devoluciones", tags = {
+	@ApiOperation(httpMethod = "DELETE", value = "Permite eliminar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y DEVOLUCIONES.", tags = {
 			"Layouts" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Layout eliminado con éxito."),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
@@ -158,45 +171,12 @@ public class LayoutsController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteLayout(@PathVariable(name = "folio", required = true) Long folio,
 			@PathVariable(name = "idLayout", required = true) Long idLayout) {
-		layoutsService.eliminarUnLayout(folio, idLayout);
+		if (!ValidadorLayout.validateDeleteLayout(folio, idLayout))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		boolean respuesta = layoutsService.eliminarUnLayout(folio, idLayout);
+		if(respuesta)throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layout eliminado con éxito.", null);
 	}
-
-	/**
-	 * Construye un objeto dummy
-	 * 
-	 * @return
-	 */
-//	  public static LayoutDTO buildDummy1() { LayoutDTO layoutDTO = new
-//	  LayoutDTO(); LayoutCabeceraDTO layoutCabeceraDTO = new LayoutCabeceraDTO();
-//	  List<LayoutLineaDTO> layoutLineaDTOList = new ArrayList<>(); LayoutLineaDTO
-//	  layoutLineaDTO1 = new LayoutLineaDTO(); LayoutLineaDTO layoutLineaDTO2 = new
-//	  LayoutLineaDTO(); 
-//	  layoutCabeceraDTO.setCabecera("H");
-//	  layoutCabeceraDTO.setCodigoOrigen("B");
-//	  layoutCabeceraDTO.setDescripcion("COMISION ECOMM 14122018");
-//	  layoutCabeceraDTO.setFecha(new Date());
-//	  layoutCabeceraDTO.setUnidadNegocio("NMP01"); 
-//    layoutCabeceraDTO.setId(1L);
-//	  layoutLineaDTO1.setCuenta("6402001001"); 
-//    layoutLineaDTO1.setDepId("");
-//	  layoutLineaDTO1.setId(1L); 
-//    layoutLineaDTO1.setLinea("L");
-//	  layoutLineaDTO1.setMonto(30.00); 
-//    layoutLineaDTO1.setNegocio("PRENDA");
-//	  layoutLineaDTO1.setProyectoNMP("SUCS_NB");
-//	  layoutLineaDTO1.setUnidadOperativa("13000");
-//	  layoutLineaDTO2.setCuenta("6402001001"); layoutLineaDTO2.setDepId("");
-//	  layoutLineaDTO2.setId(2L); layoutLineaDTO2.setLinea("L");
-//	  layoutLineaDTO2.setMonto(90.00); layoutLineaDTO2.setNegocio("PRENDA");
-//	  layoutLineaDTO2.setProyectoNMP("SUCS_NB");
-//	  layoutLineaDTO2.setUnidadOperativa("13001");
-//	  layoutLineaDTOList.add(layoutLineaDTO1);
-//	  layoutLineaDTOList.add(layoutLineaDTO2);
-//	  layoutDTO.setCabecera(layoutCabeceraDTO);
-//	  layoutDTO.setLineas(layoutLineaDTOList);
-//	  layoutDTO.setTipoLayout(TipoLayoutEnum.PAGOS); layoutDTO.setFolio(1); return
-//	  layoutDTO; }
-	 
 
 }

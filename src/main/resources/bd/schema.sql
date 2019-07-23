@@ -1,9 +1,10 @@
+DROP TABLE IF EXISTS `tc_layout_linea` ;
+DROP TABLE IF EXISTS `tc_layout_header` ;
 DROP TABLE IF EXISTS `to_global` ;
 DROP TABLE IF EXISTS `tb_actividad` ;
 DROP TABLE IF EXISTS `to_layout_linea` ;
 DROP TABLE IF EXISTS `to_layout_header` ;
 DROP TABLE IF EXISTS `to_layout` ;
-DROP TABLE IF EXISTS `tc_layout_header` ;
 DROP TABLE IF EXISTS `to_movimiento_devolucion` ;
 DROP TABLE IF EXISTS `to_movimiento_comision` ;
 DROP TABLE IF EXISTS `to_movimiento_pago` ;
@@ -28,6 +29,7 @@ DROP TABLE IF EXISTS `tr_estatus_conciliacion_sub_estatus_conciliacion` ;
 DROP TABLE IF EXISTS `tr_entidad_cuenta_afiliacion` ;
 DROP TABLE IF EXISTS `tr_entidad_contactos` ;
 DROP TABLE IF EXISTS `tr_cuenta_afiliacion` ;
+DROP TABLE IF EXISTS `to_pagos_partidas` ;
 DROP TABLE IF EXISTS `to_pagos` ;
 DROP TABLE IF EXISTS `tk_regla_negocio` ;
 DROP TABLE IF EXISTS `tc_codigo_estado_cuenta` ;
@@ -67,7 +69,7 @@ DROP TABLE IF EXISTS `tk_estatus_pago` ;
 CREATE TABLE IF NOT EXISTS `tk_catalogo` (
   `id` SMALLINT(6) NOT NULL,
   `descripcion_corta` VARCHAR(50) NULL DEFAULT NULL,
-  `descripcion` VARCHAR(50) NULL DEFAULT NULL,
+  `descripcion` VARCHAR(70) NULL DEFAULT NULL,
   `nombre_tabla` VARCHAR(50) NOT NULL,
   `activo` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`))
@@ -261,35 +263,45 @@ DEFAULT CHARACTER SET = latin1;
 CREATE TABLE IF NOT EXISTS `to_pagos` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_cliente` BIGINT(20) UNSIGNED NOT NULL,
-  `fecha_transaccion` DATETIME NULL DEFAULT NULL,
-  `monto` DOUBLE NULL DEFAULT NULL,
-  `autorizacion` VARCHAR(100) NULL DEFAULT NULL,
-  `metodo` VARCHAR(45) NULL DEFAULT NULL,
-  `tarjeta` VARCHAR(4) NULL DEFAULT NULL,
-  `id_openpay` VARCHAR(100) NULL DEFAULT NULL,
-  `fecha_creacion` DATETIME NULL DEFAULT NULL,
-  `descripcion` VARCHAR(200) NULL DEFAULT NULL,
-  `id_order` VARCHAR(100) NULL DEFAULT NULL,
-  `id_estatus_transaccion` INT(11) NULL DEFAULT NULL,
-  `rest_response` VARCHAR(400) NULL DEFAULT NULL,
-  `id_transaccion_midas` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
-  `folio_partida` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
-  `id_operacion` INT(11) NULL DEFAULT NULL,
-  `id_tipo_autorizacion` INT(11) NULL,
+  `fecha_transaccion` DATETIME DEFAULT NULL,
+  `monto_total` DECIMAL(16,4) DEFAULT NULL,
+  `tarjeta` VARCHAR(4) DEFAULT NULL,
+  `fecha_creacion` DATETIME DEFAULT NULL,
+  `concepto` VARCHAR(200) DEFAULT NULL,
+  `id_estatus_transaccion` INT(11) DEFAULT NULL,
+  `id_transaccion_midas` BIGINT(20) UNSIGNED DEFAULT NULL,
+  `id_tipo_autorizacion` INT(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `cliente_transacion_fk_idx` (`id_cliente` ASC),
-  INDEX `idx_id_transaccion_midas` (`id_transaccion_midas` ASC),
-  INDEX `idx_folio_partida` (`folio_partida` ASC),
-  INDEX `idx_id_operacion` (`id_operacion` ASC),
-  CONSTRAINT `fk_cliente_id`
-    FOREIGN KEY (`id_cliente`)
-    REFERENCES `tk_cliente` (`id_cliente`),
+  INDEX `cliente_transacion_fk_idx` (`id_cliente`),
+  INDEX `idx_id_transaccion_midas` (`id_transaccion_midas`),
+  INDEX `ctr_estatus_pago_fk` (`id_estatus_transaccion`),
   CONSTRAINT `ctr_estatus_pago_fk`
-    FOREIGN KEY (`id_estatus_transaccion`)
-    REFERENCES `tk_estatus_pago` (id))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
+	FOREIGN KEY (`id_estatus_transaccion`)
+    REFERENCES `tk_estatus_pago` (`id`),
+  CONSTRAINT `fk_cliente_id`
+	FOREIGN KEY (`id_cliente`)
+	REFERENCES `tk_cliente` (`id_cliente`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- -----------------------------------------------------
+-- Table `to_pagos_partidas`
+-- -----------------------------------------------------
+CREATE TABLE `to_pagos_partidas` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `folio_partida` BIGINT(20) UNSIGNED NOT NULL,
+  `id_operacion` INT(11) NOT NULL,
+  `nombre_operacion` VARCHAR(200) DEFAULT NULL,
+  `id_pago` BIGINT(20) UNSIGNED NOT NULL,
+  `monto` DECIMAL(16,4) NOT NULL,
+ PRIMARY KEY (`id`),
+ INDEX `idx_pagos_partidas_id` (`id`),
+ INDEX `idx_pagos_partidas_folio_partida` (`folio_partida`),
+ INDEX `idx_pagos_partidas_id_operacion` (`id_operacion`),
+ INDEX `idx_pagos_partidas_id_pago` (`id_pago`),
+ CONSTRAINT `ctr_id_pago`
+	FOREIGN KEY (`id_pago`)
+    REFERENCES `to_pagos` (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- -----------------------------------------------------
 -- Table `tr_regla_negocio_variable`
@@ -504,10 +516,8 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tk_tipo_contrato` (
   `id` INT(11) NOT NULL,
-  `descripcion` VARCHAR(100) NOT NULL,
-  `baja_logica` VARCHAR(1) NOT NULL,
   `abreviatura` VARCHAR(10) NOT NULL,
-  `inddep` INT(11) NOT NULL,
+  `descripcion` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
@@ -518,10 +528,8 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tk_operacion` (
   `id` INT(11) NOT NULL,
-  `tipo` INT(11) NOT NULL,
   `abreviatura` VARCHAR(10) NOT NULL,
   `descripcion` VARCHAR(100) NOT NULL,
-  `inddep` INT(11) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
@@ -601,28 +609,6 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `tc_layout_header`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tc_layout_header` (
-  `id` INT(11) NOT NULL,
-  `id_layout` INT(11) NOT NULL,
-  `cabecera` VARCHAR(10) NOT NULL,
-  `unidad_negocio` VARCHAR(45) NULL DEFAULT NULL,
-  `descripcion` VARCHAR(150) NULL DEFAULT NULL,
-  `codigo_origen` VARCHAR(45) NULL DEFAULT NULL,
-  `fecha` DATE NULL DEFAULT NULL,
-  `campo1` VARCHAR(45) NULL DEFAULT NULL,
-  `campo2` VARCHAR(45) NULL DEFAULT NULL,
-  `created_date` DATETIME NULL DEFAULT NULL,
-  `created_by` VARCHAR(100) NULL DEFAULT NULL,
-  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
-  `last_modified_date` DATETIME NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
 -- Table `to_merge_conciliacion`
 -- -----------------------------------------------------
 CREATE TABLE `to_merge_conciliacion` (
@@ -682,7 +668,7 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_global`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_global` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_conciliacion` BIGINT(20) NOT NULL,
   `fecha` DATE NOT NULL,
   `movimientos` INT(11) NULL DEFAULT NULL,
@@ -782,37 +768,37 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_proveedor` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `id_movimiento` VARCHAR(100) NOT NULL,
   `id_reporte` INT(11) NOT NULL,
-  `authorization` VARCHAR(50) NOT NULL,
-  `operation_type` VARCHAR(50) NOT NULL,
-  `method` VARCHAR(50) NOT NULL,
+  `authorization` VARCHAR(50) DEFAULT NULL,
+  `operation_type` VARCHAR(50) DEFAULT NULL,
+  `method` VARCHAR(50) DEFAULT NULL,
   `transaction_type` VARCHAR(50) NOT NULL,
   `status` VARCHAR(50) NOT NULL,
-  `conciliated` BIT(1) NOT NULL DEFAULT b'0',
+  `conciliated` BIT(1) DEFAULT b'0',
   `creation_date` DATETIME NOT NULL,
   `operation_date` DATETIME NOT NULL,
   `description` VARCHAR(50) NOT NULL,
-  `error_message` VARCHAR(50) NOT NULL,
-  `order_id` VARCHAR(50) NOT NULL,
+  `error_message` VARCHAR(50) DEFAULT NULL,
+  `order_id` VARCHAR(50) DEFAULT NULL,
   `customer_id` VARCHAR(50) NOT NULL,
-  `error_code` VARCHAR(50) NOT NULL,
+  `error_code` VARCHAR(50) DEFAULT NULL,
   `currency` VARCHAR(50) NOT NULL,
   `amount` DECIMAL(16,4) NOT NULL,
-  `payment_method_type` VARCHAR(50) NOT NULL,
-  `payment_method_url` VARCHAR(50) NOT NULL,
-  `card_id` VARCHAR(50) NOT NULL,
-  `card_type` VARCHAR(50) NOT NULL,
-  `card_brand` VARCHAR(50) NOT NULL,
-  `card_address` VARCHAR(50) NOT NULL,
-  `card_number` VARCHAR(50) NOT NULL,
-  `card_holder_name` VARCHAR(50) NOT NULL,
-  `card_expiration_year` VARCHAR(50) NOT NULL,
-  `card_expiration_month` VARCHAR(50) NOT NULL,
-  `card_allows_charges` BIT(1) NOT NULL,
-  `card_allows_payouts` BIT(1) NOT NULL,
-  `card_creation_date` DATETIME NOT NULL,
-  `card_bank_name` VARCHAR(50) NOT NULL,
-  `card_bank_code` VARCHAR(50) NOT NULL,
-  `card_customer_id` VARCHAR(50) NOT NULL,
+  `payment_method_type` VARCHAR(50) DEFAULT NULL,
+  `payment_method_url` VARCHAR(1024) DEFAULT NULL,
+  `card_id` VARCHAR(50) DEFAULT NULL,
+  `card_type` VARCHAR(50) DEFAULT NULL,
+  `card_brand` VARCHAR(50) DEFAULT NULL,
+  `card_address` VARCHAR(50) DEFAULT NULL,
+  `card_number` VARCHAR(50) DEFAULT NULL,
+  `card_holder_name` VARCHAR(50) DEFAULT NULL,
+  `card_expiration_year` VARCHAR(50) DEFAULT NULL,
+  `card_expiration_month` VARCHAR(50) DEFAULT NULL,
+  `card_allows_charges` BIT(1) DEFAULT NULL,
+  `card_allows_payouts` BIT(1) DEFAULT NULL,
+  `card_creation_date` DATETIME DEFAULT NULL,
+  `card_bank_name` VARCHAR(50) DEFAULT NULL,
+  `card_bank_code` VARCHAR(50) DEFAULT NULL,
+  `card_customer_id` VARCHAR(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_to_movimiento_midas_to_reporte1` (`id_reporte` ASC),
   CONSTRAINT `fk_to_movimiento_midas_to_reporte1`
@@ -1102,12 +1088,55 @@ CREATE TABLE to_comision_transaccion_proyeccion (
 
 
 -- -----------------------------------------------------
+-- Table `compose`.`tc_layout_header`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tc_layout_header` (
+  `id` INT(11) NOT NULL,
+  `id_layout` INT(11) NOT NULL,
+  `cabecera` VARCHAR(10) NOT NULL,
+  `unidad_negocio` VARCHAR(45) NULL DEFAULT NULL,
+  `descripcion` VARCHAR(150) NULL DEFAULT NULL,
+  `codigo_origen` VARCHAR(45) NULL DEFAULT NULL,
+  `fecha` DATE NULL DEFAULT NULL,
+  `campo1` VARCHAR(45) NULL DEFAULT NULL,
+  `campo2` VARCHAR(45) NULL DEFAULT NULL,
+  `created_date` DATETIME NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `compose`.`tc_layout_linea`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tc_layout_linea` (
+  `id` INT(11) NOT NULL,
+  `id_layout` INT(11) NOT NULL,
+  `linea` VARCHAR(10) NOT NULL,
+  `cuenta` VARCHAR(45) NULL DEFAULT NULL,
+  `dep_id` VARCHAR(45) NULL DEFAULT NULL,
+  `unidad_operativa` VARCHAR(50) NULL DEFAULT NULL,
+  `negocio` VARCHAR(45) NULL DEFAULT NULL,
+  `proyecto_nmp` VARCHAR(45) NULL DEFAULT NULL,
+  `monto` DECIMAL(16,4) NOT NULL,
+  `created_date` DATETIME NULL DEFAULT NULL,
+  `created_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
 -- Table `to_layout`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_layout` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_conciliacion` BIGINT(20) NOT NULL,
-  `tipo` VARCHAR(20) NOT NULL,
+  `tipo` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `FK_to_layout_to_conciliacion_idx` (`id_conciliacion` ASC),
   CONSTRAINT `FK_to_layout_to_conciliacion`
@@ -1121,7 +1150,7 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_layout_header`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_layout_header` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_layout` INT(11) NOT NULL,
   `cabecera` VARCHAR(10) NOT NULL,
   `unidad_negocio` VARCHAR(45) NULL DEFAULT NULL,
@@ -1147,12 +1176,12 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_layout_linea`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_layout_linea` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_layout` INT(11) NOT NULL,
   `linea` VARCHAR(10) NOT NULL,
   `cuenta` VARCHAR(45) NULL DEFAULT NULL,
   `dep_id` VARCHAR(45) NULL DEFAULT NULL,
-  `unidad_operativa` VARCHAR(10) NULL DEFAULT NULL,
+  `unidad_operativa` VARCHAR(50) NULL DEFAULT NULL,
   `negocio` VARCHAR(45) NULL DEFAULT NULL,
   `proyecto_nmp` VARCHAR(45) NULL DEFAULT NULL,
   `monto` DECIMAL(16,4) NOT NULL,
@@ -1194,7 +1223,7 @@ CREATE TABLE IF NOT EXISTS `tb_actividad` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `tipo` VARCHAR(50) NOT NULL,
   `sub_tipo` VARCHAR(50) NOT NULL,
-  `descripcion` VARCHAR(150) NOT NULL,
+  `descripcion` VARCHAR(500) NOT NULL,
   `fecha` DATETIME NOT NULL,
   `folio` BIGINT(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -1203,3 +1232,39 @@ CREATE TABLE IF NOT EXISTS `tb_actividad` (
   INDEX `idx_fecha_actividades` (`fecha` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
+
+-- ------------------------------------------------------- --
+-- -------- REINICIO DE CLAVES AUTO INCREMENTALES A 1----- --
+-- ------------------------------------------------------- --
+ALTER TABLE `tc_layout_linea` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_layout_header` AUTO_INCREMENT = 1;
+ALTER TABLE `to_global` AUTO_INCREMENT = 1;
+ALTER TABLE `tb_actividad` AUTO_INCREMENT = 1;
+ALTER TABLE `to_layout_linea` AUTO_INCREMENT = 1;
+ALTER TABLE `to_layout_header` AUTO_INCREMENT = 1;
+ALTER TABLE `to_layout` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_devolucion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_comision` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_pago` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_transito` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_conciliacion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_midas` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_proveedor` AUTO_INCREMENT = 1;
+ALTER TABLE `to_movimiento_estado_cuenta` AUTO_INCREMENT = 1;
+ALTER TABLE `to_estado_cuenta` AUTO_INCREMENT = 1;
+ALTER TABLE `to_estado_cuenta_totales_adicional` AUTO_INCREMENT = 1;
+ALTER TABLE `to_estado_cuenta_totales` AUTO_INCREMENT = 1;
+ALTER TABLE `to_estado_cuenta_cabecera` AUTO_INCREMENT = 1;
+ALTER TABLE `to_reporte` AUTO_INCREMENT = 1;
+ALTER TABLE `to_comision_transaccion_real` AUTO_INCREMENT = 1;
+ALTER TABLE `to_comision_transaccion_proyeccion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_comision_transaccion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_conciliacion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_merge_conciliacion` AUTO_INCREMENT = 1;
+ALTER TABLE `to_pagos` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_codigo_estado_cuenta` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_afiliacion` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_contactos` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_cuenta` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_entidad` AUTO_INCREMENT = 1;
+ALTER TABLE `tc_tarjetas` AUTO_INCREMENT = 1;

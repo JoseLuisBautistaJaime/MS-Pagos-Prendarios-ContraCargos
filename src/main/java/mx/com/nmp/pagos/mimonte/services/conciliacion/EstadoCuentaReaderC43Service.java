@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaFileBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaLineBuilder;
-import mx.com.nmp.pagos.mimonte.conector.EstadoCuentaAPI;
+import mx.com.nmp.pagos.mimonte.conector.EstadoCuentaBroker;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout43;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaImplementacionEnum;
@@ -36,7 +37,7 @@ import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
 public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 
 	@Inject
-	private EstadoCuentaAPI estadoCuentaAPI;
+	private EstadoCuentaBroker estadoCuentaBrokerBus;
 
 	@Inject
 	private ConciliacionHelper conciliacionHelper;
@@ -62,20 +63,20 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 	public EstadoCuentaFileLayout read(Date date, Long idConciliacion, EstadoCuentaImplementacionEnum implementacion) {
 
 		// Consulta el numero de cuenta asignado a la conciliacion
- 		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion.intValue());
+ 		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion.intValue(), null);
 
 		// Crea nombre y ruta del archivo en base a la fecha
  		String rutaArchivo = EstadoCuentaFileBuilder.buildPath(date, ruta);
 		String nombreArchivo = EstadoCuentaFileBuilder.buildFileName(date, conciliacion.getCuenta().getNumeroCuenta(), nombre);
 
 		// Consulta el archivo
-		List<String> lineasArchivo = estadoCuentaAPI.consulta(rutaArchivo, nombreArchivo);
+		List<String> lineasArchivo = estadoCuentaBrokerBus.consulta(rutaArchivo, nombreArchivo);
 		if (lineasArchivo == null || lineasArchivo.size() == 0) {
-			throw new ConciliacionException("No se encontro archivo de estado de cuenta " + nombreArchivo);
+			throw new ConciliacionException("No se encontro archivo de estado de cuenta " + nombreArchivo, CodigoError.NMP_PMIMONTE_BUSINESS_054);
 		}
 
 		if (implementacion != EstadoCuentaImplementacionEnum.CUADERNO_43) {
-			throw new ConciliacionException("Implementacion " + implementacion + " no definida");
+			throw new ConciliacionException("Implementacion " + implementacion + " no definida", CodigoError.NMP_PMIMONTE_BUSINESS_055);
 		}
 
 		// Crea implementacion cuaderno 43

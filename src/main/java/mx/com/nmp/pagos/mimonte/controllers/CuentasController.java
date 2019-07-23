@@ -33,16 +33,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.CuentaBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
-import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
-import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqNN;
-import mx.com.nmp.pagos.mimonte.dto.CategoriaDTO;
-import mx.com.nmp.pagos.mimonte.dto.CodigoEstadoCuentaDTO;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.CuentaBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
-import mx.com.nmp.pagos.mimonte.dto.CuentaRespDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaSaveDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
+import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.impl.CuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
@@ -74,6 +71,9 @@ public class CuentasController {
 	@SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(CuentasController.class);
 
+	/**
+	 * Service de entiudad Cuenta
+	 */
 	@Autowired
 	@Qualifier("cuentaServiceImpl")
 	private CuentaServiceImpl cuentaServiceImpl;
@@ -81,7 +81,8 @@ public class CuentasController {
 	/**
 	 * Guarda un nuevo catalogo Cuenta
 	 * 
-	 * @param pagoRequestDTO
+	 * @param cuentaSaveDTO
+	 * @param createdBy
 	 * @return
 	 */
 	@ResponseBody
@@ -95,15 +96,13 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CuentaSaveDTO cuentaSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		// Valida que el objeto de request y sus atributos sean validos
 		if (!ValidadorCatalogo.validateCuentaSave(cuentaSaveDTO))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		CuentaEntDTO cuentaEntDTO = null;
-		try {
-			cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl.save(
-					CuentaBuilder.buildCuentaBaseDTOFromCuentaSaveDTO(cuentaSaveDTO, new Date(), null), createdBy));
-		} catch (CatalogoException cex) {
-			throw cex;
-		}
+		// Guarda una cuenta
+		cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
+				.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaSaveDTO(cuentaSaveDTO, new Date(), null), createdBy));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				cuentaEntDTO);
 	}
@@ -111,7 +110,8 @@ public class CuentasController {
 	/**
 	 * Actualiza un catalogo Cuenta
 	 * 
-	 * @param cuentasDTO
+	 * @param cuentaDTOReq
+	 * @param lastModifiedBy
 	 * @return
 	 */
 	@ResponseBody
@@ -125,50 +125,16 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CuentaDTO cuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		// Valida que el objeto de request y sus atributos sean validos
 		if (!ValidadorCatalogo.validateCuentaUpdate(cuentaDTOReq))
-			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR);
+			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		CuentaEntDTO cuentaEntDTO = null;
-		try {
-			cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl.update(
-					CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));
-		} catch (CatalogoException ce) {
-			throw ce;
-		}
+		// Actualiza una cuenta
+		cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
+				.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				cuentaEntDTO);
 	}
-
-	/**
-	 * Obtiene un catalogo Cuenta por su numero de cuenta
-	 * 
-	 * @param idcuentas
-	 * @return
-	 */
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	@PutMapping(value = "/catalogos/cuentas/consulta", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@ApiOperation(httpMethod = "PUT", value = "Regresa un objeto catalogo cuentas en base a su id", tags = {
-//			"Cuentas" })
-//	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "cuentas encontrada"),
-//			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-//			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-//			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
-//			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-//	public Response findByNumeroCuenta(@RequestBody CuentaByNumeroDTO numeroCuenta) {
-//		CuentaEntDTO cuentaEntDTO = null;
-//		try {
-//			if (null != numeroCuenta && null != numeroCuenta.getNumero() && !numeroCuenta.getNumero().isEmpty())
-//				cuentaEntDTO = cuentaServiceImpl.findByNumeroCuenta(numeroCuenta.getNumero());
-//			else
-//				throw new CatalogoException(CatalogConstants.CATALOG_NOT_FOUND);
-//		} catch (EmptyResultDataAccessException erdaex) {
-//			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
-//		} catch (javax.persistence.NonUniqueResultException nuex) {
-//			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION);
-//		}
-//		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
-//				cuentaEntDTO);
-//	}
 
 	/**
 	 * Obtiene un catalogo Cuenta por su numero de cuenta
@@ -188,15 +154,16 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNumeroCuenta(@PathVariable String numeroCuenta) {
 		CuentaEntDTO cuentaEntDTO = null;
+		// Encuentra una cuenta por su numero
 		try {
 			if (null != numeroCuenta && !numeroCuenta.equals(""))
 				cuentaEntDTO = cuentaServiceImpl.findByNumeroCuenta(numeroCuenta);
 			else
-				throw new CatalogoException(CatalogConstants.CATALOG_NOT_FOUND);
+				throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 		} catch (EmptyResultDataAccessException erdaex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		} catch (javax.persistence.NonUniqueResultException nuex) {
-			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION);
+			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION, CodigoError.NMP_PMIMONTE_BUSINESS_002);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				cuentaEntDTO);
@@ -205,8 +172,7 @@ public class CuentasController {
 	/**
 	 * Obtiene uno o mas catalogos de Cuenta por su nombre y estatus
 	 * 
-	 * @param nombre
-	 * @param estatus
+	 * @param idEntidad
 	 * @return
 	 */
 	@ResponseBody
@@ -219,17 +185,24 @@ public class CuentasController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByCuenta(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
-
 		List<CuentaEntDTO> cuentaEntDTOList = null;
+		// Encuentra una lista de cuentas por su id de entidad asociada
 		try {
 			cuentaEntDTOList = cuentaServiceImpl.findByEntidadId(idEntidad);
 		} catch (EmptyResultDataAccessException erdaex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				cuentaEntDTOList);
 	}
 
+	/**
+	 * Elimina logicamente una cuenta por su id
+	 * 
+	 * @param idCuenta
+	 * @param lastModifiedBy
+	 * @return
+	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = "/catalogos/cuentas/{idCuenta}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -241,11 +214,11 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteByidcuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
-
+		// Elimina de manera logica una cuenta por su id
 		try {
 			cuentaServiceImpl.updateEstatusById(false, idCuenta, lastModifiedBy, new Date());
 		} catch (EmptyResultDataAccessException erdaex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
@@ -266,188 +239,12 @@ public class CuentasController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findAll() {
+		// Encuentra todas las cuentas
 		@SuppressWarnings("unchecked")
 		List<CuentaEntDTO> cuentaEntDTOList = CuentaBuilder
 				.buildCuentaEntDTOListFromCuentaBaseDTOList((List<CuentaBaseDTO>) cuentaServiceImpl.findAll());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != cuentaEntDTOList ? cuentaEntDTOList : new ArrayList<>());
-	}
-
-	/**
-	 * Crea un objeto de respuesta dummy
-	 * 
-	 * @return
-	 */
-
-	public static CuentaDTO buildDummyNew() {
-
-		CuentaDTO cuentasDto = new CuentaDTO();
-		List<AfiliacionReqNN> afiliaciones = new ArrayList<AfiliacionReqNN>();
-		AfiliacionReqNN afiliacionDto = new AfiliacionReqNN();
-		afiliacionDto.setId(234L);
-//		afiliacionDto.setNumero("12345678L");
-		afiliaciones.add(afiliacionDto);
-		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
-		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
-		CategoriaDTO cate = new CategoriaDTO();
-		cate.setId(123l);
-		cate.setDescripcion("Ventas");
-		codigo.setEstatus(true);
-		codigo.setCategoria(cate);
-		codigo.setCodigo("Leyenda CCFF");
-		codigo.setId(1234L);
-		codigos.add(codigo);
-		cuentasDto.setEstatus(true);
-		cuentasDto.setId(234L);
-//		cuentasDto.setNumero("12345678");
-		cuentasDto.setAfiliaciones(afiliaciones);
-
-		return cuentasDto;
-	}
-
-	public static CuentaRespDTO dummyRespDTO() {
-		CuentaRespDTO cuentaRespDTO = new CuentaRespDTO();
-		cuentaRespDTO.setEstatus(true);
-		cuentaRespDTO.setId(1L);
-		cuentaRespDTO.setNumero("43275498759");
-		return cuentaRespDTO;
-	}
-
-	/**
-	 * Respuesta dummy para actualizar y consulta por id id de entidades asociadas
-	 * 
-	 * @return
-	 */
-	public static List<CuentaEntDTO> buildDummyUpdtLst() {
-		List<CuentaEntDTO> cuentasDto = new ArrayList<>();
-		CuentaEntDTO cuentaEntDTO1 = new CuentaEntDTO();
-		CuentaEntDTO cuentaEntDTO2 = new CuentaEntDTO();
-		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
-		List<AfiliacionEntDTO> afiliaciones2 = new ArrayList<>();
-		AfiliacionEntDTO afiliacionDto = new AfiliacionEntDTO();
-		AfiliacionEntDTO afiliacionDto2 = new AfiliacionEntDTO();
-		AfiliacionEntDTO afiliacionDto3 = new AfiliacionEntDTO();
-		AfiliacionEntDTO afiliacionDto4 = new AfiliacionEntDTO();
-		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero("12345678L");
-//		afiliacionDto.setEstatus(true);
-		afiliacionDto2.setId(555234L);
-		afiliacionDto2.setNumero("4541545456L");
-//		afiliacionDto2.setEstatus(true);
-		afiliacionDto3.setId(234111L);
-		afiliacionDto3.setNumero("10000978L");
-//		afiliacionDto3.setEstatus(true);
-		afiliacionDto4.setId(9090904L);
-		afiliacionDto4.setNumero("112233L");
-//		afiliacionDto4.setEstatus(true);
-		afiliaciones.add(afiliacionDto);
-		afiliaciones.add(afiliacionDto2);
-		afiliaciones2.add(afiliacionDto3);
-		afiliaciones2.add(afiliacionDto4);
-		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
-		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
-		CategoriaDTO cate = new CategoriaDTO();
-		cate.setId(123l);
-		cate.setDescripcion("Otra Categoria");
-		codigo.setEstatus(true);
-		codigo.setCategoria(cate);
-		codigo.setCodigo("Leyenda FFFRR");
-		codigo.setId(1234l);
-		codigos.add(codigo);
-		cuentaEntDTO1.setEstatus(true);
-		cuentaEntDTO1.setId(234L);
-		cuentaEntDTO1.setNumero("12345678");
-		cuentaEntDTO1.setAfiliaciones(afiliaciones);
-		cuentaEntDTO2.setEstatus(true);
-		cuentaEntDTO2.setId(23443L);
-		cuentaEntDTO2.setNumero("1234454556");
-		cuentaEntDTO2.setAfiliaciones(afiliaciones2);
-		cuentasDto.add(cuentaEntDTO1);
-		cuentasDto.add(cuentaEntDTO2);
-		return cuentasDto;
-	}
-
-	/**
-	 * Respuesta dummy para consulta por
-	 * 
-	 * @return
-	 */
-	public static CuentaEntDTO buildDummyUpdt() {
-		CuentaEntDTO cuentasDto = new CuentaEntDTO();
-		List<AfiliacionEntDTO> afiliaciones = new ArrayList<>();
-		AfiliacionEntDTO afiliacionDto = new AfiliacionEntDTO();
-		AfiliacionEntDTO afiliacionDto2 = new AfiliacionEntDTO();
-		afiliacionDto.setId(234L);
-		afiliacionDto.setNumero("12345678L");
-//		afiliacionDto.setEstatus(true);
-		afiliacionDto2.setId(888L);
-		afiliacionDto2.setNumero("998811L");
-//		afiliacionDto2.setEstatus(true);
-		afiliaciones.add(afiliacionDto);
-		afiliaciones.add(afiliacionDto2);
-		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
-		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
-		CategoriaDTO cate = new CategoriaDTO();
-		cate.setId(123l);
-		cate.setDescripcion("Otra Categoria");
-		codigo.setEstatus(true);
-		codigo.setCategoria(cate);
-		codigo.setCodigo("Leyenda GGF");
-		codigo.setId(1234l);
-		codigos.add(codigo);
-		cuentasDto.setEstatus(true);
-		cuentasDto.setId(111234L);
-		cuentasDto.setNumero("12443345678");
-		cuentasDto.setAfiliaciones(afiliaciones);
-		return cuentasDto;
-	}
-
-	public static CuentaDTO buildDummy() {
-
-		CuentaDTO cuentasDto = new CuentaDTO();
-		List<AfiliacionReqNN> afiliaciones = new ArrayList<AfiliacionReqNN>();
-		AfiliacionReqNN afiliacionDto = new AfiliacionReqNN();
-		afiliacionDto.setId(234L);
-//		afiliacionDto.setNumero("12345678L");
-		afiliaciones.add(afiliacionDto);
-		List<CodigoEstadoCuentaDTO> codigos = new ArrayList<CodigoEstadoCuentaDTO>();
-		CodigoEstadoCuentaDTO codigo = new CodigoEstadoCuentaDTO();
-		CategoriaDTO cate = new CategoriaDTO();
-		cate.setId(123l);
-		cate.setDescripcion("Ventas");
-		codigo.setEstatus(true);
-		codigo.setCategoria(cate);
-		codigo.setCodigo("Leyenda CCX");
-		codigo.setId(1234l);
-		codigos.add(codigo);
-		cuentasDto.setEstatus(true);
-		cuentasDto.setId(234L);
-//		cuentasDto.setNumero("12345678");
-		cuentasDto.setAfiliaciones(afiliaciones);
-
-		return cuentasDto;
-	}
-
-	public static List<CuentaDTO> buildDummyEnti() {
-
-		List<CuentaDTO> cuentas = new ArrayList<CuentaDTO>();
-		CuentaDTO cuentasDto = new CuentaDTO();
-		List<AfiliacionReqNN> afiliaciones = new ArrayList<AfiliacionReqNN>();
-		AfiliacionReqNN afiliacionDto = new AfiliacionReqNN();
-		afiliacionDto.setId(234L);
-		afiliaciones.add(afiliacionDto);
-		CategoriaDTO cate = new CategoriaDTO();
-		cate.setId(123l);
-		cate.setDescripcion("Categoria Dummy");
-		cuentasDto.setEstatus(true);
-		cuentasDto.setId(234L);
-//		cuentasDto.setNumero("12345678");
-		cuentasDto.setAfiliaciones(afiliaciones);
-		cuentas.add(cuentasDto);
-		afiliacionDto.setId(12345L);
-//		afiliacionDto.setNumero("654321L");
-		cuentas.add(cuentasDto);
-		return cuentas;
 	}
 
 }

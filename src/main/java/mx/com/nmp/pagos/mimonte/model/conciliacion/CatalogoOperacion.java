@@ -28,17 +28,11 @@ public class CatalogoOperacion {
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@Column(name = "tipo", nullable = false)
-	private Integer tipo;
-
 	@Column(name = "abreviatura", nullable = false)
 	private String abreviatura;
 
 	@Column(name = "descripcion", nullable = false)
 	private String descripcion;
-
-	@Column(name = "inddep", nullable = false)
-	private Integer inddep;
 
 	public Integer getId() {
 		return id;
@@ -46,14 +40,6 @@ public class CatalogoOperacion {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Integer getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(Integer tipo) {
-		this.tipo = tipo;
 	}
 
 	public String getAbreviatura() {
@@ -72,23 +58,18 @@ public class CatalogoOperacion {
 		this.descripcion = descripcion;
 	}
 
-	public Integer getInddep() {
-		return inddep;
-	}
-
-	public void setInddep(Integer inddep) {
-		this.inddep = inddep;
-	}
-
 	@Override
 	public String toString() {
-		return "CatalogoOperacion [id=" + id + ", tipo=" + tipo + ", abreviatura=" + abreviatura + ", descripcion="
-				+ descripcion + ", inddep=" + inddep + "]";
+		return "CatalogoOperacion{" +
+				"id=" + id +
+				", abreviatura='" + abreviatura + '\'' +
+				", descripcion='" + descripcion + '\'' +
+				'}';
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, tipo, abreviatura, descripcion, inddep);
+		return Objects.hash(id, abreviatura, descripcion);
 	}
 
 	@Override

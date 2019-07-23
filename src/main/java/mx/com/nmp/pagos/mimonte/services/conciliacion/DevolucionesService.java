@@ -5,6 +5,7 @@ import java.util.List;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
@@ -54,7 +55,7 @@ public interface DevolucionesService {
 	 * @param modifiedBy
 	 * @return
 	 */
-	public List<DevolucionEntidadDTO>  solicitarDevoluciones(DevolucionesIdsMovimientosDTO solicitar, String modifiedBy);
+	public List<DevolucionEntidadDTO> solicitarDevoluciones(DevolucionesIdsMovimientosDTO solicitar, String modifiedBy);
 	
 	/**
 	 * 
@@ -63,5 +64,14 @@ public interface DevolucionesService {
 	 * @return
 	 */
 	public List<DevolucionConDTO> marcarDevolucion(SolicitarPagosRequestDTO marcarDevoluciones, String createdBy);
-	
+
+	/**
+	 * Se encarga de actualizar las devoluciones
+	 * @param devolucionUpdtDTO
+	 * @param modifiedBy 
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public List<DevolucionEntidadDTO> actualizar(List<DevolucionUpdtDTO> devolucionUpdtDTO, String modifiedBy) throws ConciliacionException;
+
 }

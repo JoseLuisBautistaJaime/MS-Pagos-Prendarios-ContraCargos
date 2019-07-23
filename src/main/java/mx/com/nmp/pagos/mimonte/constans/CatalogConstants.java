@@ -5,7 +5,7 @@
 package mx.com.nmp.pagos.mimonte.constans;
 
 /**
- * Nombre: CatalogConstants
+ * @name CatalogConstants
  * 
  * @author: Javier Hernandez Barraza jhernandez@quarksoft.net
  * @version: 0.1
@@ -31,29 +31,29 @@ public final class CatalogConstants {
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String CONT_MSG_SUCCESS = "Consulta Exitosa.";
+	public static final String CONT_MSG_SUCCESS = "Consulta exitosa.";
 
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String CONT_MSG_SUCCESS_SAVE = "Alta Exitosa.";
+	public static final String CONT_MSG_SUCCESS_SAVE = "Alta exitosa.";
 
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String CONT_MSG_SUCCESS_UPDATE = "Actualización Exitosa.";
+	public static final String CONT_MSG_SUCCESS_UPDATE = "Actualización exitosa.";
 
 	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
-	public static final String CONT_MSG_SUCCESS_DELETE = "Baja Exitosa.";
+	public static final String CONT_MSG_SUCCESS_DELETE = "Baja exitosa.";
 
 	/**
 	 * El nombre del header donde se especificara el nombre de usuario qque realiza
 	 * la operacion
 	 */
 	public static final String REQUEST_USER_HEADER = "requestUser";
-	
+
 	/**
 	 * El nombre del header donde se especificara el nombre de usuario qque realiza
 	 * la operacion
@@ -75,14 +75,14 @@ public final class CatalogConstants {
 	 * Mensaje que es mostrado cuando un nombre especificado como parametro ya sea
 	 * para una peticion no es encontrado
 	 */
-	public static final String CATALOG_NOMBRE_NOT_FOUND = "El id ingresado no fue encontrado";
+	public static final String CATALOG_NOMBRE_NOT_FOUND = "El nombre ingresado no fue encontrado";
 
 	/**
 	 * Mensaje que es lanzado cuando se intenta dar de alta un codigo de estado de
 	 * cuenta con una entidad y categoria repetida
 	 */
 	public static final String CODIGO_E_C_ALREADY_EXISTS = "Ya existe un codigo con esa entidad y esa categoria";
-	
+
 	/**
 	 * Mensaje que es lanzado cuando se intenta dar de alta un codigo de estado de
 	 * cuenta con una entidad, categoria y codigo repetido
@@ -145,7 +145,7 @@ public final class CatalogConstants {
 	/**
 	 * Mensaje que es mostrado si el correo electronico a actualizar ya existe.
 	 */
-	public static final String CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_NOT_EXISTS = "El correo electronico que desea actualizar ya existe.";
+	public static final String CATALOG_THE_EMAIL_THAT_WANTS_TO_UPDT_ALREADY_EXISTS = "El correo electronico que desea actualizar ya existe.";
 
 	/**
 	 * Mensaje que es mostrado si el id a actualizar no existe.
@@ -229,7 +229,7 @@ public final class CatalogConstants {
 	 * Mensaje que es mostrado cuando se desea eliminar un contacto que esta
 	 * asociado a una entidad
 	 */
-	public static final String CONTCATO_HAS_ENTIDADES_ASSOCIATED = "El contacto esta asociado a una entidad";
+	public static final String CONTACTO_HAS_ENTIDADES_ASSOCIATED = "El contacto esta asociado a una entidad";
 
 	/**
 	 * Mensaje que es mostrado cuando se genera un error de tipo no resultado unico
@@ -243,10 +243,74 @@ public final class CatalogConstants {
 	public static final String THERE_ARE_NO_ACCOUNTS = "No existen cuentas en el catalogo";
 
 	/**
-	 * mensaje que es mostrado cuando el tipo de contacto no es encontrado en el catalogo
+	 * mensaje que es mostrado cuando el tipo de contacto no es encontrado en el
+	 * catalogo
 	 */
 	public static final String TIPO_CONTACTO_NOT_FOUND = "El tipo de contacto no existe en el catalogo";
-	
+
+	/**
+	 * Mensaje que es mostrado cuando el objeto cuenta es nulo
+	 */
+	public static final String CUENTA_IS_NULL = "La cuenta es nula";
+
+	/**
+	 * Mensaje que es mostrado cuando se intenta enviar informacion de contactos
+	 * inconsistente en la actualizacion de una entidad
+	 */
+	public static final String INCONSISTENT_CONTACTS_DATA = "Los datos de uno o mas contactos son inconsistentes";
+
+	/**
+	 * Mensaje que es mostrado cuando se desea dar de baja una cuenta que ya ha sido
+	 * dada de baja
+	 */
+	public static final String CUENTA_HAS_ALREADY_DELETED = "La cuenta ya ha sido dada de baja";
+
+	/**
+	 * Mensaje que es mostrado cuando se desea dar de baja una entidad que ya ha
+	 * sido dada de baja
+	 */
+	public static final String ENTIDAD_HAS_ALREADY_DELETED = "La entidad ya ha sido dada de baja";
+
+	/**
+	 * Mensaje que es mostrado cuando la tabla solicitada no cuenta con un valor en
+	 * el campo nombre
+	 */
+	public static final String CATALOG_NOMBRE_TABLA_NOT_FOUND = "La tabla no cuenta con un valor de nombre";
+
+	/**
+	 * Clase interna que encapsula las constantes de la consulta de catalogos
+	 * 
+	 * @author user
+	 *
+	 */
+	public static final class Consulta {
+		private Consulta() {
+			super();
+		}
+
+		/**
+		 * Valor para el campo id
+		 */
+		public static final String ID_VALUE = "ID";
+
+		/**
+		 * Valor para el campo descripcion corta
+		 */
+		public static final String DESCRIPCION_CORTA_VALUE = "DESCRIPCION_CORTA";
+
+		/**
+		 * Valor para el campo descripcion
+		 */
+		public static final String DESCRIPCION_VALUE = "DESCRIPCION";
+
+		/**
+		 * Valor de el query (SELECT)
+		 */
+		public static final String QUERY_VALUE = "SELECT id AS " + ID_VALUE + ", descripcion_corta AS "
+				+ DESCRIPCION_CORTA_VALUE + ", descripcion AS " + DESCRIPCION_VALUE + " FROM ";
+
+	}
+
 	/**
 	 * Constructor privado, ya que será una clase para constantes por lo tanto no
 	 * debe ser instanciada.

@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.EstadoCuentaWraper;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayoutTipoEnum;
@@ -42,7 +43,7 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 	public EstadoCuentaWraper extract(EstadoCuentaFileLayout estadoCuentaFile) {
 
 		if (estadoCuentaFile == null) {
-			throw new ConciliacionException("Archivo de estado de cuenta invalido");
+			throw new ConciliacionException("Archivo de estado de cuenta invalido", CodigoError.NMP_PMIMONTE_BUSINESS_050);
 		}
 
 		
@@ -53,13 +54,13 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 		EstadoCuentaTotalesAdicional totalesAdicional = extractTotalesAdicional(estadoCuentaFile);
 
 		if (cabecera == null) {
-			throw new ConciliacionException("Archivo de estado de cuenta contiene cabecera incorrecta");
+			throw new ConciliacionException("Archivo de estado de cuenta contiene cabecera incorrecta", CodigoError.NMP_PMIMONTE_BUSINESS_051);
 		}
 		if (totales == null) {
-			throw new ConciliacionException("Archivo de estado de cuenta con totales incorrectos");
+			throw new ConciliacionException("Archivo de estado de cuenta con totales incorrectos", CodigoError.NMP_PMIMONTE_BUSINESS_052);
 		}
 		if (totalesAdicional == null) {
-			throw new ConciliacionException("Archivo de estado de cuenta con totales adicionales incorrectos");
+			throw new ConciliacionException("Archivo de estado de cuenta con totales adicionales incorrectos", CodigoError.NMP_PMIMONTE_BUSINESS_053);
 		}
 
 		EstadoCuentaWraper estadoCuenta = new EstadoCuentaWraper();

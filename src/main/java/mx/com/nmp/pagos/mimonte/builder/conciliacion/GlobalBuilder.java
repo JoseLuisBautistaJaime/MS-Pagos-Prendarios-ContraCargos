@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.GlobalDTO;
@@ -42,8 +44,8 @@ public abstract class GlobalBuilder {
 			globalDTO = new GlobalDTO();
 			globalDTO.setId(global.getId());
 			globalDTO.setFechaOperacion(global.getFecha());
-			globalDTO.setTotalMovimientos(null);
-			globalDTO.setTotalPartidas(null);
+			globalDTO.setTotalMovimientos(global.getMovimientos() != null ? global.getMovimientos().longValue() : 0);
+			globalDTO.setTotalPartidas(global.getPartidas() != null ? global.getPartidas().longValue() : 0);
 			globalDTO.setImporteMidas(global.getImporteMidas());
 			globalDTO.setImporteProveedor(global.getImporteProveedor());
 			globalDTO.setImporteBanco(global.getImporteBanco());
@@ -55,7 +57,9 @@ public abstract class GlobalBuilder {
 	}
 
 
-	public static Global updateGlobal(Global global, ReportesWrapper reportesWrapper, List<MovimientoMidas> movsMidas, List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta) {
+	public static Global updateGlobal(Global global, ReportesWrapper reportesWrapper, List<MovimientoMidas> movsMidas,
+			List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta, List<String> clavesDevolucion) {
+
 		if (global == null) {
 			global = new Global();
 			global.setConciliacion(new Conciliacion(reportesWrapper.getIdConciliacion()));
@@ -70,7 +74,7 @@ public abstract class GlobalBuilder {
 			// Reporte de proveedor transaccional / Consulta reporte de procesos nocturnos - formato: DD/MM/AA)
 			global.setFecha(reporteProveedor.getCreatedDate());
 			//(Total de movimientos reportados en el reporte del proveedor transaccional)
-			global.setMovmientos(movsMidas.size());
+			global.setMovimientos(movsProveedor.size());
 		}
 		
 		if (reporteMidas != null) {
@@ -80,11 +84,28 @@ public abstract class GlobalBuilder {
 
 		global.setImporteMidas(ConciliacionMathUtil.getImporteMidas(movsMidas));
 		global.setImporteProveedor(ConciliacionMathUtil.getImporteProveedor(movsProveedor));
-		global.setImporteBanco(ConciliacionMathUtil.getImporteBanco(movsEstadoCuenta));
-		global.setDevoluciones(ConciliacionMathUtil.getDevolucionesEstadoCuenta(movsEstadoCuenta));
+		global.setImporteBanco(ConciliacionMathUtil.getImporteBanco(movsEstadoCuenta, clavesDevolucion));
+		global.setImporteDevoluciones(ConciliacionMathUtil.getDevolucionesEstadoCuenta(movsEstadoCuenta, clavesDevolucion));
 		global.setDiferenciaProveedorMidas(ConciliacionMathUtil.getDiferenciaProveedorMidas(movsProveedor, movsMidas));
-		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta));
+		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta, clavesDevolucion));
 		
+		return global;
+	}
+
+	public static Global buildGlobalDTOFromConciliacion(Conciliacion conciliacion) {
+		Global global = new Global();
+		global.setConciliacion(conciliacion);
+		global.setFecha(new Date());
+		global.setDevoluciones(0);
+		global.setDiferenciaProveedorBanco(new BigDecimal(0));
+		global.setDiferenciaProveedorMidas(new BigDecimal(0));
+		global.setImporteBanco(new BigDecimal(0));
+		global.setImporteDevoluciones(new BigDecimal(0));
+		global.setImporteMidas(new BigDecimal(0));
+		global.setImporteProveedor(new BigDecimal(0));
+		global.setMonto(new BigDecimal(0));
+		global.setMovimientos(0);
+		global.setPartidas(0);
 		return global;
 	}
 

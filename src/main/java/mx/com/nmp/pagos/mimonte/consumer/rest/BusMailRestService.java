@@ -11,10 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 
@@ -35,12 +37,9 @@ public class BusMailRestService extends AbstractOAuth2RestService {
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(SolicitarPagosService.class);
 
-
-
 	public BusMailRestService() {
 		super();
 	}
-
 
 	/**
 	 * Envia el correo electronico el atributo bearerToken y statusResponse pueden
@@ -62,18 +61,22 @@ public class BusMailRestService extends AbstractOAuth2RestService {
 
 		boolean statusResponse = (null != response && null != response.get(mc.responseRespKey)
 				&& null != ((LinkedHashMap<String, Object>) (response.get(mc.responseRespKey))).get(mc.responseCodpKey)
-				&& mc.flagSendingSuccess
-						.equals(((LinkedHashMap<String, Object>) (response.get(mc.responseRespKey))).get(mc.responseCodpKey).toString()));
+				&& mc.flagSendingSuccess.equals(((LinkedHashMap<String, Object>) (response.get(mc.responseRespKey)))
+						.get(mc.responseCodpKey).toString()));
 
 		LOG.debug(statusResponse ? "Mail enviado correctamente" : "Error al enviar el e-mail");
 
 		if (!statusResponse)
-			throw new ConciliacionException(ConciliacionConstants.MAIL_CANNOT_BE_SEND);
+			throw new ConciliacionException(ConciliacionConstants.MAIL_CANNOT_BE_SEND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_066);
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.consumer.rest.AbstractOAuth2RestService#createHeadersPostTo(mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO, mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see mx.com.nmp.pagos.mimonte.consumer.rest.AbstractOAuth2RestService#
+	 * createHeadersPostTo(mx.com.nmp.pagos.mimonte.consumer.rest.dto.
+	 * BusRestAuthDTO, mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO)
 	 */
 	protected HttpHeaders createHeadersPostTo(BusRestAuthDTO auth, BusRestHeaderDTO header) {
 		String base64Creds = buildBase64Hash(auth);
