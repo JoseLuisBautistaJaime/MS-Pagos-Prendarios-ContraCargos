@@ -17,6 +17,11 @@ public final class PagoConstants {
 	}
 
 	/**
+	 * Mensaje que es mostrado cuando se intenta agregar un pago con una cantidad de partidas superior al especificado
+	 */
+	public static final String PARTIDAS_QUANTITY_EXCEDED = "La cantidad de partidas rebasa el limite permitdo";
+	
+	/**
 	 * @description Constantes relacionadas con el tamano de campos de base de datos
 	 *
 	 * @author Ismael Flores iaguilar@quarksoft.net
@@ -32,9 +37,14 @@ public final class PagoConstants {
 		}
 
 		/**
-		 * Mensaje que es mostrado cuando se revasa el tamano de la descripcion
+		 * Mensaje que es mostrado cuando se revasa la longitud del concepto del pago
 		 */
-		public static final String DESCRIPTION_SIZE_TOO_LONG = "El tamano de la descripcion es muy grande";
+		public static final String CONCEPTO_SIZE_TOO_LONG = "La longitud del concepto es muy grande";
+		
+		/**
+		 * Mensaje que es mostrado cuando se revasa la longitud del nombre de la operacion
+		 */
+		public static final String NOMBRE_OPERACION_SIZE_TOO_LONG = "La longitud del nombre de la operacion es muy grande";
 
 		/**
 		 * Mensaje que es mostrado cuando se intenta guardar un id de transaccion midas
@@ -76,7 +86,7 @@ public final class PagoConstants {
 		 * dfinido en base de datos
 		 */
 		public static final String OPERATION_AMOUNT_TOO_LONG = "El monto de una operacion es muy grande";
-
+		
 	}
 
 	/**
@@ -284,4 +294,25 @@ public final class PagoConstants {
 	 * y se realiza un rollback
 	 */
 	public static final String ROLL_BACK_EXCEPCION_MESSAGE = "Ocurrio un error insesperado y no se realizo ninguna accion, por favor revize los datos del request";
+	
+	/**
+	 * Mensaje que es mostrado cuando el concepto del pago es vacio
+	 */
+	public static final String CONCEPTO_PAGO_CANT_BE_EMPTY = "El concepto del pago no puede ser vacio";
+
+	/**
+	 * Mensaje que es mostrado cuando el id de transaccion midas es vacio
+	 */
+	public static final String ID_TRANSACCION_MIDAS_CANT_BE_EMPTY = "El id de transaccion midas no puede ser vacio";
+	
+	/**
+	 * Mensaje que es mostrado cuando el folio del contrato es vacio
+	 */
+	public static final String FOLIO_CONTRATO_CANT_BE_EMPTY = "El folio del contrato no puede ser vacio";
+	
+	/**
+	 * Mensaje que es mostrado cuando el nombre de la operacion es vacio
+	 */
+	public static final String NOMBRE_OPERACION_CANT_BE_EMPTY = "El nombre de la operacion no puede ser vacio";
+	
 }

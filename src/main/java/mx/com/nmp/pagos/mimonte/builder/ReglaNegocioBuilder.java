@@ -1,10 +1,10 @@
 package mx.com.nmp.pagos.mimonte.builder;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioDTO;
-import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
 import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
 
 /**
@@ -35,12 +35,13 @@ public class ReglaNegocioBuilder {
 		ReglaNegocioDTO rnDTO = null;
 		if (null != reglaNegocio) {
 			rnDTO = new ReglaNegocioDTO();
-			rnDTO.setAfliacion(AfiliacionBuilder.buildAfiliacionDTOFromAfilaicion(reglaNegocio.getAfiliacion()));
 			rnDTO.setConsulta(reglaNegocio.getConsulta());
 			rnDTO.setDescripcion(reglaNegocio.getDescripcion());
 			rnDTO.setId(reglaNegocio.getId());
 			rnDTO.setNombre(reglaNegocio.getNombre());
 			rnDTO.setVariables(VariableBuilder.buildVariableDTOFromVariableSet(reglaNegocio.getVariables()));
+			rnDTO.setTipoAutorizacionSet(TipoAutorizacionBuilder
+					.buildTipoAutorizacionDTOSetFromTipoAutorizacionSet(reglaNegocio.getTipoAutorizacion()));
 		}
 		return rnDTO;
 	}
@@ -73,15 +74,12 @@ public class ReglaNegocioBuilder {
 	 * @param obj
 	 * @return
 	 */
-	public static ReglaNegocioResumenDTO buildReglaNegocioResumenDTOFromObjArr(Object[] obj) {
-		ReglaNegocioResumenDTO reglaNegocioResumenDTO = null;
-		if (null != obj && obj.length == 3) {
-			reglaNegocioResumenDTO = new ReglaNegocioResumenDTO(
-					Integer.parseInt(null != obj[0] ? obj[0].toString() : null),
-					Integer.parseInt(null != obj[1] ? obj[1].toString() : null),
-					Integer.parseInt(null != obj[2] ? obj[2].toString() : null) == 1);
+	public static Boolean buildReglaNegocioResumenDTOFromObjArr(BigInteger obj) {
+		Boolean estatus = null;
+		if (null != obj) {
+			estatus = obj.equals(BigInteger.valueOf(1L)) ? true : false;
 		}
-		return reglaNegocioResumenDTO;
+		return estatus;
 	}
 
 }

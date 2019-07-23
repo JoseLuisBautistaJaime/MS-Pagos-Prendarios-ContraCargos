@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
 import java.sql.SQLDataException;
@@ -5,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +28,6 @@ import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
 import mx.com.nmp.pagos.mimonte.dss.DSSModule;
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
-import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
@@ -34,6 +36,7 @@ import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.exception.TarjetaException;
 import mx.com.nmp.pagos.mimonte.exception.TarjetaIdentifierException;
 import mx.com.nmp.pagos.mimonte.model.Pago;
+import mx.com.nmp.pagos.mimonte.model.PagoPartidas;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
@@ -69,8 +72,10 @@ public class PagoServiceImpl implements PagoService {
 	@Autowired
 	private PagoRepository pagoRepository;
 
+	/**
+	 * Modulo DSS para generaion de tipo de afiliacion
+	 */
 	@Autowired
-	@SuppressWarnings("unused")
 	private DSSModule dssModule;
 
 	/**
@@ -78,11 +83,21 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(PagoServiceImpl.class);
 
+	/**
+	 * Cantidad maxima de tarjetas por cliente
+	 */
 	@Value(PagoConstants.VariablesConstants.MAXIMUM_AMOUNT_OF_CARDS_PROPERTY)
-	private Integer MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT;
+	private Integer maximumAmountOfCardsPerClient;
 
 	/**
-	 * 
+	 * Propiedad con cantidad maxima posible de partidas a pagar
+	 */
+	@Value("${mimonte.variables.cantidad-maxima-partidas}")
+	private int cantidadMaximaPartidas;
+
+	/**
+	 * Metodo que se encarga de guardar nuevos pagos, y algunas veces tarjetas y
+	 * clientes
 	 * 
 	 * @throws SQLException
 	 * @throws NumberFormatException
@@ -97,23 +112,16 @@ public class PagoServiceImpl implements PagoService {
 			throws DataIntegrityViolationException, NumberFormatException, SQLDataException, SQLException {
 		LOG.debug("Ingreso al servicio: savePago(PagoRequestDTO pagoRequestDTO)");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
-		List<EstatusPagoResponseDTO> estatusPagos = new ArrayList<>();
-		pagoResponseDTO.setIdTipoAfiliacion(getRandomNumber());
-		pagoResponseDTO.setTipoAutorizacion(new TipoAutorizacionDTO(2, "3DSecure"));
-
-		// Esta seccion comentada es la invocacion al modulo DSS
+		List<EstatusPagoResponseDTO> estatus;
 		LOG.debug("Intentando obtener un numero de afiliacion");
 		// DSS invocation
-//		Map<String, Object> mapResult = dssModule.getNoAfiliacion(pagoRequestDTO);
-//		pagoResponseDTO.setIdTipoAfiliacion(null != mapResult && !mapResult.isEmpty()
-//				? Integer.parseInt(String.valueOf(mapResult.get(PagoConstants.ID_AFILIACION_MAPPING_NAME)))
-//				: null);
-//		pagoResponseDTO.setTipoAutorizacion(null != mapResult && !mapResult.isEmpty()
-//				? (TipoAutorizacionDTO) mapResult.get(PagoConstants.TIPO_AUTORIZACION_MAPPING_NAME)
-//				: null);
-
+		TipoAutorizacionDTO tipoAutorizacionDTO = dssModule.getNoAfiliacion(pagoRequestDTO);
+		pagoResponseDTO.setIdTipoAfiliacion(
+				null != tipoAutorizacionDTO && null != tipoAutorizacionDTO.getId() ? tipoAutorizacionDTO.getId()
+						: null);
+		pagoResponseDTO.setTipoAutorizacion(tipoAutorizacionDTO);
 		LOG.debug("Se validara objeto pagoRequestDTO");
-		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO);
+		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO, cantidadMaximaPartidas);
 		try {
 			ValidadorDatosPago.doTypeValidations(pagoRequestDTO);
 			ValidadorDatosPago.doSizeValidations(pagoRequestDTO);
@@ -158,34 +166,19 @@ public class PagoServiceImpl implements PagoService {
 				}
 			}
 		}
-		Pago pago = new Pago();
+		Pago pago = null;
 		boolean globalStatus = true;
 		if (null != pagoRequestDTO.getOperaciones() && !pagoRequestDTO.getOperaciones().isEmpty()) {
 			LOG.debug("Se iteraran operaciones dentro de pagoRequestDTO");
 			if (null != flag && flag == 0) {
-				for (OperacionDTO operacion : pagoRequestDTO.getOperaciones()) {
-					try {
-						pago = PagoBuilder.buildPagoFromObject(operacion,
-								(null != pagoRequestDTO && null != pagoRequestDTO.getGuardaTarjeta()
-										&& pagoRequestDTO.getGuardaTarjeta()) ? pagoRequestDTO.getTarjeta() : null,
-								cl, pagoRequestDTO.getIdTransaccionMidas());
-						pagoRepository.save(pago);
-						// Los estatus siguientes EstatusOperacion.XXXX son identicos a los del catalogo
-						// de estatus de transaccion de la base de datos, se hace por medio de un enum
-						// para
-						// quitar carga de trabajo al servidor
-						estatusPagos.add(new EstatusPagoResponseDTO(
-								EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(), operacion.getFolioContrato()));
-						LOG.debug("Se agrego operacion correcta: " + operacion);
-					} 
-					catch (Exception ex) {
-						estatusPagos.add(new EstatusPagoResponseDTO(EstatusOperacion.FAIL_STATUS_OPERATION.getId(),
-								operacion.getFolioContrato()));
-						LOG.error("Se agrego operacion fallida: " + operacion);
-						LOG.warn(PagoConstants.ROLL_BACK_EXCEPCION_MESSAGE.concat(" : ").concat(ex.getMessage()));
-						globalStatus = false;
-						throw new PagoException(PagoConstants.ROLL_BACK_EXCEPCION_MESSAGE);
-					}
+				try {
+					pago = PagoBuilder.buildPagoFromPagoRequestDTO(pagoRequestDTO, cl);
+					pago.setIdTipoAutorizacion(pagoResponseDTO.getIdTipoAfiliacion());
+					pagoRepository.save(pago);
+				} catch (Exception ex) {
+					LOG.warn(PagoConstants.ROLL_BACK_EXCEPCION_MESSAGE.concat(" : ").concat(ex.getMessage()));
+					globalStatus = false;
+					throw new PagoException(PagoConstants.ROLL_BACK_EXCEPCION_MESSAGE);
 				}
 			} else if (null == flag) {
 				throw new PagoException(PagoConstants.MSG_CAN_NO_CHECK_IF_PAGO_EXISTS);
@@ -193,13 +186,19 @@ public class PagoServiceImpl implements PagoService {
 				throw new PagoException(PagoConstants.TRANSACTION_ID_ALREADY_EXISTS);
 			}
 			pagoResponseDTO.setExitoso(globalStatus);
+			if (globalStatus) {
+				estatus = new ArrayList<>();
+				for (PagoPartidas partidas : pago.getPagoPartidasList()) {
+					estatus.add(new EstatusPagoResponseDTO(EstatusOperacion.SUCCESSFUL_STATUS_OPERATION.getId(),
+							partidas.getFolioPartida().toString()));
+				}
+				pagoResponseDTO.setEstatusPagos(estatus);
+			}
 		} else {
 			LOG.error("Objeto pagoRequestDTO.getOperaciones() es nulo o es vacio!");
 			pagoResponseDTO.setExitoso(false);
 			throw new PagoException(PagoConstants.NO_OPERATIONS_MESSAGE);
 		}
-
-		pagoResponseDTO.setEstatusPagos(estatusPagos);
 		return pagoResponseDTO;
 	}
 
@@ -214,7 +213,7 @@ public class PagoServiceImpl implements PagoService {
 		boolean flag = false;
 		if (null != pagoDTO && pagoDTO.getGuardaTarjeta())
 			flag = true;
-		LOG.debug("El resultado de: validaSiGuardar(PagoRequestDTO) es: " + flag);
+		LOG.debug("El resultado de: validaSiGuardar(PagoRequestDTO) es: {}", flag);
 		return flag;
 	}
 
@@ -240,21 +239,10 @@ public class PagoServiceImpl implements PagoService {
 	private boolean validaCantidadTarjetasExistentes(PagoRequestDTO pagoDTO) {
 		boolean flag = false;
 		int cantidadTarjetas = tarjetaService.countTarjetasByIdcliente(pagoDTO.getIdCliente());
-		if (cantidadTarjetas < MAXIMUM_AMOUNT_OF_CARDS_PER_CLIENT)
+		if (cantidadTarjetas < maximumAmountOfCardsPerClient)
 			flag = true;
-		LOG.debug("El resultado del metodo validaCantidadTarjetasExistentes(PagoRequestDTO) es: " + flag);
+		LOG.debug("El resultado del metodo validaCantidadTarjetasExistentes(PagoRequestDTO) es: {}", flag);
 		return flag;
-	}
-
-	/**
-	 * Metodo que regresa un numero aleatorio entre 1 y 3 simulando la tomade
-	 * decicion para un numero de afiliacion
-	 * 
-	 * @return int value
-	 */
-	private static int getRandomNumber() {
-		Random random = new Random();
-		return random.nextInt(3 - 1 + 1) + 1;
 	}
 
 }

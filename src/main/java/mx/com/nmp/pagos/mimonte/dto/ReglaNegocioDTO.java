@@ -3,8 +3,7 @@ package mx.com.nmp.pagos.mimonte.dto;
 import java.util.Set;
 
 /**
- * Nombre: ReglaNegocioDTO
- * Descripcion: Clase que encapsula la informacion
+ * Nombre: ReglaNegocioDTO Descripcion: Clase que encapsula la informacion
  * perteneciente a una Regla de Negocio.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -13,27 +12,34 @@ import java.util.Set;
  */
 public class ReglaNegocioDTO implements Comparable<ReglaNegocioDTO> {
 
-	private AfiliacionDTO afliacion;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
 	private String consulta;
-	private Set<ClienteDTO> clientes;
 	private Set<VariableDTO> variables;
+	private Set<TipoAutorizacionDTO> tipoAutorizacionSet;
 
 	public ReglaNegocioDTO() {
 		super();
 	}
 
-	public ReglaNegocioDTO(AfiliacionDTO afliacion, Integer id, String nombre, String descripcion, String consulta,
-			Set<ClienteDTO> clientes, Set<VariableDTO> variables) {
+	public ReglaNegocioDTO(Integer id, String nombre, String descripcion, String consulta, Set<VariableDTO> variables,
+			Set<TipoAutorizacionDTO> tipoAutorizacionSet) {
 		super();
-		this.afliacion = afliacion;
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.consulta = consulta;
-		this.clientes = clientes;
+		this.variables = variables;
+		this.tipoAutorizacionSet = tipoAutorizacionSet;
+	}
+
+	public ReglaNegocioDTO(Integer id, String nombre, String descripcion, String consulta, Set<VariableDTO> variables) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.consulta = consulta;
 		this.variables = variables;
 	}
 
@@ -69,28 +75,26 @@ public class ReglaNegocioDTO implements Comparable<ReglaNegocioDTO> {
 		this.consulta = consulta;
 	}
 
-	public AfiliacionDTO getAfliacion() {
-		return afliacion;
-	}
-
-	public void setAfliacion(AfiliacionDTO afliacion) {
-		this.afliacion = afliacion;
-	}
-
-	public Set<ClienteDTO> getClientes() {
-		return clientes;
-	}
-
-	public void setClientes(Set<ClienteDTO> clientes) {
-		this.clientes = clientes;
-	}
-
 	public Set<VariableDTO> getVariables() {
 		return variables;
 	}
 
 	public void setVariables(Set<VariableDTO> variables) {
 		this.variables = variables;
+	}
+
+	public Set<TipoAutorizacionDTO> getTipoAutorizacionSet() {
+		return tipoAutorizacionSet;
+	}
+
+	public void setTipoAutorizacionSet(Set<TipoAutorizacionDTO> tipoAutorizacionSet) {
+		this.tipoAutorizacionSet = tipoAutorizacionSet;
+	}
+
+	@Override
+	public String toString() {
+		return "ReglaNegocioDTO [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", consulta="
+				+ consulta + ", variables=" + variables + ", tipoAutorizacionSet=" + tipoAutorizacionSet + "]";
 	}
 
 	@Override

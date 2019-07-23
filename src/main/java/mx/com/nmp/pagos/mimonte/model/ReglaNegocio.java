@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.model;
 
 import java.util.Set;
@@ -11,17 +15,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
 /**
- * Nombre: ReglaNegocio
- * Descripcion: Entidad que representa una regla de negocio
+ * Nombre: ReglaNegocio Descripcion: Entidad que representa una regla de negocio
  * dentro del sistema.
  *
  * @author Ismael Flores iaguilar@quarksoft.net Fecha: 12/12/2018 16:58 hrs.
@@ -52,15 +53,11 @@ public class ReglaNegocio {
 	@Column(name = "consulta", nullable = false)
 	private String consulta;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_afiliacion", nullable = false)
-	private Afiliacion afiliacion;
-
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reglasNegocio")
-	private Set<Cliente> clientes;
-
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "reglasNegocio")
 	private Set<Variable> variables;
+
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "reglas")
+	private Set<TipoAutorizacion> tipoAutorizacion;
 
 	public ReglaNegocio() {
 		/**
@@ -68,36 +65,40 @@ public class ReglaNegocio {
 		 */
 	}
 
-	public ReglaNegocio(Integer id, String nombre, String descripcion, String consulta, Afiliacion afiliacion) {
+	public ReglaNegocio(Integer id, String nombre, String descripcion, String consulta) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.consulta = consulta;
-		this.afiliacion = afiliacion;
 	}
 
-	public ReglaNegocio(Integer id, String nombre, String descripcion, String consulta, Afiliacion afiliacion,
-			Set<Cliente> clientes) {
+	public ReglaNegocio(Integer id, String nombre, String descripcion, String consulta, Set<Variable> variables,
+			Set<TipoAutorizacion> tipoAutorizacion) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.consulta = consulta;
-		this.afiliacion = afiliacion;
-		this.clientes = clientes;
-	}
-
-	public ReglaNegocio(Integer id, String nombre, String descripcion, String consulta, Afiliacion afiliacion,
-			Set<Cliente> clientes, Set<Variable> variables) {
-		super();
-		this.id = id;
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-		this.consulta = consulta;
-		this.afiliacion = afiliacion;
-		this.clientes = clientes;
 		this.variables = variables;
+		this.tipoAutorizacion = tipoAutorizacion;
+	}
+
+	public ReglaNegocio(Integer id, String nombre, String descripcion, String consulta, Set<Variable> variables) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.consulta = consulta;
+		this.variables = variables;
+	}
+
+	public Set<TipoAutorizacion> getTipoAutorizacion() {
+		return tipoAutorizacion;
+	}
+
+	public void setTipoAutorizacion(Set<TipoAutorizacion> tipoAutorizacion) {
+		this.tipoAutorizacion = tipoAutorizacion;
 	}
 
 	public Integer getId() {
@@ -132,26 +133,6 @@ public class ReglaNegocio {
 		this.consulta = consulta;
 	}
 
-	public Afiliacion getAfiliacion() {
-		return afiliacion;
-	}
-
-	public void setAfiliaciones(Afiliacion afiliacion) {
-		this.afiliacion = afiliacion;
-	}
-
-	public Set<Cliente> getClientes() {
-		return clientes;
-	}
-
-	public void setClientes(Set<Cliente> clientes) {
-		this.clientes = clientes;
-	}
-
-	public void setAfiliacion(Afiliacion afiliacion) {
-		this.afiliacion = afiliacion;
-	}
-
 	public Set<Variable> getVariables() {
 		return variables;
 	}
@@ -163,7 +144,7 @@ public class ReglaNegocio {
 	@Override
 	public String toString() {
 		return "ReglaNegocio [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", consulta="
-				+ consulta + ", afiliacion=" + afiliacion + ", clientes=" + clientes + ", variables=" + variables + "]";
+				+ consulta + ", variables=" + variables + "]";
 	}
 
 }

@@ -1,5 +1,10 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dao;
 
+import java.math.BigInteger;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 
@@ -28,16 +33,16 @@ public class DSSRepositoryImpl implements DSSRepositoryCustom {
 	private EntityManager em;
 
 	/**
-	 * Metodo que ejecuta una consulta de regla de negocios y recibe un Array de
-	 * tipo Object como respuesta
+	 * Metodo que ejecuta una consulta de regla de negocios y recibe objeto de tipo
+	 * BigInteger como respuesta
 	 */
 	@Override
 	@Transactional
 	@SuppressWarnings("unchecked")
-	public Object[] execQuery(String query) throws DataIntegrityViolationException, SQLDataException, SQLException {
-		Object[] res = null;
+	public BigInteger execQuery(String query) throws DataIntegrityViolationException, SQLDataException, SQLException {
+		BigInteger res = null;
 		Query q = em.createNativeQuery(query);
-		res = (Object[]) q.getSingleResult();
+		res = (BigInteger) q.getSingleResult();
 		return res;
 	}
 

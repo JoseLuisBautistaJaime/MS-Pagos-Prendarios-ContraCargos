@@ -1,5 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dto;
 
+import java.util.Set;
+
 /**
  * Nombre: ReglaNegocioResumenDTO Descripcion: Clase que encapsula la
  * informacion perteneciente a una Regla de Negocio Resumen.
@@ -11,27 +13,18 @@ package mx.com.nmp.pagos.mimonte.dto;
 public class ReglaNegocioResumenDTO implements Comparable<ReglaNegocioResumenDTO> {
 
 	private Integer id;
-	private Integer idAfiliacion;
 	private Boolean valido;
-	private TipoAutorizacionDTO tipoAfiliacion;
+	private Set<TipoAutorizacionDTO> tipoAutorizacionSet;
 
 	public ReglaNegocioResumenDTO() {
 		super();
 	}
 
-	public ReglaNegocioResumenDTO(Integer id, Integer idAfiliacion, Boolean valido, TipoAutorizacionDTO tipoAfiliacion) {
+	public ReglaNegocioResumenDTO(Integer id, Boolean valido, Set<TipoAutorizacionDTO> tipoAutorizacionSet) {
 		super();
 		this.id = id;
 		this.valido = valido;
-		this.idAfiliacion = idAfiliacion;
-		this.tipoAfiliacion = tipoAfiliacion;
-	}
-
-	public ReglaNegocioResumenDTO(Integer id, Integer idAfiliacion, Boolean valido) {
-		super();
-		this.id = id;
-		this.valido = valido;
-		this.idAfiliacion = idAfiliacion;
+		this.tipoAutorizacionSet = tipoAutorizacionSet;
 	}
 
 	public Integer getId() {
@@ -50,26 +43,18 @@ public class ReglaNegocioResumenDTO implements Comparable<ReglaNegocioResumenDTO
 		this.valido = valido;
 	}
 
-	public Integer getIdAfiliacion() {
-		return idAfiliacion;
+	public Set<TipoAutorizacionDTO> getTipoAutorizacionSet() {
+		return tipoAutorizacionSet;
 	}
 
-	public void setIdAfiliacion(Integer idAfiliacion) {
-		this.idAfiliacion = idAfiliacion;
-	}
-
-	public TipoAutorizacionDTO getTipoAfiliacion() {
-		return tipoAfiliacion;
-	}
-
-	public void setTipoAfiliacion(TipoAutorizacionDTO tipoAfiliacion) {
-		this.tipoAfiliacion = tipoAfiliacion;
+	public void setTipoAutorizacionSet(Set<TipoAutorizacionDTO> tipoAutorizacionSet) {
+		this.tipoAutorizacionSet = tipoAutorizacionSet;
 	}
 
 	@Override
 	public String toString() {
-		return "ReglaNegocioResumenDTO [id=" + id + ", valido=" + valido + ", idAfiliacion=" + idAfiliacion + ", tipo="
-				+ tipoAfiliacion + "]";
+		return "ReglaNegocioResumenDTO [id=" + id + ", valido=" + valido + ", tipoAutorizacionSet="
+				+ tipoAutorizacionSet + "]";
 	}
 
 	@Override

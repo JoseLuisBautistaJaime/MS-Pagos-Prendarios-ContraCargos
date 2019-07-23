@@ -22,3 +22,15 @@ spring:
       enabled: false
   jpa:
     show-sql: false
+
+
+openpay:
+  wsdlLocation: openpay.wsdl
+  header:
+    api:
+      name: X-Id
+      key: 12345
+
+estadocuenta:
+  ruta: "'/'ddMMyy"
+  nombre: "'CLCO{CUENTA}'yyMMdd'.txt'"

@@ -1,103 +1,123 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.model;
 
+import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Nombre: Afiliacion Descripcion: Entidad que representa un tipo de afiliacion
- * dentro del sistema.
+ * @name Afiliacion
+ * @description Entidad que representa un tipo de afiliacion dentro del sistema.
  *
  * @author Ismael Flores iaguilar@quarksoft.net
  * @creationDate 12/12/2018 16:59 hrs.
  * @version 0.1
  */
 @Entity
-@Table(name = "tk_afiliacion")
-public class Afiliacion {
+@Table(name = "tc_afiliacion")
+public class Afiliacion extends AbstractCatalogoAdm implements Comparable<Afiliacion>, java.io.Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false, unique = true)
-	private Integer id;
+	/**
+	 * Serial id
+	 */
+	private static final long serialVersionUID = 1L;
 
-	@Column(name = "descripcion", nullable = false)
-	private String descripcion;
+	@Column(name = "numero")
+	private String numero;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "tipo")
-	private TipoAutorizacion tipo;
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "afiliaciones")
+	private Set<Cuenta> cuentas;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "afiliacion")
-	private Set<ReglaNegocio> reglas;
+	@OneToMany(mappedBy = "afiliacion", fetch = FetchType.LAZY)
+	private Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet;
 
 	public Afiliacion() {
-		/**
-		 * empty constructor
-		 */
+		super();
 	}
 
-	public Afiliacion(Integer id, String descripcion, Set<ReglaNegocio> reglas, TipoAutorizacion tipo) {
+	public Afiliacion(Long id) {
 		super();
 		this.id = id;
-		this.descripcion = descripcion;
-		this.reglas = reglas;
-		this.tipo = tipo;
 	}
 
-	public Integer getId() {
-		return id;
+	public Afiliacion(Set<Cuenta> cuentas) {
+		super();
+		this.cuentas = cuentas;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public Afiliacion(String numero, Set<Cuenta> cuentas) {
+		super();
+		this.numero = numero;
+		this.cuentas = cuentas;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+	public Afiliacion(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
+			String lastModifiedBy, String description, String shortDescription, String numero, Set<Cuenta> cuentas) {
+		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
+		this.numero = numero;
+		this.cuentas = cuentas;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+	public String getNumero() {
+		return numero;
 	}
 
-	public Set<ReglaNegocio> getRegla() {
-		return reglas;
+	public void setNumero(String numero) {
+		this.numero = numero;
 	}
 
-	public void setRegla(Set<ReglaNegocio> reglas) {
-		this.reglas = reglas;
+	public Set<Cuenta> getCuentas() {
+		return cuentas;
 	}
 
-	public TipoAutorizacion getTipo() {
-		return tipo;
+	public void setCuentas(Set<Cuenta> cuentas) {
+		this.cuentas = cuentas;
 	}
 
-	public void setTipo(TipoAutorizacion tipo) {
-		this.tipo = tipo;
+	public Set<EntidadCuentaAfiliacion> getEntidadCuentaAfiliacionSet() {
+		return entidadCuentaAfiliacionSet;
 	}
 
-	public Set<ReglaNegocio> getReglas() {
-		return reglas;
-	}
-
-	public void setReglas(Set<ReglaNegocio> reglas) {
-		this.reglas = reglas;
+	public void setEntidadCuentaAfiliacionSet(Set<EntidadCuentaAfiliacion> entidadCuentaAfiliacionSet) {
+		this.entidadCuentaAfiliacionSet = entidadCuentaAfiliacionSet;
 	}
 
 	@Override
 	public String toString() {
-		return "Afiliacion [id=" + id + ", descripcion=" + descripcion + ", reglas=" + reglas + ", tipo=" + tipo + "]";
+		return "Afiliacion [numero=" + numero + ", cuentas=" + (cuentas != null ? cuentas.size() : 0) + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(numero);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof Afiliacion))
+			return false;
+
+		final Afiliacion other = (Afiliacion) obj;
+		return (this.hashCode() == other.hashCode());
+
+	}
+
+	@Override
+	public int compareTo(Afiliacion o) {
+		return o.id.compareTo(this.id);
 	}
 
 }

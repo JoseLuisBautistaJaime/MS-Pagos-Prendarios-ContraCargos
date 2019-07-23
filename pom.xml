@@ -198,6 +198,63 @@
             <artifactId>dropbox-core-sdk</artifactId>
             <version>3.0.6</version>
         </dependency>
+        
+        <!-- Authomated test -->
+        <dependency>
+			<groupId>com.intuit.karate</groupId>
+		  	<artifactId>karate-apache</artifactId>
+		  	<version>0.6.0</version>
+		  	<scope>test</scope>
+		</dependency>
+		<dependency>
+		  	<groupId>com.intuit.karate</groupId>
+			<artifactId>karate-junit4</artifactId>
+			<version>0.6.0</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.0</version>
+		</dependency>
+		<!-- Intercepcion de eventos -->
+		<dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-aop</artifactId>
+    	</dependency>
+		
+		<!-- Construccion de plantillas HTML para envio de correo electronico -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-velocity</artifactId>
+			<version>1.4.7.RELEASE</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context-support</artifactId>
+		    <version>3.2.0.RELEASE</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		</dependency>
+
+		<!-- Bus TEST -->		
+		<dependency>
+			<groupId>mx.openpay</groupId>
+			<artifactId>openpay-api-client</artifactId>
+			<version>1.0.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+		</dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -304,11 +361,20 @@
 			     <directory>src/main/resources</directory>
 			     <filtering>true</filtering>
 			     <includes>
-			          <include>application-dev.yml</include>
-						<include>application.yml</include>
+			     	<include>application-dev.yml</include>
+					<include>application.yml</include>
+					<include>/templates/*</include>
 			     </includes>
 			</resource>
 		</resources>
+		<testResources>
+            <testResource>
+                <directory>src/test/java</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
     </build>
 
 

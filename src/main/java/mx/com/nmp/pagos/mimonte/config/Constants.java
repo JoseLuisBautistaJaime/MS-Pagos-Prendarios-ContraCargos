@@ -10,7 +10,7 @@ public final class Constants {
     public static final String RESPONSE_CODE_ERROR = "E";
 
     public static final int LONGITUD_DESCRIPCION_CORTA = 20;
-    public static final int LONGITUD_DESCRIPCION = 50;
+    public static final int LONGITUD_DESCRIPCION = 70;
     
     public static final int LONGITUD_NOMBRE_TITULAR = 100;
     public static final int LONGITUD_TOKEN = 40;

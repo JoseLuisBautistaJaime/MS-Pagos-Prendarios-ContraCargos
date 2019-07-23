@@ -1,13 +1,12 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dao;
-
-import java.sql.SQLDataException;
-import java.sql.SQLException;
-import java.util.List;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
@@ -24,22 +23,8 @@ import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
 public interface DSSRepository extends JpaRepository<ReglaNegocio, Integer>, DSSRepositoryCustom {
 
 	/**
-	 * Metodo que consulta todas las reglas de negocio asociadas a un cliente
-	 * especifico
-	 * 
-	 * @param idCliente
-	 * @return
-	 * @throws DataIntegrityViolationException
-	 * @throws SQLDataException
-	 * @throws SQLException
-	 */
-	@Query("SELECT DISTINCT rn FROM ReglaNegocio rn JOIN rn.clientes cls ON cls.idcliente = :idCliente")
-	public List<ReglaNegocio> getReglasNegocio(@Param("idCliente") Long idCliente)
-			throws DataIntegrityViolationException, SQLDataException, SQLException;
-
-	/**
 	 * Metodo que obtiene el resultado de evaluar una regla de negocio con datos de
-	 * un cliente en especifico
+	 * variables especificas
 	 */
 	@SuppressWarnings("unchecked")
 	@Query(value = "query", nativeQuery = true)

@@ -6,12 +6,11 @@ import java.util.List;
 
 import org.springframework.dao.DataIntegrityViolationException;
 
-import mx.com.nmp.pagos.mimonte.dto.ReglaNegocioResumenDTO;
+import mx.com.nmp.pagos.mimonte.dto.TipoAutorizacionDTO;
 import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
 
 /**
- * Nombre: DSSService
- * Descripcion: Interfaz que contiene las operaciones
+ * Nombre: DSSService Descripcion: Interfaz que contiene las operaciones
  * encargadas de realizar consultas relacionadas con el DSS de la aplicacion
  *
  * @author Ismael Flores iaguilar@quarksoft.net
@@ -21,14 +20,12 @@ import mx.com.nmp.pagos.mimonte.model.ReglaNegocio;
 public interface DSSService {
 
 	/**
-	 * 
 	 * Metodo que consulta todas las reglas de negocio asociadas a un cliente
 	 * especifico
 	 * 
-	 * @param Integer idCliente
-	 * @return objeto List<ReglaNegocio>
+	 * @return
 	 */
-	public abstract List<ReglaNegocio> getReglasNegocio(Long idCliente)throws DataIntegrityViolationException, SQLDataException, SQLException;
+	public abstract List<ReglaNegocio> getReglasNegocio();
 
 	/**
 	 * 
@@ -38,6 +35,15 @@ public interface DSSService {
 	 * @param String query
 	 * @return ReglaNegocioResumenDTO
 	 */
-	public abstract ReglaNegocioResumenDTO execQuery(String query)throws DataIntegrityViolationException, SQLDataException, SQLException;
+	public abstract Object execQuery(String query)
+			throws DataIntegrityViolationException, SQLDataException, SQLException;
+
+	/**
+	 * Obtiene un tipo de autorizacion por id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public abstract TipoAutorizacionDTO getTipoAutorizacionById(final Integer id);
 
 }
