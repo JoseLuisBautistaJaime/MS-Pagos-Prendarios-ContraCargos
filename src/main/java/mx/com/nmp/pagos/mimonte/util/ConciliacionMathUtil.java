@@ -2,6 +2,8 @@ package mx.com.nmp.pagos.mimonte.util;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
@@ -62,10 +64,18 @@ public class ConciliacionMathUtil {
 		BigDecimal importeProveedor = new BigDecimal(0);
 		if (movsProveedor != null) {
 			for (MovimientoProveedor movProveedor : movsProveedor) {
-				importeProveedor = importeProveedor.add(movProveedor.getAmount());
+				if (isValidTransaction(movProveedor)) {
+					importeProveedor = importeProveedor.add(movProveedor.getAmount());
+				}
 			}
 		}
 		return importeProveedor;
+	}
+
+
+	private static boolean isValidTransaction(MovimientoProveedor movProveedor) {
+		return movProveedor != null && movProveedor.getStatus() != null && movProveedor.getStatus().equalsIgnoreCase(ConciliacionConstants.ESTATUS_TRANSACCION_OPENPAY_SUCCESS) &&
+				movProveedor.getTransactionType() != null && movProveedor.getTransactionType().equalsIgnoreCase(ConciliacionConstants.TIPO_TRANSACCION_OPENPAY_CARGO);
 	}
 
 

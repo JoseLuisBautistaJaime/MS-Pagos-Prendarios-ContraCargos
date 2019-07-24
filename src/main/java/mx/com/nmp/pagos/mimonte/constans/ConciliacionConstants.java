@@ -340,6 +340,10 @@ public final class ConciliacionConstants {
 	public static final Long TIPO_CONTACTO_MIDAS = 1l;
 	public static final Long TIPO_CONTACTO_ENTIDAD = 2l;
 
+
+	public static final String ESTATUS_TRANSACCION_OPENPAY_SUCCESS = "success";
+	public static final String TIPO_TRANSACCION_OPENPAY_CARGO = "charge";
+
 	/**
 	 * Mensaje que es mostrado cuando se desea actualizar un sub estatus que no
 	 * tiene asociado nungun estatus
