@@ -188,6 +188,10 @@ public class LayoutsService {
 	@Transactional
 	public boolean eliminarUnLayout(Long idConciliacion, Long idLayout) {
 		boolean respuesta = true;
+		List<Layout> layoutList = layoutsRepository.checkFolioAndLayoutsRelationship(idConciliacion);
+		if (null == layoutList || layoutList.isEmpty())
+			throw new ConciliacionException(ConciliacionConstants.THERE_IS_NO_CONCILIACION_LAYOUT_RELATIONSHIP,
+					CodigoError.NMP_PMIMONTE_BUSINESS_084);
 		if (idConciliacion > 0L && idLayout > 0L) {
 			if (layoutsRepository.findById(idLayout).isPresent()) {
 				Layout layout = layoutsRepository.getOne(idLayout);// siLayoutPerteneceAConciliacion
@@ -200,7 +204,9 @@ public class LayoutsService {
 						respuesta = false;
 					}
 				}
-			}
+			} else
+				throw new ConciliacionException(ConciliacionConstants.LAYOUT_ID_DOESNT_EXIST,
+						CodigoError.NMP_PMIMONTE_BUSINESS_085);
 		}
 		return respuesta;
 	}

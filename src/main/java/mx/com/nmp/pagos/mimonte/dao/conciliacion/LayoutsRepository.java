@@ -71,4 +71,12 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	 */
 	public List<Layout> findByTipo(@Param("tipo") final String tipo);
 
+	/**
+	 * Regresa una lista de layouts por folio de conciliacion
+	 * @param idConciliacion
+	 * @return
+	 */
+	@Query("SELECT la FROM Layout la WHERE la.idConciliacion = :idConciliacion")
+	public List<Layout> checkFolioAndLayoutsRelationship(@Param("idConciliacion") final Long idConciliacion);
+	
 }

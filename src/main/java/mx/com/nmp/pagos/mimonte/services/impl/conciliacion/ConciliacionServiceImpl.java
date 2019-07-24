@@ -80,6 +80,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
+import mx.com.nmp.pagos.mimonte.util.MiniMaquinaEstadosConciliacion;
 
 /**
  * @name ConciliacionServiceImpl
@@ -130,6 +131,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	@Autowired
 	private ConciliacionHelper conciliacionHelper;
+
+	/**
+	 * Mini maquina de estados para actualizacion de subestatus de conciliacion
+	 */
+	@Autowired
+	private MiniMaquinaEstadosConciliacion miniMaquinaEstadosConciliacion;
 
 	/**
 	 * Repository de Actividad
@@ -497,6 +504,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Transactional
 	public void enviarConciliacion(Integer idConciliacion, String usuario) {
 
+		// Se valida que exista la conciliacion con el folio proporcionado
+		validaFolio(idConciliacion);
 		// Validar conciliacion y actualizar estatus
 		try {
 			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
@@ -534,14 +543,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			String usuario) {
-		Object meRes = null;
-		BigInteger meFlag = null;
+		Boolean subEstatusValido = null;
 		// Se valida si la conciliacion existe
 		Optional<Conciliacion> conciliaicion = conciliacionRepository
 				.findById(actualizarSubEstatusRequestDTO.getFolio());
 		if (!conciliaicion.isPresent())
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_BUSINESS_018);
+					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		// Se obtienen: El id del estatus conciliacion el orden del mismo y el roden del
 		// subestatus de acuerdo al id de subestatus especificado como parametro
 		// mediante un query nativo
@@ -566,16 +574,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Se valida que el estatus al que se quiere actualizar sea correcto en base a
 		// la maquina de estados de sub-estatus conciliacion
-		meRes = conciliacionRepository.checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(
-				actualizarSubEstatusRequestDTO.getFolio(),
-				ProcesosMaquinaEstadosConciliacion.ALTA_CONCILIACION.toString(),
+		subEstatusValido = miniMaquinaEstadosConciliacion.checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(
+				actualizarSubEstatusRequestDTO.getFolio(), ProcesosMaquinaEstadosConciliacion.ALTA_REPORTES,
 				actualizarSubEstatusRequestDTO.getIdSubEstatus());
-		if (null != meRes)
-			meFlag = (BigInteger) meRes;
-		if (null != meFlag && meFlag.compareTo(BigInteger.ONE) != 0)
+		if (null != subEstatusValido && !subEstatusValido)
 			throw new ConciliacionException(ConciliacionConstants.WRONG_ORDER_SUB_STATUS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_029);
-		else if(null == meFlag)
+		else if (null == subEstatusValido)
 			throw new ConciliacionException(ConciliacionConstants.ERROR_WHILE_VALIDATING_SUB_ESTAUS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_083);
 
@@ -813,6 +818,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 
+		// Valida que el folio sea valido
+		validaFolio(idConciliacion);
+
 		// Obtiene todos los reportes de la bd generados hasta el momento
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(idConciliacion);
 		if (reportes == null || reportes.size() == 0) {
@@ -836,6 +844,20 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				"Se genera la conciliacion con el folio " + idConciliacion, TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.GENERACION_CONCILIACION);
 
+	}
+
+	/**
+	 * Valida que un folio de conciliacion exista en la base de datos
+	 * 
+	 * @param folio
+	 */
+	public void validaFolio(final Integer folio) {
+		if (null != folio) {
+			Optional<Conciliacion> conciliacionVal = conciliacionRepository.findById(folio);
+			if (!conciliacionVal.isPresent())
+				throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
+						CodigoError.NMP_PMIMONTE_BUSINESS_045);
+		}
 	}
 
 }

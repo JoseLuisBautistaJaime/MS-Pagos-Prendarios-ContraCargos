@@ -89,8 +89,8 @@ public class LayoutsController {
 					CodigoError.NMP_PMIMONTE_0008);
 		LayoutDTO layoutDTO = layoutsService.consultarUnLayout(folio, tipoLayout);
 		if (!ValidadorLayout.validateLayoutDTO(layoutDTO))
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0005);
+			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONCILIACION_LAYOUT_RELATIONSHIP,
+					CodigoError.NMP_PMIMONTE_BUSINESS_084);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				layoutDTO);
 	}
@@ -119,8 +119,8 @@ public class LayoutsController {
 					CodigoError.NMP_PMIMONTE_0008);
 		List<LayoutDTO> layoutDTOs = layoutsService.consultarLayouts(folio);
 		if (!ValidadorLayout.validateLayoutDTOs(layoutDTOs))
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0005);
+			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONCILIACION_LAYOUT_RELATIONSHIP,
+					CodigoError.NMP_PMIMONTE_BUSINESS_084);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				layoutDTOs);
 	}
@@ -181,7 +181,7 @@ public class LayoutsController {
 					CodigoError.NMP_PMIMONTE_0008);
 		boolean respuesta = layoutsService.eliminarUnLayout(folio, idLayout);
 		if (respuesta)
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layout eliminado con éxito.", null);
 	}
 
