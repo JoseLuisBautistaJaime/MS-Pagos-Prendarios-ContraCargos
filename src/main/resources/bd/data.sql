@@ -53,6 +53,7 @@ INSERT INTO tk_estatus_operacion (id, descripcion_corta, descripcion) VALUES
 -- MODULO DSS
 -- ------------------------------------------------------------------------------------------------------------------ --
 
+
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_tipo_autorizacion - SE USAN EN MODULO DSS
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -185,7 +186,6 @@ INSERT INTO tc_codigo_estado_cuenta (codigo, id_categoria, id_entidad, descripti
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_estatus_transaccion
 -- ------------------------------------------------------------------------------------------------------------------ --
--- // TODO - VERIFICAR ESTE CATALOGO (EstatusPago = tk_estatus_transaccion)
 INSERT INTO tk_estatus_transaccion (id, descripcion_corta, descripcion) VALUES (1, 'Solicitada', 'Solicitada');
 INSERT INTO tk_estatus_transaccion (id, descripcion_corta, descripcion) VALUES (2, 'En Proceso', 'En Proceso');
 INSERT INTO tk_estatus_transaccion (id, descripcion_corta, descripcion) VALUES (3, 'Terminada', 'Terminada');
