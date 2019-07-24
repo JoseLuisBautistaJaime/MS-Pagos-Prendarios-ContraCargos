@@ -51,8 +51,9 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 * @return
 	 */
 	@Query("from MovimientoComision l  where l.idConciliacion = :idConciliacion")
-	public List<MovimientoComision> findMovimientoComisionByConciliacionId(@Param("idConciliacion") final Integer idConciliacion);
-	
+	public List<MovimientoComision> findMovimientoComisionByConciliacionId(
+			@Param("idConciliacion") final Integer idConciliacion);
+
 	/**
 	 * Regresa una lista de MovimientoDevolucion por folio de conciliacion
 	 * 
@@ -60,7 +61,9 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 * @return
 	 */
 	@Query("from MovimientoDevolucion l  where l.idConciliacion = :idConciliacion")
-	public List<MovimientoDevolucion> findMovimientoDevolucionByConciliacionId(@Param("idConciliacion") final Integer idConciliacion);
+	public List<MovimientoDevolucion> findMovimientoDevolucionByConciliacionId(
+			@Param("idConciliacion") final Integer idConciliacion);
+
 	/**
 	 * Regresa una lista de MovimientoPago por folio de conciliacion
 	 * 
@@ -68,5 +71,6 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 * @return
 	 */
 	@Query("from MovimientoPago l  where l.idConciliacion = :idConciliacion")
-	public List<MovimientoPago> findMovimientoPagoByConciliacionId(@Param("idConciliacion") final Integer idConciliacion);
+	public List<MovimientoPago> findMovimientoPagoByConciliacionId(
+			@Param("idConciliacion") final Integer idConciliacion);
 }

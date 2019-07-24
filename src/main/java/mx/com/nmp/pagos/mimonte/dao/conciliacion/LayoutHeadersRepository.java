@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +20,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
  * @version 0.1
  */
 @Repository
-public interface LayoutHeadersRepository extends JpaRepository<LayoutHeader, Long>{
+public interface LayoutHeadersRepository extends JpaRepository<LayoutHeader, Long> {
 
 }
-

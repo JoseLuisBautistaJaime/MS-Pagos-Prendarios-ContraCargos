@@ -384,4 +384,28 @@ public final class ConciliacionConstants {
 	 */
 	public static final String WRONG_OR_INCONSISTENT_FECHAS = "Hay inconsistencia en una o mas fechas";
 
+	/**
+	 * Longitud maxima permitida para la actualizacion de la descripcion del subestatus de conciliacion
+	 */
+	public static final Integer SUB_ESTATUS_DESCRIPCION_MAX_PERM_LENGHT = 250;
+	
+	/**
+	 * Mensaje que es mostrado cuando el estatus de la conciliacion se actualiza exitosamente
+	 */
+	public static final String SUB_ESTATUS_UPDATED_OK = "Actualizacion de sub estatus correcta.";
+	
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la validacion del sub estatus de conciliacion
+	 */
+	public static final String ERROR_WHILE_VALIDATING_SUB_ESTAUS = "Se genero un error durante la validacion del sub-estatus";
+	
+	/**
+	 * Mensaje que es mostrado cuando no se encuentra una folio de conciliacion asociado a uno o mas layouts
+	 */
+	public static final String THERE_IS_NO_CONCILIACION_LAYOUT_RELATIONSHIP = "La conciliacion no tiene asociado ningun layout";
+	
+	/**
+	 * Mensaje que se muestra cuando no se encuentra un id de layout especificado
+	 */
+	public static final String LAYOUT_ID_DOESNT_EXIST = "El id de layout especificado no existe";
 }

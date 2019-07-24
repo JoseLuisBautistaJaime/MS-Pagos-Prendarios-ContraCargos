@@ -27,8 +27,7 @@ public class LayoutDTO implements Comparable<LayoutDTO> {
 		super();
 	}
 
-	public LayoutDTO(Long folio, TipoLayoutEnum tipoLayout, LayoutCabeceraDTO cabecera,
-			List<LayoutLineaDTO> lineas) {
+	public LayoutDTO(Long folio, TipoLayoutEnum tipoLayout, LayoutCabeceraDTO cabecera, List<LayoutLineaDTO> lineas) {
 		super();
 		this.folio = folio;
 		this.tipoLayout = tipoLayout;

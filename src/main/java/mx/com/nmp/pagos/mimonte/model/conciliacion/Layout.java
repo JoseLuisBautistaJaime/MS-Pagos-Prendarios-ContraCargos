@@ -1,33 +1,41 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the to_layout database table.
  * 
  */
 @Entity
-@Table(name="to_layout")
+@Table(name = "to_layout")
 public class Layout implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name="id_conciliacion")
+	@Column(name = "id_conciliacion")
 	private Long idConciliacion;
 
-	@Column(name="tipo")
+	@Column(name = "tipo")
 	private String tipo;
 
-	@OneToOne(mappedBy="layout")
+	@OneToOne(mappedBy = "layout")
 	private LayoutHeader layoutHeader;
 
-	@OneToMany(mappedBy="layout", cascade = {CascadeType.MERGE})
+	@OneToMany(mappedBy = "layout", cascade = { CascadeType.MERGE })
 	private List<LayoutLinea> layoutLineas;
 
 	public Layout() {
@@ -90,13 +98,8 @@ public class Layout implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Layout{" +
-				"id=" + id +
-				", idConciliacion=" + idConciliacion +
-				", tipo='" + tipo + '\'' +
-				", layoutHeader=" + layoutHeader +
-				", layoutLineas=" + layoutLineas.size() +
-				'}';
+		return "Layout{" + "id=" + id + ", idConciliacion=" + idConciliacion + ", tipo='" + tipo + '\''
+				+ ", layoutHeader=" + layoutHeader + ", layoutLineas=" + layoutLineas.size() + '}';
 	}
 
 	@Override
@@ -110,5 +113,5 @@ public class Layout implements Serializable {
 		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
 		return result;
 	}
-	
+
 }

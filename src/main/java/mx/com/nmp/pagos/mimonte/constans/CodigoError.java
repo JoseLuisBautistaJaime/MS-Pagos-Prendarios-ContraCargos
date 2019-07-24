@@ -187,8 +187,21 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_073("No existen codigos de estado de cuenta para la categoria de comisiones configurada",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
-	NMP_PMIMONTE_BUSINESS_078("Hay incongruencia en una o mas fechas",
-			TipoError.CLIENTE, SeveridadError.MEDIA),;
+	NMP_PMIMONTE_BUSINESS_078("Hay incongruencia entre fecha inicial y final",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_080("Hay un problema con la fecha inicial",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_081("Hay un problema con la fecha final",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_082("Hay un problema de incongruencia entre fecha inicial y/o final y la fecha actual",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_083("Se genero un problema durante la validacion del subestatus",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_084("La conciliacion no tiene asociado ningun layout",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_085("El id de layout especificado no existe",
+			TipoError.CLIENTE, SeveridadError.MEDIA)
+	;
 
 	/**
 	 * Descripción del error

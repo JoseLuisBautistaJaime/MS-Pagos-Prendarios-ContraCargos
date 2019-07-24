@@ -74,11 +74,13 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ProcesosMaquinaEstadosConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
+import mx.com.nmp.pagos.mimonte.util.MiniMaquinaEstadosConciliacion;
 
 /**
  * @name ConciliacionServiceImpl
@@ -129,6 +131,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	@Autowired
 	private ConciliacionHelper conciliacionHelper;
+
+	/**
+	 * Mini maquina de estados para actualizacion de subestatus de conciliacion
+	 */
+	@Autowired
+	private MiniMaquinaEstadosConciliacion miniMaquinaEstadosConciliacion;
 
 	/**
 	 * Repository de Actividad
@@ -242,7 +250,17 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		globalRepository.save(global);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(conciliacion.getId(), "Alta de conciliacion",
+		actividadGenericMethod.registroActividad(conciliacion.getId(),
+				"Se guarda la conciliacion con el folio " + conciliacion.getId() + " con la cuenta "
+						+ (null != conciliacionRequestDTO && null != conciliacionRequestDTO.getCuenta()
+								&& null != conciliacionRequestDTO.getCuenta().getId()
+										? conciliacionRequestDTO.getCuenta().getId()
+										: "")
+						+ " y la entidad "
+						+ (null != conciliacionRequestDTO && null != conciliacionRequestDTO.getEntidad()
+								&& null != conciliacionRequestDTO.getEntidad().getId()
+										? conciliacionRequestDTO.getEntidad().getId()
+										: ""),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.GENERACION_CONCILIACION);
 
 		return ConciliacionBuilder.buildConciliacionDTOFromConciliacionCuentaAndEntidad(conciliacion, cuenta.get(),
@@ -343,7 +361,18 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		movimientoComisionRepository.saveAll(movimientosComision);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(conciliacion.getId(), "Actualizacion de conciliacion",
+		actividadGenericMethod.registroActividad(conciliacion.getId(),
+				"Se actualiza la conciliacion con el folio " + conciliacion.getId() + " con "
+						+ (null != actualizaionConciliacionRequestDTO
+								&& null != actualizaionConciliacionRequestDTO.getMovimientosTransito()
+										? actualizaionConciliacionRequestDTO.getMovimientosTransito().size()
+										: 0)
+						+ " movimientos transito y "
+						+ (null != actualizaionConciliacionRequestDTO
+								&& null != actualizaionConciliacionRequestDTO.getComisiones()
+										? actualizaionConciliacionRequestDTO.getComisiones().size()
+										: 0)
+						+ " comisiones",
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZAR_CONCILIACION);
 
 		return actualizaionConciliacionRequestDTO;
@@ -475,6 +504,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Transactional
 	public void enviarConciliacion(Integer idConciliacion, String usuario) {
 
+		// Se valida que exista la conciliacion con el folio proporcionado
+		validaFolio(idConciliacion);
 		// Validar conciliacion y actualizar estatus
 		try {
 			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
@@ -512,12 +543,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			String usuario) {
+		Boolean subEstatusValido = null;
 		// Se valida si la conciliacion existe
 		Optional<Conciliacion> conciliaicion = conciliacionRepository
 				.findById(actualizarSubEstatusRequestDTO.getFolio());
 		if (!conciliaicion.isPresent())
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_BUSINESS_018);
+					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		// Se obtienen: El id del estatus conciliacion el orden del mismo y el roden del
 		// subestatus de acuerdo al id de subestatus especificado como parametro
 		// mediante un query nativo
@@ -539,15 +571,30 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				.parseInt(map.get("estatus_order").toString()))
 			throw new ConciliacionException(ConciliacionConstants.WRONG_ORDER_SUB_STATUS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_029);
+
+		// Se valida que el estatus al que se quiere actualizar sea correcto en base a
+		// la maquina de estados de sub-estatus conciliacion
+		subEstatusValido = miniMaquinaEstadosConciliacion.checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(
+				actualizarSubEstatusRequestDTO.getFolio(), ProcesosMaquinaEstadosConciliacion.ALTA_REPORTES,
+				actualizarSubEstatusRequestDTO.getIdSubEstatus());
+		if (null != subEstatusValido && !subEstatusValido)
+			throw new ConciliacionException(ConciliacionConstants.WRONG_ORDER_SUB_STATUS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_029);
+		else if (null == subEstatusValido)
+			throw new ConciliacionException(ConciliacionConstants.ERROR_WHILE_VALIDATING_SUB_ESTAUS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_083);
+
 		// Se actualiza el sub estatus de la conciliacion al que se recibio como
 		// parametro, adicionalmente se actualizan los campos createdBy y createdDate
 		conciliacionRepository.actualizaSubEstatusConciliacion(actualizarSubEstatusRequestDTO.getFolio(),
 				new SubEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus()), usuario, new Date(),
-				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())));
+				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())),
+				actualizarSubEstatusRequestDTO.getDescripcion());
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
-				"Actualizacion de subEstatus de conciliacion", TipoActividadEnum.ACTIVIDAD,
-				SubTipoActividadEnum.ACTUALIZACION_ESTATUS_CONCILIACION);
+				"Se actualiza el subestatus de la conciliacion " + actualizarSubEstatusRequestDTO.getFolio()
+						+ " a un subestatus: " + actualizarSubEstatusRequestDTO.getIdSubEstatus(),
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZACION_ESTATUS_CONCILIACION);
 	}
 
 	/**
@@ -771,6 +818,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 
+		// Valida que el folio sea valido
+		validaFolio(idConciliacion);
+
 		// Obtiene todos los reportes de la bd generados hasta el momento
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(idConciliacion);
 		if (reportes == null || reportes.size() == 0) {
@@ -790,9 +840,24 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		this.conciliacionHelper.generarConciliacion(idConciliacion, reportes);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(idConciliacion, "Generar conciliacion", TipoActividadEnum.ACTIVIDAD,
+		actividadGenericMethod.registroActividad(idConciliacion,
+				"Se genera la conciliacion con el folio " + idConciliacion, TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.GENERACION_CONCILIACION);
 
+	}
+
+	/**
+	 * Valida que un folio de conciliacion exista en la base de datos
+	 * 
+	 * @param folio
+	 */
+	public void validaFolio(final Integer folio) {
+		if (null != folio) {
+			Optional<Conciliacion> conciliacionVal = conciliacionRepository.findById(folio);
+			if (!conciliacionVal.isPresent())
+				throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
+						CodigoError.NMP_PMIMONTE_BUSINESS_045);
+		}
 	}
 
 }

@@ -3,47 +3,53 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
-
 
 /**
  * The persistent class for the to_layout_header database table.
  * 
  */
 @Entity
-@Table(name="to_layout_header")
-public class LayoutHeader extends Updatable implements Serializable{
+@Table(name = "to_layout_header")
+public class LayoutHeader extends Updatable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name="cabecera")
+	@Column(name = "cabecera")
 	private String cabecera;
 
-	@Column(name="campo1")
+	@Column(name = "campo1")
 	private String campo1;
 
-	@Column(name="campo2")
+	@Column(name = "campo2")
 	private String campo2;
 
-	@Column(name="codigo_origen")
+	@Column(name = "codigo_origen")
 	private String codigoOrigen;
 
-	@Column(name="descripcion")
+	@Column(name = "descripcion")
 	private String descripcion;
 
-	@Column(name="fecha")
+	@Column(name = "fecha")
 	private LocalDate fecha;
 
-	@Column(name="unidad_negocio")
+	@Column(name = "unidad_negocio")
 	private String unidadNegocio;
 
 	@OneToOne
-	@JoinColumn(name="id_layout")
+	@JoinColumn(name = "id_layout")
 	private Layout layout;
 
 	public LayoutHeader() {

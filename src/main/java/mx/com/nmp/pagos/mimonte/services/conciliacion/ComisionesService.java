@@ -134,11 +134,16 @@ public class ComisionesService {
 	 */
 	public List<ComisionDTO> findByFolio(final Integer folio) {
 		List<ComisionDTO> comisionDTOList = null;
+		Optional<Conciliacion> conciliacion = conciliacionRepository.findById(folio);
+		if (!conciliacion.isPresent())
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		if (null != folio) {
 			comisionDTOList = comisionesRepository.findByFolio(folio);
 		}
 		if (null == comisionDTOList || comisionDTOList.isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND, CodigoError.NMP_PMIMONTE_0009);
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
 		return comisionDTOList;
 	}
 
@@ -178,9 +183,11 @@ public class ComisionesService {
 		Optional<Conciliacion> conciliacion = conciliacionRepository
 				.findById(comisionesTransaccionesRequestDTO.getIdConciliacion());
 		if (null == comisionesTransaccionesRequestDTO.getIdConciliacion())
-			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS, CodigoError.NMP_PMIMONTE_BUSINESS_017);
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_017);
 		if (null == conciliacion || !conciliacion.isPresent())
-			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_018);
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_018);
 		// Construir objeto pagos
 		buildMovimiento(movimientoPagos, OperacionComisionProyeccionEnum.PAGOS.getDescripcion(), transaccionesPagos,
 				comisionesTransaccionesRequestDTO.getComision());
@@ -259,11 +266,13 @@ public class ComisionesService {
 		boolean flagNew = true;
 		Optional<Conciliacion> conciliacion = conciliacionRepository.findById(comisionSaveDTO.getFolio());
 		if (!conciliacion.isPresent())
-			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_018);
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_018);
 		if (0 != comisionSaveDTO.getId()) {
 			movimientoComision = comisionesRepository.findById(comisionSaveDTO.getId());
 			if (null == movimientoComision || !movimientoComision.isPresent())
-				throw new ConciliacionException(ConciliacionConstants.COMISION_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_019);
+				throw new ConciliacionException(ConciliacionConstants.COMISION_ID_NOT_FOUND,
+						CodigoError.NMP_PMIMONTE_BUSINESS_019);
 			else
 				flagNew = false;
 		}
@@ -290,11 +299,13 @@ public class ComisionesService {
 		// Valida que el folio de conciliacion exista
 		conciliacion = conciliacionRepository.findById(comisionDeleteDTO.getFolio());
 		if (!conciliacion.isPresent())
-			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_018);
+			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_018);
 		// Valida si se puede eliminar esa comision
 		flags = comisionesRepository.verifyById(comisionDeleteDTO.getIdComisiones(), comisionDeleteDTO.getFolio());
 		if (null == flags || flags.size() < comisionDeleteDTO.getIdComisiones().size())
-			throw new ConciliacionException(ConciliacionConstants.COMISION_CANT_BE_DELETED, CodigoError.NMP_PMIMONTE_BUSINESS_020);
+			throw new ConciliacionException(ConciliacionConstants.COMISION_CANT_BE_DELETED,
+					CodigoError.NMP_PMIMONTE_BUSINESS_020);
 		// Elimina la comision
 		comisionesRepository.deleteByIdsAndIdConciliacion(comisionDeleteDTO.getIdComisiones(),
 				comisionDeleteDTO.getFolio());

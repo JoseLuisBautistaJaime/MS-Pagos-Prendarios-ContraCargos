@@ -25,49 +25,58 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
  * @version 0.1
  */
 @Repository
-public interface LayoutsRepository extends JpaRepository<Layout,Long>{
-    /**
-     * Elimina la línea de un layout
-     * @param id
-     */
+public interface LayoutsRepository extends JpaRepository<Layout, Long> {
+	/**
+	 * Elimina la línea de un layout
+	 * 
+	 * @param id
+	 */
 	@Modifying
 	@Query("delete from LayoutLinea l where l.layout.id = :id")
-	public void  eliminarUnLayoutLineas(@Param("id") final Long id);
-	
+	public void eliminarUnLayoutLineas(@Param("id") final Long id);
+
 	/**
 	 * Elimina el header de un layout
+	 * 
 	 * @param id
 	 */
 	@Modifying
 	@Query("delete from LayoutHeader l where l.layout.id = :id")
-	public void  eliminarUnLayoutHeader(@Param("id") final Long id);
-	
+	public void eliminarUnLayoutHeader(@Param("id") final Long id);
+
 	/**
 	 * Obtiene un layout
+	 * 
 	 * @param idConciliacion
 	 * @param tipo
 	 * @return
 	 */
 	@Query("from Layout l inner join l.layoutHeader inner join l.layoutLineas where l.idConciliacion = :idConciliacion and l.tipo = :tipo")
-	public List<Object[]> findByIdConciliacionAndTipo(@Param("idConciliacion") final Long idConciliacion, @Param("tipo") final String tipo);
-	
+	public List<Object[]> findByIdConciliacionAndTipo(@Param("idConciliacion") final Long idConciliacion,
+			@Param("tipo") final String tipo);
+
 	/**
 	 * Verifica si existe la conciliación en los layouts
+	 * 
 	 * @param idConciliacion
 	 * @return
 	 */
 	public List<Layout> findByIdConciliacion(@Param("idConciliacion") final Long idConciliacion);
-	
+
 	/**
 	 * Obtiene los tipos de layouts
+	 * 
 	 * @param tipo
 	 * @return
 	 */
 	public List<Layout> findByTipo(@Param("tipo") final String tipo);
+
+	/**
+	 * Regresa una lista de layouts por folio de conciliacion
+	 * @param idConciliacion
+	 * @return
+	 */
+	@Query("SELECT la FROM Layout la WHERE la.idConciliacion = :idConciliacion")
+	public List<Layout> checkFolioAndLayoutsRelationship(@Param("idConciliacion") final Long idConciliacion);
 	
 }
-
-
-
-
-

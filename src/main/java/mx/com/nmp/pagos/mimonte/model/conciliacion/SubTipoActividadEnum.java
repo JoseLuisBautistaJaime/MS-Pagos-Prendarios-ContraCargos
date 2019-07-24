@@ -32,7 +32,10 @@ public enum SubTipoActividadEnum {
 			TipoActividadEnum.ACTIVIDAD),
 
 	CONSULTA_CONCILIACION(6, "Consulta de Conciliacion",
-			"Registra un evento relacionado con la consulta de Conciliacion.", TipoActividadEnum.ACTIVIDAD);
+			"Registra un evento relacionado con la consulta de Conciliacion.", TipoActividadEnum.ACTIVIDAD),
+	
+	MOVIMIENTOS(7, "Generacion de movimientos",
+			"Se genera algun tipo de movimiento (midas, proveedor transaccional o estado de cuenta).", TipoActividadEnum.ACTIVIDAD);
 
 	private Integer id;
 	private String nombre;
