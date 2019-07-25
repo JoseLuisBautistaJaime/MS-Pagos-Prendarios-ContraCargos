@@ -415,9 +415,9 @@ public final class ConciliacionConstants {
 	public static final String ERROR_WHILE_ID_CONCILIACION_VALIDATION = "Se genero un error durante la validacion del folio de la conciliacion";
 	
 	/**
-	 * Mensaje que es mostrado cuando no hay relacion entre el folio y los movimientos ungresados o no existe uno o mas movimientos ingresados
+	 * Mensaje que es mostrado cuando no hay relacion entre el folio y los movimientos ingresados o no existe uno o mas movimientos ingresados
 	 */
-	public static final String NO_RELATION_BETWEEN_CONC_AND_MOVS_OR_DONESNT_EXISTS_SUCH_MOVS = "No hay relacion entre el folio y los movimientos ungresados o no existe uno o mas movimientos ingresados";
+	public static final String NO_RELATION_BETWEEN_CONC_AND_MOVS_OR_DONESNT_EXISTS_SUCH_MOVS = "No hay relacion entre el folio y los movimientos ingresados o no existe uno o mas movimientos ingresados";
 	
 	/**
 	 * Mensaje que es mostrado cuando se ingresa una sola fecha y esta es incorecta
