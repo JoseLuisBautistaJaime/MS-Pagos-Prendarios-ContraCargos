@@ -80,6 +80,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.LayoutsService;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 import mx.com.nmp.pagos.mimonte.util.MiniMaquinaEstadosConciliacion;
 
 /**
@@ -131,7 +133,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	@Autowired
 	private ConciliacionHelper conciliacionHelper;
-
+	
+	@Autowired
+	private LayoutsService layoutsService;
+	
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+	
 	/**
 	 * Mini maquina de estados para actualizacion de subestatus de conciliacion
 	 */
@@ -505,7 +513,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	public void enviarConciliacion(Integer idConciliacion, String usuario) {
 
 		// Se valida que exista la conciliacion con el folio proporcionado
-		validaFolio(idConciliacion);
+		conciliacionDataValidator.validateFolioExists(idConciliacion);
 		// Validar conciliacion y actualizar estatus
 		try {
 			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
@@ -527,6 +535,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			conciliacion.setLastModifiedDate(new Date());
 
 			conciliacionRepository.save(conciliacion);
+			
+			// Se crean los layouts correspondientes
+			layoutsService.enviarConciliacion(Long.valueOf(idConciliacion));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -740,6 +751,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		List<MovimientoTransito> movsTransito = null;
 		try {
 			movsTransito = this.movimientoTransitoRepository.findByIdConciliacion(conciliacion.getId());
+			if(null == movsTransito || movsTransito.isEmpty())
+				throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
+						CodigoError.NMP_PMIMONTE_0009);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ConciliacionException("Error al consultar los movimientos en transito",
@@ -819,7 +833,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					CodigoError.NMP_PMIMONTE_0008);
 
 		// Valida que el folio sea valido
-		validaFolio(idConciliacion);
+		conciliacionDataValidator.validateFolioExists(idConciliacion);
 
 		// Obtiene todos los reportes de la bd generados hasta el momento
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(idConciliacion);
@@ -844,20 +858,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				"Se genera la conciliacion con el folio " + idConciliacion, TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.GENERACION_CONCILIACION);
 
-	}
-
-	/**
-	 * Valida que un folio de conciliacion exista en la base de datos
-	 * 
-	 * @param folio
-	 */
-	public void validaFolio(final Integer folio) {
-		if (null != folio) {
-			Optional<Conciliacion> conciliacionVal = conciliacionRepository.findById(folio);
-			if (!conciliacionVal.isPresent())
-				throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
-						CodigoError.NMP_PMIMONTE_BUSINESS_045);
-		}
 	}
 
 }

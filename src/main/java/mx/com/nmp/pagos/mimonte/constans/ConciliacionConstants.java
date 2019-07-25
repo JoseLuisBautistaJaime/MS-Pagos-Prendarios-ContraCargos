@@ -408,4 +408,19 @@ public final class ConciliacionConstants {
 	 * Mensaje que se muestra cuando no se encuentra un id de layout especificado
 	 */
 	public static final String LAYOUT_ID_DOESNT_EXIST = "El id de layout especificado no existe";
+	
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la validacion del id de conciliacion
+	 */
+	public static final String ERROR_WHILE_ID_CONCILIACION_VALIDATION = "Se genero un error durante la validacion del folio de la conciliacion";
+	
+	/**
+	 * Mensaje que es mostrado cuando no hay relacion entre el folio y los movimientos ungresados o no existe uno o mas movimientos ingresados
+	 */
+	public static final String NO_RELATION_BETWEEN_CONC_AND_MOVS_OR_DONESNT_EXISTS_SUCH_MOVS = "No hay relacion entre el folio y los movimientos ungresados o no existe uno o mas movimientos ingresados";
+	
+	/**
+	 * Mensaje que es mostrado cuando se ingresa una sola fecha y esta es incorecta
+	 */
+	public static final String FECHA_IS_WRONG = "La fecha ingresada es incorrecta";
 }

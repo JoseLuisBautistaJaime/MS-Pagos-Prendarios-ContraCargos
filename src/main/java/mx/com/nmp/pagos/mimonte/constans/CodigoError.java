@@ -200,6 +200,12 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_084("La conciliacion no tiene asociado ningun layout",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_085("El id de layout especificado no existe",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_086("Error durante la validacion del folio de conciliacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_087("No hay relacion entre el folio y los movimientos ungresados o no existe uno o mas movimientos ingresados",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_088("La fecha ingresada es incorrecta",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

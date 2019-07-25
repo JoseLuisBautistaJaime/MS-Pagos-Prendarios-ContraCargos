@@ -39,6 +39,7 @@ import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 
 /**
  * @name SolicitarPagosService
@@ -93,6 +94,12 @@ public class SolicitarPagosService {
 	private ContactoRespository contactoRespository;
 
 	/**
+	 * Validador de datos relacionados con conciliacion
+	 */
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+	
+	/**
 	 * Objeto para consumo de servicio Rest para envio de e-mail
 	 */
 	@Autowired
@@ -127,6 +134,12 @@ public class SolicitarPagosService {
 		List<MovimientoTransito> movimientoTransitoList = null;
 		BusRestMailDTO generalBusMailDTO = null;
 
+		// Valida que la conciliacion exista
+		conciliacionDataValidator.validateFolioExists(requestDTO.getFolio());
+		
+		// Valida que los ids existan y tengan relacion con el folio de conciliacion ingresado
+		conciliacionDataValidator.validateIdsMovimientosConciliacionExists(requestDTO.getFolio(), requestDTO.getIdMovimientos());
+		
 		// Consultar datos, actualizacion y generacion de registros en pagos
 		try {
 			// Consulta

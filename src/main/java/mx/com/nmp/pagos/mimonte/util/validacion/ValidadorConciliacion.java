@@ -29,7 +29,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -230,31 +229,6 @@ public interface ValidadorConciliacion {
 		return true;
 	}
 
-	/**
-	 * Valida que un objeto de tipo ReporteRequestDTO sea correcto y no sea nulo ni
-	 * ninguno de sus atributos requeridos
-	 * 
-	 * @param reporteRequestDTO
-	 * @return
-	 */
-	public static boolean validateReporteRequestDTO(ReporteRequestDTO reporteRequestDTO) {
-		try {
-			if (null != reporteRequestDTO && null != reporteRequestDTO.getFechaDesde()
-					&& null != reporteRequestDTO.getFechaHasta()) {
-				Calendar ini = Calendar.getInstance();
-				Calendar fin = Calendar.getInstance();
-				ini.setTime(reporteRequestDTO.getFechaDesde());
-				fin.setTime(reporteRequestDTO.getFechaHasta());
-				if (fin.before(ini))
-					throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-							CodigoError.NMP_PMIMONTE_0008);
-			}
-		} catch (Exception ex) {
-			return false;
-		}
-		return true;
-	}
-
 	public static boolean validaConciliacionResponseSaveDTO(ConciliacionResponseSaveDTO conciliacionRequestDTO,
 			String createdBy) {
 		try {
@@ -371,7 +345,7 @@ public interface ValidadorConciliacion {
 					assertNotNull(val);
 			else
 				return false;
-		} catch (Exception ex) {
+		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
 		return true;
