@@ -340,7 +340,6 @@ public final class ConciliacionConstants {
 	public static final Long TIPO_CONTACTO_MIDAS = 1l;
 	public static final Long TIPO_CONTACTO_ENTIDAD = 2l;
 
-
 	public static final String ESTATUS_TRANSACCION_OPENPAY_SUCCESS = "success";
 	public static final String TIPO_TRANSACCION_OPENPAY_CARGO = "charge";
 
@@ -385,42 +384,60 @@ public final class ConciliacionConstants {
 	public static final String WRONG_OR_INCONSISTENT_FECHAS = "Hay inconsistencia en una o mas fechas";
 
 	/**
-	 * Longitud maxima permitida para la actualizacion de la descripcion del subestatus de conciliacion
+	 * Longitud maxima permitida para la actualizacion de la descripcion del
+	 * subestatus de conciliacion
 	 */
 	public static final Integer SUB_ESTATUS_DESCRIPCION_MAX_PERM_LENGHT = 250;
-	
+
 	/**
-	 * Mensaje que es mostrado cuando el estatus de la conciliacion se actualiza exitosamente
+	 * Mensaje que es mostrado cuando el estatus de la conciliacion se actualiza
+	 * exitosamente
 	 */
 	public static final String SUB_ESTATUS_UPDATED_OK = "Actualizacion de sub estatus correcta.";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se genera un error durante la validacion del sub estatus de conciliacion
+	 * Mensaje que es mostrado cuando se genera un error durante la validacion del
+	 * sub estatus de conciliacion
 	 */
 	public static final String ERROR_WHILE_VALIDATING_SUB_ESTAUS = "Se genero un error durante la validacion del sub-estatus";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando no se encuentra una folio de conciliacion asociado a uno o mas layouts
+	 * Mensaje que es mostrado cuando no se encuentra una folio de conciliacion
+	 * asociado a uno o mas layouts
 	 */
 	public static final String THERE_IS_NO_CONCILIACION_LAYOUT_RELATIONSHIP = "La conciliacion no tiene asociado ningun layout";
-	
+
 	/**
 	 * Mensaje que se muestra cuando no se encuentra un id de layout especificado
 	 */
 	public static final String LAYOUT_ID_DOESNT_EXIST = "El id de layout especificado no existe";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se genera un error durante la validacion del id de conciliacion
+	 * Mensaje que es mostrado cuando se genera un error durante la validacion del
+	 * id de conciliacion
 	 */
 	public static final String ERROR_WHILE_ID_CONCILIACION_VALIDATION = "Se genero un error durante la validacion del folio de la conciliacion";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando no hay relacion entre el folio y los movimientos ungresados o no existe uno o mas movimientos ingresados
+	 * Mensaje que es mostrado cuando no hay relacion entre el folio y los
+	 * movimientos ungresados o no existe uno o mas movimientos ingresados
 	 */
 	public static final String NO_RELATION_BETWEEN_CONC_AND_MOVS_OR_DONESNT_EXISTS_SUCH_MOVS = "No hay relacion entre el folio y los movimientos ungresados o no existe uno o mas movimientos ingresados";
-	
+
 	/**
 	 * Mensaje que es mostrado cuando se ingresa una sola fecha y esta es incorecta
 	 */
 	public static final String FECHA_IS_WRONG = "La fecha ingresada es incorrecta";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error consultando el id del
+	 * estatus de movimientos transito marcado como dev
+	 */
+	public static final String GETTING_DEV_ESTATUS_HAS_GONE_WRONG = "Se registro un error durante la comparacion dele status de la validacion";
+
+	/**
+	 * Mensaje que es mostrado cuando se intenta actualizar un movimiento transito a
+	 * un estatus marcado como devoluaicon cuando ya ha sido marcado antes
+	 */
+	public static final String NOT_ALLOWED_STATUS_IDS = "Uno o mas ids tiene un estatus incorrecto y no se puede actualizar";
 }

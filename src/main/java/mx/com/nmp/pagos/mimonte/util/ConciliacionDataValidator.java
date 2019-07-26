@@ -83,7 +83,7 @@ public class ConciliacionDataValidator {
 			if (null != movimientosConciliacion && !movimientosConciliacion.isEmpty()) {
 				List<MovimientoConciliacion> movimientos = movimientoConciliacionRepository.findByFolioAndIds(folio,
 						movimientosConciliacion);
-				if (null == movimientos || movimientos.isEmpty())
+				if (null == movimientos || movimientos.isEmpty() || movimientos.size() < movimientosConciliacion.size())
 					throw new ConciliacionException(
 							ConciliacionConstants.NO_RELATION_BETWEEN_CONC_AND_MOVS_OR_DONESNT_EXISTS_SUCH_MOVS,
 							CodigoError.NMP_PMIMONTE_BUSINESS_087);

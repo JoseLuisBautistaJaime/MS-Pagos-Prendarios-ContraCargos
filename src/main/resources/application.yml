@@ -45,6 +45,8 @@ spring:
 mimonte:
   variables:
     actividades-max-default: 10
+    estatus-varios:
+      no-identificada: "No identificada en MIDAS"
     mail:
       solicitud-pagos:
         title: "Solicitud de Pagos"

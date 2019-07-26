@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -12,6 +13,8 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +39,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDT
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
@@ -68,8 +72,8 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	@Autowired
 	private EstatusDevolucionRepository estatusDevolucionRepository;
 
-	@Autowired
-	private EstatusTransitoRepository estatusTransitoRepository;
+//	@Autowired
+//	private EstatusTransitoRepository estatusTransitoRepository;
 
 	@Autowired
 	private MovimientoTransitoRepository movimientoTransitoRepository;
@@ -84,7 +88,14 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	private ConciliacionHelper conciliacionHelper;
 
 	@Autowired
+	@Qualifier("estatusTransitoRepository")
+	private EstatusTransitoRepository estatusTransitoRepository;
+
+	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
+
+	@Value("${mimonte.variables.estatus-varios.no-identificada}")
+	private String nombreEstatusDevolucion;
 
 	/*
 	 * (non-Javadoc)
@@ -104,7 +115,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 		List<MovimientoDevolucion> devoluciones = movimientoDevolucionRepository
 				.findByIdConciliacion(conciliacion.getId());
 		if (devoluciones == null || devoluciones.isEmpty())
-			throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
 
 		return DevolucionesBuilder.buildDevolucionConDTOListFromMovimientoDevolucionList(devoluciones);
@@ -311,6 +322,9 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	@Transactional
 	public List<DevolucionConDTO> marcarDevolucion(SolicitarPagosRequestDTO marcarDevoluciones, String createdBy) {
 
+		EstatusTransito estatusTransito = null;
+		Boolean flagEstatus = null;
+
 		// Se validan parametros
 		if (marcarDevoluciones == null || marcarDevoluciones.getIdMovimientos() == null) {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -324,6 +338,17 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 		conciliacionDataValidator.validateIdsMovimientosConciliacionExists(marcarDevoluciones.getFolio(),
 				marcarDevoluciones.getIdMovimientos());
 
+		// Valida que el estatus de los movimientos sea el primero y unico valido para cambiar a devolucion (1)
+		estatusTransito = estatusTransitoRepository.findByNombre(nombreEstatusDevolucion);
+		if (null == estatusTransito)
+			throw new ConciliacionException(ConciliacionConstants.GETTING_DEV_ESTATUS_HAS_GONE_WRONG,
+					CodigoError.NMP_PMIMONTE_BUSINESS_089);
+		flagEstatus = BigInteger.ONE.compareTo((BigInteger) movimientoTransitoRepository
+				.verifyIfIdsHaveRightEstatus(marcarDevoluciones.getIdMovimientos(), estatusTransito.getId())) == 0;
+		if (!flagEstatus) {
+			throw new ConciliacionException(ConciliacionConstants.NOT_ALLOWED_STATUS_IDS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_090);
+		}
 		List<DevolucionConDTO> movimientosMarcados = new ArrayList<DevolucionConDTO>();
 
 		try {
@@ -333,8 +358,8 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 					.getOne(ConciliacionConstants.ESTATUS_DEVOLUCION_PENDIENTE);
 
 			// Se obtiene el catalogo de movimiento en transito transferido
-			EstatusTransito etMarcadoDev = estatusTransitoRepository
-					.getOne(ConciliacionConstants.ESTATUS_TRANSITO_MARCADO_DEVOLUCION);
+//			EstatusTransito etMarcadoDev = estatusTransitoRepository
+//					.getOne(ConciliacionConstants.ESTATUS_TRANSITO_MARCADO_DEVOLUCION);
 
 			// Por cada movimiento en transito:
 			for (Integer idMovimientoTransito : marcarDevoluciones.getIdMovimientos()) {
@@ -352,16 +377,17 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 						.buildMovimientoFromMovimientoTransito(movimientoTransito, edPendiente, createdBy);
 				movimientoDevolucionRepository.save(movimientoDevolucion);
 
-				// Se actualiza el estatus del movimiento en transito como marcado para
-				// devolucion (borrado logico)
-				movimientoTransito.setLastModifiedBy(createdBy);
-				movimientoTransito.setLastModifiedDate(new Date());
-				movimientoTransito.setEstatus(etMarcadoDev);
-				movimientoTransitoRepository.save(movimientoTransito);
-
 				DevolucionConDTO devolucionConDTO = MovimientosTransitoBuilder
 						.buildDevolucionConDTOFromMovimientoTransito(movimientoTransito, edPendiente);
 				movimientosMarcados.add(devolucionConDTO);
+
+				// Se actualiza el estatus del movimiento en transito como marcado para
+				// devolucion (borrado logico)
+				// TODO: Eliminar lineas comentadas una vez que se pruebe la funcionalidad
+//				movimientoTransito.setLastModifiedBy(createdBy);
+//				movimientoTransito.setLastModifiedDate(new Date());
+//				movimientoTransito.setEstatus(etMarcadoDev);
+				movimientoTransitoRepository.delete(movimientoTransito);
 
 			}
 		} catch (Exception ex) {

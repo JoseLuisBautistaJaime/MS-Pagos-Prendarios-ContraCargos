@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import mx.com.nmp.pagos.mimonte.model.EstatusPago;
@@ -18,14 +19,34 @@ import mx.com.nmp.pagos.mimonte.model.EstatusPago;
  */
 public class MovimientoPagoDTO implements Comparable<MovimientoPagoDTO> {
 
-	private long id;
+	private Integer id;
 	private EstatusPago estatus;
+	private BigDecimal monto;
 
-	public long getId() {
+	public MovimientoPagoDTO() {
+		super();
+	}
+
+	public MovimientoPagoDTO(Integer id, EstatusPago estatus, BigDecimal monto) {
+		super();
+		this.id = id;
+		this.estatus = estatus;
+		this.monto = monto;
+	}
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public BigDecimal getMonto() {
+		return monto;
+	}
+
+	public void setMonto(BigDecimal monto) {
+		this.monto = monto;
+	}
+
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
