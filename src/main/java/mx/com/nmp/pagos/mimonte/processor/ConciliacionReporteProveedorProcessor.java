@@ -54,7 +54,7 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 			List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(reportesWrapper.getIdConciliacion());
 			List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(reportesWrapper.getIdConciliacion());
 
-			List<MovimientoTransito> movsTransito = extraerMovimientosTransito(movsMidas, movsProveedor);
+			List<MovimientoTransito> movsTransito = extraerMovimientosTransito(movsMidas, movsProveedor, reportesWrapper.getIdConciliacion());
 
 			if (CollectionUtils.isNotEmpty(movsTransito)) {
 				if (CollectionUtils.isNotEmpty(movsTransito)) {
@@ -71,9 +71,10 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 	 * Compara los montos de los movimientos en transito VS los montos de los movimientos midas
 	 * @param movsMidas
 	 * @param movsProveedor
+	 * @param idConciliacion
 	 * @return
 	 */
-	private List<MovimientoTransito> extraerMovimientosTransito(List<MovimientoMidas> movsMidas, List<MovimientoProveedor> movsProveedor) {
+	private List<MovimientoTransito> extraerMovimientosTransito(List<MovimientoMidas> movsMidas, List<MovimientoProveedor> movsProveedor, Integer idConciliacion) {
 
 		Map<String, List<MovimientoMidas>> movsMidasByTransaction = mapMovMidasByTransaction(movsMidas);
 		Map<String, List<MovimientoProveedor>> movsProveedorByTransaction = mapByMovsTransactionByTransaction(movsProveedor);
@@ -91,7 +92,7 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 				BigDecimal montoMidas = ConciliacionMathUtil.getImporteMidas(movsMidasTransaccion);
 				if (isInvalidTransaccionMidas(movsMidasTransaccion) || montoProveedor.compareTo(montoMidas) != 0) {
 					for (MovimientoMidas movMidasTransaccion : movsMidasTransaccion) {
-						movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion));
+						movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, idConciliacion));
 					}
 				}
 			}
@@ -149,7 +150,7 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 		for (MovimientoMidas movMidas : movsMidas) {
 			if (!movMidas.getEstatus()) {
 
-				MovimientoTransito movTransito = MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidas);
+				MovimientoTransito movTransito = MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidas, reportesWrapper.getIdConciliacion());
 
 				// Verificar si ya existe el movimiento de transito con anteriodad
 				List<MovimientoTransito> movimientosTransitoBD = this.mergeReporteHandler.getMovimientoTransitoRepository().findByIdConciliacionAndMovimientoMidasId(reportesWrapper.getIdConciliacion(), movMidas.getId());
