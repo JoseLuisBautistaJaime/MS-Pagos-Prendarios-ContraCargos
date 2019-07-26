@@ -22,6 +22,7 @@ public class MovimientoPagoDTO implements Comparable<MovimientoPagoDTO> {
 	private Integer id;
 	private EstatusPago estatus;
 	private BigDecimal monto;
+	private MovimientoMidasDTO movimientoMidasDTO;
 
 	public MovimientoPagoDTO() {
 		super();
@@ -32,6 +33,14 @@ public class MovimientoPagoDTO implements Comparable<MovimientoPagoDTO> {
 		this.id = id;
 		this.estatus = estatus;
 		this.monto = monto;
+	}
+	
+	public MovimientoMidasDTO getMovimientoMidasDTO() {
+		return movimientoMidasDTO;
+	}
+
+	public void setMovimientoMidasDTO(MovimientoMidasDTO movimientoMidasDTO) {
+		this.movimientoMidasDTO = movimientoMidasDTO;
 	}
 
 	public Integer getId() {

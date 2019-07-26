@@ -35,13 +35,23 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	public List<MovimientoTransito> findByIds(List<Integer> lst);
 
 	/**
-	 * Búsqueda de los movimientos en transito a partir del folio.
+	 * Busqueda de los movimientos en transito a partir del folio.
 	 * 
 	 * @param folio
 	 * @return
 	 */
-	@Query("SELECT mt FROM MovimientoConciliacion mc INNER JOIN MovimientoTransito mt ON mc.id = mt.id WHERE mt.idConciliacion = :folio AND mt.estatus = (SELECT et.id FROM EstatusTransito et WHERE et.nombre LIKE '%Solicitada%')")
+	@Query("SELECT mt FROM MovimientoTransito mt WHERE mt.idConciliacion = :folio")
 	public List<MovimientoTransito> findByIdConciliacion(@Param("folio") Integer folio);
+
+	/**
+	 * Busqueda de los movimientos en transito a partir del folio (para validar
+	 * cuales son candidatas a solicitud de pagos).
+	 * 
+	 * @param folio
+	 * @return
+	 */
+	@Query("SELECT mt FROM MovimientoTransito mt JOIN FETCH mt.movimientoMidas WHERE mt.idConciliacion = :folio AND mt.estatus = (SELECT et.id FROM EstatusTransito et WHERE et.nombre LIKE '%Solicitada%')")
+	public List<MovimientoTransito> findByIdConciliacionPagos(@Param("folio") Integer folio);
 
 	/**
 	 * Obtiene los movimientos en transito.

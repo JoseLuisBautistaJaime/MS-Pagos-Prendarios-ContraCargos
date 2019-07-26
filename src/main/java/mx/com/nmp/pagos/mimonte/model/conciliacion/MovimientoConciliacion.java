@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,7 +43,7 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 	@Column(name = "nuevo")
 	private Boolean nuevo;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_movimiento_midas")
 	private MovimientoMidas movimientoMidas;
 

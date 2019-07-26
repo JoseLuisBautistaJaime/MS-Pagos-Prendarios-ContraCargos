@@ -35,6 +35,15 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 	private String consumidor;
 	private BigDecimal importeTransaccion;
 
+	public MovimientoMidasDTO() {
+		super();
+	}
+
+	public MovimientoMidasDTO(Long id) {
+		super();
+		this.id = id;
+	}
+
 	public Long getId() {
 		return id;
 	}

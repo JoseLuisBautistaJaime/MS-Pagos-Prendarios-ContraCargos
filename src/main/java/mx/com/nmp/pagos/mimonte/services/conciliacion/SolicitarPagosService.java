@@ -311,7 +311,7 @@ public class SolicitarPagosService {
 		List<MovimientoPago> movimientosPago = null;
 		List<MovimientoPagoDTO> movimientosPagoDTO = null;
 		if (null != folio) {
-			movimientosTransito = movimientoTransitoRepository.findByIdConciliacion(folio);
+			movimientosTransito = movimientoTransitoRepository.findByIdConciliacionPagos(folio);
 			if (null != movimientosTransito && !movimientosTransito.isEmpty()) {
 				movimientosPagoDTO = MovimientosBuilder
 						.buildMovimientoPagoDTOListFromMovimientoTransitoList(movimientosTransito);
@@ -319,7 +319,7 @@ public class SolicitarPagosService {
 				movimientoTransitoRepository.flush();
 				if (null != movimientosPagoDTO && !movimientosPagoDTO.isEmpty()) {
 					movimientosPago = MovimientosBuilder
-							.buildMovimientoPagoListFromMovimientoPagoDTOList(movimientosPagoDTO, folio);
+							.buildMovimientoPagoListFromMovimientoPagoDTOList(movimientosPagoDTO, folio, requestUser);
 					movimientosPagoRepository.saveAll(movimientosPago);
 				}
 			}

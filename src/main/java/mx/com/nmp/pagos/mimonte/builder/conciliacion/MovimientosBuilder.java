@@ -443,6 +443,8 @@ public abstract class MovimientosBuilder {
 			movimientoPagoDTO.setId(movimientoTransito.getId());
 			movimientoPagoDTO.setEstatus(new EstatusPago(movimientoTransito.getEstatus().getId()));
 			movimientoPagoDTO.setMonto(movimientoTransito.getMonto());
+			movimientoPagoDTO
+					.setMovimientoMidasDTO(new MovimientoMidasDTO(movimientoTransito.getMovimientoMidas().getId()));
 		}
 		return movimientoPagoDTO;
 	}
@@ -475,14 +477,19 @@ public abstract class MovimientosBuilder {
 	 * @return
 	 */
 	public static MovimientoPago buildMovimientoPagoFromMovimientoPagoDTO(MovimientoPagoDTO movimientoPagoDTO,
-			final Integer folio) {
+			final Integer folio, final String requestUser) {
 		MovimientoPago movimientoPago = null;
 		if (null != movimientoPagoDTO) {
 			movimientoPago = new MovimientoPago();
 			movimientoPago.setId(null);
-			movimientoPago.setEstatus(new EstatusPago(movimientoPagoDTO.getId()));
+			movimientoPago.setEstatus(new EstatusPago(movimientoPagoDTO.getEstatus().getId()));
 			movimientoPago.setMonto(movimientoPagoDTO.getMonto());
 			movimientoPago.setIdConciliacion(folio);
+			movimientoPago.setCreatedBy(requestUser);
+			movimientoPago.setCreatedDate(new Date());
+			movimientoPago.setNuevo(true);
+			movimientoPago.setMovimientoMidas(new MovimientoMidas(movimientoPagoDTO.getMovimientoMidasDTO().getId()));
+
 		}
 		return movimientoPago;
 	}
@@ -496,12 +503,12 @@ public abstract class MovimientosBuilder {
 	 * @return
 	 */
 	public static List<MovimientoPago> buildMovimientoPagoListFromMovimientoPagoDTOList(
-			List<MovimientoPagoDTO> movimientoPagoDTOList, final Integer folio) {
+			List<MovimientoPagoDTO> movimientoPagoDTOList, final Integer folio, final String requestUser) {
 		List<MovimientoPago> movimientoPagoList = null;
 		if (null != movimientoPagoDTOList && !movimientoPagoDTOList.isEmpty()) {
 			movimientoPagoList = new ArrayList<>();
 			for (MovimientoPagoDTO movimientoPagoDTO : movimientoPagoDTOList) {
-				movimientoPagoList.add(buildMovimientoPagoFromMovimientoPagoDTO(movimientoPagoDTO, folio));
+				movimientoPagoList.add(buildMovimientoPagoFromMovimientoPagoDTO(movimientoPagoDTO, folio, requestUser));
 			}
 		}
 		return movimientoPagoList;
