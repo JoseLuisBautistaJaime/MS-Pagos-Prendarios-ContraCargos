@@ -448,5 +448,5 @@ public final class ConciliacionConstants {
 	/**
 	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion pendientes
 	 */
-	public static final String THERE_IS_NO_MOVIMIENTOS_DEVOLUCION_PENDIENTES = "No existe movimientos devolucion pendientes de solicitud";
+	public static final String THERE_IS_NO_MOVIMIENTOS_DEVOLUCION_PENDIENTES = "No existen movimientos-devolucion pendientes de solicitud";
 }
