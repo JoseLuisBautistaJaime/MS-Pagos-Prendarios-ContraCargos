@@ -182,14 +182,14 @@ public class ConciliacionController {
 				&& !ValidadorConciliacion.validateFechasWithThemselves(consultaConciliacionRequestDTO.getFechaDesde(),
 						consultaConciliacionRequestDTO.getFechaHasta()))
 			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_078);
+					CodigoError.NMP_PMIMONTE_BUSINESS_082);
 		// Valida que las fechas sean congruentes con la fecha actual
 		if (null != consultaConciliacionRequestDTO && null != consultaConciliacionRequestDTO.getFechaDesde()
 				&& null != consultaConciliacionRequestDTO.getFechaHasta()
 				&& !ValidadorConciliacion.validateFechasWithCurrent(consultaConciliacionRequestDTO.getFechaDesde(),
 						consultaConciliacionRequestDTO.getFechaHasta()))
 			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_078);
+					CodigoError.NMP_PMIMONTE_BUSINESS_082);
 		// Valida que la fecha inicial sea congruente (cuando solo existe la fecha
 		// inicial)
 		if (null != consultaConciliacionRequestDTO && null != consultaConciliacionRequestDTO.getFechaDesde()

@@ -51,7 +51,7 @@ mimonte:
       solicitud-pagos:
         title: "Solicitud de Pagos"
         encode-type: UTF-8
-        velocity-layout: mailHtml.vm
+        velocity-layout: "/templates/mailHtml.vm"
       text1: "Buenas tardes."
       text2: "Solicito de su apreciable ayuda para aplicar los siguientes pagos a las partidas especificadas en la siguiente tabla en el barrido de la noche,  ya que el cliente realizo el pago en el portal de pago en línea, el cual fue aprobado, pero en Midas aún no se refleja el cobro."
       text3: "En espera de sus comentarios y apreciable ayuda. Gracias."
