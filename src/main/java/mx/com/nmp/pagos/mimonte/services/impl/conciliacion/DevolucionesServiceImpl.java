@@ -194,20 +194,12 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	public List<DevolucionEntidadDTO> solicitarDevoluciones(FolioRequestDTO folio, String modifiedBy)
 			throws ConciliacionException {
 
-		// Se validan parametros
-		if (folio == null) {
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
-		}
-
-		if (folio.getFolio() == null || folio.getFolio() <= 0) {
-			throw new ConciliacionException("Folio incorrecto", CodigoError.NMP_PMIMONTE_BUSINESS_036);
-		}
+		// Valida que el folio exista
+		conciliacionDataValidator.validateFolioExists(folio.getFolio());
 
 		List<DevolucionEntidadDTO> movimientosSolicitados = null;
 
 		try {
-
 			// Se obtienen los movimientos por folio
 			List<Integer> idsEstatus = Arrays.asList(ConciliacionConstants.ESTATUS_DEVOLUCION_PENDIENTE,
 					ConciliacionConstants.ESTATUS_DEVOLUCION_SOLICITADA);
@@ -216,16 +208,17 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 			// Se validan que existan todos los movimientos
 			if (movimientosDevolucion == null || movimientosDevolucion.size() <= 0) {
-				throw new ConciliacionException("No existe movimientos devolucion pendientes de solicitud",
-						CodigoError.NMP_PMIMONTE_0008);
+				throw new ConciliacionException(ConciliacionConstants.THERE_IS_NO_MOVIMIENTOS_DEVOLUCION_PENDIENTES,
+						CodigoError.NMP_PMIMONTE_BUSINESS_092);
 			}
-
 			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy);
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException(ConciliacionConstants.AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_035);
+			if (ex instanceof ConciliacionException)
+				throw ex;
+			else
+				throw new ConciliacionException(ConciliacionConstants.AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS,
+						CodigoError.NMP_PMIMONTE_BUSINESS_035);
 		}
 
 		return movimientosSolicitados;
@@ -338,7 +331,8 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 		conciliacionDataValidator.validateIdsMovimientosConciliacionExists(marcarDevoluciones.getFolio(),
 				marcarDevoluciones.getIdMovimientos());
 
-		// Valida que el estatus de los movimientos sea el primero y unico valido para cambiar a devolucion (1)
+		// Valida que el estatus de los movimientos sea el primero y unico valido para
+		// cambiar a devolucion (1)
 		estatusTransito = estatusTransitoRepository.findByNombre(nombreEstatusDevolucion);
 		if (null == estatusTransito)
 			throw new ConciliacionException(ConciliacionConstants.GETTING_DEV_ESTATUS_HAS_GONE_WRONG,

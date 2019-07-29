@@ -210,7 +210,11 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_089("Se genero un error en la otencion del estatus de validacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_090("Uno o mas ids de movimientos ya han sido marcados como devolucion antes",
-			TipoError.CLIENTE, SeveridadError.MEDIA)
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_091("El estatus de conciliacion expecificado no existe",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_092("No existe movimientos devolucion pendientes de solicitud",
+			TipoError.CLIENTE, SeveridadError.MEDIA)	
 	;
 
 	/**

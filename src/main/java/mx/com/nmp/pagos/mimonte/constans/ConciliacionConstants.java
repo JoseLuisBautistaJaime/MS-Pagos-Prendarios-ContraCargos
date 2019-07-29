@@ -439,4 +439,14 @@ public final class ConciliacionConstants {
 	 * un estatus marcado como devoluaicon cuando ya ha sido marcado antes
 	 */
 	public static final String NOT_ALLOWED_STATUS_IDS = "Uno o mas ids tiene un estatus incorrecto y no se puede actualizar";
+	
+	/**
+	 * Mensaje que es mostrado cuando se desea ingresar un estatus de cociliacion que no existe
+	 */
+	public static final String ESTATUS_CONCILIACION_DOESNT_EXISTS = "El estatus de conciliacion especificado no existe";
+	
+	/**
+	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion pendientes
+	 */
+	public static final String THERE_IS_NO_MOVIMIENTOS_DEVOLUCION_PENDIENTES = "No existe movimientos devolucion pendientes de solicitud";
 }

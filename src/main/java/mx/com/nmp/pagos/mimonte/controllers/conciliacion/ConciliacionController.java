@@ -176,15 +176,42 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consulta(@RequestBody ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
-
+		// Valida que las fechas sean congruentes entre si
+		if (null != consultaConciliacionRequestDTO && null != consultaConciliacionRequestDTO.getFechaDesde()
+				&& null != consultaConciliacionRequestDTO.getFechaHasta()
+				&& !ValidadorConciliacion.validateFechasWithThemselves(consultaConciliacionRequestDTO.getFechaDesde(),
+						consultaConciliacionRequestDTO.getFechaHasta()))
+			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_078);
+		// Valida que las fechas sean congruentes con la fecha actual
+		if (null != consultaConciliacionRequestDTO && null != consultaConciliacionRequestDTO.getFechaDesde()
+				&& null != consultaConciliacionRequestDTO.getFechaHasta()
+				&& !ValidadorConciliacion.validateFechasWithCurrent(consultaConciliacionRequestDTO.getFechaDesde(),
+						consultaConciliacionRequestDTO.getFechaHasta()))
+			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_078);
+		// Valida que la fecha inicial sea congruente (cuando solo existe la fecha
+		// inicial)
+		if (null != consultaConciliacionRequestDTO && null != consultaConciliacionRequestDTO.getFechaDesde()
+				&& null == consultaConciliacionRequestDTO.getFechaHasta()
+				&& !ValidadorConciliacion.validateFecha(consultaConciliacionRequestDTO.getFechaDesde()))
+			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_082);
+		// Valida que la fecha final sea congruente (cuando solo existe la fecha final)
+		if (null != consultaConciliacionRequestDTO && null != consultaConciliacionRequestDTO.getFechaHasta()
+				&& null == consultaConciliacionRequestDTO.getFechaDesde()
+				&& !ValidadorConciliacion.validateFecha(consultaConciliacionRequestDTO.getFechaHasta()))
+			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_082);
 		List<ConsultaConciliacionDTO> consulta = conciliacionServiceImpl.consulta(consultaConciliacionRequestDTO);
 
 		if (consulta != null && !consulta.isEmpty()) {
 			for (ConsultaConciliacionDTO con : consulta) {
 				con.setNumeroMovimientos(consulta.size());
 			}
-		}
-
+		} else
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				consulta);
 	}
@@ -380,6 +407,9 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response devoluciones(@RequestBody FolioRequestDTO folioRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		if (!ValidadorConciliacion.validateFolioRequestDTO(folioRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 
 		List<DevolucionEntidadDTO> response = devolucionesServiceImpl.solicitarDevoluciones(folioRequestDTO, createdBy);
 

@@ -25,6 +25,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
@@ -515,6 +516,17 @@ public interface ValidadorConciliacion {
 			}
 		}
 		return valido;
+	}
+
+	/**
+	 * Valida un objeto de tipo FolioRequestDTO para que este no sea nulo y sus
+	 * atributos requeridos sean valores validos
+	 * 
+	 * @param folioRequestDTO
+	 * @return
+	 */
+	public static boolean validateFolioRequestDTO(FolioRequestDTO folioRequestDTO) {
+		return (null != folioRequestDTO && null != folioRequestDTO.getFolio() && folioRequestDTO.getFolio() > 0);
 	}
 
 }
