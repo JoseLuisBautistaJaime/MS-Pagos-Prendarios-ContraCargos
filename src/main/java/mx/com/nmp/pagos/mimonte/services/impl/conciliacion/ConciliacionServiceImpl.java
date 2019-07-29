@@ -397,7 +397,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 */
 	@Override
 	public List<ConsultaConciliacionDTO> consulta(ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
-		
+
 		// Declaracion de objetos necesarios
 		List<ConsultaConciliacionDTO> result = null;
 		Optional<Entidad> entidad = null;
@@ -434,7 +434,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			consultaConciliacionRequestDTO.setFechaDesde(ini.getTime());
 			consultaConciliacionRequestDTO.setFechaHasta(fin.getTime());
 		}
-		
+
 		// Valida que el folio especificado exista
 		if (null != consultaConciliacionRequestDTO && null != consultaConciliacionRequestDTO.getFolio())
 			conciliacionDataValidator.validateFolioExists(consultaConciliacionRequestDTO.getFolio());
@@ -455,7 +455,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 						CodigoError.NMP_PMIMONTE_BUSINESS_091);
 		}
 
-		// TODO: (iaguilar) Validar si quitar esta parte dado que estas fechas se validan en la capa de controlador
+		// TODO: (iaguilar) Validar si quitar esta parte dado que estas fechas se
+		// validan en la capa de controlador
 		// Validación de la fecha final no sea menor que la fecha inicial.
 //		if (consultaConciliacionRequestDTO.getFechaDesde() != null
 //				&& consultaConciliacionRequestDTO.getFechaHasta() != null) {
@@ -643,14 +644,18 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				new SubEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus()), usuario, new Date(),
 				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())),
 				actualizarSubEstatusRequestDTO.getDescripcion());
+
+		// Se obtienen los datos del subestatus para el registro de actividades
+		Optional<SubEstatusConciliacion> subEstatus = subEstatusConciliacionRepository
+				.findById(actualizarSubEstatusRequestDTO.getIdSubEstatus());
+
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
 				"Se actualiza el subestatus de la conciliacion " + actualizarSubEstatusRequestDTO.getFolio()
 						+ " a un subestatus: "
-						+ (conciliaicion.isPresent() && null != conciliaicion.get().getSubEstatus()
-								&& null != conciliaicion.get().getSubEstatus().getDescription()
-										? conciliaicion.get().getSubEstatus().getDescription()
-										: actualizarSubEstatusRequestDTO.getIdSubEstatus()),
+						+ (subEstatus.isPresent() && null != subEstatus.get().getDescription()
+								? subEstatus.get().getDescription()
+								: actualizarSubEstatusRequestDTO.getIdSubEstatus()),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZACION_ESTATUS_CONCILIACION);
 	}
 
