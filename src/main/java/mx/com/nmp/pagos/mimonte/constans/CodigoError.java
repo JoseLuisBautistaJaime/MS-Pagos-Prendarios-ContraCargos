@@ -213,7 +213,7 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_091("El estatus de conciliacion expecificado no existe",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
-	NMP_PMIMONTE_BUSINESS_092("No existe movimientos devolucion pendientes de solicitud",
+	NMP_PMIMONTE_BUSINESS_092("No existen movimientos-devolucion pendientes de solicitud",
 			TipoError.CLIENTE, SeveridadError.MEDIA)	
 	;
 
