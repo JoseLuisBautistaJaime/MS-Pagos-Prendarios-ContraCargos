@@ -74,7 +74,7 @@ public class ConciliacionMathUtil {
 
 
 	private static boolean isValidTransaction(MovimientoProveedor movProveedor) {
-		return movProveedor != null && movProveedor.getStatus() != null && movProveedor.getStatus().equalsIgnoreCase(ConciliacionConstants.ESTATUS_TRANSACCION_OPENPAY_SUCCESS) &&
+		return movProveedor != null && movProveedor.getStatus() != null && movProveedor.getStatus().equalsIgnoreCase(ConciliacionConstants.ESTATUS_TRANSACCION_OPENPAY_COMPLETED) &&
 				movProveedor.getTransactionType() != null && movProveedor.getTransactionType().equalsIgnoreCase(ConciliacionConstants.TIPO_TRANSACCION_OPENPAY_CARGO);
 	}
 
