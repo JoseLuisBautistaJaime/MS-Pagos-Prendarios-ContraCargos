@@ -24,6 +24,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusReques
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
@@ -527,6 +528,43 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateFolioRequestDTO(FolioRequestDTO folioRequestDTO) {
 		return (null != folioRequestDTO && null != folioRequestDTO.getFolio() && folioRequestDTO.getFolio() > 0);
+	}
+
+	/**
+	 * Valida que un objeto de tipo DevolucionRequestDTO no sea nulo y contenga
+	 * atributos validos
+	 * 
+	 * @param devolucionRequestDTO
+	 * @return
+	 */
+	public static boolean validateDevolucionRequestDTO(DevolucionRequestDTO devolucionRequestDTO) {
+		return (null != devolucionRequestDTO.getEstatus()
+				&& (null == devolucionRequestDTO.getEstatus()
+						|| (null != devolucionRequestDTO.getEstatus() && devolucionRequestDTO.getEstatus() < 1))
+				&& (null == devolucionRequestDTO.getIdEntidad()
+						|| (null != devolucionRequestDTO.getIdEntidad() && devolucionRequestDTO.getIdEntidad() < 1)));
+	}
+
+	/**
+	 * Valida dos fechas recibidas como fecha inicial y final independientemente si
+	 * estas son nulas o no
+	 * 
+	 * @param fechaDesde
+	 * @param fechaHasta
+	 */
+	public static void validateFechasPrimary(Date fechaDesde, Date fechaHasta) {
+		if (null != fechaDesde && null != fechaHasta && !validateFechasWithThemselves(fechaDesde, fechaHasta))
+			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_078);
+		if (null != fechaDesde && null != fechaHasta && !validateFechasWithCurrent(fechaDesde, fechaHasta))
+			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_082);
+		if (null != fechaDesde && null == fechaHasta && !validateFecha(fechaDesde))
+			throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+					CodigoError.NMP_PMIMONTE_BUSINESS_088);
+		if (null == fechaDesde && null != fechaHasta && !validateFecha(fechaHasta))
+			throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+					CodigoError.NMP_PMIMONTE_BUSINESS_088);
 	}
 
 }

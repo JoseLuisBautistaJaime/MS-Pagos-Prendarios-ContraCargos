@@ -125,6 +125,8 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			@Param("fechaHasta") final Date fechaHasta);
 
 	/**
+	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
+	 * los parametros recibidos (fecha inicio y fin)
 	 * 
 	 * @param idEstatus
 	 * @param idEntidad
@@ -139,12 +141,80 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
 			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND "
-			+ " c.createdDate BETWEEN :fechaDesde AND :fechaHasta ")
+			+ " c.createdDate BETWEEN :fechaDesde AND :fechaHasta")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursal(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
 			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
 			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta);
 
+	/**
+	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
+	 * los parametros recibidos (solo fecha inicio)
+	 * 
+	 * @param idEstatus
+	 * @param idEntidad
+	 * @param identificadorCuenta
+	 * @param sucursal
+	 * @param fechaDesde
+	 * @return
+	 */
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, c.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
+			+ " WHERE ( :idEstatus IS NULL OR c.estatus.id = :idEstatus ) AND "
+			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
+			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " c.createdDate >= :fechaDesde")
+	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaHasta(
+			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
+			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
+			@Param("fechaDesde") final Date fechaDesde);
+
+	/**
+	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
+	 * los parametros recibidos (solo fecha fin)
+	 * 
+	 * @param idEstatus
+	 * @param idEntidad
+	 * @param identificadorCuenta
+	 * @param sucursal
+	 * @param fechaHasta
+	 * @return
+	 */
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, c.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
+			+ " WHERE ( :idEstatus IS NULL OR c.estatus.id = :idEstatus ) AND "
+			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
+			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " c.createdDate <= :fechaHasta")
+	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaDesde(
+			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
+			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
+			@Param("fechaHasta") final Date fechaHasta);
+
+	/**
+	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
+	 * los parametros recibidos (sin fechas)
+	 * 
+	 * @param idEstatus
+	 * @param idEntidad
+	 * @param identificadorCuenta
+	 * @param sucursal
+	 * @return
+	 */
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, c.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
+			+ " WHERE ( :idEstatus IS NULL OR c.estatus.id = :idEstatus ) AND "
+			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
+			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal )")
+	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechas(
+			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
+			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal);
+
+	/**
+	 * Regresa una lista de entities de tipo Conciliacion en base a los ids de
+	 * devolucion especificados
+	 * 
+	 * @param ids
+	 * @return
+	 */
 	@Query("FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id WHERE md.id = :ids ")
 	public List<Conciliacion> findByIdDevolucion(@Param("ids") final Integer ids);
 

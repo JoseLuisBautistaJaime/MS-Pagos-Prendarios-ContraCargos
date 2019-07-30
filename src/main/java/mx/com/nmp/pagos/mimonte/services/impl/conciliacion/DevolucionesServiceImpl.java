@@ -7,9 +7,10 @@ package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +22,19 @@ import org.springframework.transaction.annotation.Transactional;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.DevolucionesBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
@@ -45,11 +49,13 @@ import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarDevolucionesService;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
+import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 
 /**
  * @name DevolucionesServiceImpl
@@ -72,9 +78,6 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	@Autowired
 	private EstatusDevolucionRepository estatusDevolucionRepository;
 
-//	@Autowired
-//	private EstatusTransitoRepository estatusTransitoRepository;
-
 	@Autowired
 	private MovimientoTransitoRepository movimientoTransitoRepository;
 
@@ -90,6 +93,9 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	@Autowired
 	@Qualifier("estatusTransitoRepository")
 	private EstatusTransitoRepository estatusTransitoRepository;
+
+	@Autowired
+	private EstatusConciliacionRepository estatusConciliacionRepository;
 
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
@@ -234,27 +240,64 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	 */
 	@Override
 	public List<DevolucionEntidadDTO> consulta(DevolucionRequestDTO devoluciones) {
+		// Objetos necesarios
+		Optional<Entidad> entidad = null;
+		Optional<EstatusConciliacion> estatusConcliacion = null;
+		List<DevolucionEntidadDetalleDTO> result = null;
+		Map<String, Date> datesMap = null;
 
-		if (devoluciones.getEstatus() < 1)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
-		if (devoluciones.getIdEntidad() < 1)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
+		// Valida que la entidad exista
+		if (null != devoluciones && null != devoluciones.getIdEntidad())
+			entidad = entidadRepository.findById(devoluciones.getIdEntidad());
+		if (null == entidad || (null != entidad && !entidad.isPresent()))
+			throw new ConciliacionException(CatalogConstants.NO_ENTIDAD_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_060);
+		// Valida que el estatus de conciliacion exista
+		if (null != devoluciones && null != devoluciones.getEstatus())
+			estatusConcliacion = estatusConciliacionRepository.findById(devoluciones.getEstatus());
+		if (null == estatusConcliacion || (null != estatusConcliacion && !estatusConcliacion.isPresent()))
+			throw new ConciliacionException(ConciliacionConstants.ESTATUS_CONCILIACION_DOESNT_EXISTS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_091);
 
-		Calendar ini = Calendar.getInstance();
-		Calendar fin = Calendar.getInstance();
-		ini.setTime(devoluciones.getFechaDesde());
-		fin.setTime(devoluciones.getFechaHasta());
-		if (ini.after(fin))
-			throw new ConciliacionException(ConciliacionConstants.Validation.INITIAL_DATE_AFTER_FINAL_DATE,
-					CodigoError.NMP_PMIMONTE_BUSINESS_037);
+		// Realiza los ajustes de las fechas de filtrado (pone las horas en 0 a la
+		// inicial y en 23 a la final)
+		if (null != devoluciones.getFechaDesde() || null != devoluciones.getFechaHasta()) {
+			datesMap = FechasUtil.adjustDates(devoluciones.getFechaDesde(), devoluciones.getFechaHasta());
+			devoluciones.setFechaDesde(datesMap.get("startDate"));
+			devoluciones.setFechaHasta(datesMap.get("endDate"));
+		}
 
-		return DevolucionesBuilder.buildDevolucionEntidadDTOListFromDevolucionEntidadDetalleDTOList(
-				conciliacionRepository.findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursal(
-						devoluciones.getEstatus(), devoluciones.getIdEntidad(), devoluciones.getIdentificadorCuenta(),
-						devoluciones.getSucursal(), devoluciones.getFechaDesde(), devoluciones.getFechaHasta()));
+		// Realiza la consulta de la informacion
 
+		// Ninguna fecha nula
+		if (null != devoluciones.getFechaDesde() && null != devoluciones.getFechaHasta()) {
+			result = conciliacionRepository.findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursal(
+					devoluciones.getEstatus(), devoluciones.getIdEntidad(), devoluciones.getIdentificadorCuenta(),
+					devoluciones.getSucursal(), devoluciones.getFechaDesde(), devoluciones.getFechaHasta());
+		}
+
+		// La fecha final nula
+		else if (null != devoluciones.getFechaDesde() && null == devoluciones.getFechaHasta()) {
+			result = conciliacionRepository.findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaHasta(
+					devoluciones.getEstatus(), devoluciones.getIdEntidad(), devoluciones.getIdentificadorCuenta(),
+					devoluciones.getSucursal(), devoluciones.getFechaDesde());
+		}
+
+		// La fecha inicial nula
+		else if (null == devoluciones.getFechaDesde() && null != devoluciones.getFechaHasta()) {
+			result = conciliacionRepository.findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaDesde(
+					devoluciones.getEstatus(), devoluciones.getIdEntidad(), devoluciones.getIdentificadorCuenta(),
+					devoluciones.getSucursal(), devoluciones.getFechaHasta());
+		}
+
+		// Ambas fechas nulas
+		else {
+			result = conciliacionRepository.findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechas(
+					devoluciones.getEstatus(), devoluciones.getIdEntidad(), devoluciones.getIdentificadorCuenta(),
+					devoluciones.getSucursal());
+		}
+
+		// Crea el DTO de respuesta y lo regresa
+		return DevolucionesBuilder.buildDevolucionEntidadDTOListFromDevolucionEntidadDetalleDTOList(result);
 	}
 
 	/*

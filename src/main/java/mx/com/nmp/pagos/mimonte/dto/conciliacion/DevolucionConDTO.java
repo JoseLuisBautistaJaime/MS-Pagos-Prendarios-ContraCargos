@@ -25,7 +25,7 @@ public class DevolucionConDTO implements Comparable<DevolucionConDTO> {
 	private String esquemaTarjeta;
 	private String identificacionCuenta;
 	private String titular;
-	private String codigiAutorizacion;
+	private String codigoAutorizacion;
 	private Integer sucursal;
 	private Date fechaLiquidacion;
 
@@ -34,7 +34,7 @@ public class DevolucionConDTO implements Comparable<DevolucionConDTO> {
 	}
 
 	public DevolucionConDTO(Integer id, Date fecha, EstatusDevolucionDTO estatus, BigDecimal monto,
-			String esquemaTarjeta, String identificacionCuenta, String titular, String codigiAutorizacion,
+			String esquemaTarjeta, String identificacionCuenta, String titular, String codigoAutorizacion,
 			Integer sucursal, Date fechaLiquidacion) {
 
 		super();
@@ -45,7 +45,7 @@ public class DevolucionConDTO implements Comparable<DevolucionConDTO> {
 		this.esquemaTarjeta = esquemaTarjeta;
 		this.identificacionCuenta = identificacionCuenta;
 		this.titular = titular;
-		this.codigiAutorizacion = codigiAutorizacion;
+		this.codigoAutorizacion = codigoAutorizacion;
 		this.sucursal = sucursal;
 		this.fechaLiquidacion = fechaLiquidacion;
 	}
@@ -106,12 +106,12 @@ public class DevolucionConDTO implements Comparable<DevolucionConDTO> {
 		this.titular = titular;
 	}
 
-	public String getCodigiAutorizacion() {
-		return codigiAutorizacion;
+	public String getCodigoAutorizacion() {
+		return codigoAutorizacion;
 	}
 
-	public void setCodigiAutorizacion(String codigiAutorizacion) {
-		this.codigiAutorizacion = codigiAutorizacion;
+	public void setCodigoAutorizacion(String codigoAutorizacion) {
+		this.codigoAutorizacion = codigoAutorizacion;
 	}
 
 	public Integer getSucursal() {
@@ -134,7 +134,7 @@ public class DevolucionConDTO implements Comparable<DevolucionConDTO> {
 	public String toString() {
 		return "DevolucionConDTO [id=" + id + ", fecha=" + fecha + ", estatus=" + estatus + ", monto=" + monto
 				+ ", esquemaTarjeta=" + esquemaTarjeta + ", identificacionCuenta=" + identificacionCuenta + ", titular="
-				+ titular + ", codigiAutorizacion=" + codigiAutorizacion + ", sucursal=" + sucursal
+				+ titular + ", codigoAutorizacion=" + codigoAutorizacion + ", sucursal=" + sucursal
 				+ ", fechaLiquidacion=" + fechaLiquidacion + "]";
 	}
 

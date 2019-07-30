@@ -27,6 +27,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
@@ -88,12 +89,12 @@ public class DevolucionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultar(@RequestBody DevolucionRequestDTO devolucionDTO) {
-		List<DevolucionEntidadDTO> respuesta = devolucionesServiceImpl.consulta(devolucionDTO);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta devoluciones exitosa.",
-				respuesta);
+		List<DevolucionEntidadDTO> respuesta = null;
+		ValidadorConciliacion.validateFechasPrimary(devolucionDTO.getFechaDesde(), devolucionDTO.getFechaHasta());
+		respuesta = devolucionesServiceImpl.consulta(devolucionDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				ConciliacionConstants.SUCCESSFUL_RETURNS_CONSULTATION, respuesta);
 	}
-
 
 	/**
 	 * Realiza la administración de devoluciones a nivel entidad - Actualización de
@@ -119,15 +120,17 @@ public class DevolucionesController {
 
 		// Validacion
 		if (!ValidadorConciliacion.validateActualizarDevolucionRequest(devolucionUpdtDTOList) || userRequest == null) {
-			throw new ConciliacionException("Los datos para la liquidacion son incorrectos", CodigoError.NMP_PMIMONTE_0001);
+			throw new ConciliacionException("Los datos para la liquidacion son incorrectos",
+					CodigoError.NMP_PMIMONTE_0001);
 		}
 
 		// Actualizacion
-		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl.actualizar(devolucionUpdtDTOList, userRequest);
+		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl.actualizar(devolucionUpdtDTOList,
+				userRequest);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualización devoluciones exitosa.", devolucionEntidadDTOList);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualización devoluciones exitosa.",
+				devolucionEntidadDTOList);
 	}
-
 
 	/**
 	 * Realiza la administración de devoluciones a nivel entidad - Enviar solicitud
