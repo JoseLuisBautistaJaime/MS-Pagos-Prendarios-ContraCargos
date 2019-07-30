@@ -35,13 +35,23 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	public List<MovimientoTransito> findByIds(List<Integer> lst);
 
 	/**
-	 * Búsqueda de los movimientos en transito a partir del folio.
+	 * Busqueda de los movimientos en transito a partir del folio.
 	 * 
 	 * @param folio
 	 * @return
 	 */
-	@Query("SELECT mt FROM MovimientoConciliacion mc INNER JOIN MovimientoTransito mt ON mc.id = mt.id WHERE mt.idConciliacion = :folio")
+	@Query("SELECT mt FROM MovimientoTransito mt WHERE mt.idConciliacion = :folio")
 	public List<MovimientoTransito> findByIdConciliacion(@Param("folio") Integer folio);
+
+	/**
+	 * Busqueda de los movimientos en transito a partir del folio (para validar
+	 * cuales son candidatas a solicitud de pagos).
+	 * 
+	 * @param folio
+	 * @return
+	 */
+	@Query("SELECT mt FROM MovimientoTransito mt JOIN FETCH mt.movimientoMidas WHERE mt.idConciliacion = :folio AND mt.estatus = (SELECT et.id FROM EstatusTransito et WHERE et.nombre LIKE '%Solicitada%')")
+	public List<MovimientoTransito> findByIdConciliacionPagos(@Param("folio") Integer folio);
 
 	/**
 	 * Obtiene los movimientos en transito.
@@ -61,16 +71,30 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @param idMovimientos
 	 * @return
 	 */
-	@Query("SELECT mt FROM MovimientoTransito mt WHERE mt.folio = :folio AND mt.id IN :idMovimientos")
+	@Query("SELECT mt FROM MovimientoTransito mt INNER JOIN MovimientoConciliacion mc ON mt.id = mc.id WHERE mc.idConciliacion = :folio AND mt.id IN :idMovimientos")
 	public List<MovimientoTransito> findByFolioAndIds(@Param("folio") final Integer folio,
 			@Param("idMovimientos") final List<Integer> idMovimientos);
 
 	/**
 	 * Obtiene los movimientos en transito por movimiento midas
+	 * 
 	 * @param folio
 	 * @param idMovimiento
 	 * @return
 	 */
-	public List<MovimientoTransito> findByIdConciliacionAndMovimientoMidasId(Integer idConciliacion, long idMovimientoMidas);
+	public List<MovimientoTransito> findByIdConciliacionAndMovimientoMidasId(Integer idConciliacion,
+			long idMovimientoMidas);
+
+	/**
+	 * Regresa una bandera indicando con un 0 si los estatus a actualizar son
+	 * incorrectos y con un 1 si son correctos
+	 * 
+	 * @param ids
+	 * @param estatus
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT mt.id FROM to_movimiento_transito mt WHERE mt.id IN(:ids) AND mt.estatus <> :estatus) IS NOT NULL THEN 0 ELSE 1 END AS RESULT")
+	public Object verifyIfIdsHaveRightEstatus(@Param("ids") final List<Integer> ids,
+			@Param("estatus") final Integer estatus);
 
 }

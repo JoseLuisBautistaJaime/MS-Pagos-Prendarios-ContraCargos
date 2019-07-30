@@ -27,7 +27,6 @@ import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ReportePagosService;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -84,28 +83,8 @@ public class ReportesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getReportePagosEnLinea(@RequestBody ReporteRequestDTO reporteRequestDTO) {
-		if (null != reporteRequestDTO && null != reporteRequestDTO.getFechaDesde()
-				&& null != reporteRequestDTO.getFechaHasta()
-				&& !ValidadorConciliacion.validateFechasWithThemselves(reporteRequestDTO.getFechaDesde(),
-						reporteRequestDTO.getFechaHasta()))
-			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_078);
-		if (null != reporteRequestDTO && null != reporteRequestDTO.getFechaDesde()
-				&& null != reporteRequestDTO.getFechaHasta()
-				&& !ValidadorConciliacion.validateFechasWithCurrent(reporteRequestDTO.getFechaDesde(),
-						reporteRequestDTO.getFechaHasta()))
-			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_082);
-		if (null != reporteRequestDTO && null != reporteRequestDTO.getFechaDesde()
-				&& null == reporteRequestDTO.getFechaHasta()
-				&& !ValidadorConciliacion.validateFecha(reporteRequestDTO.getFechaDesde()))
-			throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
-					CodigoError.NMP_PMIMONTE_BUSINESS_088);
-		if (null != reporteRequestDTO && null == reporteRequestDTO.getFechaDesde()
-				&& null != reporteRequestDTO.getFechaHasta()
-				&& !ValidadorConciliacion.validateFecha(reporteRequestDTO.getFechaHasta()))
-			throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
-					CodigoError.NMP_PMIMONTE_BUSINESS_088);
+		ValidadorConciliacion.validateFechasPrimary(reporteRequestDTO.getFechaDesde(),
+				reporteRequestDTO.getFechaHasta());
 		ReportePagosEnLineaOuterDTO reportePagosEnLineaOuterDTO = reportePagosService
 				.getReportePagosEnLinea(reporteRequestDTO);
 		if (null == reportePagosEnLineaOuterDTO || null == reportePagosEnLineaOuterDTO.getMovimientos()

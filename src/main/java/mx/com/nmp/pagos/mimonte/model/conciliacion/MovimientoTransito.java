@@ -32,6 +32,7 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 	@JoinColumn(name = "estatus")
 	private EstatusTransito estatus;
 	
+	// La referencia del pedido (NO ES EL FOLIO DE CONCILIACION)
 	@Column(name = "folio")
 	private Integer folio;
 	

@@ -31,6 +31,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepositor
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosPagoRepository;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoPagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -38,6 +39,7 @@ import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 
@@ -98,7 +100,7 @@ public class SolicitarPagosService {
 	 */
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
-	
+
 	/**
 	 * Objeto para consumo de servicio Rest para envio de e-mail
 	 */
@@ -130,20 +132,23 @@ public class SolicitarPagosService {
 	public void solicitarPagos(SolicitarPagosRequestDTO requestDTO, final String createdBy) {
 		// Declaracion de objetos y variables necesarios
 		List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList = null;
-		List<MovimientoConciliacion> movimientoConciliacionList = null;
+//		List<MovimientoConciliacion> movimientoConciliacionList = null;
 		List<MovimientoTransito> movimientoTransitoList = null;
 		BusRestMailDTO generalBusMailDTO = null;
 
 		// Valida que la conciliacion exista
 		conciliacionDataValidator.validateFolioExists(requestDTO.getFolio());
-		
-		// Valida que los ids existan y tengan relacion con el folio de conciliacion ingresado
-		conciliacionDataValidator.validateIdsMovimientosConciliacionExists(requestDTO.getFolio(), requestDTO.getIdMovimientos());
-		
+
+		// Valida que los ids existan y tengan relacion con el folio de conciliacion
+		// ingresado
+		conciliacionDataValidator.validateIdsMovimientosConciliacionExists(requestDTO.getFolio(),
+				requestDTO.getIdMovimientos());
+
 		// Consultar datos, actualizacion y generacion de registros en pagos
 		try {
 			// Consulta
-			solicitarPagosMailDataDTOList = consultarMovimientos(solicitarPagosMailDataDTOList, requestDTO.getFolio(), requestDTO.getIdMovimientos());
+			solicitarPagosMailDataDTOList = consultarMovimientos(solicitarPagosMailDataDTOList, requestDTO.getFolio(),
+					requestDTO.getIdMovimientos());
 		} catch (Exception ex) {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_GET_MOVIMIENTOS_TRANSITO,
 					CodigoError.NMP_PMIMONTE_BUSINESS_038);
@@ -152,22 +157,26 @@ public class SolicitarPagosService {
 			// Actualiza
 			actualizarMovimientosTransito(movimientoTransitoList, requestDTO.getFolio(), requestDTO.getIdMovimientos());
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_UPDATE_MOVIMIENTOS_TRANSITO,
 					CodigoError.NMP_PMIMONTE_BUSINESS_039);
 		}
-		try {
-			// Inserta
-			insertaMovimientosPago(movimientoConciliacionList, requestDTO.getFolio(),
-					requestDTO.getIdMovimientos(), solicitarPagosMailDataDTOList, createdBy);
-		} catch (Exception ex) {
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_INSERT_MOVIMIENTOS_PAGO,
-					CodigoError.NMP_PMIMONTE_BUSINESS_040);
-		}
+		// TODO: Eliminar esta bloque comentado una vez que se haga la prueba
+//		try {
+//			// Inserta
+//			insertaMovimientosPago(movimientoConciliacionList, requestDTO.getFolio(),
+//					requestDTO.getIdMovimientos(), solicitarPagosMailDataDTOList, createdBy);
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_INSERT_MOVIMIENTOS_PAGO,
+//					CodigoError.NMP_PMIMONTE_BUSINESS_040);
+//		}
 		// Construye e-mail
 		try {
 			generalBusMailDTO = construyeEMailVelocity(solicitarPagosMailDataDTOList);
 
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL,
 					CodigoError.NMP_PMIMONTE_BUSINESS_041);
 		}
@@ -175,6 +184,7 @@ public class SolicitarPagosService {
 			// Envia e-mail
 			this.busMailRestService.enviaEmail(generalBusMailDTO);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL,
 					CodigoError.NMP_PMIMONTE_BUSINESS_042);
 		}
@@ -204,9 +214,11 @@ public class SolicitarPagosService {
 	public void actualizarMovimientosTransito(List<MovimientoTransito> movimientoTransitoList, Integer folio,
 			List<Integer> idsMovimientos) {
 		movimientoTransitoList = movimientoTransitoRepository.findByFolioAndIds(folio, idsMovimientos);
-		if (null == movimientoTransitoList || movimientoTransitoList.isEmpty())
+		if (null == movimientoTransitoList || movimientoTransitoList.isEmpty()) {
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
+		}
+
 		for (MovimientoTransito mt : movimientoTransitoList) {
 			mt.setEstatus(new EstatusTransito(2));
 		}
@@ -292,6 +304,26 @@ public class SolicitarPagosService {
 		model.put("transaccion", mc.transaccion);
 		model.put("elements", solicitarPagosMailDataDTOList);
 		return model;
+	}
+
+	public void insertaMovimientosPagoFinal(final Integer folio, final String requestUser) {
+		List<MovimientoTransito> movimientosTransito = null;
+		List<MovimientoPago> movimientosPago = null;
+		List<MovimientoPagoDTO> movimientosPagoDTO = null;
+		if (null != folio) {
+			movimientosTransito = movimientoTransitoRepository.findByIdConciliacionPagos(folio);
+			if (null != movimientosTransito && !movimientosTransito.isEmpty()) {
+				movimientosPagoDTO = MovimientosBuilder
+						.buildMovimientoPagoDTOListFromMovimientoTransitoList(movimientosTransito);
+				movimientoTransitoRepository.deleteInBatch(movimientosTransito);
+				movimientoTransitoRepository.flush();
+				if (null != movimientosPagoDTO && !movimientosPagoDTO.isEmpty()) {
+					movimientosPago = MovimientosBuilder
+							.buildMovimientoPagoListFromMovimientoPagoDTOList(movimientosPagoDTO, folio, requestUser);
+					movimientosPagoRepository.saveAll(movimientosPago);
+				}
+			}
+		}
 	}
 
 }

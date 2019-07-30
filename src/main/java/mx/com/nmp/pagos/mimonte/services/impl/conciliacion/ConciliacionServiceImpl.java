@@ -34,6 +34,7 @@ import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoComisionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.SubEstatusConciliacionBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
@@ -81,6 +82,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.LayoutsService;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 import mx.com.nmp.pagos.mimonte.util.MiniMaquinaEstadosConciliacion;
 
@@ -133,13 +135,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	@Autowired
 	private ConciliacionHelper conciliacionHelper;
-	
+
 	@Autowired
 	private LayoutsService layoutsService;
-	
+
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
-	
+
 	/**
 	 * Mini maquina de estados para actualizacion de subestatus de conciliacion
 	 */
@@ -159,6 +161,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Autowired
 	@Qualifier("actividadPaginRepository")
 	ActividadPaginRepository actividadPaginRepository;
+
+	/**
+	 * Repository para la insercion de movimientos pago
+	 */
+	@Autowired
+	@Qualifier("solicitarPagosService")
+	private SolicitarPagosService solicitarPagosService;
 
 	/**
 	 * Registro de actividades
@@ -260,15 +269,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(conciliacion.getId(),
 				"Se guarda la conciliacion con el folio " + conciliacion.getId() + " con la cuenta "
-						+ (null != conciliacionRequestDTO && null != conciliacionRequestDTO.getCuenta()
-								&& null != conciliacionRequestDTO.getCuenta().getId()
-										? conciliacionRequestDTO.getCuenta().getId()
-										: "")
+						+ (cuenta.isPresent() && null != cuenta.get().getNumeroCuenta() ? cuenta.get().getNumeroCuenta()
+								: "")
 						+ " y la entidad "
-						+ (null != conciliacionRequestDTO && null != conciliacionRequestDTO.getEntidad()
-								&& null != conciliacionRequestDTO.getEntidad().getId()
-										? conciliacionRequestDTO.getEntidad().getId()
-										: ""),
+						+ (entidad.isPresent() && null != entidad.get().getNombre() ? entidad.get().getNombre() : ""),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.GENERACION_CONCILIACION);
 
 		return ConciliacionBuilder.buildConciliacionDTOFromConciliacionCuentaAndEntidad(conciliacion, cuenta.get(),
@@ -394,35 +398,72 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public List<ConsultaConciliacionDTO> consulta(ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
 
+		// Declaracion de objetos necesarios
 		List<ConsultaConciliacionDTO> result = null;
+		Optional<Entidad> entidad = null;
+		Optional<EstatusConciliacion> estatusConciliacion = null;
 
-		// Validación de la fecha final no sea menor que la fecha inicial.
-		if (consultaConciliacionRequestDTO.getFechaDesde() != null
-				&& consultaConciliacionRequestDTO.getFechaHasta() != null) {
-			if (consultaConciliacionRequestDTO.getFechaHasta().before(consultaConciliacionRequestDTO.getFechaDesde()))
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-						CodigoError.NMP_PMIMONTE_0008);
+		// Ajuste de fechas para filtros
+		if (null == consultaConciliacionRequestDTO.getFechaDesde()
+				&& null != consultaConciliacionRequestDTO.getFechaHasta()) {
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.YEAR, 1975);
+			cal.set(Calendar.MONTH, 1);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			consultaConciliacionRequestDTO.setFechaDesde(cal.getTime());
+		}
+		if (null != consultaConciliacionRequestDTO.getFechaDesde()
+				&& null == consultaConciliacionRequestDTO.getFechaHasta()) {
+			Calendar cal = Calendar.getInstance();
+			consultaConciliacionRequestDTO.setFechaHasta(cal.getTime());
+		}
+		if (null != consultaConciliacionRequestDTO.getFechaDesde()
+				&& null != consultaConciliacionRequestDTO.getFechaHasta()) {
+			Calendar ini = Calendar.getInstance();
+			Calendar fin = Calendar.getInstance();
+			ini.setTime(consultaConciliacionRequestDTO.getFechaDesde());
+			fin.setTime(consultaConciliacionRequestDTO.getFechaHasta());
+			ini.set(Calendar.HOUR_OF_DAY, 0);
+			ini.set(Calendar.MINUTE, 0);
+			ini.set(Calendar.SECOND, 0);
+			ini.set(Calendar.MILLISECOND, 0);
+			fin.set(Calendar.HOUR_OF_DAY, 23);
+			fin.set(Calendar.MINUTE, 59);
+			fin.set(Calendar.SECOND, 59);
+			fin.set(Calendar.MILLISECOND, 59);
+			consultaConciliacionRequestDTO.setFechaDesde(ini.getTime());
+			consultaConciliacionRequestDTO.setFechaHasta(fin.getTime());
 		}
 
-		// Búsqueda y validación del idEntidad.
-		if (consultaConciliacionRequestDTO.getIdEntidad() != null
-				&& consultaConciliacionRequestDTO.getIdEntidad() > 0) {
-			Optional<Entidad> entidad = entidadRepository.findById(consultaConciliacionRequestDTO.getIdEntidad());
-			if (!entidad.isPresent()) {
-				throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
-						CodigoError.NMP_PMIMONTE_0009);
-			}
+		// Valida que el folio especificado exista
+		if (null != consultaConciliacionRequestDTO && null != consultaConciliacionRequestDTO.getFolio())
+			conciliacionDataValidator.validateFolioExists(consultaConciliacionRequestDTO.getFolio());
+
+		// Valida que la entidad especificada exista
+		if (null != consultaConciliacionRequestDTO && null != consultaConciliacionRequestDTO.getIdEntidad()) {
+			entidad = entidadRepository.findById(consultaConciliacionRequestDTO.getIdEntidad());
+			if (!entidad.isPresent())
+				throw new ConciliacionException(CatalogConstants.NO_ENTIDAD_FOUND,
+						CodigoError.NMP_PMIMONTE_BUSINESS_060);
 		}
 
-		// Búsqueda del estatus de la conciliacion a partir de idEstatus.
-		if (consultaConciliacionRequestDTO.getIdEstatus() != null
-				&& consultaConciliacionRequestDTO.getIdEstatus() > 0) {
-			Optional<EstatusConciliacion> estatusConciliacion = estatusConciliacionRepository
-					.findById(consultaConciliacionRequestDTO.getIdEstatus());
+		// Valida que el id de estatus de conciliacion especificado exista
+		if (null != consultaConciliacionRequestDTO && null != consultaConciliacionRequestDTO.getIdEstatus()) {
+			estatusConciliacion = estatusConciliacionRepository.findById(consultaConciliacionRequestDTO.getIdEstatus());
 			if (!estatusConciliacion.isPresent())
-				throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
-						CodigoError.NMP_PMIMONTE_0009);
+				throw new ConciliacionException(ConciliacionConstants.ESTATUS_CONCILIACION_DOESNT_EXISTS,
+						CodigoError.NMP_PMIMONTE_BUSINESS_091);
 		}
+
+		// TODO: (iaguilar) Validar si quitar esta parte dado que estas fechas se
+		// validan en la capa de controlador
+		// Validación de la fecha final no sea menor que la fecha inicial.
+//		if (consultaConciliacionRequestDTO.getFechaDesde() != null
+//				&& consultaConciliacionRequestDTO.getFechaHasta() != null) {
+//			if (consultaConciliacionRequestDTO.getFechaHasta().before(consultaConciliacionRequestDTO.getFechaDesde()))
+//				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+//						CodigoError.NMP_PMIMONTE_0008);
+//		}
 
 		if (null != consultaConciliacionRequestDTO.getFechaDesde()
 				&& null != consultaConciliacionRequestDTO.getFechaHasta()) {
@@ -535,7 +576,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			conciliacion.setLastModifiedDate(new Date());
 
 			conciliacionRepository.save(conciliacion);
-			
+
+			solicitarPagosService.insertaMovimientosPagoFinal(idConciliacion, usuario);
+
 			// Se crean los layouts correspondientes
 			layoutsService.enviarConciliacion(Long.valueOf(idConciliacion));
 
@@ -601,10 +644,18 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				new SubEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus()), usuario, new Date(),
 				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())),
 				actualizarSubEstatusRequestDTO.getDescripcion());
+
+		// Se obtienen los datos del subestatus para el registro de actividades
+		Optional<SubEstatusConciliacion> subEstatus = subEstatusConciliacionRepository
+				.findById(actualizarSubEstatusRequestDTO.getIdSubEstatus());
+
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
 				"Se actualiza el subestatus de la conciliacion " + actualizarSubEstatusRequestDTO.getFolio()
-						+ " a un subestatus: " + actualizarSubEstatusRequestDTO.getIdSubEstatus(),
+						+ " a un subestatus: "
+						+ (subEstatus.isPresent() && null != subEstatus.get().getDescription()
+								? subEstatus.get().getDescription()
+								: actualizarSubEstatusRequestDTO.getIdSubEstatus()),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZACION_ESTATUS_CONCILIACION);
 	}
 
@@ -675,6 +726,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	public List<ConsultaActividadDTO> consultaActividades(ConsultaActividadesRequest consultaActividadesRequest) {
 		List<ConsultaActividadDTO> consultaActividadDTOList = null;
 		try {
+			if (null != consultaActividadesRequest && null != consultaActividadesRequest.getFolio())
+				conciliacionDataValidator.validateFolioExists(consultaActividadesRequest.getFolio());
+
 			if (null == consultaActividadesRequest.getFechaDesde()
 					&& null != consultaActividadesRequest.getFechaHasta()) {
 				Calendar cal = Calendar.getInstance();
@@ -751,13 +805,17 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		List<MovimientoTransito> movsTransito = null;
 		try {
 			movsTransito = this.movimientoTransitoRepository.findByIdConciliacion(conciliacion.getId());
-			if(null == movsTransito || movsTransito.isEmpty())
-				throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
+			if (null == movsTransito || movsTransito.isEmpty())
+				throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 						CodigoError.NMP_PMIMONTE_0009);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("Error al consultar los movimientos en transito",
-					CodigoError.NMP_PMIMONTE_9999);
+			if (ex instanceof InformationNotFoundException)
+				throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+						CodigoError.NMP_PMIMONTE_0009);
+			else
+				throw new ConciliacionException("Error al consultar los movimientos en transito",
+						CodigoError.NMP_PMIMONTE_9999);
 		}
 
 		return MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(movsTransito);

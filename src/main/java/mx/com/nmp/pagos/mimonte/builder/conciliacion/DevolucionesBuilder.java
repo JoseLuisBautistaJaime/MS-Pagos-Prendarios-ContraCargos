@@ -66,7 +66,7 @@ public class DevolucionesBuilder {
 			devolucionConDTO.setEsquemaTarjeta(movimientoDevolucion.getEsquemaTarjeta());
 			devolucionConDTO.setIdentificacionCuenta(movimientoDevolucion.getIdentificadorCuenta());
 			devolucionConDTO.setTitular(movimientoDevolucion.getTitular());
-			devolucionConDTO.setCodigiAutorizacion(movimientoDevolucion.getCodigoAutorizacion());
+			devolucionConDTO.setCodigoAutorizacion(movimientoDevolucion.getCodigoAutorizacion());
 			devolucionConDTO.setSucursal(movimientoDevolucion.getSucursal());
 			devolucionConDTO.setFechaLiquidacion(movimientoDevolucion.getFechaLiquidacion());
 		}

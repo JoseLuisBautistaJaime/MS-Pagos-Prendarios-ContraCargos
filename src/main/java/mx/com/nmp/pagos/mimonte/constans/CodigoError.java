@@ -19,7 +19,7 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_0005("No existen registros para el catalogo especificado",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
-	NMP_PMIMONTE_0009("No existen informacion para mostrar",
+	NMP_PMIMONTE_0009("No existe informacion para mostrar",
 			TipoError.CLIENTE, SeveridadError.BAJA),
 	NMP_PMIMONTE_0006("Cuerpo de la peticion vacio o ocurrio un error al leerla",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
@@ -203,10 +203,18 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_086("Error durante la validacion del folio de conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
-	NMP_PMIMONTE_BUSINESS_087("No hay relacion entre el folio y los movimientos ungresados o no existe uno o mas movimientos ingresados",
+	NMP_PMIMONTE_BUSINESS_087("No hay relacion entre el folio y los movimientos ingresados o no existe uno o mas movimientos ingresados",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_088("La fecha ingresada es incorrecta",
-			TipoError.CLIENTE, SeveridadError.MEDIA)
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_089("Se genero un error en la otencion del estatus de validacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_090("Uno o mas ids de movimientos ya han sido marcados como devolucion antes",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_091("El estatus de conciliacion expecificado no existe",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_092("No existen movimientos-devolucion pendientes de solicitud",
+			TipoError.CLIENTE, SeveridadError.MEDIA)	
 	;
 
 	/**

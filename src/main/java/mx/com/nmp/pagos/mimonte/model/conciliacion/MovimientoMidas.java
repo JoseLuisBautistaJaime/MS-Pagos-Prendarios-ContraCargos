@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -131,7 +132,7 @@ public class MovimientoMidas implements Comparable<MovimientoMidas>, java.io.Ser
 	@Column(name = "id_tipo_contrato", nullable = true)
 	private Integer idTipoContrato;
 
-	@OneToMany(mappedBy = "movimientoMidas")
+	@OneToMany(mappedBy = "movimientoMidas", fetch = FetchType.LAZY)
 	private Set<MovimientoConciliacion> movimientoConciliacionSet;
 
 	public MovimientoMidas(Long id) {
