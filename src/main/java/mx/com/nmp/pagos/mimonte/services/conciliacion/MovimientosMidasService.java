@@ -4,35 +4,26 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovimientosMidasRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasBatchDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @name MovimientosMidasService
@@ -182,11 +173,15 @@ public class MovimientosMidasService {
 			List<MovimientoMidas> movimientoMidasList = MovimientosBuilder
 					.buildMovimientoMidasListFromMovimientoProcesosNocturnosListResponseDTO(
 							movimientoProcesosNocturnosDTOList, reporte.getId());
-			movimientosMidasRepository.saveAll(movimientoMidasList);
+
+			if (!CollectionUtils.isEmpty(movimientoMidasList)) {
+				movimientosMidasRepository.saveAll(movimientoMidasList);
+			}
+
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(movimientoProcesosNocturnosDTOList.getFolio(),
 					"Se dan de alta " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
-							+ " movimientos nocturnos, para  el folio " + movimientoProcesosNocturnosDTOList.getFolio(),
+							+ " movimientos nocturnos, para el folio " + movimientoProcesosNocturnosDTOList.getFolio(),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 		} catch (Exception ex) {
 			ex.printStackTrace();

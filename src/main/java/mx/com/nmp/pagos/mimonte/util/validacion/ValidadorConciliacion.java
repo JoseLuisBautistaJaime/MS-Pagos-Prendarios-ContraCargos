@@ -157,8 +157,10 @@ public interface ValidadorConciliacion {
 
 			assertNotNull(listRequestDTO.getMovimientos());
 
-			if (CollectionUtils.isNotEmpty(listRequestDTO.getMovimientos())) {
-				for (MovimientoProveedorDTO movimientoProveedorDTO : listRequestDTO.getMovimientos()) {
+			valido = true;
+
+//			if (CollectionUtils.isNotEmpty(listRequestDTO.getMovimientos())) {
+//				for (MovimientoProveedorDTO movimientoProveedorDTO : listRequestDTO.getMovimientos()) {
 					/*
 					 * assertNotNull(movimientoProveedorDTO.getAmount());
 					 * assertNotNull(movimientoProveedorDTO.getAuthorization());
@@ -195,10 +197,10 @@ public interface ValidadorConciliacion {
 					 * assertNotNull(movimientoProveedorDTO.getTransactionType());
 					 * assertNotNull(movimientoProveedorDTO.getIdMovimiento());
 					 */
-					movimientoProveedorDTO.setId(null);
-				}
-				valido = true;
-			}
+//					movimientoProveedorDTO.setId(null);
+//				}
+//				valido = true;
+//			}
 		} catch (java.lang.AssertionError | Exception ex) {
 		}
 		return valido;
