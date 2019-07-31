@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -132,7 +133,6 @@ public class SolicitarPagosService {
 	public void solicitarPagos(SolicitarPagosRequestDTO requestDTO, final String createdBy) {
 		// Declaracion de objetos y variables necesarios
 		List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList = null;
-//		List<MovimientoConciliacion> movimientoConciliacionList = null;
 		List<MovimientoTransito> movimientoTransitoList = null;
 		BusRestMailDTO generalBusMailDTO = null;
 
@@ -143,6 +143,13 @@ public class SolicitarPagosService {
 		// ingresado
 		conciliacionDataValidator.validateIdsMovimientosConciliacionExists(requestDTO.getFolio(),
 				requestDTO.getIdMovimientos());
+
+		// Valida que los ids tengan un estatus 1
+		Boolean val = (movimientoConciliacionRepository.validaFolioAndIdsForMovPagos(requestDTO.getFolio(),
+				requestDTO.getIdMovimientos())) == BigInteger.ONE;
+		if (!val)
+			throw new ConciliacionException(ConciliacionConstants.WRONG_MOVIMIENTOS_ESTATUS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_093);
 
 		// Consultar datos, actualizacion y generacion de registros en pagos
 		try {
@@ -161,16 +168,6 @@ public class SolicitarPagosService {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_UPDATE_MOVIMIENTOS_TRANSITO,
 					CodigoError.NMP_PMIMONTE_BUSINESS_039);
 		}
-		// TODO: Eliminar esta bloque comentado una vez que se haga la prueba
-//		try {
-//			// Inserta
-//			insertaMovimientosPago(movimientoConciliacionList, requestDTO.getFolio(),
-//					requestDTO.getIdMovimientos(), solicitarPagosMailDataDTOList, createdBy);
-//		} catch (Exception ex) {
-//			ex.printStackTrace();
-//			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_INSERT_MOVIMIENTOS_PAGO,
-//					CodigoError.NMP_PMIMONTE_BUSINESS_040);
-//		}
 		// Construye e-mail
 		try {
 			generalBusMailDTO = construyeEMailVelocity(solicitarPagosMailDataDTOList);
@@ -306,6 +303,12 @@ public class SolicitarPagosService {
 		return model;
 	}
 
+	/**
+	 * Inserta los movimientos transito que se marcaron como solicitud de pago
+	 * 
+	 * @param folio
+	 * @param requestUser
+	 */
 	public void insertaMovimientosPagoFinal(final Integer folio, final String requestUser) {
 		List<MovimientoTransito> movimientosTransito = null;
 		List<MovimientoPago> movimientosPago = null;

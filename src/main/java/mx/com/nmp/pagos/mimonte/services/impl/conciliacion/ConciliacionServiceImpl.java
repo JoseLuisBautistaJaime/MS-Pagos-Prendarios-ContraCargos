@@ -75,7 +75,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.ProcesosMaquinaEstadosConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -629,8 +628,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Se valida que el estatus al que se quiere actualizar sea correcto en base a
 		// la maquina de estados de sub-estatus conciliacion
 		subEstatusValido = miniMaquinaEstadosConciliacion.checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(
-				actualizarSubEstatusRequestDTO.getFolio(), ProcesosMaquinaEstadosConciliacion.ALTA_REPORTES,
-				actualizarSubEstatusRequestDTO.getIdSubEstatus());
+				actualizarSubEstatusRequestDTO.getFolio(), actualizarSubEstatusRequestDTO.getIdSubEstatus());
 		if (null != subEstatusValido && !subEstatusValido)
 			throw new ConciliacionException(ConciliacionConstants.WRONG_ORDER_SUB_STATUS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_029);

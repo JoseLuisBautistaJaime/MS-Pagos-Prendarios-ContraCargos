@@ -137,11 +137,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, c.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
-			+ " WHERE ( :idEstatus IS NULL OR c.estatus.id = :idEstatus ) AND "
+			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND "
-			+ " c.createdDate BETWEEN :fechaDesde AND :fechaHasta")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha BETWEEN :fechaDesde AND :fechaHasta")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursal(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
 			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
@@ -159,10 +158,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, c.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
-			+ " WHERE ( :idEstatus IS NULL OR c.estatus.id = :idEstatus ) AND "
+			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " c.createdDate >= :fechaDesde")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha >= :fechaDesde")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaHasta(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
 			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
@@ -180,10 +179,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, c.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
-			+ " WHERE ( :idEstatus IS NULL OR c.estatus.id = :idEstatus ) AND "
+			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " c.createdDate <= :fechaHasta")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha <= :fechaHasta")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaDesde(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
 			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
@@ -200,7 +199,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, c.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
-			+ " WHERE ( :idEstatus IS NULL OR c.estatus.id = :idEstatus ) AND "
+			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
 			+ "( :sucursal IS NULL OR md.sucursal = :sucursal )")
@@ -319,15 +318,24 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 
 	/**
 	 * Regresa un valor verdadero (numero 1) si el subestatus recibido es valido
-	 * para el proceso y subestatus inicial indicado
+	 * para el subestatus inicial indicado
 	 * 
 	 * @param folio
-	 * @param nombreProceso
 	 * @param idSubEstatus
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN :idSubEstatus IN (SELECT id_sub_estatus_posible FROM tk_maquina_estados_subestatus_conciliacion WHERE nombre_proceso = :nombreProceso AND id_sub_estatus_inicial = (SELECT id_sub_estatus_conciliacion FROM to_conciliacion WHERE id = :folio)) THEN TRUE ELSE FALSE END AS RESULT")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN :idSubEstatus IN (SELECT id_sub_estatus_posible FROM tk_maquina_estados_subestatus_conciliacion WHERE id_sub_estatus_inicial = (SELECT id_sub_estatus_conciliacion FROM to_conciliacion WHERE id = :folio)) THEN TRUE ELSE FALSE END AS RESULT")
 	public Object checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(@Param("folio") final Integer folio,
-			@Param("nombreProceso") final String nombreProceso, @Param("idSubEstatus") final Long idSubEstatus);
+			@Param("idSubEstatus") final Long idSubEstatus);
+
+	/**
+	 * Regresa un nombre de entidad y un numero de cuenta por folio de conciliacion
+	 * asociado en la tabla to_conciliacion
+	 * 
+	 * @param folio
+	 * @return
+	 */
+	@Query("SELECT en.nombre AS entidad, cta.numeroCuenta AS cuenta FROM Entidad en INNER JOIN Conciliacion c ON en.id = c.entidad.id INNER JOIN Cuenta cta ON cta.id = c.cuenta.id WHERE c.id = :folio")
+	public Map<String, Object> getEntidadNombreAndCuentaNumeroByConciliacionId(@Param("folio") final Integer folio);
 
 }

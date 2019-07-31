@@ -26,7 +26,6 @@ public class DevolucionRequestDTO implements Comparable<DevolucionRequestDTO>{
 	
 	public DevolucionRequestDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 

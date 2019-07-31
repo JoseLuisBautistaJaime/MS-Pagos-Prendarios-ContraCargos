@@ -214,7 +214,9 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_091("El estatus de conciliacion expecificado no existe",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_092("No existen movimientos-devolucion pendientes de solicitud",
-			TipoError.CLIENTE, SeveridadError.MEDIA)	
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_093("El estatus de uno o mas movimientos es incorrecto",
+			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 
 	/**

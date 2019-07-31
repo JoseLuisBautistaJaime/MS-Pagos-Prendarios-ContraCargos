@@ -109,7 +109,8 @@ mimonte:
         title: "Solicitud de Devoluciones"
         velocityTemplate: "/templates/solicitudDevoluciones.vm"
         bodyText1: "Buena tarde."
-        bodyText2: "Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario a la cuenta ${numeroCuenta} con la afiliación ${afiliacion}"
+        bodyText2: "Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario en la entidad ${entidad}, a la cuenta ${numeroCuenta}"
+#        bodyText2: "Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario a la cuenta ${numeroCuenta} con la afiliación ${afiliacion}"
     restTemplate:
       maxAttempt: 3
       retryTimeInterval: 3000

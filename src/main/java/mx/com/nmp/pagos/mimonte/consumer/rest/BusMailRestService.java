@@ -50,11 +50,9 @@ public class BusMailRestService extends AbstractOAuth2RestService {
 	 */
 	@SuppressWarnings("unchecked")
 	public void enviaEmail(BusRestMailDTO body) {
-
 		// Se obtiene el token
 		BusRestAuthDTO auth = new BusRestAuthDTO(mc.mailUser, mc.mailPass);
 		String bearerToken = postForGetToken(auth, mc.urlGetToken);
-
 		// Se manda el correo usando el token
 		BusRestHeaderDTO header = new BusRestHeaderDTO(bearerToken);
 		Map<String, Object> response = postForObject(auth, body, header, mc.urlSendEmail);

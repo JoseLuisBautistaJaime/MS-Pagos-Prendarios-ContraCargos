@@ -449,4 +449,9 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion pendientes
 	 */
 	public static final String THERE_IS_NO_MOVIMIENTOS_DEVOLUCION_PENDIENTES = "No existen movimientos-devolucion pendientes de solicitud";
+	
+	/**
+	 * Mensaje que es mostrado cuando se espera un estatus diferente al que se encuentran los movimientos
+	 */
+	public static final String WRONG_MOVIMIENTOS_ESTATUS = "El estatus de los movimientos es incorrecto";
 }

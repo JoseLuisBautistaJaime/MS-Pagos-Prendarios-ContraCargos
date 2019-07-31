@@ -25,7 +25,8 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO2;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
@@ -50,6 +51,12 @@ public class SolicitarDevolucionesService {
 	 */
 	@Autowired
 	private ContactoRespository contactoRespository;
+
+	/**
+	 * Repository de Conciliacion
+	 */
+	@Autowired
+	private ConciliacionRepository conciliacionRepository;
 
 	/**
 	 * Objeto para consumo de servicio Rest para envio de e-mail
@@ -77,7 +84,13 @@ public class SolicitarDevolucionesService {
 	 * @param devoluciones
 	 * @param contactos
 	 */
-	public void enviarSolicitudDevoluciones(List<DevolucionEntidadDTO> devoluciones) throws ConciliacionException {
+	public void enviarSolicitudDevoluciones(List<DevolucionEntidadDTO2> devoluciones, final Integer folio)
+			throws ConciliacionException {
+
+		// Objetos necesarios
+		Map<String, Object> res = null;
+		String entidad = null;
+		String cuenta = null;
 
 		// Se obtienen los contactos de midas
 		Set<Contactos> contactos = contactoRespository.findByEntidades_Id(ConciliacionConstants.TIPO_CONTACTO_ENTIDAD);
@@ -85,14 +98,24 @@ public class SolicitarDevolucionesService {
 			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL,
 					CodigoError.NMP_PMIMONTE_BUSINESS_056);
 
+		// Se obtiene la cuenta y entidad para mostrar en la leyenda
+		if (null != folio) {
+			res = conciliacionRepository.getEntidadNombreAndCuentaNumeroByConciliacionId(folio);
+			if (null != res && !res.isEmpty()) {
+				entidad = null != res.get("entidad") ? String.valueOf(res.get("entidad")) : null;
+				cuenta = null != res.get("cuenta") ? String.valueOf(res.get("cuenta")) : null;
+			}
+		}
+
 		// Construye el objeto email
-		BusRestMailDTO generalBusMailDTO = buildBusMailDTO(devoluciones, contactos);
+		BusRestMailDTO generalBusMailDTO = buildBusMailDTO(devoluciones, contactos, entidad, cuenta);
 
 		// Envia e-mail
 		try {
 			LOG.debug("Enviando email {}", generalBusMailDTO);
 			this.busMailRestService.enviaEmail(generalBusMailDTO);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL,
 					CodigoError.NMP_PMIMONTE_BUSINESS_057);
 		}
@@ -104,18 +127,17 @@ public class SolicitarDevolucionesService {
 	 * 
 	 * @return
 	 */
-	public BusRestMailDTO buildBusMailDTO(List<DevolucionEntidadDTO> devoluciones, Set<Contactos> contactos)
-			throws ConciliacionException {
+	public BusRestMailDTO buildBusMailDTO(List<DevolucionEntidadDTO2> devoluciones, Set<Contactos> contactos,
+			final String entidad, final String cuenta) throws ConciliacionException {
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
-		String titulo = applicationProperties.getMimonte().getVariables().getMail().getSolicitudDevolucion()
-				.getTitulo();
+		String titulo = applicationProperties.getMimonte().getVariables().getMail().getSolicitudDevolucion().getTitle();
 		String remitente = applicationProperties.getMimonte().getVariables().getMail().getFrom();
 		String destinatarios = contactos.stream().map(Contactos::getEmail).collect(Collectors.joining(","));
 		String template = applicationProperties.getMimonte().getVariables().getMail().getSolicitudDevolucion()
 				.getVelocityTemplate();
-		String contenidoHtml = getContenidoHtml(devoluciones, template);
+		String contenidoHtml = getContenidoHtml(devoluciones, template, entidad, cuenta);
 
 		// Se construye el DTO
 		BusRestMailDTO mailDTO = new BusRestMailDTO();
@@ -136,13 +158,16 @@ public class SolicitarDevolucionesService {
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	private String getContenidoHtml(List<DevolucionEntidadDTO> devoluciones, String template)
-			throws ConciliacionException {
+	private String getContenidoHtml(List<DevolucionEntidadDTO2> devoluciones, String template, final String entidad,
+			final String cuenta) throws ConciliacionException {
 		Map<String, Object> modelo = new LinkedHashMap<String, Object>();
 		modelo.put("text1",
 				applicationProperties.getMimonte().getVariables().getMail().getSolicitudDevolucion().getBodyText1());
 		modelo.put("text2",
 				applicationProperties.getMimonte().getVariables().getMail().getSolicitudDevolucion().getBodyText2());
+		// Se sustituyen los valores
+		modelo.put("text2",
+				modelo.get("text2").toString().replace("${numeroCuenta}", cuenta).replace("${entidad}", entidad));
 		modelo.put("devoluciones", devoluciones);
 
 		String contenidoHtml = "";
