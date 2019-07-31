@@ -4,6 +4,10 @@
  */
 package mx.com.nmp.pagos.mimonte.constans;
 
+import java.util.List;
+
+import static mx.com.nmp.pagos.mimonte.util.CollectionUtil.asList;
+
 /**
  * @name ConciliacionConstants
  * @description Clase con valores con valores constantes utiliazados en los
@@ -451,4 +455,12 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion pendientes
 	 */
 	public static final String THERE_IS_NO_MOVIMIENTOS_DEVOLUCION_PENDIENTES = "No existen movimientos-devolucion pendientes de solicitud";
+
+	/**
+	 * Identificadores válidos para realizar la actualización de sub-estatus vía PeopleSoft.
+	 */
+	public final static List<Long> IDS_SUB_ESTATUS_ACTUALIZAR_PS = asList(
+			SUBESTATUS_CONCILIACION_ENVIADA
+	);
+
 }
