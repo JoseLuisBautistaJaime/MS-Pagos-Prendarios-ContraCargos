@@ -4,16 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
@@ -22,19 +12,21 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovimientosProveedorRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorBatchDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @name MovimientosProveedorService
@@ -184,11 +176,14 @@ public class MovimientosProveedorService {
 							reporte.getId());
 
 			// Verificar si se guarda en batch
-			movimientoProveedorRepository.saveAll(movimientoProveedorList);
+			if (!CollectionUtils.isEmpty(movimientoProveedorList)) {
+				movimientoProveedorRepository.saveAll(movimientoProveedorList);
+			}
+			
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(listRequestDTO.getFolio(),
 					"Se dan de alta " + listRequestDTO.getMovimientos().size()
-							+ " movimientos de proveedor transaccional, para  el folio " + listRequestDTO.getFolio(),
+							+ " movimientos de proveedor transaccional, para el folio " + listRequestDTO.getFolio(),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
 			// Notificar cambios o alta de reportes, si existen...

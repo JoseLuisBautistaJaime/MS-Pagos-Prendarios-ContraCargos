@@ -42,7 +42,7 @@ public class CollectionUtil {
      * @param <T> El tipo de argumentos.
      * @return TRUE si los argumentos no son nulos ni vacíos.
      */
-    public static <T> boolean isNotNullNorEmpty(T... args) {
+    private static <T> boolean isNotNullNorEmpty(T... args) {
         return args != null && args.length > 0;
     }
 
