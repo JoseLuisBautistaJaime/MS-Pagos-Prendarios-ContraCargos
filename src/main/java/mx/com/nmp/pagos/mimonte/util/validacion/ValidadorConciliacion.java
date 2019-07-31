@@ -376,12 +376,10 @@ public interface ValidadorConciliacion {
 	 * @return
 	 */
 	public static boolean validateActualizarIdPSRequest(ActualizarIdPSRequest actualizarIdPSRequest) {
-		try {
-			assertNotNull(actualizarIdPSRequest);
-			assertNotNull(actualizarIdPSRequest.getFolio());
-		} catch (Exception ex) {
+		if (actualizarIdPSRequest == null || actualizarIdPSRequest.getFolio() == null) {
 			return false;
 		}
+
 		// Al menos un atributo es requerido
 		return !(null == actualizarIdPSRequest.getIdAsientoContable()
 				&& null == actualizarIdPSRequest.getIdPolizaTesoreria());

@@ -4,6 +4,10 @@
  */
 package mx.com.nmp.pagos.mimonte.constans;
 
+import static mx.com.nmp.pagos.mimonte.util.CollectionUtil.asList;
+
+import java.util.List;
+
 /**
  * @name ConciliacionConstants
  * @description Clase con valores con valores constantes utiliazados en los
@@ -340,8 +344,9 @@ public final class ConciliacionConstants {
 	public static final Long TIPO_CONTACTO_MIDAS = 1l;
 	public static final Long TIPO_CONTACTO_ENTIDAD = 2l;
 
-	public static final String ESTATUS_TRANSACCION_OPENPAY_SUCCESS = "success";
+	public static final String ESTATUS_TRANSACCION_OPENPAY_COMPLETED = "completed";
 	public static final String TIPO_TRANSACCION_OPENPAY_CARGO = "charge";
+	public static final String TIPO_OPERACION_OPENPAY_IN = "in";
 
 	/**
 	 * Mensaje que es mostrado cuando se desea actualizar un sub estatus que no
@@ -419,10 +424,11 @@ public final class ConciliacionConstants {
 	public static final String ERROR_WHILE_ID_CONCILIACION_VALIDATION = "Se genero un error durante la validacion del folio de la conciliacion";
 
 	/**
-	 * Mensaje que es mostrado cuando no hay relacion entre el folio y los movimientos ingresados o no existe uno o mas movimientos ingresados
+	 * Mensaje que es mostrado cuando no hay relacion entre el folio y los
+	 * movimientos ingresados o no existe uno o mas movimientos ingresados
 	 */
 	public static final String NO_RELATION_BETWEEN_CONC_AND_MOVS_OR_DONESNT_EXISTS_SUCH_MOVS = "No hay relacion entre el folio y los movimientos ingresados o no existe uno o mas movimientos ingresados";
-	
+
 	/**
 	 * Mensaje que es mostrado cuando se ingresa una sola fecha y esta es incorecta
 	 */
@@ -439,19 +445,29 @@ public final class ConciliacionConstants {
 	 * un estatus marcado como devoluaicon cuando ya ha sido marcado antes
 	 */
 	public static final String NOT_ALLOWED_STATUS_IDS = "Uno o mas ids tiene un estatus incorrecto y no se puede actualizar";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se desea ingresar un estatus de cociliacion que no existe
+	 * Mensaje que es mostrado cuando se desea ingresar un estatus de cociliacion
+	 * que no existe
 	 */
 	public static final String ESTATUS_CONCILIACION_DOESNT_EXISTS = "El estatus de conciliacion especificado no existe";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion pendientes
+	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion
+	 * pendientes
 	 */
 	public static final String THERE_IS_NO_MOVIMIENTOS_DEVOLUCION_PENDIENTES = "No existen movimientos-devolucion pendientes de solicitud";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se espera un estatus diferente al que se encuentran los movimientos
+	 * Mensaje que es mostrado cuando se espera un estatus diferente al que se
+	 * encuentran los movimientos
 	 */
 	public static final String WRONG_MOVIMIENTOS_ESTATUS = "El estatus de los movimientos es incorrecto";
+
+	/**
+	 * Identificadores válidos para realizar la actualización de sub-estatus vía
+	 * PeopleSoft.
+	 */
+	public final static List<Long> IDS_SUB_ESTATUS_ACTUALIZAR_PS = asList(SUBESTATUS_CONCILIACION_ENVIADA);
+
 }

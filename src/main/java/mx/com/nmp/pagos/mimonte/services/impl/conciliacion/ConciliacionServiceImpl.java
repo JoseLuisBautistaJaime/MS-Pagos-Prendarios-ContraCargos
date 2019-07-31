@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+//import mx.com.nmp.pagos.mimonte.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,8 +83,10 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.LayoutsService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
+//import mx.com.nmp.pagos.mimonte.util.CollectionUtil;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 import mx.com.nmp.pagos.mimonte.util.MiniMaquinaEstadosConciliacion;
+import mx.com.nmp.pagos.mimonte.util.StringUtil;
 
 /**
  * @name ConciliacionServiceImpl
@@ -828,46 +831,70 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 */
 	@Transactional
 	public void actualizarPS(ActualizarIdPSRequest actualizarIdPSRequest, String usuario) {
+		log.info(">> actualizarPS");
 
-		// Actualizar estatus de la conciliacion
-		// Se valida que se pueda realizar la transicion
-		// ActualizarSubEstatusRequestDTO actualizarRequest = new
-		// ActualizarSubEstatusRequestDTO();
-		// actualizarRequest.setIdSubEstatus(ConciliacionConstants.SUBESTATUS_CONCILIACION_CREADA);
-		// actualizarRequest.setFolio(actualizarIdPSRequest.getFolio());
+		// SE VALIDA EL FOLIO DE LA CONCILIACION
+		conciliacionDataValidator.validateFolioExists(actualizarIdPSRequest.getFolio());
 
-		// actualizaSubEstatusConciliacion(actualizarRequest, usuario);
-
-		// Actualizar los ids en la conciliacion
-		try {
-			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(actualizarIdPSRequest.getFolio(),
-					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
-
-			// Verificar que se encuentra en el sub estatus correcto
-			List<Long> idsSubEstatusIncorrectos = new ArrayList<Long>();
-			idsSubEstatusIncorrectos.add(ConciliacionConstants.SUBESTATUS_CONCILIACION_CREADA.longValue());
-			idsSubEstatusIncorrectos.add(ConciliacionConstants.SUBESTATUS_CONCILIACION_FINALIZADA.longValue());
-			if (conciliacion.getSubEstatus() == null
-					|| idsSubEstatusIncorrectos.contains(conciliacion.getSubEstatus().getId())) {
-				throw new ConciliacionException("La conciliacion tiene un sub estatus incorrecto",
-						CodigoError.NMP_PMIMONTE_BUSINESS_030);
-			}
-
-			conciliacion.setLastModifiedBy(usuario);
-			conciliacion.setLastModifiedDate(new Date());
-			conciliacion.setIdAsientoContable(actualizarIdPSRequest.getIdAsientoContable());
-			conciliacion.setIdPolizaTesoreria(actualizarIdPSRequest.getIdPolizaTesoreria());
-
-			// TODO: Al recibir ambos ids , se actualiza la conciliacion a finalizada
-
-			conciliacionRepository.save(conciliacion);
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException("Error al actualizar los ids de asiento contable",
-					CodigoError.NMP_PMIMONTE_BUSINESS_031);
+		// SE VALIDAN LOS ID'S DE ASIENTO CONTABLE Y POLIZA TESORERIA
+		if (StringUtil.isNullOrEmpty(actualizarIdPSRequest.getIdAsientoContable())
+				&& StringUtil.isNullOrEmpty(actualizarIdPSRequest.getIdPolizaTesoreria())) {
+			log.error("Valores nulos o vacios. IdAsientoContable: [" + actualizarIdPSRequest.getIdAsientoContable()
+					+ "], " + "IdPolizaTesoreria: [" + actualizarIdPSRequest.getIdPolizaTesoreria() + "]");
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_095.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_095);
 		}
 
+		Conciliacion conciliacion;
+		try {
+			conciliacion = conciliacionRepository.findByFolio(actualizarIdPSRequest.getFolio());
+		} catch (Exception ex) {
+			log.error("Error al obtener la conciliacion para el folio: [" + actualizarIdPSRequest.getFolio() + "]", ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_094.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_094);
+		}
+
+		// VALIDA QUE TENGA EL SUB-ESTATUS CORRECTO
+		if (conciliacion.getSubEstatus() == null || conciliacion.getSubEstatus().getId() == null
+				|| !ConciliacionConstants.IDS_SUB_ESTATUS_ACTUALIZAR_PS
+						.contains(conciliacion.getSubEstatus().getId())) {
+			log.error("La conciliacion no tiene un sub-estatus valido. Sub-estatus: [" + conciliacion.getSubEstatus()
+					+ "]");
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		}
+
+		conciliacion.setLastModifiedBy(usuario);
+		conciliacion.setLastModifiedDate(new Date());
+
+		if (StringUtil.isNotNullNorEmpty(actualizarIdPSRequest.getIdAsientoContable())) {
+			conciliacion.setIdAsientoContable(actualizarIdPSRequest.getIdAsientoContable());
+		}
+
+		if (StringUtil.isNotNullNorEmpty(actualizarIdPSRequest.getIdPolizaTesoreria())) {
+			conciliacion.setIdPolizaTesoreria(actualizarIdPSRequest.getIdPolizaTesoreria());
+		}
+
+		boolean conciliacionFinalizada = false;
+		if (StringUtil.isNotNullNorEmpty(conciliacion.getIdAsientoContable())
+				&& StringUtil.isNotNullNorEmpty(conciliacion.getIdPolizaTesoreria())) {
+			conciliacionFinalizada = true;
+		}
+
+		if (conciliacionFinalizada) {
+			log.debug("Finalizando la conciliacion ...");
+			conciliacion.setEstatus(new EstatusConciliacion(ConciliacionConstants.ESTATUS_CONCILIACION_FINALIZADA));
+			conciliacion.setSubEstatus(
+					new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_FINALIZADA));
+		}
+
+		try {
+			conciliacionRepository.save(conciliacion);
+		} catch (Exception ex) {
+			log.error("Error al actualizar la conciliacion.", ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_031.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_031);
+		}
 	}
 
 	/*
