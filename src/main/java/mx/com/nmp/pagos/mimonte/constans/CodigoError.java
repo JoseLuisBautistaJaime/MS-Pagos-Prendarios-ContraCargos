@@ -222,6 +222,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_094("Error al consultar la conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_095("Id de asiento contable e id de poliza de tesoreria nulos o vacios",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_096("Uno o mas movimientos devolucion no existen",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

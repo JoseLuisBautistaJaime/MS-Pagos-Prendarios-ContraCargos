@@ -281,7 +281,8 @@ public class MovimientosController {
 		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-
+		ValidadorConciliacion.validateFechasPrimary(saveEstadoCuentaRequestDTO.getFechaInicial(), saveEstadoCuentaRequestDTO.getFechaFinal());
+		
 		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste
 		// los movimientos del estado de cuenta
 		movimientosEstadoCuentaService.procesarConsultaEstadoCuenta(saveEstadoCuentaRequestDTO, userRequest);

@@ -475,4 +475,9 @@ public final class ConciliacionConstants {
 	 */
 	public static final String ERROR_REPLACING_EL = "Se genero un error intentando reemplazar las expresiones regulares";
 	
+	/**
+	 * Mensaje que es mostrado cuando se recie uno o mas ids de devolcuion que no existen
+	 */
+	public static final String DEV_MOVS_DONT_EXIST = "Uno o mas movimientos devolucion no existen";
+	
 }

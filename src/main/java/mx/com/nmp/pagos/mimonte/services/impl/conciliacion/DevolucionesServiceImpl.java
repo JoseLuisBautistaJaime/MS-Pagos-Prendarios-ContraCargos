@@ -319,21 +319,23 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	@Transactional
 	public List<DevolucionEntidadDTO> solicitarDevoluciones(DevolucionesIdsMovimientosDTO solicitar,
 			String modifiedBy) {
-
-		if (solicitar == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
-
-		for (Integer sol : solicitar.getIdsMovimientos()) {
-			if (sol == null)
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-						CodigoError.NMP_PMIMONTE_0008);
-			if (sol < 1)
-				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-						CodigoError.NMP_PMIMONTE_0008);
-		}
-
+		// Objetos necesarios
 		List<MovimientoDevolucion> movimientosDevolucion = null;
+		Boolean flagMovs = null;
+		// Valida que los ids de movimientos devolucion existan
+		flagMovs = ((BigInteger) movimientoDevolucionRepository.checkIfIdsExists(solicitar.getIdsMovimientos(),
+				solicitar.getIdsMovimientos().size())).compareTo(BigInteger.ONE) == 0;
+		if (!flagMovs)
+			throw new ConciliacionException(ConciliacionConstants.DEV_MOVS_DONT_EXIST,
+					CodigoError.NMP_PMIMONTE_BUSINESS_096);
+
+		// Valida que los ids de devoluciones tengan un estatus valido
+		flagMovs = ((BigInteger) movimientoDevolucionRepository.checkIfIdsEstatus(solicitar.getIdsMovimientos()))
+				.compareTo(BigInteger.ONE) == 0;
+		if (!flagMovs)
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_093.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_093);
+
 		try {
 			// Se obtienen los movimientos de devolucion usando los ids recibidos
 			movimientosDevolucion = movimientoDevolucionRepository.findAllById(solicitar.getIdsMovimientos());

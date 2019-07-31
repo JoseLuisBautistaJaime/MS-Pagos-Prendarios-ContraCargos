@@ -111,6 +111,14 @@ public class SolicitarDevolucionesService {
 				entidad = null != res.get("entidad") ? String.valueOf(res.get("entidad")) : null;
 				cuenta = null != res.get("cuenta") ? String.valueOf(res.get("cuenta")) : null;
 			}
+			else {
+				entidad = "";
+				cuenta = "";
+			}
+		}
+		else {
+			entidad = "";
+			cuenta = "";
 		}
 
 		// Construye el objeto email

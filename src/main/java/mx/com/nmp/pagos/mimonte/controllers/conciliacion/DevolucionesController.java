@@ -160,7 +160,9 @@ public class DevolucionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response solicitar(@RequestBody DevolucionesIdsMovimientosDTO devolucionesIdsMovimientosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-
+		if(!ValidadorConciliacion.validateDevolucionesIdsMovimientosDTO(devolucionesIdsMovimientosDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl
 				.solicitarDevoluciones(devolucionesIdsMovimientosDTO, userRequest);
 
