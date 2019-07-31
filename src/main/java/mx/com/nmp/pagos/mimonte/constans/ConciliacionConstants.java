@@ -470,4 +470,9 @@ public final class ConciliacionConstants {
 	 */
 	public final static List<Long> IDS_SUB_ESTATUS_ACTUALIZAR_PS = asList(SUBESTATUS_CONCILIACION_ENVIADA);
 
+	/**
+	 * Mensaje que es mostrado cuando se egenera un error de patron de regex
+	 */
+	public static final String ERROR_REPLACING_EL = "Se genero un error intentando reemplazar las expresiones regulares";
+	
 }

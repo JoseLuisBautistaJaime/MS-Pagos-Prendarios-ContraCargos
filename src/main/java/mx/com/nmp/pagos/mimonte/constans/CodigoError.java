@@ -29,6 +29,8 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_9999("Ocurrio un error inesperado, intente mas tarde",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_0010("Se genero un error relacionado con la validacion de expresiones regulares",
+			TipoError.SERVIDOR, SeveridadError.ALTA),
 
 	// ERRORES RELACIONADOS CON REGLA DE NEGOCIO
 

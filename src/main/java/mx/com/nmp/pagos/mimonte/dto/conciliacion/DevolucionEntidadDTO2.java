@@ -45,6 +45,10 @@ public class DevolucionEntidadDTO2 {
 		return sdf.format(hora);
 	}
 
+	public Date getHoraComleteFormat() {
+		return this.hora;
+	}
+	
 	public void setHora(Date hora) {
 		this.hora = hora;
 	}

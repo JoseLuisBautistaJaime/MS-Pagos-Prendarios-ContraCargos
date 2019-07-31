@@ -4,6 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +29,13 @@ import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO2;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
+import mx.com.nmp.pagos.mimonte.util.StringUtil;
 
 /**
  * @name SolicitarDevolucionesService
@@ -169,6 +175,10 @@ public class SolicitarDevolucionesService {
 		modelo.put("text2",
 				modelo.get("text2").toString().replace("${numeroCuenta}", cuenta).replace("${entidad}", entidad));
 		modelo.put("devoluciones", devoluciones);
+		// Se reemplazan posibles EL en las leyendas y el modelo
+		modelo.put("text1", StringUtil.replaceEL(modelo.get("text1").toString(), "\\$[^ ]+"));
+		modelo.put("text2", StringUtil.replaceEL(modelo.get("text2").toString(), "\\$[^ ]+"));
+		modelo.put("devoluciones", replaceNullValues(modelo.get("devoluciones")));
 
 		String contenidoHtml = "";
 		try {
@@ -178,8 +188,47 @@ public class SolicitarDevolucionesService {
 			throw new ConciliacionException("Error al obtener el contenido del email para la solicitud",
 					CodigoError.NMP_PMIMONTE_BUSINESS_058);
 		}
-
 		return contenidoHtml;
+	}
+
+	/**
+	 * Reeemplaza posibles valores nulos con cadenas vacias o valores por default
+	 * para atributos primitivos u objetos complejos
+	 * 
+	 * @param devolucionesObj
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<DevolucionEntidadDTO2> replaceNullValues(Object devolucionesObj) {
+		List<DevolucionEntidadDTO2> devoluciones;
+		List<DevolucionEntidadDTO2> respDev = null;
+		DevolucionEntidadDTO2 devolucion = null;
+		if (null != devolucionesObj) {
+			devoluciones = (List<DevolucionEntidadDTO2>) devolucionesObj;
+			if (!devoluciones.isEmpty()) {
+				respDev = new ArrayList<>();
+				for (DevolucionEntidadDTO2 dev : devoluciones) {
+					devolucion = new DevolucionEntidadDTO2();
+					devolucion.setCodigoAutorizacion(
+							null != dev.getCodigoAutorizacion() ? dev.getCodigoAutorizacion() : "");
+					devolucion.setEntidad(null != dev.getEntidad() ? dev.getEntidad() : new BaseEntidadDTO());
+					devolucion.setEsquemaTarjeta(null != dev.getEsquemaTarjeta() ? dev.getEsquemaTarjeta() : "");
+					devolucion.setEstatus(null != dev.getEstatus() ? dev.getEstatus() : new EstatusDevolucionDTO());
+					devolucion.setFecha(null != dev.getFecha() ? dev.getFecha() : new Date());
+					devolucion.setFechaLiquidacion(
+							null != dev.getFechaLiquidacion() ? dev.getFechaLiquidacion() : new Date());
+					devolucion.setHora(null != dev.getHora() ? dev.getHoraComleteFormat() : new Date());
+					devolucion.setId(null != dev.getId() ? dev.getId() : 0);
+					devolucion.setIdentificadorCuenta(
+							null != dev.getIdentificadorCuenta() ? dev.getIdentificadorCuenta() : "");
+					devolucion.setMonto(null != dev.getMonto() ? dev.getMonto() : BigDecimal.ZERO);
+					devolucion.setSucursal(null != dev.getSucursal() ? dev.getSucursal() : 0);
+					devolucion.setTitular(null != dev.getTitular() ? dev.getTitular() : "");
+					respDev.add(devolucion);
+				}
+			}
+		}
+		return respDev;
 	}
 
 }
