@@ -856,10 +856,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// VALIDA QUE TENGA EL SUB-ESTATUS CORRECTO
 		if (conciliacion.getSubEstatus() == null || conciliacion.getSubEstatus().getId() == null
-				|| !ConciliacionConstants.IDS_SUB_ESTATUS_ACTUALIZAR_PS
+				|| !ConciliacionConstants.CON_SUB_ESTATUS_ACTUALIZACION_PS
 						.contains(conciliacion.getSubEstatus().getId())) {
-			log.error("La conciliacion no tiene un sub-estatus valido. Sub-estatus: [" + conciliacion.getSubEstatus()
-					+ "]");
+			log.error("La conciliacion no tiene un sub-estatus valido. Sub-estatus: [" + conciliacion.getSubEstatus() + "]");
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_030);
 		}

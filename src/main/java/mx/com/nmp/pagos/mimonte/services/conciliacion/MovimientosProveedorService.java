@@ -18,6 +18,8 @@ import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,11 @@ import java.util.List;
  */
 @Service("movimientosProveedorService")
 public class MovimientosProveedorService {
+
+	/**
+	 * Utilizada para manipular los mensajes informativos y de error.
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(MovimientosProveedorService.class);
 
 	/**
 	 * repository de movimientos proveedor
@@ -147,6 +154,13 @@ public class MovimientosProveedorService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
 
+		if (conciliacion.getSubEstatus() == null || conciliacion.getSubEstatus().getId() == null ||
+				!ConciliacionConstants.CON_SUB_ESTATUS_CARGA_MOV_PT.contains(conciliacion.getSubEstatus().getId())) {
+			LOG.error("La conciliacion no tiene un sub-estatus valido. Sub-estatus: [" + conciliacion.getSubEstatus() + "]");
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		}
+
 		// Obtiene el reporte del proveedor transaccional
 		Reporte reporte = null;
 		/*
@@ -179,7 +193,7 @@ public class MovimientosProveedorService {
 			if (!CollectionUtils.isEmpty(movimientoProveedorList)) {
 				movimientoProveedorRepository.saveAll(movimientoProveedorList);
 			}
-			
+
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(listRequestDTO.getFolio(),
 					"Se dan de alta " + listRequestDTO.getMovimientos().size()

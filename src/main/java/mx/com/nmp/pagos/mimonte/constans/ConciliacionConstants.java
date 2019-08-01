@@ -326,8 +326,20 @@ public final class ConciliacionConstants {
 
 	// Subestatus conciliacion
 	public static final Long SUBESTATUS_CONCILIACION_CREADA = 1L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_MIDAS = 2L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA = 3L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_ERROR = 4L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY = 5L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA = 6L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_ERROR = 7L;
+	public static final Long SUBESTATUS_CONCILIACION_CONCILIACION = 8L;
+	public static final Long SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA = 9L;
+	public static final Long SUBESTATUS_CONCILIACION_CONCILIACION_ERROR = 10L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA = 11L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA = 12L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR = 13L;
 	public static final Long SUBESTATUS_CONCILIACION_ENVIADA = 14L;
-	public static final Long SUBESTATUS_CONCILIACION_ERROR = 15L;
+	public static final Long SUBESTATUS_CONCILIACION_ENVIADA_ERROR = 15L;
 	public static final Long SUBESTATUS_CONCILIACION_FINALIZADA = 16L;
 
 	// Estatus devoluciones
@@ -465,12 +477,6 @@ public final class ConciliacionConstants {
 	public static final String WRONG_MOVIMIENTOS_ESTATUS = "El estatus de los movimientos es incorrecto";
 
 	/**
-	 * Identificadores válidos para realizar la actualización de sub-estatus vía
-	 * PeopleSoft.
-	 */
-	public final static List<Long> IDS_SUB_ESTATUS_ACTUALIZAR_PS = asList(SUBESTATUS_CONCILIACION_ENVIADA);
-
-	/**
 	 * Mensaje que es mostrado cuando se egenera un error de patron de regex
 	 */
 	public static final String ERROR_REPLACING_EL = "Se genero un error intentando reemplazar las expresiones regulares";
@@ -479,5 +485,13 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se recie uno o mas ids de devolcuion que no existen
 	 */
 	public static final String DEV_MOVS_DONT_EXIST = "Uno o mas movimientos devolucion no existen";
-	
+
+	/**
+	 * Validación de sub-estatus para acciones sobre la conciliación.
+	 */
+	public final static List<Long> CON_SUB_ESTATUS_ACTUALIZACION_PS = asList(SUBESTATUS_CONCILIACION_ENVIADA);
+	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PN = asList(SUBESTATUS_CONCILIACION_CONSULTA_MIDAS);
+	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PT = asList(SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY);
+	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_EC = asList(SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA);
+
 }
