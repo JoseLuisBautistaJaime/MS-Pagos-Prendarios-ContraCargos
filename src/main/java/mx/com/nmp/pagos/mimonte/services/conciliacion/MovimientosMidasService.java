@@ -169,25 +169,32 @@ public class MovimientosMidasService {
 		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio,
 				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
-		Reporte reporte = buildReporte(conciliacion.getId(), movimientoProcesosNocturnosDTOList.getFechaDesde(),
-				movimientoProcesosNocturnosDTOList.getFechaHasta(), userRequest);
-		if (null == reporte)
-			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
-					CodigoError.NMP_PMIMONTE_BUSINESS_044);
+		Reporte reporte = null;
 		try {
-			reporte = reporteRepository.save(reporte);
-			if (0 == reporte.getId())
+
+			// Se guarda el reporte
+			reporte = buildReporte(conciliacion.getId(), movimientoProcesosNocturnosDTOList.getFechaDesde(),
+					movimientoProcesosNocturnosDTOList.getFechaHasta(), userRequest);
+			if (null == reporte) {
 				throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
 						CodigoError.NMP_PMIMONTE_BUSINESS_044);
+			}
+			reporte = reporteRepository.save(reporte);
+
+			// Se persisten los movimientos midas
 			List<MovimientoMidas> movimientoMidasList = MovimientosBuilder
 					.buildMovimientoMidasListFromMovimientoProcesosNocturnosListResponseDTO(
 							movimientoProcesosNocturnosDTOList, reporte.getId());
-			movimientosMidasRepository.saveAll(movimientoMidasList);
+			if (movimientoMidasList != null) {
+				movimientosMidasRepository.saveAll(movimientoMidasList);
+			}
+
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(movimientoProcesosNocturnosDTOList.getFolio(),
 					"Se dan de alta " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
 							+ " movimientos nocturnos, para  el folio " + movimientoProcesosNocturnosDTOList.getFolio(),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,

@@ -48,7 +48,9 @@ public class ConciliacionMathUtil {
 		BigDecimal importeMidas = new BigDecimal(0);
 		if (movsMidas != null) {
 			for (MovimientoMidas movMidas : movsMidas) {
-				importeMidas = importeMidas.add(movMidas.getMonto());
+				if (movMidas.getEstatus()) {
+					importeMidas = importeMidas.add(movMidas.getMonto());
+				}
 			}
 		}
 		return importeMidas;

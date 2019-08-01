@@ -111,11 +111,13 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 		Map<String, List<MovimientoMidas>> movsMidasByTransaction = new LinkedHashMap<String, List<MovimientoMidas>>();
 		if (movsMidas != null) {
 			for (MovimientoMidas movMidas : movsMidas) {
-				List<MovimientoMidas> movsMidasTransaccion = movsMidasByTransaction.get(movMidas.getTransaccion());
+				String transaccion = movMidas.getTransaccion().toString();
+				List<MovimientoMidas> movsMidasTransaccion = movsMidasByTransaction.get(transaccion);
 				if (movsMidasTransaccion == null) {
-					movsMidasByTransaction.put(String.valueOf(movMidas.getTransaccion()), new ArrayList<MovimientoMidas>());
+					movsMidasTransaccion = new ArrayList<MovimientoMidas>();
+					movsMidasByTransaction.put(transaccion, movsMidasTransaccion);
 				}
-				movsMidasByTransaction.get(String.valueOf(movMidas.getTransaccion())).add(movMidas);
+				movsMidasTransaccion.add(movMidas);
 			}
 		}
 		return movsMidasByTransaction;
