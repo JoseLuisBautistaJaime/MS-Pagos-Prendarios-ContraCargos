@@ -81,19 +81,17 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 
 		List<MovimientoTransito> movsTransito = new ArrayList<MovimientoTransito>();
 		
-		if (!movsProveedorByTransaction.isEmpty()) {
-			for (Map.Entry<String, List<MovimientoMidas>> movMidas : movsMidasByTransaction.entrySet()) {
-				
-				List<MovimientoProveedor> movsProveedorTransaccion = movsProveedorByTransaction.get(movMidas.getKey());
-				List<MovimientoMidas> movsMidasTransaccion = movMidas.getValue();
-				
-				// Validar monto de la transaccion sea igual al reportado en midas
-				BigDecimal montoProveedor = ConciliacionMathUtil.getImporteProveedor(movsProveedorTransaccion);
-				BigDecimal montoMidas = ConciliacionMathUtil.getImporteMidas(movsMidasTransaccion);
-				if (isInvalidTransaccionMidas(movsMidasTransaccion) || montoProveedor.compareTo(montoMidas) != 0) {
-					for (MovimientoMidas movMidasTransaccion : movsMidasTransaccion) {
-						movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, idConciliacion));
-					}
+		for (Map.Entry<String, List<MovimientoMidas>> movMidas : movsMidasByTransaction.entrySet()) {
+			
+			List<MovimientoProveedor> movsProveedorTransaccion = movsProveedorByTransaction.get(movMidas.getKey());
+			List<MovimientoMidas> movsMidasTransaccion = movMidas.getValue();
+			
+			// Validar monto de la transaccion sea igual al reportado en midas
+			BigDecimal montoProveedor = ConciliacionMathUtil.getImporteProveedor(movsProveedorTransaccion);
+			BigDecimal montoMidas = ConciliacionMathUtil.getImporteMidas(movsMidasTransaccion);
+			if (isInvalidTransaccionMidas(movsMidasTransaccion) || montoProveedor.compareTo(montoMidas) != 0) {
+				for (MovimientoMidas movMidasTransaccion : movsMidasTransaccion) {
+					movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, idConciliacion));
 				}
 			}
 		}

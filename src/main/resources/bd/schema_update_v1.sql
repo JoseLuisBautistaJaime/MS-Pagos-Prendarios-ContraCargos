@@ -4,3 +4,5 @@
 ALTER TABLE `to_layout` AUTO_INCREMENT = 1;
 ALTER TABLE `to_layout_header` AUTO_INCREMENT = 1;
 ALTER TABLE `to_layout_linea` AUTO_INCREMENT = 1;
+
+ALTER TABLE to_movimiento_transito ADD num_autorizacion VARCHAR(45);
