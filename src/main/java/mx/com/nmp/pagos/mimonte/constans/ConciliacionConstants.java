@@ -493,5 +493,9 @@ public final class ConciliacionConstants {
 	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PN = asList(SUBESTATUS_CONCILIACION_CONSULTA_MIDAS);
 	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PT = asList(SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY);
 	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_EC = asList(SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA);
-
+	
+	/**
+	 * Mensaje generico inicial para mostrar excepciones en log
+	 */
+	public static final String GENERIC_EXCEPTION_INITIAL_MESSAGE = "Se ha generado la excepcion: ";
 }

@@ -18,6 +18,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoPagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TarjetaMovimientosProveedorDTO;
 import mx.com.nmp.pagos.mimonte.model.EstatusPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MetodoPagoMovimientosProveedor;
@@ -512,6 +513,25 @@ public abstract class MovimientosBuilder {
 			}
 		}
 		return movimientoPagoList;
+	}
+
+	/**
+	 * Construye una lista de Integer de los ids contenidos en una lista de objetos
+	 * de tipo MovimientosDTO
+	 * 
+	 * @param movimientosDTOList
+	 * @return
+	 */
+	public static List<Integer> buildIdsListFromMovimientosDTOList(List<MovimientosDTO> movimientosDTOList) {
+		List<Integer> list = null;
+		if (null != movimientosDTOList && !movimientosDTOList.isEmpty()) {
+			list = new ArrayList<>();
+			for (MovimientosDTO movimiento : movimientosDTOList) {
+				if (null != movimiento.getId())
+					list.add(movimiento.getId());
+			}
+		}
+		return list;
 	}
 
 }

@@ -31,6 +31,8 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_0010("Se genero un error relacionado con la validacion de expresiones regulares",
 			TipoError.SERVIDOR, SeveridadError.ALTA),
+	NMP_PMIMONTE_0011("Se ha generado un error con la base de datos",
+			TipoError.SERVIDOR, SeveridadError.ALTA),
 
 	// ERRORES RELACIONADOS CON REGLA DE NEGOCIO
 
@@ -224,6 +226,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_095("Id de asiento contable e id de poliza de tesoreria nulos o vacios",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_096("Uno o mas movimientos devolucion no existen",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_097("Ocurrio un error al extraer los movimientos devolucion para compararlos",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

@@ -26,9 +26,11 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -569,6 +571,29 @@ public interface ValidadorConciliacion {
 			DevolucionesIdsMovimientosDTO devolucionesIdsMovimientosDTO) {
 		return (null != devolucionesIdsMovimientosDTO && null != devolucionesIdsMovimientosDTO.getIdsMovimientos()
 				&& !devolucionesIdsMovimientosDTO.getIdsMovimientos().isEmpty());
+	}
+
+	/**
+	 * Valida un objeto de tipo LiquidacionMovimientosRequestDTO para que no sea
+	 * nulo y contenga todos los atributos requeridos con valores validos
+	 * 
+	 * @param liquidacionMovimientosRequestDTO
+	 * @return
+	 */
+	public static boolean validateLiquidacionMovimientosRequestDTO(
+			LiquidacionMovimientosRequestDTO liquidacionMovimientosRequestDTO) {
+		if (null == liquidacionMovimientosRequestDTO || null == liquidacionMovimientosRequestDTO.getFolio()
+				|| null == liquidacionMovimientosRequestDTO.getMovimientos()
+				|| liquidacionMovimientosRequestDTO.getMovimientos().isEmpty())
+			return false;
+		else {
+			for (MovimientosDTO movimiento : liquidacionMovimientosRequestDTO.getMovimientos()) {
+				if (null == movimiento || null == movimiento.getFecha() || null == movimiento.getId()
+						|| movimiento.getId() <= 0)
+					return false;
+			}
+		}
+		return true;
 	}
 
 }

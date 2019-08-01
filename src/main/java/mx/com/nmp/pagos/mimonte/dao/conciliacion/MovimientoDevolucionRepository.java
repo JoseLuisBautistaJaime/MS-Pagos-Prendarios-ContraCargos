@@ -103,6 +103,20 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	 * @param ids
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN 1 NOT IN(SELECT md.estatus FROM to_movimiento_devolucion md WHERE md.id IN :ids) THEN 0 ELSE 1 END")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN 1 NOT IN(SELECT md.estatus FROM to_movimiento_devolucion md WHERE md.id IN :ids) AND 2 NOT IN(SELECT md.estatus FROM to_movimiento_devolucion md WHERE md.id IN :ids) THEN 0 ELSE 1 END")
 	public Object checkIfIdsEstatus(@Param("ids") final List<Integer> ids);
+
+	/**
+	 * Regresa un valor de 1 cuando los ids recibidos como parametros estan
+	 * relacinados con el folio de conciliacion, de lo contrario regresa un 0
+	 * 
+	 * @param folio
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(md.id) FROM to_movimiento_devolucion md INNER JOIN to_movimiento_conciliacion mc ON md.id = mc.id WHERE md.id IN :ids AND mc.id_conciliacion = :folio) = :tam THEN 1 ELSE 0 END")
+	public Object verifyIfFolioAndIdsRelationShipExists(@Param("folio") final Integer folio,
+			@Param("ids") List<Integer> ids, @Param("tam") final Integer tam);
+
 }

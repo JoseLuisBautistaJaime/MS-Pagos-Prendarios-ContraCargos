@@ -93,8 +93,8 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @param estatus
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT mt.id FROM to_movimiento_transito mt WHERE mt.id IN(:ids) AND mt.estatus <> :estatus) IS NOT NULL THEN 0 ELSE 1 END AS RESULT")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT mt.id FROM to_movimiento_transito mt WHERE mt.id IN(:ids) AND mt.estatus <> :estatus AND mt.estatus <> :estatus2) IS NOT NULL THEN 0 ELSE 1 END AS RESULT")
 	public Object verifyIfIdsHaveRightEstatus(@Param("ids") final List<Integer> ids,
-			@Param("estatus") final Integer estatus);
+			@Param("estatus") final Integer estatus, @Param("estatus2") final Integer estatus2);
 
 }
