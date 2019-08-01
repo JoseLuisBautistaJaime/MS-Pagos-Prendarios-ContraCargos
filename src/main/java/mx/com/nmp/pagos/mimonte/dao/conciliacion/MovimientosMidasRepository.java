@@ -220,7 +220,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param idsComisiones
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO(mp.operationDate, mt.folio, mp.orderId, mt.operacionDesc, mt.monto, mp.currency, mp.tarjetaMovimientosProveedor.type, mp.status, mp.tarjetaMovimientosProveedor.brand, mp.tarjetaMovimientosProveedor.cardNumber, mp.tarjetaMovimientosProveedor.holderName, mp.authorization, mt.movimientoMidas.consumidor) FROM MovimientoTransito mt INNER JOIN MovimientoProveedor mp ON mt.movimientoMidas.transaccion = mp.orderId WHERE mt.folio = :folio AND mt.id IN :idsComisiones")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO(mp.operationDate, mt.folio, mp.orderId, mt.operacionDesc, mt.monto, mp.currency, mp.tarjetaMovimientosProveedor.type, mp.status, mp.tarjetaMovimientosProveedor.brand, mp.tarjetaMovimientosProveedor.cardNumber, mp.tarjetaMovimientosProveedor.holderName, mp.authorization, mt.movimientoMidas.consumidor) FROM MovimientoTransito mt INNER JOIN MovimientoProveedor mp ON mt.movimientoMidas.transaccion = mp.orderId WHERE mt.idConciliacion = :folio AND mt.id IN :idsComisiones")
 	public List<SolicitarPagosMailDataDTO> getDataByFolioAndIdMovimientos(@Param("folio") final Integer folio,
 			@Param("idsComisiones") final List<Integer> idsComisiones);
 

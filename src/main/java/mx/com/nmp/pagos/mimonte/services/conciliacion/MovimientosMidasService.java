@@ -4,35 +4,29 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovimientosMidasRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasBatchDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @name MovimientosMidasService
@@ -44,6 +38,11 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
  */
 @Service("movimientosMidasService")
 public class MovimientosMidasService {
+
+	/**
+	 * Utilizada para manipular los mensajes informativos y de error.
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(MovimientosMidasService.class);
 
 	/**
 	 * Repository de movimientos midas
@@ -169,30 +168,35 @@ public class MovimientosMidasService {
 		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio,
 				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
-		Reporte reporte = null;
+		if (conciliacion.getSubEstatus() == null || conciliacion.getSubEstatus().getId() == null ||
+				!ConciliacionConstants.CON_SUB_ESTATUS_CARGA_MOV_PN.contains(conciliacion.getSubEstatus().getId())) {
+			LOG.error("La conciliacion no tiene un sub-estatus valido. Sub-estatus: [" + conciliacion.getSubEstatus() + "]");
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		}
+
+		Reporte reporte = buildReporte(conciliacion.getId(), movimientoProcesosNocturnosDTOList.getFechaDesde(),
+				movimientoProcesosNocturnosDTOList.getFechaHasta(), userRequest);
+		if (null == reporte)
+			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
+					CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		try {
 
-			// Se guarda el reporte
-			reporte = buildReporte(conciliacion.getId(), movimientoProcesosNocturnosDTOList.getFechaDesde(),
-					movimientoProcesosNocturnosDTOList.getFechaHasta(), userRequest);
-			if (null == reporte) {
-				throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
-						CodigoError.NMP_PMIMONTE_BUSINESS_044);
-			}
 			reporte = reporteRepository.save(reporte);
 
 			// Se persisten los movimientos midas
 			List<MovimientoMidas> movimientoMidasList = MovimientosBuilder
 					.buildMovimientoMidasListFromMovimientoProcesosNocturnosListResponseDTO(
 							movimientoProcesosNocturnosDTOList, reporte.getId());
-			if (movimientoMidasList != null) {
+
+			if (!CollectionUtils.isEmpty(movimientoMidasList)) {
 				movimientosMidasRepository.saveAll(movimientoMidasList);
 			}
 
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(movimientoProcesosNocturnosDTOList.getFolio(),
 					"Se dan de alta " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
-							+ " movimientos nocturnos, para  el folio " + movimientoProcesosNocturnosDTOList.getFolio(),
+							+ " movimientos nocturnos, para el folio " + movimientoProcesosNocturnosDTOList.getFolio(),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
 		} catch (Exception ex) {

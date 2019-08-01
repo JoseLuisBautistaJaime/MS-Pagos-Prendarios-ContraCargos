@@ -86,7 +86,7 @@ public abstract class MovimientosTransitoBuilder {
 			devolucionConDTO.setEstatus(EstatusDevolucionesBuilder.buildEstatusDevolucionDTOFromEstatusDevolucion(estatusDevolucion));
 			devolucionConDTO.setMonto(movimientoTransito.getMonto());
 			devolucionConDTO.setEsquemaTarjeta(movimientoTransito.getEsquemaTarjeta());
-			devolucionConDTO.setIdentificacionCuenta(null);
+			devolucionConDTO.setIdentificacionCuenta(movimientoTransito.getCuenta());
 			devolucionConDTO.setTitular(movimientoTransito.getTitular());
 			devolucionConDTO.setCodigoAutorizacion(null);
 			devolucionConDTO.setSucursal(movimientoTransito.getSucursal());

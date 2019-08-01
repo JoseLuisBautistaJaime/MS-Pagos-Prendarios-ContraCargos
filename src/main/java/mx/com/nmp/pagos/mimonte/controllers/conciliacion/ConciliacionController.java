@@ -442,15 +442,12 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response actualizaIdPs(
-			@RequestBody ActualizarIdPSRequest actualizarIdPSRequest/*
-																	 * ActualizaIdPsRequestDTO actualizaIdPsRequestDTO
-																	 */,
+			@RequestBody ActualizarIdPSRequest actualizarIdPSRequest,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		if (!ValidadorConciliacion.validateActualizarIdPSRequest(actualizarIdPSRequest))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-		// Comentado por ahora, hasta que la funcionalidad de la capa de servicio este
-		// completa
+
 		conciliacionServiceImpl.actualizarPS(actualizarIdPSRequest, lastModifiedBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.IDENTIFIER_PS_UPDATED_IN_THE_CONCILIATION, null);

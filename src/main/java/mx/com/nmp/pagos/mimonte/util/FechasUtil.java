@@ -40,9 +40,11 @@ public interface FechasUtil {
 			cal.set(Calendar.MONTH, 1);
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			resultMap.put(start, cal.getTime());
+			resultMap.put(end, endDate);
 		}
 		if (null != startDate && null == endDate) {
 			Calendar cal = Calendar.getInstance();
+			resultMap.put(start, startDate);
 			resultMap.put(end, cal.getTime());
 		}
 		if (null != startDate && null != endDate) {

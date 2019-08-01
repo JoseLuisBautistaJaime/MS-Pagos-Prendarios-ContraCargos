@@ -85,4 +85,24 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	 */
 	public List<MovimientoDevolucion> findByIdConciliacionAndEstatusIdIn(Integer folio, List<Integer> ids);
 
+	/**
+	 * Regresa un valor de 1 cuando se encuentran todos los movimientos devolcuion
+	 * especificados como parametro y 0 de lo contrario
+	 * 
+	 * @param ids
+	 * @param listSize
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(md.id) FROM to_movimiento_devolucion md WHERE md.id IN :ids) = :listSize THEN 1 ELSE 0 END")
+	public Object checkIfIdsExists(@Param("ids") final List<Integer> ids, @Param("listSize") final Integer listSize);
+
+	/**
+	 * Regresa un valor de 1 cuando todos los movimientos devolcuion especificados
+	 * como parametro se encuentran en estatus 1 y 0 de lo contrario
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN 1 NOT IN(SELECT md.estatus FROM to_movimiento_devolucion md WHERE md.id IN :ids) THEN 0 ELSE 1 END")
+	public Object checkIfIdsEstatus(@Param("ids") final List<Integer> ids);
 }

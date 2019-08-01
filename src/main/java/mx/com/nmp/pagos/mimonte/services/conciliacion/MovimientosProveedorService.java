@@ -4,16 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
@@ -22,19 +12,23 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovimientosProveedorRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorBatchDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @name MovimientosProveedorService
@@ -46,6 +40,11 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
  */
 @Service("movimientosProveedorService")
 public class MovimientosProveedorService {
+
+	/**
+	 * Utilizada para manipular los mensajes informativos y de error.
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(MovimientosProveedorService.class);
 
 	/**
 	 * repository de movimientos proveedor
@@ -155,6 +154,13 @@ public class MovimientosProveedorService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
 
+		if (conciliacion.getSubEstatus() == null || conciliacion.getSubEstatus().getId() == null ||
+				!ConciliacionConstants.CON_SUB_ESTATUS_CARGA_MOV_PT.contains(conciliacion.getSubEstatus().getId())) {
+			LOG.error("La conciliacion no tiene un sub-estatus valido. Sub-estatus: [" + conciliacion.getSubEstatus() + "]");
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		}
+
 		// Obtiene el reporte del proveedor transaccional
 		Reporte reporte = null;
 		/*
@@ -184,11 +190,14 @@ public class MovimientosProveedorService {
 							reporte.getId());
 
 			// Verificar si se guarda en batch
-			movimientoProveedorRepository.saveAll(movimientoProveedorList);
+			if (!CollectionUtils.isEmpty(movimientoProveedorList)) {
+				movimientoProveedorRepository.saveAll(movimientoProveedorList);
+			}
+
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(listRequestDTO.getFolio(),
 					"Se dan de alta " + listRequestDTO.getMovimientos().size()
-							+ " movimientos de proveedor transaccional, para  el folio " + listRequestDTO.getFolio(),
+							+ " movimientos de proveedor transaccional, para el folio " + listRequestDTO.getFolio(),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
 			// Notificar cambios o alta de reportes, si existen...

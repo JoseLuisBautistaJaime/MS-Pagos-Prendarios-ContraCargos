@@ -29,6 +29,8 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_9999("Ocurrio un error inesperado, intente mas tarde",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_0010("Se genero un error relacionado con la validacion de expresiones regulares",
+			TipoError.SERVIDOR, SeveridadError.ALTA),
 
 	// ERRORES RELACIONADOS CON REGLA DE NEGOCIO
 
@@ -214,7 +216,15 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_091("El estatus de conciliacion expecificado no existe",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_092("No existen movimientos-devolucion pendientes de solicitud",
-			TipoError.CLIENTE, SeveridadError.MEDIA)	
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_093("El estatus de uno o mas movimientos es incorrecto",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_094("Error al consultar la conciliacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_095("Id de asiento contable e id de poliza de tesoreria nulos o vacios",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_096("Uno o mas movimientos devolucion no existen",
+			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 
 	/**

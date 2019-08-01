@@ -73,4 +73,7 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	@Query("from MovimientoPago l  where l.idConciliacion = :idConciliacion")
 	public List<MovimientoPago> findMovimientoPagoByConciliacionId(
 			@Param("idConciliacion") final Integer idConciliacion);
+	
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT mt.id FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mc ON mc.id = mt.id WHERE mt.id IN :ids AND mc.id_conciliacion = :folio AND mt.estatus <> 1) IS NOT NULL THEN 0 ELSE 1 END as RESULT")
+	public Object validaFolioAndIdsForMovPagos(@Param("folio")final Integer folio, @Param("ids") final List<Integer> ids);
 }

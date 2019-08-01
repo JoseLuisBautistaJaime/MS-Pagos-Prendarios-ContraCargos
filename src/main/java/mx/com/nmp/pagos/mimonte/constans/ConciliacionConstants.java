@@ -4,6 +4,10 @@
  */
 package mx.com.nmp.pagos.mimonte.constans;
 
+import static mx.com.nmp.pagos.mimonte.util.CollectionUtil.asList;
+
+import java.util.List;
+
 /**
  * @name ConciliacionConstants
  * @description Clase con valores con valores constantes utiliazados en los
@@ -322,8 +326,20 @@ public final class ConciliacionConstants {
 
 	// Subestatus conciliacion
 	public static final Long SUBESTATUS_CONCILIACION_CREADA = 1L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_MIDAS = 2L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA = 3L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_ERROR = 4L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY = 5L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA = 6L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_ERROR = 7L;
+	public static final Long SUBESTATUS_CONCILIACION_CONCILIACION = 8L;
+	public static final Long SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA = 9L;
+	public static final Long SUBESTATUS_CONCILIACION_CONCILIACION_ERROR = 10L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA = 11L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA = 12L;
+	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR = 13L;
 	public static final Long SUBESTATUS_CONCILIACION_ENVIADA = 14L;
-	public static final Long SUBESTATUS_CONCILIACION_ERROR = 15L;
+	public static final Long SUBESTATUS_CONCILIACION_ENVIADA_ERROR = 15L;
 	public static final Long SUBESTATUS_CONCILIACION_FINALIZADA = 16L;
 
 	// Estatus devoluciones
@@ -339,7 +355,6 @@ public final class ConciliacionConstants {
 	// Tipo de contacts
 	public static final Long TIPO_CONTACTO_MIDAS = 1l;
 	public static final Long TIPO_CONTACTO_ENTIDAD = 2l;
-
 
 	public static final String ESTATUS_TRANSACCION_OPENPAY_COMPLETED = "completed";
 	public static final String TIPO_TRANSACCION_OPENPAY_CARGO = "charge";
@@ -421,10 +436,11 @@ public final class ConciliacionConstants {
 	public static final String ERROR_WHILE_ID_CONCILIACION_VALIDATION = "Se genero un error durante la validacion del folio de la conciliacion";
 
 	/**
-	 * Mensaje que es mostrado cuando no hay relacion entre el folio y los movimientos ingresados o no existe uno o mas movimientos ingresados
+	 * Mensaje que es mostrado cuando no hay relacion entre el folio y los
+	 * movimientos ingresados o no existe uno o mas movimientos ingresados
 	 */
 	public static final String NO_RELATION_BETWEEN_CONC_AND_MOVS_OR_DONESNT_EXISTS_SUCH_MOVS = "No hay relacion entre el folio y los movimientos ingresados o no existe uno o mas movimientos ingresados";
-	
+
 	/**
 	 * Mensaje que es mostrado cuando se ingresa una sola fecha y esta es incorecta
 	 */
@@ -441,14 +457,41 @@ public final class ConciliacionConstants {
 	 * un estatus marcado como devoluaicon cuando ya ha sido marcado antes
 	 */
 	public static final String NOT_ALLOWED_STATUS_IDS = "Uno o mas ids tiene un estatus incorrecto y no se puede actualizar";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se desea ingresar un estatus de cociliacion que no existe
+	 * Mensaje que es mostrado cuando se desea ingresar un estatus de cociliacion
+	 * que no existe
 	 */
 	public static final String ESTATUS_CONCILIACION_DOESNT_EXISTS = "El estatus de conciliacion especificado no existe";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion pendientes
+	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion
+	 * pendientes
 	 */
 	public static final String THERE_IS_NO_MOVIMIENTOS_DEVOLUCION_PENDIENTES = "No existen movimientos-devolucion pendientes de solicitud";
+
+	/**
+	 * Mensaje que es mostrado cuando se espera un estatus diferente al que se
+	 * encuentran los movimientos
+	 */
+	public static final String WRONG_MOVIMIENTOS_ESTATUS = "El estatus de los movimientos es incorrecto";
+
+	/**
+	 * Mensaje que es mostrado cuando se egenera un error de patron de regex
+	 */
+	public static final String ERROR_REPLACING_EL = "Se genero un error intentando reemplazar las expresiones regulares";
+	
+	/**
+	 * Mensaje que es mostrado cuando se recie uno o mas ids de devolcuion que no existen
+	 */
+	public static final String DEV_MOVS_DONT_EXIST = "Uno o mas movimientos devolucion no existen";
+
+	/**
+	 * Validación de sub-estatus para acciones sobre la conciliación.
+	 */
+	public final static List<Long> CON_SUB_ESTATUS_ACTUALIZACION_PS = asList(SUBESTATUS_CONCILIACION_ENVIADA);
+	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PN = asList(SUBESTATUS_CONCILIACION_CONSULTA_MIDAS);
+	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PT = asList(SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY);
+	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_EC = asList(SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA);
+
 }
