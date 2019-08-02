@@ -228,6 +228,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_096("Uno o mas movimientos devolucion no existen",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_097("Ocurrio un error al extraer los movimientos devolucion para compararlos",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_098("Uno o mas movimientos devolucion tienen un estatus incorrecto",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

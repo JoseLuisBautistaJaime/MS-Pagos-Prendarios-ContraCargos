@@ -124,18 +124,22 @@ public class DevolucionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response actualizar(@RequestBody List<DevolucionUpdtDTO> devolucionUpdtDTOList,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-
-		// Validacion
-		if (!ValidadorConciliacion.validateActualizarDevolucionRequest(devolucionUpdtDTOList) || userRequest == null) {
-			throw new ConciliacionException("Los datos para la liquidacion son incorrectos",
-					CodigoError.NMP_PMIMONTE_0001);
-		}
+			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		// Validacion de objeto y atributos
+		if (!ValidadorConciliacion.validateActualizarDevolucionRequest(devolucionUpdtDTOList) || userRequest == null
+				|| "".equals(userRequest))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		// Validacion de fechas de movimientos
+		for (DevolucionUpdtDTO devolucionUpdtDTO : devolucionUpdtDTOList)
+			if (!ValidadorConciliacion.validateFecha(devolucionUpdtDTO.getFecha()))
+				throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+						CodigoError.NMP_PMIMONTE_BUSINESS_088);
 
 		// Actualizacion
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl.actualizar(devolucionUpdtDTOList,
 				userRequest);
-
+		// Respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualización devoluciones exitosa.",
 				devolucionEntidadDTOList);
 	}
@@ -160,7 +164,7 @@ public class DevolucionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response solicitar(@RequestBody DevolucionesIdsMovimientosDTO devolucionesIdsMovimientosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		if(!ValidadorConciliacion.validateDevolucionesIdsMovimientosDTO(devolucionesIdsMovimientosDTO))
+		if (!ValidadorConciliacion.validateDevolucionesIdsMovimientosDTO(devolucionesIdsMovimientosDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl

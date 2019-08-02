@@ -14,6 +14,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO2;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
@@ -161,6 +162,35 @@ public class DevolucionesBuilder {
 		return devolucionEntidadDTO;
 	}
 
+	/**
+	 * Construye un objeto de tipo DevolucionEntidadDTO a partir de un entity de
+	 * tipo MovimientoDevolucion y un map con las entidades
+	 * 
+	 * @param movimientoDevolucion
+	 * @param entidades
+	 * @return
+	 */
+	public static DevolucionEntidadDTO buildDevolucionEntidadDTOFromMovimientoDevolucion(
+			MovimientoDevolucion movimientoDevolucion, Map<Integer, BaseEntidadDTO> entidades) {
+		DevolucionEntidadDTO devolucionEntidadDTO = null;
+		if (movimientoDevolucion != null) {
+			devolucionEntidadDTO = new DevolucionEntidadDTO();
+			devolucionEntidadDTO.setId(movimientoDevolucion.getId());
+			devolucionEntidadDTO.setFecha(movimientoDevolucion.getFecha());
+			devolucionEntidadDTO.setSucursal(movimientoDevolucion.getSucursal());
+			devolucionEntidadDTO.setIdentificadorCuenta(movimientoDevolucion.getIdentificadorCuenta());
+			devolucionEntidadDTO.setMonto(movimientoDevolucion.getMonto());
+			devolucionEntidadDTO.setEsquemaTarjeta(movimientoDevolucion.getEsquemaTarjeta());
+			devolucionEntidadDTO.setTitular(movimientoDevolucion.getTitular());
+			devolucionEntidadDTO.setCodigoAutorizacion(movimientoDevolucion.getCodigoAutorizacion());
+			devolucionEntidadDTO.setFechaLiquidacion(movimientoDevolucion.getFechaLiquidacion());
+			devolucionEntidadDTO.setEstatus(EstatusDevolucionesBuilder
+					.buildEstatusDevolucionDTOFromEstatusDevolucionSolicita(movimientoDevolucion.getEstatus()));
+			devolucionEntidadDTO.setEntidad(entidades.get(movimientoDevolucion.getId()));
+		}
+		return devolucionEntidadDTO;
+	}
+
 	public static List<DevolucionEntidadDTO> buildDevolucionEntidadDTOListFromConciliacionList(
 			List<Entidad> entidadList) {
 		List<DevolucionEntidadDTO> DevolucionEntidadDTOList = null;
@@ -294,6 +324,14 @@ public class DevolucionesBuilder {
 		return map;
 	}
 
+	/**
+	 * Construye una lista de objetos de tipo DevolucionEntidadDTO a partir de ua
+	 * lista de entities de tipo MovimientoDevolucion
+	 * 
+	 * @param movimientosDevolucion
+	 * @param entidad
+	 * @return
+	 */
 	public static List<DevolucionEntidadDTO> buildDevolucionEntidadDTOListFromMovimientoDevolucionLista(
 			List<MovimientoDevolucion> movimientosDevolucion, Entidad entidad) {
 		List<DevolucionEntidadDTO> devolucionEntidadDTOList = null;
@@ -304,6 +342,25 @@ public class DevolucionesBuilder {
 			}
 		}
 		return devolucionEntidadDTOList;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo Integer a partir de una lista de
+	 * objetos de tipo DevolucionUpdtDTO
+	 * 
+	 * @param devolucionUpdtDTOList
+	 * @return
+	 */
+	public static List<Integer> buildIntegerListFromDevolucionUpdtDTOList(
+			List<DevolucionUpdtDTO> devolucionUpdtDTOList) {
+		List<Integer> list = null;
+		if (null != devolucionUpdtDTOList) {
+			list = new ArrayList<>();
+			for (DevolucionUpdtDTO devolucionUpdtDTO : devolucionUpdtDTOList) {
+				list.add(devolucionUpdtDTO.getIdMovimiento());
+			}
+		}
+		return list;
 	}
 
 }

@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTODev;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 
 /**
@@ -118,5 +119,27 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(md.id) FROM to_movimiento_devolucion md INNER JOIN to_movimiento_conciliacion mc ON md.id = mc.id WHERE md.id IN :ids AND mc.id_conciliacion = :folio) = :tam THEN 1 ELSE 0 END")
 	public Object verifyIfFolioAndIdsRelationShipExists(@Param("folio") final Integer folio,
 			@Param("ids") List<Integer> ids, @Param("tam") final Integer tam);
+
+	/**
+	 * Regresa un valor de 1 cuando se cumple la condicion que dice que los ids de
+	 * devoluciones proporcionados tienen un estatus 2, de lo contrario regresa un 0
+	 * 
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(md.id) FROM to_movimiento_devolucion md WHERE md.id IN :ids AND md.estatus = 2) = :tam THEN 1 ELSE 0 END")
+	public Object verifyIfHaveRightEstatus(@Param("ids") final List<Integer> ids, @Param("tam") final Integer tam);
+
+	/**
+	 * Regresa una lista de objetos de tipo BaseEntidadDTODev (Se usa principalmente
+	 * para regresar datos base de las entidades asociadas a determinados ids de
+	 * movimientos devolucion)
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@Query(value = "SELECT new mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTODev(mc.id, ent.id, ent.nombre, ent.description) FROM Entidad ent INNER JOIN Conciliacion con ON ent.id = con.entidad.id INNER JOIN MovimientoConciliacion mc ON mc.idConciliacion = con.id WHERE mc.id IN :ids")
+	public List<BaseEntidadDTODev> findEntidadesByIdsMovimientos(@Param("ids") final List<Integer> ids);
 
 }

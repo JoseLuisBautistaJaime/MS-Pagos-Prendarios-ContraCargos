@@ -498,18 +498,18 @@ public interface ValidadorConciliacion {
 	 * @return
 	 */
 	public static boolean validateActualizarDevolucionRequest(List<DevolucionUpdtDTO> devolucionUpdtDTOList) {
-		boolean valido = false;
-		if (devolucionUpdtDTOList != null && devolucionUpdtDTOList.size() > 0) {
-			valido = true;
-			for (DevolucionUpdtDTO dto : devolucionUpdtDTOList) {
-				if (dto.getFecha() == null) {
-					valido = false;
-				} else if (dto.getIdMovimiento() == null || dto.getIdMovimiento() <= 0) {
-					valido = false;
-				}
+		if (null == devolucionUpdtDTOList || devolucionUpdtDTOList.isEmpty()) {
+			return false;
+		} else {
+			for (DevolucionUpdtDTO devolucionUpdtDTO : devolucionUpdtDTOList) {
+				if (null == devolucionUpdtDTO || null == devolucionUpdtDTO.getLiquidar()
+						|| null == devolucionUpdtDTO.getFecha() || null == devolucionUpdtDTO.getIdMovimiento()
+						|| devolucionUpdtDTO.getIdMovimiento().compareTo(0) == 0
+						|| devolucionUpdtDTO.getIdMovimiento().compareTo(0) < 0)
+					return false;
 			}
 		}
-		return valido;
+		return true;
 	}
 
 	/**
