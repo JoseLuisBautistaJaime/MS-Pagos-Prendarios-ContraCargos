@@ -80,18 +80,30 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 		Map<String, List<MovimientoProveedor>> movsProveedorByTransaction = mapByMovsTransactionByTransaction(movsProveedor);
 
 		List<MovimientoTransito> movsTransito = new ArrayList<MovimientoTransito>();
-		
-		for (Map.Entry<String, List<MovimientoMidas>> movMidas : movsMidasByTransaction.entrySet()) {
-			
-			List<MovimientoProveedor> movsProveedorTransaccion = movsProveedorByTransaction.get(movMidas.getKey());
-			List<MovimientoMidas> movsMidasTransaccion = movMidas.getValue();
-			
-			// Validar monto de la transaccion sea igual al reportado en midas
-			BigDecimal montoProveedor = ConciliacionMathUtil.getImporteProveedor(movsProveedorTransaccion);
-			BigDecimal montoMidas = ConciliacionMathUtil.getImporteMidas(movsMidasTransaccion);
-			if (isInvalidTransaccionMidas(movsMidasTransaccion) || montoProveedor.compareTo(montoMidas) != 0) {
-				for (MovimientoMidas movMidasTransaccion : movsMidasTransaccion) {
-					movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, idConciliacion));
+
+		// Exiten movimientos midas
+		if (!movsMidasByTransaction.isEmpty()) {
+			for (Map.Entry<String, List<MovimientoMidas>> movMidas : movsMidasByTransaction.entrySet()) {
+				
+				List<MovimientoProveedor> movsProveedorTransaccion = movsProveedorByTransaction.get(movMidas.getKey());
+				List<MovimientoMidas> movsMidasTransaccion = movMidas.getValue();
+				
+				// Validar monto de la transaccion sea igual al reportado en midas
+				BigDecimal montoProveedor = ConciliacionMathUtil.getImporteProveedor(movsProveedorTransaccion);
+				BigDecimal montoMidas = ConciliacionMathUtil.getImporteMidas(movsMidasTransaccion);
+				if (isInvalidTransaccionMidas(movsMidasTransaccion) || montoProveedor.compareTo(montoMidas) != 0) {
+					for (MovimientoMidas movMidasTransaccion : movsMidasTransaccion) {
+						movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, idConciliacion));
+					}
+				}
+			}
+		}
+
+		// Solo existen movimientos en el proveedor
+		else if (movsProveedor != null && !movsProveedor.isEmpty()) {
+			for (MovimientoProveedor movProveedor : movsProveedor) {
+				if (ConciliacionMathUtil.isValidTransaction(movProveedor)) {
+					movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovProveedor(movProveedor, idConciliacion));
 				}
 			}
 		}

@@ -276,6 +276,7 @@ public class ApplicationProperties {
 				private String url;
 				private ConsultaEstadoCuentaAuth auth;
 				private ConsultaEstadoCuentaHeader header;
+				private ArchivoEstadoCuenta archivo;
 
 				public String getUrl() {
 					return url;
@@ -299,6 +300,14 @@ public class ApplicationProperties {
 
 				public void setAuth(ConsultaEstadoCuentaAuth auth) {
 					this.auth = auth;
+				}
+
+				public ArchivoEstadoCuenta getArchivo() {
+					return archivo;
+				}
+
+				public void setArchivo(ArchivoEstadoCuenta archivo) {
+					this.archivo = archivo;
 				}
 
 				public static class ConsultaEstadoCuentaHeader {
@@ -351,6 +360,24 @@ public class ApplicationProperties {
 						this.password = password;
 					}
 				}
+				
+				public static class ArchivoEstadoCuenta {
+					private String ruta;
+					private String nombre;
+					public String getRuta() {
+						return ruta;
+					}
+					public void setRuta(String ruta) {
+						this.ruta = ruta;
+					}
+					public String getNombre() {
+						return nombre;
+					}
+					public void setNombre(String nombre) {
+						this.nombre = nombre;
+					}
+				}
+
 			}
 		}
 

@@ -57,10 +57,10 @@ public class BusMailRestService extends AbstractOAuth2RestService {
 		BusRestHeaderDTO header = new BusRestHeaderDTO(bearerToken);
 		Map<String, Object> response = postForObject(auth, body, header, mc.urlSendEmail);
 
-		boolean statusResponse = (null != response && null != response.get(mc.responseRespKey)
-				&& null != ((LinkedHashMap<String, Object>) (response.get(mc.responseRespKey))).get(mc.responseCodpKey)
-				&& mc.flagSendingSuccess.equals(((LinkedHashMap<String, Object>) (response.get(mc.responseRespKey)))
-						.get(mc.responseCodpKey).toString()));
+		boolean statusResponse = (null != response && null != response.get("respuesta")
+				&& null != ((LinkedHashMap<String, Object>) (response.get("respuesta"))).get("codigo")
+				&& "success".equals(((LinkedHashMap<String, Object>) (response.get("respuesta")))
+						.get("codigo").toString()));
 
 		LOG.debug(statusResponse ? "Mail enviado correctamente" : "Error al enviar el e-mail");
 
@@ -79,12 +79,12 @@ public class BusMailRestService extends AbstractOAuth2RestService {
 	protected HttpHeaders createHeadersPostTo(BusRestAuthDTO auth, BusRestHeaderDTO header) {
 		String base64Creds = buildBase64Hash(auth);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(mc.headerAuthKey, mc.headerAuthValue.concat(" ") + base64Creds);
-		headers.add(mc.contentTypeKey, mc.senMailContentTypeValue);
+		headers.add("Authorization", "Basic " + base64Creds);
+		headers.add("Content-Type", "application/json");
 		headers.add(mc.idConsumidorKey, mc.idConsumidorValue);
 		headers.add(mc.idDestinoKey, mc.idDestinoValue);
 		headers.add(mc.usuarioKey, mc.usuarioValue);
-		headers.add(mc.oauthBearer, header.getBearerToken());
+		headers.add("oauth.bearer", header.getBearerToken());
 		return headers;
 	}
 

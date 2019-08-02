@@ -255,7 +255,7 @@ public class SolicitarPagosService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_043);
 		// Se constrye el cuerpo de correo HTML
 		model = buildMailModel(solicitarPagosMailDataDTOList);
-		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, mc.velocityLayout, mc.encodeType,
+		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, mc.velocityLayout, "UTF-8",
 				model);
 		// Se construye el DTO de request y se invoca el servicio de correo proveido por
 		// BUS
@@ -282,23 +282,6 @@ public class SolicitarPagosService {
 		model.put("text1", mc.text1);
 		model.put("text2", mc.text2);
 		model.put("text3", mc.text3);
-		model.put("codigoAutorizacion", mc.codigoAutorizacion);
-		model.put("codigoDescuento", mc.codigoDescuento);
-		model.put("codigoRespuestaAdquiriente", mc.codigoRespuestaAdquiriente);
-		model.put("codigoRespuestaMotorPagosTransaccion", mc.codigoRespuestaMotorPagosTransaccion);
-		model.put("fechaTransaccion", mc.fechaTransaccion);
-		model.put("folioPartida", mc.folioPartida);
-		model.put("fuenteTransaccion", mc.fuenteTransaccion);
-		model.put("identificadorCuenta", mc.identificadorCuenta);
-		model.put("idTerminalAdquiriente", mc.idTerminalAdquiriente);
-		model.put("metodoPago", mc.metodoPago);
-		model.put("montoTransaccion", mc.montoTransaccion);
-		model.put("numeroLoteAdquiriente", mc.numeroLoteAdquiriente);
-		model.put("tipoCuenta", mc.tipoCuenta);
-		model.put("tipoMoneda", mc.tipoMoneda);
-		model.put("tipoTransaccion", mc.tipoTransaccion);
-		model.put("titularCuenta", mc.titularCuenta);
-		model.put("transaccion", mc.transaccion);
 		model.put("elements", solicitarPagosMailDataDTOList);
 		return model;
 	}

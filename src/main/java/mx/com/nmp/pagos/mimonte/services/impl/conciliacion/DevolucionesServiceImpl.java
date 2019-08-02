@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,9 +102,6 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
-
-	@Value("${mimonte.variables.estatus-varios.no-identificada}")
-	private String nombreEstatusDevolucion;
 
 	/**
 	 * Log de actividades en el servidor
@@ -413,7 +409,6 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	@Transactional
 	public List<DevolucionConDTO> marcarDevolucion(SolicitarPagosRequestDTO marcarDevoluciones, String createdBy) {
 
-		EstatusTransito estatusTransito = null;
 		Boolean flagEstatus = null;
 
 		// Se validan parametros
@@ -431,13 +426,13 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 		// Valida que el estatus de los movimientos sea el primero y unico valido para
 		// cambiar a devolucion (1, 2)
-		estatusTransito = estatusTransitoRepository.findByNombre(nombreEstatusDevolucion);
-		if (null == estatusTransito)
+		Optional<EstatusTransito> estatusTransito = estatusTransitoRepository.findById(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS);
+		if (null == estatusTransito || !estatusTransito.isPresent())
 			throw new ConciliacionException(ConciliacionConstants.GETTING_DEV_ESTATUS_HAS_GONE_WRONG,
 					CodigoError.NMP_PMIMONTE_BUSINESS_089);
 		// Se envia el estatus 2 que significa solicitada como pago
 		flagEstatus = BigInteger.ONE.compareTo((BigInteger) movimientoTransitoRepository
-				.verifyIfIdsHaveRightEstatus(marcarDevoluciones.getIdMovimientos(), estatusTransito.getId(), 2)) == 0;
+				.verifyIfIdsHaveRightEstatus(marcarDevoluciones.getIdMovimientos(), estatusTransito.get().getId(), 2)) == 0;
 		if (!flagEstatus) {
 			throw new ConciliacionException(ConciliacionConstants.NOT_ALLOWED_STATUS_IDS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_090);

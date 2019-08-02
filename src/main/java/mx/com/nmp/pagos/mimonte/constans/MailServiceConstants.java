@@ -28,12 +28,6 @@ public class MailServiceConstants {
 	public String subjectMail;
 
 	/**
-	 * Tipo de codificacion para e-mail para solicitud de pagos
-	 */
-	@Value("${mimonte.variables.mail.solicitud-pagos.encode-type}")
-	public String encodeType;
-
-	/**
 	 * Layout velocity para e-mail para solicitud de pagos
 	 */
 	@Value("${mimonte.variables.mail.solicitud-pagos.velocity-layout}")
@@ -68,36 +62,6 @@ public class MailServiceConstants {
 	 */
 	@Value(value = "${mimonte.variables.mail.send-mail.url}")
 	public String urlSendEmail;
-
-	/**
-	 * Key de Cabecera de autenticacion
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.auth}")
-	public String headerAuthKey;
-
-	/**
-	 * Valor de cabecera de autenticacion
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.auth-value}")
-	public String headerAuthValue;
-
-	/**
-	 * Key de cabecera para tipo de contenido
-	 */
-	@Value(value = "${mimonte.variables.mail.common-headers.content-type}")
-	public String contentTypeKey;
-
-	/**
-	 * Valor para cabecera con tipo de contenido para servicio de token
-	 */
-	@Value(value = "${mimonte.variables.mail.token.headers.content-type-value}")
-	public String tokenContentTypeValue;
-
-	/**
-	 * Valor para cabecera con tipo de contenido para servicio de envio de e-mail
-	 */
-	@Value(value = "${mimonte.variables.mail.send-mail.headers.content-type-value}")
-	public String senMailContentTypeValue;
 
 	/**
 	 * Key de Cabecera para id de consumidor
@@ -136,54 +100,6 @@ public class MailServiceConstants {
 	public String usuarioValue;
 
 	/**
-	 * Key para cabecera de envio de mail que contiene el token
-	 */
-	@Value(value = "${mimonte.variables.mail.send-mail.headers.oauth-bearer-key}")
-	public String oauthBearer;
-
-	/**
-	 * Bandera que indica si la operacion de envio se realizo correctamente
-	 */
-	@Value(value = "${mimonte.variables.mail.send-mail.success-flag}")
-	public String flagSendingSuccess;
-
-	/**
-	 * Key de cabecera para propiedad GrantTypeKey
-	 */
-	@Value(value = "${mimonte.variables.mail.token.headers.grant-key}")
-	public String headerGrantTypeKey;
-
-	/**
-	 * Valor de cabecera para propiedad GrantTypeKey
-	 */
-	@Value(value = "${mimonte.variables.mail.token.headers.grant-value}")
-	public String headerGrantTypeValue;
-
-	/**
-	 * Key de cabecera para propiedad scope
-	 */
-	@Value(value = "${mimonte.variables.mail.token.headers.scope-key}")
-	public String headerScopeKey;
-
-	/**
-	 * Valor de cabecera para propiedad scope
-	 */
-	@Value(value = "${mimonte.variables.mail.token.headers.scope-value}")
-	public String headerScopeValue;
-
-	/**
-	 * Key para el objeto de respuesta 'respuesta' de envio de e-mail
-	 */
-	@Value(value = "${mimonte.variables.mail.response.resp-key}")
-	public String responseRespKey;
-
-	/**
-	 * Key para el objeto de respuesta 'codigo' de envio de e-mail
-	 */
-	@Value(value = "${mimonte.variables.mail.response.cod-key}")
-	public String responseCodpKey;
-
-	/**
 	 * Clase que contiene las constantes que mapean las propiedades de textos del
 	 * e-mail
 	 * 
@@ -194,75 +110,13 @@ public class MailServiceConstants {
 	/**
 	 * Mail text constnts properties
 	 */
-	@Value("${mimonte.variables.mail.text1}")
+	@Value("${mimonte.variables.mail.solicitud-pagos.text1}")
 	public String text1;
 
-	@Value("${mimonte.variables.mail.text2}")
+	@Value("${mimonte.variables.mail.solicitud-pagos.text2}")
 	public String text2;
 
-	@Value("${mimonte.variables.mail.text3}")
+	@Value("${mimonte.variables.mail.solicitud-pagos.text3}")
 	public String text3;
-
-	/**
-	 * Constantes que mapean propiedades a poner como titulos de columna en la tabla
-	 * de email de movimientos transito
-	 * 
-	 * @author user
-	 *
-	 */
-
-	/**
-	 * Table Headers constants properties
-	 */
-	@Value("${mimonte.variables.mail.table.headers.fechaTransaccion}")
-	public String fechaTransaccion;
-
-	@Value("${mimonte.variables.mail.table.headers.folioPartida}")
-	public String folioPartida;
-
-	@Value("${mimonte.variables.mail.table.headers.transaccion}")
-	public String transaccion;
-
-	@Value("${mimonte.variables.mail.table.headers.codigoDescuento}")
-	public String codigoDescuento;
-
-	@Value("${mimonte.variables.mail.table.headers.tipoTransaccion}")
-	public String tipoTransaccion;
-
-	@Value("${mimonte.variables.mail.table.headers.montoTransaccion}")
-	public String montoTransaccion;
-
-	@Value("${mimonte.variables.mail.table.headers.tipoMoneda}")
-	public String tipoMoneda;
-
-	@Value("${mimonte.variables.mail.table.headers.tipoCuenta}")
-	public String tipoCuenta;
-
-	@Value("${mimonte.variables.mail.table.headers.codigoRespuestaMotorPagosTransaccion}")
-	public String codigoRespuestaMotorPagosTransaccion;
-
-	@Value("${mimonte.variables.mail.table.headers.metodoPago}")
-	public String metodoPago;
-
-	@Value("${mimonte.variables.mail.table.headers.identificadorCuenta}")
-	public String identificadorCuenta;
-
-	@Value("${mimonte.variables.mail.table.headers.idTerminalAdquiriente}")
-	public String idTerminalAdquiriente;
-
-	@Value("${mimonte.variables.mail.table.headers.titularCuenta}")
-	public String titularCuenta;
-
-	@Value("${mimonte.variables.mail.table.headers.codigoAutorizacion}")
-	public String codigoAutorizacion;
-
-	@Value("${mimonte.variables.mail.table.headers.codigoRespuestaAdquiriente}")
-	public String codigoRespuestaAdquiriente;
-
-	@Value("${mimonte.variables.mail.table.headers.numeroLoteAdquiriente}")
-	public String numeroLoteAdquiriente;
-
-	@Value("${mimonte.variables.mail.table.headers.fuenteTransaccion}")
-	public String fuenteTransaccion;
 
 }

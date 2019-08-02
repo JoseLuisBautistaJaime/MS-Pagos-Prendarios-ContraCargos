@@ -9,13 +9,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaFileBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstadoCuentaLineBuilder;
 import mx.com.nmp.pagos.mimonte.conector.EstadoCuentaBroker;
+import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout43;
@@ -42,18 +42,11 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
 	@Inject
 	private ConciliacionHelper conciliacionHelper;
 
-
 	/**
-	 * Ruta
+	 * Contiene las propiedades del sistema
 	 */
-	@Value("${estadocuenta.ruta}")
-	private String ruta;
-
-	/**
-	 * Nombre
-	 */
-	@Value("${estadocuenta.nombre}")
-	private String nombre;
+	@Inject
+	private ApplicationProperties applicationProperties;
 
 
 
@@ -66,8 +59,8 @@ public class EstadoCuentaReaderC43Service implements EstadoCuentaReaderService {
  		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion.intValue(), null);
 
 		// Crea nombre y ruta del archivo en base a la fecha
- 		String rutaArchivo = EstadoCuentaFileBuilder.buildPath(date, ruta);
-		String nombreArchivo = EstadoCuentaFileBuilder.buildFileName(date, conciliacion.getCuenta().getNumeroCuenta(), nombre);
+ 		String rutaArchivo = EstadoCuentaFileBuilder.buildPath(date, applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getArchivo().getRuta());
+		String nombreArchivo = EstadoCuentaFileBuilder.buildFileName(date, conciliacion.getCuenta().getNumeroCuenta(), applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getArchivo().getNombre());
 
 		// Consulta el archivo
 		List<String> lineasArchivo = estadoCuentaBrokerBus.consulta(rutaArchivo, nombreArchivo);
