@@ -96,7 +96,7 @@ public abstract class MovimientoDevolucionBuilder {
 		movimientoDevolucion.setEsquemaTarjeta(mt.getEsquemaTarjeta());
 		movimientoDevolucion.setIdentificadorCuenta(mt.getCuenta());
 		movimientoDevolucion.setTitular(mt.getTitular());
-		movimientoDevolucion.setCodigoAutorizacion(null);
+		movimientoDevolucion.setCodigoAutorizacion(mt.getNumAutorizacion());
 		movimientoDevolucion.setSucursal(mt.getSucursal());
 		movimientoDevolucion.setFechaLiquidacion(null);
 
