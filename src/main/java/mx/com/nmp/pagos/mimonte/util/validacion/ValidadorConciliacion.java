@@ -14,9 +14,11 @@ import java.util.List;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDeleteDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
@@ -27,6 +29,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
@@ -254,9 +257,6 @@ public interface ValidadorConciliacion {
 	 * @return
 	 */
 	public static boolean validateComisionSaveDTO(ComisionSaveDTO comisionSaveDTO) {
-		Calendar today = Calendar.getInstance();
-		Calendar fCargo = Calendar.getInstance();
-		Calendar fOperacion = Calendar.getInstance();
 		try {
 			assertNotNull(comisionSaveDTO);
 			assertNotNull(comisionSaveDTO.getDescripcion());
@@ -268,11 +268,8 @@ public interface ValidadorConciliacion {
 		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
-		fCargo.setTime(comisionSaveDTO.getFechaCargo());
-		fOperacion.setTime(comisionSaveDTO.getFechaOperacion());
 		return (!comisionSaveDTO.getDescripcion().isEmpty() && !"".equals(comisionSaveDTO.getDescripcion())
-				&& !today.before(fCargo) && !today.before(fOperacion) && comisionSaveDTO.getId() > -1
-				&& comisionSaveDTO.getMonto().compareTo(new BigDecimal("0")) > 0);
+				&& comisionSaveDTO.getId() > -1 && comisionSaveDTO.getMonto().compareTo(new BigDecimal("0")) > 0);
 	}
 
 	/**
@@ -591,6 +588,53 @@ public interface ValidadorConciliacion {
 				if (null == movimiento || null == movimiento.getFecha() || null == movimiento.getId()
 						|| movimiento.getId() <= 0)
 					return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Valida un objeto de tipo ActualizaionConciliacionRequestDTO para que no sea
+	 * nulo y que contenga todos los atributos requeridos y asu vez estos sean
+	 * valores valudos
+	 * 
+	 * @param actualizaionConciliacionRequestDTO
+	 * @return
+	 */
+	public static boolean validateActualizaionConciliacionRequestDTO(
+			ActualizaionConciliacionRequestDTO actualizaionConciliacionRequestDTO) {
+		// Valida que los objetos principales no sean nulos y/o vacios
+		if (null == actualizaionConciliacionRequestDTO || null == actualizaionConciliacionRequestDTO.getFolio()
+				|| ((null == actualizaionConciliacionRequestDTO.getComisiones()
+						|| actualizaionConciliacionRequestDTO.getComisiones().isEmpty())
+						&& (null == actualizaionConciliacionRequestDTO.getMovimientosTransito()
+								|| actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty()))
+				|| actualizaionConciliacionRequestDTO.getComisiones().isEmpty()
+				|| actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty())
+			return false;
+		else {
+			// Si las comisiones no son nulas valida sus atributos
+			if (null != actualizaionConciliacionRequestDTO.getComisiones()
+					&& !actualizaionConciliacionRequestDTO.getComisiones().isEmpty()) {
+				for (ComisionesRequestDTO comision : actualizaionConciliacionRequestDTO.getComisiones()) {
+					if (null == comision.getEstatus() || null == comision.getDescripcion()
+							|| "".equals(comision.getDescripcion()) || null == comision.getFechaCargo()
+							|| null == comision.getFechaOperacion() || null == comision.getId()
+							|| comision.getId().compareTo(0) < 0 || null == comision.getMonto()
+							|| comision.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
+						return false;
+					}
+				}
+			}
+			// Si los movimientos en transito no son nulas valida sus atributos
+			if (null != actualizaionConciliacionRequestDTO.getMovimientosTransito()
+					&& !actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty()) {
+				for (MovTransitoRequestDTO movTransito : actualizaionConciliacionRequestDTO.getMovimientosTransito()) {
+					if (null == movTransito.getId() || movTransito.getId().compareTo(0) < 0
+							|| null == movTransito.getTipo() || "".equals(movTransito.getTipo())) {
+						return false;
+					}
+				}
 			}
 		}
 		return true;

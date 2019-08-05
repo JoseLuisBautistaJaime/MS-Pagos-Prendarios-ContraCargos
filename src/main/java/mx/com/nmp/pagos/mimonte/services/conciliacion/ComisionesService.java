@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +49,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.OperacionComisionProyeccionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 
 /**
  * @name ComisionesService
@@ -103,11 +106,19 @@ public class ComisionesService {
 	@Qualifier("comisionTransaccionRealRepository")
 	private ComisionTransaccionRealRepository comisionTransaccionRealRepository;
 
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+
 	/**
 	 * Propiedad IVA
 	 */
 	@Value(ConciliacionConstants.ConstantProperties.IVA)
 	private String iva;
+
+	/**
+	 * Logger
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(ComisionesService.class);
 
 	/**
 	 * 
@@ -260,20 +271,33 @@ public class ComisionesService {
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Map<String, Object> save(final ComisionSaveDTO comisionSaveDTO, final String requestUser) {
+		// Objetos necesarios
 		Map<String, Object> result;
 		ComisionSaveResponseDTO comisionSaveResponseDTO = null;
-		Optional<MovimientoComision> movimientoComision;
+		Optional<MovimientoComision> movimientoComisionOpt = null;
+		MovimientoComision movimientoComision = null;
 		boolean flagNew = true;
-		Optional<Conciliacion> conciliacion = conciliacionRepository.findById(comisionSaveDTO.getFolio());
-		if (!conciliacion.isPresent())
-			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_BUSINESS_018);
+
+		// Valida que la conciliacion exista
+		conciliacionDataValidator.validateFolioExists(comisionSaveDTO.getFolio());
+
+		// Valida que si la comision es nueva o ya existe por id
 		if (0 != comisionSaveDTO.getId()) {
-			movimientoComision = comisionesRepository.findById(comisionSaveDTO.getId());
-			if (null == movimientoComision || !movimientoComision.isPresent())
-				throw new ConciliacionException(ConciliacionConstants.COMISION_ID_NOT_FOUND,
+			try {
+				movimientoComisionOpt = comisionesRepository.findById(comisionSaveDTO.getId());
+				movimientoComision = comisionesRepository.findByIdAndEstatus(comisionSaveDTO.getId(), true);
+			} catch (Exception ex) {
+				LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0011.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_0011);
+			}
+			if (!movimientoComisionOpt.isPresent())
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_019.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_019);
-			else
+			else if (null == movimientoComision) {
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_099.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_099);
+			} else
 				flagNew = false;
 		}
 		result = new HashMap<>();

@@ -36,6 +36,7 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
@@ -213,10 +214,24 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response actualizaConciliacion(
 			@RequestBody ActualizaionConciliacionRequestDTO actualizaionConciliacionRequestDTO,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String LastModifiedBy) {
-
-		conciliacionServiceImpl.actualizaConciliacion(actualizaionConciliacionRequestDTO);
-
+			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		// Validaciones generales del request
+		if (!ValidadorConciliacion.validateActualizaionConciliacionRequestDTO(actualizaionConciliacionRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		// Validacion de fechas de las comisiones
+		if (null != actualizaionConciliacionRequestDTO.getComisiones()
+				&& !actualizaionConciliacionRequestDTO.getComisiones().isEmpty()) {
+			for (ComisionesRequestDTO comision : actualizaionConciliacionRequestDTO.getComisiones()) {
+				if (!ValidadorConciliacion.validateFecha(comision.getFechaCargo()))
+					throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+							CodigoError.NMP_PMIMONTE_BUSINESS_088);
+				if (!ValidadorConciliacion.validateFecha(comision.getFechaOperacion()))
+					throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+							CodigoError.NMP_PMIMONTE_BUSINESS_088);
+			}
+		}
+		conciliacionServiceImpl.actualizaConciliacion(actualizaionConciliacionRequestDTO, lastModifiedBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_UPDATE,
 				null);
 	}

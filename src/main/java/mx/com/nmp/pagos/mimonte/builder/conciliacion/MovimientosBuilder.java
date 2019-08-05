@@ -9,7 +9,9 @@ import java.util.Date;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
@@ -529,6 +531,46 @@ public abstract class MovimientosBuilder {
 			for (MovimientosDTO movimiento : movimientosDTOList) {
 				if (null != movimiento.getId())
 					list.add(movimiento.getId());
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo Integer a partir de una lista de
+	 * objetos de tipoMovTransitoRequestDTO
+	 * 
+	 * @param movTransitoRequestDTOList
+	 * @return
+	 */
+	public static List<Integer> buildIntegerListFromMovTransitoRequestDTOList(
+			List<MovTransitoRequestDTO> movTransitoRequestDTOList) {
+		List<Integer> list = null;
+		if (null != movTransitoRequestDTOList && !movTransitoRequestDTOList.isEmpty()) {
+			list = new ArrayList<>();
+			for (MovTransitoRequestDTO movTransitoRequestDTO : movTransitoRequestDTOList) {
+				list.add(movTransitoRequestDTO.getId());
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo Integer a partir de una lista de
+	 * objetos de tipo ComisionesRequestDTO
+	 * 
+	 * @param comisionesRequestDTOList
+	 * @return
+	 */
+	public static List<Integer> buildIntegerListFromComisionesRequestDTOList(
+			List<ComisionesRequestDTO> comisionesRequestDTOList) {
+		List<Integer> list = null;
+		if (null != comisionesRequestDTOList && !comisionesRequestDTOList.isEmpty()) {
+			list = new ArrayList<>();
+			for (ComisionesRequestDTO comisionesRequestDTO : comisionesRequestDTOList) {
+				{
+					list.add(comisionesRequestDTO.getId());
+				}
 			}
 		}
 		return list;

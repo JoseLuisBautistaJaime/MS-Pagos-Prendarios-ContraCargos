@@ -33,6 +33,8 @@ public enum CodigoError {
 			TipoError.SERVIDOR, SeveridadError.ALTA),
 	NMP_PMIMONTE_0011("Se ha generado un error con la base de datos",
 			TipoError.SERVIDOR, SeveridadError.ALTA),
+	NMP_PMIMONTE_0012("Se genero un error al tratar de persistir la actividad",
+			TipoError.SERVIDOR, SeveridadError.ALTA),
 
 	// ERRORES RELACIONADOS CON REGLA DE NEGOCIO
 
@@ -230,6 +232,20 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_097("Ocurrio un error al extraer los movimientos devolucion para compararlos",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_098("Uno o mas movimientos devolucion tienen un estatus incorrecto",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_099("La comision no puede ser editada ya que no fue dada de alta desde la aplicacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_100("Uno o mas movimientos en transito no existen",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_101("Error al guardar y/o actualizar comisiones",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_102("Uno o mas movimientos de comision no existen",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_103("Error al consultar movimientos de comision",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_104("Ocurrio un error al solicitar una devolucion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_105("Ocurrio un error al obtener los movimientos devolucion",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

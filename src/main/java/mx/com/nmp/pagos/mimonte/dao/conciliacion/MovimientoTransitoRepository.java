@@ -97,4 +97,17 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	public Object verifyIfIdsHaveRightEstatus(@Param("ids") final List<Integer> ids,
 			@Param("estatus") final Integer estatus, @Param("estatus2") final Integer estatus2);
 
+	/**
+	 * Regresa un valor de 1 cuando los movimientos especificados son movimientos
+	 * transito valios (que existan en la tabla y hayan sido dados de alta desde la
+	 * aplicacion y no el merge), de lo contrario regresaa un 1
+	 * 
+	 * @param movTransitoIds
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(mt.id) FROM to_movimiento_transito mt WHERE mt.nuevo = 1 AND mt.id IN :movTransitoIds = :tam) THEN 1 ELSE 0 END")
+	public Object checkIfIdsExist(@Param("movTransitoIds") final List<Integer> movTransitoIds,
+			@Param("tam") final Integer tam);
+
 }

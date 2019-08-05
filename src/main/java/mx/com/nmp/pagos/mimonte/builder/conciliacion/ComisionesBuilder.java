@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
@@ -157,6 +158,31 @@ public abstract class ComisionesBuilder {
 				comisionesTransDTO.getReal().getIvaComision(), comisionesTransDTO.getReal().getTotalComision());
 
 		return comisionTransaccionReal;
+	}
+
+	/**
+	 * Construye un objeto de tipo MovimientoComision a partir de un objeto de tipo
+	 * ComisionesRequestDTO
+	 * 
+	 * @param comisionesRequestDTO
+	 * @param requestUser
+	 * @return
+	 */
+	public static MovimientoComision buildMovimientoComisionFromComisionesRequestDTO(
+			final ComisionesRequestDTO comisionesRequestDTO, final String requestUser) {
+		MovimientoComision movimientoComision = null;
+		if (null != comisionesRequestDTO) {
+			movimientoComision = new MovimientoComision();
+			movimientoComision.setCreatedBy(requestUser);
+			movimientoComision.setCreatedDate(new Date());
+			movimientoComision.setDescripcion(comisionesRequestDTO.getDescripcion());
+			movimientoComision.setEstatus(comisionesRequestDTO.getEstatus());
+			movimientoComision.setId(comisionesRequestDTO.getId());
+			movimientoComision.setMonto(comisionesRequestDTO.getMonto());
+			movimientoComision.setFechaOperacion(comisionesRequestDTO.getFechaOperacion());
+			movimientoComision.setFechaCargo(comisionesRequestDTO.getFechaCargo());
+		}
+		return movimientoComision;
 	}
 
 }

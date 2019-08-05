@@ -45,9 +45,21 @@ public interface MovimientoComisionRepository extends JpaRepository<MovimientoCo
 
 	/**
 	 * Regresa un movimiento comision por el id de movimiento estado cuenta
+	 * 
 	 * @param idMovimientoEstadoCuenta
 	 * @return
 	 */
 	public MovimientoComision findByIdMovimientoEstadoCuenta(Long idMovimientoEstadoCuenta);
+
+	/**
+	 * Regresa un valor 1 si existen todos los movimientos de comision especificados
+	 * de lo contrario regresa un 0
+	 * 
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(mc.id) FROM to_movimiento_comision mc WHERE mc.id IN :ids AND mc.tipo = 'COMISION' = :tam) THEN 1 ELSE 0 END")
+	public Object checkIfIdsExist(@Param("ids") final List<Integer> ids, @Param("tam") final Integer tam);
 
 }

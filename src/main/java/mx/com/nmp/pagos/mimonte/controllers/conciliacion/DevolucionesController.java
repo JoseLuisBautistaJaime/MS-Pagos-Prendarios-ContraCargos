@@ -167,9 +167,18 @@ public class DevolucionesController {
 		if (!ValidadorConciliacion.validateDevolucionesIdsMovimientosDTO(devolucionesIdsMovimientosDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl
-				.solicitarDevoluciones(devolucionesIdsMovimientosDTO, userRequest);
-
+		List<DevolucionEntidadDTO> devolucionEntidadDTOList = null;
+		try {
+			devolucionEntidadDTOList = devolucionesServiceImpl.solicitarDevoluciones(devolucionesIdsMovimientosDTO,
+					userRequest);
+		} catch (ConciliacionException ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw ex;
+		} catch (Exception ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_104.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_104);
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud devoluciones exitosa.",
 				devolucionEntidadDTOList);
 	}
