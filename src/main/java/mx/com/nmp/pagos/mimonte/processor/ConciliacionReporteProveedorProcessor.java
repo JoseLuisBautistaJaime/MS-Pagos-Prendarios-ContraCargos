@@ -6,7 +6,6 @@ package mx.com.nmp.pagos.mimonte.processor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
@@ -48,7 +46,7 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 	 */
 	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
 	
-		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR) || reportesWrapper.contains(TipoReporteEnum.MIDAS)) {
+		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR)) {
 
 			// Se extraen los movimientos con error, se vuelve a validar montos
 			List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(reportesWrapper.getIdConciliacion());
@@ -85,16 +83,23 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 		if (!movsMidasByTransaction.isEmpty()) {
 			for (Map.Entry<String, List<MovimientoMidas>> movMidas : movsMidasByTransaction.entrySet()) {
 				
+				// Se obtienen los movimientos open pay y midas agrupados por transaccion
 				List<MovimientoProveedor> movsProveedorTransaccion = movsProveedorByTransaction.get(movMidas.getKey());
 				List<MovimientoMidas> movsMidasTransaccion = movMidas.getValue();
 				
-				// Validar monto de la transaccion sea igual al reportado en midas
+				// Se obtiene el monto de la transaccion midas y open pay
 				BigDecimal montoProveedor = ConciliacionMathUtil.getImporteProveedor(movsProveedorTransaccion);
 				BigDecimal montoMidas = ConciliacionMathUtil.getImporteMidas(movsMidasTransaccion);
+				
+				// Se valida si es un movimiento invalido en midas o el monto es diferente al de open pay
 				if (isInvalidTransaccionMidas(movsMidasTransaccion) || montoProveedor.compareTo(montoMidas) != 0) {
+
+					// Por cada movimiento en midas se genera un movimiento en transito
 					for (MovimientoMidas movMidasTransaccion : movsMidasTransaccion) {
-						movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, idConciliacion));
+						MovimientoProveedor movProveedor = CollectionUtils.isNotEmpty(movsProveedorTransaccion) ? movsProveedorTransaccion.get(0) : null;
+						movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, movProveedor, idConciliacion));
 					}
+
 				}
 			}
 		}
@@ -154,6 +159,7 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 	}
 
 
+	/*
 	private List<MovimientoTransito> extraerMovimientosNoIdentificadosMidas(ReportesWrapper reportesWrapper, List<MovimientoMidas> movsMidas, List<MovimientoProveedor> movsProveedor) {
 		
 		List<MovimientoTransito> transito = new ArrayList<MovimientoTransito>();
@@ -184,6 +190,7 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 
 		return transito;
 	}
+	*/
 
 
 	/**

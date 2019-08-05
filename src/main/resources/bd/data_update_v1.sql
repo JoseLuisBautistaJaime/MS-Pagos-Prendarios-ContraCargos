@@ -61,3 +61,6 @@ VALUES (22, 'ENVIO_CONCILIACION', 14, 16);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
 VALUES (23, 'ENVIO_CONCILIACION', 15, 14);
+
+INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
+(5, 'No Identificada en Open Pay', 'No Identificada en Open Pay', true, now(), null, 'Sistema', null, 'NIOP');
