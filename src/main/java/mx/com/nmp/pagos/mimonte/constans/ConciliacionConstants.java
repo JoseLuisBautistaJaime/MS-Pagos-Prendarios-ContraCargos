@@ -351,6 +351,7 @@ public final class ConciliacionConstants {
 	public static final Integer ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS = 1;
 	public static final Integer ESTATUS_TRANSITO_SOLICITADA = 2;
 	public static final Integer ESTATUS_TRANSITO_MARCADO_DEVOLUCION = 4;
+	public static final Integer ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY = 5;
 
 	// Tipo de contacts
 	public static final Long TIPO_CONTACTO_MIDAS = 1l;

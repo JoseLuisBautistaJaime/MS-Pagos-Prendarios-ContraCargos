@@ -336,7 +336,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 		}
 		// Se valida la longitud del token
-		if(token.length() != Constants.LONGITUD_TOKEN)
+		if(token.length() > Constants.LONGITUD_TOKEN)
 			throw new TarjetaException(TarjetaConstants.MSG_TOKEN_VALUE_TOO_LONG);
 
 		// Obtiene los registros
