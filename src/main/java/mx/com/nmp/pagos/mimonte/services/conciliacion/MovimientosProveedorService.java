@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -83,44 +82,6 @@ public class MovimientosProveedorService {
 	}
 
 	/**
-	 * 
-	 * @param fechaDesde
-	 * @param fechaHasta
-	 */
-	public List<MovimientoProveedorDTO> listByDates(Date fechaDesde, Date fechaHasta) {
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param idConciliacion
-	 */
-	public Integer countByConciliacion(Long idConciliacion) {
-		return 0;
-	}
-
-	/**
-	 * 
-	 * @param idConciliacion
-	 * @param page
-	 * @param pageSize
-	 */
-	public List<MovimientoProveedorDTO> listByConciliacion(Long idConciliacion, Integer page, Integer pageSize) {
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param criteria
-	 * @param page
-	 * @param pageSize
-	 */
-	public List<MovimientoProveedorDTO> search(ConsultaMovimientosProveedorRequestDTO criteria, Integer page,
-			Integer pageSize) {
-		return null;
-	}
-
-	/**
 	 * Regresa el total de registros encontrados compatibles con el id de
 	 * conciliacion especificado como parametro
 	 * 
@@ -131,13 +92,6 @@ public class MovimientosProveedorService {
 		return movimientoProveedorRepository.countByReporteConciliacionId(idConciliacion);
 	}
 
-	/**
-	 * 
-	 * @param lista
-	 */
-	public void saveBatch(List<MovimientoProveedorBatchDTO> lista) {
-
-	}
 
 	/**
 	 * Guarda una lista de entidades de tipo MovimientoProveedor
@@ -148,6 +102,7 @@ public class MovimientosProveedorService {
 	public void save(MovimientoTransaccionalListRequestDTO listRequestDTO, final String userRequest)
 			throws ConciliacionException {
 
+		LOG.debug("Save {} movimientos proveedor", listRequestDTO.getFolio());
 		Conciliacion conciliacion = this.conciliacionRepository.findByFolio(listRequestDTO.getFolio());
 		if (conciliacion == null) {
 			throw new ConciliacionException("Conciliacion con el folio " + listRequestDTO.getFolio() + " no existe",

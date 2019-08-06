@@ -20,6 +20,7 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionMathUtil;
@@ -46,20 +47,23 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 	 */
 	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
 	
-		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR)) {
+		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR) || reportesWrapper.contains(TipoReporteEnum.MIDAS)) {
+			
+			// Verificar si ya se cargaron al menos 2 reportes (incluyendo el recibido)
+			if (isReportesCargados(reportesWrapper)) {
 
-			// Se extraen los movimientos con error, se vuelve a validar montos
-			List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(reportesWrapper.getIdConciliacion());
-			List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(reportesWrapper.getIdConciliacion());
-
-			List<MovimientoTransito> movsTransito = extraerMovimientosTransito(movsMidas, movsProveedor, reportesWrapper.getIdConciliacion());
-
-			if (CollectionUtils.isNotEmpty(movsTransito)) {
+				// Se extraen los movimientos con error, se vuelve a validar montos
+				List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(reportesWrapper.getIdConciliacion());
+				List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(reportesWrapper.getIdConciliacion());
+	
+				List<MovimientoTransito> movsTransito = extraerMovimientosTransito(movsMidas, movsProveedor, reportesWrapper.getIdConciliacion());
+	
 				if (CollectionUtils.isNotEmpty(movsTransito)) {
-					mergeReporteHandler.getMovimientoTransitoRepository().saveAll(movsTransito);
+					if (CollectionUtils.isNotEmpty(movsTransito)) {
+						mergeReporteHandler.getMovimientoTransitoRepository().saveAll(movsTransito);
+					}
 				}
 			}
-
 		}
 		processNext(reportesWrapper);
 	}
@@ -209,6 +213,33 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 			}
 		}
 		return invalid;
+	}
+
+
+	/**
+	 * Valida que se haya cargado al menos 2 reportes (midas/proveedor)
+	 * @param reportesWrapper
+	 * @return
+	 */
+	private boolean isReportesCargados(ReportesWrapper reportesWrapper) {
+		boolean midasCargado= false;
+		boolean proveedorCargado = false;
+		List<Reporte> reportes = this.mergeReporteHandler.getReporteRepository().findByIdConciliacion(reportesWrapper.getIdConciliacion());
+		if (CollectionUtils.isNotEmpty(reportes)) {
+			for (Reporte reporte : reportes) {
+				switch (reporte.getTipo()) {
+					case MIDAS:
+						midasCargado = true;
+						break;
+					case PROVEEDOR:
+						proveedorCargado = true;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		return midasCargado && proveedorCargado;
 	}
 
 }

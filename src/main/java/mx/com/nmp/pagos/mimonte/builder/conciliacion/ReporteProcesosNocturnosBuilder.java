@@ -35,7 +35,6 @@ public abstract class ReporteProcesosNocturnosBuilder {
 		ReporteProcesosNocturnosDTO reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO();
 		reporteProcesosNocturnosDTO.setDisponible(false);
 		if(reporteSet != null && !reporteSet.isEmpty()) {
-			reporteProcesosNocturnosDTO = new ReporteProcesosNocturnosDTO();
 			for(Reporte reporte : reporteSet) {
 				if(reporte.getTipo() == TipoReporteEnum.MIDAS) {
 					reporteProcesosNocturnosDTO.setFechaDesde(reporte.getFechaDesde());
