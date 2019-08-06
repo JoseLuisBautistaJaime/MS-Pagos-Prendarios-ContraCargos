@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,6 +51,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.OperacionComisionProyeccionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
+import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 
 /**
  * @name ComisionesService
@@ -169,6 +171,7 @@ public class ComisionesService {
 	public ComisionesTransDTO findByFechasAndComision(
 			final ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO, String requestUser) {
 		// Declaracion de objetos
+		Map<String, Date> datesMap = null;
 		List<ComisionesTransaccionesOperacionDTO> comisionesTransaccionesOperacionDTOList = new ArrayList<>();
 		Map<String, Object> mapResult = null;
 		Map<String, BigDecimal> sums = null;
@@ -181,10 +184,33 @@ public class ComisionesService {
 		BigDecimal totalOperaciones = null;
 		BigDecimal sumaComision = null;
 		BigDecimal sumaIva = null;
+
+		// Valida que la conciliacion exista
+		conciliacionDataValidator.validateFolioExists(comisionesTransaccionesRequestDTO.getIdConciliacion());
+
+		// Ajuste de fechas
+		try {
+			datesMap = FechasUtil.adjustDates(comisionesTransaccionesRequestDTO.getFechaDesde(),
+					comisionesTransaccionesRequestDTO.getFechaHasta());
+			if (null != datesMap && !datesMap.isEmpty()) {
+				comisionesTransaccionesRequestDTO
+						.setFechaDesde(null != datesMap.get("startDate") ? datesMap.get("startDate")
+								: comisionesTransaccionesRequestDTO.getFechaDesde());
+				comisionesTransaccionesRequestDTO
+						.setFechaHasta(null != datesMap.get("endDate") ? datesMap.get("endDate")
+								: comisionesTransaccionesRequestDTO.getFechaHasta());
+			}
+		} catch (Exception ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0013.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_0013);
+		}
+
 		// Encontrar suma total de pagos
 		Long transaccionesPagos = comisionesRepository.findTransaccionesPagosByFechasAndIdConciliacion(
 				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta(),
 				comisionesTransaccionesRequestDTO.getIdConciliacion());
+
 		// Se obtiene el id de devolucion, el conteo del mismo y el id de la
 		// conciliacion
 		mapResult = comisionesRepository.findDataByFechasAndIdConciliacion(
@@ -196,25 +222,32 @@ public class ComisionesService {
 		if (null == comisionesTransaccionesRequestDTO.getIdConciliacion())
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_NOT_FOUND_FOR_SUCH_PARAMS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_017);
-		if (null == conciliacion || !conciliacion.isPresent())
+		if (!conciliacion.isPresent())
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_BUSINESS_018);
+
 		// Construir objeto pagos
 		buildMovimiento(movimientoPagos, OperacionComisionProyeccionEnum.PAGOS.getDescripcion(), transaccionesPagos,
 				comisionesTransaccionesRequestDTO.getComision());
+
 		// Construir objeto devoluciones
 		buildMovimiento(movimientoDevoluciones, OperacionComisionProyeccionEnum.DEVOLUCIONES.getDescripcion(),
 				transaccionesDevoluciones, comisionesTransaccionesRequestDTO.getComision());
+
 		// Agregar movimientos a la lista
 		comisionesTransaccionesOperacionDTOList.add(movimientoPagos);
 		comisionesTransaccionesOperacionDTOList.add(movimientoDevoluciones);
+
 		// Agregar lista de operaciones a objeto padre
 		comisionesTransProyeccionDTO.setOperaciones(comisionesTransaccionesOperacionDTOList);
+
 		// Agregar suma de total iva + comisiones de pagos y devoluciones
 		totalOperaciones = movimientoPagos.getTotalComision().add(movimientoDevoluciones.getTotalComision());
 		comisionesTransProyeccionDTO.setTotalOperaciones(totalOperaciones);
+
 		// Poner el objeto proyeccion en el objeto padre
 		comisionesTransDTO.setProyeccion(comisionesTransProyeccionDTO);
+
 		// Realiza suma de comisiones e ivas
 		sums = comisionesRepository.findMovimientosSum(TipoMovimientoEnum.COMISION.getDescripcion(),
 				TipoMovimientoEnum.IVA_COMISION.getDescripcion());
@@ -222,8 +255,10 @@ public class ComisionesService {
 		sumaIva = sums.get("iva");
 		sumaComision = null != sumaComision ? sumaComision : new BigDecimal("0");
 		sumaIva = null != sumaIva ? sumaIva : new BigDecimal("0");
+
 		// Construye el objeto de comisiones real
 		buildComisionReal(comisionesTransRealDTO, sumaComision, sumaIva);
+
 		// Agrega las comisions reales a el objeto padre
 		comisionesTransDTO.setReal(comisionesTransRealDTO);
 
@@ -246,12 +281,14 @@ public class ComisionesService {
 						comisionTransaccionVer, comisionesTransDTO, comisionesTransaccionesRequestDTO,
 						comisionesTransaccionesRequestDTO.getIdConciliacion(), requestUser);
 		comisionTransaccion = comisionTransaccionRepository.save(comisionTransaccion);
+
 		// Guarda las proyecciones
 		List<Long> comisionTransaccionProyeccionSet = comisionTransaccionProyeccionRepository
 				.findBycomisionTransaccionId(comisionTransaccion.getId());
 		comisionTransaccionProyeccionRepository
 				.saveAll(ComisionesBuilder.buildComisionTransaccionProyeccionFromComisionTransaccion(
 						comisionTransaccionProyeccionSet, comisionTransaccion, comisionesTransDTO));
+
 		// Guarda los datos reales de la comisones y proyecicones
 		Set<ComisionTransaccionReal> comisionTransaccionRealSet = comisionTransaccionRealRepository
 				.findByComisionTransaccion_Id(comisionTransaccion.getId());
@@ -318,21 +355,72 @@ public class ComisionesService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void delete(final ComisionDeleteDTO comisionDeleteDTO, final String requestUser)
 			throws ConciliacionException {
-		Optional<Conciliacion> conciliacion = null;
+		// Objetos necesarios
 		List<Long> flags = null;
+		Boolean flag = null;
+
 		// Valida que el folio de conciliacion exista
-		conciliacion = conciliacionRepository.findById(comisionDeleteDTO.getFolio());
-		if (!conciliacion.isPresent())
-			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_BUSINESS_018);
+		conciliacionDataValidator.validateFolioExists(comisionDeleteDTO.getFolio());
+
+		// Valida que los ids de comisiones existan
+		try {
+			flag = ((BigInteger) comisionesRepository.checkIfIdsExist(comisionDeleteDTO.getIdComisiones(),
+					comisionDeleteDTO.getIdComisiones().size())).compareTo(BigInteger.ONE) == 0;
+			if (!flag) {
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_102.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_102);
+			}
+		} catch (ConciliacionException ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw ex;
+		} catch (Exception ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_107.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_107);
+		}
+
+		// Valida si el folio de conciliacion esta relacionado con los ids de comisiones
+		try {
+			flag = ((BigInteger) comisionesRepository.checkIfFolioAndIdsRelationshipExit(comisionDeleteDTO.getFolio(),
+					comisionDeleteDTO.getIdComisiones(), comisionDeleteDTO.getIdComisiones().size()))
+							.compareTo(BigInteger.ONE) == 0;
+			if (!flag) {
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_109.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_109);
+			}
+		} catch (ConciliacionException ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw ex;
+		} catch (Exception ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_110.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_110);
+		}
+
 		// Valida si se puede eliminar esa comision
-		flags = comisionesRepository.verifyById(comisionDeleteDTO.getIdComisiones(), comisionDeleteDTO.getFolio());
-		if (null == flags || flags.size() < comisionDeleteDTO.getIdComisiones().size())
-			throw new ConciliacionException(ConciliacionConstants.COMISION_CANT_BE_DELETED,
-					CodigoError.NMP_PMIMONTE_BUSINESS_020);
+		try {
+			flags = comisionesRepository.verifyById(comisionDeleteDTO.getIdComisiones(), comisionDeleteDTO.getFolio());
+			if (null == flags || flags.size() < comisionDeleteDTO.getIdComisiones().size())
+				throw new ConciliacionException(ConciliacionConstants.COMISION_CANT_BE_DELETED,
+						CodigoError.NMP_PMIMONTE_BUSINESS_020);
+		} catch (ConciliacionException ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw ex;
+		} catch (Exception ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_108.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_108);
+		}
+
 		// Elimina la comision
-		comisionesRepository.deleteByIdsAndIdConciliacion(comisionDeleteDTO.getIdComisiones(),
-				comisionDeleteDTO.getFolio());
+		try {
+			comisionesRepository.deleteByIdsAndIdConciliacion(comisionDeleteDTO.getIdComisiones(),
+					comisionDeleteDTO.getFolio());
+		} catch (Exception ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_106.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_106);
+		}
 	}
 
 	/**

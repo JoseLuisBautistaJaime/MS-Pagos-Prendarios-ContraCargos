@@ -106,8 +106,21 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @param tam
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(mt.id) FROM to_movimiento_transito mt WHERE mt.nuevo = 1 AND mt.id IN :movTransitoIds = :tam) THEN 1 ELSE 0 END")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(mt.id) FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mc ON mt.id = mc.id WHERE mc.nuevo = 1 AND mt.id IN :movTransitoIds) = (SELECT :tam)) THEN 1 ELSE 0 END")
 	public Object checkIfIdsExist(@Param("movTransitoIds") final List<Integer> movTransitoIds,
 			@Param("tam") final Integer tam);
+
+	/**
+	 * Regresa un valor de 1 cuando los ids de movimientos tansito pertenecen a la
+	 * conciliacion, de lo contrario regres un valor de 0
+	 * 
+	 * @param folio
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(mt.id) FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mc ON mt.id = mc.id WHERE mt.id IN :ids AND mc.id_conciliacion = :folio) = (SELECT :tam)) THEN 1 ELSE 0 END")
+	public Object checkIdsAndFolioRelationship(@Param("folio") final Integer folio,
+			@Param("ids") final List<Integer> ids, @Param("tam") final Integer tam);
 
 }

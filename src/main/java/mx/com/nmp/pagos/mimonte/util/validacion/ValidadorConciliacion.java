@@ -269,6 +269,7 @@ public interface ValidadorConciliacion {
 			return false;
 		}
 		return (!comisionSaveDTO.getDescripcion().isEmpty() && !"".equals(comisionSaveDTO.getDescripcion())
+				&& comisionSaveDTO.getDescripcion().length() <= ConciliacionConstants.DESCRIPCION_MOV_COMISION_SIZE
 				&& comisionSaveDTO.getId() > -1 && comisionSaveDTO.getMonto().compareTo(new BigDecimal("0")) > 0);
 	}
 
@@ -305,9 +306,6 @@ public interface ValidadorConciliacion {
 	 */
 	public static boolean validateComisionesTransaccionesRequestDTO(
 			ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO) {
-		Calendar desde = Calendar.getInstance();
-		Calendar hasta = Calendar.getInstance();
-		Calendar today = Calendar.getInstance();
 		try {
 			assertNotNull(comisionesTransaccionesRequestDTO);
 			assertNotNull(comisionesTransaccionesRequestDTO.getComision());
@@ -317,9 +315,7 @@ public interface ValidadorConciliacion {
 		} catch (java.lang.AssertionError | Exception ex) {
 			return false;
 		}
-		desde.setTime(comisionesTransaccionesRequestDTO.getFechaDesde());
-		hasta.setTime(comisionesTransaccionesRequestDTO.getFechaHasta());
-		return (!today.before(desde) && !today.before(hasta) && (desde.before(hasta) || desde.equals(hasta)));
+		return true;
 	}
 
 	/**

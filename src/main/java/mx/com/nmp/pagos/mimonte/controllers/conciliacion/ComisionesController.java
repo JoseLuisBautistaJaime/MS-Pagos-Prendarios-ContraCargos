@@ -154,7 +154,12 @@ public class ComisionesController {
 		try {
 			comisionesService.delete(comisionDeleteDTO, userRequest);
 		} catch (ConciliacionException ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
 			throw ex;
+		} catch (Exception ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_106.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_106);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
@@ -180,11 +185,18 @@ public class ComisionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaComisionesTransacciones(
 			@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		// Valida el objeto y atributos del request
 		if (!ValidadorConciliacion.validateComisionesTransaccionesRequestDTO(comisionesTransaccionesRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa.",
+
+		// Valida las fechas
+		ValidadorConciliacion.validateFechasPrimary(comisionesTransaccionesRequestDTO.getFechaDesde(),
+				comisionesTransaccionesRequestDTO.getFechaHasta());
+
+		// Regresa una respuesta
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				comisionesService.findByFechasAndComision(comisionesTransaccionesRequestDTO, userRequest));
 	}
 

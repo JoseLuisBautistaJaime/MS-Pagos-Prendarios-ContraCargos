@@ -35,6 +35,8 @@ public enum CodigoError {
 			TipoError.SERVIDOR, SeveridadError.ALTA),
 	NMP_PMIMONTE_0012("Se genero un error al tratar de persistir la actividad",
 			TipoError.SERVIDOR, SeveridadError.ALTA),
+	NMP_PMIMONTE_0013("Se genero un error durante el ajuste de fechas",
+			TipoError.SERVIDOR, SeveridadError.ALTA),
 
 	// ERRORES RELACIONADOS CON REGLA DE NEGOCIO
 
@@ -246,6 +248,18 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_104("Ocurrio un error al solicitar una devolucion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_105("Ocurrio un error al obtener los movimientos devolucion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_106("Error al intentar eliminar la comision",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_107("Error al validar los ids de comision",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_108("Error intentando validar si se pueden eliminar movimientos comision",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_109("No hay relacion entre el folio y uno o mas movimientos comision ingresados",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_110("Error validando la relacion entre folio y movimientos comision",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_111("Uno o mas movimientos transito no pertenecen a la conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

@@ -335,6 +335,29 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_038);
 		}
 
+		// Valida que haya relacion entre el folio de conciliacion y los movimientos
+		// transito especificados
+		if (null != actualizaionConciliacionRequestDTO.getMovimientosTransito()
+				&& !actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty()) {
+			flag = null;
+			try {
+				flag = ((BigInteger) movimientoTransitoRepository.checkIdsAndFolioRelationship(
+						actualizaionConciliacionRequestDTO.getFolio(), idsMov, idsMov.size()))
+								.compareTo(BigInteger.ONE) == 0;
+				if (!flag) {
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_111.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_111);
+				}
+			} catch (ConciliacionException ex) {
+				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				throw ex;
+			} catch (Exception ex) {
+				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_038.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_038);
+			}
+		}
+
 		// Valida que los movimientos comision existan previamente (si es que se
 		// recibieron como parametro)
 		flag = null;
@@ -356,6 +379,29 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_103.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_103);
+		}
+
+		// Valida que haya relacion entre el folio de conciliacion y los movimientos
+		// comision especificados
+		if (null != actualizaionConciliacionRequestDTO.getComisiones()
+				&& !actualizaionConciliacionRequestDTO.getComisiones().isEmpty()) {
+			flag = null;
+			try {
+				flag = ((BigInteger) movimientoComisionRepository.checkIdsAndFolioRelationship(
+						actualizaionConciliacionRequestDTO.getFolio(), idsCom, idsCom.size()))
+								.compareTo(BigInteger.ONE) == 0;
+				if (!flag) {
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_109.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_109);
+				}
+			} catch (ConciliacionException ex) {
+				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				throw ex;
+			} catch (Exception ex) {
+				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_103.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_103);
+			}
 		}
 
 		// Obtiene la conciliacion para registrar la actividad

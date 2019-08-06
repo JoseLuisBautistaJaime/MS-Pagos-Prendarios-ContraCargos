@@ -115,4 +115,28 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 */
 	public MovimientoComision findByIdAndEstatus(final Integer idMovimientoComision, final Boolean estatus);
 
+	/**
+	 * Regresa un valor de 1 cuando todos los ids de comisiones existen, de lo
+	 * contrario regresa un valor 0
+	 * 
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(com.id) FROM to_movimiento_comision com WHERE com.id IN :ids)= :tam THEN 1 ELSE 0 END")
+	public Object checkIfIdsExist(@Param("ids") final List<Integer> ids, @Param("tam") final Integer tam);
+
+	/**
+	 * Regresa un valor de 1 cuando todos los ids de comisiones ingresados
+	 * corresponden al folio de ocnciliacion, de lo contrario regresa un 0
+	 * 
+	 * @param folio
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(mc.id) FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.id IN :ids AND mcon.id_conciliacion = :folio) = :tam THEN 1 ELSE 0 END")
+	public Object checkIfFolioAndIdsRelationshipExit(@Param("folio") final Integer folio,
+			@Param("ids") final List<Integer> ids, @Param("tam") final Integer tam);
+
 }

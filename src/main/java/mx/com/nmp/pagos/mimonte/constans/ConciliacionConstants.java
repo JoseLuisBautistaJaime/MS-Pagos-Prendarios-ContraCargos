@@ -481,9 +481,10 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se egenera un error de patron de regex
 	 */
 	public static final String ERROR_REPLACING_EL = "Se genero un error intentando reemplazar las expresiones regulares";
-	
+
 	/**
-	 * Mensaje que es mostrado cuando se recie uno o mas ids de devolcuion que no existen
+	 * Mensaje que es mostrado cuando se recie uno o mas ids de devolcuion que no
+	 * existen
 	 */
 	public static final String DEV_MOVS_DONT_EXIST = "Uno o mas movimientos devolucion no existen";
 
@@ -493,10 +494,16 @@ public final class ConciliacionConstants {
 	public final static List<Long> CON_SUB_ESTATUS_ACTUALIZACION_PS = asList(SUBESTATUS_CONCILIACION_ENVIADA);
 	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PN = asList(SUBESTATUS_CONCILIACION_CONSULTA_MIDAS);
 	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PT = asList(SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY);
-	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_EC = asList(SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA);
-	
+	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_EC = asList(
+			SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA);
+
 	/**
 	 * Mensaje generico inicial para mostrar excepciones en log
 	 */
 	public static final String GENERIC_EXCEPTION_INITIAL_MESSAGE = "Se ha generado la excepcion: ";
+
+	/**
+	 * Longitud maxima del campo descripcion para movimientos comision
+	 */
+	public static final int DESCRIPCION_MOV_COMISION_SIZE = 150;
 }
