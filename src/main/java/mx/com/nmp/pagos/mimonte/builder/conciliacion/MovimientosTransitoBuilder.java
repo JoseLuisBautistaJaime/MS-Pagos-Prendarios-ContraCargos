@@ -152,7 +152,7 @@ public abstract class MovimientosTransitoBuilder {
 		movTransito.setTipoContratoDesc(movMidas.getTipoContratoDesc());
 		movTransito.setEsquemaTarjeta(movMidas.getMarcaTarjeta());
 		movTransito.setCuenta(movMidas.getTarjeta());
-		movTransito.setTitular(movProveedor.getTarjetaMovimientosProveedor().getHolderName());
+		movTransito.setTitular(movProveedor != null && movProveedor.getTarjetaMovimientosProveedor() != null ? movProveedor.getTarjetaMovimientosProveedor().getHolderName() : null);
 		movTransito.setNumAutorizacion(movMidas.getNumAutorizacion());
 		movTransito.setMovimientoMidas(movMidas);
 		movTransito.setNuevo(false);
