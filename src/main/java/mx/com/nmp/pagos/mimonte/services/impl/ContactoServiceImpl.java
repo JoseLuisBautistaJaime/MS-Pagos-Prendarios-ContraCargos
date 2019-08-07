@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +68,10 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 	@Override
 	@Transactional
 	public <T extends AbstractCatalogoDTO> T save(ContactoBaseDTO e, String createdBy) {
+		// Objetos necesarios
+		Contactos contacto = null;
+		Optional<TipoContacto> tipoContacto = null;
+
 		// Valida que el contacto no exista
 		if (!validaEmailExistente(e))
 			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_ADD_ALREADY_EXISTS,
@@ -78,8 +83,11 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 			throw new CatalogoException(CatalogConstants.CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST,
 					CodigoError.NMP_PMIMONTE_BUSINESS_011);
 		// Construye y regresa la respuesta
-		return (T) ContactosBuilder.buildContactosDTOFromContactos(
-				contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTO(e)));
+		contacto = contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTO(e));
+		tipoContacto = tipoContactoRepository.findById(contacto.getTipoContacto().getId());
+		if (tipoContacto.isPresent())
+			contacto.setTipoContacto(tipoContacto.get());
+		return (T) ContactosBuilder.buildContactosDTOFromContactos(contacto);
 	}
 
 	/**
@@ -88,23 +96,31 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractCatalogoDTO> T update(ContactoBaseDTO e, String lastModifiedBy) {
+		// Objetos necesarios
+		Contactos contacto = null;
+		Optional<Contactos> contactoResp = null;
+
 		// Valida que el email no exista
 		if (!validaEmailExistente(e))
 			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_UPDT_ALREADY_EXISTS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_015);
 		if (null != e)
 			e.setLastModifiedBy(lastModifiedBy);
+
 		// Valida que el contacto exista
 		if (validaContacto(e))
-			throw new InformationNotFoundException(CatalogConstants.CATALOG_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0005);
+			throw new InformationNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
+
 		// Valida que el tipo de contacto exista
 		if (validaTipoContacto(e))
 			throw new CatalogoException(CatalogConstants.CATALOG_THE_CONTACT_TYPE_ID_DOES_NOT_EXIST,
 					CodigoError.NMP_PMIMONTE_BUSINESS_011);
+
 		// Construye y regresa el objeto de respuesta
-		return (T) ContactosBuilder.buildContactosDTOFromContactos(
-				contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTOupdt(e)));
+		contacto = contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTOupdt(e));
+		contactoResp = contactoRespository.findById(contacto.getId());
+		return (T) ContactosBuilder
+				.buildContactosDTOFromContactos(contactoResp.isPresent() ? contactoResp.get() : contacto);
 	}
 
 	/**
@@ -189,22 +205,14 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 	 * @return
 	 */
 	public boolean validaEmailExistente(ContactoBaseDTO e) {
-		Contactos validaEmail = contactoRespository.findByEmail(e.getEmail());
-		if (e.getId() == null && null != validaEmail) {
-			return (!e.getEmail().equals(validaEmail.getEmail()));
-		} else {
-			if (null != validaEmail && e.getId().equals(validaEmail.getId()))
-				return true;
-			else if (null != validaEmail && !e.getId().equals(validaEmail.getId())
-					&& !e.getEmail().equals(validaEmail.getEmail()))
-				return true;
-			else if (null != validaEmail && !e.getId().equals(validaEmail.getId())
-					&& e.getEmail().equals(validaEmail.getEmail()))
-				return false;
-			else
-				return true;
+		Boolean flag = true;
+		if (null == e || null == e.getEmail() || "".equals(e.getEmail()))
+			return false;
+		else {
+			flag = ((BigInteger) contactoRespository.validateDuplicateEmail(e.getEmail()))
+					.compareTo(BigInteger.ONE) == 0;
 		}
-
+		return flag;
 	}
 
 	/**

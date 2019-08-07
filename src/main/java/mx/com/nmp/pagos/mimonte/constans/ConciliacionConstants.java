@@ -506,4 +506,17 @@ public final class ConciliacionConstants {
 	 * Longitud maxima del campo descripcion para movimientos comision
 	 */
 	public static final int DESCRIPCION_MOV_COMISION_SIZE = 150;
+
+	/**
+	 * Mensaje que es mostrado cuando se guarda un movimiento estado cuenta de
+	 * manera exitosa
+	 */
+	public static final String SUCCESSFUL_SAVE_ESTADO_CUENTA = "Alta de estado cuenta exitosa.";
+
+	/**
+	 * Mensaje que es mostrado cuando se conculta un movimiento estado cuenta de
+	 * manera exitosa
+	 */
+	public static final String SUCCESSFUL_QUERY_ESTADO_CUENTA = "Consulta de movimientos exitosa.";
+
 }

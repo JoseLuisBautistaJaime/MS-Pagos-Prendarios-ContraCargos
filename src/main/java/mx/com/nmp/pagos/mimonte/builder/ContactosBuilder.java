@@ -197,6 +197,7 @@ public abstract class ContactosBuilder {
 			contactosDTO.setLastModifiedDate(contactoBaseDTO.getLastModifiedDate());
 			contactosDTO.setCreatedBy(contactoBaseDTO.getCreatedBy());
 			contactosDTO.setLastModifiedBy(contactoBaseDTO.getLastModifiedBy());
+			contactosDTO.setCreatedBy(contactoBaseDTO.getCreatedBy());
 		}
 		return contactosDTO;
 	}

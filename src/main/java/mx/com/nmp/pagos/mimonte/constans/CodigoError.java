@@ -260,6 +260,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_110("Error validando la relacion entre folio y movimientos comision",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_111("Uno o mas movimientos transito no pertenecen a la conciliacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_112("Se genero un error validando el sub-estatus de la conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

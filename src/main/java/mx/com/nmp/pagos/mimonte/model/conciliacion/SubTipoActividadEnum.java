@@ -33,9 +33,14 @@ public enum SubTipoActividadEnum {
 
 	CONSULTA_CONCILIACION(6, "Consulta de Conciliacion",
 			"Registra un evento relacionado con la consulta de Conciliacion.", TipoActividadEnum.ACTIVIDAD),
-	
+
 	MOVIMIENTOS(7, "Generacion de movimientos",
-			"Se genera algun tipo de movimiento (midas, proveedor transaccional o estado de cuenta).", TipoActividadEnum.ACTIVIDAD);
+			"Se genera algun tipo de movimiento (midas, proveedor transaccional o estado de cuenta.",
+			TipoActividadEnum.ACTIVIDAD),
+
+	ACTUALIZACION_ID_PEOPLE_SOFT(8, "Actualizacion de id de PeopleSoft",
+			"Se genera una actualizacion del id de peoplesoft que es la actualizacion de id de asiento contable e id de poliaza contable.",
+			TipoActividadEnum.ACTIVIDAD);
 
 	private Integer id;
 	private String nombre;

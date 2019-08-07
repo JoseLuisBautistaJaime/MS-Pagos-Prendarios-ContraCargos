@@ -4,19 +4,21 @@
  */
 package mx.com.nmp.pagos.mimonte.util;
 
-import mx.com.nmp.pagos.mimonte.constans.CodigoError;
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
+import java.math.BigInteger;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 
 /**
  * @name ConciliacionDataValidator
@@ -40,18 +42,16 @@ public class ConciliacionDataValidator {
 	/**
 	 * Repository de conciliacion
 	 */
-	@SuppressWarnings({"SpringJavaAutowiringInspection", "SpringAutowiredFieldsWarningInspection"})
+	@SuppressWarnings({ "SpringJavaAutowiringInspection", "SpringAutowiredFieldsWarningInspection" })
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
 
 	/**
 	 * Repository de Movimientos conciliacion
 	 */
-	@SuppressWarnings({"SpringJavaAutowiringInspection", "SpringAutowiredFieldsWarningInspection"})
+	@SuppressWarnings({ "SpringJavaAutowiringInspection", "SpringAutowiredFieldsWarningInspection" })
 	@Autowired
 	private MovimientoConciliacionRepository movimientoConciliacionRepository;
-
-
 
 	// METODOS
 
@@ -94,7 +94,7 @@ public class ConciliacionDataValidator {
 	/**
 	 * Valida si los movimientos corresponden a la conciliacion indicada.
 	 *
-	 * @param folio El folio de la conciliacion.
+	 * @param folio                   El folio de la conciliacion.
 	 * @param movimientosConciliacion La lista de movimientos.
 	 */
 	public void validateIdsMovimientosConciliacionExists(Integer folio, List<Integer> movimientosConciliacion) {
@@ -117,8 +117,32 @@ public class ConciliacionDataValidator {
 		}
 
 		if (CollectionUtils.isEmpty(movimientos) || movimientos.size() < movimientosConciliacion.size())
-			throw new ConciliacionException(ConciliacionConstants.NO_RELATION_BETWEEN_CONC_AND_MOVS_OR_DONESNT_EXISTS_SUCH_MOVS,
+			throw new ConciliacionException(
+					ConciliacionConstants.NO_RELATION_BETWEEN_CONC_AND_MOVS_OR_DONESNT_EXISTS_SUCH_MOVS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_087);
+	}
+
+	/**
+	 * Valida que el sub-estatus de una conciliacion se correcto, en base al folio
+	 * de conciliacion y sub-estatus recibido
+	 * 
+	 * @param folio
+	 * @param subEstatusConciliacion
+	 */
+	public void validateSubEstatusByFolioAndSubEstatus(final Integer folio, final Long subEstatusConciliacion) {
+		Boolean flag = null;
+		try {
+			flag = ((BigInteger) conciliacionRepository.checkIfConciliciacionHasValidStatus(folio,
+					subEstatusConciliacion)).compareTo(BigInteger.ONE) == 0;
+			if (!flag)
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		} catch (ConciliacionException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_112.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_112);
+		}
 	}
 
 }

@@ -82,4 +82,13 @@ public interface ContactoRespository extends JpaRepository<Contactos, Long> {
 	@Query(nativeQuery = true, value = "DELETE FROM tc_contactos WHERE id NOT IN(SELECT DISTINCT cto.id FROM (SELECT * FROM tc_contactos) cto INNER JOIN tr_entidad_contactos eco ON cto.id = eco.id_contacto) AND id_tipo_contacto = :idTipoContacto")
 	public void deleteWithNoAccountAssociation(@Param("idTipoContacto") final Long idTipoContacto);
 
+	/**
+	 * Regresa un valor 1 cuando el email no existe, de lo contrario regresa un 0
+	 * 
+	 * @param email
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(cto.id) FROM tc_contactos cto WHERE cto.email = :email) = 0) THEN 1 ELSE 0 END")
+	public Object validateDuplicateEmail(@Param("email") final String email);
+
 }

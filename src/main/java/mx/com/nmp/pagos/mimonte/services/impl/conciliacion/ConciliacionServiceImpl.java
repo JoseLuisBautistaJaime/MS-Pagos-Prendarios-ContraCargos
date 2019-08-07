@@ -668,9 +668,14 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	@Transactional
 	public void enviarConciliacion(Integer idConciliacion, String usuario) {
-
 		// Se valida que exista la conciliacion con el folio proporcionado
 		conciliacionDataValidator.validateFolioExists(idConciliacion);
+
+		// Valida que la conciliacion tenga el estatus correcto para poder dar de alta
+		// el estado cuenta
+		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,
+				ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA);
+
 		// Validar conciliacion y actualizar estatus
 		try {
 			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
@@ -682,7 +687,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			idsSubEstatusIncorrectos.add(ConciliacionConstants.SUBESTATUS_CONCILIACION_FINALIZADA.longValue());
 			if (conciliacion.getSubEstatus() == null
 					|| idsSubEstatusIncorrectos.contains(conciliacion.getSubEstatus().getId())) {
-				throw new ConciliacionException("La conciliacion tiene un sub estatus incorrecto",
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_030);
 			}
 
@@ -1009,6 +1014,16 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_031.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_031);
 		}
+
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(actualizarIdPSRequest.getFolio(),
+				"Se actualiza el id de people-soft para la conciliacion "
+						.concat(String.valueOf(actualizarIdPSRequest.getFolio()))
+						.concat(" con el id de asiento contable: ")
+						.concat(String.valueOf(actualizarIdPSRequest.getIdAsientoContable()))
+						.concat(" y el di de poliza de tesoreria: ")
+						.concat(String.valueOf(actualizarIdPSRequest.getIdPolizaTesoreria())),
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZACION_ID_PEOPLE_SOFT);
 	}
 
 	/*
