@@ -13,7 +13,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.soap.MessageFactory;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,12 +58,6 @@ import mx.openpay.client.utils.SearchParams;
 @Api(value = "Servicio para emular BUS", description = "REST API para emular BUS", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
 		"BUS" })
 public class BusTestController {
-
-	/**
-	 * Fabrica de beans
-	 */
-	@Autowired
-	private BeanFactory beanFactory;
 
 	/**
 	 * Movimientos Controller
@@ -153,7 +146,7 @@ public class BusTestController {
 		MovimientoTransaccionalListRequestDTO movsTransaccion = new MovimientoTransaccionalListRequestDTO();
 		movsTransaccion.setFechaDesde(request.getFechaDesde());
 		movsTransaccion.setFechaHasta(request.getFechaHasta());
-		movsTransaccion.setFolio(request.getFolio() != null ? request.getFolio().intValue() : 0);
+		movsTransaccion.setFolio(request.getFolio() != null ? request.getFolio() : 0);
 		movsTransaccion.setMovimientos(movimientos);
 		
 		return movimientosController.saveMovimientosProvedor(movsTransaccion, userRequest);
@@ -249,7 +242,7 @@ public class BusTestController {
 		MovimientoProcesosNocturnosListResponseDTO movsDTO = new MovimientoProcesosNocturnosListResponseDTO();
 		movsDTO.setFechaDesde(request.getFechaDesde());
 		movsDTO.setFechaHasta(request.getFechaHasta());
-		movsDTO.setFolio(request.getFolio() != null ? request.getFolio().intValue() : 0);
+		movsDTO.setFolio(request.getFolio() != null ? request.getFolio() : 0);
 		movsDTO.setMovimientos(movimientos);
 		
 		

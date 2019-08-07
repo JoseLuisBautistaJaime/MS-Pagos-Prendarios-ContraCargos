@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class MovimientoTransaccionalListRequestDTO implements Comparable<MovimientoTransaccionalListRequestDTO> {
 
-	private Integer folio;
+	private Long folio;
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private List<MovimientoProveedorDTO> movimientos;
@@ -27,7 +27,7 @@ public class MovimientoTransaccionalListRequestDTO implements Comparable<Movimie
 		super();
 	}
 
-	public MovimientoTransaccionalListRequestDTO(Integer folio, Date fechaDesde, Date fechaHasta,
+	public MovimientoTransaccionalListRequestDTO(Long folio, Date fechaDesde, Date fechaHasta,
 			List<MovimientoProveedorDTO> movimientos) {
 		super();
 		this.folio = folio;
@@ -36,11 +36,11 @@ public class MovimientoTransaccionalListRequestDTO implements Comparable<Movimie
 		this.movimientos = movimientos;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

@@ -19,7 +19,7 @@ import java.util.List;
 public class MovimientoProcesosNocturnosListResponseDTO
 		implements Comparable<MovimientoProcesosNocturnosListResponseDTO> {
 
-	private Integer folio;
+	private Long folio;
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private List<MovimientoMidasRequestDTO> movimientos;
@@ -28,17 +28,17 @@ public class MovimientoProcesosNocturnosListResponseDTO
 		super();
 	}
 
-	public MovimientoProcesosNocturnosListResponseDTO(Integer folio, List<MovimientoMidasRequestDTO> movimientos) {
+	public MovimientoProcesosNocturnosListResponseDTO(Long folio, List<MovimientoMidasRequestDTO> movimientos) {
 		super();
 		this.folio = folio;
 		this.movimientos = movimientos;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

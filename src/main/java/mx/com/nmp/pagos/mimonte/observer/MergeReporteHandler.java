@@ -86,7 +86,7 @@ public class MergeReporteHandler {
 	 * @param reportes
 	 * @param idConciliacion
 	 */
-	public void handle(List<Reporte> reportes, Integer idConciliacion) {
+	public void handle(List<Reporte> reportes, Long idConciliacion) {
 
 		ReportesWrapper wrapper = new ReportesWrapper(idConciliacion);
 

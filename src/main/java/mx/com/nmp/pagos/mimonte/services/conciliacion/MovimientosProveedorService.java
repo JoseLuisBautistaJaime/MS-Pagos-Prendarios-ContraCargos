@@ -88,7 +88,7 @@ public class MovimientosProveedorService {
 	 * @param idConciliacion
 	 * @return
 	 */
-	public Long countByConciliacionId(final Integer idConciliacion) {
+	public Long countByConciliacionId(final Long idConciliacion) {
 		return movimientoProveedorRepository.countByReporteConciliacionId(idConciliacion);
 	}
 

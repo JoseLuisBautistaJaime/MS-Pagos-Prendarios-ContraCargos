@@ -23,15 +23,15 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 public class ReporteObservable extends Observable {
 
 	private List<Reporte> reportes;
-	private Integer idConciliacion;
+	private Long idConciliacion;
 
-	public ReporteObservable(List<Reporte> reportes, Integer idConciliacion) {
+	public ReporteObservable(List<Reporte> reportes, Long idConciliacion) {
 		this.reportes = null;
 		this.idConciliacion = idConciliacion;
 		verifyReportes(reportes);
 	}
 
-	public ReporteObservable(Reporte reporte, Integer idConciliacion) {
+	public ReporteObservable(Reporte reporte, Long idConciliacion) {
 		this.reportes = null;
 		this.idConciliacion = idConciliacion;
 		verifyReportes(Arrays.asList(reporte));
@@ -55,7 +55,7 @@ public class ReporteObservable extends Observable {
 		return reportes;
 	}
 
-	public Integer getIdConciliacion() {
+	public Long getIdConciliacion() {
 		return idConciliacion;
 	}
 

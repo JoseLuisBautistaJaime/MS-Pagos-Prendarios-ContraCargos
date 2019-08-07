@@ -129,7 +129,7 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	private List<MovimientoDevolucion> extraerMovimientoDevolucion(Integer idReporte, Integer idConciliacion) throws ConciliacionException {
+	private List<MovimientoDevolucion> extraerMovimientoDevolucion(Integer idReporte, Long idConciliacion) throws ConciliacionException {
 		
 		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByCategoria(idReporte, ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES);
 		

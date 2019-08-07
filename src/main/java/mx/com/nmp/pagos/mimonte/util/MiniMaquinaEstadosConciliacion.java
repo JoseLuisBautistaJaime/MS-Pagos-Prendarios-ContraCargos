@@ -44,7 +44,7 @@ public class MiniMaquinaEstadosConciliacion {
 	 * @param idSubestatus
 	 * @return
 	 */
-	public Boolean checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(final Integer folio, final Long idSubestatus) {
+	public Boolean checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(final Long folio, final Long idSubestatus) {
 		Boolean resp = null;
 		Object obj = null;
 		if (null != folio && null != idSubestatus) {

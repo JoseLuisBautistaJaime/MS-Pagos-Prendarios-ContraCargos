@@ -38,7 +38,7 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 	private Integer id;
 
 	@Column(name = "id_conciliacion")
-	private Integer idConciliacion;
+	private Long idConciliacion;
 
 	@Column(name = "nuevo")
 	private Boolean nuevo;
@@ -55,14 +55,14 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 	}
 
-	public MovimientoConciliacion(Integer id, Integer idConciliacion, Boolean nuevo) {
+	public MovimientoConciliacion(Integer id, Long idConciliacion, Boolean nuevo) {
 		super();
 		this.id = id;
 		this.idConciliacion = idConciliacion;
 		this.nuevo = nuevo;
 	}
 
-	public MovimientoConciliacion(Integer id, Integer idConciliacion, Boolean nuevo, MovimientoMidas movimientoMidas) {
+	public MovimientoConciliacion(Integer id, Long idConciliacion, Boolean nuevo, MovimientoMidas movimientoMidas) {
 		super();
 		this.id = id;
 		this.idConciliacion = idConciliacion;
@@ -86,11 +86,11 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 		this.id = id;
 	}
 
-	public Integer getIdConciliacion() {
+	public Long getIdConciliacion() {
 		return idConciliacion;
 	}
 
-	public void setIdConciliacion(Integer idConciliacion) {
+	public void setIdConciliacion(Long idConciliacion) {
 		this.idConciliacion = idConciliacion;
 	}
 

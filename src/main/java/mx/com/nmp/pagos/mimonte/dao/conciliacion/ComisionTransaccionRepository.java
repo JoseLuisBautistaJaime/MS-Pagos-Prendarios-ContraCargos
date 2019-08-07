@@ -32,6 +32,6 @@ public interface ComisionTransaccionRepository extends JpaRepository<ComisionTra
 	 * @return
 	 */
 	@Query(nativeQuery = true, value = "SELECT ct.id FROM to_comision_transaccion ct WHERE ct.id_conciliacion = :conciliacionId")
-	public List<Integer> findByConciliacionId(@Param("conciliacionId") Integer conciliacionId);
+	public List<Integer> findByConciliacionId(@Param("conciliacionId") Long conciliacionId);
 
 }

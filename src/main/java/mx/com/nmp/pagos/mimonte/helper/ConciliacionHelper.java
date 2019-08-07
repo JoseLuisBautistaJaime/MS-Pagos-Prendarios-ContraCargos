@@ -27,7 +27,7 @@ public interface ConciliacionHelper {
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public Conciliacion getConciliacionByFolio(Integer folio, Integer idEstatusConciliacion) throws ConciliacionException;
+	public Conciliacion getConciliacionByFolio(Long folio, Integer idEstatusConciliacion) throws ConciliacionException;
 
 	/**
 	 * Se encarga de generar/regenerar la conciliacion en base a el(los) reporte(s) recibido(s)
@@ -35,6 +35,6 @@ public interface ConciliacionHelper {
 	 * @param reportes
 	 * @throws ConciliacionException
 	 */
-	public void generarConciliacion(Integer folio, List<Reporte> reportes) throws ConciliacionException;
+	public void generarConciliacion(Long folio, List<Reporte> reportes) throws ConciliacionException;
 
 }

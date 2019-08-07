@@ -109,7 +109,7 @@ public abstract class MovimientoDevolucionBuilder {
 	 * @param movEstadoCuenta
 	 * @return
 	 */
-	public static MovimientoDevolucion buildMovimientoFromMovEstadoCuenta(MovimientoEstadoCuenta movEstadoCuenta, Integer idConciliacion, String createdBy, EstadoCuentaCabecera cabecera) {
+	public static MovimientoDevolucion buildMovimientoFromMovEstadoCuenta(MovimientoEstadoCuenta movEstadoCuenta, Long idConciliacion, String createdBy, EstadoCuentaCabecera cabecera) {
 		MovimientoDevolucion movimientoDevolucion = new MovimientoDevolucion();
 		movimientoDevolucion.setIdConciliacion(idConciliacion);
 		movimientoDevolucion.setCreatedDate(new Date());

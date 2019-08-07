@@ -67,7 +67,7 @@ public interface ConciliacionService {
 	 * @param folio
 	 * @return
 	 */
-	public ConciliacionDTOList consultaFolio(Integer folio);
+	public ConciliacionDTOList consultaFolio(Long folio);
 
 	/**
 	 * Servicio que permite enviar la conciliación.
@@ -75,7 +75,7 @@ public interface ConciliacionService {
 	 * @param idConciliacion
 	 * @param usuario
 	 */
-	public void enviarConciliacion(Integer idConciliacion, String usuario);
+	public void enviarConciliacion(Long idConciliacion, String usuario);
 
 	/**
 	 * sevicio callBack que será usuado para actualizar el id del registro de las
@@ -120,13 +120,13 @@ public interface ConciliacionService {
 	 * @param folio
 	 * @return
 	 */
-	public List<MovTransitoDTO> consultaMovimientosTransito(Integer folio);
+	public List<MovTransitoDTO> consultaMovimientosTransito(Long folio);
 
 	/**
 	 * 
 	 * @param idConcilacion
 	 */
-	public Conciliacion getById(Integer idConcilacion);
+	public Conciliacion getById(Long idConcilacion);
 
 	/**
 	 * Servicio que permite generar la conciliación usando los movimientos de
@@ -139,6 +139,6 @@ public interface ConciliacionService {
 	 * @param lastModifiedBy
 	 * @throws ConciliacionException
 	 */
-	public void generarConciliacion(Integer folio, String lastModifiedBy) throws ConciliacionException;
+	public void generarConciliacion(Long folio, String lastModifiedBy) throws ConciliacionException;
 
 }

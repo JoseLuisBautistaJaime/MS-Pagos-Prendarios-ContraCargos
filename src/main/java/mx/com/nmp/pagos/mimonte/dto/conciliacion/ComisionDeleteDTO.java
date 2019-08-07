@@ -18,24 +18,24 @@ import java.util.Objects;
  */
 public class ComisionDeleteDTO implements Comparable<ComisionDeleteDTO> {
 
-	private Integer folio;
+	private Long folio;
 	private List<Integer> idComisiones;
 
 	public ComisionDeleteDTO() {
 		super();
 	}
 
-	public ComisionDeleteDTO(Integer folio, List<Integer> idComisiones) {
+	public ComisionDeleteDTO(Long folio, List<Integer> idComisiones) {
 		super();
 		this.folio = folio;
 		this.idComisiones = idComisiones;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

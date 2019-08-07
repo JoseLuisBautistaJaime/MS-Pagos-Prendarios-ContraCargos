@@ -49,14 +49,14 @@ public class EventAspect {
 	public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 		// Declaracion de objetos
 		Actividad actividad = null;
-		Integer folio = null;
+		Long folio = null;
 		String descripcion = null;
 		TipoActividadEnum tipo = null;
 		SubTipoActividadEnum subTipo = null;
 		// Se obtienen los argumentos y se setean a atributos
 		Object[] arr = joinPoint.getArgs();
 		if (arr.length >= 4) {
-			folio = Integer.parseInt(arr[0].toString());
+			folio = Long.parseLong(arr[0].toString());
 			descripcion = arr[1].toString();
 			tipo = (TipoActividadEnum) arr[2];
 			subTipo = (SubTipoActividadEnum) arr[3];
@@ -78,7 +78,7 @@ public class EventAspect {
 	 * @param subTipo
 	 * @return
 	 */
-	private Actividad buildActividad(final Integer folio, final String descripcion, final TipoActividadEnum tipo,
+	private Actividad buildActividad(final Long folio, final String descripcion, final TipoActividadEnum tipo,
 			final SubTipoActividadEnum subTipo) {
 		Actividad actividad = null;
 		if (null != folio && null != descripcion && null != tipo && null != subTipo) {

@@ -25,7 +25,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
  * @created 31-Mar-2019 6:33:59 PM
  */
 @Repository("conciliacionRepository")
-public interface ConciliacionRepository extends PagingAndSortingRepository<Conciliacion, Integer> {
+public interface ConciliacionRepository extends PagingAndSortingRepository<Conciliacion, Long> {
 
 	/**
 	 * Búsquda de la conciliación a partir del folio.
@@ -34,12 +34,12 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("FROM Conciliacion c WHERE c.id = :folio")
-	public Conciliacion findByFolio(@Param("folio") final Integer folio);
+	public Conciliacion findByFolio(@Param("folio") final Long folio);
 
 	/**
 	 * Búsqueda de la conciliación a partir de del id.
 	 */
-	public Optional<Conciliacion> findById(Integer id);
+	public Optional<Conciliacion> findById(Long id);
 
 	/**
 	 * Búsqueda de la conciliacíon a partir de la entidad.
@@ -77,7 +77,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND c.createdDate BETWEEN :fechaDesde AND :fechaHasta")
-	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechas(@Param("folio") final Integer folio,
+	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechas(@Param("folio") final Long folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus,
 			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta);
 
@@ -91,7 +91,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus)")
-	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatus(@Param("folio") final Integer folio,
+	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatus(@Param("folio") final Long folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus);
 
 	/**
@@ -105,7 +105,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND c.createdDate >= :fechaDesde")
-	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechaDesde(@Param("folio") final Integer folio,
+	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechaDesde(@Param("folio") final Long folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus,
 			@Param("fechaDesde") final Date fechaDesde);
 
@@ -120,7 +120,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND c.createdDate <= :fechaHasta")
-	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechaHasta(@Param("folio") final Integer folio,
+	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechaHasta(@Param("folio") final Long folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus,
 			@Param("fechaHasta") final Date fechaHasta);
 
@@ -279,7 +279,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 */
 	@Modifying
 	@Query(nativeQuery = true, value = "UPDATE to_conciliacion SET id_sub_estatus_conciliacion = :subEstatus, id_estatus_conciliacion = :estatusConciliacion, sub_estatus_descripcion = :descripcion, last_modified_by = :usuario, last_modified_date = :fecha WHERE id = :folio")
-	public void actualizaSubEstatusConciliacion(@Param("folio") final Integer folio,
+	public void actualizaSubEstatusConciliacion(@Param("folio") final Long folio,
 			@Param("subEstatus") SubEstatusConciliacion subEstatus, @Param("usuario") final String usuario,
 			@Param("fecha") Date fecha, @Param("estatusConciliacion") final EstatusConciliacion estatusConciliacion,
 			@Param("descripcion") final String descripcion);
@@ -292,7 +292,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query(nativeQuery = true, value = "SELECT ec.order_number AS estatus_order, sc.order_number AS sub_estatus_order FROM tk_estatus_conciliacion ec INNER JOIN to_conciliacion c ON c.id_estatus_conciliacion = ec.id INNER JOIN tk_sub_estatus_conciliacion sc ON sc.id = c.id_sub_estatus_conciliacion where C.ID = :folio")
-	public Map<String, Object> findOrderSubstatusAndStatusByFolio(@Param("folio") final Integer folio);
+	public Map<String, Object> findOrderSubstatusAndStatusByFolio(@Param("folio") final Long folio);
 
 	/**
 	 * Regresa una conciliacion por id de entidad, id de cuenta y fecha creacion
@@ -325,7 +325,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN :idSubEstatus IN (SELECT id_sub_estatus_posible FROM tk_maquina_estados_subestatus_conciliacion WHERE id_sub_estatus_inicial = (SELECT id_sub_estatus_conciliacion FROM to_conciliacion WHERE id = :folio)) THEN TRUE ELSE FALSE END AS RESULT")
-	public Object checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(@Param("folio") final Integer folio,
+	public Object checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(@Param("folio") final Long folio,
 			@Param("idSubEstatus") final Long idSubEstatus);
 
 	/**
@@ -336,6 +336,6 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("SELECT en.nombre AS entidad, cta.numeroCuenta AS cuenta FROM Entidad en INNER JOIN Conciliacion c ON en.id = c.entidad.id INNER JOIN Cuenta cta ON cta.id = c.cuenta.id WHERE c.id = :folio")
-	public Map<String, Object> getEntidadNombreAndCuentaNumeroByConciliacionId(@Param("folio") final Integer folio);
+	public Map<String, Object> getEntidadNombreAndCuentaNumeroByConciliacionId(@Param("folio") final Long folio);
 
 }

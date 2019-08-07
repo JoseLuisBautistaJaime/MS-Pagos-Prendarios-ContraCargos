@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class ActualizaionConciliacionRequestDTO implements Comparable<ActualizaionConciliacionRequestDTO> {
 
-	private Integer folio;
+	private Long folio;
 	private List<MovTransitoRequestDTO> movimientosTransito;
 	private List<ComisionesRequestDTO> comisiones;
 
@@ -25,7 +25,7 @@ public class ActualizaionConciliacionRequestDTO implements Comparable<Actualizai
 		super();
 	}
 
-	public ActualizaionConciliacionRequestDTO(Integer folio, List<MovTransitoRequestDTO> movimientosTransito,
+	public ActualizaionConciliacionRequestDTO(Long folio, List<MovTransitoRequestDTO> movimientosTransito,
 			List<ComisionesRequestDTO> comisiones) {
 		super();
 		this.folio = folio;
@@ -33,11 +33,11 @@ public class ActualizaionConciliacionRequestDTO implements Comparable<Actualizai
 		this.comisiones = comisiones;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

@@ -17,7 +17,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
  */
 public class ReportesWrapper {
 
-	private Integer idConciliacion;
+	private Long idConciliacion;
 
 	private Reporte reporteMidas;
 	private Reporte reporteProveedor;
@@ -25,7 +25,7 @@ public class ReportesWrapper {
 	
 
 
-	public ReportesWrapper(Integer idConciliacion) {
+	public ReportesWrapper(Long idConciliacion) {
 		this.idConciliacion = idConciliacion;
 	}
 
@@ -61,7 +61,7 @@ public class ReportesWrapper {
 		return idReporte;
 	}
 
-	public Integer getIdConciliacion() {
+	public Long getIdConciliacion() {
 		return idConciliacion;
 	}
 

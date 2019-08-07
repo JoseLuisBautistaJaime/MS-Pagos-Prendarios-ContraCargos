@@ -23,7 +23,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 	 */
 	private static final long serialVersionUID = 1087675429120495856L;
 	
-	private Integer Folio;
+	private Long folio;
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
@@ -41,22 +41,20 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 
 	public ConciliacionDTOList() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ConciliacionDTOList(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
-		// TODO Auto-generated constructor stub
 	}
 
-	public ConciliacionDTOList(Integer folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
+	public ConciliacionDTOList(Long folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
 			String subEstatusDescripcion, Long idTesoreria, Long idAsientoContable, EntidadDTO entidad,
 			CuentaDTO cuenta, ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
 			GlobalDTO global, List<DevolucionConDTO> devoluciones, List<MovTransitoDTO> movimientosTransito,
 			List<ComisionesDTO> comisiones) {
 		super();
-		Folio = folio;
+		this.folio = folio;
 		this.estatus = estatus;
 		this.subEstatus = subEstatus;
 		this.subEstatusDescripcion = subEstatusDescripcion;
@@ -73,12 +71,12 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 		this.comisiones = comisiones;
 	}
 
-	public Integer getFolio() {
-		return Folio;
+	public Long getFolio() {
+		return this.folio;
 	}
 
-	public void setFolio(Integer folio) {
-		Folio = folio;
+	public void setFolio(Long folio) {
+		this.folio = folio;
 	}
 
 	public EstatusConciliacionDTO getEstatus() {
@@ -195,7 +193,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 
 	@Override
 	public String toString() {
-		return "ConciliacionDTOList [Folio=" + Folio + ", estatus=" + estatus + ", subEstatus=" + subEstatus
+		return "ConciliacionDTOList [folio=" + folio + ", estatus=" + estatus + ", subEstatus=" + subEstatus
 				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idTesoreria=" + idTesoreria
 				+ ", idAsientoContable=" + idAsientoContable + ", entidad=" + entidad + ", cuenta=" + cuenta
 				+ ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="

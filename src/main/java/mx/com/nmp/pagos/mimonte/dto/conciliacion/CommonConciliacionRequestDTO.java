@@ -15,22 +15,22 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class CommonConciliacionRequestDTO implements Comparable<CommonConciliacionRequestDTO> {
 
-	private Integer folio;
+	private Long folio;
 
 	public CommonConciliacionRequestDTO() {
 		super();
 	}
 
-	public CommonConciliacionRequestDTO(Integer folio) {
+	public CommonConciliacionRequestDTO(Long folio) {
 		super();
 		this.folio = folio;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

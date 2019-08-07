@@ -217,7 +217,7 @@ public class ComisionesController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaComisiones(@PathVariable(value = "folio", required = true) Integer folio) {
+	public Response consultaComisiones(@PathVariable(value = "folio", required = true) Long folio) {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa.",
 				comisionesService.findByFolio(folio));
 	}

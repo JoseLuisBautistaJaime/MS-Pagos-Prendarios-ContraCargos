@@ -59,7 +59,7 @@ public abstract class ConciliacionProcessorChain {
 		}
 	}
 
-	protected List<MovimientoMidas> getMovimientosMidasByConciliacion(Integer idConciliacion) throws ConciliacionException {
+	protected List<MovimientoMidas> getMovimientosMidasByConciliacion(Long idConciliacion) throws ConciliacionException {
 		List<MovimientoMidas> movimientosMidas = null;
 		try {
 			movimientosMidas = this.mergeReporteHandler.getMovimientosMidasRepository()
@@ -72,7 +72,7 @@ public abstract class ConciliacionProcessorChain {
 		return movimientosMidas;
 	}
 
-	protected List<MovimientoProveedor> getMovimientosProveedorByConciliacion(Integer idConciliacion) throws ConciliacionException {
+	protected List<MovimientoProveedor> getMovimientosProveedorByConciliacion(Long idConciliacion) throws ConciliacionException {
 		List<MovimientoProveedor> movimientosProveedor = null;
 		try {
 			movimientosProveedor = this.mergeReporteHandler.getMovimientoProveedorRepository()
@@ -85,7 +85,7 @@ public abstract class ConciliacionProcessorChain {
 		return movimientosProveedor;
 	}
 
-	protected List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByConciliacion(Integer idConciliacion) throws ConciliacionException {
+	protected List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByConciliacion(Long idConciliacion) throws ConciliacionException {
 		List<MovimientoEstadoCuenta> movimientosEstadoCuenta = null;
 		try {
 			movimientosEstadoCuenta = this.mergeReporteHandler.getMovimientoEstadoCuentaRepository()

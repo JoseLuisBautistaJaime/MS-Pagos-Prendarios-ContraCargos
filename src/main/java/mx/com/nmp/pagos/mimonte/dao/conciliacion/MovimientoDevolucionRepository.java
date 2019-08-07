@@ -34,7 +34,7 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	 * @return
 	 */
 	@Query("SELECT md FROM MovimientoDevolucion md WHERE md.idConciliacion = :folio")
-	public List<MovimientoDevolucion> findByIdConciliacion(@Param("folio") Integer folio);
+	public List<MovimientoDevolucion> findByIdConciliacion(@Param("folio") Long folio);
 
 	/**
 	 * Obtiene los movimientos por devolución cuando el parametro ingresado es el
@@ -45,7 +45,7 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	 * @return
 	 */
 	@Query("SELECT md FROM MovimientoDevolucion md WHERE md.idConciliacion = :folio AND md.id = :idMovimiento")
-	public MovimientoDevolucion findByIdConciliacionAndIdMovimiento(@Param("folio") final Integer folio,
+	public MovimientoDevolucion findByIdConciliacionAndIdMovimiento(@Param("folio") final Long folio,
 			@Param("idMovimiento") final Integer idMovimiento);
 
 	/**
@@ -55,7 +55,7 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	 * @return
 	 */
 	@Query("SELECT md FROM MovimientoDevolucion md WHERE md.idConciliacion = :folio")
-	public List<MovimientoDevolucion> findByFolio(@Param("folio") Integer folio);
+	public List<MovimientoDevolucion> findByFolio(@Param("folio") Long folio);
 
 	/**
 	 * Regresa una lista de movimientos devolucion por ids y fecha
@@ -84,7 +84,7 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	 * @param ids
 	 * @return
 	 */
-	public List<MovimientoDevolucion> findByIdConciliacionAndEstatusIdIn(Integer folio, List<Integer> ids);
+	public List<MovimientoDevolucion> findByIdConciliacionAndEstatusIdIn(Long folio, List<Integer> ids);
 
 	/**
 	 * Regresa un valor de 1 cuando se encuentran todos los movimientos devolcuion
@@ -117,7 +117,7 @@ public interface MovimientoDevolucionRepository extends JpaRepository<Movimiento
 	 * @return
 	 */
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(md.id) FROM to_movimiento_devolucion md INNER JOIN to_movimiento_conciliacion mc ON md.id = mc.id WHERE md.id IN :ids AND mc.id_conciliacion = :folio) = :tam THEN 1 ELSE 0 END")
-	public Object verifyIfFolioAndIdsRelationShipExists(@Param("folio") final Integer folio,
+	public Object verifyIfFolioAndIdsRelationShipExists(@Param("folio") final Long folio,
 			@Param("ids") List<Integer> ids, @Param("tam") final Integer tam);
 
 	/**

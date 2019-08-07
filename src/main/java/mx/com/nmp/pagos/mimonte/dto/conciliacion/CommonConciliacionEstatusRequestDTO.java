@@ -15,14 +15,14 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class CommonConciliacionEstatusRequestDTO implements Comparable<CommonConciliacionEstatusRequestDTO> {
 
-	private Integer folio;
+	private Long folio;
 	private Boolean estatus;
 
 	public CommonConciliacionEstatusRequestDTO() {
 		super();
 	}
 
-	public CommonConciliacionEstatusRequestDTO(Integer folio, Boolean estatus) {
+	public CommonConciliacionEstatusRequestDTO(Long folio, Boolean estatus) {
 		super();
 		this.folio = folio;
 		this.estatus = estatus;
@@ -36,11 +36,11 @@ public class CommonConciliacionEstatusRequestDTO implements Comparable<CommonCon
 		this.estatus = estatus;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

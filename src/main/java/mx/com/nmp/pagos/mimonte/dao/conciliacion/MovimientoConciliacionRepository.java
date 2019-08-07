@@ -30,7 +30,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 public interface MovimientoConciliacionRepository extends JpaRepository<MovimientoConciliacion, Integer> {
 
 	@Query("SELECT mc FROM MovimientoConciliacion mc WHERE mc.idConciliacion = :folio")
-	public List<MovimientoConciliacion> findByFolio(@Param("folio") Integer folio);
+	public List<MovimientoConciliacion> findByFolio(@Param("folio") Long folio);
 
 	/**
 	 * Regresa una lista de MovimientoConciliacion por folio de conciliacion e ids
@@ -41,7 +41,7 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 * @return
 	 */
 	@Query("SELECT mc FROM MovimientoConciliacion mc WHERE mc.idConciliacion = :folio AND mc.id IN :idMovimientos")
-	public List<MovimientoConciliacion> findByFolioAndIds(@Param("folio") final Integer folio,
+	public List<MovimientoConciliacion> findByFolioAndIds(@Param("folio") final Long folio,
 			@Param("idMovimientos") final List<Integer> idMovimientos);
 
 	/**
@@ -52,7 +52,7 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 */
 	@Query("from MovimientoComision l  where l.idConciliacion = :idConciliacion")
 	public List<MovimientoComision> findMovimientoComisionByConciliacionId(
-			@Param("idConciliacion") final Integer idConciliacion);
+			@Param("idConciliacion") final Long idConciliacion);
 
 	/**
 	 * Regresa una lista de MovimientoDevolucion por folio de conciliacion
@@ -62,7 +62,7 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 */
 	@Query("from MovimientoDevolucion l  where l.idConciliacion = :idConciliacion")
 	public List<MovimientoDevolucion> findMovimientoDevolucionByConciliacionId(
-			@Param("idConciliacion") final Integer idConciliacion);
+			@Param("idConciliacion") final Long idConciliacion);
 
 	/**
 	 * Regresa una lista de MovimientoPago por folio de conciliacion
@@ -72,8 +72,8 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 */
 	@Query("from MovimientoPago l  where l.idConciliacion = :idConciliacion")
 	public List<MovimientoPago> findMovimientoPagoByConciliacionId(
-			@Param("idConciliacion") final Integer idConciliacion);
+			@Param("idConciliacion") final Long idConciliacion);
 	
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT mt.id FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mc ON mc.id = mt.id WHERE mt.id IN :ids AND mc.id_conciliacion = :folio AND mt.estatus <> 1) IS NOT NULL THEN 0 ELSE 1 END as RESULT")
-	public Object validaFolioAndIdsForMovPagos(@Param("folio")final Integer folio, @Param("ids") final List<Integer> ids);
+	public Object validaFolioAndIdsForMovPagos(@Param("folio")final Long folio, @Param("ids") final List<Integer> ids);
 }

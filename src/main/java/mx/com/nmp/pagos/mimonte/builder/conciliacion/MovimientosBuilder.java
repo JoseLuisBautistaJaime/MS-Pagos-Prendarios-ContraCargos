@@ -480,7 +480,7 @@ public abstract class MovimientosBuilder {
 	 * @return
 	 */
 	public static MovimientoPago buildMovimientoPagoFromMovimientoPagoDTO(MovimientoPagoDTO movimientoPagoDTO,
-			final Integer folio, final String requestUser) {
+			final Long folio, final String requestUser) {
 		MovimientoPago movimientoPago = null;
 		if (null != movimientoPagoDTO) {
 			movimientoPago = new MovimientoPago();
@@ -506,7 +506,7 @@ public abstract class MovimientosBuilder {
 	 * @return
 	 */
 	public static List<MovimientoPago> buildMovimientoPagoListFromMovimientoPagoDTOList(
-			List<MovimientoPagoDTO> movimientoPagoDTOList, final Integer folio, final String requestUser) {
+			List<MovimientoPagoDTO> movimientoPagoDTOList, final Long folio, final String requestUser) {
 		List<MovimientoPago> movimientoPagoList = null;
 		if (null != movimientoPagoDTOList && !movimientoPagoDTOList.isEmpty()) {
 			movimientoPagoList = new ArrayList<>();

@@ -90,7 +90,7 @@ public class MovimientosMidasService {
 	 * @param estatus
 	 * @return
 	 */
-	public Long countByConciliacionId(final Integer idConciliacion, final Boolean estatus) {
+	public Long countByConciliacionId(final Long idConciliacion, final Boolean estatus) {
 		if (null != estatus)
 			return movimientosMidasRepository.countByReporteConciliacionIdAndEstatus(idConciliacion, estatus);
 		else
@@ -164,7 +164,7 @@ public class MovimientosMidasService {
 			String userRequest) {
 
 		// Se valida que exista la conciliacion
-		Integer folio = movimientoProcesosNocturnosDTOList.getFolio();
+		Long folio = movimientoProcesosNocturnosDTOList.getFolio();
 		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio,
 				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
@@ -219,12 +219,12 @@ public class MovimientosMidasService {
 	 * @param userRequest
 	 * @return
 	 */
-	public static Reporte buildReporte(final Integer folio, final Date fechaDesde, final Date fechaHasta,
+	public static Reporte buildReporte(final Long folio, final Date fechaDesde, final Date fechaHasta,
 			final String userRequest) {
 		Reporte reporte = new Reporte();
 		if (null == folio || null == fechaDesde || null == fechaHasta || null == userRequest)
 			return null;
-		reporte.setConciliacion(new Conciliacion((long) folio));
+		reporte.setConciliacion(new Conciliacion(folio));
 		reporte.setCreatedBy(userRequest);
 		reporte.setCreatedDate(new Date());
 		reporte.setDisponible(true);

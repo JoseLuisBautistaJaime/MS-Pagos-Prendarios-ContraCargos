@@ -17,24 +17,24 @@ import java.util.List;
  */
 public class SolicitarPagosRequestDTO implements Comparable<SolicitarPagosRequestDTO> {
 
-	private Integer folio;
+	private Long folio;
 	private List<Integer> idMovimientos;
 
 	public SolicitarPagosRequestDTO() {
 		super();
 	}
 
-	public SolicitarPagosRequestDTO(Integer folio, List<Integer> idMovimientos) {
+	public SolicitarPagosRequestDTO(Long folio, List<Integer> idMovimientos) {
 		super();
 		this.folio = folio;
 		this.idMovimientos = idMovimientos;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

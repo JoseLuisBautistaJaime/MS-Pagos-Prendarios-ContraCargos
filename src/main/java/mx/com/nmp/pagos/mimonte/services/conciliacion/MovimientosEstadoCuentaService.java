@@ -167,7 +167,7 @@ public class MovimientosEstadoCuentaService {
 	 * @param idConciliacion
 	 * @return
 	 */
-	public Long countByConciliacionId(final Integer idConciliacion) {
+	public Long countByConciliacionId(final Long idConciliacion) {
 		return movimientoEstadoCuentaRepository.countMovimientos(idConciliacion);
 	}
 
@@ -262,7 +262,7 @@ public class MovimientosEstadoCuentaService {
 		}
 
 		// Se regenera la conciliacion
-		this.conciliacionHelper.generarConciliacion(idConciliacion.intValue(), Arrays.asList(reporte));
+		this.conciliacionHelper.generarConciliacion(idConciliacion, Arrays.asList(reporte));
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(idConciliacion,
 				"Se procesa la consulta del estado de cuenta para la conciliacion con folio " + idConciliacion,

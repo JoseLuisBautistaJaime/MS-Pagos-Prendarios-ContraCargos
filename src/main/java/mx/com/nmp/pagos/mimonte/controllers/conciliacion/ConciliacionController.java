@@ -152,7 +152,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaFolio(@PathVariable(value = "folio", required = true) Integer folio) {
+	public Response consultaFolio(@PathVariable(value = "folio", required = true) Long folio) {
 
 		ConciliacionDTOList consultaFolio = conciliacionServiceImpl.consultaFolio(folio);
 
@@ -256,9 +256,9 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response enviaConciliacion(@PathVariable(value = "folio", required = true) Integer folio,
+	public Response enviaConciliacion(@PathVariable(value = "folio", required = true) Long folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		if (!ValidadorConciliacion.validateInteger(folio))
+		if (!ValidadorConciliacion.validateLong(folio))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		conciliacionServiceImpl.enviarConciliacion(folio, createdBy);
@@ -284,7 +284,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Integer folio) {
+	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Long folio) {
 		List<MovTransitoDTO> response = conciliacionService.consultaMovimientosTransito(folio);
 		if (null == response || response.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
@@ -368,7 +368,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaMovimientosDevolucion(@PathVariable(value = "folio", required = true) Integer folio) {
+	public Response consultaMovimientosDevolucion(@PathVariable(value = "folio", required = true) Long folio) {
 
 		List<DevolucionConDTO> devoluciones = devolucionesServiceImpl.consultaDevolucion(folio);
 		if (null == devoluciones || devoluciones.isEmpty())
@@ -500,9 +500,9 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Integer folio,
+	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Long folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {
-		if (!ValidadorConciliacion.validateInteger(folio))
+		if (!ValidadorConciliacion.validateLong(folio))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		conciliacionServiceImpl.generarConciliacion(folio, requestUser);

@@ -76,7 +76,7 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 	 * @param idConciliacion
 	 * @return
 	 */
-	private List<MovimientoTransito> extraerMovimientosTransito(List<MovimientoMidas> movsMidas, List<MovimientoProveedor> movsProveedor, Integer idConciliacion) {
+	private List<MovimientoTransito> extraerMovimientosTransito(List<MovimientoMidas> movsMidas, List<MovimientoProveedor> movsProveedor, Long idConciliacion) {
 
 		Map<String, List<MovimientoMidas>> movsMidasByTransaction = mapMovMidasByTransaction(movsMidas);
 		Map<String, List<MovimientoProveedor>> movsProveedorByTransaction = mapByMovsTransactionByTransaction(movsProveedor);

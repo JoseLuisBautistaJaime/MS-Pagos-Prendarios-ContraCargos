@@ -196,7 +196,7 @@ public class SolicitarPagosService {
 	 * @return
 	 */
 	public List<SolicitarPagosMailDataDTO> consultarMovimientos(
-			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList, Integer folio,
+			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList, Long folio,
 			List<Integer> idsMovimientos) {
 		return movimientosMidasRepository.getDataByFolioAndIdMovimientos(folio, idsMovimientos);
 	}
@@ -208,7 +208,7 @@ public class SolicitarPagosService {
 	 * @param folio
 	 * @param idsMovimientos
 	 */
-	public void actualizarMovimientosTransito(List<MovimientoTransito> movimientoTransitoList, Integer folio,
+	public void actualizarMovimientosTransito(List<MovimientoTransito> movimientoTransitoList, Long folio,
 			List<Integer> idsMovimientos) {
 		movimientoTransitoList = movimientoTransitoRepository.findByFolioAndIds(folio, idsMovimientos);
 		if (null == movimientoTransitoList || movimientoTransitoList.isEmpty()) {
@@ -232,7 +232,7 @@ public class SolicitarPagosService {
 	 * @param solicitarPagosMailDataDTOList
 	 * @param createdBy
 	 */
-	public void insertaMovimientosPago(List<MovimientoConciliacion> movimientoConciliacionList, Integer folio,
+	public void insertaMovimientosPago(List<MovimientoConciliacion> movimientoConciliacionList, Long folio,
 			List<Integer> idsMovimientos, List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList,
 			String createdBy) {
 		movimientoConciliacionList = movimientoConciliacionRepository.findByFolioAndIds(folio, idsMovimientos);
@@ -292,7 +292,8 @@ public class SolicitarPagosService {
 	 * @param folio
 	 * @param requestUser
 	 */
-	public void insertaMovimientosPagoFinal(final Integer folio, final String requestUser) {
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void insertaMovimientosPagoFinal(final Long folio, final String requestUser) {
 		List<MovimientoTransito> movimientosTransito = null;
 		List<MovimientoPago> movimientosPago = null;
 		List<MovimientoPagoDTO> movimientosPagoDTO = null;

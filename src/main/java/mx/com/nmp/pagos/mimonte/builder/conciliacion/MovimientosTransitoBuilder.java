@@ -111,7 +111,7 @@ public abstract class MovimientosTransitoBuilder {
 		return devolucionConDTOList;
 	}
 
-	public static MovimientoTransito buildMovTransitoFromMovProveedor(MovimientoProveedor movProveedor, Integer idConciliacion) {
+	public static MovimientoTransito buildMovTransitoFromMovProveedor(MovimientoProveedor movProveedor, Long idConciliacion) {
 		MovimientoTransito movTransito = new MovimientoTransito();
 		movTransito.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
 		movTransito.setCreatedDate(new Date());
@@ -140,7 +140,7 @@ public abstract class MovimientosTransitoBuilder {
 	 * @param idConciliacion
 	 * @return
 	 */
-	public static MovimientoTransito buildMovTransitoFromMovMidas(MovimientoMidas movMidas, MovimientoProveedor movProveedor, Integer idConciliacion) {
+	public static MovimientoTransito buildMovTransitoFromMovMidas(MovimientoMidas movMidas, MovimientoProveedor movProveedor, Long idConciliacion) {
 		MovimientoTransito movTransito = new MovimientoTransito();
 		movTransito.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
 		movTransito.setCreatedDate(new Date());

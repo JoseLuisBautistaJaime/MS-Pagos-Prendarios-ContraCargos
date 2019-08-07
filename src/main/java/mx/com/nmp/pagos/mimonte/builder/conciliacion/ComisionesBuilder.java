@@ -79,7 +79,7 @@ public abstract class ComisionesBuilder {
 	 */
 	public static ComisionTransaccion buildComisionTransaccionFromComisionesTransDTOAndComisionesTransaccionesRequestDTO(
 			Long comisionTransaccionVer, ComisionesTransDTO comisionesTransDTO,
-			ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO, Integer idConciliacion,
+			ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO, Long idConciliacion,
 			String requestUser) {
 		ComisionTransaccion comisionTransaccion = null;
 		if (null != comisionesTransDTO) {

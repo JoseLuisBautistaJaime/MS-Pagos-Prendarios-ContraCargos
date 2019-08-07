@@ -67,7 +67,7 @@ public class ConciliacionDataValidator {
 	 *
 	 * @param folio El folio de la conciliacion.
 	 */
-	public void validateFolioExists(Integer folio) {
+	public void validateFolioExists(Long folio) {
 		LOG.info(">> validateFolioExists");
 
 		if (folio == null) {
@@ -97,7 +97,7 @@ public class ConciliacionDataValidator {
 	 * @param folio El folio de la conciliacion.
 	 * @param movimientosConciliacion La lista de movimientos.
 	 */
-	public void validateIdsMovimientosConciliacionExists(Integer folio, List<Integer> movimientosConciliacion) {
+	public void validateIdsMovimientosConciliacionExists(Long folio, List<Integer> movimientosConciliacion) {
 		LOG.info(">> validateIdsMovimientosConciliacionExists");
 
 		if (CollectionUtils.isEmpty(movimientosConciliacion)) {

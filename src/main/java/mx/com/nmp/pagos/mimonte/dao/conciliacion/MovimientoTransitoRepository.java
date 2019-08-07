@@ -41,7 +41,7 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @return
 	 */
 	@Query("SELECT mt FROM MovimientoTransito mt WHERE mt.idConciliacion = :folio")
-	public List<MovimientoTransito> findByIdConciliacion(@Param("folio") Integer folio);
+	public List<MovimientoTransito> findByIdConciliacion(@Param("folio") Long folio);
 
 	/**
 	 * Busqueda de los movimientos en transito a partir del folio (para validar
@@ -51,7 +51,7 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @return
 	 */
 	@Query("SELECT mt FROM MovimientoTransito mt JOIN FETCH mt.movimientoMidas WHERE mt.idConciliacion = :folio AND mt.estatus = (SELECT et.id FROM EstatusTransito et WHERE et.nombre LIKE '%Solicitada%')")
-	public List<MovimientoTransito> findByIdConciliacionPagos(@Param("folio") Integer folio);
+	public List<MovimientoTransito> findByIdConciliacionPagos(@Param("folio") Long folio);
 
 	/**
 	 * Obtiene los movimientos en transito.
@@ -61,7 +61,7 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @return
 	 */
 	@Query("SELECT mt FROM MovimientoConciliacion mc INNER JOIN MovimientoTransito mt ON mc.id = mt.id WHERE mc.idConciliacion = :folio AND mt.id = :idMovimiento ")
-	public MovimientoTransito findByIdFolioAndIdMovimiento(@Param("folio") final Integer folio,
+	public MovimientoTransito findByIdFolioAndIdMovimiento(@Param("folio") final Long folio,
 			@Param("idMovimiento") final Integer idMovimiento);
 
 	/**
@@ -72,7 +72,7 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @return
 	 */
 	@Query("SELECT mt FROM MovimientoTransito mt INNER JOIN MovimientoConciliacion mc ON mt.id = mc.id WHERE mc.idConciliacion = :folio AND mt.id IN :idMovimientos")
-	public List<MovimientoTransito> findByFolioAndIds(@Param("folio") final Integer folio,
+	public List<MovimientoTransito> findByFolioAndIds(@Param("folio") final Long folio,
 			@Param("idMovimientos") final List<Integer> idMovimientos);
 
 	/**
@@ -82,7 +82,7 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @param idMovimiento
 	 * @return
 	 */
-	public List<MovimientoTransito> findByIdConciliacionAndMovimientoMidasId(Integer idConciliacion,
+	public List<MovimientoTransito> findByIdConciliacionAndMovimientoMidasId(Long idConciliacion,
 			long idMovimientoMidas);
 
 	/**
@@ -120,7 +120,7 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @return
 	 */
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(mt.id) FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mc ON mt.id = mc.id WHERE mt.id IN :ids AND mc.id_conciliacion = :folio) = (SELECT :tam)) THEN 1 ELSE 0 END")
-	public Object checkIdsAndFolioRelationship(@Param("folio") final Integer folio,
+	public Object checkIdsAndFolioRelationship(@Param("folio") final Long folio,
 			@Param("ids") final List<Integer> ids, @Param("tam") final Integer tam);
 
 }

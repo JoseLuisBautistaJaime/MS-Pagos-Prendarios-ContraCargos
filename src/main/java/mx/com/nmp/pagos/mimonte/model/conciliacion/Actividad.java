@@ -64,14 +64,14 @@ public class Actividad {
 	private Date fecha;
 
 	@Column(name = "folio", nullable = false)
-	private Integer folio;
+	private Long folio;
 
 	public Actividad() {
 		super();
 	}
 
 	public Actividad(Long id, TipoActividadEnum tipo, SubTipoActividadEnum subTipo, String descripcion, Date fecha,
-			Integer folio) {
+			Long folio) {
 		super();
 		this.id = id;
 		this.tipo = tipo;
@@ -121,11 +121,11 @@ public class Actividad {
 		this.fecha = fecha;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

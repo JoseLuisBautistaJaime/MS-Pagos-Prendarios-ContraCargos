@@ -118,7 +118,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	 * consultaDevolucion(java.lang.Integer)
 	 */
 	@Override
-	public List<DevolucionConDTO> consultaDevolucion(Integer folio) {
+	public List<DevolucionConDTO> consultaDevolucion(Long folio) {
 
 		if (folio < 1)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -581,7 +581,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	 * @return
 	 */
 	private List<DevolucionEntidadDTO> solicitarDevoluciones(List<MovimientoDevolucion> movimientosDevolucion,
-			String usuario, final Integer folio) {
+			String usuario, final Long folio) {
 		// Objetos necesarios
 		Map<String, Object> map = null;
 		List<DevolucionEntidadDTO> devolucionesSolicitadas = null;

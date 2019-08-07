@@ -90,7 +90,7 @@ public class SolicitarDevolucionesService {
 	 * @param devoluciones
 	 * @param contactos
 	 */
-	public void enviarSolicitudDevoluciones(List<DevolucionEntidadDTO2> devoluciones, final Integer folio)
+	public void enviarSolicitudDevoluciones(List<DevolucionEntidadDTO2> devoluciones, final Long folio)
 			throws ConciliacionException {
 
 		// Objetos necesarios

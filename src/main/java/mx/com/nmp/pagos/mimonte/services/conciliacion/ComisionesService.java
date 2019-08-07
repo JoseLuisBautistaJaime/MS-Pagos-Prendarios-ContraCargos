@@ -145,7 +145,7 @@ public class ComisionesService {
 	 * @param folio
 	 * @return
 	 */
-	public List<ComisionDTO> findByFolio(final Integer folio) {
+	public List<ComisionDTO> findByFolio(final Long folio) {
 		List<ComisionDTO> comisionDTOList = null;
 		Optional<Conciliacion> conciliacion = conciliacionRepository.findById(folio);
 		if (!conciliacion.isPresent())

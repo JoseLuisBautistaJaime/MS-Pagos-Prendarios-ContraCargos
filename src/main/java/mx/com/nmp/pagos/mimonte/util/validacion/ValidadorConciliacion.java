@@ -357,6 +357,21 @@ public interface ValidadorConciliacion {
 	}
 
 	/**
+	 * Valida que un objeto de tipo Long no sea nulo
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static boolean validateLong(final Long value) {
+		try {
+			assertNotNull(value);
+		} catch (Exception ex) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Valida que el objeto de tipo ActualizarIdPSRequest contenga los atributos
 	 * requeridos y estos contengan valores validos
 	 * 

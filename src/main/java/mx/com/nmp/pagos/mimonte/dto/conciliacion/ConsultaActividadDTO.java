@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class ConsultaActividadDTO implements Comparable<ConsultaActividadDTO> {
 
-	private Integer folio;
+	private Long folio;
 	private Date fecha;
 	private String descripcion;
 
@@ -25,18 +25,18 @@ public class ConsultaActividadDTO implements Comparable<ConsultaActividadDTO> {
 		super();
 	}
 
-	public ConsultaActividadDTO(Integer folio, Date fecha, String descripcion) {
+	public ConsultaActividadDTO(Long folio, Date fecha, String descripcion) {
 		super();
 		this.folio = folio;
 		this.fecha = fecha;
 		this.descripcion = descripcion;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

@@ -44,7 +44,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @return
 	 */
 	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public List<MovimientoMidas> findByConciliacionId(@Param("conciliacionId") final Integer conciliacionId);
+	public List<MovimientoMidas> findByConciliacionId(@Param("conciliacionId") final Long conciliacionId);
 
 	/**
 	 * Regresa los movimientos midas por id de conciliacion
@@ -55,7 +55,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 */
 	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
 	public List<MovimientoMidas> findByReporteConciliacionIdAndEstatus(
-			@Param("conciliacionId") final Integer conciliacionId,
+			@Param("conciliacionId") final Long conciliacionId,
 			@Param("estatus") final Boolean estatus/* , Pageable pageable */);
 
 	/**
@@ -65,7 +65,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @return
 	 */
 	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId);
+	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId);
 
 	/**
 	 * Regresa el total de registros movimientos midas por id de conciliacion y
@@ -75,7 +75,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @return
 	 */
 	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
-	public Long countByReporteConciliacionIdAndEstatus(@Param("conciliacionId") final Integer conciliacionId,
+	public Long countByReporteConciliacionIdAndEstatus(@Param("conciliacionId") final Long conciliacionId,
 			@Param("estatus") final Boolean estatus);
 
 	/**
@@ -85,7 +85,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @return
 	 */
 	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public Long countByReporteConciliacionId(@Param("conciliacionId") final Integer conciliacionId);
+	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId);
 
 	/**
 	 * Regresa un reporte de movimientos de pagos en linea (midas)
@@ -221,7 +221,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @return
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO(mp.operationDate, mt.folio, mp.orderId, mt.operacionDesc, mt.monto, mp.currency, mp.tarjetaMovimientosProveedor.type, mp.status, mp.tarjetaMovimientosProveedor.brand, mp.tarjetaMovimientosProveedor.cardNumber, mp.tarjetaMovimientosProveedor.holderName, mp.authorization, mt.movimientoMidas.consumidor) FROM MovimientoTransito mt INNER JOIN MovimientoProveedor mp ON mt.movimientoMidas.transaccion = mp.orderId WHERE mt.idConciliacion = :folio AND mt.id IN :idsComisiones")
-	public List<SolicitarPagosMailDataDTO> getDataByFolioAndIdMovimientos(@Param("folio") final Integer folio,
+	public List<SolicitarPagosMailDataDTO> getDataByFolioAndIdMovimientos(@Param("folio") final Long folio,
 			@Param("idsComisiones") final List<Integer> idsComisiones);
 
 }

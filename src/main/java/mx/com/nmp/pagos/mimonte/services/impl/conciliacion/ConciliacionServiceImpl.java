@@ -620,7 +620,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 * devoluciones, movimientos en transito y comisiones
 	 */
 	@Override
-	public ConciliacionDTOList consultaFolio(Integer folio) {
+	public ConciliacionDTOList consultaFolio(Long folio) {
 
 		// Validación del folio en el request.
 		if (folio == null || folio < 1)
@@ -653,9 +653,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 * 
 	 * @see
 	 * mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#getById(
-	 * java.lang.Integer)
+	 * java.lang.Long)
 	 */
-	public Conciliacion getById(Integer idConciliacion) {
+	public Conciliacion getById(Long idConciliacion) {
 		return conciliacionHelper.getConciliacionByFolio(idConciliacion, null);
 	}
 
@@ -663,18 +663,17 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 * (non-Javadoc)
 	 * 
 	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#
-	 * enviarConciliacion(java.lang.Integer, java.lang.String)
+	 * enviarConciliacion(java.lang.Long, java.lang.String)
 	 */
 	@Override
 	@Transactional
-	public void enviarConciliacion(Integer idConciliacion, String usuario) {
+	public void enviarConciliacion(Long idConciliacion, String usuario) {
 
-		// Se valida que exista la conciliacion con el folio proporcionado
-		conciliacionDataValidator.validateFolioExists(idConciliacion);
-		// Validar conciliacion y actualizar estatus
+		// Validar conciliacion
+		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
+				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
+
 		try {
-			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
-					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 			// Verificar que se encuentra en el sub estatus correcto
 			List<Long> idsSubEstatusIncorrectos = new ArrayList<Long>();
@@ -686,17 +685,18 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 						CodigoError.NMP_PMIMONTE_BUSINESS_030);
 			}
 
+			// Se mueven los movimientos de transito a movimientos pago antes de generar los layouts
+			solicitarPagosService.insertaMovimientosPagoFinal(idConciliacion, usuario);
+
+			// Se crean los layouts correspondientes
+			layoutsService.enviarConciliacion(idConciliacion);
+
+			// Se actualiza el sub estatus a enviada
 			conciliacion
 					.setSubEstatus(new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_ENVIADA));
 			conciliacion.setLastModifiedBy(usuario);
 			conciliacion.setLastModifiedDate(new Date());
-
 			conciliacionRepository.save(conciliacion);
-
-			solicitarPagosService.insertaMovimientosPagoFinal(idConciliacion, usuario);
-
-			// Se crean los layouts correspondientes
-			layoutsService.enviarConciliacion(Long.valueOf(idConciliacion));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -913,7 +913,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 * consultaMovimientosTransito(java.lang.Integer)
 	 */
 	@Override
-	public List<MovTransitoDTO> consultaMovimientosTransito(Integer folio) {
+	public List<MovTransitoDTO> consultaMovimientosTransito(Long folio) {
 
 		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(folio, null);
 
@@ -1015,10 +1015,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 * (non-Javadoc)
 	 * 
 	 * @see mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService#
-	 * generarConciliacion(java.lang.Integer, java.lang.String)
+	 * generarConciliacion(java.lang.Long, java.lang.String)
 	 */
 	@Transactional
-	public void generarConciliacion(Integer idConciliacion, String lastModifiedBy) throws ConciliacionException {
+	public void generarConciliacion(Long idConciliacion, String lastModifiedBy) throws ConciliacionException {
 
 		// Validación del request
 		if (idConciliacion == null)
