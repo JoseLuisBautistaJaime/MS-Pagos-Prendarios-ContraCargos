@@ -248,13 +248,17 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 			// Registro de actividad
 			if (null != liquidarDevoluciones.getFolio()) {
-				actividadGenericMethod.registroActividad(liquidarDevoluciones.getFolio(), "Se han liquidado "
-						.concat(String.valueOf(movimientosLiquidados.size())).concat(" de la conciliacion ")
-						.concat(String.valueOf(
-								null != liquidarDevoluciones.getFolio() ? liquidarDevoluciones.getFolio() : null))
-						.concat(" por un total de $ ")
-						.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosLiquidados))),
-						TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+				actividadGenericMethod
+						.registroActividad(liquidarDevoluciones.getFolio(),
+								"Se realizo la liquidacion de ".concat(String.valueOf(movimientosLiquidados.size()))
+										.concat(" devolucion(es) de la conciliacion: ")
+										.concat(String.valueOf(null != liquidarDevoluciones.getFolio()
+												? liquidarDevoluciones.getFolio()
+												: null))
+										.concat(" por un total de: $ ")
+										.concat(String
+												.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosLiquidados))),
+								TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 			}
 
 			movimientoDevolucionRepository.flush();
@@ -299,10 +303,11 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, folio.getFolio(), false);
 
 			// Registro de actividad
-			actividadGenericMethod.registroActividad(folio.getFolio(), "Se ha solicitado la devoluciones para "
+			actividadGenericMethod.registroActividad(folio.getFolio(), "Se realizo la solicitud de devolucion de "
 					.concat(String.valueOf(null != movimientosSolicitados ? movimientosSolicitados.size() : null))
-					.concat(" movimientos por un total de $ "
-							.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosSolicitados)))),
+					.concat(" movimiento(s) ").concat(" de la conciliacion: ").concat(String.valueOf(folio.getFolio()))
+					.concat("por un total de: $ ")
+					.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosSolicitados))),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
 		} catch (Exception ex) {
@@ -534,9 +539,10 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(marcarDevoluciones.getFolio(),
-					"Se han marcado como devolucion los movimientos: "
-							.concat(marcarDevoluciones.getIdMovimientos().toString())
-							.concat(" para la conciliacion: ".concat(String.valueOf(marcarDevoluciones.getFolio()))),
+					"Se realizo el marcado para devolucion de "
+							.concat(String.valueOf(marcarDevoluciones.getIdMovimientos().size()))
+							.concat(" movimiento(s) de la conciliacion: "
+									.concat(String.valueOf(marcarDevoluciones.getFolio()))),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
 		} catch (Exception ex) {

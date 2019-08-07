@@ -40,6 +40,10 @@ public enum SubTipoActividadEnum {
 
 	ACTUALIZACION_ID_PEOPLE_SOFT(8, "Actualizacion de id de PeopleSoft",
 			"Se genera una actualizacion del id de peoplesoft que es la actualizacion de id de asiento contable e id de poliaza contable.",
+			TipoActividadEnum.ACTIVIDAD),
+	
+	COMISIONES(9, "Operaciones sobre comisiones",
+			"Se realiza una operacion sobre las comisiones.",
 			TipoActividadEnum.ACTIVIDAD);
 
 	private Integer id;
