@@ -252,7 +252,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 						.concat(String.valueOf(movimientosLiquidados.size())).concat(" de la conciliacion ")
 						.concat(String.valueOf(
 								null != liquidarDevoluciones.getFolio() ? liquidarDevoluciones.getFolio() : null))
-						.concat(" por un total de ")
+						.concat(" por un total de $ ")
 						.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosLiquidados))),
 						TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 			}
@@ -296,12 +296,12 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				throw new ConciliacionException(ConciliacionConstants.THERE_IS_NO_MOVIMIENTOS_DEVOLUCION_PENDIENTES,
 						CodigoError.NMP_PMIMONTE_BUSINESS_092);
 			}
-			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, folio.getFolio());
+			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, folio.getFolio(), false);
 
 			// Registro de actividad
-			actividadGenericMethod.registroActividad(folio, "Se ha solicitado la devoluciones para "
+			actividadGenericMethod.registroActividad(folio.getFolio(), "Se ha solicitado la devoluciones para "
 					.concat(String.valueOf(null != movimientosSolicitados ? movimientosSolicitados.size() : null))
-					.concat(" movimientos por un total de $"
+					.concat(" movimientos por un total de $ "
 							.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosSolicitados)))),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
@@ -441,7 +441,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 		}
 
 		try {
-			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, null);
+			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, null, true);
 		} catch (Exception ex) {
 			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
 			throw ex;
@@ -609,7 +609,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			devolucionesDTO.add(DevolucionesBuilder.buildDevolucionEntidadDTOFromMovimientoDevolucion(devolucion,
 					baseEntidadDTOMap));
 		}
-		
+
 		return devolucionesDTO;
 	}
 
@@ -621,10 +621,12 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	 * 
 	 * @param movimientosDevolucion
 	 * @param usuario
+	 * @param folio
+	 * @param issueAnActivity
 	 * @return
 	 */
 	private List<DevolucionEntidadDTO> solicitarDevoluciones(List<MovimientoDevolucion> movimientosDevolucion,
-			String usuario, final Integer folio) {
+			String usuario, final Integer folio, final boolean issueAnActivity) {
 		// Objetos necesarios
 		Map<String, Object> map = null;
 		List<DevolucionEntidadDTO> devolucionesSolicitadas = null;
@@ -648,7 +650,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			// Se actualiza el estatus a solicitada
 			for (MovimientoDevolucion md : movimientosDevolucion) {
 				// Se compara el estatus para ver que sea el correcto
-				if (md.getEstatus().getId().compareTo(ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA) != 0) {
+				if (md.getEstatus().getId().compareTo(ConciliacionConstants.ESTATUS_DEVOLUCION_PENDIENTE) != 0) {
 					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_098.getDescripcion(),
 							CodigoError.NMP_PMIMONTE_BUSINESS_098);
 				}
@@ -685,13 +687,19 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			throw ex;
 		}
 
-		// Registro de actividad
-		actividadGenericMethod.registroActividad(folio,
-				"Se solicitan devoluciones para "
-						.concat(String.valueOf(
-								null != devolucionesSolicitadasInner ? devolucionesSolicitadasInner.size() : null))
-						.concat(" movimientos, pertenecientes a la conciliacion ").concat(String.valueOf(folio)),
-				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+		// TODO: Analizar esta situacion y borrar si es necesario
+		// No se puede registrar dado que no se especifica el dato pricipal de ñla
+		// actividad (EL FOLIO DE CONCILIACiON)
+//		if (issueAnActivity) {
+//			// Registro de actividad
+//			actividadGenericMethod.registroActividad(folio, "Se solicitan devoluciones para "
+//					.concat(String
+//							.valueOf(null != devolucionesSolicitadasInner ? devolucionesSolicitadasInner.size() : null))
+//					.concat(" movimientos, pertenecientes a la conciliacion ").concat(String.valueOf(folio))
+//					.concat(" por un total de $ ")
+//					.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(devolucionesSolicitadas))),
+//					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+//		}
 
 		return devolucionesSolicitadas;
 	}
@@ -734,7 +742,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	private static BigDecimal getTotalFromDevolucionEntidadDTOList(
 			List<DevolucionEntidadDTO> devolucionEntidadDTOListList) {
 		BigDecimal total = null;
-		if (null != devolucionEntidadDTOListList && devolucionEntidadDTOListList.isEmpty()) {
+		if (null != devolucionEntidadDTOListList && !devolucionEntidadDTOListList.isEmpty()) {
 			total = new BigDecimal(0);
 			for (DevolucionEntidadDTO devolucionEntidadDTO : devolucionEntidadDTOListList) {
 				total = total.add(null != devolucionEntidadDTO && null != devolucionEntidadDTO.getMonto()

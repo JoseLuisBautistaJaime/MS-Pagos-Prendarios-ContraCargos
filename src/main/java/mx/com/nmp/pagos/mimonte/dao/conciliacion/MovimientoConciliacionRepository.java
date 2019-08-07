@@ -40,7 +40,7 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 * @param idMovimientos
 	 * @return
 	 */
-	@Query("SELECT mc FROM MovimientoConciliacion mc WHERE mc.idConciliacion = :folio AND mc.id IN :idMovimientos")
+	@Query("SELECT mt FROM MovimientoTransito mt WHERE mt.idConciliacion = :folio AND mt.id IN :idMovimientos")
 	public List<MovimientoConciliacion> findByFolioAndIds(@Param("folio") final Integer folio,
 			@Param("idMovimientos") final List<Integer> idMovimientos);
 

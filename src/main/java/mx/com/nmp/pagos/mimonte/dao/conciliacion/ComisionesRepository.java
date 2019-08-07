@@ -50,9 +50,9 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param idConciliacion
 	 * @return
 	 */
-	@Query("SELECT mc.id FROM MovimientoComision mc WHERE mc.id IN :idsComisiones AND mc.id IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = true AND mcon.idConciliacion = :idConciliacion)")
-	public List<Long> verifyById(@Param("idsComisiones") final List<Integer> idsComisiones,
-			@Param("idConciliacion") final Integer idConciliacion);
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(mc.id) FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.id IN :idsComisiones AND mcon.id_conciliacion = :idConciliacion AND mcon.nuevo = true) = :tam) THEN 1 ELSE 0 END")
+	public Object verifyById(@Param("idsComisiones") final List<Integer> idsComisiones,
+			@Param("idConciliacion") final Integer idConciliacion, @Param("tam") final Integer tam);
 
 	/**
 	 * Regresa el total de movimientos de pagos que estan entre las fechas
@@ -108,12 +108,13 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	public ComisionSaveResponseDTO findByIdComision(@Param("idComision") final Integer idComision);
 
 	/**
-	 * Regresa un movimiento comision por id y estatus
+	 * Regresa un movimiento comision por id y campo nuevo
 	 * 
 	 * @param idMovimientoComision
+	 * @param nuevo
 	 * @return
 	 */
-	public MovimientoComision findByIdAndEstatus(final Integer idMovimientoComision, final Boolean estatus);
+	public MovimientoComision findByIdAndNuevo(final Integer idMovimientoComision, final Boolean nuevo);
 
 	/**
 	 * Regresa un valor de 1 cuando todos los ids de comisiones existen, de lo

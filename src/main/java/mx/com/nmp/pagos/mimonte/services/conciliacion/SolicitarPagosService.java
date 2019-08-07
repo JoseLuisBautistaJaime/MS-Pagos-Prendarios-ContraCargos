@@ -200,8 +200,9 @@ public class SolicitarPagosService {
 		actividadGenericMethod.registroActividad(requestDTO.getFolio(),
 				"Se ha solicitado el pago para ".concat(String.valueOf(requestDTO.getIdMovimientos().size()))
 						.concat(" movimientos asociados a la conciliacion: "
-								.concat(String.valueOf(requestDTO.getFolio())).concat(" por un total de ")
-								.concat(String.valueOf(getMontoFromMovimientoTransitoList(movimientoTransitoList)))),
+								.concat(String.valueOf(requestDTO.getFolio())).concat(" por un total de $ ")
+								.concat(String.valueOf(
+										getMontoFromSolicitarPagosMailDataDTOList(solicitarPagosMailDataDTOList)))),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.SOLICITAR_PAGO);
 	}
 
@@ -337,14 +338,16 @@ public class SolicitarPagosService {
 	 * @param movimientoTransitoList
 	 * @return
 	 */
-	private static BigDecimal getMontoFromMovimientoTransitoList(List<MovimientoTransito> movimientoTransitoList) {
+	private static BigDecimal getMontoFromSolicitarPagosMailDataDTOList(
+			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
 		BigDecimal total = null;
-		if (null != movimientoTransitoList && !movimientoTransitoList.isEmpty()) {
+		if (null != solicitarPagosMailDataDTOList && !solicitarPagosMailDataDTOList.isEmpty()) {
 			total = new BigDecimal(0);
-			for (MovimientoTransito movimientoTransito : movimientoTransitoList) {
-				total = total.add(null != movimientoTransito && null != movimientoTransito.getMonto()
-						? movimientoTransito.getMonto()
-						: BigDecimal.ZERO);
+			for (SolicitarPagosMailDataDTO solicitarPagosMailDataDTO : solicitarPagosMailDataDTOList) {
+				total = total.add(
+						null != solicitarPagosMailDataDTO && null != solicitarPagosMailDataDTO.getMontoTransaccion()
+								? solicitarPagosMailDataDTO.getMontoTransaccion()
+								: BigDecimal.ZERO);
 			}
 		}
 		return total;
