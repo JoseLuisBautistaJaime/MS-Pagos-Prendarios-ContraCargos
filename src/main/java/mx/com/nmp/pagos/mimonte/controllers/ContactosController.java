@@ -35,6 +35,7 @@ import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
@@ -100,7 +101,8 @@ public class ContactosController {
 		if (!ValidadorCatalogo.validaContactoReqSaveDTO(contacto))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		if (!ValidadorGenerico.validateEmail2(contacto.getEmail()))
-			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT, CodigoError.NMP_PMIMONTE_BUSINESS_013);
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT,
+					CodigoError.NMP_PMIMONTE_BUSINESS_013);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				(ContactoRespDTO) ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.save(
 						ContactosBuilder.buildContactoBaseDTOFromContactoRequestDTO(contacto, new Date(), null),
@@ -125,14 +127,29 @@ public class ContactosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response updateContacto(@RequestBody ContactoReqUpdateDTO contacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		// Objectos necesarios
+		ContactoBaseDTO contactoBaseDTO = null;
+
+		// Valida el objeto y atributos
 		if (!ValidadorCatalogo.validaContactoReqUpdateDTO(contacto))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
+
+		// Valida el patron de email de contacto
 		if (!ValidadorGenerico.validateEmail2(contacto.getEmail()))
-			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT, CodigoError.NMP_PMIMONTE_BUSINESS_013);
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT,
+					CodigoError.NMP_PMIMONTE_BUSINESS_013);
+
+		// Actauliza el contacto
+		contactoBaseDTO = contactoServiceImpl.update(
+				ContactosBuilder.buildContactoRespDTOFromContactoReqUpdateDTO(contacto, new Date(), null),
+				lastModifiedBy);
+
+		// Mapea el objetos a un objeto de respuesta
+		ContactoRespDTO contactoResp = ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(contactoBaseDTO);
+
+		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
-				(ContactoRespDTO) ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.update(
-						ContactosBuilder.buildContactoRespDTOFromContactoReqUpdateDTO(contacto, new Date(), null),
-						lastModifiedBy)));
+				contactoResp);
 	}
 
 	/**
@@ -236,13 +253,15 @@ public class ContactosController {
 			@RequestParam(name = "email", required = false) String email,
 			@PathVariable(name = "idTipoContacto", required = true) Long idTipoContacto) {
 		if (email != null && !ValidadorGenerico.validateEmail2(email)) {
-			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT, CodigoError.NMP_PMIMONTE_BUSINESS_013);
+			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT,
+					CodigoError.NMP_PMIMONTE_BUSINESS_013);
 		}
 		List<ContactoRespDTO> lst = null;
 		try {
 			lst = contactoServiceImpl.findByIdTipoContactoAndNombreAndEmail(idTipoContacto, nombre, email);
 		} catch (EmptyResultDataAccessException eex) {
-			throw new CatalogoException(CatalogConstants.CATALOG_ID_AND_NAME_AND_EMAIL_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_014);
+			throw new CatalogoException(CatalogConstants.CATALOG_ID_AND_NAME_AND_EMAIL_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_BUSINESS_014);
 		}
 		if (lst == null || lst.isEmpty())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);

@@ -168,7 +168,6 @@ public abstract class ContactosBuilder {
 			contactoRespDTO.setNombre(contactoReqUpdateDTO.getNombre());
 			contactoRespDTO.setTipoContacto(TipoContactoBuilder
 					.buildTipoContactoDTOFromTipoContactoReqDTO(contactoReqUpdateDTO.getTipoContacto()));
-			contactoRespDTO.setCreatedDate(createdDate);
 			contactoRespDTO.setLastModifiedDate(lastModifiedDate);
 		}
 

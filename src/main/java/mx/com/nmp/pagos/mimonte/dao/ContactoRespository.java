@@ -91,4 +91,24 @@ public interface ContactoRespository extends JpaRepository<Contactos, Long> {
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(cto.id) FROM tc_contactos cto WHERE cto.email = :email) = 0) THEN 1 ELSE 0 END")
 	public Object validateDuplicateEmail(@Param("email") final String email);
 
+	/**
+	 * Regesa un valor de 1 cuando un email de contacto no existe (a menos que sea
+	 * el mismo contacto), de lo contrario regresa un valor 0
+	 * 
+	 * @param email
+	 * @param id
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(cto.id) FROM tc_contactos cto WHERE cto.email = :email AND cto.id <> :id) = 0) THEN 1 ELSE 0 END")
+	public Object validateDuplicateEmailUpdt(@Param("email") final String email, @Param("id") final Long id);
+
+	/**
+	 * Regresa el dato createdBy de un contacto por su id
+	 * 
+	 * @param idCto
+	 * @return
+	 */
+	@Query("SELECT cto.createdBy FROM Contactos cto WHERE cto.id = :idCto")
+	public Object getCreatedByById(@Param("idCto") final Long idCto);
+
 }

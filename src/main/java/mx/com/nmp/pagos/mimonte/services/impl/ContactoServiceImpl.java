@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
@@ -95,13 +96,14 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	public <T extends AbstractCatalogoDTO> T update(ContactoBaseDTO e, String lastModifiedBy) {
 		// Objetos necesarios
 		Contactos contacto = null;
-		Optional<Contactos> contactoResp = null;
+		String createdBy = null;
 
 		// Valida que el email no exista
-		if (!validaEmailExistente(e))
+		if (!validaEmailExistenteUpdt(e))
 			throw new CatalogoException(CatalogConstants.CATALOG_THE_EMAIL_THAT_WANTS_TO_UPDT_ALREADY_EXISTS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_015);
 		if (null != e)
@@ -118,9 +120,13 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 
 		// Construye y regresa el objeto de respuesta
 		contacto = contactoRespository.save(ContactosBuilder.buildContactosFromContactosDTOupdt(e));
-		contactoResp = contactoRespository.findById(contacto.getId());
-		return (T) ContactosBuilder
-				.buildContactosDTOFromContactos(contactoResp.isPresent() ? contactoResp.get() : contacto);
+
+		// Spring no recupera el dato createdBy incluso en una consulta distinta, por
+		// eso se recupera manual
+		createdBy = String.valueOf(contactoRespository.getCreatedByById(contacto.getId()));
+		contacto.setCreatedBy(createdBy);
+
+		return (T) ContactosBuilder.buildContactosDTOFromContactos(contacto);
 	}
 
 	/**
@@ -210,6 +216,24 @@ public class ContactoServiceImpl implements CatalogoAdmService<ContactoBaseDTO> 
 			return false;
 		else {
 			flag = ((BigInteger) contactoRespository.validateDuplicateEmail(e.getEmail()))
+					.compareTo(BigInteger.ONE) == 0;
+		}
+		return flag;
+	}
+
+	/**
+	 * Valida que el email proporcionado no exista (a emnos que pertenezca al mismo
+	 * contacto)
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public boolean validaEmailExistenteUpdt(ContactoBaseDTO e) {
+		Boolean flag = true;
+		if (null == e || null == e.getEmail() || "".equals(e.getEmail()))
+			return false;
+		else {
+			flag = ((BigInteger) contactoRespository.validateDuplicateEmailUpdt(e.getEmail(), e.getId()))
 					.compareTo(BigInteger.ONE) == 0;
 		}
 		return flag;
