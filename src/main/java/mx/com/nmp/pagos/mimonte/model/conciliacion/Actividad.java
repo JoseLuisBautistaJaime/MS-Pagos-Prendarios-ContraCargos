@@ -55,7 +55,7 @@ public class Actividad {
 	@Enumerated(EnumType.STRING)
 	private SubTipoActividadEnum subTipo;
 
-	@Size(max = 150, message = "La longitud de la descripcion debe ser de maximo 150 caracteres")
+	@Size(max = 500, message = "La longitud de la descripcion debe ser de maximo 500 caracteres")
 	@Column(name = "descripcion", nullable = false)
 	private String descripcion;
 

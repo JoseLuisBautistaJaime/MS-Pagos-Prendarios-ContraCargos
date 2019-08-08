@@ -60,7 +60,11 @@ public class EventAspect {
 			descripcion = arr[1].toString();
 			tipo = (TipoActividadEnum) arr[2];
 			subTipo = (SubTipoActividadEnum) arr[3];
-			// Se construye la entidad actividad
+			
+			// Se trunca el texto de algunos atributos			
+			descripcion = truncateText(descripcion, 500);
+			
+			// Se construye la entidad actividad			
 			actividad = buildActividad(folio, descripcion, tipo, subTipo);
 			// Se guarda la entidad Actividad
 			if (null != actividad)
@@ -92,4 +96,20 @@ public class EventAspect {
 		return actividad;
 	}
 
+	/**
+	 * Trunca una cadena de caracteres a la longitud especificada
+	 * 
+	 * @param text
+	 * @param tam
+	 * @return
+	 */
+	private String truncateText(String text, Integer tam) {
+		String strResult = "";
+		if (null != text && null != tam && text.length() > tam) {
+			strResult = text.substring(0, tam);
+		} else
+			strResult = text;
+		return strResult;
+	}
+	
 }

@@ -382,13 +382,10 @@ public class ComisionesService {
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(comisionSaveDTO.getFolio(),
-				(flagNew ? "Se agrega una nueva comision a la conciliacion "
-						: "Se actualiza una comision en la conciliacion ")
-								.concat(String.valueOf(comisionSaveDTO.getFolio())).concat(" por un monto de: $ ")
-								.concat(String.valueOf(comisionSaveDTO.getMonto()))
-								.concat(" y unas fechas de cargo y operacion: ")
-								.concat(String.valueOf(comisionSaveDTO.getFechaCargo()).concat(", "))
-								.concat(String.valueOf(comisionSaveDTO.getFechaOperacion())).concat(" respectivamente"),
+				(flagNew ? "Se agrega una nueva comision por concepto de "
+						: "Se actualiza una comision por concepto de ").concat(comisionSaveDTO.getDescripcion())
+								.concat(", con un monto de: $ ").concat(String.valueOf(comisionSaveDTO.getMonto()))
+								.concat(", para la conciliacion ").concat(String.valueOf(comisionSaveDTO.getFolio())),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.COMISIONES);
 
 		return result;
