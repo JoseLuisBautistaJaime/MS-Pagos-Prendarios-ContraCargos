@@ -79,4 +79,21 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	@Query("SELECT la FROM Layout la WHERE la.idConciliacion = :idConciliacion")
 	public List<Layout> checkFolioAndLayoutsRelationship(@Param("idConciliacion") final Long idConciliacion);
 	
+	/**
+	 * Regresa un valor de 1 cuando el id de layout proporcionado si existe, de lo contrario regresa un 0
+	 * @param idLayout
+	 * @return
+	 */
+	@Query("SELECT CASE WHEN (SELECT l.id FROM Layout l WHERE l.id = :idLayout) IS NOT NULL THEN 1 ELSE 0 END")
+	public Object checkIfIdExist(@Param("idLayout") final Long idLayout);
+
+	/**
+	 * Regresa un valor de 1 cuando el folio de conciliacion y el id de layout proporcionados tienen relacion, de loc ontrario regresa un 0
+	 * @param folio
+	 * @param idLayout
+	 * @return
+	 */
+	@Query("SELECT CASE WHEN (SELECT l.id FROM to_layout l WHERE l.id = :idLayout AND l.id_conciliacion = :folio) IS NOT NULL THEN 1 ELSE 0 END")
+	public Object checkIfFolioIdRelationshipExist(@Param("folio") final Integer folio, @Param("idLayout") final Long idLayout);
+	
 }

@@ -162,6 +162,11 @@ public final class ConciliacionConstants {
 	/**
 	 * Mensaje mostrado para una consulta exitosa.
 	 */
+	public static final String SUCCESSFUL_DELETE = "Eliminacion exitosa.";
+	
+	/**
+	 * Mensaje mostrado para una consulta exitosa.
+	 */
 	public static final String SUCCESSFUL_UPDATE = "Actualización exitosa.";
 
 	/**

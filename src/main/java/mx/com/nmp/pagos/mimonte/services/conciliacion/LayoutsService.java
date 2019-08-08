@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +44,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 
 /**
  * * @name LayoutsService
@@ -96,6 +100,17 @@ public class LayoutsService {
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
 
+	/**
+	 * Validador generico de conciliacion
+	 */
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+	
+	/**
+	 * Logs de la clase
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(LayoutsService.class);
+	
 	public LayoutsService() {
 		super();
 	}
@@ -140,26 +155,40 @@ public class LayoutsService {
 	 * @return
 	 */
 	public List<LayoutDTO> consultarLayouts(Long idConciliacion) {
+		// Objetos necesarios
 		List<LayoutDTO> layoutDTOs = new ArrayList<>();
-		if (idConciliacion > 0L) {
-			LayoutDTO layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.PAGOS.toString());
-			if (layoutDTO != null) {
-				layoutDTOs.add(layoutDTO);
-			}
-			layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.COMISIONES_MOV.toString());
-			if (layoutDTO != null) {
-				layoutDTOs.add(layoutDTO);
-			}
-			layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.COMISIONES_GENERALES.toString());
-			if (layoutDTO != null) {
-				layoutDTOs.add(layoutDTO);
-			}
-			layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.DEVOLUCIONES.toString());
-			if (layoutDTO != null) {
-				layoutDTOs.add(layoutDTO);
-			}
+		
+		try {
+			// Valida que la conciliacion exista
+			conciliacionDataValidator.validateFolioExists(idConciliacion.intValue());
+			
+			if (idConciliacion > 0L) {
+				LayoutDTO layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.PAGOS.toString());
+				if (layoutDTO != null) {
+					layoutDTOs.add(layoutDTO);
+				}
+				layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.COMISIONES_MOV.toString());
+				if (layoutDTO != null) {
+					layoutDTOs.add(layoutDTO);
+				}
+				layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.COMISIONES_GENERALES.toString());
+				if (layoutDTO != null) {
+					layoutDTOs.add(layoutDTO);
+				}
+				layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.DEVOLUCIONES.toString());
+				if (layoutDTO != null) {
+					layoutDTOs.add(layoutDTO);
+				}
+			}	
 		}
-
+		catch(ConciliacionException ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw ex;
+		}
+		catch(Exception ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_113.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_113);
+		}
 		return layoutDTOs;
 	}
 
@@ -187,26 +216,56 @@ public class LayoutsService {
 	 */
 	@Transactional
 	public boolean eliminarUnLayout(Long idConciliacion, Long idLayout) {
-		boolean respuesta = true;
-		List<Layout> layoutList = layoutsRepository.checkFolioAndLayoutsRelationship(idConciliacion);
-		if (null == layoutList || layoutList.isEmpty())
-			throw new ConciliacionException(ConciliacionConstants.THERE_IS_NO_CONCILIACION_LAYOUT_RELATIONSHIP,
-					CodigoError.NMP_PMIMONTE_BUSINESS_084);
-		if (idConciliacion > 0L && idLayout > 0L) {
-			if (layoutsRepository.findById(idLayout).isPresent()) {
-				Layout layout = layoutsRepository.getOne(idLayout);// siLayoutPerteneceAConciliacion
-				List<Layout> layouts = layoutsRepository.findByTipo(layout.getTipo());// siLayoutEsElMismoTipo
-				for (Layout layout2 : layouts) {
-					if (layout2.getIdConciliacion() == idConciliacion) {
-						layoutsRepository.eliminarUnLayoutLineas(layout2.getId());
-						layoutsRepository.eliminarUnLayoutHeader(layout2.getId());
-						layoutsRepository.deleteById(layout2.getId());
-						respuesta = false;
+		// Objetos necesarios
+		Boolean flag = null;
+		boolean respuesta = false;
+		
+		// LOGICA DE ELIMINACION
+		try {
+			// Valida que la conciliacion exista
+			conciliacionDataValidator.validateFolioExists(idConciliacion.intValue());
+			
+			// Valida que el id de layout exista
+			flag = ((BigInteger)layoutsRepository.checkIfIdExist(idLayout)).compareTo(BigInteger.ONE) == 0;
+			if(!flag)
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_085.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_085);
+			
+			// Valida que la conciliacion este ligada al id de layout especificado
+			flag = null;
+			flag = ((BigInteger)layoutsRepository.checkIfFolioIdRelationshipExist(idConciliacion.intValue(), idLayout)).compareTo(BigInteger.ONE) == 0;
+			if(!flag)
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_115.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_115);
+			
+			// Logica de eliminacion
+			respuesta = true;
+			List<Layout> layoutList = layoutsRepository.checkFolioAndLayoutsRelationship(idConciliacion);
+			if (null == layoutList || layoutList.isEmpty())
+				throw new ConciliacionException(ConciliacionConstants.THERE_IS_NO_CONCILIACION_LAYOUT_RELATIONSHIP,
+						CodigoError.NMP_PMIMONTE_BUSINESS_084);
+			if (idConciliacion > 0L && idLayout > 0L) {
+				if (layoutsRepository.findById(idLayout).isPresent()) {
+					Layout layout = layoutsRepository.getOne(idLayout);// siLayoutPerteneceAConciliacion
+					List<Layout> layouts = layoutsRepository.findByTipo(layout.getTipo());// siLayoutEsElMismoTipo
+					for (Layout layout2 : layouts) {
+						if (layout2.getIdConciliacion() == idConciliacion) {
+							layoutsRepository.eliminarUnLayoutLineas(layout2.getId());
+							layoutsRepository.eliminarUnLayoutHeader(layout2.getId());
+							layoutsRepository.deleteById(layout2.getId());
+							respuesta = false;
+						}
 					}
-				}
-			} else
-				throw new ConciliacionException(ConciliacionConstants.LAYOUT_ID_DOESNT_EXIST,
-						CodigoError.NMP_PMIMONTE_BUSINESS_085);
+				} else
+					throw new ConciliacionException(ConciliacionConstants.LAYOUT_ID_DOESNT_EXIST,
+							CodigoError.NMP_PMIMONTE_BUSINESS_085);
+			}	
+		}
+		catch(ConciliacionException ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw ex;
+		}
+		catch(Exception ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_114.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_114);
 		}
 		return respuesta;
 	}

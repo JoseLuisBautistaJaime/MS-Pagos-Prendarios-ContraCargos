@@ -262,6 +262,12 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_111("Uno o mas movimientos transito no pertenecen a la conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_112("Se genero un error validando el sub-estatus de la conciliacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_113("Se genero un error durante la consulta de layouts",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_114("Se genero un error durante la eliminacion de layouts",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_115("No existe relacion entre la conciliacion y el layout especificado",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 
