@@ -84,7 +84,7 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	 * @param idLayout
 	 * @return
 	 */
-	@Query("SELECT CASE WHEN (SELECT l.id FROM Layout l WHERE l.id = :idLayout) IS NOT NULL THEN 1 ELSE 0 END")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(l.id) FROM to_layout l WHERE l.id = :idLayout) > (SELECT 1)) THEN 1 ELSE 0 END")
 	public Object checkIfIdExist(@Param("idLayout") final Long idLayout);
 
 	/**
@@ -93,7 +93,7 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	 * @param idLayout
 	 * @return
 	 */
-	@Query("SELECT CASE WHEN (SELECT l.id FROM to_layout l WHERE l.id = :idLayout AND l.id_conciliacion = :folio) IS NOT NULL THEN 1 ELSE 0 END")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(l.id) FROM to_layout l WHERE l.id = :idLayout AND l.id_conciliacion = :folio) > (SELECT 1)) THEN 1 ELSE 0 END")
 	public Object checkIfFolioIdRelationshipExist(@Param("folio") final Integer folio, @Param("idLayout") final Long idLayout);
 	
 }
