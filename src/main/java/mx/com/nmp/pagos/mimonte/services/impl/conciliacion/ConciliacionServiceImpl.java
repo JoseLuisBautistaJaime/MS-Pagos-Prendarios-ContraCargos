@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -674,22 +675,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Valida que la conciliacion tenga el estatus correcto para poder dar de alta
 		// el estado cuenta
 		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,
-				ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA);
+				Arrays.asList(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA));
 
 		// Validar conciliacion y actualizar estatus
 		try {
 			Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
 					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
-
-			// Verificar que se encuentra en el sub estatus correcto
-			List<Long> idsSubEstatusIncorrectos = new ArrayList<Long>();
-			idsSubEstatusIncorrectos.add(ConciliacionConstants.SUBESTATUS_CONCILIACION_CREADA.longValue());
-			idsSubEstatusIncorrectos.add(ConciliacionConstants.SUBESTATUS_CONCILIACION_FINALIZADA.longValue());
-			if (conciliacion.getSubEstatus() == null
-					|| idsSubEstatusIncorrectos.contains(conciliacion.getSubEstatus().getId())) {
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
-						CodigoError.NMP_PMIMONTE_BUSINESS_030);
-			}
 
 			conciliacion
 					.setSubEstatus(new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_ENVIADA));
@@ -1034,7 +1025,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 */
 	@Transactional
 	public void generarConciliacion(Integer idConciliacion, String lastModifiedBy) throws ConciliacionException {
-
 		// Validación del request
 		if (idConciliacion == null)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -1047,6 +1037,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Valida que el folio sea valido
 		conciliacionDataValidator.validateFolioExists(idConciliacion);
 
+		// Valida que la conciliacion tenga alguno de los estatus validos para realizar esta operacion ([Edo. Cta. Comp=12 & Openpay Compl=6])
+		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,Arrays.asList(6L, 12L));
+		
 		// Obtiene todos los reportes de la bd generados hasta el momento
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(idConciliacion);
 		if (reportes == null || reportes.size() == 0) {

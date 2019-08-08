@@ -129,11 +129,11 @@ public class ConciliacionDataValidator {
 	 * @param folio
 	 * @param subEstatusConciliacion
 	 */
-	public void validateSubEstatusByFolioAndSubEstatus(final Integer folio, final Long subEstatusConciliacion) {
+	public void validateSubEstatusByFolioAndSubEstatus(final Integer folio, final List<Long> subEstatusConciliacionList) {
 		Boolean flag = null;
 		try {
 			flag = ((BigInteger) conciliacionRepository.checkIfConciliciacionHasValidStatus(folio,
-					subEstatusConciliacion)).compareTo(BigInteger.ONE) == 0;
+					subEstatusConciliacionList)).compareTo(BigInteger.ONE) == 0;
 			if (!flag)
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_030);

@@ -339,14 +339,14 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	public Map<String, Object> getEntidadNombreAndCuentaNumeroByConciliacionId(@Param("folio") final Integer folio);
 
 	/**
-	 * Regresa un valor 1 cuando la conciliacion tiene el estatus especificado, y un
-	 * 0 en caso contrario
+	 * Regresa un valor 1 cuando la conciliacion tiene al menos uno de los estatus
+	 * especificados, y un 0 en caso contrario
 	 * 
 	 * @param folio
 	 * @param estatus
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(con.id) FROM to_conciliacion con WHERE con.id = :folio AND con.id_sub_estatus_conciliacion = :estatus) > 0) THEN 1 ELSE 0 END")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(con.id) FROM to_conciliacion con WHERE con.id = :folio AND con.id_sub_estatus_conciliacion IN :subEstatusList) > 0) THEN 1 ELSE 0 END")
 	public Object checkIfConciliciacionHasValidStatus(@Param("folio") final Integer folio,
-			@Param("estatus") final Long estatus);
+			@Param("subEstatusList") final List<Long> subEstatusList);
 }
