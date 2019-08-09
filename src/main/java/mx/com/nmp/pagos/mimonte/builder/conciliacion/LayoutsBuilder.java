@@ -13,6 +13,7 @@ import java.util.List;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
@@ -49,7 +50,6 @@ public abstract class LayoutsBuilder {
 		return layoutsDTO;
 	}
 
-
 	/**
 	 * Construye un objeto de tipo LayoutDTO a partir de un entity de tipo Layout
 	 * 
@@ -68,7 +68,6 @@ public abstract class LayoutsBuilder {
 
 		return layoutDTO;
 	}
-
 
 	/**
 	 * Construye un objeto de tipo LayoutCabeceraDTO a partir de un entity de tipo
@@ -125,7 +124,7 @@ public abstract class LayoutsBuilder {
 	 * Construye un entity de tipo Layout apartir de un objeto de tipo LayoutDTO
 	 * 
 	 * @param layoutDTO
-	 * @param requestUser 
+	 * @param requestUser
 	 * @return
 	 */
 	public static Layout buildLayoutFromLayoutDTO(LayoutDTO layoutDTO, String requestUser) {
@@ -146,11 +145,12 @@ public abstract class LayoutsBuilder {
 	 * LayoutDTO
 	 * 
 	 * @param layoutDTO
-	 * @param layout 
-	 * @param requestUser 
+	 * @param layout
+	 * @param requestUser
 	 * @return
 	 */
-	public static LayoutHeader buildLayoutHeaderFromLayoutCabeceraDTO(LayoutDTO layoutDTO, Layout layout, String requestUser) {
+	public static LayoutHeader buildLayoutHeaderFromLayoutCabeceraDTO(LayoutDTO layoutDTO, Layout layout,
+			String requestUser) {
 		LayoutHeader layoutHeader = null;
 
 		if (layoutDTO != null) {
@@ -169,7 +169,8 @@ public abstract class LayoutsBuilder {
 	 * @param requestUser
 	 * @return
 	 */
-	public static LayoutHeader buildLayoutHeaderFromLayoutCabeceraDTO(LayoutCabeceraDTO layoutCabeceraDTO, Layout layout, String requestUser) {
+	public static LayoutHeader buildLayoutHeaderFromLayoutCabeceraDTO(LayoutCabeceraDTO layoutCabeceraDTO,
+			Layout layout, String requestUser) {
 		LayoutHeader layoutHeader = null;
 
 		if (layoutCabeceraDTO != null) {
@@ -186,7 +187,6 @@ public abstract class LayoutsBuilder {
 
 		return layoutHeader;
 	}
-
 
 	/**
 	 * Construye un objeto de tipo LayoutLineaDTO a partir de un entity de tipo
@@ -217,11 +217,12 @@ public abstract class LayoutsBuilder {
 	 * objetos de tipo LayoutLineaDTO
 	 * 
 	 * @param layoutLineaDTOs
-	 * @param layout 
-	 * @param requestUser 
+	 * @param layout
+	 * @param requestUser
 	 * @return
 	 */
-	public static List<LayoutLinea> buildLayoutLineaFromLayoutLineaDTO(List<LayoutLineaDTO> layoutLineaDTOs, Layout layout, String requestUser) {
+	public static List<LayoutLinea> buildLayoutLineaFromLayoutLineaDTO(List<LayoutLineaDTO> layoutLineaDTOs,
+			Layout layout, String requestUser) {
 		List<LayoutLinea> layoutLineas = new ArrayList<>();
 		layoutLineaDTOs.forEach(l -> {
 			LayoutLinea layoutLinea = new LayoutLinea();
@@ -234,7 +235,8 @@ public abstract class LayoutsBuilder {
 			layoutLinea.setProyectoNmp(l.getProyectoNMP());
 			layoutLinea.setMonto(l.getMonto());
 			layoutLinea.setLayout(layout);
-			layoutLinea.setNuevo(false);
+			// TODO: Corroborar se cambia a true para estandarizar en alta por medio de app a: 1, igual que en comisiones
+			layoutLinea.setNuevo(true);
 			layoutLinea.setCreatedBy(requestUser);
 			layoutLinea.setCreatedDate(new Date());
 			layoutLineas.add(layoutLinea);
@@ -285,13 +287,15 @@ public abstract class LayoutsBuilder {
 				&& !layoutLineaDTO.getCuenta().equals("") && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0;
 	}
 
-
 	/**
-	 * Construye la cabecera para el layout usando los valores configurados por default en la bd
+	 * Construye la cabecera para el layout usando los valores configurados por
+	 * default en la bd
+	 * 
 	 * @param layoutHeaderCatalog
 	 * @return
 	 */
-	public static LayoutCabeceraDTO buildLayoutCabeceraDTOFromLayoutHeaderCatalog(LayoutHeaderCatalog layoutHeaderCatalog) {
+	public static LayoutCabeceraDTO buildLayoutCabeceraDTOFromLayoutHeaderCatalog(
+			LayoutHeaderCatalog layoutHeaderCatalog) {
 		LayoutCabeceraDTO layoutHeaderDTO = new LayoutCabeceraDTO();
 		layoutHeaderDTO.setCabecera(layoutHeaderCatalog.getCabecera());
 		layoutHeaderDTO.setCodigoOrigen(layoutHeaderCatalog.getCodigoOrigen());
@@ -300,7 +304,6 @@ public abstract class LayoutsBuilder {
 		layoutHeaderDTO.setUnidadNegocio(layoutHeaderCatalog.getUnidadNegocio());
 		return layoutHeaderDTO;
 	}
-
 
 	public static void mergeLinea(LayoutLinea lineaBD, LayoutLinea linea, String requestUser) {
 		lineaBD.setLinea(linea.getLinea());
@@ -312,6 +315,25 @@ public abstract class LayoutsBuilder {
 		lineaBD.setMonto(linea.getMonto());
 		lineaBD.setLastModifiedBy(requestUser);
 		lineaBD.setLastModifiedDate(new Date());
+	}
+
+	/**
+	 * Construye un objeto de tipo LayoutDTO a partir de un objeto de tipo
+	 * LayoutRequestDTO
+	 * 
+	 * @param layoutRequestDTO
+	 * @return
+	 */
+	public static LayoutDTO buildLayoutDTOFromLayoutRequestDTO(LayoutRequestDTO layoutRequestDTO) {
+		LayoutDTO layoutDTO = null;
+		if (null != layoutRequestDTO) {
+			layoutDTO = new LayoutDTO();
+			layoutDTO.setCabecera(null);
+			layoutDTO.setFolio(layoutRequestDTO.getFolio());
+			layoutDTO.setLineas(layoutRequestDTO.getLineas());
+			layoutDTO.setTipoLayout(layoutRequestDTO.getTipoLayout());
+		}
+		return layoutDTO;
 	}
 
 }

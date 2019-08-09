@@ -268,6 +268,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_114("Se genero un error durante la eliminacion de layouts",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_115("No existe relacion entre la conciliacion y el layout especificado",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_116("El layout no puede ser eliminado por que no se dio de alta desde la aplicacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

@@ -35,6 +35,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutEditionValidationDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.HeaderCatalogEnum;
@@ -129,7 +130,9 @@ public class LayoutsService {
 	 * @return
 	 */
 	public LayoutDTO consultarUnLayout(Long idConciliacion, TipoLayoutEnum tipo) {
+		// Objetos necesarios
 		Layout layout = null;
+		
 		if (validar(idConciliacion, tipo)) {
 			try {
 				List<Layout> layouts = layoutsRepository.findByIdConciliacionAndTipo(idConciliacion, tipo);
@@ -139,12 +142,18 @@ public class LayoutsService {
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
-				throw new ConciliacionException("Error al consultar el layout tipo " + tipo, CodigoError.NMP_PMIMONTE_BUSINESS_011);
+				throw new ConciliacionException("Error al consultar el layout tipo " + tipo, CodigoError.NMP_PMIMONTE_BUSINESS_113);
 			}
 		}
-		if (layout == null) {
-			throw new ConciliacionException("No existe un layout para el tipo especificado " + tipo, CodigoError.NMP_PMIMONTE_BUSINESS_084);
-		}
+		
+		// TODO: Borrar esta sentencia if dado que es valido que sea nulo en algunas ocaciones (no siempre existe un tipo X de layout para una conciliacion)
+//		if (layout == null) {
+//			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+//					CodigoError.NMP_PMIMONTE_0009);
+//		}
+		
+		// TODO: Obtener el header para incrustar en el objeto de retorno
+		
 		return LayoutsBuilder.buildLayoutDTOFromLayout(layout);
 	}
 
@@ -246,10 +255,14 @@ public class LayoutsService {
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_085.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_085);
 			
 			// Valida que la conciliacion este ligada al id de layout especificado
-			flag = null;
 			flag = ((BigInteger)layoutsRepository.checkIfFolioIdRelationshipExist(idConciliacion.intValue(), idLayout)).compareTo(BigInteger.ONE) == 0;
 			if(!flag)
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_115.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_115);
+			
+			// Valida que el layout no tenga lineas dadas de alta desde el sistema para poder eliminar (nuevo = 1)
+			flag = ((BigInteger)layoutsRepository.checkIfLineasAreNew(idConciliacion, idLayout)).compareTo(BigInteger.ONE) == 0;
+			if(!flag)
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_116.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_116);
 			
 			// Logica de eliminacion
 			respuesta = true;
@@ -270,8 +283,8 @@ public class LayoutsService {
 						}
 					}
 				} else
-					throw new ConciliacionException(ConciliacionConstants.LAYOUT_ID_DOESNT_EXIST,
-							CodigoError.NMP_PMIMONTE_BUSINESS_085);
+					throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
+							CodigoError.NMP_PMIMONTE_0009);
 			}	
 		}
 		catch(ConciliacionException ex) {
@@ -291,9 +304,11 @@ public class LayoutsService {
 	 * @param idLinea
 	 */
 	public void eliminarLinea(Long idLinea) throws ConciliacionException {
-
-		// Se valida que la conciliacion se encuentre en proceso
+		// Objetos necesarios
 		Optional<LayoutLinea> linea = null;
+		Boolean flag = null;
+		
+		// Se valida que la linea exista
 		try {
 			linea = this.layoutLineasRepository.findById(idLinea);
 		}
@@ -302,9 +317,14 @@ public class LayoutsService {
 			throw new ConciliacionException("Error al obtener la linea del layout asignada al id " + idLinea, CodigoError.NMP_PMIMONTE_BUSINESS_085);
 		}
 		if (linea == null || !linea.isPresent()) {
-			throw new ConciliacionException("Error al obtener la linea del layout asignada al id " + idLinea, CodigoError.NMP_PMIMONTE_BUSINESS_085);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_085.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_085);
 		}
 
+		// Se valida que la linea se pueda elimina, o sea que fue dada de alta desde la aplicacion (nuevo = 1)
+		flag = ((BigInteger)layoutLineasRepository.checkIfLineIsNew(idLinea)).compareTo(BigInteger.ONE) == 0;
+		if(!flag)
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_116.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_116);
+		
 		// Se valida que la conciliacion asignada se encuentre en proceso
 		Long idConciliacion = linea.get().getLayout().getIdConciliacion();
 		this.conciliacionHelper.getConciliacionByFolio(idConciliacion, ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
