@@ -88,4 +88,21 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	@Query("DELETE FROM LayoutLinea WHERE layout.id IN (SELECT id FROM Layout WHERE idConciliacion = :idConciliacion) AND nuevo = :nuevo")
 	public void deleteByIdConciliacionAndNuevo(@Param("idConciliacion") Long idConciliacion, @Param("nuevo") boolean nuevo);
 	
+	/**
+	 * Regresa un valor de 1 cuando el id de layout proporcionado si existe, de lo contrario regresa un 0
+	 * @param idLayout
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(l.id) FROM to_layout l WHERE l.id = :idLayout) >= (SELECT 1)) THEN 1 ELSE 0 END")
+	public Object checkIfIdExist(@Param("idLayout") final Long idLayout);
+
+	/**
+	 * Regresa un valor de 1 cuando el folio de conciliacion y el id de layout proporcionados tienen relacion, de loc ontrario regresa un 0
+	 * @param folio
+	 * @param idLayout
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(l.id) FROM to_layout l WHERE l.id = :idLayout AND l.id_conciliacion = :folio) >= (SELECT 1)) THEN 1 ELSE 0 END")
+	public Object checkIfFolioIdRelationshipExist(@Param("folio") final Integer folio, @Param("idLayout") final Long idLayout);
+	
 }

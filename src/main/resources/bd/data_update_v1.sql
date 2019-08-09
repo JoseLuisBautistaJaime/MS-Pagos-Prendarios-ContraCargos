@@ -64,3 +64,12 @@ VALUES (23, 'ENVIO_CONCILIACION', 15, 14);
 
 INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
 (5, 'No Identificada en Open Pay', 'No Identificada en Open Pay', true, now(), null, 'Sistema', null, 'NIOP');
+
+
+-- ---------------------------------------------------------------------------------- --
+-- - ACTUALIZACION DE FECHAS EN tc_layout_header PARA SUSTITUIT 0's POR FECHA ACTUAL - --
+-- ------------------------------ [2019-08-07 19:07:03] ----------------------------- --
+-- ---------------------------------------------------------------------------------- --
+UPDATE tc_layout_header SET fecha = NOW() WHERE ID IN (1,2,3,4);
+-- ------------------------------------- END ---------------------------------------- --
+-- ---------------------------------------------------------------------------------- --

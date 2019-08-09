@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.DevolucionesBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
@@ -58,6 +60,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarDevolucionesService;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
@@ -103,6 +107,15 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	@Autowired
 	private EstatusConciliacionRepository estatusConciliacionRepository;
 
+	/**
+	 * Registro de actividades
+	 */
+	@Autowired
+	private ActividadGenericMethod actividadGenericMethod;
+
+	/**
+	 * Validador generico para datos relacionados conconciliacion
+	 */
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
 
@@ -232,12 +245,29 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 						.buildDevolucionEntidadDTOFromMovimientosDevolucion(md, entidad);
 				movimientosLiquidados.add(devolucionEntidadDTO);
 			}
+
+			// Registro de actividad
+			if (null != liquidarDevoluciones.getFolio()) {
+				actividadGenericMethod
+						.registroActividad(liquidarDevoluciones.getFolio(),
+								"Se realizo la liquidacion de ".concat(String.valueOf(movimientosLiquidados.size()))
+										.concat(" devolucion(es) de la conciliacion: ")
+										.concat(String.valueOf(null != liquidarDevoluciones.getFolio()
+												? liquidarDevoluciones.getFolio()
+												: null))
+										.concat(" por un total de: $ ")
+										.concat(String
+												.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosLiquidados))),
+								TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+			}
+
 			movimientoDevolucionRepository.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_035);
 		}
+
 		return movimientosLiquidados;
 	}
 
@@ -270,7 +300,16 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				throw new ConciliacionException(ConciliacionConstants.THERE_IS_NO_MOVIMIENTOS_DEVOLUCION_PENDIENTES,
 						CodigoError.NMP_PMIMONTE_BUSINESS_092);
 			}
-			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, folio.getFolio());
+			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, folio.getFolio(), false);
+
+			// Registro de actividad
+			actividadGenericMethod.registroActividad(folio.getFolio(), "Se realizo la solicitud de devolucion de "
+					.concat(String.valueOf(null != movimientosSolicitados ? movimientosSolicitados.size() : null))
+					.concat(" movimiento(s) ").concat(" de la conciliacion: ").concat(String.valueOf(folio.getFolio()))
+					.concat("por un total de: $ ")
+					.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosSolicitados))),
+					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			if (ex instanceof ConciliacionException)
@@ -407,11 +446,12 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 		}
 
 		try {
-			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, null);
+			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, null, true);
 		} catch (Exception ex) {
 			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
 			throw ex;
 		}
+
 		return movimientosSolicitados;
 	}
 
@@ -496,6 +536,15 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				movimientoTransitoRepository.delete(movimientoTransito);
 
 			}
+
+			// Registro de actividad
+			actividadGenericMethod.registroActividad(marcarDevoluciones.getFolio(),
+					"Se realizo el marcado para devolucion de "
+							.concat(String.valueOf(marcarDevoluciones.getIdMovimientos().size()))
+							.concat(" movimiento(s) de la conciliacion: "
+									.concat(String.valueOf(marcarDevoluciones.getFolio()))),
+					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.AN_ERROR_OCCURS_IN_CHANGE_OF_STATUS,
@@ -578,10 +627,12 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	 * 
 	 * @param movimientosDevolucion
 	 * @param usuario
+	 * @param folio
+	 * @param issueAnActivity
 	 * @return
 	 */
 	private List<DevolucionEntidadDTO> solicitarDevoluciones(List<MovimientoDevolucion> movimientosDevolucion,
-			String usuario, final Long folio) {
+			String usuario, final Long folio, final boolean issueAnActivity) {
 		// Objetos necesarios
 		Map<String, Object> map = null;
 		List<DevolucionEntidadDTO> devolucionesSolicitadas = null;
@@ -605,7 +656,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			// Se actualiza el estatus a solicitada
 			for (MovimientoDevolucion md : movimientosDevolucion) {
 				// Se compara el estatus para ver que sea el correcto
-				if (md.getEstatus().getId().compareTo(ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA) != 0) {
+				if (md.getEstatus().getId().compareTo(ConciliacionConstants.ESTATUS_DEVOLUCION_PENDIENTE) != 0) {
 					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_098.getDescripcion(),
 							CodigoError.NMP_PMIMONTE_BUSINESS_098);
 				}
@@ -641,6 +692,21 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
 			throw ex;
 		}
+
+		// TODO: Analizar esta situacion y borrar si es necesario
+		// No se puede registrar dado que no se especifica el dato pricipal de ñla
+		// actividad (EL FOLIO DE CONCILIACiON)
+//		if (issueAnActivity) {
+//			// Registro de actividad
+//			actividadGenericMethod.registroActividad(folio, "Se solicitan devoluciones para "
+//					.concat(String
+//							.valueOf(null != devolucionesSolicitadasInner ? devolucionesSolicitadasInner.size() : null))
+//					.concat(" movimientos, pertenecientes a la conciliacion ").concat(String.valueOf(folio))
+//					.concat(" por un total de $ ")
+//					.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(devolucionesSolicitadas))),
+//					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+//		}
+
 		return devolucionesSolicitadas;
 	}
 
@@ -670,6 +736,27 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			}
 		}
 		return map;
+	}
+
+	/**
+	 * Realiza la suma de montos de una lista de movimientos de tipo
+	 * DevolucionEntidadDTO y la regresa en un numero de tipo BigDecimal
+	 * 
+	 * @param devolucionEntidadDTOListList
+	 * @return
+	 */
+	private static BigDecimal getTotalFromDevolucionEntidadDTOList(
+			List<DevolucionEntidadDTO> devolucionEntidadDTOListList) {
+		BigDecimal total = null;
+		if (null != devolucionEntidadDTOListList && !devolucionEntidadDTOListList.isEmpty()) {
+			total = new BigDecimal(0);
+			for (DevolucionEntidadDTO devolucionEntidadDTO : devolucionEntidadDTOListList) {
+				total = total.add(null != devolucionEntidadDTO && null != devolucionEntidadDTO.getMonto()
+						? devolucionEntidadDTO.getMonto()
+						: BigDecimal.ZERO);
+			}
+		}
+		return total;
 	}
 
 }

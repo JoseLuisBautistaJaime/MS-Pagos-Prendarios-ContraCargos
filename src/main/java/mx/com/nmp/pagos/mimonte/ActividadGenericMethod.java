@@ -38,5 +38,4 @@ public class ActividadGenericMethod {
 		 * No hay cuerpo para este metodo los argumentos son tomados por el interceptor
 		 */
 	}
-
 }

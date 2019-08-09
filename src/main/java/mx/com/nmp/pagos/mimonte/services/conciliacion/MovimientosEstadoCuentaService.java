@@ -7,7 +7,10 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
@@ -42,6 +46,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaParserService;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
+import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 
 /**
  * @name MovimientosEstadoCuentaService
@@ -97,10 +103,28 @@ public class MovimientosEstadoCuentaService {
 	private EstadoCuentaParserService estadoCuentaParserService;
 
 	/**
+	 * Repository de conciliacion
+	 */
+	@Autowired
+	@Qualifier("conciliacionRepository")
+	private ConciliacionRepository conciliacionRepository;
+
+	/**
+	 * Validador generico para datos de conciliacion
+	 */
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+
+	/**
 	 * Registro de actividades
 	 */
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
+
+	/**
+	 * Log de la clase
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(MovimientosEstadoCuentaService.class);
 
 	public MovimientosEstadoCuentaService() {
 		super();
@@ -225,7 +249,36 @@ public class MovimientosEstadoCuentaService {
 	@Transactional
 	public void procesarConsultaEstadoCuenta(SaveEstadoCuentaRequestDTO request, final String userRequest)
 			throws ConciliacionException {
+		// Objetos necesarios
+		Map<String, Date> datesMap = null;
 
+		// Valida que la conciliacion exista
+		conciliacionDataValidator.validateFolioExists(request.getFolio());
+
+		// Ajuste de fechas
+		try {
+			datesMap = FechasUtil.adjustDates(request.getFechaInicial(), request.getFechaFinal());
+			if (null != datesMap) {
+				request.setFechaInicial(
+						null != datesMap.get("startDate ") ? datesMap.get("startDate ") : request.getFechaInicial());
+				request.setFechaFinal(
+						null != datesMap.get("endDate ") ? datesMap.get("endDate ") : request.getFechaFinal());
+			}
+		} catch (ConciliacionException ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw ex;
+		} catch (Exception ex) {
+			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0013.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_0013);
+		}
+
+		// Valida que la conciliacion tenga el estatus correcto para poder dar de alta
+		// el estado cuenta
+		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(request.getFolio(),
+				Arrays.asList(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA));
+
+		// Guarda un nuevo reporte
 		Reporte reporte = save(request, userRequest);
 
 		// Consulta los diferentes estados de cuenta por cada fecha

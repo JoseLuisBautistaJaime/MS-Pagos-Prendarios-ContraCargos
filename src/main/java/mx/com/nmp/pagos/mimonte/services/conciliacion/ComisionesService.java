@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ComisionesBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -49,6 +51,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionReal;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.OperacionComisionProyeccionEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 import mx.com.nmp.pagos.mimonte.util.FechasUtil;
@@ -110,6 +114,12 @@ public class ComisionesService {
 
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
+
+	/**
+	 * Registro de actividades
+	 */
+	@Autowired
+	private ActividadGenericMethod actividadGenericMethod;
 
 	/**
 	 * Propiedad IVA
@@ -295,6 +305,14 @@ public class ComisionesService {
 		comisionTransaccionRealRepository.save(ComisionesBuilder.buildComisionTransaccionRealFromComisionTransaccion(
 				comisionTransaccionRealSet, comisionTransaccion, comisionesTransDTO));
 
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(comisionesTransaccionesRequestDTO.getIdConciliacion(),
+				"Se genera la consulta de transacciones de comsiones, proyeccion y real de la conciliacion "
+						.concat(String.valueOf(comisionesTransaccionesRequestDTO.getIdConciliacion()))
+						.concat(" con una comision bancaria por: $ ")
+						.concat(String.valueOf(comisionesTransaccionesRequestDTO.getComision())),
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.COMISIONES);
+
 		// regresa el objeto
 		return comisionesTransDTO;
 	}
@@ -314,28 +332,46 @@ public class ComisionesService {
 		Optional<MovimientoComision> movimientoComisionOpt = null;
 		MovimientoComision movimientoComision = null;
 		boolean flagNew = true;
+		boolean flagRelationship = true;
 
 		// Valida que la conciliacion exista
 		conciliacionDataValidator.validateFolioExists(comisionSaveDTO.getFolio());
 
-		// Valida que si la comision es nueva o ya existe por id
+		// Valida que si la comision existe y ademas fue dada de alta desde la
+		// aplicacion ademas de que si es una edicion, valida que el folio de
+		// conciliacion este relacionado con dicha comision
 		if (0 != comisionSaveDTO.getId()) {
 			try {
+				// Valida que la comision exista
 				movimientoComisionOpt = comisionesRepository.findById(comisionSaveDTO.getId());
-				movimientoComision = comisionesRepository.findByIdAndEstatus(comisionSaveDTO.getId(), true);
+				if (!movimientoComisionOpt.isPresent())
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_019.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_019);
+
+				// Valida que la comision pueda ser editada (fue dada de alta desde la
+				// aplicacion [nuevo=1])
+				movimientoComision = comisionesRepository.findByIdAndNuevo(comisionSaveDTO.getId(), true);
+				if (null == movimientoComision)
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_099.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_099);
+
+				// Valida que la conciliacion este relacionada con la comision
+				flagRelationship = ((BigInteger) comisionesRepository.checkIfFolioAndIdsRelationshipExist(
+						comisionSaveDTO.getFolio(), Arrays.asList(comisionSaveDTO.getId()), 1))
+								.compareTo(BigInteger.ONE) == 0;
+				if (!flagRelationship)
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_109.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_109);
+
+				flagNew = false;
+			} catch (ConciliacionException ex) {
+				LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				throw ex;
 			} catch (Exception ex) {
 				LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0011.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_0011);
 			}
-			if (!movimientoComisionOpt.isPresent())
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_019.getDescripcion(),
-						CodigoError.NMP_PMIMONTE_BUSINESS_019);
-			else if (null == movimientoComision) {
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_099.getDescripcion(),
-						CodigoError.NMP_PMIMONTE_BUSINESS_099);
-			} else
-				flagNew = false;
 		}
 		result = new HashMap<>();
 		MovimientoComision movimientoComisionRes = comisionesRepository.save(
@@ -343,6 +379,15 @@ public class ComisionesService {
 		comisionSaveResponseDTO = comisionesRepository.findByIdComision(movimientoComisionRes.getId());
 		result.put("result", comisionSaveResponseDTO);
 		result.put("flag", flagNew);
+
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(comisionSaveDTO.getFolio(),
+				(flagNew ? "Se agrega una nueva comision por concepto de "
+						: "Se actualiza una comision por concepto de ").concat(comisionSaveDTO.getDescripcion())
+								.concat(", con un monto de: $ ").concat(String.valueOf(comisionSaveDTO.getMonto()))
+								.concat(", para la conciliacion ").concat(String.valueOf(comisionSaveDTO.getFolio())),
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.COMISIONES);
+
 		return result;
 	}
 
@@ -356,7 +401,6 @@ public class ComisionesService {
 	public void delete(final ComisionDeleteDTO comisionDeleteDTO, final String requestUser)
 			throws ConciliacionException {
 		// Objetos necesarios
-		List<Long> flags = null;
 		Boolean flag = null;
 
 		// Valida que el folio de conciliacion exista
@@ -381,7 +425,7 @@ public class ComisionesService {
 
 		// Valida si el folio de conciliacion esta relacionado con los ids de comisiones
 		try {
-			flag = ((BigInteger) comisionesRepository.checkIfFolioAndIdsRelationshipExit(comisionDeleteDTO.getFolio(),
+			flag = ((BigInteger) comisionesRepository.checkIfFolioAndIdsRelationshipExist(comisionDeleteDTO.getFolio(),
 					comisionDeleteDTO.getIdComisiones(), comisionDeleteDTO.getIdComisiones().size()))
 							.compareTo(BigInteger.ONE) == 0;
 			if (!flag) {
@@ -398,9 +442,12 @@ public class ComisionesService {
 		}
 
 		// Valida si se puede eliminar esa comision
+		flag = null;
 		try {
-			flags = comisionesRepository.verifyById(comisionDeleteDTO.getIdComisiones(), comisionDeleteDTO.getFolio());
-			if (null == flags || flags.size() < comisionDeleteDTO.getIdComisiones().size())
+			flag = ((BigInteger) comisionesRepository.verifyById(comisionDeleteDTO.getIdComisiones(),
+					comisionDeleteDTO.getFolio(), comisionDeleteDTO.getIdComisiones().size()))
+							.compareTo(BigInteger.ONE) == 0;
+			if (!flag)
 				throw new ConciliacionException(ConciliacionConstants.COMISION_CANT_BE_DELETED,
 						CodigoError.NMP_PMIMONTE_BUSINESS_020);
 		} catch (ConciliacionException ex) {
@@ -421,6 +468,13 @@ public class ComisionesService {
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_106.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_106);
 		}
+
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(comisionDeleteDTO.getFolio(),
+				"Se realizo la eliminacion de ".concat(String.valueOf(comisionDeleteDTO.getIdComisiones().size()))
+						.concat(" comision(es) de la conciliacion ")
+						.concat(String.valueOf(comisionDeleteDTO.getFolio())),
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.COMISIONES);
 	}
 
 	/**

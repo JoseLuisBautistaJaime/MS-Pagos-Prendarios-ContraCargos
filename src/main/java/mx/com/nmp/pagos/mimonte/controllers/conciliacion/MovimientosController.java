@@ -277,17 +277,22 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveMovimientoEsadoCuenta(@RequestBody SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-
+		// Validacion general de objeto y atributos
 		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-		ValidadorConciliacion.validateFechasPrimary(saveEstadoCuentaRequestDTO.getFechaInicial(), saveEstadoCuentaRequestDTO.getFechaFinal());
-		
+
+		// Validacion de fechas
+		ValidadorConciliacion.validateFechasPrimary(saveEstadoCuentaRequestDTO.getFechaInicial(),
+				saveEstadoCuentaRequestDTO.getFechaFinal());
+
 		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste
 		// los movimientos del estado de cuenta
 		movimientosEstadoCuentaService.procesarConsultaEstadoCuenta(saveEstadoCuentaRequestDTO, userRequest);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Alta de estado cuenta exitosa.", null);
+		// Regresa la respuesta exitosa
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				ConciliacionConstants.SUCCESSFUL_SAVE_ESTADO_CUENTA, null);
 	}
 
 	/**
@@ -332,8 +337,8 @@ public class MovimientosController {
 			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
 
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta de movimientos exitosa.",
-				movimientosEstadoCuentaDTO);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				ConciliacionConstants.SUCCESSFUL_QUERY_ESTADO_CUENTA, movimientosEstadoCuentaDTO);
 	}
 
 }

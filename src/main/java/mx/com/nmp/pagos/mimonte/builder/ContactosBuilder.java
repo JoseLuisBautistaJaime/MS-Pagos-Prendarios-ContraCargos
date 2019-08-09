@@ -168,7 +168,6 @@ public abstract class ContactosBuilder {
 			contactoRespDTO.setNombre(contactoReqUpdateDTO.getNombre());
 			contactoRespDTO.setTipoContacto(TipoContactoBuilder
 					.buildTipoContactoDTOFromTipoContactoReqDTO(contactoReqUpdateDTO.getTipoContacto()));
-			contactoRespDTO.setCreatedDate(createdDate);
 			contactoRespDTO.setLastModifiedDate(lastModifiedDate);
 		}
 
@@ -197,6 +196,7 @@ public abstract class ContactosBuilder {
 			contactosDTO.setLastModifiedDate(contactoBaseDTO.getLastModifiedDate());
 			contactosDTO.setCreatedBy(contactoBaseDTO.getCreatedBy());
 			contactosDTO.setLastModifiedBy(contactoBaseDTO.getLastModifiedBy());
+			contactosDTO.setCreatedBy(contactoBaseDTO.getCreatedBy());
 		}
 		return contactosDTO;
 	}

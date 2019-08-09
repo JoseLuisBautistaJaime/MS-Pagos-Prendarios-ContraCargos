@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -42,6 +44,8 @@ import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 
 /**
@@ -95,6 +99,12 @@ public class SolicitarPagosService {
 	 */
 	@Autowired
 	private ContactoRespository contactoRespository;
+
+	/**
+	 * Registro de actividades
+	 */
+	@Autowired
+	private ActividadGenericMethod actividadGenericMethod;
 
 	/**
 	 * Validador de datos relacionados con conciliacion
@@ -185,6 +195,15 @@ public class SolicitarPagosService {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL,
 					CodigoError.NMP_PMIMONTE_BUSINESS_042);
 		}
+
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(requestDTO.getFolio(),
+				"Se realizo la solicitud de pago de ".concat(String.valueOf(requestDTO.getIdMovimientos().size()))
+						.concat(" movimiento(s) de la conciliacion: ".concat(String.valueOf(requestDTO.getFolio()))
+								.concat(" por un total de: $ ")
+								.concat(String.valueOf(
+										getMontoFromSolicitarPagosMailDataDTOList(solicitarPagosMailDataDTOList)))),
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.SOLICITAR_PAGO);
 	}
 
 	/**
@@ -311,6 +330,28 @@ public class SolicitarPagosService {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Regresa un objeto de tipo BigDecimal con la suma de los montos de una lista
+	 * de objetos de tipo MovimientoTransito
+	 * 
+	 * @param movimientoTransitoList
+	 * @return
+	 */
+	private static BigDecimal getMontoFromSolicitarPagosMailDataDTOList(
+			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
+		BigDecimal total = null;
+		if (null != solicitarPagosMailDataDTOList && !solicitarPagosMailDataDTOList.isEmpty()) {
+			total = new BigDecimal(0);
+			for (SolicitarPagosMailDataDTO solicitarPagosMailDataDTO : solicitarPagosMailDataDTOList) {
+				total = total.add(
+						null != solicitarPagosMailDataDTO && null != solicitarPagosMailDataDTO.getMontoTransaccion()
+								? solicitarPagosMailDataDTO.getMontoTransaccion()
+								: BigDecimal.ZERO);
+			}
+		}
+		return total;
 	}
 
 }

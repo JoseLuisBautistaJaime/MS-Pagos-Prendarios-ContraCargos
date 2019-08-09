@@ -257,11 +257,16 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response enviaConciliacion(@PathVariable(value = "folio", required = true) Long folio,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		// Valida el atributo
 		if (!ValidadorConciliacion.validateLong(folio))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
+		
+		// Realiza el envio d ela conciliacion
 		conciliacionServiceImpl.enviarConciliacion(folio, createdBy);
+		
+		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.CONCILIATION_SENT_SUCCESSFULLY, null);
 	}
