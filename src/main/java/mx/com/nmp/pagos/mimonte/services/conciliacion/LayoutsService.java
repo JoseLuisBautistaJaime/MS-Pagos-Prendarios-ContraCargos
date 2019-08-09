@@ -766,15 +766,15 @@ public class LayoutsService {
 	 * @return
 	 */
 	private LayoutHeader getLayoutHeaderByIdLayout(Long idConciliacion, Long idLayout) {
-		Optional<LayoutHeader> layoutHeader = null;
+		LayoutHeader layoutHeader = null;
 		try {
-			layoutHeader = this.layoutHeadersRepository.findById(idLayout);
+			layoutHeader = this.layoutHeadersRepository.findByLayoutId(idLayout);
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ConciliacionException("Ocurrio un error consultar el header para el layout " + idLayout, CodigoError.NMP_PMIMONTE_0011);
 		}
-		return layoutHeader != null && layoutHeader.isPresent() ? layoutHeader.get() : null;
+		return layoutHeader;
 	}
 
 
