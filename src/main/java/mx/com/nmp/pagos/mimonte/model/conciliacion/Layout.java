@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -86,6 +87,9 @@ public class Layout implements Serializable {
 	}
 
 	public LayoutLinea addLayoutLinea(LayoutLinea layoutLinea) {
+		if (getLayoutLineas() == null) {
+			this.layoutLineas = new ArrayList<LayoutLinea>();
+		}
 		getLayoutLineas().add(layoutLinea);
 		layoutLinea.setLayout(this);
 
@@ -93,8 +97,10 @@ public class Layout implements Serializable {
 	}
 
 	public LayoutLinea removeLayoutLinea(LayoutLinea layoutLinea) {
-		getLayoutLineas().remove(layoutLinea);
-		layoutLinea.setLayout(null);
+		if (getLayoutLineas() != null) {
+			getLayoutLineas().remove(layoutLinea);
+			layoutLinea.setLayout(null);
+		}
 
 		return layoutLinea;
 	}

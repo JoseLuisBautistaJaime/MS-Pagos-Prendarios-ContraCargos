@@ -6,13 +6,10 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -32,12 +29,10 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutsRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutEditionValidationDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.HeaderCatalogEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
@@ -207,7 +202,7 @@ public class LayoutsService {
 				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 		// Se encarga de persistir o actualizar el layout, header y lineas
-		List<Layout> layouts = mergeLayouts(conciliacion.getId(), Arrays.asList(layoutDTO), requestUser);
+		List<Layout> layouts = mergeLayouts(conciliacion.getId(), Arrays.asList(layoutDTO), requestUser, true);
 
 		// Se persisten los layouts
 		if (layouts != null && layouts.size() > 0) {
@@ -342,7 +337,7 @@ public class LayoutsService {
 			limpiarLayoutsGenerados(conciliacion.getId());
 
 			// Se generan todos los layouts, incluyendo cabeceras
-			List<Layout> layouts = mergeLayouts(conciliacion.getId(), layoutsDTO, user);
+			List<Layout> layouts = mergeLayouts(conciliacion.getId(), layoutsDTO, user, false); // Genera layouts a partir de movimientos
 
 			// Se persisten
 			try {
@@ -363,152 +358,61 @@ public class LayoutsService {
 
 
 	/**
-	 * Guarda y edita un layout como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y
-	 * DEVOLUCIONES
-	 * 
-	 * @param layoutDTO
-	 */
-	private void persistirLayout(LayoutDTO layoutDTO, final String requestUser) {
-		Layout layout = new Layout();
-		List<LayoutEditionValidationDTO> layoutEditionValidationDTOList = null;
-		List<Long> ids = null;
-		Map<Long, LayoutEditionValidationDTO> map = null;
-		LocalDate localDate = LocalDate.now();
-		if (validar(layoutDTO)) {
-			LayoutHeaderCatalog layoutHeaderCatalog = null;
-			LayoutHeader layoutHeader = null;
-			layout.setIdConciliacion(layoutDTO.getFolio());
-			layout.setTipo(layoutDTO.getTipoLayout());
-			if (LayoutsBuilder.validaLineas(layoutDTO.getLineas())) {
-				ids = new ArrayList<>();
-				layout.setLayoutLineas(LayoutsBuilder.buildLayoutLineaFromLayoutLineaDTO(layoutDTO.getLineas(), layout, requestUser));
-				layout = layoutsRepository.saveAndFlush(layout);
-				if (layoutDTO.getTipoLayout().toString().equals(TipoLayoutEnum.PAGOS.toString())) {
-					layoutHeaderCatalog = layoutHeaderCatalogRepository.getOne(HeaderCatalogEnum.PAGOS.id());// buscarLayoutHeader
-					if (localDate.getDayOfWeek().getValue() == 5) {
-						layoutHeaderCatalog.setFecha(localDate.plusDays(3));
-					} else {
-						layoutHeaderCatalog.setFecha(localDate);
-					}
-				}
-				if (layoutDTO.getTipoLayout().toString().equals(TipoLayoutEnum.COMISIONES_MOV.toString())) {
-					layoutHeaderCatalog = layoutHeaderCatalogRepository.getOne(HeaderCatalogEnum.COMISIONES_MOV.id());
-					layoutHeaderCatalog.setFecha(localDate);
-				}
-				if (layoutDTO.getTipoLayout().toString().equals(TipoLayoutEnum.COMISIONES_GENERALES.toString())) {
-					layoutHeaderCatalog = layoutHeaderCatalogRepository
-							.getOne(HeaderCatalogEnum.COMISIONES_GENERALES.id());
-					layoutHeaderCatalog.setFecha(localDate);
-				}
-				if (layoutDTO.getTipoLayout().toString().equals(TipoLayoutEnum.DEVOLUCIONES.toString())) {
-					layoutHeaderCatalog = layoutHeaderCatalogRepository.getOne(HeaderCatalogEnum.DEVOLUCIONES.id());
-					layoutHeaderCatalog.setFecha(localDate);
-				}
-				layoutHeader = new LayoutHeader();
-				layoutHeader.setId(layoutHeaderCatalog.getId());
-				layoutHeader.setCabecera(layoutHeaderCatalog.getCabecera());
-				layoutHeader.setCodigoOrigen(layoutHeaderCatalog.getCodigoOrigen());
-				layoutHeader.setDescripcion(layoutHeaderCatalog.getDescripcion() + " " + LocalDate.now());
-				layoutHeader.setFecha(layoutHeaderCatalog.getFecha());
-				layoutHeader.setUnidadNegocio(layoutHeaderCatalog.getUnidadNegocio());
-
-				layoutHeader.setLayout(layout);
-				layoutHeadersRepository.saveAndFlush(layoutHeader);
-				
-				
-				
-				for (LayoutLinea layoutLinea : layout.getLayoutLineas()) {
-					layoutLinea.setLayout(layout);
-					if (null != layoutLinea.getId())
-						ids.add(layoutLinea.getId());
-				}
-				if (!ids.isEmpty()) {
-					layoutEditionValidationDTOList = layoutLineasRepository.getIdsDataValidateCreateOrUpdate(ids);
-					if (null != layoutEditionValidationDTOList && !layoutEditionValidationDTOList.isEmpty()) {
-						map = getMapFromDTOList(layoutEditionValidationDTOList);
-					}
-					for (LayoutLinea layoutLinea : layout.getLayoutLineas()) {
-						if (null != map && !map.isEmpty() && map.containsKey(layoutLinea.getId())) {
-							if (null == map.get(layoutLinea.getId()).getCreatedBy()) {
-								layoutLinea.setCreatedBy(requestUser);
-								layoutLinea.setCreatedDate(new Date());
-							} else {
-								layoutLinea.setLastModifiedBy(requestUser);
-								layoutLinea.setLastModifiedDate(new Date());
-							}
-						} else {
-							layoutLinea.setCreatedBy(requestUser);
-							layoutLinea.setCreatedDate(new Date());
-						}
-					}
-
-				}
-				layoutLineasRepository.saveAll(layout.getLayoutLineas());
-			} // End if
-		} // End if
-	}
-
-
-	/**
-	 * Cobstruye un mapa de tipo Long, LayoutEditionValidationDTO a partir de una
-	 * lista de tipo LayoutEditionValidationDTO
-	 * 
-	 * @param list
-	 * @return
-	 */
-	private Map<Long, LayoutEditionValidationDTO> getMapFromDTOList(List<LayoutEditionValidationDTO> list) {
-		Map<Long, LayoutEditionValidationDTO> map = null;
-		if (null != list && !list.isEmpty()) {
-			map = new HashMap<>();
-			for (LayoutEditionValidationDTO elem : list) {
-				map.put(elem.getId(), elem);
-			}
-		}
-		return map;
-	}
-
-
-	/**
 	 * Se encarga de generar los layouts para persistencia, se verifica si ya existen, en caso contrario se construye.
 	 * Adicionalmente se verifica si los layouts ya cuentan con cabecera, si no tiene cabecera se genera una nueva
 	 * @param idConciliacion
 	 * @param layoutsDTO
 	 * @param requestUser 
+	 * @param nuevo
 	 */
-	private List<Layout> mergeLayouts(Long idConciliacion, List<LayoutDTO> layoutsDTO, String requestUser) throws ConciliacionException {
+	private List<Layout> mergeLayouts(Long idConciliacion, List<LayoutDTO> layoutsDTO, String requestUser, boolean nuevo) throws ConciliacionException {
 		List<Layout> layouts = null;
 		if (layoutsDTO != null && layoutsDTO.size() > 0) {
 			
 			layouts = new ArrayList<Layout>();
 			for (LayoutDTO layoutDTO : layoutsDTO) {
 
+				// LAYOUT //////////////////////////////
 				// Se obtiene el layout de la BD, si no existe se crea
 				Layout layoutDB = getLayoutByTipoLayout(idConciliacion, layoutDTO.getTipoLayout());
 				if (layoutDB == null) {
 					layoutDB = buildLayout(idConciliacion, layoutDTO, requestUser);
 				}
-				else {
 
-					// Se verifica el tipo de layout y si ya tiene cabecera
-					LayoutHeader layoutHeaderBD = getLayoutHeaderByIdLayout(idConciliacion, layoutDB.getId());
-					if (layoutHeaderBD == null) {
-						layoutHeaderBD = LayoutsBuilder.buildLayoutHeaderFromLayoutCabeceraDTO(layoutDTO.getCabecera(), layoutDB, requestUser);
-						layoutDB.setLayoutHeader(layoutHeaderBD);
-					}
-					else {
-						// Se actualiza (No se requiere)
-						/*LayoutHeader layoutHeader = buildLayoutHeader(idConciliacion, layoutDTO.getCabecera());
-						layoutHeader.setLayout(layoutDB);
-						layoutHeader.setId(layoutHeaderBD.getId());
-						layoutHeaderBD = layoutHeader;
-						layoutHeaderBD.setLastModifiedBy(requestUser);
-						layoutHeaderBD.setLastModifiedDate(new Date());
-						layoutDB.setLayoutHeader(layoutHeaderBD);*/
-					}
 
-					// Se actualizan las lineas
-					mergeLayoutLineas(layoutDTO.getLineas(), layoutDB, idConciliacion, requestUser);
+				// HEADER ////////////////////////////
+				// Se verifica si se especifico header en caso contrario se crea por default
+				LayoutCabeceraDTO headerDTO = layoutDTO.getCabecera();
+				LayoutHeader layoutHeaderBD = null;
+				if (layoutDB.getId() != null) {
+					layoutHeaderBD = getLayoutHeaderByIdLayout(idConciliacion, layoutDB.getId());
 				}
+
+				// No existe el header se crea uno nuevo
+				if (layoutHeaderBD == null) {
+					if (headerDTO == null) {
+						LayoutHeaderCatalog headerCatalog = getCabeceraCatalog(layoutDTO.getTipoLayout());
+						headerDTO = LayoutsBuilder.buildLayoutCabeceraDTOFromLayoutHeaderCatalog(headerCatalog);
+					}
+					layoutHeaderBD = LayoutsBuilder.buildLayoutHeaderFromLayoutCabeceraDTO(headerDTO, layoutDB, requestUser);
+					layoutDB.setLayoutHeader(layoutHeaderBD);
+				}
+				else {
+					// Se actualiza el header (No se requiere)
+					/*LayoutHeader layoutHeader = buildLayoutHeader(idConciliacion, layoutDTO.getCabecera());
+					layoutHeader.setLayout(layoutDB);
+					layoutHeader.setId(layoutHeaderBD.getId());
+					layoutHeaderBD = layoutHeader;
+					layoutHeaderBD.setLastModifiedBy(requestUser);
+					layoutHeaderBD.setLastModifiedDate(new Date());
+					layoutDB.setLayoutHeader(layoutHeaderBD);*/
+				}
+
+
+				// LINEAS /////////////////////
+				// Se actualizan las lineas
+				mergeLayoutLineas(layoutDTO.getLineas(), layoutDB, idConciliacion, requestUser, nuevo);
+	
 				layouts.add(layoutDB);
 			}
 		}
@@ -521,30 +425,32 @@ public class LayoutsService {
 	 * @param lineas
 	 * @param layout
 	 * @param requestUser 
+	 * @param nuevo 
 	 */
-	private void mergeLayoutLineas(List<LayoutLineaDTO> lineasDTO, Layout layout, Long idConciliacion, String requestUser) throws ConciliacionException {
+	private void mergeLayoutLineas(List<LayoutLineaDTO> lineasDTO, Layout layout, Long idConciliacion, String requestUser, boolean nuevo) throws ConciliacionException {
 
 		if (lineasDTO != null && lineasDTO.size() > 0) {
 
 			List<LayoutLinea> lineas = LayoutsBuilder.buildLayoutLineaFromLayoutLineaDTO(lineasDTO, layout, requestUser);
 
 			// Existentes
-			if (layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
-				for (LayoutLinea linea : lineas) {
-					if (linea.getId() != null && linea.getId() > 0) {
-						boolean found = false;
-						if (layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
-							for (LayoutLinea lineaBD : layout.getLayoutLineas()) {
-								if (linea.getId() == lineaBD.getId()) {
-									LayoutsBuilder.mergeLinea(lineaBD, linea, requestUser);
-									found = true;
-									break;
-								}
-							}
-							if (!found) {
-								throw new ConciliacionException("No existe la linea layout con id " + linea.getId(), CodigoError.NMP_PMIMONTE_0011);
+			for (LayoutLinea linea : lineas) {
+				if (linea.getId() != null && linea.getId() > 0) {
+					boolean found = false;
+					if (layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
+						for (LayoutLinea lineaBD : layout.getLayoutLineas()) {
+							if (linea.getId() == lineaBD.getId()) {
+								LayoutsBuilder.mergeLinea(lineaBD, linea, requestUser);
+								found = true;
+								break;
 							}
 						}
+						if (!found) {
+							throw new ConciliacionException("No existe la linea layout con id " + linea.getId(), CodigoError.NMP_PMIMONTE_0011);
+						}
+					}
+					else {
+						throw new ConciliacionException("No existe la linea layout con id " + linea.getId(), CodigoError.NMP_PMIMONTE_0011);
 					}
 				}
 			}
@@ -554,7 +460,7 @@ public class LayoutsService {
 				// Valida si existe el layout
 				if (linea.getId() == null || linea.getId() == 0) {
 					linea.setId(null);
-					linea.setNuevo(false);
+					linea.setNuevo(nuevo);
 					linea.setCreatedBy(requestUser);
 					linea.setCreatedDate(new Date());
 					layout.addLayoutLinea(linea);
@@ -801,25 +707,6 @@ public class LayoutsService {
 		}
 
 		return lineaCatalog.get();
-	}
-
-
-	/**
-	 * Obtiene una linea por su id
-	 * @param idLinea
-	 * @return
-	 * @throws ConciliacionException
-	 */
-	private LayoutLinea getLayoutLineaById(Long idLinea) throws ConciliacionException {
-		Optional<LayoutLinea> linea = null;
-		try {
-			linea = this.layoutLineasRepository.findById(idLinea);
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException("Ocurrio un error al consultar la linea para el layout " + idLinea, CodigoError.NMP_PMIMONTE_0011);
-		}
-		return linea != null && linea.isPresent() ? linea.get() : null;
 	}
 
 

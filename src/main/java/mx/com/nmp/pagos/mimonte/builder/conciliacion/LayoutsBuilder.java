@@ -13,6 +13,7 @@ import java.util.List;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.HeaderCatalogEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
@@ -134,8 +135,6 @@ public abstract class LayoutsBuilder {
 		if (layoutDTO != null) {
 			layout = new Layout();
 			layout.setTipo(layoutDTO.getTipoLayout());
-			layout.setLayoutHeader(buildLayoutHeaderFromLayoutCabeceraDTO(layoutDTO, layout, requestUser));
-			layout.setLayoutLineas(buildLayoutLineaFromLayoutLineaDTO(layoutDTO.getLineas(), layout, requestUser));
 		}
 
 		return layout;
@@ -292,12 +291,22 @@ public abstract class LayoutsBuilder {
 	 * @return
 	 */
 	public static LayoutCabeceraDTO buildLayoutCabeceraDTOFromLayoutHeaderCatalog(LayoutHeaderCatalog layoutHeaderCatalog) {
+
+		LocalDate localDate = LocalDate.now();
+		if (layoutHeaderCatalog.getId() == HeaderCatalogEnum.PAGOS.id() && localDate.getDayOfWeek().getValue() == 5) {
+			layoutHeaderCatalog.setFecha(localDate.plusDays(3));
+		}
+		else {
+			layoutHeaderCatalog.setFecha(localDate);
+		}
+
 		LayoutCabeceraDTO layoutHeaderDTO = new LayoutCabeceraDTO();
 		layoutHeaderDTO.setCabecera(layoutHeaderCatalog.getCabecera());
 		layoutHeaderDTO.setCodigoOrigen(layoutHeaderCatalog.getCodigoOrigen());
 		layoutHeaderDTO.setDescripcion(layoutHeaderCatalog.getDescripcion() + " " + LocalDate.now());
 		layoutHeaderDTO.setFecha(layoutHeaderCatalog.getFecha());
 		layoutHeaderDTO.setUnidadNegocio(layoutHeaderCatalog.getUnidadNegocio());
+
 		return layoutHeaderDTO;
 	}
 
