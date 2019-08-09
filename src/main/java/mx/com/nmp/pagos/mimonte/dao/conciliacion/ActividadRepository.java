@@ -42,37 +42,14 @@ public interface ActividadRepository extends JpaRepository<Actividad, Long> {
 			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta);
 
 	/**
-	 * Regresa una lista de objetos de tipo ConsultaActividadDTO por folio y fecha
-	 * de inicio
+	 * Regresa las actividades por fechas
 	 * 
-	 * @param folio
 	 * @param fechaDesde
-	 * @return
-	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio AND act.fecha >= :fechaDesde  ORDER BY act.fecha DESC")
-	public List<ConsultaActividadDTO> findByFolioAndFechaDesde(@Param("folio") final Long folio,
-			@Param("fechaDesde") final Date fechaDesde);
-
-	/**
-	 * Regresa una lista de objetos de tipo ConsultaActividadDTO a partir de un
-	 * folio y una fecha de fin
-	 * 
-	 * @param folio
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio AND act.fecha <= :fechaHasta  ORDER BY act.fecha DESC")
-	public List<ConsultaActividadDTO> findByFolioAndFechaHasta(@Param("folio") final Long folio,
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.fecha BETWEEN :fechaDesde AND :fechaHasta  ORDER BY act.fecha DESC")
+	public List<ConsultaActividadDTO> findByFechaDesdeAndFechaHasta(@Param("fechaDesde") final Date fechaDesde,
 			@Param("fechaHasta") final Date fechaHasta);
-
-	/**
-	 * Regresa una lista de objetos de tipo ConsultaActividadDTO a partir de un
-	 * folio de conciliacion
-	 * 
-	 * @param folio
-	 * @return
-	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio ORDER BY act.fecha DESC")
-	public List<ConsultaActividadDTO> findByFolio(@Param("folio") final Long folio);
 
 }

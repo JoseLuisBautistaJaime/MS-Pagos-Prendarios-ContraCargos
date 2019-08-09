@@ -91,6 +91,7 @@ import mx.com.nmp.pagos.mimonte.services.conciliacion.LayoutsService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 //import mx.com.nmp.pagos.mimonte.util.CollectionUtil;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
+import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 import mx.com.nmp.pagos.mimonte.util.MiniMaquinaEstadosConciliacion;
 import mx.com.nmp.pagos.mimonte.util.StringUtil;
 
@@ -684,7 +685,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Validar conciliacion y actualizar estatus
 		try {
 
-			// Se mueven los movimientos de transito a movimientos pago antes de generar los layouts
+			// Se mueven los movimientos de transito a movimientos pago antes de generar los
+			// layouts
 			solicitarPagosService.insertaMovimientosPagoFinal(idConciliacion, usuario);
 
 			// Se crean los layouts correspondientes
@@ -838,58 +840,35 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 */
 	@Override
 	public List<ConsultaActividadDTO> consultaActividades(ConsultaActividadesRequest consultaActividadesRequest) {
+		// Objetos necesarios
+		Map<String, Date> datesMap = null;
 		List<ConsultaActividadDTO> consultaActividadDTOList = null;
 		try {
+
+			// Valida que el folio exista si es que no es nulo
 			if (null != consultaActividadesRequest && null != consultaActividadesRequest.getFolio())
 				conciliacionDataValidator.validateFolioExists(consultaActividadesRequest.getFolio());
 
-			if (null == consultaActividadesRequest.getFechaDesde()
-					&& null != consultaActividadesRequest.getFechaHasta()) {
-				Calendar cal = Calendar.getInstance();
-				cal.set(Calendar.YEAR, 1975);
-				cal.set(Calendar.MONTH, 1);
-				cal.set(Calendar.DAY_OF_MONTH, 1);
-				consultaActividadesRequest.setFechaDesde(cal.getTime());
-			}
-			if (null != consultaActividadesRequest.getFechaDesde()
-					&& null == consultaActividadesRequest.getFechaHasta()) {
-				Calendar cal = Calendar.getInstance();
-				consultaActividadesRequest.setFechaHasta(cal.getTime());
-			}
+			// Ajuste de fechas
+			datesMap = FechasUtil.adjustDates(consultaActividadesRequest.getFechaDesde(),
+					consultaActividadesRequest.getFechaHasta());
+			consultaActividadesRequest.setFechaDesde(datesMap.get("startDate"));
+			consultaActividadesRequest.setFechaHasta(datesMap.get("endDate"));
+
 			// Ningun atributo es nulo
 			if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
 					&& null != consultaActividadesRequest.getFechaHasta()) {
-				Calendar ini = Calendar.getInstance();
-				Calendar fin = Calendar.getInstance();
-				ini.setTime(consultaActividadesRequest.getFechaDesde());
-				fin.setTime(consultaActividadesRequest.getFechaHasta());
-				ini.set(Calendar.HOUR_OF_DAY, 0);
-				ini.set(Calendar.MINUTE, 0);
-				ini.set(Calendar.SECOND, 0);
-				ini.set(Calendar.MILLISECOND, 0);
-				fin.set(Calendar.HOUR_OF_DAY, 23);
-				fin.set(Calendar.MINUTE, 59);
-				fin.set(Calendar.SECOND, 59);
-				fin.set(Calendar.MILLISECOND, 59);
-				consultaActividadesRequest.setFechaDesde(ini.getTime());
-				consultaActividadesRequest.setFechaHasta(fin.getTime());
 				consultaActividadDTOList = actividadRepository.findByFolioFechaDesdeAndFechaHasta(
 						consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde(),
 						consultaActividadesRequest.getFechaHasta());
 			}
-			// La fechaHasta es nula
-			else if (null != consultaActividadesRequest.getFolio()
-					&& null != consultaActividadesRequest.getFechaDesde())
-				consultaActividadDTOList = actividadRepository.findByFolioAndFechaDesde(
-						consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde());
-			// La fechaDesde es nula
-			else if (null != consultaActividadesRequest.getFolio()
-					&& null != consultaActividadesRequest.getFechaHasta())
-				consultaActividadDTOList = actividadRepository.findByFolioAndFechaHasta(
-						consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaHasta());
-			// Ambas fechas son nulas
-			else if (null != consultaActividadesRequest.getFolio())
-				consultaActividadDTOList = actividadRepository.findByFolio(consultaActividadesRequest.getFolio());
+
+			// El folio es nulo y las fechas no
+			else if (null == consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
+					&& null != consultaActividadesRequest.getFechaHasta()) {
+				consultaActividadDTOList = actividadRepository.findByFechaDesdeAndFechaHasta(
+						consultaActividadesRequest.getFechaDesde(), consultaActividadesRequest.getFechaHasta());
+			}
 			// Todos los atributos son nulos se consultan los ultimos 10 por default
 			else {
 				Pageable pageable = PageRequest.of(0,
@@ -1040,9 +1019,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Valida que el folio sea valido
 		conciliacionDataValidator.validateFolioExists(idConciliacion);
 
-		// Valida que la conciliacion tenga alguno de los estatus validos para realizar esta operacion ([Edo. Cta. Comp=12 & Openpay Compl=6])
-		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,Arrays.asList(6L, 12L));
-		
+		// Valida que la conciliacion tenga alguno de los estatus validos para realizar
+		// esta operacion ([Edo. Cta. Comp=12 & Openpay Compl=6])
+		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion, Arrays.asList(6L, 12L));
+
 		// Obtiene todos los reportes de la bd generados hasta el momento
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(idConciliacion);
 		if (reportes == null || reportes.size() == 0) {

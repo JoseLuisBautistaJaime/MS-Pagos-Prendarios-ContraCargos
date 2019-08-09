@@ -25,15 +25,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.LayoutsBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.LayoutsService;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorLayout;
 
@@ -65,6 +68,12 @@ public class LayoutsController {
 	private LayoutsService layoutsService;
 
 	/**
+	 * Validador generico de conciliacion
+	 */
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+	
+	/**
 	 * Permite consultar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES
 	 * y DEVOLUCIONES.
 	 * 
@@ -84,14 +93,24 @@ public class LayoutsController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByFolioAndTipoLayout(@PathVariable(value = "folio", required = true) Long folio,
-			@PathVariable(value = "tipoLayout", required = true) TipoLayoutEnum tipoLayout) {
+			@PathVariable(value = "tipoLayout", required = true) TipoLayoutEnum tipoLayout) {		
+		// Valida el objeto del request
 		if (!ValidadorLayout.validateConsultaUnLayout(folio, tipoLayout))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
+		
+		// Valida que la conciliacion exista
+		conciliacionDataValidator.validateFolioExists(folio);
+		
+		// Consulta los layouts
 		LayoutDTO layoutDTO = layoutsService.consultarUnLayout(folio, tipoLayout);
+		
+		// Valida que el objeto de respuesta no se anulo o vacio
 		if (!ValidadorLayout.validateLayoutDTO(layoutDTO))
-			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONCILIACION_LAYOUT_RELATIONSHIP,
-					CodigoError.NMP_PMIMONTE_BUSINESS_084);
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
+		
+		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				layoutDTO);
 	}
@@ -115,13 +134,20 @@ public class LayoutsController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByFolio(@PathVariable(value = "folio", required = true) Long folio) {
+		// Valida el folio
 		if (!ValidadorLayout.validateLong(folio))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
+		
+		// Consulta los layouts
 		List<LayoutDTO> layoutDTOs = layoutsService.consultarLayouts(folio);
+		
+		// Valida que la lista no sea vacia o nula
 		if (!ValidadorLayout.validateLayoutDTOs(layoutDTOs))
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
+		
+		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				layoutDTOs);
 	}
@@ -144,14 +170,27 @@ public class LayoutsController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response saveLayout(@RequestBody LayoutDTO layoutDTOe,
+	public Response saveLayout(@RequestBody LayoutRequestDTO layoutRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {
-		if (!ValidadorLayout.validateSaveLayout(layoutDTOe))
+		// Objetos necesarios
+		LayoutDTO layoutDTO = null;
+		
+		// Valida el objeto dle request y sus atributos
+		if (!ValidadorLayout.validateSaveLayout(layoutRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-		layoutsService.saveLayout(layoutDTOe, requestUser);
-		LayoutDTO layoutDTOs = layoutsService.consultarUnLayout(layoutDTOe.getFolio(),
-				layoutDTOe.getTipoLayout());
+		
+		// Construye el objeto recibido como parametro por un DTO generico para su perisstencia
+		layoutDTO = LayoutsBuilder.buildLayoutDTOFromLayoutRequestDTO(layoutRequestDTO);
+		
+		// Guarda el layout
+		layoutsService.saveLayout(layoutDTO, requestUser);
+		
+		// Consulta el layout por folio de conciliacion y tipo de layout
+		LayoutDTO layoutDTOs = layoutsService.consultarUnLayout(layoutDTO.getFolio(),
+				layoutDTO.getTipoLayout());
+		
+		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SAVE_SUCCESSFUL,
 				layoutDTOs);
 	}
@@ -177,12 +216,19 @@ public class LayoutsController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteLayout(@PathVariable(name = "folio", required = true) Long folio,
 			@PathVariable(name = "idLayout", required = true) Long idLayout) {
+		// Valida que el objeto de request sea valido
 		if (!ValidadorLayout.validateDeleteLayout(folio, idLayout))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
+		
+		// Elimina el layout
 		boolean respuesta = layoutsService.eliminarUnLayout(folio, idLayout);
+		
+		// Valida que la eliminaicon se realizo de manera correcta
 		if (respuesta)
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_045);
+		
+		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_DELETE, null);
 	}
 
@@ -206,11 +252,16 @@ public class LayoutsController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteLineaLayout(@PathVariable(name = "idLinea", required = true) Long idLinea) {
+		// Valida el id de linea
 		if (idLinea == null || idLinea == 0) {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		}
+		
+		// Elimina la linea
 		layoutsService.eliminarLinea(idLinea);
+		
+		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Linea eliminada con éxito.", null);
 	}
 
