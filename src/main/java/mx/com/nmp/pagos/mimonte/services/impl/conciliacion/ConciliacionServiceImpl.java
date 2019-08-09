@@ -689,7 +689,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			solicitarPagosService.insertaMovimientosPagoFinal(idConciliacion, usuario);
 
 			// Se crean los layouts correspondientes
-			layoutsService.enviarConciliacion(idConciliacion);
+			layoutsService.enviarConciliacion(idConciliacion, usuario);
 
 			// Se actualiza el sub estatus a enviada
 			conciliacion

@@ -32,6 +32,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.LayoutsService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorLayout;
@@ -83,7 +84,7 @@ public class LayoutsController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByFolioAndTipoLayout(@PathVariable(value = "folio", required = true) Long folio,
-			@PathVariable(value = "tipoLayout", required = true) String tipoLayout) {
+			@PathVariable(value = "tipoLayout", required = true) TipoLayoutEnum tipoLayout) {
 		if (!ValidadorLayout.validateConsultaUnLayout(folio, tipoLayout))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -150,7 +151,7 @@ public class LayoutsController {
 					CodigoError.NMP_PMIMONTE_0008);
 		layoutsService.saveLayout(layoutDTOe, requestUser);
 		LayoutDTO layoutDTOs = layoutsService.consultarUnLayout(layoutDTOe.getFolio(),
-				layoutDTOe.getTipoLayout().toString());
+				layoutDTOe.getTipoLayout());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layouts agregados con éxito.",
 				layoutDTOs);
 	}
@@ -183,6 +184,34 @@ public class LayoutsController {
 		if (respuesta)
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Layout eliminado con éxito.", null);
+	}
+
+	/**
+	 * Permite eliminar un layout, como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES
+	 * y DEVOLUCIONES.
+	 * 
+	 * @param folio
+	 * @param idLayout
+	 * @param userRequest
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@DeleteMapping(value = "/layouts/{idLinea}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "DELETE", value = "Permite eliminar una linea de un layout.", tags = {
+			"Layouts" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Linea eliminada con éxito."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response deleteLineaLayout(@PathVariable(name = "idLinea", required = true) Long idLinea) {
+		if (idLinea == null || idLinea == 0) {
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		}
+		layoutsService.eliminarLinea(idLinea);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Linea eliminada con éxito.", null);
 	}
 
 }

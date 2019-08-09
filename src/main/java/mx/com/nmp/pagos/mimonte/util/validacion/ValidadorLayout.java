@@ -27,11 +27,11 @@ public interface ValidadorLayout {
 	 * @param tipoLayout
 	 * @return
 	 */
-	public static boolean validateConsultaUnLayout(Long folio, String tipoLayout) {
+	public static boolean validateConsultaUnLayout(Long folio, TipoLayoutEnum tipoLayout) {
 			return validateLong(folio) &&  
-					(null != tipoLayout && tipoLayout.length()!=0) &&
-					(tipoLayout.equals(TipoLayoutEnum.PAGOS.toString()) || tipoLayout.equals(TipoLayoutEnum.COMISIONES_MOV.toString())
-					|| tipoLayout.equals(TipoLayoutEnum.COMISIONES_GENERALES.toString()) || tipoLayout.equals(TipoLayoutEnum.DEVOLUCIONES.toString()));
+					null != tipoLayout &&
+					tipoLayout == TipoLayoutEnum.PAGOS || tipoLayout == TipoLayoutEnum.COMISIONES_MOV
+					|| tipoLayout == TipoLayoutEnum.COMISIONES_GENERALES || tipoLayout == TipoLayoutEnum.DEVOLUCIONES;
 		
 	}
 	

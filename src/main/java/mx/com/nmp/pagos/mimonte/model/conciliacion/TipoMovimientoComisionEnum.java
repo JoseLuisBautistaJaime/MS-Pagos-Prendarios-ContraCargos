@@ -12,14 +12,14 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  * @version 1.0
  * @creationDate 27/05/2019 15:03 hrs.
  */
-public enum TipoMovimientoEnum {
+public enum TipoMovimientoComisionEnum {
 
 	COMISION(1, "COMISION"), IVA_COMISION(2, "IVA_COMISION"), OPENPAY(3, "OPENPAY");
 
 	private int id;
 	private String descripcion;
 
-	private TipoMovimientoEnum(int id, String descripcion) {
+	private TipoMovimientoComisionEnum(int id, String descripcion) {
 		this.id = id;
 		this.descripcion = descripcion;
 	}

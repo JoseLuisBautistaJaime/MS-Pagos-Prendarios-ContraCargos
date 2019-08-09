@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,13 +31,14 @@ public class Layout implements Serializable {
 	@Column(name = "id_conciliacion")
 	private Long idConciliacion;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "tipo")
-	private String tipo;
+	private TipoLayoutEnum tipo;
 
-	@OneToOne(mappedBy = "layout")
+	@OneToOne(mappedBy = "layout", cascade= { CascadeType.PERSIST} )
 	private LayoutHeader layoutHeader;
 
-	@OneToMany(mappedBy = "layout", cascade = { CascadeType.MERGE })
+	@OneToMany(mappedBy = "layout", cascade = { CascadeType.ALL })
 	private List<LayoutLinea> layoutLineas;
 
 	public Layout() {
@@ -58,11 +61,11 @@ public class Layout implements Serializable {
 		this.idConciliacion = idConciliacion;
 	}
 
-	public String getTipo() {
+	public TipoLayoutEnum getTipo() {
 		return this.tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(TipoLayoutEnum tipo) {
 		this.tipo = tipo;
 	}
 

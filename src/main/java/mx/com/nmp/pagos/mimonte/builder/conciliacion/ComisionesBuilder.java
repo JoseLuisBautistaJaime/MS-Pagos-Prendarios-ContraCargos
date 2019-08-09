@@ -19,7 +19,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionProyeccion
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionReal;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
 
 /**
  * @name ComisionesBuilder
@@ -60,7 +60,7 @@ public abstract class ComisionesBuilder {
 			movimientoComision.setId(comisionSaveDTO.getId());
 			movimientoComision.setIdConciliacion(comisionSaveDTO.getFolio());
 			movimientoComision.setMonto(comisionSaveDTO.getMonto());
-			movimientoComision.setTipo(TipoMovimientoEnum.COMISION);
+			movimientoComision.setTipoComision(TipoMovimientoComisionEnum.COMISION);
 		}
 		return movimientoComision;
 	}
@@ -118,13 +118,13 @@ public abstract class ComisionesBuilder {
 			idIva = comisionTransaccionProyeccionList.get(1);
 		}
 		proyecciones.add(new ComisionTransaccionProyeccion(null == idCom ? 0L : idCom,
-				new ComisionTransaccion(comisionTransaccion.getId()), TipoMovimientoEnum.COMISION.getId(),
+				new ComisionTransaccion(comisionTransaccion.getId()), TipoMovimientoComisionEnum.COMISION.getId(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getTransacciones(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getComision(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getIvaComision(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(0).getTotalComision()));
 		proyecciones.add(new ComisionTransaccionProyeccion(null == idIva ? 0L : idIva,
-				new ComisionTransaccion(comisionTransaccion.getId()), TipoMovimientoEnum.IVA_COMISION.getId(),
+				new ComisionTransaccion(comisionTransaccion.getId()), TipoMovimientoComisionEnum.IVA_COMISION.getId(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(1).getTransacciones(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(1).getComision(),
 				comisionesTransDTO.getProyeccion().getOperaciones().get(1).getIvaComision(),

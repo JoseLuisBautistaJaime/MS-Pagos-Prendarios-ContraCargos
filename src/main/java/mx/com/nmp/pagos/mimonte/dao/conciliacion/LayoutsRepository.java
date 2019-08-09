@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 
 /**
  * @name LayoutsRepository
@@ -51,9 +52,9 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	 * @param tipo
 	 * @return
 	 */
-	@Query("from Layout l inner join l.layoutHeader inner join l.layoutLineas where l.idConciliacion = :idConciliacion and l.tipo = :tipo")
-	public List<Object[]> findByIdConciliacionAndTipo(@Param("idConciliacion") final Long idConciliacion,
-			@Param("tipo") final String tipo);
+	@Query("from Layout l where l.idConciliacion = :idConciliacion and l.tipo = :tipo")
+	public List<Layout> findByIdConciliacionAndTipo(@Param("idConciliacion") final Long idConciliacion,
+			@Param("tipo") final TipoLayoutEnum tipo);
 
 	/**
 	 * Verifica si existe la conciliación en los layouts
@@ -69,7 +70,7 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	 * @param tipo
 	 * @return
 	 */
-	public List<Layout> findByTipo(@Param("tipo") final String tipo);
+	public List<Layout> findByTipo(@Param("tipo") final TipoLayoutEnum tipo);
 
 	/**
 	 * Regresa una lista de layouts por folio de conciliacion
@@ -78,5 +79,13 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	 */
 	@Query("SELECT la FROM Layout la WHERE la.idConciliacion = :idConciliacion")
 	public List<Layout> checkFolioAndLayoutsRelationship(@Param("idConciliacion") final Long idConciliacion);
+
+	/**
+	 * Elimina los layouts que fueron creados a partir de movimientos generados en la conciliacion
+	 * @param idConciliacion
+	 */
+	@Modifying
+	@Query("DELETE FROM LayoutLinea WHERE layout.id IN (SELECT id FROM Layout WHERE idConciliacion = :idConciliacion) AND nuevo = :nuevo")
+	public void deleteByIdConciliacionAndNuevo(@Param("idConciliacion") Long idConciliacion, @Param("nuevo") boolean nuevo);
 	
 }

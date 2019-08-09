@@ -49,7 +49,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionReal;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.OperacionComisionProyeccionEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 
@@ -249,8 +249,8 @@ public class ComisionesService {
 		comisionesTransDTO.setProyeccion(comisionesTransProyeccionDTO);
 
 		// Realiza suma de comisiones e ivas
-		sums = comisionesRepository.findMovimientosSum(TipoMovimientoEnum.COMISION.getDescripcion(),
-				TipoMovimientoEnum.IVA_COMISION.getDescripcion());
+		sums = comisionesRepository.findMovimientosSum(TipoMovimientoComisionEnum.COMISION.getDescripcion(),
+				TipoMovimientoComisionEnum.IVA_COMISION.getDescripcion());
 		sumaComision = sums.get("comision");
 		sumaIva = sums.get("iva");
 		sumaComision = null != sumaComision ? sumaComision : new BigDecimal("0");

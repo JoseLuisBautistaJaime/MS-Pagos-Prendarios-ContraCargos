@@ -14,6 +14,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
 
@@ -102,6 +103,10 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 		this.nuevo = nuevo;
 	}
 
+	@Transient
+	public abstract MovimientoConciliacionEnum getTipoMovimiento();
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -109,6 +114,7 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((idConciliacion == null) ? 0 : idConciliacion.hashCode());
 		result = prime * result + ((nuevo == null) ? 0 : nuevo.hashCode());
+		result = prime * result + ((movimientoMidas == null || movimientoMidas.getId() == null) ? 0 : movimientoMidas.getId().hashCode());
 		return result;
 	}
 

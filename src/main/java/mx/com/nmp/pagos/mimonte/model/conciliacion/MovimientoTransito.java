@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 
@@ -172,6 +173,12 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 	public void setNumAutorizacion(String numAutorizacion) {
 		this.numAutorizacion = numAutorizacion;
 	}
+
+	@Transient
+	public MovimientoConciliacionEnum getTipoMovimiento() {
+		return MovimientoConciliacionEnum.TRANSITO;
+	}
+
 
 	@Override
 	public int hashCode() {

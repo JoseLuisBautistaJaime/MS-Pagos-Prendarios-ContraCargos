@@ -6,3 +6,10 @@ ALTER TABLE `to_layout_header` AUTO_INCREMENT = 1;
 ALTER TABLE `to_layout_linea` AUTO_INCREMENT = 1;
 
 ALTER TABLE to_movimiento_transito ADD num_autorizacion VARCHAR(45);
+
+ALTER TABLE `to_layout_linea` ADD (
+	`nuevo` TINYINT(1) NULL DEFAULT 0
+);
+
+ALTER TABLE `conciliacion`.`to_layout` 
+ADD UNIQUE INDEX `to_layout_UNIQUE` (`id_conciliacion`, tipo);

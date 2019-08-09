@@ -10,7 +10,7 @@ import java.util.List;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
 
 /**
  * @name MovimientoComisionBuilder
@@ -80,7 +80,7 @@ public abstract class MovimientoComisionBuilder {
 		movComision.setIdMovimientoEstadoCuenta(movEstadoCuenta.getId());
 		movComision.setMonto(movEstadoCuenta.getImporte());
 		movComision.setNuevo(false);
-		movComision.setTipo(TipoMovimientoEnum.COMISION); //  TODO: Verificar si es iva o comision
+		movComision.setTipoComision(TipoMovimientoComisionEnum.COMISION); //  TODO: Verificar si es iva o comision
 		return movComision;
 	}
 

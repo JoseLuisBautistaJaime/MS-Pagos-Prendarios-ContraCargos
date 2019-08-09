@@ -53,6 +53,9 @@ public class LayoutLinea extends Updatable implements Serializable {
 	@JoinColumn(name = "id_layout")
 	private Layout layout;
 
+	@Column(name = "nuevo")
+	private Boolean nuevo;
+
 	public LayoutLinea() {
 		super();
 	}
@@ -129,6 +132,15 @@ public class LayoutLinea extends Updatable implements Serializable {
 		this.layout = layout;
 	}
 
+	public Boolean getNuevo() {
+		return nuevo;
+	}
+
+	public void setNuevo(Boolean nuevo) {
+		this.nuevo = nuevo;
+	}
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -142,6 +154,7 @@ public class LayoutLinea extends Updatable implements Serializable {
 		result = prime * result + ((negocio == null) ? 0 : negocio.hashCode());
 		result = prime * result + ((proyectoNmp == null) ? 0 : proyectoNmp.hashCode());
 		result = prime * result + ((unidadOperativa == null) ? 0 : unidadOperativa.hashCode());
+		result = prime * result + ((nuevo == null) ? 0 : nuevo.hashCode());
 		return result;
 	}
 

@@ -4,12 +4,15 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.LayoutsBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutHeaderCatalogRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutHeadersRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutLineaCatalogRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutLineasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutsRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutEditionValidationDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
@@ -37,12 +40,11 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.LineaCatalogEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 
 /**
  * * @name LayoutsService
@@ -98,12 +100,6 @@ public class LayoutsService {
 	@Autowired
 	private ConciliacionHelper conciliacionHelper;
 
-	/**
-	 * Repository de Conciliacion
-	 */
-	@Autowired
-	private ConciliacionRepository conciliacionRepository;
-
 
 
 
@@ -111,34 +107,29 @@ public class LayoutsService {
 	 * Consulta un Layout de una Conciliación
 	 * 
 	 * @param idConciliacion
-	 * @param tipoLayout
+	 * @param tipo
 	 * @return
 	 */
-	public LayoutDTO consultarUnLayout(Long idConciliacion, String tipoLayout) {
-		List<Object[]> layouts = null;
-		Layout layoutNuevo = new Layout();
-		List<LayoutLinea> layoutLineas = new ArrayList<>();
-		if (validar(idConciliacion, tipoLayout)) {
-			layouts = layoutsRepository.findByIdConciliacionAndTipo(idConciliacion, tipoLayout);
-
-			int x = 1;
-			for (Object[] arrayObject : layouts) {
-				if (x == 1) {
-					Layout layout = (Layout) arrayObject[0];
-					LayoutHeader layoutHeader = (LayoutHeader) arrayObject[1];
-					layoutNuevo.setIdConciliacion(layout.getIdConciliacion());
-					layoutNuevo.setTipo(layout.getTipo());
-					layoutNuevo.setLayoutHeader(layoutHeader);
+	public LayoutDTO consultarUnLayout(Long idConciliacion, TipoLayoutEnum tipo) {
+		Layout layout = null;
+		if (validar(idConciliacion, tipo)) {
+			try {
+				List<Layout> layouts = layoutsRepository.findByIdConciliacionAndTipo(idConciliacion, tipo);
+				if (layouts != null && layouts.size() > 0) {
+					layout = layouts.get(0);
 				}
-				LayoutLinea layoutLinea = (LayoutLinea) arrayObject[2];
-				layoutLineas.add(layoutLinea);
-
-				x = 0;
 			}
-			layoutNuevo.setLayoutLineas(layoutLineas);
+			catch (Exception ex) {
+				ex.printStackTrace();
+				throw new ConciliacionException("Error al consultar el layout tipo " + tipo, CodigoError.NMP_PMIMONTE_BUSINESS_011);
+			}
 		}
-		return LayoutsBuilder.buildLayoutDTOFromLayout(layoutNuevo);
+		if (layout == null) {
+			throw new ConciliacionException("No existe un layout para el tipo especificado " + tipo, CodigoError.NMP_PMIMONTE_BUSINESS_084);
+		}
+		return LayoutsBuilder.buildLayoutDTOFromLayout(layout);
 	}
+
 
 	/**
 	 * Consulta los Layouts de una Conciliación
@@ -147,43 +138,48 @@ public class LayoutsService {
 	 * @return
 	 */
 	public List<LayoutDTO> consultarLayouts(Long idConciliacion) {
-		List<LayoutDTO> layoutDTOs = new ArrayList<>();
-		if (idConciliacion > 0L) {
-			LayoutDTO layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.PAGOS.toString());
-			if (layoutDTO != null) {
-				layoutDTOs.add(layoutDTO);
-			}
-			layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.COMISIONES_MOV.toString());
-			if (layoutDTO != null) {
-				layoutDTOs.add(layoutDTO);
-			}
-			layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.COMISIONES_GENERALES.toString());
-			if (layoutDTO != null) {
-				layoutDTOs.add(layoutDTO);
-			}
-			layoutDTO = consultarUnLayout(idConciliacion, TipoLayoutEnum.DEVOLUCIONES.toString());
-			if (layoutDTO != null) {
-				layoutDTOs.add(layoutDTO);
-			}
+		List<Layout> layouts = new ArrayList<Layout>();
+		try {
+			layouts = layoutsRepository.findByIdConciliacion(idConciliacion);
 		}
-
-		return layoutDTOs;
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar los layouts", CodigoError.NMP_PMIMONTE_BUSINESS_011);
+		}
+		if (layouts == null) {
+			throw new ConciliacionException("No existe un layouts para la conciliacion " + idConciliacion, CodigoError.NMP_PMIMONTE_BUSINESS_084);
+		}
+		return LayoutsBuilder.buildLayoutsDTOFromLayouts(layouts);
 	}
 
+
 	/**
-	 * Agrega un Layout
+	 * Agrega o actualiza un Layout
 	 * 
 	 * @param layoutDTO
 	 */
 	@Transactional
 	public void saveLayout(LayoutDTO layoutDTO, final String requestUser) {
-		if (conciliacionRepository.findById(layoutDTO.getFolio()).isPresent()) {
-			obtenerLayout(layoutDTO, requestUser);
-		} else {
-			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0008);
+
+		// Se valida que la conciliacion se encuentre en proceso
+		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(layoutDTO.getFolio(),
+				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
+
+		// Se encarga de persistir o actualizar el layout, header y lineas
+		List<Layout> layouts = mergeLayouts(conciliacion.getId(), Arrays.asList(layoutDTO), requestUser);
+
+		// Se persisten los layouts
+		if (layouts != null && layouts.size() > 0) {
+			try {
+				this.layoutsRepository.saveAll(layouts);
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+				throw new ConciliacionException("Ocurrio un error al persistir los layouts", CodigoError.NMP_PMIMONTE_0011);
+			}
 		}
 	}
+
 
 	/**
 	 * Elimina un Layout
@@ -193,7 +189,7 @@ public class LayoutsService {
 	 * @return
 	 */
 	@Transactional
-	public boolean eliminarUnLayout(Long idConciliacion, Long idLayout) {
+	public boolean eliminarUnLayout(Long idConciliacion, Long idLayout) throws ConciliacionException {
 		boolean respuesta = true;
 		List<Layout> layoutList = layoutsRepository.checkFolioAndLayoutsRelationship(idConciliacion);
 		if (null == layoutList || layoutList.isEmpty())
@@ -218,6 +214,41 @@ public class LayoutsService {
 		return respuesta;
 	}
 
+
+	/**
+	 * Se encarga de eliminar una linea del layout
+	 * @param idLinea
+	 */
+	public void eliminarLinea(Long idLinea) throws ConciliacionException {
+
+		// Se valida que la conciliacion se encuentre en proceso
+		Optional<LayoutLinea> linea = null;
+		try {
+			linea = this.layoutLineasRepository.findById(idLinea);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al obtener la linea del layout asignada al id " + idLinea, CodigoError.NMP_PMIMONTE_BUSINESS_085);
+		}
+		if (linea == null || !linea.isPresent()) {
+			throw new ConciliacionException("Error al obtener la linea del layout asignada al id " + idLinea, CodigoError.NMP_PMIMONTE_BUSINESS_085);
+		}
+
+		// Se valida que la conciliacion asignada se encuentre en proceso
+		Long idConciliacion = linea.get().getLayout().getIdConciliacion();
+		this.conciliacionHelper.getConciliacionByFolio(idConciliacion, ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
+
+		// Se elimina la linea del layout
+		try {
+			this.layoutLineasRepository.deleteById(linea.get().getId());
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al eliminar la linea del layout asignada al id " + idLinea, CodigoError.NMP_PMIMONTE_BUSINESS_085);
+		}
+	}
+
+
 	/**
 	 * Genera layouts a partir de una conciliación
 	 * 
@@ -225,89 +256,40 @@ public class LayoutsService {
 	 * @return
 	 */
 	@Transactional
-	public void enviarConciliacion(Long idConciliacion) {
+	public void enviarConciliacion(Long idConciliacion, String user) {
 
 		// Obtiene, valida la conciliacion (en proceso)
-		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(idConciliacion, null);
+		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(idConciliacion, ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
+		// Se obtienen todos los layouts en base a los movimientos generados durante la conciliacion
+		List<LayoutDTO> layoutsDTO = buildLayoutsDTO(conciliacion.getId());
 
-		// Se obtienen todos los movimientos de pagos, devoluciones, comisiones
-		// PAGOS /////
-		List<MovimientoPago> movimientoPagos = movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion);
-		LayoutLineaCatalog layoutLineaCatalog = layoutLineaCatalogRepository.getOne(LineaCatalogEnum.PAGOS.id());// Obtener // LayoutLinea
+		// Se persisten los layouts
+		if (layoutsDTO != null && layoutsDTO.size() > 0) {
 
-		List<LayoutLineaDTO> layoutLineaDTOList = new ArrayList<>();
-		for (MovimientoPago movimientoPago : movimientoPagos) {
-			LayoutLineaDTO layoutLineaDTO1 = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(layoutLineaCatalog,
-					movimientoPago.getMonto());
-			layoutLineaDTOList.add(layoutLineaDTO1);
-		}
+			// Se verifican duplicados o cargados con anterioridad (nuevo = false)
+			limpiarLayoutsGenerados(conciliacion.getId());
 
-		LayoutDTO layoutDTO = new LayoutDTO();
-		layoutDTO.setFolio(idConciliacion);
-		layoutDTO.setTipoLayout(TipoLayoutEnum.PAGOS);
-		layoutDTO.setLineas(layoutLineaDTOList);
+			// Se generan todos los layouts, incluyendo cabeceras
+			List<Layout> layouts = mergeLayouts(conciliacion.getId(), layoutsDTO, user);
 
-		obtenerLayout(layoutDTO, null);
-
-		LayoutDTO layoutDTO1 = new LayoutDTO();
-		LayoutLineaDTO layoutLineaDTO2 = null;
-		List<LayoutLineaDTO> layoutLineaListDTO1 = new ArrayList<>();
-		layoutDTO1.setFolio(idConciliacion);
-		layoutDTO1.setTipoLayout(TipoLayoutEnum.DEVOLUCIONES);
-		List<MovimientoDevolucion> movimientoDevolucions = movimientoConciliacionRepository
-				.findMovimientoDevolucionByConciliacionId(idConciliacion);
-		LayoutLineaCatalog layoutLineaCatalog4 = layoutLineaCatalogRepository
-				.getOne(LineaCatalogEnum.DEVOLUCIONES.id());
-		for (MovimientoDevolucion movimientoDevolucion : movimientoDevolucions) {
-			layoutLineaDTO2 = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(layoutLineaCatalog4,
-					movimientoDevolucion.getMonto());
-			layoutLineaListDTO1.add(layoutLineaDTO2);
-		}
-		layoutDTO1.setLineas(layoutLineaListDTO1);
-		obtenerLayout(layoutDTO1, null);
-
-		LayoutDTO layoutDTO2 = new LayoutDTO();
-		LayoutLineaDTO layoutLineaDTO3 = null;
-		List<LayoutLineaDTO> layoutLineaDTOList3 = new ArrayList<>();
-		layoutDTO2.setFolio(idConciliacion);
-		layoutDTO2.setTipoLayout(TipoLayoutEnum.COMISIONES_MOV);
-		List<MovimientoComision> movimientoConciliacions = movimientoConciliacionRepository
-				.findMovimientoComisionByConciliacionId(idConciliacion);
-		LayoutLineaCatalog layoutLineaCatalog2 = layoutLineaCatalogRepository
-				.getOne(LineaCatalogEnum.COMISIONES_MOV.id());
-		for (MovimientoComision movimientoComision : movimientoConciliacions) {
-			if (movimientoComision.getTipo().equals(TipoMovimientoEnum.OPENPAY)) {
-				layoutLineaDTO3 = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(layoutLineaCatalog2,
-						movimientoComision.getMonto());
-				layoutLineaDTOList3.add(layoutLineaDTO3);
+			// Se persisten
+			try {
+				this.layoutsRepository.saveAll(layouts);
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+				throw new ConciliacionException("Ocurrio un error al persistir los layouts", CodigoError.NMP_PMIMONTE_0011);
 			}
 		}
-		layoutDTO2.setLineas(layoutLineaDTOList3);
-		obtenerLayout(layoutDTO2, null);
-
-		LayoutDTO layoutDTO4 = new LayoutDTO();
-		LayoutLineaDTO layoutLineaDTO4 = null;
-		List<LayoutLineaDTO> layoutLineaDTOList4 = new ArrayList<>();
-		layoutDTO4.setFolio(idConciliacion);
-		layoutDTO4.setTipoLayout(TipoLayoutEnum.COMISIONES_GENERALES);
-		List<MovimientoComision> movimientoConciliacions1 = movimientoConciliacionRepository
-				.findMovimientoComisionByConciliacionId(idConciliacion);
-		LayoutLineaCatalog layoutLineaCatalog3 = layoutLineaCatalogRepository
-				.getOne(LineaCatalogEnum.COMISIONES_GENERALES.id());
-		for (MovimientoComision movimientoComision : movimientoConciliacions1) {
-			if (movimientoComision.getTipo().equals(TipoMovimientoEnum.COMISION)
-					|| movimientoComision.getTipo().equals(TipoMovimientoEnum.IVA_COMISION)) {
-				layoutLineaDTO4 = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(layoutLineaCatalog3,
-						movimientoComision.getMonto());
-				layoutLineaDTOList4.add(layoutLineaDTO4);
-			}
-		}
-		layoutDTO4.setLineas(layoutLineaDTOList4);
-		obtenerLayout(layoutDTO4, null);
-	
 
 	}// End enviarConciliacion
+
+
+
+
+	// PRIVATES /////////////////////////////////////////////
+
 
 	/**
 	 * Guarda y edita un layout como PAGOS, COMISIONES_MOV, COMISIONES_GENERALES y
@@ -315,7 +297,7 @@ public class LayoutsService {
 	 * 
 	 * @param layoutDTO
 	 */
-	public void obtenerLayout(LayoutDTO layoutDTO, final String requestUser) {
+	private void persistirLayout(LayoutDTO layoutDTO, final String requestUser) {
 		Layout layout = new Layout();
 		List<LayoutEditionValidationDTO> layoutEditionValidationDTOList = null;
 		List<Long> ids = null;
@@ -325,10 +307,10 @@ public class LayoutsService {
 			LayoutHeaderCatalog layoutHeaderCatalog = null;
 			LayoutHeader layoutHeader = null;
 			layout.setIdConciliacion(layoutDTO.getFolio());
-			layout.setTipo(layoutDTO.getTipoLayout().toString());
+			layout.setTipo(layoutDTO.getTipoLayout());
 			if (LayoutsBuilder.validaLineas(layoutDTO.getLineas())) {
 				ids = new ArrayList<>();
-				layout.setLayoutLineas(LayoutsBuilder.buildLayoutLineaFromLayoutLineaDTO(layoutDTO.getLineas()));
+				layout.setLayoutLineas(LayoutsBuilder.buildLayoutLineaFromLayoutLineaDTO(layoutDTO.getLineas(), layout, requestUser));
 				layout = layoutsRepository.saveAndFlush(layout);
 				if (layoutDTO.getTipoLayout().toString().equals(TipoLayoutEnum.PAGOS.toString())) {
 					layoutHeaderCatalog = layoutHeaderCatalogRepository.getOne(HeaderCatalogEnum.PAGOS.id());// buscarLayoutHeader
@@ -361,6 +343,9 @@ public class LayoutsService {
 
 				layoutHeader.setLayout(layout);
 				layoutHeadersRepository.saveAndFlush(layoutHeader);
+				
+				
+				
 				for (LayoutLinea layoutLinea : layout.getLayoutLineas()) {
 					layoutLinea.setLayout(layout);
 					if (null != layoutLinea.getId())
@@ -392,6 +377,7 @@ public class LayoutsService {
 		} // End if
 	}
 
+
 	/**
 	 * Cobstruye un mapa de tipo Long, LayoutEditionValidationDTO a partir de una
 	 * lista de tipo LayoutEditionValidationDTO
@@ -399,7 +385,7 @@ public class LayoutsService {
 	 * @param list
 	 * @return
 	 */
-	public Map<Long, LayoutEditionValidationDTO> getMapFromDTOList(List<LayoutEditionValidationDTO> list) {
+	private Map<Long, LayoutEditionValidationDTO> getMapFromDTOList(List<LayoutEditionValidationDTO> list) {
 		Map<Long, LayoutEditionValidationDTO> map = null;
 		if (null != list && !list.isEmpty()) {
 			map = new HashMap<>();
@@ -410,6 +396,401 @@ public class LayoutsService {
 		return map;
 	}
 
+
+	/**
+	 * Se encarga de generar los layouts para persistencia, se verifica si ya existen, en caso contrario se construye.
+	 * Adicionalmente se verifica si los layouts ya cuentan con cabecera, si no tiene cabecera se genera una nueva
+	 * @param idConciliacion
+	 * @param layoutsDTO
+	 * @param requestUser 
+	 */
+	private List<Layout> mergeLayouts(Long idConciliacion, List<LayoutDTO> layoutsDTO, String requestUser) throws ConciliacionException {
+		List<Layout> layouts = null;
+		if (layoutsDTO != null && layoutsDTO.size() > 0) {
+			
+			layouts = new ArrayList<Layout>();
+			for (LayoutDTO layoutDTO : layoutsDTO) {
+
+				// Se obtiene el layout de la BD, si no existe se crea
+				Layout layoutDB = getLayoutByTipoLayout(idConciliacion, layoutDTO.getTipoLayout());
+				if (layoutDB == null) {
+					layoutDB = buildLayout(idConciliacion, layoutDTO, requestUser);
+				}
+				else {
+
+					// Se verifica el tipo de layout y si ya tiene cabecera
+					LayoutHeader layoutHeaderBD = getLayoutHeaderByIdLayout(idConciliacion, layoutDB.getId());
+					if (layoutHeaderBD == null) {
+						layoutHeaderBD = LayoutsBuilder.buildLayoutHeaderFromLayoutCabeceraDTO(layoutDTO.getCabecera(), layoutDB, requestUser);
+						layoutDB.setLayoutHeader(layoutHeaderBD);
+					}
+					else {
+						// Se actualiza (No se requiere)
+						/*LayoutHeader layoutHeader = buildLayoutHeader(idConciliacion, layoutDTO.getCabecera());
+						layoutHeader.setLayout(layoutDB);
+						layoutHeader.setId(layoutHeaderBD.getId());
+						layoutHeaderBD = layoutHeader;
+						layoutHeaderBD.setLastModifiedBy(requestUser);
+						layoutHeaderBD.setLastModifiedDate(new Date());
+						layoutDB.setLayoutHeader(layoutHeaderBD);*/
+					}
+
+					// Se actualizan las lineas
+					mergeLayoutLineas(layoutDTO.getLineas(), layoutDB, idConciliacion, requestUser);
+				}
+				layouts.add(layoutDB);
+			}
+		}
+		return layouts;
+	}
+
+
+	/**
+	 * Se encarga de actualizar o insertar las lineas recibidas vs las existentes en la bd
+	 * @param lineas
+	 * @param layout
+	 * @param requestUser 
+	 */
+	private void mergeLayoutLineas(List<LayoutLineaDTO> lineasDTO, Layout layout, Long idConciliacion, String requestUser) throws ConciliacionException {
+
+		if (lineasDTO != null && lineasDTO.size() > 0) {
+
+			List<LayoutLinea> lineas = LayoutsBuilder.buildLayoutLineaFromLayoutLineaDTO(lineasDTO, layout, requestUser);
+
+			// Existentes
+			if (layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
+				for (LayoutLinea linea : lineas) {
+					if (linea.getId() != null && linea.getId() > 0) {
+						boolean found = false;
+						if (layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
+							for (LayoutLinea lineaBD : layout.getLayoutLineas()) {
+								if (linea.getId() == lineaBD.getId()) {
+									LayoutsBuilder.mergeLinea(lineaBD, linea, requestUser);
+									found = true;
+									break;
+								}
+							}
+							if (!found) {
+								throw new ConciliacionException("No existe la linea layout con id " + linea.getId(), CodigoError.NMP_PMIMONTE_0011);
+							}
+						}
+					}
+				}
+			}
+
+			// Nuevas
+			for (LayoutLinea linea : lineas) {
+				// Valida si existe el layout
+				if (linea.getId() == null || linea.getId() == 0) {
+					linea.setId(null);
+					linea.setNuevo(false);
+					linea.setCreatedBy(requestUser);
+					linea.setCreatedDate(new Date());
+					layout.addLayoutLinea(linea);
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * Se encarga de construir un layout en base a los parametros del DTO recibidos
+	 * @param layoutDTO
+	 * @param requestUser 
+	 * @return
+	 */
+	private Layout buildLayout(Long idConciliacion, LayoutDTO layoutDTO, String requestUser) throws ConciliacionException {
+		Layout layout = LayoutsBuilder.buildLayoutFromLayoutDTO(layoutDTO, requestUser);
+		layout.setIdConciliacion(idConciliacion);
+		layout.setTipo(layoutDTO.getTipoLayout());
+		return layout;
+	}
+
+
+	/**
+	 * Genera los layouts en base a la conciliacion
+	 * @param idConciliacion
+	 */
+	private List<LayoutDTO> buildLayoutsDTO(Long idConciliacion) {
+
+		List<LayoutDTO> layoutsDTO = new ArrayList<LayoutDTO>();
+		
+		// Se construyen todos los layouts en base a los movimientos de pagos, devoluciones, comisiones
+		// PAGOS /////
+		LayoutDTO layoutDTO = buildLayoutDTO(idConciliacion, TipoLayoutEnum.PAGOS);
+		if (layoutDTO != null) {
+			layoutsDTO.add(layoutDTO);
+		}
+
+		// DEVOLUCIONES ////
+		layoutDTO = buildLayoutDTO(idConciliacion, TipoLayoutEnum.DEVOLUCIONES);
+		if (layoutDTO != null) {
+			layoutsDTO.add(layoutDTO);
+		}
+
+		// COMISIONES OPEN PAY ??
+		layoutDTO = buildLayoutDTO(idConciliacion, TipoLayoutEnum.COMISIONES_MOV);
+		if (layoutDTO != null) {
+			layoutsDTO.add(layoutDTO);
+		}
+
+		// COMISIONES GENERALES
+		layoutDTO = buildLayoutDTO(idConciliacion, TipoLayoutEnum.COMISIONES_GENERALES);
+		if (layoutDTO != null) {
+			layoutsDTO.add(layoutDTO);
+		}
+
+		return layoutsDTO;
+	}
+
+
+	/**
+	 * Genera los layouts para el movimiento solo si existen movimientos
+	 * @param idConciliacion
+	 * @param movimientoPagos
+	 * @param layoutLineaCatalog
+	 * @return
+	 */
+	private LayoutDTO buildLayoutDTO(Long idConciliacion, TipoLayoutEnum tipoLayout) throws ConciliacionException {
+
+		LayoutDTO layoutDTO = null;
+
+		// Se obtienen los movimientos de acuerdo al tipo de layout
+		List<MovimientoConciliacion> movimientos = obtenerMovimientosConciliacion(idConciliacion, tipoLayout);
+		if (movimientos != null && movimientos.size() > 0) {
+	
+			// Se construyen las lineas
+			List<LayoutLineaDTO> lineasDTO = buildLineasDTO(movimientos, tipoLayout);
+
+			// Se genera la cabecera correspondiente
+			LayoutCabeceraDTO cabeceraDTO = buildCabeceraDTO(idConciliacion, tipoLayout);
+
+			// Se crea el layout correspondiente
+			layoutDTO = new LayoutDTO();
+			layoutDTO.setFolio(idConciliacion);
+			layoutDTO.setTipoLayout(tipoLayout);
+			layoutDTO.setLineas(lineasDTO);
+			layoutDTO.setCabecera(cabeceraDTO);	
+		}
+
+		return layoutDTO;
+	}
+
+
+	/**
+	 * Construye la cabecera para el tipo de layout especificado usando los valores por default configurados en la bd
+	 * @param idConciliacion
+	 * @param tipoLayout
+	 * @return
+	 */
+	private LayoutCabeceraDTO buildCabeceraDTO(Long idConciliacion, TipoLayoutEnum tipoLayout) {
+		
+		// Obtiene la cabecera del catalogo correspondiente al tipo layout
+		LayoutHeaderCatalog layoutHeaderCatalog = getCabeceraCatalog(tipoLayout);
+
+		// Se construye la cabecera
+		LayoutCabeceraDTO cabecera = LayoutsBuilder.buildLayoutCabeceraDTOFromLayoutHeaderCatalog(layoutHeaderCatalog);
+		return cabecera;
+	}
+
+
+	/**
+	 * Se construyen las lineas de acuerdo al tipo de layout
+	 * @param movimientos
+	 * @param tipoLayout
+	 * @return
+	 */
+	private List<LayoutLineaDTO> buildLineasDTO(List<MovimientoConciliacion> movimientos, TipoLayoutEnum tipoLayout) throws ConciliacionException {
+
+		LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipoLayout);
+
+		// Genera las lineas
+		List<LayoutLineaDTO> lineasDTO = new ArrayList<LayoutLineaDTO>();
+		for (MovimientoConciliacion movimiento : movimientos) {
+			BigDecimal monto = getMontoMovimiento(movimiento);
+			LayoutLineaDTO lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaCatalog, monto);
+			lineasDTO.add(lineaDTO);
+		}
+		return lineasDTO;
+	}
+
+
+	/**
+	 * Obtiene el monto del movimiento de la conciliacion de acuerdo al tipo de movimiento
+	 * @param movimiento
+	 * @return
+	 */
+	private BigDecimal getMontoMovimiento(MovimientoConciliacion movimiento) {
+		BigDecimal monto = new BigDecimal(0);
+		switch (movimiento.getTipoMovimiento()) {
+			case COMISIONES:
+				monto = ((MovimientoComision)movimiento).getMonto();
+				break;
+			case PAGOS:
+				monto = ((MovimientoPago)movimiento).getMonto();
+				break;
+			case DEVOLUCIONES:
+				monto = ((MovimientoDevolucion)movimiento).getMonto();
+				break;
+			default:
+				break;
+		}
+		return monto;
+	}
+
+
+	/**
+	 * Obtiene el listado de movimientos conciliacion de acuerdo al tipo de layout
+	 * @param idConciliacion
+	 * @param tipoLayout
+	 * @return
+	 */
+	private List<MovimientoConciliacion> obtenerMovimientosConciliacion(Long idConciliacion, TipoLayoutEnum tipoLayout) {
+		List<MovimientoConciliacion> movimientos = new ArrayList<MovimientoConciliacion>();
+		switch (tipoLayout) {
+			case PAGOS:
+				movimientos.addAll(movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion));
+				break;
+			case DEVOLUCIONES:
+				movimientos.addAll(movimientoConciliacionRepository.findMovimientoDevolucionByConciliacionId(idConciliacion));
+				break;
+			case COMISIONES_MOV: // TipoMovimientoComisionEnum.OPENPAY
+				//movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion)); // TODO: Verificar tipos
+				break;
+			case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.IVA_COMISION
+				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
+				break;
+		}
+		return movimientos;
+	}
+
+
+	/**
+	 * Se encarga de obtener el layout por tipo de layout
+	 * @param idConciliacion
+	 * @param tipoLayout
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	private Layout getLayoutByTipoLayout(Long idConciliacion, TipoLayoutEnum tipoLayout) throws ConciliacionException {
+		Layout layout = null;
+		try {
+			List<Layout> layouts = this.layoutsRepository.findByIdConciliacionAndTipo(idConciliacion, tipoLayout);
+			if (layouts != null && layouts.size() > 0) {
+				layout = layouts.get(0);
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Ocurrio un error consultar el layout", CodigoError.NMP_PMIMONTE_0011);
+		}
+		return layout;
+	}
+
+
+	/**
+	 * Obtiene la cabecera en base al id del layout
+	 * @param idConciliacion
+	 * @param idLayout
+	 * @return
+	 */
+	private LayoutHeader getLayoutHeaderByIdLayout(Long idConciliacion, Long idLayout) {
+		Optional<LayoutHeader> layoutHeader = null;
+		try {
+			layoutHeader = this.layoutHeadersRepository.findById(idLayout);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Ocurrio un error consultar el header para el layout " + idLayout, CodigoError.NMP_PMIMONTE_0011);
+		}
+		return layoutHeader != null && layoutHeader.isPresent() ? layoutHeader.get() : null;
+	}
+
+
+	/**
+	 * Obtiene la linea del catalogo de acuerdo tipo de layout
+	 * @param tipoLayout
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	private LayoutLineaCatalog getLayoutLineaCatalog(TipoLayoutEnum tipoLayout) throws ConciliacionException {
+		Optional<LayoutLineaCatalog> lineaCatalog = null;
+
+		// Se obtienen los valores por default de la linea de acuerdo al tipo de layout
+		try {
+			lineaCatalog = layoutLineaCatalogRepository.findById(tipoLayout.getLineaCatalog().id());
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Ocurrio un error consultar la linea del catalogo para el tipo layout " + tipoLayout, CodigoError.NMP_PMIMONTE_0011);
+		}
+		
+		if (lineaCatalog == null || !lineaCatalog.isPresent()) {
+			throw new ConciliacionException("No existe la linea del catalogo para el tipo de layout " + tipoLayout, CodigoError.NMP_PMIMONTE_0011);
+		}
+
+		return lineaCatalog.get();
+	}
+
+
+	/**
+	 * Obtiene una linea por su id
+	 * @param idLinea
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	private LayoutLinea getLayoutLineaById(Long idLinea) throws ConciliacionException {
+		Optional<LayoutLinea> linea = null;
+		try {
+			linea = this.layoutLineasRepository.findById(idLinea);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Ocurrio un error al consultar la linea para el layout " + idLinea, CodigoError.NMP_PMIMONTE_0011);
+		}
+		return linea != null && linea.isPresent() ? linea.get() : null;
+	}
+
+
+	/**
+	 * Obtiene la cabecera del catalogo correspondiente al tipo de layout
+	 * @param tipoLayout
+	 * @return
+	 */
+	private LayoutHeaderCatalog getCabeceraCatalog(TipoLayoutEnum tipoLayout) {
+		// Se obtiene la configuracion de la cabecera en la bd
+		Optional<LayoutHeaderCatalog> layoutHeaderCatalog = null;
+		try {
+			layoutHeaderCatalog = layoutHeaderCatalogRepository.findById(tipoLayout.getHeaderCatalog().id());// buscarLayoutHeader
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("No existe la configuracion de la cabecera del layout de tipo " + tipoLayout, CodigoError.NMP_PMIMONTE_0011);
+		}
+
+		if (layoutHeaderCatalog == null || !layoutHeaderCatalog.isPresent()) {
+			throw new ConciliacionException("No existe la configuracion de la cabecera del layout de tipo " + tipoLayout, CodigoError.NMP_PMIMONTE_0011);
+		}
+
+		return layoutHeaderCatalog.get();
+	}
+
+
+	/**
+	 * Elimina los layouts que han sido generados con anterioridad (todos layouts con la bandera nuevo = false)
+	 * @param idConciliacion
+	 */
+	private void limpiarLayoutsGenerados(Long idConciliacion) throws ConciliacionException {
+		try {
+			this.layoutsRepository.deleteByIdConciliacionAndNuevo(idConciliacion, false); // Solo layouts generados
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al regenerar los layouts", CodigoError.NMP_PMIMONTE_0011);
+		}
+	}
+
+
 	/**
 	 * Valida los campos idConciliacion y tipoLayout
 	 * 
@@ -417,11 +798,11 @@ public class LayoutsService {
 	 * @param tipoLayout
 	 * @return
 	 */
-	public boolean validar(Long idConciliacion, String tipoLayout) {
-		return idConciliacion > 0L && tipoLayout.equals(TipoLayoutEnum.PAGOS.toString())
-				|| tipoLayout.equals(TipoLayoutEnum.COMISIONES_MOV.toString())
-				|| tipoLayout.equals(TipoLayoutEnum.COMISIONES_GENERALES.toString())
-				|| tipoLayout.equals(TipoLayoutEnum.DEVOLUCIONES.toString());
+	public boolean validar(Long idConciliacion, TipoLayoutEnum tipoLayout) {
+		return idConciliacion > 0L && tipoLayout == TipoLayoutEnum.PAGOS
+				|| tipoLayout == TipoLayoutEnum.COMISIONES_MOV
+				|| tipoLayout == TipoLayoutEnum.COMISIONES_GENERALES
+				|| tipoLayout == TipoLayoutEnum.DEVOLUCIONES;
 	}
 
 	/**

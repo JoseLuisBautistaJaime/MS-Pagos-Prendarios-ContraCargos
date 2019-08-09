@@ -54,7 +54,7 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 	 */
 	public Conciliacion getConciliacionByFolio(Long folio, Integer idStatusConciliacion) throws ConciliacionException {
 
-		LOG.info(">> validateFolioExists");
+		LOG.info(">> getConciliacionByFolio");
 
 		if (folio == null) {
 			LOG.debug("El folio recibido es nulo");
