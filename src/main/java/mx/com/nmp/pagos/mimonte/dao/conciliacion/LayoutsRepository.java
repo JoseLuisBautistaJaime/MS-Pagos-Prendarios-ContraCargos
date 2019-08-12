@@ -122,7 +122,7 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	 * @param idLayout
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT ll.id FROM to_layout_linea ll INNER JOIN to_layout l ON ll.id_layout = l.id WHERE l.id = :idLayout AND l.id_conciliacion = :folio  AND ll.nuevo = 1) IS NOT NULL THEN 1 ELSE 0 END")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(ll.id) FROM to_layout_linea ll INNER JOIN to_layout l ON ll.id_layout = l.id WHERE l.id = :idLayout AND l.id_conciliacion = :folio  AND ll.nuevo = 0) <> 0 ) THEN 0 ELSE 1 END")
 	public Object checkIfLineasAreNew(@Param("folio") final Long folio, @Param("idLayout") final Long idLayout);
 
 }

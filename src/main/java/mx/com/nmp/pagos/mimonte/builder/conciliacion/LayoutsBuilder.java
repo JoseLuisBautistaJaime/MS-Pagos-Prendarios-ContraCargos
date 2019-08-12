@@ -58,15 +58,16 @@ public abstract class LayoutsBuilder {
 	 * @return
 	 */
 	public static LayoutDTO buildLayoutDTOFromLayout(Layout layout) {
-		LayoutDTO layoutDTO = new LayoutDTO();
-		layoutDTO.setFolio(layout.getIdConciliacion());
-		layoutDTO.setTipoLayout(layout.getTipo());
-		layoutDTO.setCabecera(buildLayoutCabeceraDTOFromLayoutHeader(layout.getLayoutHeader()));
-
-		if (layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
-			layoutDTO.setLineas(buildLayoutLineaDTOFromLayoutLinea(layout.getLayoutLineas()));
+		LayoutDTO layoutDTO = null;
+		if(null != layout) {
+			layoutDTO = new LayoutDTO();
+			layoutDTO.setFolio(layout.getIdConciliacion());
+			layoutDTO.setTipoLayout(layout.getTipo());
+			layoutDTO.setCabecera(buildLayoutCabeceraDTOFromLayoutHeader(layout.getLayoutHeader()));
+			if (layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
+				layoutDTO.setLineas(buildLayoutLineaDTOFromLayoutLinea(layout.getLayoutLineas()));
+			}	
 		}
-
 		return layoutDTO;
 	}
 
@@ -79,7 +80,6 @@ public abstract class LayoutsBuilder {
 	 */
 	public static LayoutCabeceraDTO buildLayoutCabeceraDTOFromLayoutHeader(LayoutHeader layoutHeader) {
 		LayoutCabeceraDTO layoutCabeceraDTO = null;
-
 		if (layoutHeader != null) {
 			layoutCabeceraDTO = new LayoutCabeceraDTO();
 			layoutCabeceraDTO.setId(layoutHeader.getId());
@@ -89,7 +89,6 @@ public abstract class LayoutsBuilder {
 			layoutCabeceraDTO.setCodigoOrigen(layoutHeader.getCodigoOrigen());
 			layoutCabeceraDTO.setFecha(layoutHeader.getFecha());
 		}
-
 		return layoutCabeceraDTO;
 	}
 

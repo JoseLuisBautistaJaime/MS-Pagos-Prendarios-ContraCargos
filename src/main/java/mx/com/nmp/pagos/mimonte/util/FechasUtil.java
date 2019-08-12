@@ -47,11 +47,12 @@ public interface FechasUtil {
 			resultMap.put(start, startDate);
 			resultMap.put(end, cal.getTime());
 		}
-		if (null != startDate && null != endDate) {
+		if (null == startDate && null == endDate) {
 			Calendar ini = Calendar.getInstance();
 			Calendar fin = Calendar.getInstance();
-			ini.setTime(startDate);
-			fin.setTime(endDate);
+			ini.set(Calendar.YEAR, 1975);
+			ini.set(Calendar.MONTH, 1);
+			ini.set(Calendar.DAY_OF_MONTH, 1);
 			ini.set(Calendar.HOUR_OF_DAY, 0);
 			ini.set(Calendar.MINUTE, 0);
 			ini.set(Calendar.SECOND, 0);
