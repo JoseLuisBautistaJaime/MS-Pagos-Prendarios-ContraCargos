@@ -843,6 +843,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Objetos necesarios
 		Map<String, Date> datesMap = null;
 		List<ConsultaActividadDTO> consultaActividadDTOList = null;
+		Boolean flagNullParams = null;
+		flagNullParams = (null != consultaActividadesRequest
+				&& (null != consultaActividadesRequest.getFolio() || null != consultaActividadesRequest.getFechaDesde()
+						|| null != consultaActividadesRequest.getFechaHasta()));
 		try {
 
 			// Valida que el folio exista si es que no es nulo
@@ -855,22 +859,24 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			consultaActividadesRequest.setFechaDesde(datesMap.get("startDate"));
 			consultaActividadesRequest.setFechaHasta(datesMap.get("endDate"));
 
-			// Ningun atributo es nulo
-			if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
-					&& null != consultaActividadesRequest.getFechaHasta()) {
-				consultaActividadDTOList = actividadRepository.findByFolioFechaDesdeAndFechaHasta(
-						consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde(),
-						consultaActividadesRequest.getFechaHasta());
-			}
+			if (!flagNullParams) {
+				// Ningun atributo es nulo
+				if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
+						&& null != consultaActividadesRequest.getFechaHasta()) {
+					consultaActividadDTOList = actividadRepository.findByFolioFechaDesdeAndFechaHasta(
+							consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde(),
+							consultaActividadesRequest.getFechaHasta());
+				}
 
-			// El folio es nulo y las fechas no
-			else if (null == consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
-					&& null != consultaActividadesRequest.getFechaHasta()) {
-				consultaActividadDTOList = actividadRepository.findByFechaDesdeAndFechaHasta(
-						consultaActividadesRequest.getFechaDesde(), consultaActividadesRequest.getFechaHasta());
-			}
-			// Todos los atributos son nulos se consultan los ultimos 10 por default
-			else {
+				// El folio es nulo y las fechas no
+				else if (null == consultaActividadesRequest.getFolio()
+						&& null != consultaActividadesRequest.getFechaDesde()
+						&& null != consultaActividadesRequest.getFechaHasta()) {
+					consultaActividadDTOList = actividadRepository.findByFechaDesdeAndFechaHasta(
+							consultaActividadesRequest.getFechaDesde(), consultaActividadesRequest.getFechaHasta());
+				}
+			} else {
+				// Todos los atributos son nulos se consultan los ultimos 10 por default
 				Pageable pageable = PageRequest.of(0,
 						null != actividadesMaxDefaultValue ? actividadesMaxDefaultValue : 10);
 				consultaActividadDTOList = actividadPaginRepository.nGetTopXActividades(pageable);
