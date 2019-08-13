@@ -214,7 +214,7 @@ public final class PagoConstants {
 	 * Mensaje que es mostrado cuando se intenta guardar una tarjeta que ya existe
 	 * mediante el servicio de Pago
 	 */
-	public static final String MSG_CARD_WAS_NOT_SAVED = "El pago se registro de manera correcta pero la tarjeta no se guardo por que ya existe";
+	public static final String MSG_CARD_WAS_NOT_SAVED = "El pago se registro de manera correcta pero la tarjeta no se guardo porque ya existe";
 
 	/**
 	 * Mensaje que es enviado cuando se intenta registrar el pago de un cliente que

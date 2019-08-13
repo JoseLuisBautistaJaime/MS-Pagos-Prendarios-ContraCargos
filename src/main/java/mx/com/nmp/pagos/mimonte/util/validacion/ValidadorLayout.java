@@ -4,13 +4,14 @@
  */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
+import mx.com.nmp.pagos.mimonte.util.StringUtil;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @name ValidadorLayout
@@ -123,14 +124,15 @@ public interface ValidadorLayout {
 	 * @return
 	 */
 	public static boolean validar(LayoutLineaDTO layoutLineaDTO) {
-		return null != layoutLineaDTO && (null != layoutLineaDTO.getId() && layoutLineaDTO.getId() >= 0L)
-				&& (null != layoutLineaDTO.getLinea() && layoutLineaDTO.getLinea().length() != 0)
-				&& (null != layoutLineaDTO.getCuenta() && layoutLineaDTO.getCuenta().length() != 0)
-				&& (null != layoutLineaDTO.getMonto() && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0)
-				&& null != layoutLineaDTO.getDepId() && !"".equals(layoutLineaDTO.getDepId())
-				&& null != layoutLineaDTO.getNegocio() && !"".equals(layoutLineaDTO.getNegocio())
-				&& null != layoutLineaDTO.getProyectoNMP() && !"".equals(layoutLineaDTO.getProyectoNMP())
-				&& null != layoutLineaDTO.getUnidadOperativa() && !"".equals(layoutLineaDTO.getUnidadOperativa());
+		return layoutLineaDTO != null
+				&& (layoutLineaDTO.getId() != null && layoutLineaDTO.getId() >= 0L)
+				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getCuenta()))
+				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getDepId()))
+				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getLinea()))
+				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getNegocio()))
+				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getProyectoNMP()))
+				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getUnidadOperativa()))
+				&& (layoutLineaDTO.getMonto() != null && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0);
 	}
 
 }
