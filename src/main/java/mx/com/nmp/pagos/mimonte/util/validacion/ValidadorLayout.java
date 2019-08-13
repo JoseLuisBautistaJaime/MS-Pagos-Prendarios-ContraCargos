@@ -77,12 +77,11 @@ public interface ValidadorLayout {
 	public static boolean validateSaveLayout(LayoutRequestDTO layoutRequestDTO) {
 		return null != layoutRequestDTO && (null != layoutRequestDTO.getFolio() && layoutRequestDTO.getFolio() > 0L)
 				&& (null != layoutRequestDTO.getTipoLayout()
-						&& (layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.PAGOS)
-						|| (layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.COMISIONES_MOV)
-						|| (layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.COMISIONES_GENERALES))
-				|| (null != layoutRequestDTO && layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.DEVOLUCIONES)
-						&& validaLineas(layoutRequestDTO.getLineas());
-
+				&& (layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.PAGOS)
+				|| (layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.COMISIONES_MOV)
+				|| (layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.COMISIONES_GENERALES)
+				|| (layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.DEVOLUCIONES)
+				&& validaLineas(layoutRequestDTO.getLineas()));
 	}
 
 	/**
