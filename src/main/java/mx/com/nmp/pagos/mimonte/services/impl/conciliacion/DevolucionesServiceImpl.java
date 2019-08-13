@@ -305,8 +305,8 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(folio.getFolio(), "Se realizo la solicitud de devolucion de "
 					.concat(String.valueOf(null != movimientosSolicitados ? movimientosSolicitados.size() : null))
-					.concat(" movimiento(s) ").concat(" de la conciliacion: ").concat(String.valueOf(folio.getFolio()))
-					.concat("por un total de: $ ")
+					.concat(" movimiento(s) de la conciliacion: ").concat(String.valueOf(folio.getFolio()))
+					.concat(" por un total de: $ ")
 					.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosSolicitados))),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
