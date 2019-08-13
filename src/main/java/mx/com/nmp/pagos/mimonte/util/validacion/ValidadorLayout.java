@@ -4,15 +4,14 @@
  */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import com.mysql.cj.util.StringUtils;
-
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
+import mx.com.nmp.pagos.mimonte.util.StringUtil;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @name ValidadorLayout
@@ -129,10 +128,10 @@ public interface ValidadorLayout {
 				&& (null != layoutLineaDTO.getLinea() && layoutLineaDTO.getLinea().length() != 0)
 				&& (null != layoutLineaDTO.getCuenta() && layoutLineaDTO.getCuenta().length() != 0)
 				&& (null != layoutLineaDTO.getMonto() && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0)
-				&& !StringUtils.isNullOrEmpty(layoutLineaDTO.getDepId())
-				&& !StringUtils.isNullOrEmpty(layoutLineaDTO.getNegocio())
-				&& !StringUtils.isNullOrEmpty(layoutLineaDTO.getProyectoNMP())
-				&& !StringUtils.isNullOrEmpty(layoutLineaDTO.getUnidadOperativa())
+				&& !StringUtil.isNullOrEmpty(layoutLineaDTO.getDepId())
+				&& !StringUtil.isNullOrEmpty(layoutLineaDTO.getNegocio())
+				&& !StringUtil.isNullOrEmpty(layoutLineaDTO.getProyectoNMP())
+				&& !StringUtil.isNullOrEmpty(layoutLineaDTO.getUnidadOperativa())
 				;
 	}
 

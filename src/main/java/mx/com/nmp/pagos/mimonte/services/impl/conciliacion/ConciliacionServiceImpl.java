@@ -283,11 +283,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(conciliacion.getId(),
-				"Se guarda la conciliacion con el folio " + conciliacion.getId() + " con la cuenta "
-						+ (cuenta.isPresent() && null != cuenta.get().getNumeroCuenta() ? cuenta.get().getNumeroCuenta()
-								: "")
-						+ " y la entidad "
-						+ (entidad.isPresent() && null != entidad.get().getNombre() ? entidad.get().getNombre() : ""),
+				"Se creo la conciliacion con el folio " + conciliacion.getId() + " para la entidad "
+						+ (entidad.isPresent() && null != entidad.get().getNombre() ? entidad.get().getNombre() : "")
+						+ ", y la cuenta "
+						+ (cuenta.isPresent() && null != cuenta.get().getNumeroCuenta() ? cuenta.get().getNumeroCuenta() : ""),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.GENERACION_CONCILIACION);
 
 		return ConciliacionBuilder.buildConciliacionDTOFromConciliacionCuentaAndEntidad(conciliacion, cuenta.get(),
@@ -767,8 +766,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
-				"Se actualiza el subestatus de la conciliacion " + actualizarSubEstatusRequestDTO.getFolio()
-						+ " a un subestatus: "
+				"Se actualizo el sub-estado de la conciliacion con el folio " + actualizarSubEstatusRequestDTO.getFolio()
+						+ " a: "
 						+ (subEstatus.isPresent() && null != subEstatus.get().getDescription()
 								? subEstatus.get().getDescription()
 								: actualizarSubEstatusRequestDTO.getIdSubEstatus()),

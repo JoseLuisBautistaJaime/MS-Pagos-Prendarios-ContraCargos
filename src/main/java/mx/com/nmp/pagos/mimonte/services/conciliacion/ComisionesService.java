@@ -472,7 +472,7 @@ public class ComisionesService {
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(comisionDeleteDTO.getFolio(),
 				"Se realizo la eliminacion de ".concat(String.valueOf(comisionDeleteDTO.getIdComisiones().size()))
-						.concat(" comision(es) de la conciliacion ")
+						.concat(" comision(es) de la conciliacion con el folio: ")
 						.concat(String.valueOf(comisionDeleteDTO.getFolio())),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.COMISIONES);
 	}
