@@ -195,8 +195,9 @@ public class MovimientosMidasService {
 
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(movimientoProcesosNocturnosDTOList.getFolio(),
-					"Se dan de alta " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
-							+ " movimientos nocturnos, para el folio " + movimientoProcesosNocturnosDTOList.getFolio(),
+					"Se registraron " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
+							+ " movimientos provenientes de procesos nocturnos,"
+							+ " para la conciliacion con el folio: " + movimientoProcesosNocturnosDTOList.getFolio(),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
 		} catch (Exception ex) {

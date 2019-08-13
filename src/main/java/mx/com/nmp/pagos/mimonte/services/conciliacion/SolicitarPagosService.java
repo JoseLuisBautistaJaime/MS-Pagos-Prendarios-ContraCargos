@@ -199,8 +199,8 @@ public class SolicitarPagosService {
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(requestDTO.getFolio(),
 				"Se realizo la solicitud de pago de ".concat(String.valueOf(requestDTO.getIdMovimientos().size()))
-						.concat(" movimiento(s) de la conciliacion: ".concat(String.valueOf(requestDTO.getFolio()))
-								.concat(" por un total de: $ ")
+						.concat(" movimiento(s) de la conciliacion con el folio: ".concat(String.valueOf(requestDTO.getFolio()))
+								.concat(", por un total de: $ ")
 								.concat(String.valueOf(
 										getMontoFromSolicitarPagosMailDataDTOList(solicitarPagosMailDataDTOList)))),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.SOLICITAR_PAGO);

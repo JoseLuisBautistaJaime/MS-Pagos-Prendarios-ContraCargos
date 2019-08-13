@@ -130,8 +130,7 @@ public interface ValidadorLayout {
 				&& null != layoutLineaDTO.getDepId() && !"".equals(layoutLineaDTO.getDepId())
 				&& null != layoutLineaDTO.getNegocio() && !"".equals(layoutLineaDTO.getNegocio())
 				&& null != layoutLineaDTO.getProyectoNMP() && !"".equals(layoutLineaDTO.getProyectoNMP())
-				&& null != layoutLineaDTO.getUnidadOperativa() && !"".equals(layoutLineaDTO.getUnidadOperativa())
-				;
+				&& null != layoutLineaDTO.getUnidadOperativa() && !"".equals(layoutLineaDTO.getUnidadOperativa());
 	}
 
 }

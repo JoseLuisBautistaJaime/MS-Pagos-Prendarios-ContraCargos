@@ -251,11 +251,11 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				actividadGenericMethod
 						.registroActividad(liquidarDevoluciones.getFolio(),
 								"Se realizo la liquidacion de ".concat(String.valueOf(movimientosLiquidados.size()))
-										.concat(" devolucion(es) de la conciliacion: ")
+										.concat(" devolucion(es) de la conciliacion con el folio: ")
 										.concat(String.valueOf(null != liquidarDevoluciones.getFolio()
 												? liquidarDevoluciones.getFolio()
 												: null))
-										.concat(" por un total de: $ ")
+										.concat(", por un total de: $ ")
 										.concat(String
 												.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosLiquidados))),
 								TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
@@ -305,8 +305,8 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(folio.getFolio(), "Se realizo la solicitud de devolucion de "
 					.concat(String.valueOf(null != movimientosSolicitados ? movimientosSolicitados.size() : null))
-					.concat(" movimiento(s) de la conciliacion: ").concat(String.valueOf(folio.getFolio()))
-					.concat(" por un total de: $ ")
+					.concat(" movimiento(s) de la conciliacion con el folio: ").concat(String.valueOf(folio.getFolio()))
+					.concat(", por un total de: $ ")
 					.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(movimientosSolicitados))),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
@@ -541,7 +541,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			actividadGenericMethod.registroActividad(marcarDevoluciones.getFolio(),
 					"Se realizo el marcado para devolucion de "
 							.concat(String.valueOf(marcarDevoluciones.getIdMovimientos().size()))
-							.concat(" movimiento(s) de la conciliacion: "
+							.concat(" movimiento(s) de la conciliacion con el folio: "
 									.concat(String.valueOf(marcarDevoluciones.getFolio()))),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 

@@ -141,7 +141,7 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 	}
 
 	public String getFechaLiquidacion() {
-		return sf.format(fechaLiquidacion);
+		return null != fechaLiquidacion ? sf.format(fechaLiquidacion) : null;
 	}
 
 	public void setFechaLiquidacion(Date fechaLiquidacion) {

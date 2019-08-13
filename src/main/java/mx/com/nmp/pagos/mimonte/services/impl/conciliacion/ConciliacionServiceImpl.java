@@ -282,12 +282,11 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		globalRepository.save(global);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(conciliacion.getId(),
-				"Se guarda la conciliacion con el folio " + conciliacion.getId() + " con la cuenta "
-						+ (cuenta.isPresent() && null != cuenta.get().getNumeroCuenta() ? cuenta.get().getNumeroCuenta()
-								: "")
-						+ " y la entidad "
-						+ (entidad.isPresent() && null != entidad.get().getNombre() ? entidad.get().getNombre() : ""),
+		actividadGenericMethod.registroActividad(conciliacion.getId(), "Se creo la conciliacion con el folio "
+				+ conciliacion.getId() + " para la entidad "
+				+ (entidad.isPresent() && null != entidad.get().getNombre() ? entidad.get().getNombre() : "")
+				+ ", y la cuenta "
+				+ (cuenta.isPresent() && null != cuenta.get().getNumeroCuenta() ? cuenta.get().getNumeroCuenta() : ""),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.GENERACION_CONCILIACION);
 
 		return ConciliacionBuilder.buildConciliacionDTOFromConciliacionCuentaAndEntidad(conciliacion, cuenta.get(),
@@ -767,8 +766,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
-				"Se actualiza el subestatus de la conciliacion " + actualizarSubEstatusRequestDTO.getFolio()
-						+ " a un subestatus: "
+				"Se actualizo el sub-estado de la conciliacion con el folio "
+						+ actualizarSubEstatusRequestDTO.getFolio() + " a: "
 						+ (subEstatus.isPresent() && null != subEstatus.get().getDescription()
 								? subEstatus.get().getDescription()
 								: actualizarSubEstatusRequestDTO.getIdSubEstatus()),
@@ -844,7 +843,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		Map<String, Date> datesMap = null;
 		List<ConsultaActividadDTO> consultaActividadDTOList = null;
 		Boolean flagNullParams = null;
-		flagNullParams = (null != consultaActividadesRequest
+
+		// Bandera para saber si todos los parametros son nulos y hay que regresar el
+		// top X en la consulta
+		flagNullParams = !(null != consultaActividadesRequest
 				&& (null != consultaActividadesRequest.getFolio() || null != consultaActividadesRequest.getFechaDesde()
 						|| null != consultaActividadesRequest.getFechaHasta()));
 		try {
