@@ -125,4 +125,28 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(ll.id) FROM to_layout_linea ll INNER JOIN to_layout l ON ll.id_layout = l.id WHERE l.id = :idLayout AND l.id_conciliacion = :folio  AND ll.nuevo = 0) <> 0 ) THEN 0 ELSE 1 END")
 	public Object checkIfLineasAreNew(@Param("folio") final Long folio, @Param("idLayout") final Long idLayout);
 
+	/**
+	 * Regresa un valor de 1 cuando el id de conciliacion y el tipo de layout son
+	 * compatibles, de lo contrario regresa un 0
+	 * 
+	 * @param folio
+	 * @param tipo
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(l.id) FROM to_layout l WHERE l.id_conciliacion = :folio AND l.tipo = :tipo) > (SELECT 0)) THEN 1 ELSE 0 END")
+	public Object checkRightFolioAndTipoLayout(@Param("folio") final Long folio, @Param("tipo") final String tipo);
+
+	/**
+	 * Regrea un valor de 1 si todos los ids de lineas de layout pertenecen a la
+	 * conciliacion especificada y que son lineas eliminables (nuevo = 1)
+	 * 
+	 * @param folio
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(ll.id) FROM to_layout_linea ll INNER JOIN to_layout l ON l.id = ll.id_layout WHERE ll.id IN :ids AND l.id_conciliacion = :folio AND ll.nuevo = 1) = :tam) THEN 1 ELSE 0 END")
+	public Object checkLineasIdsAndFolioRelationship(@Param("folio") final Long folio,
+			@Param("ids") final List<Long> ids, @Param("tam") final Integer tam);
+
 }

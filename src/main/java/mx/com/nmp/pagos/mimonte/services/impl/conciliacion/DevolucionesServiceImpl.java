@@ -35,6 +35,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusTransitoRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
@@ -58,6 +59,8 @@ import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -107,6 +110,9 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	@Autowired
 	private EstatusConciliacionRepository estatusConciliacionRepository;
 
+	@Autowired
+	MovimientoConciliacionRepository movimientoConciliacionRepository;
+	
 	/**
 	 * Registro de actividades
 	 */
@@ -517,7 +523,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 					throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
 							CodigoError.NMP_PMIMONTE_0009);
 				}
-
+				
 				// Se crea el movimiento devolucion en base al movimiento en transito
 				MovimientoDevolucion movimientoDevolucion = MovimientoDevolucionBuilder
 						.buildMovimientoFromMovimientoTransito(movimientoTransito, edPendiente, createdBy);
@@ -533,6 +539,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 //				movimientoTransito.setLastModifiedBy(createdBy);
 //				movimientoTransito.setLastModifiedDate(new Date());
 //				movimientoTransito.setEstatus(etMarcadoDev);
+//				movimientoConciliacionRepository.delete(movimientoTransito);
 				movimientoTransitoRepository.delete(movimientoTransito);
 
 			}

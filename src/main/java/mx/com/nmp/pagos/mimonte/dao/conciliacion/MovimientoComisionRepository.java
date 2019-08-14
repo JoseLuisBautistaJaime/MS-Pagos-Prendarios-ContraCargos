@@ -71,7 +71,7 @@ public interface MovimientoComisionRepository extends JpaRepository<MovimientoCo
 	 * @param tam
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(mc.id) FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.id IN (68,69) AND mcon.id_conciliacion = 1) = (SELECT 2)) THEN 1 ELSE 0 END")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(mc.id) FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.id IN :ids AND mcon.id_conciliacion = :folio) = (SELECT :tam)) THEN 1 ELSE 0 END")
 	public Object checkIdsAndFolioRelationship(@Param("folio") final Long folio,
 			@Param("ids") final List<Integer> ids, @Param("tam") final Integer tam);
 

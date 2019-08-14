@@ -37,6 +37,8 @@ public enum CodigoError {
 			TipoError.SERVIDOR, SeveridadError.ALTA),
 	NMP_PMIMONTE_0013("Se genero un error durante el ajuste de fechas",
 			TipoError.SERVIDOR, SeveridadError.ALTA),
+	NMP_PMIMONTE_0014("Se genero un error durante las validaciones",
+			TipoError.SERVIDOR, SeveridadError.ALTA),
 
 	// ERRORES RELACIONADOS CON REGLA DE NEGOCIO
 
@@ -274,6 +276,12 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_117("El id de linea de layout no existe",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_118("La linea no puede ser eliminada porque el layout al que pertenece no se dio de alta desde la aplicacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_119("El folio de conciliacion y el tipo de layout no coinciden",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_120("Ocurrio un error al perisistiry/o actualizar lineas de los layouts",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_121("Uno o mas ids de lineas no coinciden con el folio de conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

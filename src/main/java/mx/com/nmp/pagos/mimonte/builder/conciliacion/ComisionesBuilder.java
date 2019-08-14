@@ -169,7 +169,7 @@ public abstract class ComisionesBuilder {
 	 * @return
 	 */
 	public static MovimientoComision buildMovimientoComisionFromComisionesRequestDTO(
-			final ComisionesRequestDTO comisionesRequestDTO, final String requestUser) {
+			final ComisionesRequestDTO comisionesRequestDTO, final String requestUser, final Long folio) {
 		MovimientoComision movimientoComision = null;
 		if (null != comisionesRequestDTO) {
 			movimientoComision = new MovimientoComision();
@@ -181,6 +181,8 @@ public abstract class ComisionesBuilder {
 			movimientoComision.setMonto(comisionesRequestDTO.getMonto());
 			movimientoComision.setFechaOperacion(comisionesRequestDTO.getFechaOperacion());
 			movimientoComision.setFechaCargo(comisionesRequestDTO.getFechaCargo());
+			movimientoComision.setIdConciliacion(folio);
+			movimientoComision.setTipoComision(TipoMovimientoComisionEnum.COMISION);
 		}
 		return movimientoComision;
 	}

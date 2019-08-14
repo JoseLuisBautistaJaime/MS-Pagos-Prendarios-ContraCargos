@@ -619,9 +619,7 @@ public interface ValidadorConciliacion {
 				|| ((null == actualizaionConciliacionRequestDTO.getComisiones()
 						|| actualizaionConciliacionRequestDTO.getComisiones().isEmpty())
 						&& (null == actualizaionConciliacionRequestDTO.getMovimientosTransito()
-								|| actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty()))
-				|| actualizaionConciliacionRequestDTO.getComisiones().isEmpty()
-				|| actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty())
+								|| actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty())))
 			return false;
 		else {
 			// Si las comisiones no son nulas valida sus atributos

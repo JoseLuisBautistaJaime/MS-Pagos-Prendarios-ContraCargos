@@ -13,8 +13,8 @@ import java.util.List;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.HeaderCatalogEnum;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.HeaderCatalogEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
@@ -59,14 +59,14 @@ public abstract class LayoutsBuilder {
 	 */
 	public static LayoutDTO buildLayoutDTOFromLayout(Layout layout) {
 		LayoutDTO layoutDTO = null;
-		if(null != layout) {
+		if (null != layout) {
 			layoutDTO = new LayoutDTO();
 			layoutDTO.setFolio(layout.getIdConciliacion());
 			layoutDTO.setTipoLayout(layout.getTipo());
 			layoutDTO.setCabecera(buildLayoutCabeceraDTOFromLayoutHeader(layout.getLayoutHeader()));
 			if (layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
 				layoutDTO.setLineas(buildLayoutLineaDTOFromLayoutLinea(layout.getLayoutLineas()));
-			}	
+			}
 		}
 		return layoutDTO;
 	}
@@ -233,7 +233,8 @@ public abstract class LayoutsBuilder {
 			layoutLinea.setProyectoNmp(l.getProyectoNMP());
 			layoutLinea.setMonto(l.getMonto());
 			layoutLinea.setLayout(layout);
-			// TODO: Corroborar se cambia a true para estandarizar en alta por medio de app a: 1, igual que en comisiones
+			// TODO: Corroborar se cambia a true para estandarizar en alta por medio de app
+			// a: 1, igual que en comisiones
 			layoutLinea.setNuevo(true);
 			layoutLinea.setCreatedBy(requestUser);
 			layoutLinea.setCreatedDate(new Date());
@@ -298,8 +299,7 @@ public abstract class LayoutsBuilder {
 		LocalDate localDate = LocalDate.now();
 		if (layoutHeaderCatalog.getId() == HeaderCatalogEnum.PAGOS.id() && localDate.getDayOfWeek().getValue() == 5) {
 			layoutHeaderCatalog.setFecha(localDate.plusDays(3));
-		}
-		else {
+		} else {
 			layoutHeaderCatalog.setFecha(localDate);
 		}
 
@@ -342,6 +342,24 @@ public abstract class LayoutsBuilder {
 			layoutDTO.setTipoLayout(layoutRequestDTO.getTipoLayout());
 		}
 		return layoutDTO;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo Long con los ids de una lista de
+	 * objetos de tipo LayoutLineaDTO NOTA: No se toman en cuenta los ids 0
+	 * 
+	 * @param layoutLineaDTOList
+	 * @return
+	 */
+	public static List<Long> buildLongListFromLayoutLineaDTONO0List(List<LayoutLineaDTO> layoutLineaDTOList) {
+		List<Long> list = null;
+		if (null != layoutLineaDTOList && !layoutLineaDTOList.isEmpty()) {
+			list = new ArrayList<>();
+			for (LayoutLineaDTO layoutLineaDTO : layoutLineaDTOList)
+				if (layoutLineaDTO.getId().compareTo(0L) != 0)
+					list.add(layoutLineaDTO.getId());
+		}
+		return list;
 	}
 
 }

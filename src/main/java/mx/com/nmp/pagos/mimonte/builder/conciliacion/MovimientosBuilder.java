@@ -562,15 +562,14 @@ public abstract class MovimientosBuilder {
 	 * @param comisionesRequestDTOList
 	 * @return
 	 */
-	public static List<Integer> buildIntegerListFromComisionesRequestDTOList(
+	public static List<Integer> buildIntegerListFromComisionesRequestDTONO0List(
 			List<ComisionesRequestDTO> comisionesRequestDTOList) {
 		List<Integer> list = null;
 		if (null != comisionesRequestDTOList && !comisionesRequestDTOList.isEmpty()) {
 			list = new ArrayList<>();
 			for (ComisionesRequestDTO comisionesRequestDTO : comisionesRequestDTOList) {
-				{
+				if (!comisionesRequestDTO.getId().equals(0))
 					list.add(comisionesRequestDTO.getId());
-				}
 			}
 		}
 		return list;

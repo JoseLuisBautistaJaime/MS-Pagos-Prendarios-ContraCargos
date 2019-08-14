@@ -51,7 +51,7 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 	public MovimientoConciliacion() {
 		super();
 	}
-
+	
 	public MovimientoConciliacion(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 	}
