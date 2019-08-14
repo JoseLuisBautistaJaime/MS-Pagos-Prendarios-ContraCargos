@@ -35,15 +35,15 @@ public class ConciliacionMerge implements Serializable {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "midas_last_updated", nullable = false)
 	private Date midasLastUpdated;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "proveedor_last_updated", nullable = false)
 	private Date proveedorLastUpdated;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "estado_cuenta_last_updated", nullable = false)
 	private Date estadoCuentaLastUpdated;
 
