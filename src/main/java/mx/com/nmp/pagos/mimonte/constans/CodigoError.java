@@ -269,7 +269,11 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_115("No existe relacion entre la conciliacion y el layout especificado",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
-	NMP_PMIMONTE_BUSINESS_116("El layout no puede ser eliminado por que no se dio de alta desde la aplicacion",
+	NMP_PMIMONTE_BUSINESS_116("El layout no puede ser eliminado porque no se dio de alta desde la aplicacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_117("El id de linea de layout no existe",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_118("La linea no puede ser eliminada porque el layout al que pertenece no se dio de alta desde la aplicacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

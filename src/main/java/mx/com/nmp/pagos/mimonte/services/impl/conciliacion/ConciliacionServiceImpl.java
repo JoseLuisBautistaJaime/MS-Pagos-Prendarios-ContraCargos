@@ -282,12 +282,11 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		globalRepository.save(global);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(conciliacion.getId(),
-				"Se guarda la conciliacion con el folio " + conciliacion.getId() + " con la cuenta "
-						+ (cuenta.isPresent() && null != cuenta.get().getNumeroCuenta() ? cuenta.get().getNumeroCuenta()
-								: "")
-						+ " y la entidad "
-						+ (entidad.isPresent() && null != entidad.get().getNombre() ? entidad.get().getNombre() : ""),
+		actividadGenericMethod.registroActividad(conciliacion.getId(), "Se creo la conciliacion con el folio "
+				+ conciliacion.getId() + " para la entidad "
+				+ (entidad.isPresent() && null != entidad.get().getNombre() ? entidad.get().getNombre() : "")
+				+ ", y la cuenta "
+				+ (cuenta.isPresent() && null != cuenta.get().getNumeroCuenta() ? cuenta.get().getNumeroCuenta() : ""),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.GENERACION_CONCILIACION);
 
 		return ConciliacionBuilder.buildConciliacionDTOFromConciliacionCuentaAndEntidad(conciliacion, cuenta.get(),
@@ -767,8 +766,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
-				"Se actualiza el subestatus de la conciliacion " + actualizarSubEstatusRequestDTO.getFolio()
-						+ " a un subestatus: "
+				"Se actualizo el sub-estado de la conciliacion con el folio "
+						+ actualizarSubEstatusRequestDTO.getFolio() + " a: "
 						+ (subEstatus.isPresent() && null != subEstatus.get().getDescription()
 								? subEstatus.get().getDescription()
 								: actualizarSubEstatusRequestDTO.getIdSubEstatus()),
@@ -843,6 +842,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Objetos necesarios
 		Map<String, Date> datesMap = null;
 		List<ConsultaActividadDTO> consultaActividadDTOList = null;
+		Boolean flagNullParams = null;
+
+		// Bandera para saber si todos los parametros son nulos y hay que regresar el
+		// top X en la consulta
+		flagNullParams = !(null != consultaActividadesRequest
+				&& (null != consultaActividadesRequest.getFolio() || null != consultaActividadesRequest.getFechaDesde()
+						|| null != consultaActividadesRequest.getFechaHasta()));
 		try {
 
 			// Valida que el folio exista si es que no es nulo
@@ -855,22 +861,24 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			consultaActividadesRequest.setFechaDesde(datesMap.get("startDate"));
 			consultaActividadesRequest.setFechaHasta(datesMap.get("endDate"));
 
-			// Ningun atributo es nulo
-			if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
-					&& null != consultaActividadesRequest.getFechaHasta()) {
-				consultaActividadDTOList = actividadRepository.findByFolioFechaDesdeAndFechaHasta(
-						consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde(),
-						consultaActividadesRequest.getFechaHasta());
-			}
+			if (!flagNullParams) {
+				// Ningun atributo es nulo
+				if (null != consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
+						&& null != consultaActividadesRequest.getFechaHasta()) {
+					consultaActividadDTOList = actividadRepository.findByFolioFechaDesdeAndFechaHasta(
+							consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde(),
+							consultaActividadesRequest.getFechaHasta());
+				}
 
-			// El folio es nulo y las fechas no
-			else if (null == consultaActividadesRequest.getFolio() && null != consultaActividadesRequest.getFechaDesde()
-					&& null != consultaActividadesRequest.getFechaHasta()) {
-				consultaActividadDTOList = actividadRepository.findByFechaDesdeAndFechaHasta(
-						consultaActividadesRequest.getFechaDesde(), consultaActividadesRequest.getFechaHasta());
-			}
-			// Todos los atributos son nulos se consultan los ultimos 10 por default
-			else {
+				// El folio es nulo y las fechas no
+				else if (null == consultaActividadesRequest.getFolio()
+						&& null != consultaActividadesRequest.getFechaDesde()
+						&& null != consultaActividadesRequest.getFechaHasta()) {
+					consultaActividadDTOList = actividadRepository.findByFechaDesdeAndFechaHasta(
+							consultaActividadesRequest.getFechaDesde(), consultaActividadesRequest.getFechaHasta());
+				}
+			} else {
+				// Todos los atributos son nulos se consultan los ultimos 10 por default
 				Pageable pageable = PageRequest.of(0,
 						null != actividadesMaxDefaultValue ? actividadesMaxDefaultValue : 10);
 				consultaActividadDTOList = actividadPaginRepository.nGetTopXActividades(pageable);

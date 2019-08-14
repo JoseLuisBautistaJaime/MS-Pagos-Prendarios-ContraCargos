@@ -76,8 +76,8 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 		this.id = id;
 	}
 
-	public String getFecha() {
-		return sf.format(fecha);
+	public Date getFecha() {
+		return fecha;
 	}
 
 	public void setFecha(Date fecha) {
@@ -140,8 +140,8 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 		this.codigoAutorizacion = codigoAutorizacion;
 	}
 
-	public Date getFechaLiquidacion() {
-		return fechaLiquidacion;
+	public String getFechaLiquidacion() {
+		return null != fechaLiquidacion ? sf.format(fechaLiquidacion) : null;
 	}
 
 	public void setFechaLiquidacion(Date fechaLiquidacion) {

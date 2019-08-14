@@ -312,13 +312,13 @@ public class LayoutsService {
 			throw new ConciliacionException("Error al obtener la linea del layout asignada al id " + idLinea, CodigoError.NMP_PMIMONTE_BUSINESS_085);
 		}
 		if (linea == null || !linea.isPresent()) {
-			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_085.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_085);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_117.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_117);
 		}
 
 		// Se valida que la linea se pueda elimina, o sea que fue dada de alta desde la aplicacion (nuevo = 1)
 		flag = ((BigInteger)layoutLineasRepository.checkIfLineIsNew(idLinea)).compareTo(BigInteger.ONE) == 0;
 		if(!flag)
-			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_116.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_116);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_118.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_118);
 		
 		// Se valida que la conciliacion asignada se encuentre en proceso
 		Long idConciliacion = linea.get().getLayout().getIdConciliacion();

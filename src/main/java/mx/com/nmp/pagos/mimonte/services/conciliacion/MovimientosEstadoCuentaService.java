@@ -318,7 +318,7 @@ public class MovimientosEstadoCuentaService {
 		this.conciliacionHelper.generarConciliacion(idConciliacion, Arrays.asList(reporte));
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(idConciliacion,
-				"Se procesa la consulta del estado de cuenta para la conciliacion con folio " + idConciliacion,
+				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 	}
 

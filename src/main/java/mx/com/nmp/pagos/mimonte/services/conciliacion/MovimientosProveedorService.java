@@ -151,8 +151,9 @@ public class MovimientosProveedorService {
 
 			// Registro de actividad
 			actividadGenericMethod.registroActividad(listRequestDTO.getFolio(),
-					"Se dan de alta " + listRequestDTO.getMovimientos().size()
-							+ " movimientos de proveedor transaccional, para el folio " + listRequestDTO.getFolio(),
+					"Se registraron " + listRequestDTO.getMovimientos().size()
+							+ " movimientos provenientes del proveedor transaccional,"
+							+ " para la conciliacion con el folio: " + listRequestDTO.getFolio(),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
 			// Notificar cambios o alta de reportes, si existen...
