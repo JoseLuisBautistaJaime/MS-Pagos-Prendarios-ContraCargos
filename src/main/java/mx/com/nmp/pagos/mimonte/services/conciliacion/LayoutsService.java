@@ -206,20 +206,28 @@ public class LayoutsService {
 		Conciliacion conciliacion = null;
 		List<Long> layoutIdsList;
 		Boolean flag = false;
+		Boolean flagNew = false;
 
 		try {
 			// Se valida que la conciliacion se encuentre en proceso
 			conciliacion = this.conciliacionHelper.getConciliacionByFolio(layoutDTO.getFolio(),
 					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
-			// Se valida que el folio de conciliacion y el tipo de layout coincidan
-			flag = ((BigInteger) layoutsRepository.checkRightFolioAndTipoLayout(layoutDTO.getFolio(),
-					layoutDTO.getTipoLayout().toString())).compareTo(BigInteger.ONE) == 0;
-			if (!flag)
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_119.getDescripcion(),
-						CodigoError.NMP_PMIMONTE_BUSINESS_119);
+			// Se valida si el layout es nuevo, de ser uno existente se valida que el tipo
+			// sea correcto
+			flagNew = ((BigInteger) layoutsRepository.checkIfLayoutIsNew(layoutDTO.getFolio()))
+					.compareTo(BigInteger.ONE) == 0;
+			if (!flagNew) {
+				// Se valida que el folio de conciliacion y el tipo de layout coincidan
+				flag = ((BigInteger) layoutsRepository.checkRightFolioAndTipoLayout(layoutDTO.getFolio(),
+						layoutDTO.getTipoLayout().toString())).compareTo(BigInteger.ONE) == 0;
+				if (!flag)
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_119.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_119);
+			}
 
-			// Se valida que las lineas a editar existan para ese layout y que sean lineas eliminables (dadas de alta desde APP)
+			// Se valida que las lineas a editar existan para ese layout y que sean lineas
+			// eliminables (dadas de alta desde APP)
 			layoutIdsList = LayoutsBuilder.buildLongListFromLayoutLineaDTONO0List(layoutDTO.getLineas());
 			if (null != layoutIdsList && !layoutIdsList.isEmpty()) {
 				flag = ((BigInteger) layoutsRepository.checkLineasIdsAndFolioRelationship(layoutDTO.getFolio(),

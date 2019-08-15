@@ -149,4 +149,14 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	public Object checkLineasIdsAndFolioRelationship(@Param("folio") final Long folio,
 			@Param("ids") final List<Long> ids, @Param("tam") final Integer tam);
 
+	/**
+	 * Regresa un valor de 0 cuando el folio especificado no tiene ningun layout, de
+	 * lo contrario regresa un 0
+	 * 
+	 * @param folio
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT l.id FROM to_layout l where l.id_conciliacion = :folio) IS NULL THEN 1 ELSE 0 END")
+	public Object checkIfLayoutIsNew(@Param("folio") final Long folio);
+
 }
