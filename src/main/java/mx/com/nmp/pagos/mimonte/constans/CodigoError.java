@@ -282,6 +282,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_120("Ocurrio un error al perisistiry/o actualizar lineas de los layouts",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_121("Uno o mas ids de lineas no coinciden con el folio de conciliacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_122("Una o mas lineas de layout no existen o estas no fueron dadas de alta desde la aplicacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

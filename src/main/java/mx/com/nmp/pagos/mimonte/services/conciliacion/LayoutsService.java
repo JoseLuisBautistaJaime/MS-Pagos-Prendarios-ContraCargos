@@ -225,8 +225,8 @@ public class LayoutsService {
 				flag = ((BigInteger) layoutsRepository.checkLineasIdsAndFolioRelationship(layoutDTO.getFolio(),
 						layoutIdsList, layoutIdsList.size())).compareTo(BigInteger.ONE) == 0;
 				if (!flag)
-					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_121.getDescripcion(),
-							CodigoError.NMP_PMIMONTE_BUSINESS_121);
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_122.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_122);
 			}
 
 		} catch (ConciliacionException ex) {
