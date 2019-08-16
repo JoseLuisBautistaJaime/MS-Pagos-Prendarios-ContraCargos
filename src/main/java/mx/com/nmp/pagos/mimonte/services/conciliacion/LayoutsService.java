@@ -213,18 +213,19 @@ public class LayoutsService {
 			conciliacion = this.conciliacionHelper.getConciliacionByFolio(layoutDTO.getFolio(),
 					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
+			// TODO: Eliminar esto esta validacion es inncesaria dado que se pueden dar de alta multiples tipos de layout por conciliacion 
 			// Se valida si el layout es nuevo, de ser uno existente se valida que el tipo
 			// sea correcto
-			flagNew = ((BigInteger) layoutsRepository.checkIfLayoutIsNew(layoutDTO.getFolio()))
-					.compareTo(BigInteger.ONE) == 0;
-			if (!flagNew) {
-				// Se valida que el folio de conciliacion y el tipo de layout coincidan
-				flag = ((BigInteger) layoutsRepository.checkRightFolioAndTipoLayout(layoutDTO.getFolio(),
-						layoutDTO.getTipoLayout().toString())).compareTo(BigInteger.ONE) == 0;
-				if (!flag)
-					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_119.getDescripcion(),
-							CodigoError.NMP_PMIMONTE_BUSINESS_119);
-			}
+//			flagNew = ((BigInteger) layoutsRepository.checkIfLayoutIsNew(layoutDTO.getFolio()))
+//					.compareTo(BigInteger.ONE) == 0;
+//			if (!flagNew) {
+//				// Se valida que el folio de conciliacion y el tipo de layout coincidan
+//				flag = ((BigInteger) layoutsRepository.checkRightFolioAndTipoLayout(layoutDTO.getFolio(),
+//						layoutDTO.getTipoLayout().toString())).compareTo(BigInteger.ONE) == 0;
+//				if (!flag)
+//					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_119.getDescripcion(),
+//							CodigoError.NMP_PMIMONTE_BUSINESS_119);
+//			}
 
 			// Se valida que las lineas a editar existan para ese layout y que sean lineas
 			// eliminables (dadas de alta desde APP)
@@ -233,8 +234,8 @@ public class LayoutsService {
 				flag = ((BigInteger) layoutsRepository.checkLineasIdsAndFolioRelationship(layoutDTO.getFolio(),
 						layoutIdsList, layoutIdsList.size())).compareTo(BigInteger.ONE) == 0;
 				if (!flag)
-					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_122.getDescripcion(),
-							CodigoError.NMP_PMIMONTE_BUSINESS_122);
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_123.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_123);
 			}
 
 		} catch (ConciliacionException ex) {
