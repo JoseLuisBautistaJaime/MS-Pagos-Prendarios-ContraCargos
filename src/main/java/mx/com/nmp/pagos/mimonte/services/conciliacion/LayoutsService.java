@@ -242,6 +242,7 @@ public class LayoutsService {
 			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
 			throw ex;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0014.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_0014);

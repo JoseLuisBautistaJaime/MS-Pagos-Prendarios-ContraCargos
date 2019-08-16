@@ -156,7 +156,7 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	 * @param folio
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT l.id FROM to_layout l where l.id_conciliacion = :folio) IS NULL THEN 1 ELSE 0 END")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(l.id) FROM to_layout l where l.id_conciliacion = :folio) = 0 THEN 1 ELSE 0 END")
 	public Object checkIfLayoutIsNew(@Param("folio") final Long folio);
 
 }
