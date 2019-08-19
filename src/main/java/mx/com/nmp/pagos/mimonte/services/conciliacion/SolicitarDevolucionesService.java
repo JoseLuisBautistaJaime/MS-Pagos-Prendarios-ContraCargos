@@ -99,7 +99,7 @@ public class SolicitarDevolucionesService {
 		String cuenta = null;
 
 		// Se obtienen los contactos de midas
-		Set<Contactos> contactos = contactoRespository.findByEntidades_Id(ConciliacionConstants.TIPO_CONTACTO_ENTIDAD);
+		Set<Contactos> contactos = contactoRespository.findByEntidades_Id(devoluciones.get(0).getEntidad().getId());
 		if (null == contactos || contactos.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL,
 					CodigoError.NMP_PMIMONTE_BUSINESS_056);
