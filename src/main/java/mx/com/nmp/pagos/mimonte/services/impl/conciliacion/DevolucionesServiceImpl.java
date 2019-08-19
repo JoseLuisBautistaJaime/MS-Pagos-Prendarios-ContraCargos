@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -653,7 +654,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			try {
 				edSolicitada = estatusDevolucionRepository.getOne(ConciliacionConstants.ESTATUS_DEVOLUCION_SOLICITADA);
 			} catch (Exception ex) {
-				LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
 				throw ex;
 			}
 
@@ -675,7 +676,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				try {
 					entidad = entidadRepository.findByConciliacion(md.getIdConciliacion());
 				} catch (Exception ex) {
-					LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+					LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 					throw ex;
 				}
 				// Se fabrica el objeto de respuesta
@@ -684,7 +685,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 					devolucionesSolicitadas.add((DevolucionEntidadDTO) map.get("DTO"));
 					devolucionesSolicitadasInner.add((DevolucionEntidadDTO2) map.get("DTO2"));
 				} catch (Exception ex) {
-					LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+					LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 					throw ex;
 				}
 			}
@@ -699,7 +700,8 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				Map<Long, List<DevolucionEntidadDTO2>> mapByEntidad = new HashMap<>();
 				for (DevolucionEntidadDTO2 elem : devolucionesSolicitadasInner) {
 					if (!mapByEntidad.containsKey(elem.getEntidad().getId())) {
-						mapByEntidad.put(elem.getEntidad().getId(), Arrays.asList(elem));
+						List<DevolucionEntidadDTO2> list = new LinkedList<>(Arrays.asList(elem));
+						mapByEntidad.put(elem.getEntidad().getId(), list);
 					} else {
 						mapByEntidad.get(elem.getEntidad().getId()).add(elem);
 					}
@@ -710,11 +712,10 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				for (Map.Entry<Long, List<DevolucionEntidadDTO2>> entry : mapByEntidad.entrySet()) {
 					solicitarDevolucionesService.enviarSolicitudDevoluciones(entry.getValue());
 				}
-			}
-
-			solicitarDevolucionesService.enviarSolicitudDevoluciones(devolucionesSolicitadasInner, folio);
+			} else
+				solicitarDevolucionesService.enviarSolicitudDevoluciones(devolucionesSolicitadasInner, folio);
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		}
 
