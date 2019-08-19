@@ -100,8 +100,10 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 
 					// Por cada movimiento en midas se genera un movimiento en transito
 					for (MovimientoMidas movMidasTransaccion : movsMidasTransaccion) {
-						MovimientoProveedor movProveedor = CollectionUtils.isNotEmpty(movsProveedorTransaccion) ? movsProveedorTransaccion.get(0) : null;
-						movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, movProveedor, idConciliacion));
+						if (movMidasTransaccion.getEstatus() == null || !movMidasTransaccion.getEstatus()) {
+							MovimientoProveedor movProveedor = CollectionUtils.isNotEmpty(movsProveedorTransaccion) ? movsProveedorTransaccion.get(0) : null;
+							movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, movProveedor, idConciliacion));
+						}
 					}
 
 				}
