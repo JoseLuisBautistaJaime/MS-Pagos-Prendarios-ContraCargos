@@ -259,7 +259,7 @@ public class ComisionesService {
 		comisionesTransDTO.setProyeccion(comisionesTransProyeccionDTO);
 
 		// Realiza suma de comisiones e ivas
-		sums = comisionesRepository.findMovimientosSum(TipoMovimientoComisionEnum.COMISION.getDescripcion(),
+		sums = comisionesRepository.findMovimientosSum(comisionesTransaccionesRequestDTO.getIdConciliacion(), TipoMovimientoComisionEnum.COMISION.getDescripcion(),
 				TipoMovimientoComisionEnum.IVA_COMISION.getDescripcion());
 		sumaComision = sums.get("comision");
 		sumaIva = sums.get("iva");

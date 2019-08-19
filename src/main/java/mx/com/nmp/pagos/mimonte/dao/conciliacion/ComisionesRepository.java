@@ -80,13 +80,16 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 
 	/**
 	 * Regresa la suma de los movimientos tipo COMISION y los de tipo IVA_COMISION
+	 * por folio de conciliacion
 	 * 
+	 * @param folio
 	 * @param tipoComisionPago
 	 * @param tipoComisionIva
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT comision, iva FROM (SELECT SUM(mc.monto) AS comision FROM to_movimiento_comision mc WHERE mc.tipo = :tipoComisionPago) comision, (SELECT SUM(mc.monto) AS iva FROM to_movimiento_comision mc WHERE mc.tipo = :tipoComisionIva) iva")
-	public Map<String, BigDecimal> findMovimientosSum(@Param("tipoComisionPago") final String tipoComisionPago,
+	@Query(nativeQuery = true, value = "SELECT comision, iva FROM (SELECT SUM(mc.monto) AS comision FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.tipo = :tipoComisionPago AND mcon.id_conciliacion = :folio) comision, (SELECT SUM(mc.monto) AS iva FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.tipo = :tipoComisionIva AND mcon.id_conciliacion = :folio) iva")
+	public Map<String, BigDecimal> findMovimientosSum(@Param("folio") final Long folio,
+			@Param("tipoComisionPago") final String tipoComisionPago,
 			@Param("tipoComisionIva") final String tipoComisionIva);
 
 	/**
