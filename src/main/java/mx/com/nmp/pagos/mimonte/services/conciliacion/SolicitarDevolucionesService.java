@@ -110,19 +110,55 @@ public class SolicitarDevolucionesService {
 			if (null != res && !res.isEmpty()) {
 				entidad = null != res.get("entidad") ? String.valueOf(res.get("entidad")) : null;
 				cuenta = null != res.get("cuenta") ? String.valueOf(res.get("cuenta")) : null;
-			}
-			else {
+			} else {
 				entidad = "";
 				cuenta = "";
 			}
-		}
-		else {
+		} else {
 			entidad = "";
 			cuenta = "";
 		}
 
 		// Construye el objeto email
 		BusRestMailDTO generalBusMailDTO = buildBusMailDTO(devoluciones, contactos, entidad, cuenta);
+
+		// Envia e-mail
+		try {
+			LOG.debug("Enviando email {}", generalBusMailDTO);
+			this.busMailRestService.enviaEmail(generalBusMailDTO);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL,
+					CodigoError.NMP_PMIMONTE_BUSINESS_057);
+		}
+
+	}
+
+	/**
+	 * Realiza el envio de solicitudes de devolucion, se invoca por cada grupo de
+	 * devoluciones que comparten una misma entidad
+	 * 
+	 * @param lst
+	 * @throws ConciliacionException
+	 */
+	public void enviarSolicitudDevoluciones(final List<DevolucionEntidadDTO2> lst) throws ConciliacionException {
+
+		// Objetos necesarios
+		String entidad = null;
+		String cuenta = null;
+
+		// Se obtienen los contactos de midas
+		Set<Contactos> contactos = contactoRespository.findByEntidades_Id(lst.get(0).getEntidad().getId());
+		if (null == contactos || contactos.isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL,
+					CodigoError.NMP_PMIMONTE_BUSINESS_056);
+
+		// Se obtiene la cuenta y entidad para mostrar en la leyenda
+		entidad = lst.get(0).getEntidad().getNombre();
+		cuenta = "";
+
+		// Construye el objeto email
+		BusRestMailDTO generalBusMailDTO = buildBusMailDTO(lst, contactos, entidad, cuenta);
 
 		// Envia e-mail
 		try {

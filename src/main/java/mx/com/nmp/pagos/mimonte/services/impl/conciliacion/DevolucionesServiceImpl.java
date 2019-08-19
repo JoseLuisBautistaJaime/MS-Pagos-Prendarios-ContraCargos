@@ -59,8 +59,6 @@ import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -112,7 +110,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 	@Autowired
 	MovimientoConciliacionRepository movimientoConciliacionRepository;
-	
+
 	/**
 	 * Registro de actividades
 	 */
@@ -523,7 +521,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 					throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
 							CodigoError.NMP_PMIMONTE_0009);
 				}
-				
+
 				// Se crea el movimiento devolucion en base al movimiento en transito
 				MovimientoDevolucion movimientoDevolucion = MovimientoDevolucionBuilder
 						.buildMovimientoFromMovimientoTransito(movimientoTransito, edPendiente, createdBy);
@@ -692,8 +690,28 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			}
 
 		}
-		// Se envia el email con la solicitud de devoluciones
+		// ENVIO DE E-MAIL PARA SOLICITUD DE DEVOLUCIONES
 		try {
+			// Se hace el siguiente proceso para cuando no se especifica un folio de
+			// coniliacion
+			if (null == folio) {
+				// Se agrupan las devoluciones por entidad en una estructura Map
+				Map<Long, List<DevolucionEntidadDTO2>> mapByEntidad = new HashMap<>();
+				for (DevolucionEntidadDTO2 elem : devolucionesSolicitadasInner) {
+					if (!mapByEntidad.containsKey(elem.getEntidad().getId())) {
+						mapByEntidad.put(elem.getEntidad().getId(), Arrays.asList(elem));
+					} else {
+						mapByEntidad.get(elem.getEntidad().getId()).add(elem);
+					}
+				}
+
+				// Se invoca el metodo de envio pr cada grupo de devoluciones que comparten una
+				// entidad en comun
+				for (Map.Entry<Long, List<DevolucionEntidadDTO2>> entry : mapByEntidad.entrySet()) {
+					solicitarDevolucionesService.enviarSolicitudDevoluciones(entry.getValue());
+				}
+			}
+
 			solicitarDevolucionesService.enviarSolicitudDevoluciones(devolucionesSolicitadasInner, folio);
 		} catch (Exception ex) {
 			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
@@ -701,7 +719,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 		}
 
 		// TODO: Analizar esta situacion y borrar si es necesario
-		// No se puede registrar dado que no se especifica el dato pricipal de ñla
+		// No se puede registrar dado que no se especifica el dato pricipal de la
 		// actividad (EL FOLIO DE CONCILIACiON)
 //		if (issueAnActivity) {
 //			// Registro de actividad
