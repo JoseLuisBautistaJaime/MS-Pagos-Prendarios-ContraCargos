@@ -104,6 +104,9 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 							MovimientoProveedor movProveedor = CollectionUtils.isNotEmpty(movsProveedorTransaccion) ? movsProveedorTransaccion.get(0) : null;
 							movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, movProveedor, idConciliacion));
 						}
+						else if (movsProveedorTransaccion == null || movsProveedorTransaccion.size() == 0) { // No existe mov identificado en open pay
+							movsTransito.add(MovimientosTransitoBuilder.buildMovTransitoFromMovMidas(movMidasTransaccion, null, idConciliacion)); 
+						}
 					}
 
 				}
