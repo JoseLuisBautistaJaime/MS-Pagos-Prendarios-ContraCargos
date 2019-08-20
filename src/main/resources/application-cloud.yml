@@ -23,6 +23,9 @@ spring:
   jpa:
     show-sql: false
 
+logback:
+  loglevel: INFO
+
 # Variables utiles para app microservicios mimonte
 #Pagos
 mimonte:

@@ -11,6 +11,7 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.*;

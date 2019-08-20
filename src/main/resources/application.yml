@@ -23,7 +23,7 @@ info:
 
 spring:
   application:
-    name: Micro Servicios Pagos Mi Monte
+    name: mimonte
   http:
     multipart:
       max-file-size: 10MB
@@ -39,6 +39,9 @@ spring:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+logging:
+  config: classpath:logback-spring.xml
 
 # Variables utiles para app microservicios mimonte
 #Pagos
