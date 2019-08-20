@@ -265,10 +265,10 @@ public class MovimientosEstadoCuentaService {
 						null != datesMap.get("endDate ") ? datesMap.get("endDate ") : request.getFechaFinal());
 			}
 		} catch (ConciliacionException ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0013.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_0013);
 		}

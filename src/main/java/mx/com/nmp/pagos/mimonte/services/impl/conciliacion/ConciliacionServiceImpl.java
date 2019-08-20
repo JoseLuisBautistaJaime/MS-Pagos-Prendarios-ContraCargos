@@ -331,7 +331,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		} catch (ConciliacionException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_038.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_038);
 		}
@@ -350,10 +350,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 							CodigoError.NMP_PMIMONTE_BUSINESS_111);
 				}
 			} catch (ConciliacionException ex) {
-				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw ex;
 			} catch (Exception ex) {
-				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_038.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_038);
 			}
@@ -380,7 +380,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		} catch (ConciliacionException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_103.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_103);
 		}
@@ -402,10 +402,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 							CodigoError.NMP_PMIMONTE_BUSINESS_109);
 				}
 			} catch (ConciliacionException ex) {
-				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw ex;
 			} catch (Exception ex) {
-				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_103.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_103);
 			}
@@ -416,7 +416,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			conciliacion = conciliacionHelper.getConciliacionByFolio(actualizaionConciliacionRequestDTO.getFolio(),
 					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 		} catch (Exception ex) {
-			log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_094.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_094);
 		}
@@ -449,10 +449,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					movimientoComisionRepository.flush();
 				}
 			} catch (ConciliacionException ex) {
-				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw ex;
 			} catch (Exception ex) {
-				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_039.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_039);
 			}
@@ -494,7 +494,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				movimientoComisionRepository.saveAll(movimientosComision);
 				movimientoComisionRepository.flush();
 			} catch (Exception ex) {
-				log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_101.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_101);
 			}
@@ -513,7 +513,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 							+ " comisiones",
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZAR_CONCILIACION);
 		} catch (Exception ex) {
-			log.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0012.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_0012);
 		}

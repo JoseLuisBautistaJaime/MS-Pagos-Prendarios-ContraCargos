@@ -184,10 +184,10 @@ public class LayoutsService {
 				}
 			}
 		} catch (ConciliacionException ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_113.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_113);
 		}
@@ -213,7 +213,8 @@ public class LayoutsService {
 			conciliacion = this.conciliacionHelper.getConciliacionByFolio(layoutDTO.getFolio(),
 					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
-			// TODO: Eliminar esto esta validacion es inncesaria dado que se pueden dar de alta multiples tipos de layout por conciliacion 
+			// TODO: Eliminar esto esta validacion es inncesaria dado que se pueden dar de
+			// alta multiples tipos de layout por conciliacion
 			// Se valida si el layout es nuevo, de ser uno existente se valida que el tipo
 			// sea correcto
 //			flagNew = ((BigInteger) layoutsRepository.checkIfLayoutIsNew(layoutDTO.getFolio()))
@@ -239,11 +240,11 @@ public class LayoutsService {
 			}
 
 		} catch (ConciliacionException ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0014.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_0014);
 		}
@@ -252,10 +253,10 @@ public class LayoutsService {
 		try {
 			layouts = mergeLayouts(conciliacion.getId(), Arrays.asList(layoutDTO), requestUser, true);
 		} catch (ConciliacionException ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_120.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_120);
 		}
@@ -334,10 +335,10 @@ public class LayoutsService {
 							CodigoError.NMP_PMIMONTE_0009);
 			}
 		} catch (ConciliacionException ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_114.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_114);
 		}

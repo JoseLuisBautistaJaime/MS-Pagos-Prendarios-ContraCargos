@@ -185,7 +185,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_097.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_097);
 		} catch (ConciliacionException ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0011.getDescripcion(),
@@ -438,7 +438,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			// Se obtienen los movimientos de devolucion usando los ids recibidos
 			movimientosDevolucion = movimientoDevolucionRepository.findAllById(solicitar.getIdsMovimientos());
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_105.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_105);
 		}
@@ -453,7 +453,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 		try {
 			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, null, true);
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		}
 
@@ -654,7 +654,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			try {
 				edSolicitada = estatusDevolucionRepository.getOne(ConciliacionConstants.ESTATUS_DEVOLUCION_SOLICITADA);
 			} catch (Exception ex) {
-				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw ex;
 			}
 

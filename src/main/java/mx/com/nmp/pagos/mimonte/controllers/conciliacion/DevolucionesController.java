@@ -172,10 +172,10 @@ public class DevolucionesController {
 			devolucionEntidadDTOList = devolucionesServiceImpl.solicitarDevoluciones(devolucionesIdsMovimientosDTO,
 					userRequest);
 		} catch (ConciliacionException ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_104.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_104);
 		}

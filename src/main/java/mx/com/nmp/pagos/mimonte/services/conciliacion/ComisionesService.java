@@ -211,7 +211,7 @@ public class ComisionesService {
 								: comisionesTransaccionesRequestDTO.getFechaHasta());
 			}
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0013.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_0013);
 		}
@@ -365,10 +365,10 @@ public class ComisionesService {
 
 				flagNew = false;
 			} catch (ConciliacionException ex) {
-				LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw ex;
 			} catch (Exception ex) {
-				LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex);
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0011.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_0011);
 			}
@@ -415,10 +415,10 @@ public class ComisionesService {
 						CodigoError.NMP_PMIMONTE_BUSINESS_102);
 			}
 		} catch (ConciliacionException ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_107.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_107);
 		}
@@ -433,10 +433,10 @@ public class ComisionesService {
 						CodigoError.NMP_PMIMONTE_BUSINESS_109);
 			}
 		} catch (ConciliacionException ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_110.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_110);
 		}
@@ -451,10 +451,10 @@ public class ComisionesService {
 				throw new ConciliacionException(ConciliacionConstants.COMISION_CANT_BE_DELETED,
 						CodigoError.NMP_PMIMONTE_BUSINESS_020);
 		} catch (ConciliacionException ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_108.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_108);
 		}
@@ -464,7 +464,7 @@ public class ComisionesService {
 			comisionesRepository.deleteByIdsAndIdConciliacion(comisionDeleteDTO.getIdComisiones(),
 					comisionDeleteDTO.getFolio());
 		} catch (Exception ex) {
-			LOG.debug(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE.concat("{}"), ex.getMessage());
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_106.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_106);
 		}
