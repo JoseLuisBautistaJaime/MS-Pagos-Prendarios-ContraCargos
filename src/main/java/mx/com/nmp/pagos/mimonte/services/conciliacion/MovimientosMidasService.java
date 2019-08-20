@@ -75,15 +75,6 @@ public class MovimientosMidasService {
 	}
 
 	/**
-	 * 
-	 * @param fechaDesde
-	 * @param fechaHasta
-	 */
-	public List<MovimientoMidasDTO> listByDates(Date fechaDesde, Date fechaHasta) {
-		return null;
-	}
-
-	/**
 	 * Regresa el total de registros de movimientos midas por id de conciliacion
 	 * 
 	 * @param idConciliacion
@@ -91,40 +82,13 @@ public class MovimientosMidasService {
 	 * @return
 	 */
 	public Long countByConciliacionId(final Long idConciliacion, final Boolean estatus) {
+		LOG.debug("countByConciliacionId {}, {}", idConciliacion, estatus);
 		if (null != estatus)
 			return movimientosMidasRepository.countByReporteConciliacionIdAndEstatus(idConciliacion, estatus);
 		else
 			return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion);
 	}
 
-	/**
-	 * 
-	 * @param idConciliacion
-	 * @param page
-	 * @param pageSize
-	 */
-	public List<MovimientoMidasDTO> listByConciliacion(Long idConciliacion, Integer page, Integer pageSize) {
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param criteria
-	 * @param page
-	 * @param pageSize
-	 */
-	public List<MovimientoMidasDTO> search(ConsultaMovimientosMidasRequestDTO criteria, Integer page,
-			Integer pageSize) {
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param criterios
-	 */
-	public Integer count(ConsultaMovimientosMidasRequestDTO criterios) {
-		return 0;
-	}
 
 	/**
 	 * Regresa una lista de movimientos midas
@@ -144,14 +108,6 @@ public class MovimientosMidasService {
 										commonConciliacionRequestDTO.getEstatus()/* , pageable */)
 						: movimientosMidasRepository
 								.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()));
-	}
-
-	/**
-	 * 
-	 * @param lista
-	 */
-	public void saveBatch(List<MovimientoMidasBatchDTO> lista) {
-
 	}
 
 	/**

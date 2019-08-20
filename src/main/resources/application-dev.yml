@@ -44,6 +44,9 @@ spring:
       max-active: 1
     driver-class-name: com.mysql.jdbc.Driver
 
+logback:
+  loglevel: DEBUG
+
 # Variables utiles para app microservicios mimonte
 #Pagos
 mimonte:

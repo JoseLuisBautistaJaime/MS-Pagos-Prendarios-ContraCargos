@@ -156,7 +156,9 @@ public abstract class MovimientosTransitoBuilder {
 		movTransito.setNumAutorizacion(movMidas.getNumAutorizacion());
 		movTransito.setMovimientoMidas(movMidas);
 		movTransito.setNuevo(false);
-		movTransito.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS.intValue()));
+		movTransito.setEstatus(new EstatusTransito(movProveedor != null ?
+				ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS.intValue() :
+					ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY));
 		movTransito.setIdConciliacion(idConciliacion);
 		return movTransito;
 	}
