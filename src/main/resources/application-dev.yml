@@ -52,15 +52,9 @@ mimonte:
       solicitud-pagos:
         title: "Solicitud de Pagos"
         velocity-layout: "/templates/mailHtml.vm"
-        text1: "Buenas tardes."
-        text2: "Solicito de su apreciable ayuda para aplicar los siguientes pagos a las partidas especificadas en la siguiente tabla en el barrido de la noche,  ya que el cliente realizó el pago en el portal de pago en línea, el cual fue aprobado, pero en Midas aún no se refleja el cobro."
-        text3: "En espera de sus comentarios y apreciable ayuda. Gracias."
       solicitudDevolucion:
         title: "Solicitud de Devoluciones"
         velocityTemplate: "/templates/solicitudDevoluciones.vm"
-        bodyText1: "Buena tarde."
-        bodyText2: "Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario en la entidad ${entidad}, a la cuenta ${numeroCuenta}"
-#        bodyText2: "Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario a la cuenta ${numeroCuenta} con la afiliación ${afiliacion}"
       from: mail@nmp.com
       auth:
         user: mimonte

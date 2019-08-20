@@ -107,16 +107,4 @@ public class MailServiceConstants {
 	 *
 	 */
 
-	/**
-	 * Mail text constnts properties
-	 */
-	@Value("${mimonte.variables.mail.solicitud-pagos.text1}")
-	public String text1;
-
-	@Value("${mimonte.variables.mail.solicitud-pagos.text2}")
-	public String text2;
-
-	@Value("${mimonte.variables.mail.solicitud-pagos.text3}")
-	public String text3;
-
 }

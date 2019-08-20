@@ -35,7 +35,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstatusDevolucionDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
-import mx.com.nmp.pagos.mimonte.util.StringUtil;
 
 /**
  * @name SolicitarDevolucionesService
@@ -211,17 +210,11 @@ public class SolicitarDevolucionesService {
 	private String getContenidoHtml(List<DevolucionEntidadDTO2> devoluciones, String template, final String entidad,
 			final String cuenta) throws ConciliacionException {
 		Map<String, Object> modelo = new LinkedHashMap<String, Object>();
-		modelo.put("text1",
-				applicationProperties.getMimonte().getVariables().getMail().getSolicitudDevolucion().getBodyText1());
-		modelo.put("text2",
-				applicationProperties.getMimonte().getVariables().getMail().getSolicitudDevolucion().getBodyText2());
 		// Se sustituyen los valores
-		modelo.put("text2",
-				modelo.get("text2").toString().replace("${numeroCuenta}", cuenta).replace("${entidad}", entidad));
+		modelo.put("numeroCuenta", cuenta);
+		modelo.put("entidad", entidad);
 		modelo.put("devoluciones", devoluciones);
 		// Se reemplazan posibles EL en las leyendas y el modelo
-		modelo.put("text1", StringUtil.replaceEL(modelo.get("text1").toString(), "\\$[^ ]+"));
-		modelo.put("text2", StringUtil.replaceEL(modelo.get("text2").toString(), "\\$[^ ]+"));
 		modelo.put("devoluciones", replaceNullValues(modelo.get("devoluciones")));
 
 		String contenidoHtml = "";

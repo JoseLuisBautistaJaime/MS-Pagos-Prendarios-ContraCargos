@@ -199,8 +199,8 @@ public class SolicitarPagosService {
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(requestDTO.getFolio(),
 				"Se realizo la solicitud de pago de ".concat(String.valueOf(requestDTO.getIdMovimientos().size()))
-						.concat(" movimiento(s) de la conciliacion con el folio: ".concat(String.valueOf(requestDTO.getFolio()))
-								.concat(", por un total de: $ ")
+						.concat(" movimiento(s) de la conciliacion con el folio: "
+								.concat(String.valueOf(requestDTO.getFolio())).concat(", por un total de: $ ")
 								.concat(String.valueOf(
 										getMontoFromSolicitarPagosMailDataDTOList(solicitarPagosMailDataDTOList)))),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.SOLICITAR_PAGO);
@@ -215,8 +215,7 @@ public class SolicitarPagosService {
 	 * @return
 	 */
 	public List<SolicitarPagosMailDataDTO> consultarMovimientos(
-			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList, Long folio,
-			List<Integer> idsMovimientos) {
+			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList, Long folio, List<Integer> idsMovimientos) {
 		return movimientosMidasRepository.getDataByFolioAndIdMovimientos(folio, idsMovimientos);
 	}
 
@@ -298,9 +297,6 @@ public class SolicitarPagosService {
 	 */
 	public Map<String, Object> buildMailModel(List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
 		Map<String, Object> model = new HashMap<>();
-		model.put("text1", mc.text1);
-		model.put("text2", mc.text2);
-		model.put("text3", mc.text3);
 		model.put("elements", solicitarPagosMailDataDTOList);
 		return model;
 	}

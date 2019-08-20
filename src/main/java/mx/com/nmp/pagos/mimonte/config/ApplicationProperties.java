@@ -213,8 +213,6 @@ public class ApplicationProperties {
 
 					private String title;
 					private String velocityTemplate;
-					private String bodyText1;
-					private String bodyText2;
 
 					public String getTitle() {
 						return title;
@@ -232,21 +230,6 @@ public class ApplicationProperties {
 						this.velocityTemplate = velocityTemplate;
 					}
 
-					public String getBodyText1() {
-						return bodyText1;
-					}
-
-					public void setBodyText1(String bodyText1) {
-						this.bodyText1 = bodyText1;
-					}
-
-					public String getBodyText2() {
-						return bodyText2;
-					}
-
-					public void setBodyText2(String bodyText2) {
-						this.bodyText2 = bodyText2;
-					}
 				}
 
 			}
