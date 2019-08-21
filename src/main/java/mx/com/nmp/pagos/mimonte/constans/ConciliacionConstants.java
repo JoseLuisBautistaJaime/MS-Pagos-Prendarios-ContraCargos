@@ -355,8 +355,8 @@ public final class ConciliacionConstants {
 	// Estatus transito
 	public static final Integer ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS = 1;
 	public static final Integer ESTATUS_TRANSITO_SOLICITADA = 2;
-	public static final Integer ESTATUS_TRANSITO_MARCADO_DEVOLUCION = 4;
-	public static final Integer ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY = 5;
+	public static final Integer ESTATUS_TRANSITO_MARCADO_DEVOLUCION = 3;
+	public static final Integer ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY = 4;
 
 	// Tipo de contacts
 	public static final Long TIPO_CONTACTO_MIDAS = 1l;
@@ -524,4 +524,9 @@ public final class ConciliacionConstants {
 	 */
 	public static final String SUCCESSFUL_QUERY_ESTADO_CUENTA = "Consulta de movimientos exitosa.";
 
+	/**
+	 * Estatus exitos de un movimiento proveedor
+	 */
+	public static final String MOVIMIENTOS_PROVEEDOR_SUCCESSFUL_STATUS = "%COMPLETE%";
+	
 }

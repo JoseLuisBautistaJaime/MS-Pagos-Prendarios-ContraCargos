@@ -71,19 +71,20 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 * @return
 	 */
 	@Query("from MovimientoPago l  where l.idConciliacion = :idConciliacion")
-	public List<MovimientoPago> findMovimientoPagoByConciliacionId(
-			@Param("idConciliacion") final Long idConciliacion);
+	public List<MovimientoPago> findMovimientoPagoByConciliacionId(@Param("idConciliacion") final Long idConciliacion);
 
 	/**
 	 * Regresa un valor de 1 cuando todos los ids de movimientos transito ingresados
-	 * existen, estan relacionados al folio especificado y no tienen un estatus 1 o
-	 * 5
+	 * existen, estan relacionados al folio especificado y no tienen un estatus 4
+	 * (No reconocido por Openpay)
 	 * 
 	 * @param folio
 	 * @param ids
+	 * @param estatusNROpenpay
+	 * @param tam
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT mt.id FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mc ON mc.id = mt.id WHERE mt.id IN :ids AND mc.id_conciliacion = :folio AND mt.estatus <> 1 AND mt.estatus <> 5) IS NOT NULL THEN 0 ELSE 1 END as RESULT")
-	public Object validaFolioAndIdsForMovPagos(@Param("folio") final Long folio,
-			@Param("ids") final List<Integer> ids);
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(mt.id) FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mc ON mc.id = mt.id WHERE mt.id IN :ids AND mc.id_conciliacion = :folio AND mt.estatus <> :estatusNROpenpay) = :tam THEN 1 ELSE 0 END as RESULT")
+	public Object validaFolioAndIdsForMovPagos(@Param("folio") final Long folio, @Param("ids") final List<Integer> ids,
+			@Param("estatusNROpenpay") final Integer estatusNROpenpay, @Param("tam") final Integer tam);
 }

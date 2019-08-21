@@ -217,15 +217,13 @@ public class ComisionesService {
 		}
 
 		// Encontrar suma total de pagos
-		Long transaccionesPagos = comisionesRepository.findTransaccionesPagosByFechasAndIdConciliacion(
-				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta(),
-				comisionesTransaccionesRequestDTO.getIdConciliacion());
+		Long transaccionesPagos = comisionesRepository.findTransaccionesPagosByFechas(
+				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta(), ConciliacionConstants.MOVIMIENTOS_PROVEEDOR_SUCCESSFUL_STATUS);
 
 		// Se obtiene el id de devolucion, el conteo del mismo y el id de la
 		// conciliacion
-		mapResult = comisionesRepository.findDataByFechasAndIdConciliacion(
-				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta(),
-				comisionesTransaccionesRequestDTO.getIdConciliacion());
+		mapResult = comisionesRepository.findDataByFechas(
+				comisionesTransaccionesRequestDTO.getFechaDesde(), comisionesTransaccionesRequestDTO.getFechaHasta(), ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
 		Long transaccionesDevoluciones = (Long) mapResult.get("countId");
 		Optional<Conciliacion> conciliacion = conciliacionRepository
 				.findById(comisionesTransaccionesRequestDTO.getIdConciliacion());
@@ -259,7 +257,8 @@ public class ComisionesService {
 		comisionesTransDTO.setProyeccion(comisionesTransProyeccionDTO);
 
 		// Realiza suma de comisiones e ivas
-		sums = comisionesRepository.findMovimientosSum(comisionesTransaccionesRequestDTO.getIdConciliacion(), TipoMovimientoComisionEnum.COMISION.getDescripcion(),
+		sums = comisionesRepository.findMovimientosSum(
+				TipoMovimientoComisionEnum.COMISION.getDescripcion(),
 				TipoMovimientoComisionEnum.IVA_COMISION.getDescripcion());
 		sumaComision = sums.get("comision");
 		sumaIva = sums.get("iva");
