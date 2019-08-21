@@ -74,6 +74,7 @@ import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
@@ -89,7 +90,6 @@ import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.LayoutsService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
-//import mx.com.nmp.pagos.mimonte.util.CollectionUtil;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 import mx.com.nmp.pagos.mimonte.util.MiniMaquinaEstadosConciliacion;
@@ -151,6 +151,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
 
+
+	
 	/**
 	 * Mini maquina de estados para actualizacion de subestatus de conciliacion
 	 */
@@ -658,10 +660,14 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Búsqueda de los reporte a partir del folio.
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(folio);
 
+		// Obtiene las comisiones transacciones
+		ComisionTransaccion comisionTransaccion = this.conciliacionHelper.getComisionTransaccion(folio);
+		
 		return ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(conciliacion, reportes,
 				MovimientoDevolucionBuilder.buildDevolucionConDTOListFromMovimientoDevolucionList(mD),
 				MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(mT),
-				MovimientoComisionBuilder.buildComisionesDTOListFromMovimientoComisionList(mC));
+				MovimientoComisionBuilder.buildComisionesDTOListFromMovimientoComisionList(mC),
+				ComisionesBuilder.buildComisionTransaccionDTOFromComisionTransaccion(comisionTransaccion));
 	}
 
 	/*

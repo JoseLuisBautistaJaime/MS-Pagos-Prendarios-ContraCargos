@@ -33,6 +33,8 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	private DevolucionConDTO devoluciones;
 	private MovTransitoDTO movimientosTransito;
 	private ComisionesDTO comisiones;
+	private ComisionesTransProyeccionDTO comisionesTransacciones;
+
 
 	public ConciliacionDTO() {
 		super();
@@ -200,6 +202,14 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	@Override
 	public int compareTo(ConciliacionDTO o) {
 		return 0;
+	}
+
+	public ComisionesTransProyeccionDTO getComisionesTransacciones() {
+		return comisionesTransacciones;
+	}
+
+	public void setComisionesTransacciones(ComisionesTransProyeccionDTO comisionesTransacciones) {
+		this.comisionesTransacciones = comisionesTransacciones;
 	}
 
 }

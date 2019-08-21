@@ -26,12 +26,19 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 public interface ComisionTransaccionRepository extends JpaRepository<ComisionTransaccion, Long> {
 
 	/**
-	 * Encuentra una comision transaccion por id de conciliacion
+	 * Encuentra una comision transaccion ID por id de conciliacion
 	 * 
 	 * @param conciliacionId
 	 * @return
 	 */
 	@Query(nativeQuery = true, value = "SELECT ct.id FROM to_comision_transaccion ct WHERE ct.id_conciliacion = :conciliacionId")
-	public List<Integer> findByConciliacionId(@Param("conciliacionId") Long conciliacionId);
+	public List<Integer> findComisionIdByConciliacionId(@Param("conciliacionId") Long conciliacionId);
+
+	/**
+	 * Encuentra una comision transaccion por id de conciliacion
+	 * @param conciliacionId
+	 * @return
+	 */
+	public ComisionTransaccion findByConciliacionId(Long conciliacionId);
 
 }
