@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionTransaccionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
@@ -46,6 +48,9 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 
 	@Autowired
 	private ReporteObserver reporteObserver;
+
+	@Autowired
+	private ComisionTransaccionRepository comisionTransaccionRepository;
 
 
 
@@ -80,14 +85,30 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 		return conciliacion;
 	}
 
+
 	/* (non-Javadoc)
 	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#generarConciliacion(java.lang.Long, mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte[])
 	 */
-	@Override
 	public void generarConciliacion(Long folio, List<Reporte> reportes) throws ConciliacionException {
 		ReporteObservable reporteObservable = new ReporteObservable(reportes, folio);
 		reporteObservable.addObserver(reporteObserver);
 		reporteObservable.notifyObservers();
+	}
+
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#getComisionTransaccion(java.lang.Long)
+	 */
+	public ComisionTransaccion getComisionTransaccion(Long folio) throws ConciliacionException {
+		ComisionTransaccion comisionTransaccion = null;
+		try {
+			comisionTransaccion = this.comisionTransaccionRepository.findByConciliacionId(folio);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar las comisiones transacciones", CodigoError.NMP_PMIMONTE_0011);
+		}
+		return comisionTransaccion;
 	}
 
 }

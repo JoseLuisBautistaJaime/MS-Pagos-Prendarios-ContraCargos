@@ -135,7 +135,7 @@ public class ComisionTransaccion extends Updatable implements java.io.Serializab
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, conciliacion, fechaDesde, fechaHasta, comision);
+		return Objects.hash(id, conciliacion != null ? conciliacion.getId() : 0, fechaDesde, fechaHasta, comision);
 	}
 
 	@Override

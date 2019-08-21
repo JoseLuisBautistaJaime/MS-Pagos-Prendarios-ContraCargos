@@ -278,7 +278,7 @@ public class ComisionesService {
 		// retorno de tipo List<Long> o ArrayList<Long>
 		List<Integer> comisionTransaccionVerInteger = null;
 		comisionTransaccionVerInteger = comisionTransaccionRepository
-				.findByConciliacionId(comisionesTransaccionesRequestDTO.getIdConciliacion());
+				.findComisionIdByConciliacionId(comisionesTransaccionesRequestDTO.getIdConciliacion());
 		Long comisionTransaccionVer = null;
 		if (null != comisionTransaccionVerInteger && !comisionTransaccionVerInteger.isEmpty()) {
 			for (Integer val : comisionTransaccionVerInteger) {

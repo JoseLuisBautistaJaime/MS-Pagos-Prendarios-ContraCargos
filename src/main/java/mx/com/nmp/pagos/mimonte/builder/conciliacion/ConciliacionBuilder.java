@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionRequestDTO;
@@ -269,7 +270,7 @@ public abstract class ConciliacionBuilder {
 	 */
 	public static ConciliacionDTOList buildConciliacionDTOListFromConciliacion(Conciliacion conciliacion,
 			List<Reporte> reportes, List<DevolucionConDTO> devolucionConDTOList, List<MovTransitoDTO> movTransitoDTOList,
-			List<ComisionesDTO> comisionesDTOList) {
+			List<ComisionesDTO> comisionesDTOList, ComisionesTransDTO comisionesTranDTO) {
 		ConciliacionDTOList conciliacionDTOList = null;
 		if (conciliacion != null) {
 			conciliacionDTOList = new ConciliacionDTOList();
@@ -290,6 +291,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTOList.setDevoluciones(devolucionConDTOList);
 			conciliacionDTOList.setMovimientosTransito(movTransitoDTOList);
 			conciliacionDTOList.setComisiones(comisionesDTOList);
+			conciliacionDTOList.setComisionesTransacciones(comisionesTranDTO);
 			conciliacionDTOList.setCreatedDate(conciliacion.getCreatedDate());
 			conciliacionDTOList.setLastModifiedDate(conciliacion.getLastModifiedDate());
 			conciliacionDTOList.setCreatedBy(conciliacion.getCreatedBy());
