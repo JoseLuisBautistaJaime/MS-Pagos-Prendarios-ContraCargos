@@ -488,14 +488,14 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 		// Valida que el estatus de los movimientos sea el primero y unico valido para
 		// cambiar a devolucion (1, 2)
-		Optional<EstatusTransito> estatusTransito = estatusTransitoRepository
-				.findById(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS);
-		if (null == estatusTransito || !estatusTransito.isPresent())
-			throw new ConciliacionException(ConciliacionConstants.GETTING_DEV_ESTATUS_HAS_GONE_WRONG,
-					CodigoError.NMP_PMIMONTE_BUSINESS_089);
+//		Optional<EstatusTransito> estatusTransito = estatusTransitoRepository
+//				.findById(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS);
+//		if (null == estatusTransito || !estatusTransito.isPresent())
+//			throw new ConciliacionException(ConciliacionConstants.GETTING_DEV_ESTATUS_HAS_GONE_WRONG,
+//					CodigoError.NMP_PMIMONTE_BUSINESS_089);
 		// Se envia el estatus 2 que significa solicitada como pago
 		flagEstatus = BigInteger.ONE.compareTo((BigInteger) movimientoTransitoRepository.verifyIfIdsHaveRightEstatus(
-				marcarDevoluciones.getIdMovimientos(), ConciliacionConstants.ESTATUS_TRANSITO_SOLICITADA,
+				marcarDevoluciones.getIdMovimientos(), ConciliacionConstants.ESTATUS_TRANSITO_MARCADO_DEVOLUCION,
 				ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY,
 				marcarDevoluciones.getIdMovimientos().size())) == 0;
 		if (!flagEstatus) {

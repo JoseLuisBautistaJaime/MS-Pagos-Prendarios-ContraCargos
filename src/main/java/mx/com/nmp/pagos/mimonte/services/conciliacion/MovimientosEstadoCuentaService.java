@@ -297,8 +297,8 @@ public class MovimientosEstadoCuentaService {
 			throw ex;
 		} catch (Exception ex) {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_112.getDescripcion(),
-					CodigoError.NMP_PMIMONTE_BUSINESS_112);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
 		}
 
 		// Actualiza el sub-estatus para realizar el registro del estado de cuenta

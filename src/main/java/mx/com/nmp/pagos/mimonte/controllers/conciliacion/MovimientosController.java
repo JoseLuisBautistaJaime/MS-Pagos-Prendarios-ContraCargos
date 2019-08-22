@@ -41,7 +41,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosEstadoCuentaService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosProveedorService;
@@ -287,7 +286,6 @@ public class MovimientosController {
 	public Response saveMovimientoEsadoCuenta(@RequestBody SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		// Objetos necesarios
-		EstatusConciliacion estatusConciliacion = null;
 		Boolean procesoCorrecto = null;
 		String descripcionError = "";
 
@@ -319,8 +317,6 @@ public class MovimientosController {
 		} finally {
 			try {
 				// Se actualiza el sub estatus de la conciliacion en base al resultado
-				estatusConciliacion = conciliacionRepository
-						.findEstatusByConciliacionId(saveEstadoCuentaRequestDTO.getFolio());
 				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
 						saveEstadoCuentaRequestDTO.getFolio(),
 						procesoCorrecto
@@ -329,8 +325,8 @@ public class MovimientosController {
 						descripcionError), userRequest);
 			} catch (Exception ex) {
 				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_124.getDescripcion(),
-						CodigoError.NMP_PMIMONTE_BUSINESS_124);
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_030);
 			}
 		}
 		// Regresa la respuesta exitosa
