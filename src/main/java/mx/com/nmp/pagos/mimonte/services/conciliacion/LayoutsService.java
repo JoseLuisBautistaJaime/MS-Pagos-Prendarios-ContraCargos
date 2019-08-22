@@ -711,20 +711,20 @@ public class LayoutsService {
 			TipoLayoutEnum tipoLayout) {
 		List<MovimientoConciliacion> movimientos = new ArrayList<MovimientoConciliacion>();
 		switch (tipoLayout) {
-		case PAGOS:
-			movimientos.addAll(movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion));
-			break;
-		case DEVOLUCIONES:
-			movimientos
-					.addAll(movimientoConciliacionRepository.findMovimientoDevolucionByConciliacionId(idConciliacion));
-			break;
-		case COMISIONES_MOV: // TipoMovimientoComisionEnum.OPENPAY
-			// movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
-			// // TODO: Verificar tipos
-			break;
-		case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.IVA_COMISION
-			movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
-			break;
+			case PAGOS:
+				movimientos.addAll(movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion));
+				break;
+			case DEVOLUCIONES:
+				movimientos.addAll(movimientoConciliacionRepository.findMovimientoDevolucionByConciliacionIdAndStatus(
+						idConciliacion, ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA));
+				break;
+			case COMISIONES_MOV: // TipoMovimientoComisionEnum.OPENPAY
+				// movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
+				// // TODO: Verificar tipos
+				break;
+			case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.IVA_COMISION
+				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
+				break;
 		}
 		return movimientos;
 	}

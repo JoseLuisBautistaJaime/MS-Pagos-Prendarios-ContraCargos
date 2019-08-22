@@ -60,9 +60,10 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 * @param idConciliacion
 	 * @return
 	 */
-	@Query("from MovimientoDevolucion l  where l.idConciliacion = :idConciliacion")
-	public List<MovimientoDevolucion> findMovimientoDevolucionByConciliacionId(
-			@Param("idConciliacion") final Long idConciliacion);
+	@Query("from MovimientoDevolucion l  where l.idConciliacion = :idConciliacion AND l.estatus.id = :idEstatus")
+	public List<MovimientoDevolucion> findMovimientoDevolucionByConciliacionIdAndStatus(
+			@Param("idConciliacion") final Long idConciliacion,
+			@Param("idEstatus") final Integer idEstatus);
 
 	/**
 	 * Regresa una lista de MovimientoPago por folio de conciliacion
