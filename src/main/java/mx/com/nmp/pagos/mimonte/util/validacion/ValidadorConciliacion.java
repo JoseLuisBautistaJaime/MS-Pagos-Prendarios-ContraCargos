@@ -37,6 +37,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoActualizacionTransito;
 
 /**
  * @name ValidadorConciliacion
@@ -640,7 +641,10 @@ public interface ValidadorConciliacion {
 					&& !actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty()) {
 				for (MovTransitoRequestDTO movTransito : actualizaionConciliacionRequestDTO.getMovimientosTransito()) {
 					if (null == movTransito.getId() || movTransito.getId().compareTo(0) < 0
-							|| null == movTransito.getTipo() || "".equals(movTransito.getTipo())) {
+							|| null == movTransito.getTipo() || "".equals(movTransito.getTipo())
+							|| (!TipoMovimientoActualizacionTransito.PAGOS.getNombre().equals(movTransito.getTipo())
+									&& !TipoMovimientoActualizacionTransito.DEVOLUCIONES.getNombre()
+											.equals(movTransito.getTipo()))) {
 						return false;
 					}
 				}

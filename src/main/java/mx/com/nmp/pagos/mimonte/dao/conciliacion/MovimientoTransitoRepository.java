@@ -114,6 +114,19 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 			@Param("tam") final Integer tam);
 
 	/**
+	 * Regresa un valor de 1 cuando los ids de movimientos en transito ingrsados
+	 * existen indiferentemente de su id o estatus de alta, de lo contrario regresa
+	 * un 0
+	 * 
+	 * @param movTransitoIds
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ( (SELECT COUNT(mt.id) FROM to_movimiento_transito mt WHERE mt.id IN :movTransitoIds) = (SELECT :tam) ) THEN 1 ELSE 0 END")
+	public Object checkIfIdsExistOnly(@Param("movTransitoIds") final List<Integer> movTransitoIds,
+			@Param("tam") final Integer tam);
+
+	/**
 	 * Regresa un valor de 1 cuando los ids de movimientos tansito pertenecen a la
 	 * conciliacion, de lo contrario regres un valor de 0
 	 * 
@@ -125,5 +138,33 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(mt.id) FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mc ON mt.id = mc.id WHERE mt.id IN :ids AND mc.id_conciliacion = :folio) = (SELECT :tam)) THEN 1 ELSE 0 END")
 	public Object checkIdsAndFolioRelationship(@Param("folio") final Long folio, @Param("ids") final List<Integer> ids,
 			@Param("tam") final Integer tam);
+
+	/**
+	 * Regresa un valor 1 si los ids proporcionados son ids de movs. transito dados
+	 * de alta por el suuario y realcionados a la conciliaicon especificada, de lo
+	 * contrario regresa unvalor 0
+	 * 
+	 * @param folio
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ( (SELECT COUNT(mt.id) FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mcon ON mt.id = mcon.id WHERE mcon.nuevo = 1 AND mt.id IN :ids  AND mcon.id_conciliacion = :folio) = (SELECT :tam)) THEN 1 ELSE 0 END")
+	public Object checkRightStatus(@Param("folio") final Long folio, @Param("ids") final List<Integer> ids,
+			@Param("tam") final Integer tam);
+
+	/**
+	 * Regresa un valor de 1 cuando los ids ingresados no estan en un estatus de los
+	 * indicados
+	 * 
+	 * @param folio
+	 * @param ids
+	 * @param tam
+	 * @param estatusList
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ( (SELECT COUNT(mt.id) FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mcon ON mt.id = mcon.id WHERE mt.id IN :ids AND mcon.id_conciliacion = :folio AND mt.estatus NOT IN :estatusList) = (SELECT :tam) ) THEN 1 ELSE 0 END")
+	public Object verifyRightStatus(@Param("folio") final Long folio, @Param("ids") final List<Integer> ids,
+			@Param("tam") final Integer tam, @Param("estatusList") final List<Integer> estatusList);
 
 }

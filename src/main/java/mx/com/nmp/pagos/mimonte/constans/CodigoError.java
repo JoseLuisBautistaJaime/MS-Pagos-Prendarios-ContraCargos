@@ -290,6 +290,12 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_124("Ocurrio un error durante la actualizacion de sub-estatus de la conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_125("Ocurrio un error durante la obtencion del estatus de la conciliacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_126("Uno o mas movimientos transito no fueron dados de alta por el usuario",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_127("Uno o mas movimientos de comision no pueden ser editados/eliminados por que no fueron creados por el usuario",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_128("Uno o mas movimientos estan repetidos",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

@@ -6,7 +6,9 @@ package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
@@ -556,23 +558,38 @@ public abstract class MovimientosBuilder {
 	}
 
 	/**
-	 * Construye una lista de objetos de tipo Integer a partir de una lista de
-	 * objetos de tipo ComisionesRequestDTO
+	 * Construye un mapa con dos listas una con ids de comisiones a ser editados y
+	 * otra con una lista de ids comisiones a ser eliminados de pendiendo de su
+	 * estatus
 	 * 
 	 * @param comisionesRequestDTOList
 	 * @return
 	 */
-	public static List<Integer> buildIntegerListFromComisionesRequestDTONO0List(
+	public static Map<String, List<Integer>> buildMapIntegerListFromComisionesRequestDTONO0List(
 			List<ComisionesRequestDTO> comisionesRequestDTOList) {
-		List<Integer> list = null;
+		Map<String, List<Integer>> map = null;
+		List<Integer> listComs = null;
+		List<Integer> listComsDel = null;
+		List<Integer> idsComComp = null;
 		if (null != comisionesRequestDTOList && !comisionesRequestDTOList.isEmpty()) {
-			list = new ArrayList<>();
+			listComs = new ArrayList<>();
+			listComsDel = new ArrayList<>();
+			idsComComp = new ArrayList<>();
 			for (ComisionesRequestDTO comisionesRequestDTO : comisionesRequestDTOList) {
 				if (!comisionesRequestDTO.getId().equals(0))
-					list.add(comisionesRequestDTO.getId());
+					idsComComp.add(comisionesRequestDTO.getId());
+				if (!comisionesRequestDTO.getId().equals(0) && comisionesRequestDTO.getEstatus())
+					listComs.add(comisionesRequestDTO.getId());
+				else if (!comisionesRequestDTO.getId().equals(0) && !comisionesRequestDTO.getEstatus())
+					listComsDel.add(comisionesRequestDTO.getId());
 			}
+			map = new HashMap<>();
+			map.put("idsCom", listComs);
+			map.put("idsComDel", listComsDel);
+			map.put("idsComComp", idsComComp);
 		}
-		return list;
+
+		return map;
 	}
 
 	/**

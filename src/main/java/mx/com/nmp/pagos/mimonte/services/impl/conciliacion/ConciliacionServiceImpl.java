@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 //import mx.com.nmp.pagos.mimonte.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
@@ -151,8 +153,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
 
-
-	
 	/**
 	 * Mini maquina de estados para actualizacion de subestatus de conciliacion
 	 */
@@ -306,8 +306,11 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			ActualizaionConciliacionRequestDTO actualizaionConciliacionRequestDTO, final String requestUser) {
 		// OBJETOS NECESARIOS
 		Map<Integer, ComisionesRequestDTO> mapC = null;
+		Map<String, List<Integer>> mapComs = null;
 		List<Integer> idsMov = null;
 		List<Integer> idsCom = null;
+		List<Integer> idsComDel = null;
+		List<Integer> idsComComp = null;
 		List<Integer> idsPagos = null;
 		List<Integer> idsDevoluciones = null;
 		Conciliacion conciliacion = null;
@@ -316,32 +319,30 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// VALIDA QUE FOLIO DE CONCILIACION EXISTA
 		conciliacionDataValidator.validateFolioExists(actualizaionConciliacionRequestDTO.getFolio());
 
-		// Valida que los ids de movimientos transito existan (si es que hay
-		// movimientos transito) y que sean de un tipo valido (nuevo = 1)
-		try {
-			if (null != actualizaionConciliacionRequestDTO.getMovimientosTransito()
-					&& !actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty()) {
-				idsMov = MovimientosBuilder.buildIntegerListFromMovTransitoRequestDTOList(
-						actualizaionConciliacionRequestDTO.getMovimientosTransito());
-				flag = ((BigInteger) movimientoTransitoRepository.checkIfIdsExist(idsMov, idsMov.size()))
-						.compareTo(BigInteger.ONE) == 0;
-				if (!flag) {
-					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_100.getDescripcion(),
-							CodigoError.NMP_PMIMONTE_BUSINESS_100);
-				}
-			}
-		} catch (ConciliacionException ex) {
-			throw ex;
-		} catch (Exception ex) {
-			log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_038.getDescripcion(),
-					CodigoError.NMP_PMIMONTE_BUSINESS_038);
-		}
-
-		// Valida que haya relacion entre el folio de conciliacion y los movimientos
-		// transito especificados
+		// VALIDACIONES SOBRE MOVIMIENTOS TRANSITO
 		if (null != actualizaionConciliacionRequestDTO.getMovimientosTransito()
 				&& !actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty()) {
+
+			// Construye lista de ids de movimeintos en transito
+			idsMov = MovimientosBuilder.buildIntegerListFromMovTransitoRequestDTOList(
+					actualizaionConciliacionRequestDTO.getMovimientosTransito());
+
+			// Valida que los movimientos no esten repetidos
+			flag = validateNoDuplicated(idsMov);
+			if (!flag)
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_128.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_128);
+
+			// Valida que los ids de movimientos transito existan
+			flag = ((BigInteger) movimientoTransitoRepository.checkIfIdsExistOnly(idsMov, idsMov.size()))
+					.compareTo(BigInteger.ONE) == 0;
+			if (!flag) {
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_100.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_100);
+			}
+
+			// Valida que haya relacion entre el folio de conciliacion y los movimientos
+			// transito especificados
 			flag = null;
 			try {
 				flag = ((BigInteger) movimientoTransitoRepository.checkIdsAndFolioRelationship(
@@ -351,6 +352,27 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_111.getDescripcion(),
 							CodigoError.NMP_PMIMONTE_BUSINESS_111);
 				}
+
+				// Valida que los movimientos hayan sido dados de alta por sistema
+				flag = null;
+				flag = ((BigInteger) movimientoTransitoRepository
+						.checkRightStatus(actualizaionConciliacionRequestDTO.getFolio(), idsMov, idsMov.size()))
+								.compareTo(BigInteger.ONE) == 0;
+				if (!flag) {
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_126.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_126);
+				}
+
+				// Valida que el estatus sea uno permitido
+				flag = ((BigInteger) movimientoTransitoRepository.verifyRightStatus(
+						actualizaionConciliacionRequestDTO.getFolio(), idsMov, idsMov.size(),
+						Arrays.asList(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY)))
+								.compareTo(BigInteger.ONE) == 0;
+				if (!flag) {
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_090.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_090);
+				}
+
 			} catch (ConciliacionException ex) {
 				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw ex;
@@ -361,23 +383,70 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			}
 		}
 
-		// Valida que los movimientos comision existan previamente (si es que se
-		// recibieron como parametro)
+		// VALIDACIONES SOBRE CONMISIONES
 		flag = null;
 		try {
 			if (null != actualizaionConciliacionRequestDTO.getComisiones()
 					&& !actualizaionConciliacionRequestDTO.getComisiones().isEmpty()) {
-				idsCom = MovimientosBuilder.buildIntegerListFromComisionesRequestDTONO0List(
+				Boolean flag2 = null;
+				Boolean flag3 = null;
+				Boolean flag4 = null;
+				Boolean flag5 = null;
+				mapComs = MovimientosBuilder.buildMapIntegerListFromComisionesRequestDTONO0List(
 						actualizaionConciliacionRequestDTO.getComisiones());
+				idsCom = mapComs.get("idsCom");
+				idsComDel = mapComs.get("idsComDel");
+				idsComComp = mapComs.get("idsComComp");
 				if (null == idsCom || idsCom.size() == 0)
 					flag = true;
-				else
+				else {
+					// Valida que los movimientos comision existan previamente (si es que se
+					// recibieron como parametro)
 					flag = ((BigInteger) movimientoComisionRepository.checkIfIdsExist(idsCom, idsCom.size()))
 							.compareTo(BigInteger.ONE) == 0;
-				if (!flag) {
+
+					if (flag) {
+						// Valida que las comisiones a editar tengan relacion con el folio de
+						// conciliacion especificado
+						flag2 = ((BigInteger) movimientoComisionRepository.checkIdsAndFolioRelationship(
+								actualizaionConciliacionRequestDTO.getFolio(), idsCom, idsCom.size()))
+										.compareTo(BigInteger.ONE) == 0;
+						if (flag2) {
+							// Valida que las comisiones a editar hayan sido dadas de alta por el usuario
+							flag3 = ((BigInteger) movimientoComisionRepository.checkRightStatus(
+									actualizaionConciliacionRequestDTO.getFolio(), idsCom, idsCom.size()))
+											.compareTo(BigInteger.ONE) == 0;
+							if (flag3) {
+								// Valida que no haya movimientos de comision repetidos (esto para evitar el
+								// conflicto en que se desee editar en uno y eliminar en otro)
+								flag4 = validateNoDuplicated(idsComComp);
+
+								if (flag4) {
+									flag5 = ((BigInteger) movimientoComisionRepository.verifyRightStatus(
+											actualizaionConciliacionRequestDTO.getFolio(), idsCom, idsCom.size(),
+											Arrays.asList(
+													ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY)))
+															.compareTo(BigInteger.ONE) == 0;
+								}
+							}
+						}
+					}
+				}
+				if (!flag)
 					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_102.getDescripcion(),
 							CodigoError.NMP_PMIMONTE_BUSINESS_102);
-				}
+				else if (null != flag2 && !flag2)
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_109.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_109);
+				else if (null != flag3 && !flag3)
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_127.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_127);
+				else if (null != flag4 && !flag4)
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_128.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_128);
+				else if (null != flag5 && !flag5)
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_090.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_090);
 			}
 		} catch (ConciliacionException ex) {
 			throw ex;
@@ -389,29 +458,29 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Valida que haya relacion entre el folio de conciliacion y los movimientos
 		// comision especificados
-		if (null != actualizaionConciliacionRequestDTO.getComisiones()
-				&& !actualizaionConciliacionRequestDTO.getComisiones().isEmpty()) {
-			flag = null;
-			try {
-				if (null == idsCom || idsCom.isEmpty())
-					flag = true;
-				else
-					flag = ((BigInteger) movimientoComisionRepository.checkIdsAndFolioRelationship(
-							actualizaionConciliacionRequestDTO.getFolio(), idsCom, idsCom.size()))
-									.compareTo(BigInteger.ONE) == 0;
-				if (!flag) {
-					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_109.getDescripcion(),
-							CodigoError.NMP_PMIMONTE_BUSINESS_109);
-				}
-			} catch (ConciliacionException ex) {
-				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-				throw ex;
-			} catch (Exception ex) {
-				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_103.getDescripcion(),
-						CodigoError.NMP_PMIMONTE_BUSINESS_103);
-			}
-		}
+//		if (null != actualizaionConciliacionRequestDTO.getComisiones()
+//				&& !actualizaionConciliacionRequestDTO.getComisiones().isEmpty()) {
+//			flag = null;
+//			try {
+//				if (null == idsCom || idsCom.isEmpty())
+//					flag = true;
+//				else
+//					flag = ((BigInteger) movimientoComisionRepository.checkIdsAndFolioRelationship(
+//							actualizaionConciliacionRequestDTO.getFolio(), idsCom, idsCom.size()))
+//									.compareTo(BigInteger.ONE) == 0;
+//				if (!flag) {
+//					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_109.getDescripcion(),
+//							CodigoError.NMP_PMIMONTE_BUSINESS_109);
+//				}
+//			} catch (ConciliacionException ex) {
+//				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+//				throw ex;
+//			} catch (Exception ex) {
+//				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+//				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_103.getDescripcion(),
+//						CodigoError.NMP_PMIMONTE_BUSINESS_103);
+//			}
+//		}
 
 		// Obtiene la conciliacion para registrar la actividad
 		try {
@@ -442,7 +511,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					solicitarPagosService.solicitarPagos(
 							new SolicitarPagosRequestDTO(actualizaionConciliacionRequestDTO.getFolio(), idsPagos),
 							requestUser);
-				movimientoComisionRepository.flush();	
+					movimientoComisionRepository.flush();
 				}
 				// Actualiza a movimientos devolucion
 				if (!idsDevoluciones.isEmpty()) {
@@ -463,10 +532,15 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// GUARDA O ACTUALIZA LAS COMISIONES
 		if (null != actualizaionConciliacionRequestDTO.getComisiones()
 				&& !actualizaionConciliacionRequestDTO.getComisiones().isEmpty()) {
+			int count = -1;
 			try {
 				mapC = new HashMap<>();
 				for (ComisionesRequestDTO movimientoComision : actualizaionConciliacionRequestDTO.getComisiones()) {
-					mapC.put(movimientoComision.getId(), movimientoComision);
+					if (movimientoComision.getId().compareTo(0) == 0) {
+						mapC.put(count, movimientoComision);
+						count--;
+					} else
+						mapC.put(movimientoComision.getId(), movimientoComision);
 				}
 				// Se obtienen los movimientos de comision a atualizar
 				List<MovimientoComision> movimientosComision = null;
@@ -481,20 +555,29 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 						mC.setFechaOperacion(mapC.get(mC.getId()).getFechaOperacion());
 						mC.setFechaCargo(mapC.get(mC.getId()).getFechaCargo());
 						mC.setMonto(mapC.get(mC.getId()).getMonto());
+						mC.setLastModifiedBy(requestUser);
+						mC.setLastModifiedDate(new Date());
 					}
 				} else if (null == movimientosComision)
 					movimientosComision = new ArrayList<>();
 				// Se agregan a la lista los nuevos movimientos de comision
+				int cnt = -1;
 				for (Map.Entry<Integer, ComisionesRequestDTO> entry : mapC.entrySet()) {
 					ComisionesRequestDTO comisionesRequestDTO = entry.getValue();
-					if (comisionesRequestDTO.getId().compareTo(0) == 0) {
-						movimientosComision.add(ComisionesBuilder.buildMovimientoComisionFromComisionesRequestDTO(
-								comisionesRequestDTO, requestUser, actualizaionConciliacionRequestDTO.getFolio()));
+					if (comisionesRequestDTO.getId().compareTo(0) <= 0) {
+						movimientosComision.add(ComisionesBuilder.buildMovimientoComisionFromComisionesRequestDTONew(
+								comisionesRequestDTO, requestUser, actualizaionConciliacionRequestDTO.getFolio(), cnt));
+						cnt--;
 					}
 				}
 				// Se aguardan todos los movimientos comision (nuevos y actualizados)
-				movimientoComisionRepository.saveAll(movimientosComision);
-				movimientoComisionRepository.flush();
+				if (null != movimientosComision && !movimientosComision.isEmpty()) {
+					movimientoComisionRepository.saveAll(movimientosComision);
+					movimientoComisionRepository.flush();
+				}
+				// Se eliminan las comisiones en false
+				if (null != idsComDel && !idsComDel.isEmpty())
+					movimientoComisionRepository.deleteByIds(idsComDel);
 			} catch (Exception ex) {
 				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_101.getDescripcion(),
@@ -662,7 +745,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Obtiene las comisiones transacciones
 		ComisionTransaccion comisionTransaccion = this.conciliacionHelper.getComisionTransaccion(folio);
-		
+
 		return ConciliacionBuilder.buildConciliacionDTOListFromConciliacion(conciliacion, reportes,
 				MovimientoDevolucionBuilder.buildDevolucionConDTOListFromMovimientoDevolucionList(mD),
 				MovimientosTransitoBuilder.buildMovTransitoDTOListFromMovimientoTransitoList(mT),
@@ -1075,6 +1158,24 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				"Se genera la conciliacion con el folio " + idConciliacion, TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.GENERACION_CONCILIACION);
 
+	}
+
+	/**
+	 * Valida que no haya elementos duplicados en una lista de objetos tipo Integer
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	private static boolean validateNoDuplicated(List<Integer> ids) {
+		Set<Integer> set = null;
+		if (null != ids && !ids.isEmpty()) {
+			set = new HashSet<>();
+			for (Integer each : ids)
+				if (!set.add(each))
+					return false;
+			return true;
+		}
+		return true;
 	}
 
 }
