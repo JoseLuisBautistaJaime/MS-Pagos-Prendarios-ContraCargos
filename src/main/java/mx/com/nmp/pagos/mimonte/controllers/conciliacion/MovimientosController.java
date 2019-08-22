@@ -29,6 +29,7 @@ import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListDTO;
@@ -40,9 +41,11 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosEstadoCuentaService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosProveedorService;
+import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
@@ -93,6 +96,12 @@ public class MovimientosController {
 	@Autowired
 	@Qualifier("movimientosEstadoCuentaService")
 	private MovimientosEstadoCuentaService movimientosEstadoCuentaService;
+
+	/**
+	 * Servicio de conciliacion
+	 */
+	@Autowired
+	ConciliacionServiceImpl conciliacionServiceImpl;
 
 	/**
 	 * Repository de conciliacion
@@ -277,6 +286,11 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveMovimientoEsadoCuenta(@RequestBody SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		// Objetos necesarios
+		EstatusConciliacion estatusConciliacion = null;
+		Boolean procesoCorrecto = null;
+		String descripcionError = "";
+
 		// Validacion general de objeto y atributos
 		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -288,8 +302,37 @@ public class MovimientosController {
 
 		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste
 		// los movimientos del estado de cuenta
-		movimientosEstadoCuentaService.procesarConsultaEstadoCuenta(saveEstadoCuentaRequestDTO, userRequest);
-
+		try {
+			movimientosEstadoCuentaService.procesarConsultaEstadoCuenta(saveEstadoCuentaRequestDTO, userRequest);
+			procesoCorrecto = true;
+		} catch (ConciliacionException cex) {
+			procesoCorrecto = false;
+			descripcionError = cex.getCodigoError().getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
+			throw cex;
+		} catch (Exception eex) {
+			procesoCorrecto = false;
+			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_046.getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_046.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_046);
+		} finally {
+			try {
+				// Se actualiza el sub estatus de la conciliacion en base al resultado
+				estatusConciliacion = conciliacionRepository
+						.findEstatusByConciliacionId(saveEstadoCuentaRequestDTO.getFolio());
+				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
+						saveEstadoCuentaRequestDTO.getFolio(),
+						procesoCorrecto
+								? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
+								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
+						descripcionError), userRequest);
+			} catch (Exception ex) {
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_124.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_124);
+			}
+		}
 		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.SUCCESSFUL_SAVE_ESTADO_CUENTA, null);

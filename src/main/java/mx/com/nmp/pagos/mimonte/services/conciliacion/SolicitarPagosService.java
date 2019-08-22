@@ -156,7 +156,8 @@ public class SolicitarPagosService {
 
 		// Valida que los ids tengan un estatus 1
 		Boolean val = (movimientoConciliacionRepository.validaFolioAndIdsForMovPagos(requestDTO.getFolio(),
-				requestDTO.getIdMovimientos())) == BigInteger.ONE;
+				requestDTO.getIdMovimientos(), ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY,
+				requestDTO.getIdMovimientos().size())) == BigInteger.ONE;
 		if (!val)
 			throw new ConciliacionException(ConciliacionConstants.WRONG_MOVIMIENTOS_ESTATUS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_093);
@@ -235,7 +236,7 @@ public class SolicitarPagosService {
 		}
 
 		for (MovimientoTransito mt : movimientoTransitoList) {
-			mt.setEstatus(new EstatusTransito(2));
+			mt.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_SOLICITADA));
 		}
 		movimientoTransitoRepository.saveAll(movimientoTransitoList);
 	}

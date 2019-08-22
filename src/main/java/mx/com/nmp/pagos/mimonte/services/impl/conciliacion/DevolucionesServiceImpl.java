@@ -495,7 +495,9 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_089);
 		// Se envia el estatus 2 que significa solicitada como pago
 		flagEstatus = BigInteger.ONE.compareTo((BigInteger) movimientoTransitoRepository.verifyIfIdsHaveRightEstatus(
-				marcarDevoluciones.getIdMovimientos(), estatusTransito.get().getId(), 2)) == 0;
+				marcarDevoluciones.getIdMovimientos(), ConciliacionConstants.ESTATUS_TRANSITO_SOLICITADA,
+				ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY,
+				marcarDevoluciones.getIdMovimientos().size())) == 0;
 		if (!flagEstatus) {
 			throw new ConciliacionException(ConciliacionConstants.NOT_ALLOWED_STATUS_IDS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_090);

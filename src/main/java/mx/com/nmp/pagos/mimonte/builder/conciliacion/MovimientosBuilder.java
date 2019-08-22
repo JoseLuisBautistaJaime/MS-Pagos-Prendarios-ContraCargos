@@ -575,4 +575,22 @@ public abstract class MovimientosBuilder {
 		return list;
 	}
 
+	/**
+	 * Cinstruye una lista de elementos de tipo Long a partir de una lista de
+	 * elementos de tipo Object
+	 * 
+	 * @param objectList
+	 * @return
+	 */
+	public static List<Long> buildLongListFromObjectList(List<Object> objectList) {
+		List<Long> longList = null;
+		if (null != objectList) {
+			longList = new ArrayList<>();
+			for (Object object : objectList) {
+				longList.add(Long.valueOf(object.toString()));
+			}
+		}
+		return longList;
+	}
+
 }

@@ -86,16 +86,19 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 			long idMovimientoMidas);
 
 	/**
-	 * Regresa una bandera indicando con un 0 si los estatus a actualizar son
-	 * incorrectos y con un 1 si son correctos
+	 * Regresa una bandera indicando con un 1 si los estatus a actualizar son
+	 * correctos y con un 0 si son incorrectos
 	 * 
 	 * @param ids
 	 * @param estatus
+	 * @param estatus2
+	 * @param tam
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT mt.id FROM to_movimiento_transito mt WHERE mt.id IN(:ids) AND mt.estatus <> :estatus AND mt.estatus <> :estatus2 AND mt.estatus <> 5) IS NOT NULL THEN 0 ELSE 1 END AS RESULT")
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(mt.id) FROM to_movimiento_transito mt WHERE mt.id IN(:ids) AND mt.estatus <> :estatus AND mt.estatus <> :estatus2) = :tam THEN 1 ELSE 0 END AS RESULT")
 	public Object verifyIfIdsHaveRightEstatus(@Param("ids") final List<Integer> ids,
-			@Param("estatus") final Integer estatus, @Param("estatus2") final Integer estatus2);
+			@Param("estatus") final Integer estatus, @Param("estatus2") final Integer estatus2,
+			@Param("tam") final Integer tam);
 
 	/**
 	 * Regresa un valor de 1 cuando los movimientos especificados son movimientos
@@ -120,7 +123,7 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @return
 	 */
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(mt.id) FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mc ON mt.id = mc.id WHERE mt.id IN :ids AND mc.id_conciliacion = :folio) = (SELECT :tam)) THEN 1 ELSE 0 END")
-	public Object checkIdsAndFolioRelationship(@Param("folio") final Long folio,
-			@Param("ids") final List<Integer> ids, @Param("tam") final Integer tam);
+	public Object checkIdsAndFolioRelationship(@Param("folio") final Long folio, @Param("ids") final List<Integer> ids,
+			@Param("tam") final Integer tam);
 
 }
