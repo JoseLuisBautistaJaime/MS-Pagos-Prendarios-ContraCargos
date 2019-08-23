@@ -15,7 +15,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  */
 public enum TipoMovimientoActualizacionTransito {
 
-	PAGOS(1, "PAGOS"), DEVOLUCIONES(2, "DEVOLUCIONES");
+	PAGO(1, "PAGO"), DEVOLUCION(2, "DEVOLUCION");
 
 	private int id;
 	private String nombre;

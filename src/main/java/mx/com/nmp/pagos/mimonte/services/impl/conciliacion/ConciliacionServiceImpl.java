@@ -319,7 +319,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// VALIDA QUE FOLIO DE CONCILIACION EXISTA
 		conciliacionDataValidator.validateFolioExists(actualizaionConciliacionRequestDTO.getFolio());
 
-		// VALIDACIONES SOBRE MOVIMIENTOS TRANSITO
+		// VALIDACIONES SOBRE MOVIMIENTOS TRANSITO (SI ES QUE EXISTEN EN EL REQUEST)
 		if (null != actualizaionConciliacionRequestDTO.getMovimientosTransito()
 				&& !actualizaionConciliacionRequestDTO.getMovimientosTransito().isEmpty()) {
 
@@ -353,15 +353,17 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 							CodigoError.NMP_PMIMONTE_BUSINESS_111);
 				}
 
+				// TODO: Eliminar esta validacion comentada ya que los movs. transito siempre
+				// son dados de alta por sistema
 				// Valida que los movimientos hayan sido dados de alta por sistema
-				flag = null;
-				flag = ((BigInteger) movimientoTransitoRepository
-						.checkRightStatus(actualizaionConciliacionRequestDTO.getFolio(), idsMov, idsMov.size()))
-								.compareTo(BigInteger.ONE) == 0;
-				if (!flag) {
-					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_126.getDescripcion(),
-							CodigoError.NMP_PMIMONTE_BUSINESS_126);
-				}
+//				flag = null;
+//				flag = ((BigInteger) movimientoTransitoRepository
+//						.checkRightStatus(actualizaionConciliacionRequestDTO.getFolio(), idsMov, idsMov.size()))
+//								.compareTo(BigInteger.ONE) == 0;
+//				if (!flag) {
+//					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_126.getDescripcion(),
+//							CodigoError.NMP_PMIMONTE_BUSINESS_126);
+//				}
 
 				// Valida que el estatus sea uno permitido
 				flag = ((BigInteger) movimientoTransitoRepository.verifyRightStatus(
@@ -383,7 +385,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			}
 		}
 
-		// VALIDACIONES SOBRE CONMISIONES
+		// VALIDACIONES SOBRE CONMISIONES (SI ES QUE EXISTEN EN EL REQUEST)
 		flag = null;
 		try {
 			if (null != actualizaionConciliacionRequestDTO.getComisiones()
@@ -402,28 +404,32 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				else {
 					// Valida que los movimientos comision existan previamente (si es que se
 					// recibieron como parametro)
-					flag = ((BigInteger) movimientoComisionRepository.checkIfIdsExist(idsCom, idsCom.size()))
+					flag = ((BigInteger) movimientoComisionRepository.checkIfIdsExist(idsComComp, idsComComp.size()))
 							.compareTo(BigInteger.ONE) == 0;
 
 					if (flag) {
 						// Valida que las comisiones a editar tengan relacion con el folio de
 						// conciliacion especificado
 						flag2 = ((BigInteger) movimientoComisionRepository.checkIdsAndFolioRelationship(
-								actualizaionConciliacionRequestDTO.getFolio(), idsCom, idsCom.size()))
+								actualizaionConciliacionRequestDTO.getFolio(), idsComComp, idsComComp.size()))
 										.compareTo(BigInteger.ONE) == 0;
 						if (flag2) {
 							// Valida que las comisiones a editar hayan sido dadas de alta por el usuario
 							flag3 = ((BigInteger) movimientoComisionRepository.checkRightStatus(
-									actualizaionConciliacionRequestDTO.getFolio(), idsCom, idsCom.size()))
+									actualizaionConciliacionRequestDTO.getFolio(), idsComComp, idsComComp.size()))
 											.compareTo(BigInteger.ONE) == 0;
 							if (flag3) {
+
 								// Valida que no haya movimientos de comision repetidos (esto para evitar el
 								// conflicto en que se desee editar en uno y eliminar en otro)
 								flag4 = validateNoDuplicated(idsComComp);
 
 								if (flag4) {
+
+									// Valida que las comisiones tengan un estatus correcto
 									flag5 = ((BigInteger) movimientoComisionRepository.verifyRightStatus(
-											actualizaionConciliacionRequestDTO.getFolio(), idsCom, idsCom.size(),
+											actualizaionConciliacionRequestDTO.getFolio(), idsComComp,
+											idsComComp.size(),
 											Arrays.asList(
 													ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY)))
 															.compareTo(BigInteger.ONE) == 0;
@@ -456,32 +462,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_103);
 		}
 
-		// Valida que haya relacion entre el folio de conciliacion y los movimientos
-		// comision especificados
-//		if (null != actualizaionConciliacionRequestDTO.getComisiones()
-//				&& !actualizaionConciliacionRequestDTO.getComisiones().isEmpty()) {
-//			flag = null;
-//			try {
-//				if (null == idsCom || idsCom.isEmpty())
-//					flag = true;
-//				else
-//					flag = ((BigInteger) movimientoComisionRepository.checkIdsAndFolioRelationship(
-//							actualizaionConciliacionRequestDTO.getFolio(), idsCom, idsCom.size()))
-//									.compareTo(BigInteger.ONE) == 0;
-//				if (!flag) {
-//					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_109.getDescripcion(),
-//							CodigoError.NMP_PMIMONTE_BUSINESS_109);
-//				}
-//			} catch (ConciliacionException ex) {
-//				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-//				throw ex;
-//			} catch (Exception ex) {
-//				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-//				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_103.getDescripcion(),
-//						CodigoError.NMP_PMIMONTE_BUSINESS_103);
-//			}
-//		}
-
 		// Obtiene la conciliacion para registrar la actividad
 		try {
 			conciliacion = conciliacionHelper.getConciliacionByFolio(actualizaionConciliacionRequestDTO.getFolio(),
@@ -500,9 +480,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			try {
 				// Clasifica los movimientos en dos listas distintas dependiendo del tipo
 				for (MovTransitoRequestDTO movimiento : actualizaionConciliacionRequestDTO.getMovimientosTransito()) {
-					if (TipoMovimientoActualizacionTransito.PAGOS.getNombre().equals(movimiento.getTipo()))
+					if (TipoMovimientoActualizacionTransito.PAGO.getNombre().equals(movimiento.getTipo()))
 						idsPagos.add(movimiento.getId());
-					else if (TipoMovimientoActualizacionTransito.DEVOLUCIONES.getNombre().equals(movimiento.getTipo()))
+					else if (TipoMovimientoActualizacionTransito.DEVOLUCION.getNombre().equals(movimiento.getTipo()))
 						idsDevoluciones.add(movimiento.getId());
 				}
 				// ACTUALIZA LOS MOVIMIENTOS TRANSITO A SUS NUEVOS TIPOS

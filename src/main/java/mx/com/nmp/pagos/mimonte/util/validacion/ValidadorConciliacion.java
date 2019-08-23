@@ -642,8 +642,8 @@ public interface ValidadorConciliacion {
 				for (MovTransitoRequestDTO movTransito : actualizaionConciliacionRequestDTO.getMovimientosTransito()) {
 					if (null == movTransito.getId() || movTransito.getId().compareTo(0) < 0
 							|| null == movTransito.getTipo() || "".equals(movTransito.getTipo())
-							|| (!TipoMovimientoActualizacionTransito.PAGOS.getNombre().equals(movTransito.getTipo())
-									&& !TipoMovimientoActualizacionTransito.DEVOLUCIONES.getNombre()
+							|| (!TipoMovimientoActualizacionTransito.PAGO.getNombre().equals(movTransito.getTipo())
+									&& !TipoMovimientoActualizacionTransito.DEVOLUCION.getNombre()
 											.equals(movTransito.getTipo()))) {
 						return false;
 					}
