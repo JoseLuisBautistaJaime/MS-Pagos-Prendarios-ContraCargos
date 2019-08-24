@@ -399,7 +399,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				idsCom = mapComs.get("idsCom");
 				idsComDel = mapComs.get("idsComDel");
 				idsComComp = mapComs.get("idsComComp");
-				if (null == idsCom || idsCom.size() == 0)
+				if (null == idsComComp || idsComComp.isEmpty())
 					flag = true;
 				else {
 					// Valida que los movimientos comision existan previamente (si es que se
