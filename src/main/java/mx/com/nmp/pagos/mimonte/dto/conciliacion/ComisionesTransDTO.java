@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -23,6 +24,8 @@ public class ComisionesTransDTO implements Comparable<ComisionesTransDTO> {
 
 	private ComisionesTransProyeccionDTO proyeccion;
 	private ComisionesTransRealDTO real;
+
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public ComisionesTransDTO() {
 		super();
@@ -50,16 +53,16 @@ public class ComisionesTransDTO implements Comparable<ComisionesTransDTO> {
 		this.real = real;
 	}
 
-	public Date getFechaDesde() {
-		return fechaDesde;
+	public String getFechaDesde() {
+		return sdf.format(fechaDesde);
 	}
 
 	public void setFechaDesde(Date fechaDesde) {
 		this.fechaDesde = fechaDesde;
 	}
 
-	public Date getFechaHasta() {
-		return fechaHasta;
+	public String getFechaHasta() {
+		return sdf.format(fechaHasta);
 	}
 
 	public void setFechaHasta(Date fechaHasta) {

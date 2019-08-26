@@ -23,6 +23,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionProyeccion
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccionReal;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.OperacionComisionProyeccionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
 
 /**
@@ -242,19 +243,30 @@ public abstract class ComisionesBuilder {
 		return comisionesDTO;
 	}
 
+	/**
+	 * Construye un objeto de tipo ComisionesTransProyeccionDTO a partir de una
+	 * lista de objetos de tipo ComisionTransaccionProyeccion
+	 * 
+	 * @param comisionTransaccionProyeccionSet
+	 * @return
+	 */
 	private static ComisionesTransProyeccionDTO buildComisionesTransProyeccionDTOFromComisionesTransaccionProyeccion(
 			List<ComisionTransaccionProyeccion> comisionTransaccionProyeccionSet) {
 		List<ComisionesTransaccionesOperacionDTO> operaciones = null;
 		ComisionesTransProyeccionDTO proy = null;
-		if (comisionTransaccionProyeccionSet != null && comisionTransaccionProyeccionSet.size() > 0) {
+		String opName = null;
+		if (comisionTransaccionProyeccionSet != null && !comisionTransaccionProyeccionSet.isEmpty()) {
 			proy = new ComisionesTransProyeccionDTO();
 			BigDecimal totalOperaciones = new BigDecimal(0);
-			operaciones = new ArrayList<ComisionesTransaccionesOperacionDTO>();
+			operaciones = new ArrayList<>();
 			for (ComisionTransaccionProyeccion comisionTransaccionProyeccion : comisionTransaccionProyeccionSet) {
-				ComisionesTransaccionesOperacionDTO operacion = new ComisionesTransaccionesOperacionDTO(
-						comisionTransaccionProyeccion.getOperacion() != null
-								? comisionTransaccionProyeccion.getOperacion().toString()
-								: null,
+				if (null != comisionTransaccionProyeccion.getOperacion()) {
+					opName = null != OperacionComisionProyeccionEnum
+							.getById(comisionTransaccionProyeccion.getOperacion()) ? OperacionComisionProyeccionEnum
+									.getById(comisionTransaccionProyeccion.getOperacion().intValue()).getDescripcion()
+									: null;
+				}
+				ComisionesTransaccionesOperacionDTO operacion = new ComisionesTransaccionesOperacionDTO(opName,
 						comisionTransaccionProyeccion.getTransacciones(), comisionTransaccionProyeccion.getComision(),
 						comisionTransaccionProyeccion.getIvaComision(), comisionTransaccionProyeccion.getTotal());
 				operaciones.add(operacion);

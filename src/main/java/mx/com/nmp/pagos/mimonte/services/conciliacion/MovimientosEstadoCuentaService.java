@@ -311,7 +311,7 @@ public class MovimientosEstadoCuentaService {
 		if (null != estatusConciliacion) {
 			conciliacionService.actualizaSubEstatusConciliacionNT(request.getFolio(),
 					new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA),
-					userRequest, new Date(), estatusConciliacion, "");
+					userRequest, new Date(), estatusConciliacion, null);
 		} else {
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_125.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_125);

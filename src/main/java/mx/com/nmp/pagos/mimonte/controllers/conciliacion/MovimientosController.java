@@ -287,7 +287,7 @@ public class MovimientosController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		// Objetos necesarios
 		Boolean procesoCorrecto = null;
-		String descripcionError = "";
+		String descripcionError = null;
 
 		// Validacion general de objeto y atributos
 		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestDTO(saveEstadoCuentaRequestDTO))
