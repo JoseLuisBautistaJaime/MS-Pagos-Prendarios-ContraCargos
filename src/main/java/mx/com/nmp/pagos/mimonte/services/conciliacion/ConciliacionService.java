@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 
 /**
  * @author Quarksoft
@@ -95,6 +98,19 @@ public interface ConciliacionService {
 	 */
 	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			String usuario);
+
+	/**
+	 * Realiza a actualizacion de el subesttaus de una conciliaicon por folio
+	 * 
+	 * @param folio
+	 * @param subEstatus
+	 * @param usuario
+	 * @param fecha
+	 * @param estatusConciliacion
+	 * @param descripcion
+	 */
+	public void actualizaSubEstatusConciliacionNT(Long folio, SubEstatusConciliacion subEstatus, final String usuario,
+			Date fecha, EstatusConciliacion estatusConciliacion, String descripcion);
 
 	/**
 	 * Servicio que consulta el resumen de conciliaciones realizadas.

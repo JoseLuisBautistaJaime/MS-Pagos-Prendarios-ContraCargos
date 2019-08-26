@@ -112,6 +112,12 @@ public class MovimientosEstadoCuentaService {
 	private ConciliacionRepository conciliacionRepository;
 
 	/**
+	 * Service de conciliacion
+	 */
+	@Autowired
+	private ConciliacionService conciliacionService;
+	
+	/**
 	 * Validador generico para datos de conciliacion
 	 */
 	@Autowired
@@ -301,9 +307,9 @@ public class MovimientosEstadoCuentaService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_030);
 		}
 
-		// Actualiza el sub-estatus para realizar el registro del estado de cuenta
+		// Actualiza el sub-estatus para realizar el registro del estado de cuenta (invoca un metodo de actualizacion con una nueva transaccion)
 		if (null != estatusConciliacion) {
-			conciliacionRepository.actualizaSubEstatusConciliacion(request.getFolio(),
+			conciliacionService.actualizaSubEstatusConciliacionNT(request.getFolio(),
 					new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA),
 					userRequest, new Date(), estatusConciliacion, "");
 		} else {
