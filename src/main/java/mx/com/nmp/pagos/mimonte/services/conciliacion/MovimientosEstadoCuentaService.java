@@ -319,8 +319,9 @@ public class MovimientosEstadoCuentaService {
 
 		// Valida que la conciliacion tenga el estatus correcto para poder dar de alta
 		// el estado cuenta
-		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(request.getFolio(),
-				Arrays.asList(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA));
+		// TODO: Eliminar, ya no es necesario validar por segunda vez
+//		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(request.getFolio(),
+//				Arrays.asList(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA));
 
 		// Obtiene el estatus de la conciliacion
 		estatusConciliacion = conciliacionRepository.findEstatusByConciliacionId(request.getFolio());

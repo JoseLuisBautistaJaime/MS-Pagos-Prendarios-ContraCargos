@@ -90,7 +90,10 @@ public abstract class ComisionesBuilder {
 			comisionTransaccion = new ComisionTransaccion();
 			comisionTransaccion.setLastModifiedBy(null != comisionTransaccionVer ? requestUser : null);
 			comisionTransaccion.setLastModifiedDate(null != comisionTransaccionVer ? new Date() : null);
-			comisionTransaccion.setComision(comisionesTransDTO.getReal().getComision());
+			// TODO: Checar si efectivamente se toma la comision recibida y entonces
+			// elimianr la linea comentada
+			// comisionTransaccion.setComision(comisionesTransDTO.getReal().getComision());
+			comisionTransaccion.setComision(comisionesTransaccionesRequestDTO.getComision());
 			comisionTransaccion.setCreatedBy(null == comisionTransaccionVer ? requestUser : null);
 			comisionTransaccion.setCreatedDate(null == comisionTransaccionVer ? new Date() : null);
 			comisionTransaccion.setFechaDesde(comisionesTransaccionesRequestDTO.getFechaDesde());
@@ -241,11 +244,12 @@ public abstract class ComisionesBuilder {
 
 	private static ComisionesTransProyeccionDTO buildComisionesTransProyeccionDTOFromComisionesTransaccionProyeccion(
 			List<ComisionTransaccionProyeccion> comisionTransaccionProyeccionSet) {
+		List<ComisionesTransaccionesOperacionDTO> operaciones = null;
 		ComisionesTransProyeccionDTO proy = null;
 		if (comisionTransaccionProyeccionSet != null && comisionTransaccionProyeccionSet.size() > 0) {
 			proy = new ComisionesTransProyeccionDTO();
 			BigDecimal totalOperaciones = new BigDecimal(0);
-			List<ComisionesTransaccionesOperacionDTO> operaciones = new ArrayList<ComisionesTransaccionesOperacionDTO>();
+			operaciones = new ArrayList<ComisionesTransaccionesOperacionDTO>();
 			for (ComisionTransaccionProyeccion comisionTransaccionProyeccion : comisionTransaccionProyeccionSet) {
 				ComisionesTransaccionesOperacionDTO operacion = new ComisionesTransaccionesOperacionDTO(
 						comisionTransaccionProyeccion.getOperacion() != null
@@ -256,6 +260,7 @@ public abstract class ComisionesBuilder {
 				operaciones.add(operacion);
 				totalOperaciones = totalOperaciones.add(comisionTransaccionProyeccion.getTotal());
 			}
+			proy.setOperaciones(operaciones);
 			proy.setTotalOperaciones(totalOperaciones);
 		}
 		return proy;

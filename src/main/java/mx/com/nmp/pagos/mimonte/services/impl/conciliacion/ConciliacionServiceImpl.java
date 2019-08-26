@@ -1166,8 +1166,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void actualizaSubEstatusConciliacionNT(Long folio, SubEstatusConciliacion subEstatus, String usuario,
 			Date fecha, EstatusConciliacion estatusConciliacion, String descripcion) {
-		conciliacionRepository.actualizaSubEstatusConciliacion(folio, subEstatus, usuario, fecha, estatusConciliacion,
-				descripcion);
+		subEstatusConciliacionRepository.actualizaSubEstatusConciliacion(folio, subEstatus, usuario, fecha,
+				estatusConciliacion, descripcion);
+		subEstatusConciliacionRepository.flush();
 
 	}
 
