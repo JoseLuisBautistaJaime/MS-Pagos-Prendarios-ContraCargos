@@ -14,12 +14,14 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.HeaderCatalogEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.GrupoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
+import mx.com.nmp.pagos.mimonte.util.DateUtil;
 
 /**
  * @name LayoutsBuilder
@@ -189,14 +191,12 @@ public abstract class LayoutsBuilder {
 	/**
 	 * Construye un objeto de tipo LayoutLineaDTO a partir de un entity de tipo
 	 * LayoutLineaCatalog
-	 * 
 	 * @param layoutLineaCatalog
 	 * @param monto
+	 * @param unidadOperativa 
 	 * @return
 	 */
-	public static LayoutLineaDTO buildLayoutLineaDTOFromLayoutLineaCatalog(LayoutLineaCatalog layoutLineaCatalog,
-			BigDecimal monto) {
-
+	public static LayoutLineaDTO buildLayoutLineaDTOFromLayoutLineaCatalog(LayoutLineaCatalog layoutLineaCatalog, BigDecimal monto, String unidadOperativa) {
 		LayoutLineaDTO layoutLineaDTO = new LayoutLineaDTO();
 		layoutLineaDTO.setCuenta(layoutLineaCatalog.getCuenta());
 		layoutLineaDTO.setDepId(layoutLineaCatalog.getDepId());
@@ -205,8 +205,7 @@ public abstract class LayoutsBuilder {
 		layoutLineaDTO.setMonto(monto);
 		layoutLineaDTO.setNegocio(layoutLineaCatalog.getNegocio());
 		layoutLineaDTO.setProyectoNMP(layoutLineaCatalog.getProyectoNmp());
-		layoutLineaDTO.setUnidadOperativa(layoutLineaCatalog.getUnidadOperativa());
-
+		layoutLineaDTO.setUnidadOperativa(unidadOperativa);
 		return layoutLineaDTO;
 	}
 
@@ -297,17 +296,14 @@ public abstract class LayoutsBuilder {
 			LayoutHeaderCatalog layoutHeaderCatalog) {
 
 		LocalDate localDate = LocalDate.now();
-		if (layoutHeaderCatalog.getId() == HeaderCatalogEnum.PAGOS.id() && localDate.getDayOfWeek().getValue() == 5) {
-			layoutHeaderCatalog.setFecha(localDate.plusDays(3));
-		} else {
-			layoutHeaderCatalog.setFecha(localDate);
+		if (layoutHeaderCatalog.getTipo() == TipoLayoutEnum.PAGOS && localDate.getDayOfWeek().getValue() == 5) {
+			localDate = localDate.plusDays(3);
 		}
-
 		LayoutCabeceraDTO layoutHeaderDTO = new LayoutCabeceraDTO();
 		layoutHeaderDTO.setCabecera(layoutHeaderCatalog.getCabecera());
 		layoutHeaderDTO.setCodigoOrigen(layoutHeaderCatalog.getCodigoOrigen());
-		layoutHeaderDTO.setDescripcion(layoutHeaderCatalog.getDescripcion() + " " + LocalDate.now());
-		layoutHeaderDTO.setFecha(layoutHeaderCatalog.getFecha());
+		layoutHeaderDTO.setDescripcion(layoutHeaderCatalog.getDescripcion() + " " + DateUtil.formatDate(new Date(), "ddMMyyyy"));
+		layoutHeaderDTO.setFecha(localDate);
 		layoutHeaderDTO.setUnidadNegocio(layoutHeaderCatalog.getUnidadNegocio());
 
 		return layoutHeaderDTO;

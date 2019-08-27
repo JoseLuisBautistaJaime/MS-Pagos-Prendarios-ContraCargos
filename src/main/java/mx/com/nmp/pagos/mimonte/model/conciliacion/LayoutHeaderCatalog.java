@@ -1,11 +1,10 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,18 +37,17 @@ public class LayoutHeaderCatalog extends Updatable implements Serializable {
 	@Column(name = "codigo_origen")
 	private String codigoOrigen;
 
-	@Column(name = "created_by")
-	private String createdBy;
-
+	@Column(name = "descripcion")
 	private String descripcion;
-
-	private LocalDate fecha;
-
-	@Column(name = "id_layout")
-	private Long idLayout;
 
 	@Column(name = "unidad_negocio")
 	private String unidadNegocio;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tipo")
+	private TipoLayoutEnum tipo;
+
+
 
 	public LayoutHeaderCatalog() {
 		super();
@@ -95,22 +93,6 @@ public class LayoutHeaderCatalog extends Updatable implements Serializable {
 		this.codigoOrigen = codigoOrigen;
 	}
 
-	public String getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
 	public String getDescripcion() {
 		return this.descripcion;
 	}
@@ -119,44 +101,20 @@ public class LayoutHeaderCatalog extends Updatable implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-	public LocalDate getFecha() {
-		return this.fecha;
-	}
-
-	public void setFecha(LocalDate fecha) {
-		this.fecha = fecha;
-	}
-
-	public Long getIdLayout() {
-		return this.idLayout;
-	}
-
-	public void setIdLayout(Long idLayout) {
-		this.idLayout = idLayout;
-	}
-
-	public String getLastModifiedBy() {
-		return this.lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public Date getLastModifiedDate() {
-		return this.lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
 	public String getUnidadNegocio() {
 		return this.unidadNegocio;
 	}
 
 	public void setUnidadNegocio(String unidadNegocio) {
 		this.unidadNegocio = unidadNegocio;
+	}
+
+	public TipoLayoutEnum getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoLayoutEnum tipo) {
+		this.tipo = tipo;
 	}
 
 }

@@ -13,3 +13,14 @@ ALTER TABLE `to_layout_linea` ADD (
 
 ALTER TABLE `to_layout` 
 ADD UNIQUE INDEX `to_layout_UNIQUE` (`id_conciliacion`, tipo);
+
+ALTER TABLE `tc_layout_header` 
+DROP COLUMN `fecha`,
+DROP COLUMN `id_layout`,
+ADD COLUMN `tipo` VARCHAR(50) NULL AFTER `campo2`,
+ADD COLUMN `grupo` VARCHAR(50) NULL AFTER `tipo`;
+
+ALTER TABLE `tc_layout_linea` 
+DROP COLUMN `id_layout`,
+DROP COLUMN `monto`,
+ADD COLUMN `tipo` VARCHAR(45) NULL AFTER `monto`;

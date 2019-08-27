@@ -1,10 +1,12 @@
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,14 +33,8 @@ public class LayoutLineaCatalog extends Updatable implements Serializable {
 	@Column(name = "dep_id")
 	private String depId;
 
-	@Column(name = "id_layout")
-	private Long idLayout;
-
 	@Column(name = "linea")
 	private String linea;
-
-	@Column(name = "monto")
-	private Double monto;
 
 	@Column(name = "negocio")
 	private String negocio;
@@ -48,6 +44,15 @@ public class LayoutLineaCatalog extends Updatable implements Serializable {
 
 	@Column(name = "unidad_operativa")
 	private String unidadOperativa;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tipo")
+	private TipoLayoutEnum tipo;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "grupo")
+	private GrupoLayoutEnum grupo;
+
 
 	public LayoutLineaCatalog() {
 		super();
@@ -59,22 +64,6 @@ public class LayoutLineaCatalog extends Updatable implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
 	}
 
 	public String getCuenta() {
@@ -93,44 +82,12 @@ public class LayoutLineaCatalog extends Updatable implements Serializable {
 		this.depId = depId;
 	}
 
-	public Long getIdLayout() {
-		return this.idLayout;
-	}
-
-	public void setIdLayout(Long idLayout) {
-		this.idLayout = idLayout;
-	}
-
-	public String getLastModifiedBy() {
-		return this.lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public Date getLastModifiedDate() {
-		return this.lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
 	public String getLinea() {
 		return this.linea;
 	}
 
 	public void setLinea(String linea) {
 		this.linea = linea;
-	}
-
-	public Double getMonto() {
-		return this.monto;
-	}
-
-	public void setMonto(Double monto) {
-		this.monto = monto;
 	}
 
 	public String getNegocio() {
@@ -157,12 +114,25 @@ public class LayoutLineaCatalog extends Updatable implements Serializable {
 		this.unidadOperativa = unidadOperativa;
 	}
 
+	public TipoLayoutEnum getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoLayoutEnum tipo) {
+		this.tipo = tipo;
+	}
+
+	public GrupoLayoutEnum getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(GrupoLayoutEnum grupo) {
+		this.grupo = grupo;
+	}
+
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
+		return Objects.hash(id, cuenta, depId, linea, negocio, proyectoNmp, unidadOperativa, tipo, grupo);
 	}
 
 	@Override
