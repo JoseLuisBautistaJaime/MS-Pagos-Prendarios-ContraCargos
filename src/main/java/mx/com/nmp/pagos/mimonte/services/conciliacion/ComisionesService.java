@@ -306,9 +306,9 @@ public class ComisionesService {
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(comisionesTransaccionesRequestDTO.getIdConciliacion(),
-				"Se genera la consulta de transacciones de comsiones, proyeccion y real de la conciliacion "
+				"Se genero la consulta de Comisiones/Transacciones para la conciliacion con el folio: "
 						.concat(String.valueOf(comisionesTransaccionesRequestDTO.getIdConciliacion()))
-						.concat(" con una comision bancaria por: $ ")
+						.concat(", con una comision bancaria de: ")
 						.concat(String.valueOf(comisionesTransaccionesRequestDTO.getComision())),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.COMISIONES);
 
@@ -387,10 +387,10 @@ public class ComisionesService {
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(comisionSaveDTO.getFolio(),
-				(flagNew ? "Se agrega una nueva comision por concepto de "
-						: "Se actualiza una comision por concepto de ").concat(comisionSaveDTO.getDescripcion())
-								.concat(", con un monto de: $ ").concat(String.valueOf(comisionSaveDTO.getMonto()))
-								.concat(", para la conciliacion ").concat(String.valueOf(comisionSaveDTO.getFolio())),
+				(flagNew ? "Se agrego una nueva comision para la conciliacion con el folio: "
+						: "Se actualizo una comision de la conciliacion con el folio ").concat(String.valueOf(comisionSaveDTO.getFolio()))
+								.concat(", por el concepto: ").concat(comisionSaveDTO.getDescripcion())
+								.concat(", con un monto de: $ ").concat(String.valueOf(comisionSaveDTO.getMonto())),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.COMISIONES);
 
 		return result;
