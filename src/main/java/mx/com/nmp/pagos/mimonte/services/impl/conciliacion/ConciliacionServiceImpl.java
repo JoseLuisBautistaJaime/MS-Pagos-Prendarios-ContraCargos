@@ -1081,13 +1081,18 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(actualizarIdPSRequest.getFolio(),
-				"Se actualiza el id de people-soft para la conciliacion "
-						.concat(String.valueOf(actualizarIdPSRequest.getFolio()))
-						.concat(" con el id de asiento contable: ")
-						.concat(String.valueOf(actualizarIdPSRequest.getIdAsientoContable()))
-						.concat(" y el di de poliza de tesoreria: ")
-						.concat(String.valueOf(actualizarIdPSRequest.getIdPolizaTesoreria())),
+		String descripcionActividad = "Se actualizo la informacion de PeopleSoft para la conciliacion: "
+				.concat(String.valueOf(actualizarIdPSRequest.getFolio()));
+
+		if (StringUtil.isNotNullNorEmpty(actualizarIdPSRequest.getIdAsientoContable())) {
+			descripcionActividad += ", ID Asiento Contable: " + String.valueOf(actualizarIdPSRequest.getIdAsientoContable());
+		}
+
+		if (StringUtil.isNotNullNorEmpty(actualizarIdPSRequest.getIdPolizaTesoreria())) {
+			descripcionActividad += ", ID Poliza Tesoreria: " + String.valueOf(actualizarIdPSRequest.getIdPolizaTesoreria());
+		}
+
+		actividadGenericMethod.registroActividad(actualizarIdPSRequest.getFolio(), descripcionActividad,
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZACION_ID_PEOPLE_SOFT);
 	}
 
