@@ -20,6 +20,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuentaCabecera;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
@@ -56,40 +57,50 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 			// Devoluciones
 			List<MovimientoDevolucion> movsDevoluciones = extraerMovimientoDevolucion(reportesWrapper.getIdConciliacion());
 			if (CollectionUtils.isNotEmpty(movsDevoluciones)) {
+
+				List<MovimientoDevolucion> movimientosDevolucionSave = new ArrayList<MovimientoDevolucion>();
+
 				for (MovimientoDevolucion movDevolucion : movsDevoluciones) {
 
 					// TODO: Se verifica si ya existe
 					movDevolucion.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
 					movDevolucion.setCreatedDate(new Date());
 					movDevolucion.setIdConciliacion(reportesWrapper.getIdConciliacion());
+					
+					movimientosDevolucionSave.add(movDevolucion);
 				}
 
-				// Se guardan las comisiones
-				this.mergeReporteHandler.getMovimientoDevolucionRepository().saveAll(movsDevoluciones);
+				// Se guardan las devoluciones
+				this.mergeReporteHandler.getMovimientoDevolucionRepository().saveAll(movimientosDevolucionSave);
 			}
 
 
 			// Comisiones
 			List<MovimientoComision> movsComisiones = extraerMovimientoComision(reportesWrapper.getIdConciliacion());
 			if (CollectionUtils.isNotEmpty(movsComisiones)) {
+
+				List<MovimientoComision> movimientosComisionSave = new ArrayList<MovimientoComision>();
+
 				for (MovimientoComision movComision : movsComisiones) {
 
 					// Se verifica si ya existe
 					MovimientoComision movComisionBD = this.mergeReporteHandler.getMovimientoComisionRepository()
 							.findByIdMovimientoEstadoCuenta(movComision.getIdMovimientoEstadoCuenta());
-					if (movComisionBD != null) {
-						movComision.setId(movComisionBD.getId());
+					if (movComisionBD != null) { // Update last modified
+						movComision = movComisionBD;
 						movComision.setLastModifiedBy(ConciliacionConstants.USER_SYSTEM);
 						movComision.setLastModifiedDate(new Date());
-					} else {
+					} else { // Crear nueva
 						movComision.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
 						movComision.setCreatedDate(new Date());
 						movComision.setIdConciliacion(reportesWrapper.getIdConciliacion());
 					}
+					
+					movimientosComisionSave.add(movComision);
 				}
 
 				// Se guardan las comisiones
-				this.mergeReporteHandler.getMovimientoComisionRepository().saveAll(movsComisiones);
+				this.mergeReporteHandler.getMovimientoComisionRepository().saveAll(movimientosComisionSave);
 			}
 		}
 
