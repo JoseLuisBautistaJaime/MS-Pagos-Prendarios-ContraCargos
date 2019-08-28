@@ -23,6 +23,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
+import mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.processor.ConciliacionGlobalProcessor;
 import mx.com.nmp.pagos.mimonte.processor.ConciliacionProcessorChain;
@@ -77,6 +78,9 @@ public class MergeReporteHandler {
 
 	@Inject
 	private EstadoCuentaRepository estadoCuentaRepository;
+
+	@Inject
+	private EstadoCuentaHelper estadoCuentaHelper;
 
 
 
@@ -178,16 +182,16 @@ public class MergeReporteHandler {
 		return estadoCuentaRepository;
 	}
 
-
-
 	public MovimientoDevolucionRepository getMovimientoDevolucionRepository() {
 		return movimientoDevolucionRepository;
 	}
 
-
-
 	public EstadoCuentaCabeceraRepository getEstadoCuentaCabeceraRepository() {
 		return estadoCuentaCabeceraRepository;
+	}
+
+	public EstadoCuentaHelper getEstadoCuentaHelper() {
+		return estadoCuentaHelper;
 	}
 
 }

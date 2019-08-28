@@ -322,7 +322,7 @@ public final class ConciliacionConstants {
 	// CATALOGOS
 
 	public static final Long CATEGORIA_ESTADO_CUENTA_COMISIONES = 2L;
-	public static final Long CATEGORIA_ESTADO_CUENTA_IVA = 4L;
+	public static final Long CATEGORIA_ESTADO_CUENTA_IVA = 5L;
 	public static final Long CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES = 6L;
 
 	// Estatus conciliacion

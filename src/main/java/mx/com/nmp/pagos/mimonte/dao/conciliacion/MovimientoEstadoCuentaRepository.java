@@ -56,14 +56,19 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	public List<MovimientoEstadoCuenta> findByReporte(@Param("reporteId") final Integer reporteId);
 
 	/**
-	 * Regresa los movimientos estado de cuenta por id de reporte y claves leyenda
+	 * Regresa los movimientos estado de cuenta por id de conciliacion y claves leyenda
 	 * @param idReporte
 	 * @param clavesLeyenda
 	 * @return
 	 */
-	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.id = :reporteId AND mm.claveLeyenda IN (:clavesLeyenda)")
-	public List<MovimientoEstadoCuenta> findByReporteAndClaveLeyendaIn(@Param("reporteId") final Integer reporteId, @Param("clavesLeyenda") List<String> clavesLeyenda);
+	@Query("SELECT DISTINCT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :idConciliacion AND mm.claveLeyenda IN (:clavesLeyenda)")
+	public List<MovimientoEstadoCuenta> findByConciliacionAndClaveLeyendaIn(@Param("idConciliacion") final Long idConciliacion, @Param("clavesLeyenda") List<String> clavesLeyenda);
 
+	/**
+	 * Obtiene los movimientos de estado de cuenta asignados a una conciliacion
+	 * @param idConciliacion
+	 * @return
+	 */
 	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte INNER JOIN r.conciliacion con WHERE con.id = :idConciliacion")
 	public List<MovimientoEstadoCuenta> findByConciliacion(@Param("idConciliacion") final Long idConciliacion);
 

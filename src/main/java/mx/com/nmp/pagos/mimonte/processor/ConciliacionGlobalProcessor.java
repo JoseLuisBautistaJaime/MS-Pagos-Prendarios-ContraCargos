@@ -45,7 +45,7 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 		List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(reportesWrapper.getIdConciliacion());
 		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByConciliacion(reportesWrapper.getIdConciliacion());
 
-		List<String> codigosDevoluciones = getCodigosEstadoCuenta(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES);
+		List<String> codigosDevoluciones = this.mergeReporteHandler.getEstadoCuentaHelper().getCodigosEstadoCuenta(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES);
 		
 		// Actualizar seccion global
 		global = GlobalBuilder.updateGlobal(global, reportesWrapper, movsMidas, movsProveedor, movsEstadoCuenta, codigosDevoluciones);

@@ -67,4 +67,11 @@ public interface CodigoEstadoCuentaRepository extends JpaRepository<CodigoEstado
 	 * Regresa todos los codigos de estado de cuenta
 	 */
 	public List<CodigoEstadoCuenta> findAll();
+
+	/**
+	 * Regresa todos los codigos de estado de cuenta por estatus
+	 * @param estatus
+	 * @return
+	 */
+	public List<CodigoEstadoCuenta> findAllByEstatus(boolean estatus);
 }
