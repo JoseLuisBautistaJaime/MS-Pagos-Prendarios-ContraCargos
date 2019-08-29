@@ -665,11 +665,27 @@ public class LayoutsService {
 
 		// Genera las lineas
 		List<LayoutLineaDTO> lineasDTO = new ArrayList<LayoutLineaDTO>();
-		
-		// Agrupar movimientos por tipo y grupo
+
+		// Agrupar movimientos por tipo y grupo sucursales
 		GrupoLayoutEnum grupo = GrupoLayoutEnum.SUCURSALES;
 		List<MovimientoConciliacion> movimientosByGrupo = agruparMovimientos(movimientos, tipo, grupo);
 		LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipo, grupo);
+		if (lineaCatalog == null) {
+			throw new ConciliacionException("No existe configuracion de la linea para el layout " + tipo + " y grupo " + grupo);
+		}
+
+		// Genera las lineas de acuerdo al tipo y grupo
+		for (MovimientoConciliacion movimiento : movimientosByGrupo) {
+			BigDecimal monto = getMontoMovimiento(movimiento, tipo, grupo);
+			String unidadOperativa = getUnidadOperativa(movimiento, lineaCatalog);
+			LayoutLineaDTO lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaCatalog, monto, unidadOperativa);
+			lineasDTO.add(lineaDTO);
+		}
+
+		// Agrupar movimientos por tipo y grupo Banco
+		grupo = GrupoLayoutEnum.BANCOS;
+		movimientosByGrupo = agruparMovimientos(movimientos, tipo, grupo);
+		lineaCatalog = getLayoutLineaCatalog(tipo, grupo);
 		if (lineaCatalog == null) {
 			throw new ConciliacionException("No existe configuracion de la linea para el layout " + tipo + " y grupo " + grupo);
 		}

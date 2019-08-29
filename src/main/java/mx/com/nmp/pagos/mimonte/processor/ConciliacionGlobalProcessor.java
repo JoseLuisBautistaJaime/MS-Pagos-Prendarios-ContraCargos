@@ -5,9 +5,7 @@
 package mx.com.nmp.pagos.mimonte.processor;
 
 import java.util.List;
-
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.GlobalBuilder;
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
@@ -15,6 +13,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
+import mx.com.nmp.pagos.mimonte.util.CodigosEdoCuentaMap;
 
 /**
  * Nombre: ConciliacionGlobalProcessor
@@ -45,10 +44,10 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 		List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(reportesWrapper.getIdConciliacion());
 		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByConciliacion(reportesWrapper.getIdConciliacion());
 
-		List<String> codigosDevoluciones = this.mergeReporteHandler.getEstadoCuentaHelper().getCodigosEstadoCuenta(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES);
+		CodigosEdoCuentaMap codigosEdoCuenta = this.mergeReporteHandler.getEstadoCuentaHelper().getCodigosEdoCuentaMap();
 		
 		// Actualizar seccion global
-		global = GlobalBuilder.updateGlobal(global, reportesWrapper, movsMidas, movsProveedor, movsEstadoCuenta, codigosDevoluciones);
+		global = GlobalBuilder.updateGlobal(global, reportesWrapper, movsMidas, movsProveedor, movsEstadoCuenta, codigosEdoCuenta);
 
 		// Guardar global en la bd
 		this.mergeReporteHandler.getGlobalRepository().saveAndFlush(global);

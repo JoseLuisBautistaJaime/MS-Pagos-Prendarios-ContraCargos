@@ -5,9 +5,9 @@
 package mx.com.nmp.pagos.mimonte.helper;
 
 import java.util.List;
-
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
+import mx.com.nmp.pagos.mimonte.util.CodigosEdoCuentaMap;
 
 /**
  * @name EstadoCuentaHelper
@@ -45,11 +45,25 @@ public interface EstadoCuentaHelper {
 	public List<String> getCodigosEstadoCuenta(Long categoriaEdoCuenta) throws ConciliacionException;
 
 	/**
+	 * Regresa el listado de codigos de estado de cuenta
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public List<String> getCodigosEstadoCuenta() throws ConciliacionException;
+
+	/**
 	 * Obtiene la categoria asignada a la clave leyenda si existe
 	 * @param codigos
 	 * @param claveLeyenda
 	 * @return
 	 */
-	public Long getCategoriaFromClave(List<CodigoEstadoCuenta> codigos, String claveLeyenda);
+	public Long getCategoriaFromClave(List<CodigoEstadoCuenta> codigos, String claveLeyenda) throws ConciliacionException;
+
+	/**
+	 * Obtiene los codigos de estado de cuenta agrupados por categoria
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public CodigosEdoCuentaMap getCodigosEdoCuentaMap() throws ConciliacionException;
 
 }

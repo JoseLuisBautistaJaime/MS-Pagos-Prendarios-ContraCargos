@@ -2,7 +2,6 @@ package mx.com.nmp.pagos.mimonte.util;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
@@ -24,13 +23,14 @@ public class ConciliacionMathUtil {
 	 * (Cantidad de las devoluciones autorizadas por la entidad bancaria reflejada en el estado de cuenta, para el proceso de preconciliación este campo obtendrá
 	 * el monto 0.00 ya que un no se importa el estado de cuenta.)
 	 * @param movsEstadoCuenta
+	 * @param codigosEdoCuenta
 	 * @return
 	 */
-	public static BigDecimal getDevolucionesEstadoCuenta(List<MovimientoEstadoCuenta> movsEstadoCuenta, List<String> clavesDevolucion) {
+	public static BigDecimal getDevolucionesEstadoCuenta(List<MovimientoEstadoCuenta> movsEstadoCuenta, CodigosEdoCuentaMap codigosEdoCuenta) {
 		BigDecimal total = new BigDecimal(0);
 		if (movsEstadoCuenta != null) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
-				if (isEstadoCuentaConcepto(movEstadoCuenta.getClaveLeyenda(), clavesDevolucion)) {
+				if (codigosEdoCuenta.containsClaveInCategoria(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES, movEstadoCuenta.getClaveLeyenda())) {
 					total = total.add(movEstadoCuenta.getImporte());
 				}
 			}
@@ -84,14 +84,14 @@ public class ConciliacionMathUtil {
 	/**
 	 * (Cantidad de liquidación reflejada en el estado de cuenta, para el proceso de preconciliación este campo obtendrá el moto 0.00 ya que aún no se importa el estado de cuenta.)
 	 * @param movsEstadoCuenta
-	 * @param clavesDevolucion
+	 * @param codigosEstadoCuenta
 	 * @return
 	 */
-	public static BigDecimal getImporteBanco(List<MovimientoEstadoCuenta> movsEstadoCuenta, List<String> clavesDevolucion) {
+	public static BigDecimal getImporteBanco(List<MovimientoEstadoCuenta> movsEstadoCuenta, CodigosEdoCuentaMap codigosEdoCuenta) {
 		BigDecimal montoLiquidacion = new BigDecimal(0);
 		if (movsEstadoCuenta != null) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
-				if (isEstadoCuentaConcepto(movEstadoCuenta.getClaveLeyenda(), clavesDevolucion)) {
+				if (codigosEdoCuenta.containsClave(movEstadoCuenta.getClaveLeyenda())) {
 					montoLiquidacion = montoLiquidacion.add(movEstadoCuenta.getImporte());
 				}
 			}
@@ -132,10 +132,11 @@ public class ConciliacionMathUtil {
 	 * si el resultado es 0.00, quiere decir que los montos de las transacciones y de la liquidación del estado de cuenta son exitosas.)
 	 * @param movsProveedor
 	 * @param movsEstadoCuenta
+	 * @param codigosEdoCuenta
 	 * @return
 	 */
-	public static BigDecimal getDiferenciaProveedorBanco(List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta, List<String> clavesDevolucion) {
-		BigDecimal montoBanco = getImporteBanco(movsEstadoCuenta, clavesDevolucion);
+	public static BigDecimal getDiferenciaProveedorBanco(List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta, CodigosEdoCuentaMap codigosEdoCuenta) {
+		BigDecimal montoBanco = getImporteBanco(movsEstadoCuenta, codigosEdoCuenta);
 		BigDecimal montoProveedor = getImporteProveedor(movsProveedor);
 		
 		BigDecimal diff = new BigDecimal(0);
@@ -152,8 +153,4 @@ public class ConciliacionMathUtil {
 		return diff;
 	}
 
-
-	private static boolean isEstadoCuentaConcepto(String clave, List<String> claves) {
-		return (clave != null && claves != null ? claves.contains(clave) : false);
-	}
 }

@@ -6,7 +6,6 @@ package mx.com.nmp.pagos.mimonte.helper.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,7 @@ import mx.com.nmp.pagos.mimonte.dao.CodigoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper;
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
+import mx.com.nmp.pagos.mimonte.util.CodigosEdoCuentaMap;
 
 /**
  * @name ConciliacionHelperImpl
@@ -122,6 +122,33 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 	}
 
 
+	public List<String> getCodigosEstadoCuenta() throws ConciliacionException {
+
+		List<CodigoEstadoCuenta> codigos = null;
+		try {
+			codigos = this.codigoEstadoCuentaRepository.findAllByEstatus(true);
+		} catch (Exception ex) {
+			throw new ConciliacionException("Error al obtener los codigos de estado de cuenta",
+					CodigoError.NMP_PMIMONTE_BUSINESS_072);
+		}
+
+		if (CollectionUtils.isEmpty(codigos)) {
+			throw new ConciliacionException(
+					"No existen codigos de estado de cuenta configurados",
+					CodigoError.NMP_PMIMONTE_BUSINESS_073);
+		}
+
+		List<String> codigosEstadoCuenta = new ArrayList<String>();
+		if (CollectionUtils.isNotEmpty(codigos)) {
+			for (CodigoEstadoCuenta codigo : codigos) {
+				codigosEstadoCuenta.add(codigo.getCodigo());
+			}
+		}
+
+		return codigosEstadoCuenta;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getCategoriaFromClave(java.util.List, java.lang.String)
 	 */
@@ -137,6 +164,28 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 		return idCategoria;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getCodigosEdoCuentaMap()
+	 */
+	public CodigosEdoCuentaMap getCodigosEdoCuentaMap() throws ConciliacionException {
+
+		List<CodigoEstadoCuenta> codigos = null;
+		try {
+			codigos = this.codigoEstadoCuentaRepository.findAllByEstatus(true);
+		} catch (Exception ex) {
+			throw new ConciliacionException("Error al obtener los codigos de estado de cuenta",
+					CodigoError.NMP_PMIMONTE_BUSINESS_072);
+		}
+
+		if (CollectionUtils.isEmpty(codigos)) {
+			throw new ConciliacionException(
+					"No existen codigos de estado de cuenta configurados",
+					CodigoError.NMP_PMIMONTE_BUSINESS_073);
+		}
+
+		return new CodigosEdoCuentaMap(codigos);
+	}
 
 
 	/**
