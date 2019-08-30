@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -301,7 +302,7 @@ public abstract class LayoutsBuilder {
 		LayoutCabeceraDTO layoutHeaderDTO = new LayoutCabeceraDTO();
 		layoutHeaderDTO.setCabecera(layoutHeaderCatalog.getCabecera());
 		layoutHeaderDTO.setCodigoOrigen(layoutHeaderCatalog.getCodigoOrigen());
-		layoutHeaderDTO.setDescripcion(layoutHeaderCatalog.getDescripcion() + " " + DateUtil.formatDate(new Date(), "ddMMyyyy"));
+		layoutHeaderDTO.setDescripcion(MessageFormat.format(layoutHeaderCatalog.getDescripcion(), DateUtil.formatDate(new Date(), "ddMMyyyy")));
 		layoutHeaderDTO.setFecha(localDate);
 		layoutHeaderDTO.setUnidadNegocio(layoutHeaderCatalog.getUnidadNegocio());
 

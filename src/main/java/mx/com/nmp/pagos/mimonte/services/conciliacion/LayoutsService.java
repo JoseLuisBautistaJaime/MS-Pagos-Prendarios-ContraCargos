@@ -620,7 +620,13 @@ public class LayoutsService {
 		if (movimientos != null && movimientos.size() > 0) {
 
 			// Se construyen las lineas
-			List<LayoutLineaDTO> lineasDTO = buildLineasDTO(movimientos, tipo);
+			List<LayoutLineaDTO> lineasDTO = new ArrayList<LayoutLineaDTO>();
+			if (tipo != TipoLayoutEnum.COMISIONES_GENERALES) {
+				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.SUCURSALES));
+			}
+			if (tipo != TipoLayoutEnum.COMISIONES_MOV) {
+				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.BANCOS));
+			}
 
 			// Se genera la cabecera correspondiente
 			LayoutCabeceraDTO cabeceraDTO = buildCabeceraDTO(idConciliacion, tipo);
@@ -659,33 +665,17 @@ public class LayoutsService {
 	 * 
 	 * @param movimientos
 	 * @param tipo
+	 * @param grupo
 	 * @return
 	 */
-	private List<LayoutLineaDTO> buildLineasDTO(List<MovimientoConciliacion> movimientos, TipoLayoutEnum tipo) throws ConciliacionException {
+	private List<LayoutLineaDTO> buildLineasDTO(List<MovimientoConciliacion> movimientos, TipoLayoutEnum tipo, GrupoLayoutEnum grupo) throws ConciliacionException {
 
 		// Genera las lineas
 		List<LayoutLineaDTO> lineasDTO = new ArrayList<LayoutLineaDTO>();
 
-		// Agrupar movimientos por tipo y grupo sucursales
-		GrupoLayoutEnum grupo = GrupoLayoutEnum.SUCURSALES;
+		// Agrupar movimientos por tipo y grupo
 		List<MovimientoConciliacion> movimientosByGrupo = agruparMovimientos(movimientos, tipo, grupo);
 		LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipo, grupo);
-		if (lineaCatalog == null) {
-			throw new ConciliacionException("No existe configuracion de la linea para el layout " + tipo + " y grupo " + grupo);
-		}
-
-		// Genera las lineas de acuerdo al tipo y grupo
-		for (MovimientoConciliacion movimiento : movimientosByGrupo) {
-			BigDecimal monto = getMontoMovimiento(movimiento, tipo, grupo);
-			String unidadOperativa = getUnidadOperativa(movimiento, lineaCatalog);
-			LayoutLineaDTO lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaCatalog, monto, unidadOperativa);
-			lineasDTO.add(lineaDTO);
-		}
-
-		// Agrupar movimientos por tipo y grupo Banco
-		grupo = GrupoLayoutEnum.BANCOS;
-		movimientosByGrupo = agruparMovimientos(movimientos, tipo, grupo);
-		lineaCatalog = getLayoutLineaCatalog(tipo, grupo);
 		if (lineaCatalog == null) {
 			throw new ConciliacionException("No existe configuracion de la linea para el layout " + tipo + " y grupo " + grupo);
 		}

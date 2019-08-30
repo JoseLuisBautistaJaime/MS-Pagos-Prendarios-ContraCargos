@@ -765,16 +765,23 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,
 				Arrays.asList(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA));
 
+
 		// Validar conciliacion y actualizar estatus
+
+		// Se mueven los movimientos de transito a movimientos pago antes de generar los
+		// layouts
 		try {
-
-			// Se mueven los movimientos de transito a movimientos pago antes de generar los
-			// layouts
 			solicitarPagosService.insertaMovimientosPagoFinal(idConciliacion, usuario);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al actualizar los ids de asiento contable",
+					CodigoError.NMP_PMIMONTE_BUSINESS_031);
+		}
 
-			// Se crean los layouts correspondientes
-			layoutsService.enviarConciliacion(idConciliacion, usuario);
+		// Se crean los layouts correspondientes
+		layoutsService.enviarConciliacion(idConciliacion, usuario);
 
+		try {
 			// Se actualiza el sub estatus a enviada
 			conciliacion
 					.setSubEstatus(new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_ENVIADA));
