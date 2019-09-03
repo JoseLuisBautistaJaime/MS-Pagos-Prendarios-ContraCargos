@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.LayoutsBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -45,6 +46,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 
@@ -109,6 +112,12 @@ public class LayoutsService {
 	private ConciliacionDataValidator conciliacionDataValidator;
 
 	/**
+	 * Registro de actividades
+	 */
+	@Autowired
+	private ActividadGenericMethod actividadGenericMethod;
+
+	/**
 	 * Logs de la clase
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(LayoutsService.class);
@@ -140,13 +149,6 @@ public class LayoutsService {
 						CodigoError.NMP_PMIMONTE_BUSINESS_113);
 			}
 		}
-
-		// TODO: Borrar esta sentencia if dado que es valido que sea nulo en algunas
-		// ocaciones (no siempre existe un tipo X de layout para una conciliacion)
-//		if (layout == null) {
-//			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-//					CodigoError.NMP_PMIMONTE_0009);
-//		}
 
 		// TODO: Obtener el header para incrustar en el objeto de retorno
 
@@ -208,27 +210,11 @@ public class LayoutsService {
 		Conciliacion conciliacion = null;
 		List<Long> layoutIdsList;
 		Boolean flag = false;
-		Boolean flagNew = false;
 
 		try {
 			// Se valida que la conciliacion se encuentre en proceso
 			conciliacion = this.conciliacionHelper.getConciliacionByFolio(layoutDTO.getFolio(),
 					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
-
-			// TODO: Eliminar esto esta validacion es inncesaria dado que se pueden dar de
-			// alta multiples tipos de layout por conciliacion
-			// Se valida si el layout es nuevo, de ser uno existente se valida que el tipo
-			// sea correcto
-//			flagNew = ((BigInteger) layoutsRepository.checkIfLayoutIsNew(layoutDTO.getFolio()))
-//					.compareTo(BigInteger.ONE) == 0;
-//			if (!flagNew) {
-//				// Se valida que el folio de conciliacion y el tipo de layout coincidan
-//				flag = ((BigInteger) layoutsRepository.checkRightFolioAndTipoLayout(layoutDTO.getFolio(),
-//						layoutDTO.getTipoLayout().toString())).compareTo(BigInteger.ONE) == 0;
-//				if (!flag)
-//					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_119.getDescripcion(),
-//							CodigoError.NMP_PMIMONTE_BUSINESS_119);
-//			}
 
 			// Se valida que las lineas a editar existan para ese layout y que sean lineas
 			// eliminables (dadas de alta desde APP)
@@ -273,6 +259,15 @@ public class LayoutsService {
 						CodigoError.NMP_PMIMONTE_0011);
 			}
 		}
+
+		if (null != layoutDTO.getFolio() && null != layoutDTO.getTipoLayout() && null != layoutDTO.getLineas()) {
+			// Registro de actividad
+			String desc = "Se crea el layout del tipo: ".concat(layoutDTO.getTipoLayout().toString())
+					.concat(", con un total de ").concat(String.valueOf(layoutDTO.getLineas().size()))
+					.concat(" lineas, pertenecirente a la conciliacion: ").concat(String.valueOf(layoutDTO.getFolio()));
+			actividadGenericMethod.registroActividad(layoutDTO.getFolio(), desc, TipoActividadEnum.ACTIVIDAD,
+					SubTipoActividadEnum.LAYOUTS);
+		}
 	}
 
 	/**
@@ -287,6 +282,7 @@ public class LayoutsService {
 		// Objetos necesarios
 		Boolean flag = null;
 		boolean respuesta = false;
+		boolean flagAct = true;
 
 		// LOGICA DE ELIMINACION
 		try {
@@ -337,12 +333,21 @@ public class LayoutsService {
 							CodigoError.NMP_PMIMONTE_0009);
 			}
 		} catch (ConciliacionException ex) {
+			flagAct = false;
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		} catch (Exception ex) {
+			flagAct = false;
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_114.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_114);
+		} finally {
+			if (flagAct && null != idConciliacion && null != idLayout) {
+				String desc = "Se elimino el layout con id: ".concat(String.valueOf(idLayout))
+						.concat(", perteneciente a la conciliacion: ").concat(String.valueOf(idConciliacion));
+				actividadGenericMethod.registroActividad(idConciliacion, desc, TipoActividadEnum.ACTIVIDAD,
+						SubTipoActividadEnum.LAYOUTS);
+			}
 		}
 		return respuesta;
 	}
@@ -356,6 +361,7 @@ public class LayoutsService {
 		// Objetos necesarios
 		Optional<LayoutLinea> linea = null;
 		Boolean flag = null;
+		boolean flagAct = true;
 
 		// Se valida que la linea exista
 		try {
@@ -386,9 +392,17 @@ public class LayoutsService {
 		try {
 			this.layoutLineasRepository.deleteById(linea.get().getId());
 		} catch (Exception ex) {
+			flagAct = false;
 			ex.printStackTrace();
 			throw new ConciliacionException("Error al eliminar la linea del layout asignada al id " + idLinea,
 					CodigoError.NMP_PMIMONTE_BUSINESS_085);
+		} finally {
+			if (flagAct && null != idLinea && null != idConciliacion) {
+				String desc = "Se elimino la linea con id: ".concat(String.valueOf(idLinea))
+						.concat(", perteneciente a la conciliacion: ").concat(String.valueOf(idConciliacion));
+				actividadGenericMethod.registroActividad(idConciliacion, desc, TipoActividadEnum.ACTIVIDAD,
+						SubTipoActividadEnum.LAYOUTS);
+			}
 		}
 	}
 
@@ -668,7 +682,8 @@ public class LayoutsService {
 	 * @param grupo
 	 * @return
 	 */
-	private List<LayoutLineaDTO> buildLineasDTO(List<MovimientoConciliacion> movimientos, TipoLayoutEnum tipo, GrupoLayoutEnum grupo) throws ConciliacionException {
+	private List<LayoutLineaDTO> buildLineasDTO(List<MovimientoConciliacion> movimientos, TipoLayoutEnum tipo,
+			GrupoLayoutEnum grupo) throws ConciliacionException {
 
 		// Genera las lineas
 		List<LayoutLineaDTO> lineasDTO = new ArrayList<LayoutLineaDTO>();
@@ -677,14 +692,16 @@ public class LayoutsService {
 		List<MovimientoConciliacion> movimientosByGrupo = agruparMovimientos(movimientos, tipo, grupo);
 		LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipo, grupo);
 		if (lineaCatalog == null) {
-			throw new ConciliacionException("No existe configuracion de la linea para el layout " + tipo + " y grupo " + grupo);
+			throw new ConciliacionException(
+					"No existe configuracion de la linea para el layout " + tipo + " y grupo " + grupo);
 		}
 
 		// Genera las lineas de acuerdo al tipo y grupo
 		for (MovimientoConciliacion movimiento : movimientosByGrupo) {
 			BigDecimal monto = getMontoMovimiento(movimiento, tipo, grupo);
 			String unidadOperativa = getUnidadOperativa(movimiento, lineaCatalog);
-			LayoutLineaDTO lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaCatalog, monto, unidadOperativa);
+			LayoutLineaDTO lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaCatalog, monto,
+					unidadOperativa);
 			lineasDTO.add(lineaDTO);
 		}
 
@@ -692,57 +709,61 @@ public class LayoutsService {
 	}
 
 	/**
-	 * Agrupa los movimientos de acuerdo al tipo de movimiento y grupo SUCURSAL o BANCO
+	 * Agrupa los movimientos de acuerdo al tipo de movimiento y grupo SUCURSAL o
+	 * BANCO
+	 * 
 	 * @param movimientos
 	 * @param tipo
 	 * @param grupo
 	 * @return
 	 */
-	private List<MovimientoConciliacion> agruparMovimientos(List<MovimientoConciliacion> movimientos, TipoLayoutEnum tipo, GrupoLayoutEnum grupo) {
+	private List<MovimientoConciliacion> agruparMovimientos(List<MovimientoConciliacion> movimientos,
+			TipoLayoutEnum tipo, GrupoLayoutEnum grupo) {
 		List<MovimientoConciliacion> movimientosGrupo = new ArrayList<MovimientoConciliacion>();
 		if (movimientos != null && movimientos.size() > 0) {
 			for (MovimientoConciliacion movimiento : movimientos) {
 				switch (grupo) {
-					case BANCOS: // TODO: Comisiones u otro tipo de movimientos
-						if (movimiento.getMovimientoMidas() == null) {
-							movimientosGrupo.add(movimiento);
-						}
-						break;
-					case SUCURSALES:
-						if (movimiento.getMovimientoMidas() != null) {
-							movimientosGrupo.add(movimiento);
-						}
-						break;
+				case BANCOS: // TODO: Comisiones u otro tipo de movimientos
+					if (movimiento.getMovimientoMidas() == null) {
+						movimientosGrupo.add(movimiento);
+					}
+					break;
+				case SUCURSALES:
+					if (movimiento.getMovimientoMidas() != null) {
+						movimientosGrupo.add(movimiento);
+					}
+					break;
 				}
 			}
 		}
 		return movimientosGrupo;
 	}
 
-
 	/**
 	 * Obtiene el monto del movimiento de la conciliacion de acuerdo al tipo de
 	 * movimiento
+	 * 
 	 * @param movimiento
 	 * @param tipo
 	 * @param grupo
 	 * @return
 	 */
-	private BigDecimal getMontoMovimiento(MovimientoConciliacion movimiento, TipoLayoutEnum tipo, GrupoLayoutEnum grupo) {
+	private BigDecimal getMontoMovimiento(MovimientoConciliacion movimiento, TipoLayoutEnum tipo,
+			GrupoLayoutEnum grupo) {
 		BigDecimal monto = new BigDecimal(0);
 		switch (tipo) {
-			case PAGOS:
-				monto = ((MovimientoPago) movimiento).getMonto();
-				break;
-			case DEVOLUCIONES:
-				monto = ((MovimientoDevolucion) movimiento).getMonto();
-				break;
-			case COMISIONES_GENERALES:
-			case COMISIONES_MOV:
-				monto = ((MovimientoComision) movimiento).getMonto();
-				break;
-			default:
-				break;
+		case PAGOS:
+			monto = ((MovimientoPago) movimiento).getMonto();
+			break;
+		case DEVOLUCIONES:
+			monto = ((MovimientoDevolucion) movimiento).getMonto();
+			break;
+		case COMISIONES_GENERALES:
+		case COMISIONES_MOV:
+			monto = ((MovimientoComision) movimiento).getMonto();
+			break;
+		default:
+			break;
 		}
 		if (monto != null) {
 			monto = (grupo == GrupoLayoutEnum.BANCOS ? monto.negate() : monto);
@@ -750,9 +771,10 @@ public class LayoutsService {
 		return monto;
 	}
 
-
 	/**
-	 * Obtiene la unidad operativa de acuerdo al tipo de layout y grupo SUCURSAL o BANCO
+	 * Obtiene la unidad operativa de acuerdo al tipo de layout y grupo SUCURSAL o
+	 * BANCO
+	 * 
 	 * @param movimiento
 	 * @param lineaCatalog
 	 * @return
@@ -761,30 +783,35 @@ public class LayoutsService {
 		String unidadOperativa = "";
 		if (StringUtils.isNotBlank(lineaCatalog.getUnidadOperativa())) {
 			switch (lineaCatalog.getTipo()) {
-				case PAGOS:
-					MovimientoPago movimientoPago = (MovimientoPago)movimiento;
-					if (movimientoPago.getMovimientoMidas() != null && movimientoPago.getMovimientoMidas().getSucursal() != null) {
-						unidadOperativa = String.format(lineaCatalog.getUnidadOperativa(), movimientoPago.getMovimientoMidas().getSucursal());
-					}
-					break;
-				case DEVOLUCIONES:
-					MovimientoDevolucion movimientoDevolucion = (MovimientoDevolucion)movimiento;
-					if (movimientoDevolucion.getMovimientoMidas() != null && movimientoDevolucion.getMovimientoMidas().getSucursal() != null) {
-						unidadOperativa = String.format(lineaCatalog.getUnidadOperativa(), movimientoDevolucion.getMovimientoMidas().getSucursal());
-					}
-					break;
-				case COMISIONES_MOV:
-				case COMISIONES_GENERALES:
-					MovimientoComision movimientoComision = (MovimientoComision)movimiento;
-					if (movimientoComision.getMovimientoMidas() != null && movimientoComision.getMovimientoMidas().getSucursal() != null) {
-						unidadOperativa = String.format(lineaCatalog.getUnidadOperativa(), movimientoComision.getMovimientoMidas().getSucursal());
-					}
-					break;
+			case PAGOS:
+				MovimientoPago movimientoPago = (MovimientoPago) movimiento;
+				if (movimientoPago.getMovimientoMidas() != null
+						&& movimientoPago.getMovimientoMidas().getSucursal() != null) {
+					unidadOperativa = String.format(lineaCatalog.getUnidadOperativa(),
+							movimientoPago.getMovimientoMidas().getSucursal());
+				}
+				break;
+			case DEVOLUCIONES:
+				MovimientoDevolucion movimientoDevolucion = (MovimientoDevolucion) movimiento;
+				if (movimientoDevolucion.getMovimientoMidas() != null
+						&& movimientoDevolucion.getMovimientoMidas().getSucursal() != null) {
+					unidadOperativa = String.format(lineaCatalog.getUnidadOperativa(),
+							movimientoDevolucion.getMovimientoMidas().getSucursal());
+				}
+				break;
+			case COMISIONES_MOV:
+			case COMISIONES_GENERALES:
+				MovimientoComision movimientoComision = (MovimientoComision) movimiento;
+				if (movimientoComision.getMovimientoMidas() != null
+						&& movimientoComision.getMovimientoMidas().getSucursal() != null) {
+					unidadOperativa = String.format(lineaCatalog.getUnidadOperativa(),
+							movimientoComision.getMovimientoMidas().getSucursal());
+				}
+				break;
 			}
 		}
 		return unidadOperativa;
 	}
-
 
 	/**
 	 * Obtiene el listado de movimientos conciliacion de acuerdo al tipo de layout
@@ -796,24 +823,23 @@ public class LayoutsService {
 	private List<MovimientoConciliacion> obtenerMovimientosConciliacion(Long idConciliacion, TipoLayoutEnum tipo) {
 		List<MovimientoConciliacion> movimientos = new ArrayList<MovimientoConciliacion>();
 		switch (tipo) {
-			case PAGOS:
-				movimientos.addAll(movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion));
-				break;
-			case DEVOLUCIONES:
-				movimientos.addAll(movimientoConciliacionRepository.findMovimientoDevolucionByConciliacionIdAndStatus(
-						idConciliacion, ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA));
-				break;
-			case COMISIONES_MOV: // TipoMovimientoComisionEnum.OPENPAY
-				// movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
-				// // TODO: Verificar tipos
-				break;
-			case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.IVA_COMISION
-				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
-				break;
+		case PAGOS:
+			movimientos.addAll(movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion));
+			break;
+		case DEVOLUCIONES:
+			movimientos.addAll(movimientoConciliacionRepository.findMovimientoDevolucionByConciliacionIdAndStatus(
+					idConciliacion, ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA));
+			break;
+		case COMISIONES_MOV: // TipoMovimientoComisionEnum.OPENPAY
+			// movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
+			// // TODO: Verificar tipos
+			break;
+		case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.IVA_COMISION
+			movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
+			break;
 		}
 		return movimientos;
 	}
-
 
 	/**
 	 * Se encarga de obtener el layout por tipo de layout
@@ -863,7 +889,8 @@ public class LayoutsService {
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	private LayoutLineaCatalog getLayoutLineaCatalog(TipoLayoutEnum tipoLayout, GrupoLayoutEnum grupo) throws ConciliacionException {
+	private LayoutLineaCatalog getLayoutLineaCatalog(TipoLayoutEnum tipoLayout, GrupoLayoutEnum grupo)
+			throws ConciliacionException {
 		LayoutLineaCatalog lineaCatalog = null;
 
 		// Se obtienen los valores por default de la linea de acuerdo al tipo de layout
@@ -871,13 +898,13 @@ public class LayoutsService {
 			lineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupo(tipoLayout, grupo);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException(
-					"Ocurrio un error consultar la linea del catalogo para el tipo layout " + tipoLayout + " y grupo " + grupo,
-					CodigoError.NMP_PMIMONTE_0011);
+			throw new ConciliacionException("Ocurrio un error consultar la linea del catalogo para el tipo layout "
+					+ tipoLayout + " y grupo " + grupo, CodigoError.NMP_PMIMONTE_0011);
 		}
 
 		if (lineaCatalog == null) {
-			throw new ConciliacionException("No existe la linea del catalogo para el tipo de layout " + tipoLayout + " y grupo " + grupo,
+			throw new ConciliacionException(
+					"No existe la linea del catalogo para el tipo de layout " + tipoLayout + " y grupo " + grupo,
 					CodigoError.NMP_PMIMONTE_0011);
 		}
 

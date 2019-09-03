@@ -44,6 +44,10 @@ public enum SubTipoActividadEnum {
 	
 	COMISIONES(9, "Operaciones sobre comisiones",
 			"Se realiza una operacion sobre las comisiones.",
+			TipoActividadEnum.ACTIVIDAD),
+	
+	LAYOUTS(10, "Operaciones sobre layouts",
+			"Se realiza una operacion sobre los layouts.",
 			TipoActividadEnum.ACTIVIDAD);
 
 	private Integer id;

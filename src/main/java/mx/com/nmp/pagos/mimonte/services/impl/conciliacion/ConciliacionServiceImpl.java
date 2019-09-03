@@ -353,18 +353,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 							CodigoError.NMP_PMIMONTE_BUSINESS_111);
 				}
 
-				// TODO: Eliminar esta validacion comentada ya que los movs. transito siempre
-				// son dados de alta por sistema
-				// Valida que los movimientos hayan sido dados de alta por sistema
-//				flag = null;
-//				flag = ((BigInteger) movimientoTransitoRepository
-//						.checkRightStatus(actualizaionConciliacionRequestDTO.getFolio(), idsMov, idsMov.size()))
-//								.compareTo(BigInteger.ONE) == 0;
-//				if (!flag) {
-//					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_126.getDescripcion(),
-//							CodigoError.NMP_PMIMONTE_BUSINESS_126);
-//				}
-
 				// Valida que el estatus sea uno permitido
 				flag = ((BigInteger) movimientoTransitoRepository.verifyRightStatus(
 						actualizaionConciliacionRequestDTO.getFolio(), idsMov, idsMov.size(),
@@ -652,16 +640,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 						CodigoError.NMP_PMIMONTE_BUSINESS_091);
 		}
 
-		// TODO: (iaguilar) Validar si quitar esta parte dado que estas fechas se
-		// validan en la capa de controlador
-		// Validación de la fecha final no sea menor que la fecha inicial.
-//		if (consultaConciliacionRequestDTO.getFechaDesde() != null
-//				&& consultaConciliacionRequestDTO.getFechaHasta() != null) {
-//			if (consultaConciliacionRequestDTO.getFechaHasta().before(consultaConciliacionRequestDTO.getFechaDesde()))
-//				throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-//						CodigoError.NMP_PMIMONTE_0008);
-//		}
-
 		if (null != consultaConciliacionRequestDTO.getFechaDesde()
 				&& null != consultaConciliacionRequestDTO.getFechaHasta()) {
 			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
@@ -764,7 +742,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// el estado cuenta
 		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,
 				Arrays.asList(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA));
-
 
 		// Validar conciliacion y actualizar estatus
 
@@ -1092,11 +1069,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				.concat(String.valueOf(actualizarIdPSRequest.getFolio()));
 
 		if (StringUtil.isNotNullNorEmpty(actualizarIdPSRequest.getIdAsientoContable())) {
-			descripcionActividad += ", ID Asiento Contable: " + String.valueOf(actualizarIdPSRequest.getIdAsientoContable());
+			descripcionActividad += ", ID Asiento Contable: "
+					+ String.valueOf(actualizarIdPSRequest.getIdAsientoContable());
 		}
 
 		if (StringUtil.isNotNullNorEmpty(actualizarIdPSRequest.getIdPolizaTesoreria())) {
-			descripcionActividad += ", ID Poliza Tesoreria: " + String.valueOf(actualizarIdPSRequest.getIdPolizaTesoreria());
+			descripcionActividad += ", ID Poliza Tesoreria: "
+					+ String.valueOf(actualizarIdPSRequest.getIdPolizaTesoreria());
 		}
 
 		actividadGenericMethod.registroActividad(actualizarIdPSRequest.getFolio(), descripcionActividad,
