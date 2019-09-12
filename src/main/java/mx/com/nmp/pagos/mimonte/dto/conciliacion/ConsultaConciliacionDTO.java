@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionDTO> {
 
-	private Integer folio;
+	private Long folio;
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
@@ -31,7 +31,7 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 		super();
 	}
 	
-	public ConsultaConciliacionDTO(Integer folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
+	public ConsultaConciliacionDTO(Long folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
 			String subEstatusDescripcion, Long idPolizaTesoreria, Long idAsientoContable, Date createdDate,
 			String createdBy, Date lastModifiedDate, String lastModifiedBy, EntidadDTO entidad, CuentaDTO cuenta,
 			Integer numeroMovimientos) {
@@ -51,11 +51,11 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 		this.numeroMovimientos = numeroMovimientos;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

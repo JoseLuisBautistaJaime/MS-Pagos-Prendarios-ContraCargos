@@ -14,7 +14,7 @@ import java.util.Date;
 public class ConsultaConciliacionRequestDTO {
 
 	private Long idEntidad;
-	private Integer folio;
+	private Long folio;
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private Integer idEstatus;
@@ -24,7 +24,7 @@ public class ConsultaConciliacionRequestDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ConsultaConciliacionRequestDTO(Long idEntidad, Integer folio, Date fechaDesde, Date fechaHasta,
+	public ConsultaConciliacionRequestDTO(Long idEntidad, Long folio, Date fechaDesde, Date fechaHasta,
 			Integer idEstatus) {
 		super();
 		this.idEntidad = idEntidad;
@@ -42,11 +42,11 @@ public class ConsultaConciliacionRequestDTO {
 		this.idEntidad = idEntidad;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

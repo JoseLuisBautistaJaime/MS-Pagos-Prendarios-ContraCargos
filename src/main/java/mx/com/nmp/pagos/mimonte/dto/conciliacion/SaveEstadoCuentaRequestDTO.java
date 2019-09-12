@@ -18,15 +18,15 @@ import java.util.Objects;
  */
 public class SaveEstadoCuentaRequestDTO implements Comparable<SaveEstadoCuentaRequestDTO> {
 
-	private Integer folio;
+	private Long folio;
 	private Date fechaInicial;
 	private Date fechaFinal;
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

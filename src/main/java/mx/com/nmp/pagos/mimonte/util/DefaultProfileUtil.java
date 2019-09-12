@@ -2,7 +2,6 @@ package mx.com.nmp.pagos.mimonte.util;
 
 import mx.com.nmp.pagos.mimonte.config.Constants;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.SpringApplication;
 import org.springframework.core.env.Environment;
 
 import java.util.HashMap;

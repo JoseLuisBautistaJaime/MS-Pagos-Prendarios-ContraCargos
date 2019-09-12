@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
+
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
 
 /**
@@ -16,6 +17,7 @@ public interface EstadoCuentaRepository extends PagingAndSortingRepository<Estad
 
 	/**
 	 * Regresa un estado de cuenta por id de reporte y fecha carga
+	 * 
 	 * @param idReporte
 	 * @param fechaCarga
 	 * @return

@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -31,6 +34,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepositor
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosPagoRepository;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoPagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -38,7 +42,11 @@ import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 
 /**
  * @name SolicitarPagosService
@@ -93,6 +101,18 @@ public class SolicitarPagosService {
 	private ContactoRespository contactoRespository;
 
 	/**
+	 * Registro de actividades
+	 */
+	@Autowired
+	private ActividadGenericMethod actividadGenericMethod;
+
+	/**
+	 * Validador de datos relacionados con conciliacion
+	 */
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+
+	/**
 	 * Objeto para consumo de servicio Rest para envio de e-mail
 	 */
 	@Autowired
@@ -123,14 +143,30 @@ public class SolicitarPagosService {
 	public void solicitarPagos(SolicitarPagosRequestDTO requestDTO, final String createdBy) {
 		// Declaracion de objetos y variables necesarios
 		List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList = null;
-		List<MovimientoConciliacion> movimientoConciliacionList = null;
 		List<MovimientoTransito> movimientoTransitoList = null;
 		BusRestMailDTO generalBusMailDTO = null;
+
+		// Valida que la conciliacion exista
+		conciliacionDataValidator.validateFolioExists(requestDTO.getFolio());
+
+		// Valida que los ids existan y tengan relacion con el folio de conciliacion
+		// ingresado
+		conciliacionDataValidator.validateIdsMovimientosConciliacionExists(requestDTO.getFolio(),
+				requestDTO.getIdMovimientos());
+
+		// Valida que los ids tengan un estatus 1
+		Boolean val = (movimientoConciliacionRepository.validaFolioAndIdsForMovPagos(requestDTO.getFolio(),
+				requestDTO.getIdMovimientos(), ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY,
+				requestDTO.getIdMovimientos().size())) == BigInteger.ONE;
+		if (!val)
+			throw new ConciliacionException(ConciliacionConstants.WRONG_MOVIMIENTOS_ESTATUS,
+					CodigoError.NMP_PMIMONTE_BUSINESS_093);
 
 		// Consultar datos, actualizacion y generacion de registros en pagos
 		try {
 			// Consulta
-			solicitarPagosMailDataDTOList = consultarMovimientos(solicitarPagosMailDataDTOList, requestDTO.getFolio(), requestDTO.getIdMovimientos());
+			solicitarPagosMailDataDTOList = consultarMovimientos(solicitarPagosMailDataDTOList, requestDTO.getFolio(),
+					requestDTO.getIdMovimientos());
 		} catch (Exception ex) {
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_GET_MOVIMIENTOS_TRANSITO,
 					CodigoError.NMP_PMIMONTE_BUSINESS_038);
@@ -139,22 +175,16 @@ public class SolicitarPagosService {
 			// Actualiza
 			actualizarMovimientosTransito(movimientoTransitoList, requestDTO.getFolio(), requestDTO.getIdMovimientos());
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_UPDATE_MOVIMIENTOS_TRANSITO,
 					CodigoError.NMP_PMIMONTE_BUSINESS_039);
-		}
-		try {
-			// Inserta
-			insertaMovimientosPago(movimientoConciliacionList, requestDTO.getFolio(),
-					requestDTO.getIdMovimientos(), solicitarPagosMailDataDTOList, createdBy);
-		} catch (Exception ex) {
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_INSERT_MOVIMIENTOS_PAGO,
-					CodigoError.NMP_PMIMONTE_BUSINESS_040);
 		}
 		// Construye e-mail
 		try {
 			generalBusMailDTO = construyeEMailVelocity(solicitarPagosMailDataDTOList);
 
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL,
 					CodigoError.NMP_PMIMONTE_BUSINESS_041);
 		}
@@ -162,9 +192,19 @@ public class SolicitarPagosService {
 			// Envia e-mail
 			this.busMailRestService.enviaEmail(generalBusMailDTO);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL,
 					CodigoError.NMP_PMIMONTE_BUSINESS_042);
 		}
+
+		// Registro de actividad
+		actividadGenericMethod.registroActividad(requestDTO.getFolio(),
+				"Se realizo la solicitud de pago de ".concat(String.valueOf(requestDTO.getIdMovimientos().size()))
+						.concat(" movimiento(s) de la conciliacion con el folio: "
+								.concat(String.valueOf(requestDTO.getFolio())).concat(", por un total de: $ ")
+								.concat(String.valueOf(
+										getMontoFromSolicitarPagosMailDataDTOList(solicitarPagosMailDataDTOList)))),
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.SOLICITAR_PAGO);
 	}
 
 	/**
@@ -176,8 +216,7 @@ public class SolicitarPagosService {
 	 * @return
 	 */
 	public List<SolicitarPagosMailDataDTO> consultarMovimientos(
-			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList, Integer folio,
-			List<Integer> idsMovimientos) {
+			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList, Long folio, List<Integer> idsMovimientos) {
 		return movimientosMidasRepository.getDataByFolioAndIdMovimientos(folio, idsMovimientos);
 	}
 
@@ -188,14 +227,16 @@ public class SolicitarPagosService {
 	 * @param folio
 	 * @param idsMovimientos
 	 */
-	public void actualizarMovimientosTransito(List<MovimientoTransito> movimientoTransitoList, Integer folio,
+	public void actualizarMovimientosTransito(List<MovimientoTransito> movimientoTransitoList, Long folio,
 			List<Integer> idsMovimientos) {
 		movimientoTransitoList = movimientoTransitoRepository.findByFolioAndIds(folio, idsMovimientos);
-		if (null == movimientoTransitoList || movimientoTransitoList.isEmpty())
+		if (null == movimientoTransitoList || movimientoTransitoList.isEmpty()) {
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
+		}
+
 		for (MovimientoTransito mt : movimientoTransitoList) {
-			mt.setEstatus(new EstatusTransito(2));
+			mt.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_SOLICITADA));
 		}
 		movimientoTransitoRepository.saveAll(movimientoTransitoList);
 	}
@@ -210,7 +251,7 @@ public class SolicitarPagosService {
 	 * @param solicitarPagosMailDataDTOList
 	 * @param createdBy
 	 */
-	public void insertaMovimientosPago(List<MovimientoConciliacion> movimientoConciliacionList, Integer folio,
+	public void insertaMovimientosPago(List<MovimientoConciliacion> movimientoConciliacionList, Long folio,
 			List<Integer> idsMovimientos, List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList,
 			String createdBy) {
 		movimientoConciliacionList = movimientoConciliacionRepository.findByFolioAndIds(folio, idsMovimientos);
@@ -233,7 +274,7 @@ public class SolicitarPagosService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_043);
 		// Se constrye el cuerpo de correo HTML
 		model = buildMailModel(solicitarPagosMailDataDTOList);
-		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, mc.velocityLayout, mc.encodeType,
+		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, mc.velocityLayout, "UTF-8",
 				model);
 		// Se construye el DTO de request y se invoca el servicio de correo proveido por
 		// BUS
@@ -257,28 +298,57 @@ public class SolicitarPagosService {
 	 */
 	public Map<String, Object> buildMailModel(List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
 		Map<String, Object> model = new HashMap<>();
-		model.put("text1", mc.text1);
-		model.put("text2", mc.text2);
-		model.put("text3", mc.text3);
-		model.put("codigoAutorizacion", mc.codigoAutorizacion);
-		model.put("codigoDescuento", mc.codigoDescuento);
-		model.put("codigoRespuestaAdquiriente", mc.codigoRespuestaAdquiriente);
-		model.put("codigoRespuestaMotorPagosTransaccion", mc.codigoRespuestaMotorPagosTransaccion);
-		model.put("fechaTransaccion", mc.fechaTransaccion);
-		model.put("folioPartida", mc.folioPartida);
-		model.put("fuenteTransaccion", mc.fuenteTransaccion);
-		model.put("identificadorCuenta", mc.identificadorCuenta);
-		model.put("idTerminalAdquiriente", mc.idTerminalAdquiriente);
-		model.put("metodoPago", mc.metodoPago);
-		model.put("montoTransaccion", mc.montoTransaccion);
-		model.put("numeroLoteAdquiriente", mc.numeroLoteAdquiriente);
-		model.put("tipoCuenta", mc.tipoCuenta);
-		model.put("tipoMoneda", mc.tipoMoneda);
-		model.put("tipoTransaccion", mc.tipoTransaccion);
-		model.put("titularCuenta", mc.titularCuenta);
-		model.put("transaccion", mc.transaccion);
 		model.put("elements", solicitarPagosMailDataDTOList);
 		return model;
+	}
+
+	/**
+	 * Inserta los movimientos transito que se marcaron como solicitud de pago
+	 * 
+	 * @param folio
+	 * @param requestUser
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void insertaMovimientosPagoFinal(final Long folio, final String requestUser) {
+		List<MovimientoTransito> movimientosTransito = null;
+		List<MovimientoPago> movimientosPago = null;
+		List<MovimientoPagoDTO> movimientosPagoDTO = null;
+		if (null != folio) {
+			movimientosTransito = movimientoTransitoRepository.findByIdConciliacionPagos(folio);
+			if (null != movimientosTransito && !movimientosTransito.isEmpty()) {
+				movimientosPagoDTO = MovimientosBuilder
+						.buildMovimientoPagoDTOListFromMovimientoTransitoList(movimientosTransito);
+				movimientoTransitoRepository.deleteInBatch(movimientosTransito);
+				movimientoTransitoRepository.flush();
+				if (null != movimientosPagoDTO && !movimientosPagoDTO.isEmpty()) {
+					movimientosPago = MovimientosBuilder
+							.buildMovimientoPagoListFromMovimientoPagoDTOList(movimientosPagoDTO, folio, requestUser);
+					movimientosPagoRepository.saveAll(movimientosPago);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Regresa un objeto de tipo BigDecimal con la suma de los montos de una lista
+	 * de objetos de tipo MovimientoTransito
+	 * 
+	 * @param movimientoTransitoList
+	 * @return
+	 */
+	private static BigDecimal getMontoFromSolicitarPagosMailDataDTOList(
+			List<SolicitarPagosMailDataDTO> solicitarPagosMailDataDTOList) {
+		BigDecimal total = null;
+		if (null != solicitarPagosMailDataDTOList && !solicitarPagosMailDataDTOList.isEmpty()) {
+			total = new BigDecimal(0);
+			for (SolicitarPagosMailDataDTO solicitarPagosMailDataDTO : solicitarPagosMailDataDTOList) {
+				total = total.add(
+						null != solicitarPagosMailDataDTO && null != solicitarPagosMailDataDTO.getMontoTransaccion()
+								? solicitarPagosMailDataDTO.getMontoTransaccion()
+								: BigDecimal.ZERO);
+			}
+		}
+		return total;
 	}
 
 }

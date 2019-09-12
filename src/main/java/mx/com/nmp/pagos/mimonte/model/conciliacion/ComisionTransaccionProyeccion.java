@@ -51,7 +51,7 @@ public class ComisionTransaccionProyeccion implements java.io.Serializable, Comp
 	private Long transacciones;
 
 	@Column(name = "comision", nullable = true)
-	private BigDecimal comsion;
+	private BigDecimal comision;
 
 	@Column(name = "iva", nullable = true)
 	private BigDecimal ivaComision;
@@ -64,35 +64,35 @@ public class ComisionTransaccionProyeccion implements java.io.Serializable, Comp
 	}
 
 	public ComisionTransaccionProyeccion(ComisionTransaccion comisionTransaccion, Integer operacion,
-			Long transacciones, BigDecimal comsion, BigDecimal ivaComision, BigDecimal total) {
+			Long transacciones, BigDecimal comision, BigDecimal ivaComision, BigDecimal total) {
 		super();
 		this.comisionTransaccion = comisionTransaccion;
 		this.operacion = operacion;
 		this.transacciones = transacciones;
-		this.comsion = comsion;
+		this.comision = comision;
 		this.ivaComision = ivaComision;
 		this.total = total;
 	}
 	
 	public ComisionTransaccionProyeccion(Long id, ComisionTransaccion comisionTransaccion, Integer operacion,
-			Long transacciones, BigDecimal comsion, BigDecimal ivaComision, BigDecimal total) {
+			Long transacciones, BigDecimal comision, BigDecimal ivaComision, BigDecimal total) {
 		super();
 		this.id = id;
 		this.comisionTransaccion = comisionTransaccion;
 		this.operacion = operacion;
 		this.transacciones = transacciones;
-		this.comsion = comsion;
+		this.comision = comision;
 		this.ivaComision = ivaComision;
 		this.total = total;
 	}
 
-	public ComisionTransaccionProyeccion(Long id, Integer operacion, Long transacciones, BigDecimal comsion,
+	public ComisionTransaccionProyeccion(Long id, Integer operacion, Long transacciones, BigDecimal comision,
 			BigDecimal ivaComision, BigDecimal total) {
 		super();
 		this.id = id;
 		this.operacion = operacion;
 		this.transacciones = transacciones;
-		this.comsion = comsion;
+		this.comision = comision;
 		this.ivaComision = ivaComision;
 		this.total = total;
 	}
@@ -121,12 +121,12 @@ public class ComisionTransaccionProyeccion implements java.io.Serializable, Comp
 		this.operacion = operacion;
 	}
 
-	public BigDecimal getComsion() {
-		return comsion;
+	public BigDecimal getComision() {
+		return comision;
 	}
 
-	public void setComsion(BigDecimal comsion) {
-		this.comsion = comsion;
+	public void setComision(BigDecimal comision) {
+		this.comision = comision;
 	}
 
 	public BigDecimal getIvaComision() {
@@ -155,7 +155,7 @@ public class ComisionTransaccionProyeccion implements java.io.Serializable, Comp
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, comisionTransaccion, operacion, transacciones, comsion, ivaComision, total);
+		return Objects.hash(id, comisionTransaccion, operacion, transacciones, comision, ivaComision, total);
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class ComisionTransaccionProyeccion implements java.io.Serializable, Comp
 	@Override
 	public String toString() {
 		return "ComisionTransaccionProyeccion [id=" + id + ", comisionTransaccion=" + comisionTransaccion
-				+ ", operacion=" + operacion + ", transacciones=" + transacciones + ", comsion=" + comsion
+				+ ", operacion=" + operacion + ", transacciones=" + transacciones + ", comision=" + comision
 				+ ", ivaComision=" + ivaComision + ", total=" + total + "]";
 	}
 

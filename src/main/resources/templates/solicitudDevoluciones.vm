@@ -19,22 +19,22 @@
     </STYLE>
   </HEAD>
   <BODY>
-    <span>${text1}</span>
+    <span>Buena tarde.</span>
     <br>
-    <span>${text2}</span>
+    <span>Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario en la entidad ${entidad}, a la cuenta ${numeroCuenta}</span>
     <br>
     <br>
     <table>
       <thead>
         <tr style="background-color: #dddddd;">
-          <th>FECHA</th>
-          <th>HORA</th>
+          <th>Fecha</th>
+          <th>Hora</th>
           <th>Monto</th>
           <th>Esquema Tarjeta</th>
           <th>Identificador de cuenta</th>
           <th>Titular de cuenta</th>
           <th>C&oacute;digo de autorizaci&oacute;n</th>
-          <th>SUCURSAL</th>
+          <th>Sucursal</th>
         </tr>
       </thead>
       <tbody>
@@ -45,8 +45,8 @@
             <td>$dev.monto</td>
             <td>$dev.esquemaTarjeta</td>
             <td>$dev.identificadorCuenta</td>
-            <td>$dev.titularCuenta</td>
-            <td>$dev.codigoAutorization</td>
+            <td>$dev.titular</td>
+            <td>$dev.codigoAutorizacion</td>
             <td>$dev.sucursal</td>
           </tr>
         #end

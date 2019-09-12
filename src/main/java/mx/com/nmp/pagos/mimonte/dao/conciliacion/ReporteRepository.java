@@ -33,7 +33,7 @@ public interface ReporteRepository extends JpaRepository<Reporte, Integer> {
 	 * @return
 	 */
 	@Query("FROM Reporte r WHERE r.conciliacion.id = :idConciliacion")
-	public List<Reporte> findByIdConciliacion(@Param("idConciliacion") final Integer idConciliacion);
+	public List<Reporte> findByIdConciliacion(@Param("idConciliacion") final Long idConciliacion);
 
 
 	/**
@@ -55,6 +55,6 @@ public interface ReporteRepository extends JpaRepository<Reporte, Integer> {
 					"AND r1.tipo = :tipo" +
 			")"
 	)
-	public Reporte findLastByIdConciliacionAndTipo(@Param("idConciliacion") final Integer idConciliacion, @Param("tipo") TipoReporteEnum tipo);
+	public Reporte findLastByIdConciliacionAndTipo(@Param("idConciliacion") final Long idConciliacion, @Param("tipo") TipoReporteEnum tipo);
 
 }

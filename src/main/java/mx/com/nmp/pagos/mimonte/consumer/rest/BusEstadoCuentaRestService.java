@@ -89,15 +89,15 @@ public class BusEstadoCuentaRestService extends AbstractOAuth2RestService {
 	protected HttpHeaders createHeadersPostTo(BusRestAuthDTO auth, BusRestHeaderDTO header) {
 		String base64Creds = buildBase64Hash(auth);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(mc.headerAuthKey, mc.headerAuthValue.concat(" ") + base64Creds);
-		headers.add(mc.contentTypeKey, mc.senMailContentTypeValue);
+		headers.add("Authorization", "Basic " + base64Creds);
+		headers.add("Content-Type", "application/json");
 		headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta()
 				.getHeader().getIdConsumidor());
 		headers.add(mc.idDestinoKey,
 				applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getHeader().getIdDestino());
 		headers.add(mc.usuarioKey,
 				applicationProperties.getMimonte().getVariables().getConsultaEstadoCuenta().getHeader().getUsuario());
-		headers.add(mc.oauthBearer, header.getBearerToken());
+		headers.add("oauth.bearer", header.getBearerToken());
 		return headers;
 	}
 

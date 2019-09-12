@@ -22,4 +22,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 @Repository
 public interface LayoutHeadersRepository extends JpaRepository<LayoutHeader, Long> {
 
+	public LayoutHeader findByLayoutId(Long idLayout);
+
 }

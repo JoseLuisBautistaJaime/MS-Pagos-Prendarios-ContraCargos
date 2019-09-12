@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import mx.com.nmp.pagos.mimonte.model.EstatusPago;
 
@@ -72,6 +73,13 @@ public class MovimientoPago extends MovimientoConciliacion implements Comparable
 	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
+
+	@Transient
+	public MovimientoConciliacionEnum getTipoMovimiento() {
+		return MovimientoConciliacionEnum.PAGOS;
+	}
+
+
 
 	@Override
 	public int hashCode() {

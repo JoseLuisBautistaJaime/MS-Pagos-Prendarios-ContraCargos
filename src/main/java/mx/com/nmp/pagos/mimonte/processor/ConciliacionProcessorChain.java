@@ -4,16 +4,11 @@
  */
 package mx.com.nmp.pagos.mimonte.processor;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
-
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
@@ -35,6 +30,7 @@ public abstract class ConciliacionProcessorChain {
 	public ConciliacionProcessorChain(MergeReporteHandler mergeReporteHandler) {
 		this.mergeReporteHandler = mergeReporteHandler;
 	}
+
 
 	/**
 	 * Setea el siguiente procesador dentro de la cadena
@@ -59,7 +55,7 @@ public abstract class ConciliacionProcessorChain {
 		}
 	}
 
-	protected List<MovimientoMidas> getMovimientosMidasByConciliacion(Integer idConciliacion) throws ConciliacionException {
+	protected List<MovimientoMidas> getMovimientosMidasByConciliacion(Long idConciliacion) throws ConciliacionException {
 		List<MovimientoMidas> movimientosMidas = null;
 		try {
 			movimientosMidas = this.mergeReporteHandler.getMovimientosMidasRepository()
@@ -72,7 +68,7 @@ public abstract class ConciliacionProcessorChain {
 		return movimientosMidas;
 	}
 
-	protected List<MovimientoProveedor> getMovimientosProveedorByConciliacion(Integer idConciliacion) throws ConciliacionException {
+	protected List<MovimientoProveedor> getMovimientosProveedorByConciliacion(Long idConciliacion) throws ConciliacionException {
 		List<MovimientoProveedor> movimientosProveedor = null;
 		try {
 			movimientosProveedor = this.mergeReporteHandler.getMovimientoProveedorRepository()
@@ -85,7 +81,7 @@ public abstract class ConciliacionProcessorChain {
 		return movimientosProveedor;
 	}
 
-	protected List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByConciliacion(Integer idConciliacion) throws ConciliacionException {
+	protected List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByConciliacion(Long idConciliacion) throws ConciliacionException {
 		List<MovimientoEstadoCuenta> movimientosEstadoCuenta = null;
 		try {
 			movimientosEstadoCuenta = this.mergeReporteHandler.getMovimientoEstadoCuentaRepository()
@@ -154,38 +150,6 @@ public abstract class ConciliacionProcessorChain {
 			throw new ConciliacionException("Error al consultar estado cuenta", CodigoError.NMP_PMIMONTE_BUSINESS_071);
 		}
 		return estadoCuenta;
-	}
-
-	/**
-	 * Regresa el listado de codigos de estado de cuenta para la categoria indicada
-	 * 
-	 * @return
-	 */
-	protected List<String> getCodigosEstadoCuenta(Long categoriaEdoCuenta) throws ConciliacionException {
-
-		List<CodigoEstadoCuenta> codigosComisiones = null;
-		try {
-			codigosComisiones = this.mergeReporteHandler.getCodigoEstadoCuentaRepository()
-					.findByCategoriaIdAndEstatus(categoriaEdoCuenta, true);
-		} catch (Exception ex) {
-			throw new ConciliacionException("Error al obtener los codigos de estado de cuenta",
-					CodigoError.NMP_PMIMONTE_BUSINESS_072);
-		}
-
-		if (CollectionUtils.isEmpty(codigosComisiones)) {
-			throw new ConciliacionException(
-					"No existen codigos de estado de cuenta para la categoria de comisiones configurados",
-					CodigoError.NMP_PMIMONTE_BUSINESS_073);
-		}
-
-		List<String> codigosEstadoCuenta = new ArrayList<String>();
-		if (CollectionUtils.isNotEmpty(codigosComisiones)) {
-			for (CodigoEstadoCuenta codigoComision : codigosComisiones) {
-				codigosEstadoCuenta.add(codigoComision.getCodigo());
-			}
-		}
-
-		return codigosEstadoCuenta;
 	}
 
 }

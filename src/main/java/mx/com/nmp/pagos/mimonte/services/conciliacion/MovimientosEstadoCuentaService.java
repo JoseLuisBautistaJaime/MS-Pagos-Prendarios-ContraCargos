@@ -7,7 +7,10 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
@@ -36,12 +40,16 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaParserService;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
+import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 
 /**
  * @name MovimientosEstadoCuentaService
@@ -97,10 +105,34 @@ public class MovimientosEstadoCuentaService {
 	private EstadoCuentaParserService estadoCuentaParserService;
 
 	/**
+	 * Repository de conciliacion
+	 */
+	@Autowired
+	@Qualifier("conciliacionRepository")
+	private ConciliacionRepository conciliacionRepository;
+
+	/**
+	 * Service de conciliacion
+	 */
+	@Autowired
+	private ConciliacionService conciliacionService;
+	
+	/**
+	 * Validador generico para datos de conciliacion
+	 */
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+
+	/**
 	 * Registro de actividades
 	 */
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
+
+	/**
+	 * Log de la clase
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(MovimientosEstadoCuentaService.class);
 
 	public MovimientosEstadoCuentaService() {
 		super();
@@ -167,7 +199,7 @@ public class MovimientosEstadoCuentaService {
 	 * @param idConciliacion
 	 * @return
 	 */
-	public Long countByConciliacionId(final Integer idConciliacion) {
+	public Long countByConciliacionId(final Long idConciliacion) {
 		return movimientoEstadoCuentaRepository.countMovimientos(idConciliacion);
 	}
 
@@ -225,7 +257,76 @@ public class MovimientosEstadoCuentaService {
 	@Transactional
 	public void procesarConsultaEstadoCuenta(SaveEstadoCuentaRequestDTO request, final String userRequest)
 			throws ConciliacionException {
+		// Objetos necesarios
+		Map<String, Date> datesMap = null;
+		List<Long> possibleSubEstatus = null;
+		EstatusConciliacion estatusConciliacion = null;
 
+		// Valida que la conciliacion exista
+		conciliacionDataValidator.validateFolioExists(request.getFolio());
+
+		// Ajuste de fechas
+		try {
+			datesMap = FechasUtil.adjustDates(request.getFechaInicial(), request.getFechaFinal());
+			if (null != datesMap) {
+				request.setFechaInicial(
+						null != datesMap.get("startDate ") ? datesMap.get("startDate ") : request.getFechaInicial());
+				request.setFechaFinal(
+						null != datesMap.get("endDate ") ? datesMap.get("endDate ") : request.getFechaFinal());
+			}
+		} catch (ConciliacionException ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw ex;
+		} catch (Exception ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0013.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_0013);
+		}
+
+		// Se obtien el estatus de la conciliacion
+		try {
+			estatusConciliacion = conciliacionRepository.findEstatusByConciliacionId(request.getFolio());
+		} catch (Exception ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_125.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_125);
+		}
+
+		// Valida que tenga un sub.estatus valido
+		try {
+			possibleSubEstatus = MovimientosBuilder
+					.buildLongListFromObjectList(conciliacionRepository.getPossibleSubestatusList(
+							ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA));
+			conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(request.getFolio(), possibleSubEstatus);
+		} catch (ConciliacionException ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw ex;
+		} catch (Exception ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		}
+
+		// Actualiza el sub-estatus para realizar el registro del estado de cuenta (invoca un metodo de actualizacion con una nueva transaccion)
+		if (null != estatusConciliacion) {
+			conciliacionService.actualizaSubEstatusConciliacionNT(request.getFolio(),
+					new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA),
+					userRequest, new Date(), estatusConciliacion, null);
+		} else {
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_125.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_125);
+		}
+
+		// Valida que la conciliacion tenga el estatus correcto para poder dar de alta
+		// el estado cuenta
+		// TODO: Eliminar, ya no es necesario validar por segunda vez
+//		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(request.getFolio(),
+//				Arrays.asList(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA));
+
+		// Obtiene el estatus de la conciliacion
+		estatusConciliacion = conciliacionRepository.findEstatusByConciliacionId(request.getFolio());
+
+		// Guarda un nuevo reporte
 		Reporte reporte = save(request, userRequest);
 
 		// Consulta los diferentes estados de cuenta por cada fecha
@@ -262,10 +363,10 @@ public class MovimientosEstadoCuentaService {
 		}
 
 		// Se regenera la conciliacion
-		this.conciliacionHelper.generarConciliacion(idConciliacion.intValue(), Arrays.asList(reporte));
+		this.conciliacionHelper.generarConciliacion(idConciliacion, Arrays.asList(reporte));
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(idConciliacion,
-				"Se procesa la consulta del estado de cuenta para la conciliacion con folio " + idConciliacion,
+				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 	}
 

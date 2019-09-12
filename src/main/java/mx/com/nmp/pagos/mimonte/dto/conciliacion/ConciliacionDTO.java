@@ -18,7 +18,7 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	 */
 	private static final long serialVersionUID = 1838609195762330516L;
 
-	private Integer folio;
+	private Long folio;
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
@@ -33,18 +33,18 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	private DevolucionConDTO devoluciones;
 	private MovTransitoDTO movimientosTransito;
 	private ComisionesDTO comisiones;
+	private ComisionesTransProyeccionDTO comisionesTransacciones;
+
 
 	public ConciliacionDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ConciliacionDTO(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
-		// TODO Auto-generated constructor stub
 	}
 
-	public ConciliacionDTO(Integer folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
+	public ConciliacionDTO(Long folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
 			String subEstatusDescripcion, Long idPolizaTesoreria, Long idAsientoContable, EntidadDTO entidad,
 			CuentaDTO cuenta, ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
@@ -68,11 +68,11 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 		this.comisiones = comisiones;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 
@@ -202,6 +202,14 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	@Override
 	public int compareTo(ConciliacionDTO o) {
 		return 0;
+	}
+
+	public ComisionesTransProyeccionDTO getComisionesTransacciones() {
+		return comisionesTransacciones;
+	}
+
+	public void setComisionesTransacciones(ComisionesTransProyeccionDTO comisionesTransacciones) {
+		this.comisionesTransacciones = comisionesTransacciones;
 	}
 
 }

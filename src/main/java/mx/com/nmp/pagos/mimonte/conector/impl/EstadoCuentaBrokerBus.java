@@ -15,7 +15,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -39,10 +38,12 @@ public class EstadoCuentaBrokerBus implements EstadoCuentaBroker {
 	@Autowired
 	private BusEstadoCuentaRestService busEstadoCuentaRestService;
 
+
+
 	/**
 	 * {@inheritDoc}
 	 */
-	@Cacheable("EstadoCuentaBroker.consulta")
+	//@Cacheable("EstadoCuentaBroker.consulta")
 	@Override
 	public List<String> consulta(String ruta, String archivo) throws ConciliacionException {
 		LOGGER.info(">> consulta({}/{})", ruta, archivo);

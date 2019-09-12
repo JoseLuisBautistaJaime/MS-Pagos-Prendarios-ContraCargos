@@ -16,7 +16,7 @@ import java.util.Date;
  */
 public class ConsultaActividadesRequestDTO {
 
-	private Integer folio;
+	private Long folio;
 	private Date fechaDesde;
 	private Date fechaHasta;
 	
@@ -24,17 +24,17 @@ public class ConsultaActividadesRequestDTO {
 		super();
 	}
 	
-	public ConsultaActividadesRequestDTO(Integer folio, Date fechaDesde, Date fechaHasta) {
+	public ConsultaActividadesRequestDTO(Long folio, Date fechaDesde, Date fechaHasta) {
 		super();
 		this.folio = folio;
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = fechaHasta;
 	}
 	
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 	public Date getFechaDesde() {

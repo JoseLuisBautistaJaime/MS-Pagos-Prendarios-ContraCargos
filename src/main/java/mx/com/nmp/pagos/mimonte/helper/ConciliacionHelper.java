@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.helper;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 
@@ -27,7 +28,7 @@ public interface ConciliacionHelper {
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public Conciliacion getConciliacionByFolio(Integer folio, Integer idEstatusConciliacion) throws ConciliacionException;
+	public Conciliacion getConciliacionByFolio(Long folio, Integer idEstatusConciliacion) throws ConciliacionException;
 
 	/**
 	 * Se encarga de generar/regenerar la conciliacion en base a el(los) reporte(s) recibido(s)
@@ -35,6 +36,14 @@ public interface ConciliacionHelper {
 	 * @param reportes
 	 * @throws ConciliacionException
 	 */
-	public void generarConciliacion(Integer folio, List<Reporte> reportes) throws ConciliacionException;
+	public void generarConciliacion(Long folio, List<Reporte> reportes) throws ConciliacionException;
+
+	/**
+	 * Se encarga de obtener la proyeccion asignada a la conciliacion
+	 * @param folio
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public ComisionTransaccion getComisionTransaccion(Long folio) throws ConciliacionException;
 
 }

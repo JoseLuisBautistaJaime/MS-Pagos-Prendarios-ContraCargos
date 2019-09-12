@@ -79,8 +79,8 @@ public abstract class AbstractOAuth2RestService {
 	public String postForGetToken(final BusRestAuthDTO auth, String url) throws ConciliacionException {
 
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-		map.add(mc.headerGrantTypeKey, mc.headerGrantTypeValue);
-		map.add(mc.headerScopeKey, mc.headerScopeValue);
+		map.add("grant_type", "client_credentials");
+		map.add("scope", "UserProfile.me");
 
 		HttpHeaders headers = createHeadersToken(auth);
 		HttpEntity<MultiValueMap<String, String>> request2 = new HttpEntity<MultiValueMap<String, String>>(map,
@@ -219,8 +219,8 @@ public abstract class AbstractOAuth2RestService {
 	private HttpHeaders createHeadersToken(BusRestAuthDTO auth) {
 		String base64Creds = buildBase64Hash(auth);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(mc.headerAuthKey, mc.headerAuthValue.concat(" ") + base64Creds);
-		headers.add(mc.contentTypeKey, mc.tokenContentTypeValue);
+		headers.add("Authorization", "Basic " + base64Creds);
+		headers.add("Content-Type", "application/x-www-form-urlencoded");
 		headers.add(mc.idConsumidorKey, mc.idConsumidorValue);
 		headers.add(mc.idDestinoKey, mc.idDestinoValue);
 		headers.add(mc.usuarioKey, mc.usuarioValue);

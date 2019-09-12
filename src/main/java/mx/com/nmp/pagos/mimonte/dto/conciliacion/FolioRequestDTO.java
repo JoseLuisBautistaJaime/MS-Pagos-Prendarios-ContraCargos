@@ -14,22 +14,22 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class FolioRequestDTO implements Comparable<FolioRequestDTO>{
 	
-	private Integer folio;
+	private Long folio;
 
 	public FolioRequestDTO() {
 		super();
 	}
 
-	public FolioRequestDTO(Integer folio) {
+	public FolioRequestDTO(Long folio) {
 		super();
 		this.folio = folio;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

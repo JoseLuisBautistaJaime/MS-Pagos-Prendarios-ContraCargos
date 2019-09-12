@@ -31,23 +31,23 @@
     <table>
       <thead>
         <tr style="background-color: #dddddd;">
-          <th>${fechaTransaccion}</th>
-          <th>${folioPartida}</th>
-          <th>${transaccion}</th>
-          <th>${codigoDescuento}</th>
-          <th>${tipoTransaccion}</th>
-          <th>${montoTransaccion}</th>
-          <th>${tipoMoneda}</th>
-          <th>${tipoCuenta}</th>
-          <th>${codigoRespuestaMotorPagosTransaccion}</th>
-          <th>${metodoPago}</th>
-          <th>${identificadorCuenta}</th>
-          <th>${idTerminalAdquiriente}</th>
-          <th>${titularCuenta}</th>
-          <th>${codigoAutorizacion}</th>
-          <th>${codigoRespuestaAdquiriente}</th>
-          <th>${numeroLoteAdquiriente}</th>
-          <th>${fuenteTransaccion}</th>
+          <th>Fecha de la Transacción</th>
+          <th>Folio Partida</th>
+          <th>Transacción</th>
+          <th>Código de Descuento</th>
+          <th>Tipo de Transacción</th>
+          <th>Monto de la Transacción</th>
+          <th>Tipo de Moneda</th>
+          <th>Tipo de Cuenta</th>
+          <th>Código de Respuesta de Motor de Pagos de Transacción</th>
+          <th>Método de Pago</th>
+          <th>Identificador de Cuenta</th>
+          <th>Id de Terminal de Adquiriente</th>
+          <th>Titular de la Cuenta</th>
+          <th>Código de Autorización</th>
+          <th>Código de Respuesta de Adquiriente</th>
+          <th>Número de Lote de Adquiriente</th>
+          <th>Fuente de Transacción</th>
         </tr>
       </thead>
       <tbody>

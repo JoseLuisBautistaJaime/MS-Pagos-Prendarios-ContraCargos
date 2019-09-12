@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 
 /**
@@ -14,6 +15,14 @@ import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
  *
  */
 @Repository("estatusTransitoRepository")
-public interface EstatusTransitoRepository extends JpaRepository<EstatusTransito, Integer>{
+public interface EstatusTransitoRepository extends JpaRepository<EstatusTransito, Integer> {
+
+	/**
+	 * Regresa un estatus transito por nombre
+	 * 
+	 * @param nombre
+	 * @return
+	 */
+	public EstatusTransito findByNombre(final String nombre);
 
 }

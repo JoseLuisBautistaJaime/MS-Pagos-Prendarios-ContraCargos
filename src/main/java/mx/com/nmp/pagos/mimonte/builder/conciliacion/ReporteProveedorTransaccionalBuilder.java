@@ -37,7 +37,6 @@ public abstract class ReporteProveedorTransaccionalBuilder {
 		ReporteProveedorTransaccionalDTO reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO();
 		reporteProveedorTransaccionalDTO.setDisponible(false);
 		if (reporteList != null && !reporteList.isEmpty()) {
-			reporteProveedorTransaccionalDTO = new ReporteProveedorTransaccionalDTO();
 			for (Reporte reporte : reporteList) {
 				if (reporte.getTipo() == TipoReporteEnum.PROVEEDOR) {
 					reporteProveedorTransaccionalDTO.setFechaHasta(reporte.getFechaHasta());

@@ -30,6 +30,6 @@ public interface GlobalRepository extends JpaRepository<Global, Long> {
 	 * @return
 	 */
 	@Query("FROM Global g WHERE g.conciliacion.id = :idConciliacion")
-	public Global findByIdConciliacion(@Param("idConciliacion") final Integer idConciliacion);
+	public Global findByIdConciliacion(@Param("idConciliacion") final Long idConciliacion);
 
 }

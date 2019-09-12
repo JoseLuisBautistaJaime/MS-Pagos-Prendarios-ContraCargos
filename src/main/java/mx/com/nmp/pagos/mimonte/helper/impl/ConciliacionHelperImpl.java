@@ -6,13 +6,18 @@ package mx.com.nmp.pagos.mimonte.helper.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionTransaccionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
@@ -31,6 +36,11 @@ import mx.com.nmp.pagos.mimonte.observer.ReporteObserver;
 public class ConciliacionHelperImpl implements ConciliacionHelper {
 
 	/**
+	 * Utilizada para manipular los mensajes informativos y de error.
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(ConciliacionHelperImpl.class);
+
+	/**
 	 * Conciliacion repository
 	 */
 	@Autowired
@@ -39,25 +49,33 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 	@Autowired
 	private ReporteObserver reporteObserver;
 
+	@Autowired
+	private ComisionTransaccionRepository comisionTransaccionRepository;
+
+
 
 	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#getConciliacionByFolio(java.lang.Integer, java.lang.Integer)
+	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#getConciliacionByFolio(java.lang.Long, java.lang.Integer)
 	 */
-	public Conciliacion getConciliacionByFolio(Integer folio, Integer idStatusConciliacion) throws ConciliacionException {
+	public Conciliacion getConciliacionByFolio(Long folio, Integer idStatusConciliacion) throws ConciliacionException {
+
+		LOG.info(">> getConciliacionByFolio");
+
+		if (folio == null) {
+			LOG.debug("El folio recibido es nulo");
+			throw new ConciliacionException(ConciliacionConstants.ERROR_WHILE_ID_CONCILIACION_VALIDATION,
+					CodigoError.NMP_PMIMONTE_BUSINESS_086);
+		}
 
 		Conciliacion conciliacion = null;
 		try {
 			conciliacion = this.conciliacionRepository.findByFolio(folio);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-//			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
-//					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 			throw new ConciliacionException("Conciliacion con el folio " + folio + " no existe", CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
 
 		if (conciliacion == null) {
-//			throw new ConciliacionException("No existe conciliacion para el folio " + folio,
-//					CodigoError.NMP_PMIMONTE_BUSINESS_045);
 			throw new ConciliacionException("Conciliacion con el folio " + folio + " no existe", CodigoError.NMP_PMIMONTE_BUSINESS_045);
 		}
 		if (idStatusConciliacion != null && conciliacion.getEstatus().getId() != idStatusConciliacion) {
@@ -67,14 +85,30 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 		return conciliacion;
 	}
 
+
 	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#generarConciliacion(java.lang.Integer, mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte[])
+	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#generarConciliacion(java.lang.Long, mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte[])
 	 */
-	@Override
-	public void generarConciliacion(Integer folio, List<Reporte> reportes) throws ConciliacionException {
+	public void generarConciliacion(Long folio, List<Reporte> reportes) throws ConciliacionException {
 		ReporteObservable reporteObservable = new ReporteObservable(reportes, folio);
 		reporteObservable.addObserver(reporteObserver);
 		reporteObservable.notifyObservers();
+	}
+
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#getComisionTransaccion(java.lang.Long)
+	 */
+	public ComisionTransaccion getComisionTransaccion(Long folio) throws ConciliacionException {
+		ComisionTransaccion comisionTransaccion = null;
+		try {
+			comisionTransaccion = this.comisionTransaccionRepository.findByConciliacionId(folio);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar las comisiones transacciones", CodigoError.NMP_PMIMONTE_0011);
+		}
+		return comisionTransaccion;
 	}
 
 }

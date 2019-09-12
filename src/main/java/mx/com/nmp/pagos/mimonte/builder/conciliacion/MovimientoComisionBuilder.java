@@ -10,7 +10,7 @@ import java.util.List;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
 
 /**
  * @name MovimientoComisionBuilder
@@ -69,9 +69,10 @@ public abstract class MovimientoComisionBuilder {
 	/**
 	 * Se construye movimiento comisiones a partir de la entidad estado de cuenta
 	 * @param movEstadoCuenta
+	 * @param tipoComision
 	 * @return
 	 */
-	public static MovimientoComision buildMovComisionFromMovEstadoCuenta(MovimientoEstadoCuenta movEstadoCuenta) {
+	public static MovimientoComision buildMovComisionFromMovEstadoCuenta(MovimientoEstadoCuenta movEstadoCuenta, TipoMovimientoComisionEnum tipoComision) {
 		MovimientoComision movComision = new MovimientoComision();
 		movComision.setDescripcion(movEstadoCuenta.getConcepto());
 		movComision.setEstatus(true);
@@ -80,7 +81,7 @@ public abstract class MovimientoComisionBuilder {
 		movComision.setIdMovimientoEstadoCuenta(movEstadoCuenta.getId());
 		movComision.setMonto(movEstadoCuenta.getImporte());
 		movComision.setNuevo(false);
-		movComision.setTipo(TipoMovimientoEnum.COMISION); //  TODO: Verificar si es iva o comision
+		movComision.setTipoComision(tipoComision);
 		return movComision;
 	}
 

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 
 /**
  * @name LayoutHeaderCatalogRepository
@@ -21,5 +22,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
  */
 @Repository
 public interface LayoutHeaderCatalogRepository extends JpaRepository<LayoutHeaderCatalog, Long> {
+
+	public LayoutHeaderCatalog findByTipo(TipoLayoutEnum tipo);
 
 }

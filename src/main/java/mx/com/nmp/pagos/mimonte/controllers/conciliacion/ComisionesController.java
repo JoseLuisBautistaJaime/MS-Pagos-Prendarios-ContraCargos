@@ -101,12 +101,24 @@ public class ComisionesController {
 		String msgResponse = null;
 		// Se realiza validacion de request
 		if (!ValidadorConciliacion.validateComisionSaveDTO(comisionSaveDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR, CodigoError.NMP_PMIMONTE_0008);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		// Valida la fecha cargo de la comision del request
+		if (!ValidadorConciliacion.validateFecha(comisionSaveDTO.getFechaCargo()))
+			throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+					CodigoError.NMP_PMIMONTE_BUSINESS_088);
+
+		// Valida la fecha operacion de la comision del request
+		if (!ValidadorConciliacion.validateFecha(comisionSaveDTO.getFechaOperacion()))
+			throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+					CodigoError.NMP_PMIMONTE_BUSINESS_088);
+
 		// Se guarda la comision
 		result = comisionesService.save(comisionSaveDTO, userRequest);
 		// Se valida que el resultado del guardado no sea nulo
 		if (null == result)
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND, CodigoError.NMP_PMIMONTE_0009);
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
 		// Se asigna la bandera de registro uevo y el objeto de resultado a un mapa para
 		// saber que mensaje mostrar en el response
 		comisionSaveResponseDTO = (ComisionSaveResponseDTO) result.get("result");
@@ -137,11 +149,17 @@ public class ComisionesController {
 	public Response delete(@RequestBody ComisionDeleteDTO comisionDeleteDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		if (!ValidadorConciliacion.validateComisionDeleteDTO(comisionDeleteDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR, CodigoError.NMP_PMIMONTE_0008);
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		try {
 			comisionesService.delete(comisionDeleteDTO, userRequest);
 		} catch (ConciliacionException ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
+		} catch (Exception ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_106.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_106);
 		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
@@ -167,10 +185,18 @@ public class ComisionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaComisionesTransacciones(
 			@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		// Valida el objeto y atributos del request
 		if (!ValidadorConciliacion.validateComisionesTransaccionesRequestDTO(comisionesTransaccionesRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR, CodigoError.NMP_PMIMONTE_0008);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa.",
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+
+		// Valida las fechas
+		ValidadorConciliacion.validateFechasPrimary(comisionesTransaccionesRequestDTO.getFechaDesde(),
+				comisionesTransaccionesRequestDTO.getFechaHasta());
+
+		// Regresa una respuesta
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				comisionesService.findByFechasAndComision(comisionesTransaccionesRequestDTO, userRequest));
 	}
 
@@ -191,7 +217,7 @@ public class ComisionesController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaComisiones(@PathVariable(value = "folio", required = true) Integer folio) {
+	public Response consultaComisiones(@PathVariable(value = "folio", required = true) Long folio) {
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa.",
 				comisionesService.findByFolio(folio));
 	}

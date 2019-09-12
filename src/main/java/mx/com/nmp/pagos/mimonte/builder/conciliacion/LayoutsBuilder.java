@@ -5,17 +5,23 @@
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
+import mx.com.nmp.pagos.mimonte.util.DateUtil;
 
 /**
  * @name LayoutsBuilder
@@ -29,6 +35,24 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 public abstract class LayoutsBuilder {
 
 	/* Conversión de Entity a DTO */
+
+	/**
+	 * Construye un objeto de tipo LayoutDTO a partir de un entity de tipo Layout
+	 * 
+	 * @param layout
+	 * @return
+	 */
+	public static List<LayoutDTO> buildLayoutsDTOFromLayouts(List<Layout> layouts) {
+		List<LayoutDTO> layoutsDTO = null;
+		if (layouts != null && layouts.size() > 0) {
+			layoutsDTO = new ArrayList<LayoutDTO>();
+			for (Layout layout : layouts) {
+				layoutsDTO.add(buildLayoutDTOFromLayout(layout));
+			}
+		}
+		return layoutsDTO;
+	}
+
 	/**
 	 * Construye un objeto de tipo LayoutDTO a partir de un entity de tipo Layout
 	 * 
@@ -37,15 +61,15 @@ public abstract class LayoutsBuilder {
 	 */
 	public static LayoutDTO buildLayoutDTOFromLayout(Layout layout) {
 		LayoutDTO layoutDTO = null;
-
-		if (layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
+		if (null != layout) {
 			layoutDTO = new LayoutDTO();
 			layoutDTO.setFolio(layout.getIdConciliacion());
-			layoutDTO.setTipoLayout(TipoLayoutEnum.valueOf(layout.getTipo()));
+			layoutDTO.setTipoLayout(layout.getTipo());
 			layoutDTO.setCabecera(buildLayoutCabeceraDTOFromLayoutHeader(layout.getLayoutHeader()));
-			layoutDTO.setLineas(buildLayoutLineaDTOFromLayoutLinea(layout.getLayoutLineas()));
+			if (layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
+				layoutDTO.setLineas(buildLayoutLineaDTOFromLayoutLinea(layout.getLayoutLineas()));
+			}
 		}
-
 		return layoutDTO;
 	}
 
@@ -58,7 +82,6 @@ public abstract class LayoutsBuilder {
 	 */
 	public static LayoutCabeceraDTO buildLayoutCabeceraDTOFromLayoutHeader(LayoutHeader layoutHeader) {
 		LayoutCabeceraDTO layoutCabeceraDTO = null;
-
 		if (layoutHeader != null) {
 			layoutCabeceraDTO = new LayoutCabeceraDTO();
 			layoutCabeceraDTO.setId(layoutHeader.getId());
@@ -68,7 +91,6 @@ public abstract class LayoutsBuilder {
 			layoutCabeceraDTO.setCodigoOrigen(layoutHeader.getCodigoOrigen());
 			layoutCabeceraDTO.setFecha(layoutHeader.getFecha());
 		}
-
 		return layoutCabeceraDTO;
 	}
 
@@ -104,16 +126,15 @@ public abstract class LayoutsBuilder {
 	 * Construye un entity de tipo Layout apartir de un objeto de tipo LayoutDTO
 	 * 
 	 * @param layoutDTO
+	 * @param requestUser
 	 * @return
 	 */
-	public static Layout buildLayoutDTOFromLayout(LayoutDTO layoutDTO) {
+	public static Layout buildLayoutFromLayoutDTO(LayoutDTO layoutDTO, String requestUser) {
 		Layout layout = null;
 
 		if (layoutDTO != null) {
 			layout = new Layout();
-			layout.setTipo(layoutDTO.getTipoLayout().toString());
-			layout.setLayoutHeader(buildLayoutHeaderFromLayoutCabeceraDTO(layoutDTO));
-			layout.setLayoutLineas(buildLayoutLineaFromLayoutLineaDTO(layoutDTO.getLineas()));
+			layout.setTipo(layoutDTO.getTipoLayout());
 		}
 
 		return layout;
@@ -124,18 +145,44 @@ public abstract class LayoutsBuilder {
 	 * LayoutDTO
 	 * 
 	 * @param layoutDTO
+	 * @param layout
+	 * @param requestUser
 	 * @return
 	 */
-	public static LayoutHeader buildLayoutHeaderFromLayoutCabeceraDTO(LayoutDTO layoutDTO) {
+	public static LayoutHeader buildLayoutHeaderFromLayoutCabeceraDTO(LayoutDTO layoutDTO, Layout layout,
+			String requestUser) {
 		LayoutHeader layoutHeader = null;
 
 		if (layoutDTO != null) {
+			layoutHeader = buildLayoutHeaderFromLayoutCabeceraDTO(layoutDTO.getCabecera(), layout, requestUser);
+		}
+
+		return layoutHeader;
+	}
+
+	/**
+	 * Construye un entity de tipo LayoutHeader apartir de un objeto de tipo
+	 * LayoutDTO
+	 * 
+	 * @param layoutCabeceraDTO
+	 * @param layout
+	 * @param requestUser
+	 * @return
+	 */
+	public static LayoutHeader buildLayoutHeaderFromLayoutCabeceraDTO(LayoutCabeceraDTO layoutCabeceraDTO,
+			Layout layout, String requestUser) {
+		LayoutHeader layoutHeader = null;
+
+		if (layoutCabeceraDTO != null) {
 			layoutHeader = new LayoutHeader();
-			layoutHeader.setCabecera(layoutDTO.getCabecera().getCabecera());
-			layoutHeader.setUnidadNegocio(layoutDTO.getCabecera().getUnidadNegocio());
-			layoutHeader.setDescripcion(layoutDTO.getCabecera().getDescripcion());
-			layoutHeader.setCodigoOrigen(layoutDTO.getCabecera().getCodigoOrigen());
-			layoutHeader.setFecha(layoutDTO.getCabecera().getFecha());
+			layoutHeader.setCabecera(layoutCabeceraDTO.getCabecera());
+			layoutHeader.setUnidadNegocio(layoutCabeceraDTO.getUnidadNegocio());
+			layoutHeader.setDescripcion(layoutCabeceraDTO.getDescripcion());
+			layoutHeader.setCodigoOrigen(layoutCabeceraDTO.getCodigoOrigen());
+			layoutHeader.setFecha(layoutCabeceraDTO.getFecha());
+			layoutHeader.setLayout(layout);
+			layoutHeader.setCreatedBy(requestUser);
+			layoutHeader.setCreatedDate(new Date());
 		}
 
 		return layoutHeader;
@@ -144,14 +191,12 @@ public abstract class LayoutsBuilder {
 	/**
 	 * Construye un objeto de tipo LayoutLineaDTO a partir de un entity de tipo
 	 * LayoutLineaCatalog
-	 * 
 	 * @param layoutLineaCatalog
 	 * @param monto
+	 * @param unidadOperativa 
 	 * @return
 	 */
-	public static LayoutLineaDTO buildLayoutLineaDTOFromLayoutLineaCatalog(LayoutLineaCatalog layoutLineaCatalog,
-			BigDecimal monto) {
-
+	public static LayoutLineaDTO buildLayoutLineaDTOFromLayoutLineaCatalog(LayoutLineaCatalog layoutLineaCatalog, BigDecimal monto, String unidadOperativa) {
 		LayoutLineaDTO layoutLineaDTO = new LayoutLineaDTO();
 		layoutLineaDTO.setCuenta(layoutLineaCatalog.getCuenta());
 		layoutLineaDTO.setDepId(layoutLineaCatalog.getDepId());
@@ -160,8 +205,7 @@ public abstract class LayoutsBuilder {
 		layoutLineaDTO.setMonto(monto);
 		layoutLineaDTO.setNegocio(layoutLineaCatalog.getNegocio());
 		layoutLineaDTO.setProyectoNMP(layoutLineaCatalog.getProyectoNmp());
-		layoutLineaDTO.setUnidadOperativa(layoutLineaCatalog.getUnidadOperativa());
-
+		layoutLineaDTO.setUnidadOperativa(unidadOperativa);
 		return layoutLineaDTO;
 	}
 
@@ -170,13 +214,16 @@ public abstract class LayoutsBuilder {
 	 * objetos de tipo LayoutLineaDTO
 	 * 
 	 * @param layoutLineaDTOs
+	 * @param layout
+	 * @param requestUser
 	 * @return
 	 */
-	public static List<LayoutLinea> buildLayoutLineaFromLayoutLineaDTO(List<LayoutLineaDTO> layoutLineaDTOs) {
+	public static List<LayoutLinea> buildLayoutLineaFromLayoutLineaDTO(List<LayoutLineaDTO> layoutLineaDTOs,
+			Layout layout, String requestUser) {
 		List<LayoutLinea> layoutLineas = new ArrayList<>();
 		layoutLineaDTOs.forEach(l -> {
 			LayoutLinea layoutLinea = new LayoutLinea();
-			layoutLinea.setId(l.getId());
+			layoutLinea.setId(l.getId() != null && l.getId() > 0 ? l.getId() : null);
 			layoutLinea.setLinea(l.getLinea());
 			layoutLinea.setCuenta(l.getCuenta());
 			layoutLinea.setDepId(l.getDepId());
@@ -184,6 +231,12 @@ public abstract class LayoutsBuilder {
 			layoutLinea.setNegocio(l.getNegocio());
 			layoutLinea.setProyectoNmp(l.getProyectoNMP());
 			layoutLinea.setMonto(l.getMonto());
+			layoutLinea.setLayout(layout);
+			// TODO: Corroborar se cambia a true para estandarizar en alta por medio de app
+			// a: 1, igual que en comisiones
+			layoutLinea.setNuevo(true);
+			layoutLinea.setCreatedBy(requestUser);
+			layoutLinea.setCreatedDate(new Date());
 			layoutLineas.add(layoutLinea);
 		});
 
@@ -230,6 +283,79 @@ public abstract class LayoutsBuilder {
 	public static boolean validar(LayoutLineaDTO layoutLineaDTO) {
 		return layoutLineaDTO.getId() >= 0L && !layoutLineaDTO.getLinea().equals("")
 				&& !layoutLineaDTO.getCuenta().equals("") && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0;
+	}
+
+	/**
+	 * Construye la cabecera para el layout usando los valores configurados por
+	 * default en la bd
+	 * 
+	 * @param layoutHeaderCatalog
+	 * @return
+	 */
+	public static LayoutCabeceraDTO buildLayoutCabeceraDTOFromLayoutHeaderCatalog(
+			LayoutHeaderCatalog layoutHeaderCatalog) {
+
+		LocalDate localDate = LocalDate.now();
+		if (layoutHeaderCatalog.getTipo() == TipoLayoutEnum.PAGOS && localDate.getDayOfWeek().getValue() == 5) {
+			localDate = localDate.plusDays(3);
+		}
+		LayoutCabeceraDTO layoutHeaderDTO = new LayoutCabeceraDTO();
+		layoutHeaderDTO.setCabecera(layoutHeaderCatalog.getCabecera());
+		layoutHeaderDTO.setCodigoOrigen(layoutHeaderCatalog.getCodigoOrigen());
+		layoutHeaderDTO.setDescripcion(MessageFormat.format(layoutHeaderCatalog.getDescripcion(), DateUtil.formatDate(new Date(), "ddMMyyyy")));
+		layoutHeaderDTO.setFecha(localDate);
+		layoutHeaderDTO.setUnidadNegocio(layoutHeaderCatalog.getUnidadNegocio());
+
+		return layoutHeaderDTO;
+	}
+
+	public static void mergeLinea(LayoutLinea lineaBD, LayoutLinea linea, String requestUser) {
+		lineaBD.setLinea(linea.getLinea());
+		lineaBD.setCuenta(linea.getCuenta());
+		lineaBD.setDepId(linea.getDepId());
+		lineaBD.setUnidadOperativa(linea.getUnidadOperativa());
+		lineaBD.setNegocio(linea.getNegocio());
+		lineaBD.setProyectoNmp(linea.getProyectoNmp());
+		lineaBD.setMonto(linea.getMonto());
+		lineaBD.setLastModifiedBy(requestUser);
+		lineaBD.setLastModifiedDate(new Date());
+	}
+
+	/**
+	 * Construye un objeto de tipo LayoutDTO a partir de un objeto de tipo
+	 * LayoutRequestDTO
+	 * 
+	 * @param layoutRequestDTO
+	 * @return
+	 */
+	public static LayoutDTO buildLayoutDTOFromLayoutRequestDTO(LayoutRequestDTO layoutRequestDTO) {
+		LayoutDTO layoutDTO = null;
+		if (null != layoutRequestDTO) {
+			layoutDTO = new LayoutDTO();
+			layoutDTO.setCabecera(null);
+			layoutDTO.setFolio(layoutRequestDTO.getFolio());
+			layoutDTO.setLineas(layoutRequestDTO.getLineas());
+			layoutDTO.setTipoLayout(layoutRequestDTO.getTipoLayout());
+		}
+		return layoutDTO;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo Long con los ids de una lista de
+	 * objetos de tipo LayoutLineaDTO NOTA: No se toman en cuenta los ids 0
+	 * 
+	 * @param layoutLineaDTOList
+	 * @return
+	 */
+	public static List<Long> buildLongListFromLayoutLineaDTONO0List(List<LayoutLineaDTO> layoutLineaDTOList) {
+		List<Long> list = null;
+		if (null != layoutLineaDTOList && !layoutLineaDTOList.isEmpty()) {
+			list = new ArrayList<>();
+			for (LayoutLineaDTO layoutLineaDTO : layoutLineaDTOList)
+				if (layoutLineaDTO.getId().compareTo(0L) != 0)
+					list.add(layoutLineaDTO.getId());
+		}
+		return list;
 	}
 
 }

@@ -37,7 +37,6 @@ public abstract class ReporteEstadoCuentaBuilder {
 		reporteEstadoCuentaDTO.setDisponible(false);
 
 		if (reporteList != null && !reporteList.isEmpty()) {
-			reporteEstadoCuentaDTO = new ReporteEstadoCuentaDTO();
 			for (Reporte reporte : reporteList) {
 				if (reporte.getTipo() == TipoReporteEnum.ESTADO_CUENTA) {
 					reporteEstadoCuentaDTO.setFechaDesde(reporte.getFechaDesde());

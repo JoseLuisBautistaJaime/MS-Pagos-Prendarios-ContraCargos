@@ -71,17 +71,20 @@ public class ReportePagosService {
 					reporteRequestDTO.getSucursales(), reporteRequestDTO.getPartida());
 		// Querys sin sucursales
 		else if (null != reporteRequestDTO.getFechaDesde() && null != reporteRequestDTO.getFechaHasta()
-				&& null == reporteRequestDTO.getSucursales() || reporteRequestDTO.getSucursales().isEmpty())
+				&& null == reporteRequestDTO.getSucursales()
+				|| (null != reporteRequestDTO.getSucursales() && reporteRequestDTO.getSucursales().isEmpty()))
 			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithFechasNS(
 					reporteRequestDTO.getFechaDesde(), reporteRequestDTO.getFechaHasta(),
 					reporteRequestDTO.getProducto(), reporteRequestDTO.getOperacion(), reporteRequestDTO.getPartida());
 		else if (null != reporteRequestDTO.getFechaDesde() && null == reporteRequestDTO.getFechaHasta()
-				&& null == reporteRequestDTO.getSucursales() || reporteRequestDTO.getSucursales().isEmpty())
+				&& null == reporteRequestDTO.getSucursales()
+				|| (null != reporteRequestDTO.getSucursales() && reporteRequestDTO.getSucursales().isEmpty()))
 			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithFechaDesdeNS(
 					reporteRequestDTO.getFechaDesde(), reporteRequestDTO.getProducto(),
 					reporteRequestDTO.getOperacion(), reporteRequestDTO.getPartida());
 		else if (null == reporteRequestDTO.getFechaDesde() && null != reporteRequestDTO.getFechaHasta()
-				&& null == reporteRequestDTO.getSucursales() || reporteRequestDTO.getSucursales().isEmpty())
+				&& null == reporteRequestDTO.getSucursales()
+				|| (null != reporteRequestDTO.getSucursales() && reporteRequestDTO.getSucursales().isEmpty()))
 			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithFechaHastaNS(
 					reporteRequestDTO.getFechaHasta(), reporteRequestDTO.getProducto(),
 					reporteRequestDTO.getOperacion(), reporteRequestDTO.getPartida());

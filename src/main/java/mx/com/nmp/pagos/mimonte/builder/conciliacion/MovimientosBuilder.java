@@ -6,17 +6,23 @@ package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoPagoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TarjetaMovimientosProveedorDTO;
 import mx.com.nmp.pagos.mimonte.model.EstatusPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MetodoPagoMovimientosProveedor;
@@ -24,6 +30,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TarjetaMovimientosProveedor;
 
 /**
@@ -337,14 +344,14 @@ public abstract class MovimientosBuilder {
 		MovimientoEstadoCuentaDTO movimientoEstadoCuentaDTO = null;
 		if (null != movimientoEstadoCuentaDBDTO) {
 			movimientoEstadoCuentaDTO = new MovimientoEstadoCuentaDTO();
-			movimientoEstadoCuentaDTO.setDepositos(
-					movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(ConciliacionConstants.TipoMovimiento.TIPO_DEPOSITO) ? movimientoEstadoCuentaDBDTO.getImporte()
+			movimientoEstadoCuentaDTO.setDepositos(movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(
+					ConciliacionConstants.TipoMovimiento.TIPO_DEPOSITO) ? movimientoEstadoCuentaDBDTO.getImporte()
 							: null);
 			movimientoEstadoCuentaDTO.setDescripcion(movimientoEstadoCuentaDBDTO.getDescripcion());
 			movimientoEstadoCuentaDTO.setFecha(movimientoEstadoCuentaDBDTO.getFecha());
 			movimientoEstadoCuentaDTO.setId(movimientoEstadoCuentaDBDTO.getId());
-			movimientoEstadoCuentaDTO.setRetiros(
-					movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(ConciliacionConstants.TipoMovimiento.TIPO_RETIRO) ? movimientoEstadoCuentaDBDTO.getImporte()
+			movimientoEstadoCuentaDTO.setRetiros(movimientoEstadoCuentaDBDTO.getTipoMovimiento()
+					.equals(ConciliacionConstants.TipoMovimiento.TIPO_RETIRO) ? movimientoEstadoCuentaDBDTO.getImporte()
 							: null);
 			if (pos == 0)
 				movimientoEstadoCuentaDTO.setSaldo(movimientoEstadoCuentaDBDTO.getTotalInicial());
@@ -424,6 +431,183 @@ public abstract class MovimientosBuilder {
 			}
 		}
 		return movimientoPagoList;
+	}
+
+	/**
+	 * Construye un objeto de tipo MovimientoPagoDTO a partir de un entity de tipo
+	 * MovimientoTransito
+	 * 
+	 * @param movimientoTransito
+	 * @return
+	 */
+	public static MovimientoPagoDTO buildMovimientoPagoDTOFromMovimientoTransito(
+			MovimientoTransito movimientoTransito) {
+		MovimientoPagoDTO movimientoPagoDTO = null;
+		if (null != movimientoTransito) {
+			movimientoPagoDTO = new MovimientoPagoDTO();
+			movimientoPagoDTO.setId(movimientoTransito.getId());
+			movimientoPagoDTO.setEstatus(new EstatusPago(movimientoTransito.getEstatus().getId()));
+			movimientoPagoDTO.setMonto(movimientoTransito.getMonto());
+			movimientoPagoDTO
+					.setMovimientoMidasDTO(new MovimientoMidasDTO(movimientoTransito.getMovimientoMidas().getId()));
+		}
+		return movimientoPagoDTO;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo MovimientoPagoDTO a partir de una
+	 * lista de entities de tipo MovimientoTransito
+	 * 
+	 * @param movimientosTransito
+	 * @return
+	 */
+	public static List<MovimientoPagoDTO> buildMovimientoPagoDTOListFromMovimientoTransitoList(
+			List<MovimientoTransito> movimientosTransito) {
+		List<MovimientoPagoDTO> movimientosPagoDTO = null;
+		if (null != movimientosTransito && !movimientosTransito.isEmpty()) {
+			movimientosPagoDTO = new ArrayList<>();
+			for (MovimientoTransito movimientoTransito : movimientosTransito) {
+				movimientosPagoDTO.add(buildMovimientoPagoDTOFromMovimientoTransito(movimientoTransito));
+			}
+		}
+		return movimientosPagoDTO;
+	}
+
+	/**
+	 * Construye un entity de tipo MovimientoPago a partir de un objeto de tipo
+	 * MovimientoPagoDTO
+	 * 
+	 * @param movimientoPagoDTO
+	 * @param folio
+	 * @return
+	 */
+	public static MovimientoPago buildMovimientoPagoFromMovimientoPagoDTO(MovimientoPagoDTO movimientoPagoDTO,
+			final Long folio, final String requestUser) {
+		MovimientoPago movimientoPago = null;
+		if (null != movimientoPagoDTO) {
+			movimientoPago = new MovimientoPago();
+			movimientoPago.setId(null);
+			movimientoPago.setEstatus(new EstatusPago(movimientoPagoDTO.getEstatus().getId()));
+			movimientoPago.setMonto(movimientoPagoDTO.getMonto());
+			movimientoPago.setIdConciliacion(folio);
+			movimientoPago.setCreatedBy(requestUser);
+			movimientoPago.setCreatedDate(new Date());
+			movimientoPago.setNuevo(true);
+			movimientoPago.setMovimientoMidas(new MovimientoMidas(movimientoPagoDTO.getMovimientoMidasDTO().getId()));
+
+		}
+		return movimientoPago;
+	}
+
+	/**
+	 * Construye una lista de entities de tipo MovimientoPago a partir de una lista
+	 * de objetos de tipo MovimientoPagoDTO
+	 * 
+	 * @param movimientoPagoDTOList
+	 * @param folio
+	 * @return
+	 */
+	public static List<MovimientoPago> buildMovimientoPagoListFromMovimientoPagoDTOList(
+			List<MovimientoPagoDTO> movimientoPagoDTOList, final Long folio, final String requestUser) {
+		List<MovimientoPago> movimientoPagoList = null;
+		if (null != movimientoPagoDTOList && !movimientoPagoDTOList.isEmpty()) {
+			movimientoPagoList = new ArrayList<>();
+			for (MovimientoPagoDTO movimientoPagoDTO : movimientoPagoDTOList) {
+				movimientoPagoList.add(buildMovimientoPagoFromMovimientoPagoDTO(movimientoPagoDTO, folio, requestUser));
+			}
+		}
+		return movimientoPagoList;
+	}
+
+	/**
+	 * Construye una lista de Integer de los ids contenidos en una lista de objetos
+	 * de tipo MovimientosDTO
+	 * 
+	 * @param movimientosDTOList
+	 * @return
+	 */
+	public static List<Integer> buildIdsListFromMovimientosDTOList(List<MovimientosDTO> movimientosDTOList) {
+		List<Integer> list = null;
+		if (null != movimientosDTOList && !movimientosDTOList.isEmpty()) {
+			list = new ArrayList<>();
+			for (MovimientosDTO movimiento : movimientosDTOList) {
+				if (null != movimiento.getId())
+					list.add(movimiento.getId());
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo Integer a partir de una lista de
+	 * objetos de tipoMovTransitoRequestDTO
+	 * 
+	 * @param movTransitoRequestDTOList
+	 * @return
+	 */
+	public static List<Integer> buildIntegerListFromMovTransitoRequestDTOList(
+			List<MovTransitoRequestDTO> movTransitoRequestDTOList) {
+		List<Integer> list = null;
+		if (null != movTransitoRequestDTOList && !movTransitoRequestDTOList.isEmpty()) {
+			list = new ArrayList<>();
+			for (MovTransitoRequestDTO movTransitoRequestDTO : movTransitoRequestDTOList) {
+				list.add(movTransitoRequestDTO.getId());
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * Construye un mapa con dos listas una con ids de comisiones a ser editados y
+	 * otra con una lista de ids comisiones a ser eliminados de pendiendo de su
+	 * estatus
+	 * 
+	 * @param comisionesRequestDTOList
+	 * @return
+	 */
+	public static Map<String, List<Integer>> buildMapIntegerListFromComisionesRequestDTONO0List(
+			List<ComisionesRequestDTO> comisionesRequestDTOList) {
+		Map<String, List<Integer>> map = null;
+		List<Integer> listComs = null;
+		List<Integer> listComsDel = null;
+		List<Integer> idsComComp = null;
+		if (null != comisionesRequestDTOList && !comisionesRequestDTOList.isEmpty()) {
+			listComs = new ArrayList<>();
+			listComsDel = new ArrayList<>();
+			idsComComp = new ArrayList<>();
+			for (ComisionesRequestDTO comisionesRequestDTO : comisionesRequestDTOList) {
+				if (!comisionesRequestDTO.getId().equals(0))
+					idsComComp.add(comisionesRequestDTO.getId());
+				if (!comisionesRequestDTO.getId().equals(0) && comisionesRequestDTO.getEstatus())
+					listComs.add(comisionesRequestDTO.getId());
+				else if (!comisionesRequestDTO.getId().equals(0) && !comisionesRequestDTO.getEstatus())
+					listComsDel.add(comisionesRequestDTO.getId());
+			}
+			map = new HashMap<>();
+			map.put("idsCom", listComs);
+			map.put("idsComDel", listComsDel);
+			map.put("idsComComp", idsComComp);
+		}
+
+		return map;
+	}
+
+	/**
+	 * Cinstruye una lista de elementos de tipo Long a partir de una lista de
+	 * elementos de tipo Object
+	 * 
+	 * @param objectList
+	 * @return
+	 */
+	public static List<Long> buildLongListFromObjectList(List<Object> objectList) {
+		List<Long> longList = null;
+		if (null != objectList) {
+			longList = new ArrayList<>();
+			for (Object object : objectList) {
+				longList.add(Long.valueOf(object.toString()));
+			}
+		}
+		return longList;
 	}
 
 }

@@ -27,11 +27,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.DevolucionesService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
@@ -88,12 +90,19 @@ public class DevolucionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultar(@RequestBody DevolucionRequestDTO devolucionDTO) {
-		List<DevolucionEntidadDTO> respuesta = devolucionesServiceImpl.consulta(devolucionDTO);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta devoluciones exitosa.",
-				respuesta);
+		List<DevolucionEntidadDTO> respuesta = null;
+		// Valida que el objeto principal no sea nulo
+		if (null == devolucionDTO)
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		ValidadorConciliacion.validateFechasPrimary(devolucionDTO.getFechaDesde(), devolucionDTO.getFechaHasta());
+		respuesta = devolucionesServiceImpl.consulta(devolucionDTO);
+		if (null == respuesta || respuesta.isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				ConciliacionConstants.SUCCESSFUL_RETURNS_CONSULTATION, respuesta);
 	}
-
 
 	/**
 	 * Realiza la administración de devoluciones a nivel entidad - Actualización de
@@ -115,19 +124,25 @@ public class DevolucionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response actualizar(@RequestBody List<DevolucionUpdtDTO> devolucionUpdtDTOList,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-
-		// Validacion
-		if (!ValidadorConciliacion.validateActualizarDevolucionRequest(devolucionUpdtDTOList) || userRequest == null) {
-			throw new ConciliacionException("Los datos para la liquidacion son incorrectos", CodigoError.NMP_PMIMONTE_0001);
-		}
+			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		// Validacion de objeto y atributos
+		if (!ValidadorConciliacion.validateActualizarDevolucionRequest(devolucionUpdtDTOList) || userRequest == null
+				|| "".equals(userRequest))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		// Validacion de fechas de movimientos
+		for (DevolucionUpdtDTO devolucionUpdtDTO : devolucionUpdtDTOList)
+			if (!ValidadorConciliacion.validateFecha(devolucionUpdtDTO.getFecha()))
+				throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+						CodigoError.NMP_PMIMONTE_BUSINESS_088);
 
 		// Actualizacion
-		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl.actualizar(devolucionUpdtDTOList, userRequest);
-
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualización devoluciones exitosa.", devolucionEntidadDTOList);
+		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl.actualizar(devolucionUpdtDTOList,
+				userRequest);
+		// Respuesta
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Actualización devoluciones exitosa.",
+				devolucionEntidadDTOList);
 	}
-
 
 	/**
 	 * Realiza la administración de devoluciones a nivel entidad - Enviar solicitud
@@ -149,10 +164,21 @@ public class DevolucionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response solicitar(@RequestBody DevolucionesIdsMovimientosDTO devolucionesIdsMovimientosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-
-		List<DevolucionEntidadDTO> devolucionEntidadDTOList = devolucionesServiceImpl
-				.solicitarDevoluciones(devolucionesIdsMovimientosDTO, userRequest);
-
+		if (!ValidadorConciliacion.validateDevolucionesIdsMovimientosDTO(devolucionesIdsMovimientosDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		List<DevolucionEntidadDTO> devolucionEntidadDTOList = null;
+		try {
+			devolucionEntidadDTOList = devolucionesServiceImpl.solicitarDevoluciones(devolucionesIdsMovimientosDTO,
+					userRequest);
+		} catch (ConciliacionException ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw ex;
+		} catch (Exception ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_104.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_104);
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Solicitud devoluciones exitosa.",
 				devolucionEntidadDTOList);
 	}

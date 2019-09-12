@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 
@@ -162,6 +163,12 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	public void setFechaLiquidacion(Date fechaLiquidacion) {
 		this.fechaLiquidacion = fechaLiquidacion;
 	}
+
+	@Transient
+	public MovimientoConciliacionEnum getTipoMovimiento() {
+		return MovimientoConciliacionEnum.DEVOLUCIONES;
+	}
+
 
 	@Override
 	public int hashCode() {

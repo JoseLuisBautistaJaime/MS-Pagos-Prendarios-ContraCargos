@@ -48,7 +48,6 @@ public abstract class EstatusDevolucionesBuilder {
 			estatusDevolucion = new EstatusDevolucion();
 			estatusDevolucion.setId(estatusDevolucionDTO.getId());
 			estatusDevolucion.setDescripcion(estatusDevolucionDTO.getDescripcion());
-//			estatusDevolucion.setEstatus(estatusDevolucionDTO.getEstatus());
 		}
 		return estatusDevolucion;
 	}
@@ -64,6 +63,7 @@ public abstract class EstatusDevolucionesBuilder {
 			estatusDevolucionDTO = new EstatusDevolucionDTO();
 			estatusDevolucionDTO.setId(estatusDevolucion.getId());
 			estatusDevolucionDTO.setDescripcion(estatusDevolucion.getDescripcion());
+			estatusDevolucionDTO.setEstatus(estatusDevolucion.getEstatus());
 		}
 		return estatusDevolucionDTO;
 	}

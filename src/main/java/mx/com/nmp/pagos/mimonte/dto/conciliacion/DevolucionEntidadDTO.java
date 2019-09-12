@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
@@ -20,6 +21,8 @@ import mx.com.nmp.pagos.mimonte.dto.BaseEntidadDTO;
  */
 public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 
+	private static final SimpleDateFormat sf;
+	
 	private Integer id;
 	private BaseEntidadDTO entidad;
 	private Date fecha;
@@ -32,7 +35,11 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 	private String codigoAutorizacion;
 	private Date fechaLiquidacion;
 
-	public DevolucionEntidadDTO() {
+	static {
+		sf = new SimpleDateFormat("yyyy-MM-dd");
+	}
+	
+	public DevolucionEntidadDTO() {		
 		super();
 	}
 
@@ -133,8 +140,8 @@ public class DevolucionEntidadDTO implements Comparable<DevolucionEntidadDTO> {
 		this.codigoAutorizacion = codigoAutorizacion;
 	}
 
-	public Date getFechaLiquidacion() {
-		return fechaLiquidacion;
+	public String getFechaLiquidacion() {
+		return null != fechaLiquidacion ? sf.format(fechaLiquidacion) : null;
 	}
 
 	public void setFechaLiquidacion(Date fechaLiquidacion) {

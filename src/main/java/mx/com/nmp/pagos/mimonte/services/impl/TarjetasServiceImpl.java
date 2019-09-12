@@ -335,6 +335,9 @@ public class TarjetasServiceImpl implements TarjetasService {
 			throw new TarjetaException(TarjetaConstants.MSG_FAILURE_UPTOKEN);
 
 		}
+		// Se valida la longitud del token
+		if(token.length() > Constants.LONGITUD_TOKEN)
+			throw new TarjetaException(TarjetaConstants.MSG_TOKEN_VALUE_TOO_LONG);
 
 		// Obtiene los registros
 		Tarjetas updateTarjeta = tarjetaRepository.findByIdOpenPay(id_openpay);

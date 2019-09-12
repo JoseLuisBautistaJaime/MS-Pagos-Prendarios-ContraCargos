@@ -61,6 +61,8 @@ public class MimonteApplication {
                 activeProfiles.contains(Constants.SPRING_PROFILE_CLOUD)) {
             LOGGER.error("Los profiles 'dev' y 'cloud' no deben ser especificados al mismo tiempo.");
         }
+        LOGGER.debug("DEBUG--------------");
+        LOGGER.info("INFO--------------");
     }
 
     public static void main(String[] args) throws UnknownHostException {
@@ -86,6 +88,7 @@ public class MimonteApplication {
                 env.getProperty("server.port"),
                 env.getActiveProfiles());
 
-
+        LOGGER.debug("DEBUG--------------");
+        LOGGER.info("INFO--------------");
     }
 }

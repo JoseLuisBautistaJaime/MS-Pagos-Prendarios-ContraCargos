@@ -33,4 +33,17 @@ public enum OperacionComisionProyeccionEnum {
 		return descripcion;
 	}
 
+	/**
+	 * Regresa un valor del Enum por id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static OperacionComisionProyeccionEnum getById(int id) {
+		for (OperacionComisionProyeccionEnum e : values()) {
+			if (e.id == id)
+				return e;
+		}
+		return null;
+	}
 }

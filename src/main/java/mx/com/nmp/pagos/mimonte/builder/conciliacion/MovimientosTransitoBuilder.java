@@ -54,6 +54,7 @@ public abstract class MovimientosTransitoBuilder {
 			movTransitoDTO.setEsquemaTarjeta(movimientoTransito.getEsquemaTarjeta());
 			movTransitoDTO.setCuenta(movimientoTransito.getCuenta());
 			movTransitoDTO.setTitularCuenta(movimientoTransito.getTitular());
+			movTransitoDTO.setNumAutorizacion(movimientoTransito.getNumAutorizacion());
 		}
 		return movTransitoDTO;
 	}
@@ -77,19 +78,19 @@ public abstract class MovimientosTransitoBuilder {
 		return movTransitoDTOList;
 	}
 	
-	public static DevolucionConDTO buildDevolucionConDTOFromMovimientoTransito(MovimientoTransito movimientoTransito, EstatusDevolucion estatusDevolucion) {
+	public static DevolucionConDTO buildDevolucionConDTOFromMovimientoTransito(MovimientoTransito movTransito, EstatusDevolucion estatusDevolucion) {
 		DevolucionConDTO devolucionConDTO = null;
-		if(movimientoTransito != null) {
+		if(movTransito != null) {
 			devolucionConDTO = new DevolucionConDTO();
-			devolucionConDTO.setId(movimientoTransito.getId());
-			devolucionConDTO.setFecha(movimientoTransito.getFecha());
+			devolucionConDTO.setId(movTransito.getId());
+			devolucionConDTO.setFecha(movTransito.getFecha());
 			devolucionConDTO.setEstatus(EstatusDevolucionesBuilder.buildEstatusDevolucionDTOFromEstatusDevolucion(estatusDevolucion));
-			devolucionConDTO.setMonto(movimientoTransito.getMonto());
-			devolucionConDTO.setEsquemaTarjeta(movimientoTransito.getEsquemaTarjeta());
-			devolucionConDTO.setIdentificacionCuenta(null);
-			devolucionConDTO.setTitular(movimientoTransito.getTitular());
-			devolucionConDTO.setCodigiAutorizacion(null);
-			devolucionConDTO.setSucursal(movimientoTransito.getSucursal());
+			devolucionConDTO.setMonto(movTransito.getMonto());
+			devolucionConDTO.setEsquemaTarjeta(movTransito.getEsquemaTarjeta());
+			devolucionConDTO.setIdentificacionCuenta(movTransito.getCuenta());
+			devolucionConDTO.setTitular(movTransito.getTitular());
+			devolucionConDTO.setCodigoAutorizacion(movTransito.getNumAutorizacion());
+			devolucionConDTO.setSucursal(movTransito.getSucursal());
 			devolucionConDTO.setFechaLiquidacion(null);
 			
 			
@@ -110,14 +111,25 @@ public abstract class MovimientosTransitoBuilder {
 		return devolucionConDTOList;
 	}
 
-	public static MovimientoTransito buildMovTransitoFromMovProveedor(MovimientoProveedor movProveedor) {
+	public static MovimientoTransito buildMovTransitoFromMovProveedor(MovimientoProveedor movProveedor, Long idConciliacion) {
 		MovimientoTransito movTransito = new MovimientoTransito();
 		movTransito.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
 		movTransito.setCreatedDate(new Date());
-		//movTransito.setFolio(movProveedor.getTarjetaMovimientosProveedor().get); // TODO:
-		//movTransito.setSucursal(movProveedor.get); // TODO:
-		// movTransito.set
-		movTransito.setCuenta(movProveedor.getTarjetaMovimientosProveedor().getCardNumber()); // TODO: Enmascarar
+		movTransito.setFolio(null); // TODO: No folio
+		movTransito.setSucursal(null); // TODO: Sucursal
+		movTransito.setFecha(movProveedor.getOperationDate());
+		movTransito.setOperacionDesc(null); // TODO: Operacion date
+		movTransito.setMonto(movProveedor.getAmount());
+		movTransito.setTipoContratoDesc(null); // TODO: Tipo contrato
+		movTransito.setEsquemaTarjeta(movProveedor.getTarjetaMovimientosProveedor().getBrand());
+		movTransito.setCuenta(movProveedor.getTarjetaMovimientosProveedor().getCardNumber());
+		movTransito.setTitular(movProveedor.getTarjetaMovimientosProveedor().getHolderName());
+		movTransito.setNumAutorizacion(movProveedor.getAuthorization());
+		movTransito.setMovimientoMidas(null); // TODO: No relacion
+		movTransito.setNuevo(false);
+		movTransito.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY.intValue()));
+		movTransito.setIdConciliacion(idConciliacion);
+
 		return movTransito;
 	}
 
@@ -125,9 +137,10 @@ public abstract class MovimientosTransitoBuilder {
 	/**
 	 * Crea un movimiento transito a partir de un movimiento midas
 	 * @param movMidas
+	 * @param idConciliacion
 	 * @return
 	 */
-	public static MovimientoTransito buildMovTransitoFromMovMidas(MovimientoMidas movMidas) {
+	public static MovimientoTransito buildMovTransitoFromMovMidas(MovimientoMidas movMidas, MovimientoProveedor movProveedor, Long idConciliacion) {
 		MovimientoTransito movTransito = new MovimientoTransito();
 		movTransito.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
 		movTransito.setCreatedDate(new Date());
@@ -137,12 +150,16 @@ public abstract class MovimientosTransitoBuilder {
 		movTransito.setOperacionDesc(movMidas.getOperacionDesc());
 		movTransito.setMonto(movMidas.getMonto());
 		movTransito.setTipoContratoDesc(movMidas.getTipoContratoDesc());
-		movTransito.setEsquemaTarjeta(movTransito.getEsquemaTarjeta());
-		movTransito.setCuenta(movMidas.getTarjeta()); // TODO: Enmascarar
-		movTransito.setTitular(movTransito.getTitular());
+		movTransito.setEsquemaTarjeta(movMidas.getMarcaTarjeta());
+		movTransito.setCuenta(movMidas.getTarjeta());
+		movTransito.setTitular(movProveedor != null && movProveedor.getTarjetaMovimientosProveedor() != null ? movProveedor.getTarjetaMovimientosProveedor().getHolderName() : null);
+		movTransito.setNumAutorizacion(movMidas.getNumAutorizacion());
 		movTransito.setMovimientoMidas(movMidas);
 		movTransito.setNuevo(false);
-		movTransito.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS.intValue()));
+		movTransito.setEstatus(new EstatusTransito(movProveedor != null ?
+				ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS.intValue() :
+					ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY));
+		movTransito.setIdConciliacion(idConciliacion);
 		return movTransito;
 	}
 

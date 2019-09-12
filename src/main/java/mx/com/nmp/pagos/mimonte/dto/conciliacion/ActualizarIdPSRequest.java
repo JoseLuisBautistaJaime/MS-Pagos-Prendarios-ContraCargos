@@ -17,7 +17,7 @@ import java.util.Objects;
  */
 public class ActualizarIdPSRequest {
 
-	private Integer folio;
+	private Long folio;
 	private String idPolizaTesoreria;
 	private String idAsientoContable;
 
@@ -25,18 +25,18 @@ public class ActualizarIdPSRequest {
 		super();
 	}
 
-	public ActualizarIdPSRequest(Integer folio, String idPolizaTesoreria, String idAsientoContable) {
+	public ActualizarIdPSRequest(Long folio, String idPolizaTesoreria, String idAsientoContable) {
 		super();
 		this.folio = folio;
 		this.idPolizaTesoreria = idPolizaTesoreria;
 		this.idAsientoContable = idAsientoContable;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

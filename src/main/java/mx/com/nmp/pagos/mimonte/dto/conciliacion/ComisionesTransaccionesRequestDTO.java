@@ -22,7 +22,7 @@ public class ComisionesTransaccionesRequestDTO implements Comparable<ComisionesT
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private BigDecimal comision;
-	private Integer idConciliacion;
+	private Long idConciliacion;
 
 	public ComisionesTransaccionesRequestDTO() {
 		super();
@@ -59,11 +59,11 @@ public class ComisionesTransaccionesRequestDTO implements Comparable<ComisionesT
 		this.comision = comision;
 	}
 
-	public Integer getIdConciliacion() {
+	public Long getIdConciliacion() {
 		return idConciliacion;
 	}
 
-	public void setIdConciliacion(Integer idConciliacion) {
+	public void setIdConciliacion(Long idConciliacion) {
 		this.idConciliacion = idConciliacion;
 	}
 
