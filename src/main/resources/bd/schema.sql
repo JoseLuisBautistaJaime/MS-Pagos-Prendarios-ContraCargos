@@ -280,11 +280,11 @@ CREATE TABLE IF NOT EXISTS `to_pagos` (
   INDEX `idx_id_transaccion_midas` (`id_transaccion_midas`),
   INDEX `ctr_estatus_pago_fk` (`id_estatus_transaccion`),
   CONSTRAINT `ctr_estatus_pago_fk`
-  FOREIGN KEY (`id_estatus_transaccion`)
+    FOREIGN KEY (`id_estatus_transaccion`)
     REFERENCES `tk_estatus_pago` (`id`),
   CONSTRAINT `fk_cliente_id`
-  FOREIGN KEY (`id_cliente`)
-  REFERENCES `tk_cliente` (`id_cliente`)
+    FOREIGN KEY (`id_cliente`)
+    REFERENCES `tk_cliente` (`id_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -298,13 +298,13 @@ CREATE TABLE `to_pagos_partidas` (
   `nombre_operacion` VARCHAR(200) DEFAULT NULL,
   `id_pago` BIGINT(20) UNSIGNED NOT NULL,
   `monto` DECIMAL(16,4) NOT NULL,
- PRIMARY KEY (`id`),
- INDEX `idx_pagos_partidas_id` (`id`),
- INDEX `idx_pagos_partidas_folio_partida` (`folio_partida`),
- INDEX `idx_pagos_partidas_id_operacion` (`id_operacion`),
- INDEX `idx_pagos_partidas_id_pago` (`id_pago`),
- CONSTRAINT `ctr_id_pago`
-  FOREIGN KEY (`id_pago`)
+  PRIMARY KEY (`id`),
+  INDEX `idx_pagos_partidas_id` (`id`),
+  INDEX `idx_pagos_partidas_folio_partida` (`folio_partida`),
+  INDEX `idx_pagos_partidas_id_operacion` (`id_operacion`),
+  INDEX `idx_pagos_partidas_id_pago` (`id_pago`),
+  CONSTRAINT `ctr_id_pago`
+    FOREIGN KEY (`id_pago`)
     REFERENCES `to_pagos` (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -1107,7 +1107,7 @@ CREATE TABLE to_comision_transaccion_proyeccion (
   comision_transaccion INTEGER NOT NULL,
   operacion BIGINT NOT NULL,
   transacciones INT(11) NULL,
-    comision DECIMAL(16,4),
+  comision DECIMAL(16,4),
   iva DECIMAL(16,4),
   total DECIMAL(16,4),
   PRIMARY KEY (id),
