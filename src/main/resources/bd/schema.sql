@@ -61,7 +61,7 @@ DROP TABLE IF EXISTS `tk_estatus_pago` ;
 
 
 -- ------------------------------------------------------------------------------------------------------------
--- FASE 1 PAGOS ------------------------------------------------------------------------------------------------------
+-- FASE 1 PAGOS -----------------------------------------------------------------------------------------------
 -- ------------------------------------------------------------------------------------------------------------
 
 
@@ -280,11 +280,11 @@ CREATE TABLE IF NOT EXISTS `to_pagos` (
   INDEX `idx_id_transaccion_midas` (`id_transaccion_midas`),
   INDEX `ctr_estatus_pago_fk` (`id_estatus_transaccion`),
   CONSTRAINT `ctr_estatus_pago_fk`
-	FOREIGN KEY (`id_estatus_transaccion`)
+  FOREIGN KEY (`id_estatus_transaccion`)
     REFERENCES `tk_estatus_pago` (`id`),
   CONSTRAINT `fk_cliente_id`
-	FOREIGN KEY (`id_cliente`)
-	REFERENCES `tk_cliente` (`id_cliente`)
+  FOREIGN KEY (`id_cliente`)
+  REFERENCES `tk_cliente` (`id_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -304,7 +304,7 @@ CREATE TABLE `to_pagos_partidas` (
  INDEX `idx_pagos_partidas_id_operacion` (`id_operacion`),
  INDEX `idx_pagos_partidas_id_pago` (`id_pago`),
  CONSTRAINT `ctr_id_pago`
-	FOREIGN KEY (`id_pago`)
+  FOREIGN KEY (`id_pago`)
     REFERENCES `to_pagos` (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -631,10 +631,10 @@ CREATE TABLE `tk_maquina_estados_subestatus_conciliacion` (
   PRIMARY KEY (`id`),
   INDEX `idx_me_id` (`id`),
   INDEX `idx_me_nombre_proceso` (`nombre_proceso`),
-  CONSTRAINT FOREIGN KEY `fk_id_subestatus_inicial` (`id_sub_estatus_inicial`) 
-	REFERENCES tk_sub_estatus_conciliacion (`id`),
+  CONSTRAINT FOREIGN KEY `fk_id_subestatus_inicial` (`id_sub_estatus_inicial`)
+  REFERENCES tk_sub_estatus_conciliacion (`id`),
   CONSTRAINT FOREIGN KEY `fk_id_subestatus_posible` (`id_sub_estatus_posible`)
-	REFERENCES tk_sub_estatus_conciliacion (`id`)
+  REFERENCES tk_sub_estatus_conciliacion (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -843,18 +843,18 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 CREATE TABLE to_estado_cuenta_totales_adicional
 (
-	id INTEGER NOT NULL AUTO_INCREMENT,
-	clave_pais VARCHAR(4),
-	sucursal VARCHAR(4),
-	cuenta VARCHAR(10),
-	no_cargos INTEGER,
-	importe_total_cargos DECIMAL(16,2),
-	no_abonos INTEGER,
-	importe_total_abonos DECIMAL(16,2),
-	tipo_saldo TINYINT,
-	saldo_final DECIMAL(16,2),
-	moneda_alfabetica VARCHAR(3),
-	PRIMARY KEY (id)
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  clave_pais VARCHAR(4),
+  sucursal VARCHAR(4),
+  cuenta VARCHAR(10),
+  no_cargos INTEGER,
+  importe_total_cargos DECIMAL(16,2),
+  no_abonos INTEGER,
+  importe_total_abonos DECIMAL(16,2),
+  tipo_saldo TINYINT,
+  saldo_final DECIMAL(16,2),
+  moneda_alfabetica VARCHAR(3),
+  PRIMARY KEY (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -863,12 +863,12 @@ CREATE TABLE to_estado_cuenta_totales_adicional
 -- -----------------------------------------------------
 CREATE TABLE to_estado_cuenta_totales
 (
-	id INTEGER NOT NULL AUTO_INCREMENT,
-	clave_pais VARCHAR(3),
-	subcodigo_registro VARCHAR(2),
-	informacion1 VARCHAR(35),
-	informacion2 VARCHAR(35),
-	PRIMARY KEY (id)
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  clave_pais VARCHAR(3),
+  subcodigo_registro VARCHAR(2),
+  informacion1 VARCHAR(35),
+  informacion2 VARCHAR(35),
+  PRIMARY KEY (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -877,20 +877,20 @@ CREATE TABLE to_estado_cuenta_totales
 -- -----------------------------------------------------
 CREATE TABLE to_estado_cuenta_cabecera
 (
-	id INTEGER NOT NULL AUTO_INCREMENT,
-	clave_pais VARCHAR(4),
-	sucursal VARCHAR(4),
-	cuenta VARCHAR(10),
-	fecha_inicial DATE,
-	fecha_final DATE,
-	tipo_saldo TINYINT,
-	saldo_inicial DECIMAL(16,2),
-	moneda_alfabetica VARCHAR(3),
-	digito_cuenta_clabe CHAR(1),
-	titular_cuenta VARCHAR(23),
-	plaza_cuenta_clabe VARCHAR(3),
-	libre VARCHAR(3),
-	PRIMARY KEY (id)
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  clave_pais VARCHAR(4),
+  sucursal VARCHAR(4),
+  cuenta VARCHAR(10),
+  fecha_inicial DATE,
+  fecha_final DATE,
+  tipo_saldo TINYINT,
+  saldo_inicial DECIMAL(16,2),
+  moneda_alfabetica VARCHAR(3),
+  digito_cuenta_clabe CHAR(1),
+  titular_cuenta VARCHAR(23),
+  plaza_cuenta_clabe VARCHAR(3),
+  libre VARCHAR(3),
+  PRIMARY KEY (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -899,25 +899,25 @@ CREATE TABLE to_estado_cuenta_cabecera
 -- -----------------------------------------------------
 CREATE TABLE to_estado_cuenta
 (
-	id INTEGER NOT NULL AUTO_INCREMENT,
-	reporte INTEGER,
-	cabecera INTEGER,
-	total_movimientos INTEGER,
-	totales INTEGER,
-	totales_adicional INTEGER,
-	fecha_carga DATE,
-	PRIMARY KEY (id),
-	KEY (cabecera),
-	KEY (totales),
-	KEY (totales_adicional),
-	CONSTRAINT FK_to_estado_cuenta_to_movimiento_estado_cuenta_cabecera 
-		FOREIGN KEY (cabecera) REFERENCES to_estado_cuenta_cabecera (id),
-	CONSTRAINT FK_to_estado_cuenta_to_movimiento_estado_cuenta_totales 
-		FOREIGN KEY (totales) REFERENCES to_estado_cuenta_totales (id),
-	CONSTRAINT FK_to_estado_cuenta_to_movimiento_edo_cta_tot_adicional 
-		FOREIGN KEY (totales_adicional) REFERENCES to_estado_cuenta_totales_adicional (id),
-	CONSTRAINT FK_to_estado_cuenta_to_reporte 
-		FOREIGN KEY (reporte) REFERENCES to_reporte (id)
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  reporte INTEGER,
+  cabecera INTEGER,
+  total_movimientos INTEGER,
+  totales INTEGER,
+  totales_adicional INTEGER,
+  fecha_carga DATE,
+  PRIMARY KEY (id),
+  KEY (cabecera),
+  KEY (totales),
+  KEY (totales_adicional),
+  CONSTRAINT FK_to_estado_cuenta_to_movimiento_estado_cuenta_cabecera
+    FOREIGN KEY (cabecera) REFERENCES to_estado_cuenta_cabecera (id),
+  CONSTRAINT FK_to_estado_cuenta_to_movimiento_estado_cuenta_totales
+    FOREIGN KEY (totales) REFERENCES to_estado_cuenta_totales (id),
+  CONSTRAINT FK_to_estado_cuenta_to_movimiento_edo_cta_tot_adicional
+    FOREIGN KEY (totales_adicional) REFERENCES to_estado_cuenta_totales_adicional (id),
+  CONSTRAINT FK_to_estado_cuenta_to_reporte
+    FOREIGN KEY (reporte) REFERENCES to_reporte (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -926,25 +926,25 @@ CREATE TABLE to_estado_cuenta
 -- -----------------------------------------------------
 CREATE TABLE to_movimiento_estado_cuenta
 (
-	id INTEGER NOT NULL AUTO_INCREMENT,
-	estado_cuenta INTEGER,
-	clave_pais VARCHAR(4),
-	sucursal VARCHAR(4),
-	fecha_operacion DATE,
-	fecha_valor DATE,
-	libre VARCHAR(2),
-	clave_leyenda VARCHAR(3),
-	tipo_movimiento TINYINT,
-	importe DECIMAL(16,2),
-	dato VARCHAR(10),
-	concepto VARCHAR(28),
-	codigo_dato VARCHAR(2),
-	referencia_ampliada VARCHAR(38),
-	referencia VARCHAR(38),
-	PRIMARY KEY (id),
-	KEY (estado_cuenta),
-	CONSTRAINT FK_to_movimiento_estado_cuenta_to_estado_cuenta 
-		FOREIGN KEY (estado_cuenta) REFERENCES to_estado_cuenta (id)
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  estado_cuenta INTEGER,
+  clave_pais VARCHAR(4),
+  sucursal VARCHAR(4),
+  fecha_operacion DATE,
+  fecha_valor DATE,
+  libre VARCHAR(2),
+  clave_leyenda VARCHAR(3),
+  tipo_movimiento TINYINT,
+  importe DECIMAL(16,2),
+  dato VARCHAR(10),
+  concepto VARCHAR(28),
+  codigo_dato VARCHAR(2),
+  referencia_ampliada VARCHAR(38),
+  referencia VARCHAR(38),
+  PRIMARY KEY (id),
+  KEY (estado_cuenta),
+  CONSTRAINT FK_to_movimiento_estado_cuenta_to_estado_cuenta
+    FOREIGN KEY (estado_cuenta) REFERENCES to_estado_cuenta (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1050,6 +1050,7 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_transito` (
   `esquema_tarjeta` VARCHAR(45) NULL DEFAULT NULL,
   `cuenta` VARCHAR(45) NULL DEFAULT NULL,
   `titular` VARCHAR(255) NULL DEFAULT NULL,
+  `num_autorizacion` VARCHAR(45),
   PRIMARY KEY (`id`),
   INDEX `movimiento_transito_fk_idx` (`estatus` ASC),
   CONSTRAINT `FK_to_movimiento_transito_to_movimiento_conciliacion`
@@ -1066,19 +1067,19 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_comision_transaccion`
 -- -----------------------------------------------------
 CREATE TABLE to_comision_transaccion (
-	id INTEGER NOT NULL AUTO_INCREMENT,
-	id_conciliacion BIGINT(20) NOT NULL,
-	fecha_desde DATE NOT NULL,
-	fecha_hasta DATE NOT NULL,
-	comision DECIMAL(16,4) NOT NULL,
-	created_by VARCHAR(100),
-	created_date DATETIME,
-	last_modified_by VARCHAR(100),
-	last_modified_date DATETIME,
-	PRIMARY KEY (id),
-	KEY (id_conciliacion),
-	CONSTRAINT FK_to_comision_transaccion_to_conciliacion 
-		FOREIGN KEY (id_conciliacion) REFERENCES to_conciliacion (id)
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  id_conciliacion BIGINT(20) NOT NULL,
+  fecha_desde DATE NOT NULL,
+  fecha_hasta DATE NOT NULL,
+  comision DECIMAL(16,4) NOT NULL,
+  created_by VARCHAR(100),
+  created_date DATETIME,
+  last_modified_by VARCHAR(100),
+  last_modified_date DATETIME,
+  PRIMARY KEY (id),
+  KEY (id_conciliacion),
+  CONSTRAINT FK_to_comision_transaccion_to_conciliacion
+    FOREIGN KEY (id_conciliacion) REFERENCES to_conciliacion (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1086,15 +1087,15 @@ CREATE TABLE to_comision_transaccion (
 -- Table `to_comision_transaccion_real`
 -- -----------------------------------------------------
 CREATE TABLE to_comision_transaccion_real (
-	id INTEGER NOT NULL AUTO_INCREMENT,
-	comision_transaccion INTEGER NOT NULL,
-	comision DECIMAL(16,4) NOT NULL,
-	iva_comision DECIMAL(16,4),
-	total DECIMAL(16,4),
-	PRIMARY KEY (id),
-	KEY (comision_transaccion),
-	CONSTRAINT FK_to_comision_transaccion_real_to_comision_transaccion 
-		FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id)
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  comision_transaccion INTEGER NOT NULL,
+  comision DECIMAL(16,4) NOT NULL,
+  iva_comision DECIMAL(16,4),
+  total DECIMAL(16,4),
+  PRIMARY KEY (id),
+  KEY (comision_transaccion),
+  CONSTRAINT FK_to_comision_transaccion_real_to_comision_transaccion
+    FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1102,18 +1103,17 @@ CREATE TABLE to_comision_transaccion_real (
 -- Table `to_comision_transaccion_proyeccion`
 -- -----------------------------------------------------
 CREATE TABLE to_comision_transaccion_proyeccion (
-	id BIGINT NOT NULL AUTO_INCREMENT,
-	comision_transaccion INTEGER NOT NULL,
-	operacion BIGINT NOT NULL,
-	-- transacciones DECIMAL(16,4),
-	transacciones INT(11) NULL,
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  comision_transaccion INTEGER NOT NULL,
+  operacion BIGINT NOT NULL,
+  transacciones INT(11) NULL,
     comision DECIMAL(16,4),
-	iva DECIMAL(16,4),
-	total DECIMAL(16,4),
-	PRIMARY KEY (id),
-	KEY (comision_transaccion),
-	CONSTRAINT FK_to_comision_transaccion_proyeccion_to_comision_transaccion 
-		FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id)
+  iva DECIMAL(16,4),
+  total DECIMAL(16,4),
+  PRIMARY KEY (id),
+  KEY (comision_transaccion),
+  CONSTRAINT FK_to_comision_transaccion_proyeccion_to_comision_transaccion
+    FOREIGN KEY (comision_transaccion) REFERENCES to_comision_transaccion (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1122,14 +1122,13 @@ CREATE TABLE to_comision_transaccion_proyeccion (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tc_layout_header` (
   `id` INT(11) NOT NULL,
-  `id_layout` INT(11) NOT NULL,
   `cabecera` VARCHAR(10) NOT NULL,
   `unidad_negocio` VARCHAR(45) NULL DEFAULT NULL,
   `descripcion` VARCHAR(150) NULL DEFAULT NULL,
   `codigo_origen` VARCHAR(45) NULL DEFAULT NULL,
-  `fecha` DATE NULL DEFAULT NULL,
   `campo1` VARCHAR(45) NULL DEFAULT NULL,
   `campo2` VARCHAR(45) NULL DEFAULT NULL,
+  `tipo` VARCHAR(50) NULL,
   `created_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
@@ -1144,14 +1143,14 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tc_layout_linea` (
   `id` INT(11) NOT NULL,
-  `id_layout` INT(11) NOT NULL,
   `linea` VARCHAR(10) NOT NULL,
   `cuenta` VARCHAR(45) NULL DEFAULT NULL,
   `dep_id` VARCHAR(45) NULL DEFAULT NULL,
   `unidad_operativa` VARCHAR(50) NULL DEFAULT NULL,
   `negocio` VARCHAR(45) NULL DEFAULT NULL,
   `proyecto_nmp` VARCHAR(45) NULL DEFAULT NULL,
-  `monto` DECIMAL(16,4) NOT NULL,
+  `tipo` VARCHAR(45) NULL,
+  `grupo` VARCHAR(50) NULL,
   `created_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
@@ -1170,6 +1169,7 @@ CREATE TABLE IF NOT EXISTS `to_layout` (
   `tipo` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `FK_to_layout_to_conciliacion_idx` (`id_conciliacion` ASC),
+  UNIQUE INDEX `to_layout_UNIQUE` (`id_conciliacion`, tipo),
   CONSTRAINT `FK_to_layout_to_conciliacion`
     FOREIGN KEY (`id_conciliacion`)
     REFERENCES `to_conciliacion` (`id`))
@@ -1216,6 +1216,7 @@ CREATE TABLE IF NOT EXISTS `to_layout_linea` (
   `negocio` VARCHAR(45) NULL DEFAULT NULL,
   `proyecto_nmp` VARCHAR(45) NULL DEFAULT NULL,
   `monto` DECIMAL(16,4) NOT NULL,
+  `nuevo` TINYINT(1) NULL DEFAULT 0,
   `created_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
@@ -1272,9 +1273,9 @@ ALTER TABLE `tc_layout_linea` AUTO_INCREMENT = 1;
 ALTER TABLE `tc_layout_header` AUTO_INCREMENT = 1;
 ALTER TABLE `to_global` AUTO_INCREMENT = 1;
 ALTER TABLE `tb_actividad` AUTO_INCREMENT = 1;
-ALTER TABLE `to_layout_linea` AUTO_INCREMENT = 1;
-ALTER TABLE `to_layout_header` AUTO_INCREMENT = 1;
 ALTER TABLE `to_layout` AUTO_INCREMENT = 1;
+ALTER TABLE `to_layout_header` AUTO_INCREMENT = 1;
+ALTER TABLE `to_layout_linea` AUTO_INCREMENT = 1;
 ALTER TABLE `to_movimiento_devolucion` AUTO_INCREMENT = 1;
 ALTER TABLE `to_movimiento_comision` AUTO_INCREMENT = 1;
 ALTER TABLE `to_movimiento_pago` AUTO_INCREMENT = 1;
