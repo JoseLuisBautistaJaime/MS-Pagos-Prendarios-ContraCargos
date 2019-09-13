@@ -296,6 +296,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_127("Uno o mas movimientos de comision no pueden ser editados/eliminados por que no fueron creados por el usuario",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_128("Uno o mas movimientos estan repetidos",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_129("Una o mas lineas no tiene el mismo tipo de Layout",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

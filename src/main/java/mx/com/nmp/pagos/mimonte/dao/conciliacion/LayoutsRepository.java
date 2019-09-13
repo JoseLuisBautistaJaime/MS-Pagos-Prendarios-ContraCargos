@@ -159,4 +159,17 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(l.id) FROM to_layout l where l.id_conciliacion = :folio) = 0 THEN 1 ELSE 0 END")
 	public Object checkIfLayoutIsNew(@Param("folio") final Long folio);
 
+	/**
+	 * Regresa un valor de 1 cuando todos los ids de lienas d elayouts ingresados
+	 * pertenecen al mismo tipo, de lo contrario regresa un valor de 0
+	 * 
+	 * @param lineasIds
+	 * @param tam
+	 * @param tipo
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ( (SELECT COUNT(ll.id) FROM to_layout_linea ll INNER JOIN to_layout l  ON ll.id_layout = l.id WHERE ll.id IN :lineasIds AND l.tipo = :tipo) = (SELECT :tam) ) THEN 1 ELSE 0 END")
+	public Object validateLineasVSTipo(@Param("lineasIds") final List<Long> lineasIds, @Param("tam") final Integer tam,
+			@Param("tipo") final String tipo);
+
 }

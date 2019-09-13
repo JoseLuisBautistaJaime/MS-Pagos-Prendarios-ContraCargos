@@ -191,12 +191,14 @@ public abstract class LayoutsBuilder {
 	/**
 	 * Construye un objeto de tipo LayoutLineaDTO a partir de un entity de tipo
 	 * LayoutLineaCatalog
+	 * 
 	 * @param layoutLineaCatalog
 	 * @param monto
-	 * @param unidadOperativa 
+	 * @param unidadOperativa
 	 * @return
 	 */
-	public static LayoutLineaDTO buildLayoutLineaDTOFromLayoutLineaCatalog(LayoutLineaCatalog layoutLineaCatalog, BigDecimal monto, String unidadOperativa) {
+	public static LayoutLineaDTO buildLayoutLineaDTOFromLayoutLineaCatalog(LayoutLineaCatalog layoutLineaCatalog,
+			BigDecimal monto, String unidadOperativa) {
 		LayoutLineaDTO layoutLineaDTO = new LayoutLineaDTO();
 		layoutLineaDTO.setCuenta(layoutLineaCatalog.getCuenta());
 		layoutLineaDTO.setDepId(layoutLineaCatalog.getDepId());
@@ -302,7 +304,8 @@ public abstract class LayoutsBuilder {
 		LayoutCabeceraDTO layoutHeaderDTO = new LayoutCabeceraDTO();
 		layoutHeaderDTO.setCabecera(layoutHeaderCatalog.getCabecera());
 		layoutHeaderDTO.setCodigoOrigen(layoutHeaderCatalog.getCodigoOrigen());
-		layoutHeaderDTO.setDescripcion(MessageFormat.format(layoutHeaderCatalog.getDescripcion(), DateUtil.formatDate(new Date(), "ddMMyyyy")));
+		layoutHeaderDTO.setDescripcion(MessageFormat.format(layoutHeaderCatalog.getDescripcion(),
+				DateUtil.formatDate(new Date(), "ddMMyyyy")));
 		layoutHeaderDTO.setFecha(localDate);
 		layoutHeaderDTO.setUnidadNegocio(layoutHeaderCatalog.getUnidadNegocio());
 
@@ -356,6 +359,25 @@ public abstract class LayoutsBuilder {
 					list.add(layoutLineaDTO.getId());
 		}
 		return list;
+	}
+
+	/**
+	 * Construye una lista de objetos de tipo Long a partir de una lista de objetos
+	 * de tipo LayoutDTO, especificamente con los atributos id de dicho objeto
+	 * 
+	 * @param layoutDTO
+	 * @return
+	 */
+	public static List<Long> getLineasIds(LayoutDTO layoutDTO) {
+		List<Long> lst = null;
+		if (null != layoutDTO && null != layoutDTO.getLineas() && !layoutDTO.getLineas().isEmpty()) {
+			lst = new ArrayList<>();
+			for (LayoutLineaDTO layoutLineaDTO : layoutDTO.getLineas()) {
+				if (layoutLineaDTO.getId() > 0)
+					lst.add(layoutLineaDTO.getId());
+			}
+		}
+		return lst;
 	}
 
 }
