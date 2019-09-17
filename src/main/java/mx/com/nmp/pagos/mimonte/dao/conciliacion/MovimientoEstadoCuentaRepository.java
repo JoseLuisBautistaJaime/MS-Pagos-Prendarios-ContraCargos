@@ -32,7 +32,7 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	 * @return
 	 */
 	@Query("SELECT COUNT(mm.id) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
-	public Long countMovimientos(@Param("folioConciliacion") final Integer folioConciliacion);
+	public Long countMovimientos(@Param("folioConciliacion") final Long folioConciliacion);
 
 	/**
 	 * Regresa una lista de objetos de tipo MovimientoEstadoCuentaDBDTO relacionados
@@ -44,7 +44,7 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	 * @return
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoEstadoCuentaDBDTO(mm.id, mm.fechaOperacion, mm.concepto, mm.tipoMovimiento, mm.importe, ec.cabecera.saldoInicial, ec.totalesAdicional.saldoFinal) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :folioConciliacion")
-	public List<MovimientoEstadoCuentaDBDTO> listMovimientos(@Param("folioConciliacion") final Integer folioConciliacion
+	public List<MovimientoEstadoCuentaDBDTO> listMovimientos(@Param("folioConciliacion") final Long folioConciliacion
 			/*,Pageable pageable*/);
 
 	/**
@@ -56,15 +56,20 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	public List<MovimientoEstadoCuenta> findByReporte(@Param("reporteId") final Integer reporteId);
 
 	/**
-	 * Regresa los movimientos estado de cuenta por id de reporte y claves leyenda
+	 * Regresa los movimientos estado de cuenta por id de conciliacion y claves leyenda
 	 * @param idReporte
 	 * @param clavesLeyenda
 	 * @return
 	 */
-	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.id = :reporteId AND mm.claveLeyenda IN (:clavesLeyenda)")
-	public List<MovimientoEstadoCuenta> findByReporteAndClaveLeyendaIn(@Param("reporteId") final Integer reporteId, @Param("clavesLeyenda") List<String> clavesLeyenda);
+	@Query("SELECT DISTINCT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte WHERE r.conciliacion.id = :idConciliacion AND mm.claveLeyenda IN (:clavesLeyenda)")
+	public List<MovimientoEstadoCuenta> findByConciliacionAndClaveLeyendaIn(@Param("idConciliacion") final Long idConciliacion, @Param("clavesLeyenda") List<String> clavesLeyenda);
 
+	/**
+	 * Obtiene los movimientos de estado de cuenta asignados a una conciliacion
+	 * @param idConciliacion
+	 * @return
+	 */
 	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte INNER JOIN r.conciliacion con WHERE con.id = :idConciliacion")
-	public List<MovimientoEstadoCuenta> findByConciliacion(@Param("idConciliacion") final Integer idConciliacion);
+	public List<MovimientoEstadoCuenta> findByConciliacion(@Param("idConciliacion") final Long idConciliacion);
 
 }

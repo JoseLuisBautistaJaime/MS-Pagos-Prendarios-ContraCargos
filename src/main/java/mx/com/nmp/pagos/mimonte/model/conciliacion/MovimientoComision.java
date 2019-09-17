@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 /**
@@ -51,7 +52,7 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tipo")
-	private TipoMovimientoEnum tipo;
+	private TipoMovimientoComisionEnum tipo;
 
 	@Column(name="id_movimiento_estado_cuenta")
 	private Long idMovimientoEstadoCuenta;
@@ -110,11 +111,11 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 		this.estatus = estatus;
 	}
 
-	public TipoMovimientoEnum getTipo() {
+	public TipoMovimientoComisionEnum getTipoComision() {
 		return tipo;
 	}
 
-	public void setTipo(TipoMovimientoEnum tipo) {
+	public void setTipoComision(TipoMovimientoComisionEnum tipo) {
 		this.tipo = tipo;
 	}
 
@@ -124,6 +125,11 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 
 	public void setIdMovimientoEstadoCuenta(Long idMovimientoEstadoCuenta) {
 		this.idMovimientoEstadoCuenta = idMovimientoEstadoCuenta;
+	}
+
+	@Transient
+	public MovimientoConciliacionEnum getTipoMovimiento() {
+		return MovimientoConciliacionEnum.COMISIONES;
 	}
 
 

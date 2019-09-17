@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 
@@ -32,6 +33,7 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 	@JoinColumn(name = "estatus")
 	private EstatusTransito estatus;
 	
+	// La referencia del pedido (NO ES EL FOLIO DE CONCILIACION)
 	@Column(name = "folio")
 	private Integer folio;
 	
@@ -59,6 +61,9 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 	
 	@Column(name = "titular")
 	private String titular;
+	
+	@Column(name = "num_autorizacion")
+	private String numAutorizacion;
 
 
 	public MovimientoTransito() {
@@ -161,10 +166,24 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 		this.titular = titular;
 	}
 
+	public String getNumAutorizacion() {
+		return numAutorizacion;
+	}
+
+	public void setNumAutorizacion(String numAutorizacion) {
+		this.numAutorizacion = numAutorizacion;
+	}
+
+	@Transient
+	public MovimientoConciliacionEnum getTipoMovimiento() {
+		return MovimientoConciliacionEnum.TRANSITO;
+	}
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((cuenta == null) ? 0 : cuenta.hashCode());
 		result = prime * result + ((esquemaTarjeta == null) ? 0 : esquemaTarjeta.hashCode());
 		result = prime * result + ((estatus == null) ? 0 : estatus.hashCode());
@@ -175,6 +194,7 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 		result = prime * result + ((sucursal == null) ? 0 : sucursal.hashCode());
 		result = prime * result + ((tipoContratoDesc == null) ? 0 : tipoContratoDesc.hashCode());
 		result = prime * result + ((titular == null) ? 0 : titular.hashCode());
+		result = prime * result + ((numAutorizacion == null) ? 0 : numAutorizacion.hashCode());
 		return result;
 	}
 
@@ -182,62 +202,12 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+
+		if (!(obj instanceof MovimientoTransito))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MovimientoTransito other = (MovimientoTransito) obj;
-		if (cuenta == null) {
-			if (other.cuenta != null)
-				return false;
-		} else if (!cuenta.equals(other.cuenta))
-			return false;
-		if (esquemaTarjeta == null) {
-			if (other.esquemaTarjeta != null)
-				return false;
-		} else if (!esquemaTarjeta.equals(other.esquemaTarjeta))
-			return false;
-		if (estatus == null) {
-			if (other.estatus != null)
-				return false;
-		} else if (!estatus.equals(other.estatus))
-			return false;
-		if (fecha == null) {
-			if (other.fecha != null)
-				return false;
-		} else if (!fecha.equals(other.fecha))
-			return false;
-		if (folio == null) {
-			if (other.folio != null)
-				return false;
-		} else if (!folio.equals(other.folio))
-			return false;
-		if (monto == null) {
-			if (other.monto != null)
-				return false;
-		} else if (!monto.equals(other.monto))
-			return false;
-		if (operacionDesc == null) {
-			if (other.operacionDesc != null)
-				return false;
-		} else if (!operacionDesc.equals(other.operacionDesc))
-			return false;
-		if (sucursal == null) {
-			if (other.sucursal != null)
-				return false;
-		} else if (!sucursal.equals(other.sucursal))
-			return false;
-		if (tipoContratoDesc == null) {
-			if (other.tipoContratoDesc != null)
-				return false;
-		} else if (!tipoContratoDesc.equals(other.tipoContratoDesc))
-			return false;
-		if (titular == null) {
-			if (other.titular != null)
-				return false;
-		} else if (!titular.equals(other.titular))
-			return false;
-		return true;
+
+		final MovimientoTransito other = (MovimientoTransito) obj;
+		return (this.hashCode() == other.hashCode());
 	}
 
 	@Override
@@ -245,7 +215,7 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 		return "MovimientoTransito [estatus=" + estatus + ", folio=" + folio + ", sucursal=" + sucursal
 				+ ", fecha=" + fecha + ", operacionDesc=" + operacionDesc + ", monto=" + monto + ", tipoContratoDesc="
 				+ tipoContratoDesc + ", esquemaTarjeta=" + esquemaTarjeta + ", cuenta=" + cuenta + ", titular="
-				+ titular + "]";
+				+ titular + ", numAutorizacion " + numAutorizacion + "]";
 	}
 
 }

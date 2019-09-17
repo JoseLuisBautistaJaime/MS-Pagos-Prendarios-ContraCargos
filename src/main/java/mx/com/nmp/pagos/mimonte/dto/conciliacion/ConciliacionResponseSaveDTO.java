@@ -23,7 +23,7 @@ public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 	 */
 	private static final long serialVersionUID = 4775215154348440515L;
 
-	private Integer folio;
+	private Long folio;
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
@@ -48,7 +48,7 @@ public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 	}
 
-	public ConciliacionResponseSaveDTO(Integer folio, EstatusConciliacionDTO estatus,
+	public ConciliacionResponseSaveDTO(Long folio, EstatusConciliacionDTO estatus,
 			SubEstatusConciliacionDTO subEstatus, String subEstatusDescripcion, Long idTesoreria,
 			Long idAsientoContable, EntidadDTO entidad, CuentaDTO cuenta,
 			ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
@@ -73,11 +73,11 @@ public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 		this.comisiones = comisiones;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

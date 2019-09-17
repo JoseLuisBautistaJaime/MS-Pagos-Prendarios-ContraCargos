@@ -10,11 +10,16 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
+import javax.persistence.FetchType;
+import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,6 +35,26 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
  * @version 1.0
  * @created 31-Mar-2019 5:57:57 PM
  */
+//@SqlResultSetMapping(name = "OrderResults", entities = {
+//		@EntityResult(entityClass = mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO.class, fields = {
+//				@FieldResult(name = "fechaTransaccion", column = "fechaTransaccion"),
+//				@FieldResult(name = "folioPartida", column = "folioPartida"),
+//				@FieldResult(name = "transaccion", column = "transaccion"),
+//				@FieldResult(name = "codigoDescuento", column = "codigoDescuento"),
+//				@FieldResult(name = "tipoTransaccion", column = "tipoTransaccion"),
+//				@FieldResult(name = "montoTransaccion", column = "montoTransaccion"),
+//				@FieldResult(name = "tipoMoneda", column = "tipoMoneda"),
+//				@FieldResult(name = "tipoCuenta", column = "tipoCuenta"),
+//				@FieldResult(name = "codigoRespuestaMotorPagosTransaccion", column = "codigoRespuestaMotorPagosTransaccion"),
+//				@FieldResult(name = "metodoPago", column = "metodoPago"),
+//				@FieldResult(name = "identificadorCuenta", column = "identificadorCuenta"),
+//				@FieldResult(name = "idTerminalAdquiriente", column = "idTerminalAdquiriente"),
+//				@FieldResult(name = "titularCuenta", column = "titularCuenta"),
+//				@FieldResult(name = "codigoAutorizacion", column = "codigoAutorizacion"),
+//				@FieldResult(name = "codigoRespuestaAdquiriente", column = "codigoRespuestaAdquiriente"),
+//				@FieldResult(name = "numeroLoteAdquiriente", column = "numeroLoteAdquiriente"),
+//				@FieldResult(name = "fuenteTransaccion", column = "fuenteTransaccion") }) }, columns = {
+//						@ColumnResult(name = "item_name") })
 @Entity
 @Table(name = "to_movimiento_midas")
 public class MovimientoMidas implements Comparable<MovimientoMidas>, java.io.Serializable, MovimientoReporte {
@@ -131,18 +156,18 @@ public class MovimientoMidas implements Comparable<MovimientoMidas>, java.io.Ser
 	@Column(name = "id_tipo_contrato", nullable = true)
 	private Integer idTipoContrato;
 
-	@OneToMany(mappedBy = "movimientoMidas")
+	@OneToMany(mappedBy = "movimientoMidas", fetch = FetchType.LAZY)
 	private Set<MovimientoConciliacion> movimientoConciliacionSet;
 
 	public MovimientoMidas(Long id) {
 		super();
 		this.id = id;
 	}
-	
+
 	public MovimientoMidas() {
 		super();
 	}
-	
+
 	public Long getId() {
 		return id;
 	}

@@ -7,7 +7,6 @@ package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.GlobalDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
@@ -16,6 +15,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.util.CodigosEdoCuentaMap;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionMathUtil;
 
 /**
@@ -58,7 +58,7 @@ public abstract class GlobalBuilder {
 
 
 	public static Global updateGlobal(Global global, ReportesWrapper reportesWrapper, List<MovimientoMidas> movsMidas,
-			List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta, List<String> clavesDevolucion) {
+			List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta, CodigosEdoCuentaMap codigosEdoCuenta) {
 
 		if (global == null) {
 			global = new Global();
@@ -84,10 +84,10 @@ public abstract class GlobalBuilder {
 
 		global.setImporteMidas(ConciliacionMathUtil.getImporteMidas(movsMidas));
 		global.setImporteProveedor(ConciliacionMathUtil.getImporteProveedor(movsProveedor));
-		global.setImporteBanco(ConciliacionMathUtil.getImporteBanco(movsEstadoCuenta, clavesDevolucion));
-		global.setImporteDevoluciones(ConciliacionMathUtil.getDevolucionesEstadoCuenta(movsEstadoCuenta, clavesDevolucion));
+		global.setImporteBanco(ConciliacionMathUtil.getImporteBanco(movsEstadoCuenta, codigosEdoCuenta));
+		global.setImporteDevoluciones(ConciliacionMathUtil.getDevolucionesEstadoCuenta(movsEstadoCuenta, codigosEdoCuenta));
 		global.setDiferenciaProveedorMidas(ConciliacionMathUtil.getDiferenciaProveedorMidas(movsProveedor, movsMidas));
-		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta, clavesDevolucion));
+		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta, codigosEdoCuenta));
 		
 		return global;
 	}

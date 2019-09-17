@@ -24,7 +24,7 @@ public interface DevolucionesService {
 	 * @param folio
 	 * @return
 	 */
-	public List<DevolucionConDTO> consultaDevolucion(Integer folio);
+	public List<DevolucionConDTO> consultaDevolucion(Long folio);
 	
 	/**
 	 * 

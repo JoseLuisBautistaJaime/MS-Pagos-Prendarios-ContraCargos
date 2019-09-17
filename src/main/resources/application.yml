@@ -23,7 +23,7 @@ info:
 
 spring:
   application:
-    name: Micro Servicios Pagos Mi Monte
+    name: mimonte
   http:
     multipart:
       max-file-size: 10MB
@@ -39,50 +39,26 @@ spring:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        
+
+logging:
+  config: classpath:logback-spring.xml
+
 # Variables utiles para app microservicios mimonte
 #Pagos
 mimonte:
   variables:
-    actividades-max-default: 10
     mail:
       solicitud-pagos:
         title: "Solicitud de Pagos"
-        encode-type: UTF-8
-        velocity-layout: mailHtml.vm
-      text1: "Buenas tardes."
-      text2: "Solicito de su apreciable ayuda para aplicar los siguientes pagos a las partidas especificadas en la siguiente tabla en el barrido de la noche,  ya que el cliente realizo el pago en el portal de pago en línea, el cual fue aprobado, pero en Midas aún no se refleja el cobro."
-      text3: "En espera de sus comentarios y apreciable ayuda. Gracias."
-      table:
-        headers:
-          fechaTransaccion: "Fecha de la Transacción"
-          folioPartida: "Folio Partida"
-          transaccion: "Transacción"
-          codigoDescuento: "Código de Descuento"
-          tipoTransaccion: "Tipo de Transacción"
-          montoTransaccion: "Monto de la Transacción"
-          tipoMoneda: "Tipo de Moneda"
-          tipoCuenta: "Tipo de Cuenta"
-          codigoRespuestaMotorPagosTransaccion: "Código de Respuesta de Motor de Pagos de Transacción"
-          metodoPago: "Método de Pago"
-          identificadorCuenta: "Identificador de Cuenta"
-          idTerminalAdquiriente: "Id de Terminal de Adquiriente"
-          titularCuenta: "Titular de la Cuenta"
-          codigoAutorizacion: "Código de Autorización"
-          codigoRespuestaAdquiriente: "Código de Respuesta de Adquiriente"
-          numeroLoteAdquiriente: "Número de Lote de Adquiriente"
-          fuenteTransaccion: "Fuente de Transacción"
-      response:
-          resp-key: respuesta
-          cod-key: codigo
+        velocity-layout: "/templates/mailHtml.vm"
+      solicitudDevolucion:
+        title: "Solicitud de Devoluciones"
+        velocityTemplate: "/templates/solicitudDevoluciones.vm"
       from: mail@nmp.com
       auth:
         user: mimonte
         password: iXjqY2ccS783PTF0
       common-headers:
-        auth: Authorization
-        auth-value: Basic
-        content-type: Content-Type
         id-consumidor: idConsumidor
         id-consumidor-value: 42
         id-destino: idDestino
@@ -90,27 +66,9 @@ mimonte:
         usuario: usuario
         usuario-value: usuario
       token:
-        headers:
-          grant-key: grant_type
-          grant-value: client_credentials
-          scope-key: scope
-          scope-value: UserProfile.me
-          content-type-value: application/x-www-form-urlencoded
         url: https://iamdr.montepiedad.com.mx:4444/NMP/oauth2/v1
       send-mail:
-        success-flag: success
-        headers:
-          oauth-bearer-key: oauth.bearer
-          content-type-value: application/json
         url: https://iamdr.montepiedad.com.mx:4444/NMP/Utileria/EnvioCorreo/v2
-      solicitudDevolucion:
-        title: "Solicitud de Devoluciones"
-        velocityTemplate: solicitudDevoluciones.vm
-        bodyText1: "Buena tarde."
-        bodyText2: "Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario a la cuenta ${numeroCuenta} con la afiliación ${afiliacion}"
-    restTemplate:
-      maxAttempt: 3
-      retryTimeInterval: 3000
     consultaEstadoCuenta:
       url: https://iamdr.montepiedad.com.mx:4444/NMP/GestionFinanzas/Conciliacion/DocEdoCuenta/v1
       auth:
@@ -120,19 +78,15 @@ mimonte:
         usuario: usuario
         idConsumidor: 42
         idDestino: 100
+      archivo:
+        ruta: "'/'ddMMyy"
+        nombre: "'CLCO{CUENTA}'yyMMdd'.txt'"
+    dss:
+      idcliente: "{idCliente}"
+    restTemplate:
+      maxAttempt: 3
+      retryTimeInterval: 3000
+    actividades-max-default: 10
     cantidad-maxima-tarjetas: 3
     cantidad-maxima-partidas: 10
     iva: 0.16
-    dss:
-      idcliente: "{idCliente}"
-
-openpay:
-  wsdlLocation: openpay.wsdl
-  header:
-    api:
-      name: X-Id
-      key: 12345
-
-estadocuenta:
-  ruta: "'/'ddMMyy"
-  nombre: "'CLCO{CUENTA}'yyMMdd'.txt'"

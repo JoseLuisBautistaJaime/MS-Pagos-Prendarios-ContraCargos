@@ -15,27 +15,26 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class ActualizaSubEstatusDTO implements Comparable<ActualizaSubEstatusDTO>{
 	
-	private Integer folio;
+	private Long folio;
 	private Integer idSubEstatus;
 	private String descripcion;
 
 	public ActualizaSubEstatusDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public ActualizaSubEstatusDTO(Integer folio, Integer idSubEstatus, String descripcion) {
+	public ActualizaSubEstatusDTO(Long folio, Integer idSubEstatus, String descripcion) {
 		super();
 		this.folio = folio;
 		this.idSubEstatus = idSubEstatus;
 		this.descripcion = descripcion;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

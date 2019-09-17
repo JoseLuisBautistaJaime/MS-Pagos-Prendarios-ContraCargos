@@ -41,7 +41,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	@Modifying
 	@Query("DELETE FROM MovimientoComision mc WHERE mc.id IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = true AND mcon.idConciliacion = :idConciliacion)")
 	public void deleteByIdsAndIdConciliacion(@Param("idsComisiones") final List<Integer> idsComisiones,
-			@Param("idConciliacion") final Integer idConciliacion);
+			@Param("idConciliacion") final Long idConciliacion);
 
 	/**
 	 * Verfica si es posible eliminar una comision
@@ -50,9 +50,9 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param idConciliacion
 	 * @return
 	 */
-	@Query("SELECT mc.id FROM MovimientoComision mc WHERE mc.id IN :idsComisiones AND mc.id IN (SELECT mcon.id FROM MovimientoConciliacion mcon WHERE mcon.id in :idsComisiones AND mcon.nuevo = true AND mcon.idConciliacion = :idConciliacion)")
-	public List<Long> verifyById(@Param("idsComisiones") final List<Integer> idsComisiones,
-			@Param("idConciliacion") final Integer idConciliacion);
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(mc.id) FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.id IN :idsComisiones AND mcon.id_conciliacion = :idConciliacion AND mcon.nuevo = true) = :tam) THEN 1 ELSE 0 END")
+	public Object verifyById(@Param("idsComisiones") final List<Integer> idsComisiones,
+			@Param("idConciliacion") final Long idConciliacion, @Param("tam") final Integer tam);
 
 	/**
 	 * Regresa el total de movimientos de pagos que estan entre las fechas
@@ -60,32 +60,35 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * 
 	 * @param fechaDesde
 	 * @param fechaHasta
+	 * @param estatus
 	 * @return
 	 */
-	@Query("SELECT COUNT(mp.id) FROM MovimientoPago mp INNER JOIN MovimientoConciliacion mc ON mp.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta AND mc.idConciliacion = :idConciliacion")
-	public Long findTransaccionesPagosByFechasAndIdConciliacion(@Param("fechaDesde") final Date fechaDesde,
-			@Param("fechaHasta") final Date fechaHasta, @Param("idConciliacion") Integer idConciliacion);
+	@Query("SELECT COUNT(mp.id) FROM MovimientoProveedor mp WHERE mp.status LIKE :estatus AND mp.operationDate BETWEEN :fechaDesde AND :fechaHasta")
+	public Long findTransaccionesPagosByFechas(@Param("fechaDesde") final Date fechaDesde,
+			@Param("fechaHasta") final Date fechaHasta, @Param("estatus") final String estatus);
 
 	/**
-	 * Regresa el id de un movimiento comision su id de conciliacion asociado y el
-	 * conteo de el id de comision por un rango de fechas
+	 * Regresa el id de un movimiento comision y el conteo de el id de comision por
+	 * un rango de fechas
 	 * 
 	 * @param fechaDesde
 	 * @param fechaHasta
+	 * @param estatusId
 	 * @return
 	 */
-	@Query("SELECT COUNT(md.id) AS countId FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta AND mc.idConciliacion = :idConciliacion")
-	public Map<String, Object> findDataByFechasAndIdConciliacion(@Param("fechaDesde") final Date fechaDesde,
-			@Param("fechaHasta") final Date fechaHasta, @Param("idConciliacion") Integer idConciliacion);
+	@Query("SELECT COUNT(md.id) AS countId FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta AND md.estatus.id = :estatusId")
+	public Map<String, Object> findDataByFechas(@Param("fechaDesde") final Date fechaDesde,
+			@Param("fechaHasta") final Date fechaHasta, @Param("estatusId") final Integer estatusId);
 
 	/**
 	 * Regresa la suma de los movimientos tipo COMISION y los de tipo IVA_COMISION
+	 * por folio de conciliacion
 	 * 
 	 * @param tipoComisionPago
 	 * @param tipoComisionIva
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT comision, iva FROM (SELECT SUM(mc.monto) AS comision FROM to_movimiento_comision mc WHERE mc.tipo = :tipoComisionPago) comision, (SELECT SUM(mc.monto) AS iva FROM to_movimiento_comision mc WHERE mc.tipo = :tipoComisionIva) iva")
+	@Query(nativeQuery = true, value = "SELECT comision, iva FROM (SELECT SUM(mc.monto) AS comision FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.tipo = :tipoComisionPago) comision, (SELECT SUM(mc.monto) AS iva FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.tipo = :tipoComisionIva) iva")
 	public Map<String, BigDecimal> findMovimientosSum(@Param("tipoComisionPago") final String tipoComisionPago,
 			@Param("tipoComisionIva") final String tipoComisionIva);
 
@@ -96,7 +99,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @return
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDTO(mc.id, mc.fechaOperacion, mc.fechaCargo, mc.monto, mc.descripcion, mcon.nuevo) FROM MovimientoComision mc INNER JOIN MovimientoConciliacion mcon ON mc.id = mcon.id AND mcon.idConciliacion = :folio")
-	public List<ComisionDTO> findByFolio(@Param("folio") final Integer folio);
+	public List<ComisionDTO> findByFolio(@Param("folio") final Long folio);
 
 	/**
 	 * Regresa un movimiento comision por id
@@ -106,4 +109,38 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionSaveResponseDTO(mcon.idConciliacion, mc.id, mc.fechaOperacion, mc.fechaCargo, mc.monto, mc.descripcion, mcon.nuevo) FROM MovimientoComision mc INNER JOIN MovimientoConciliacion mcon ON mc.id = mcon.id WHERE mc.id = :idComision")
 	public ComisionSaveResponseDTO findByIdComision(@Param("idComision") final Integer idComision);
+
+	/**
+	 * Regresa un movimiento comision por id y campo nuevo
+	 * 
+	 * @param idMovimientoComision
+	 * @param nuevo
+	 * @return
+	 */
+	public MovimientoComision findByIdAndNuevo(final Integer idMovimientoComision, final Boolean nuevo);
+
+	/**
+	 * Regresa un valor de 1 cuando todos los ids de comisiones existen, de lo
+	 * contrario regresa un valor 0
+	 * 
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(com.id) FROM to_movimiento_comision com WHERE com.id IN :ids)= :tam THEN 1 ELSE 0 END")
+	public Object checkIfIdsExist(@Param("ids") final List<Integer> ids, @Param("tam") final Integer tam);
+
+	/**
+	 * Regresa un valor de 1 cuando todos los ids de comisiones ingresados
+	 * corresponden al folio de ocnciliacion, de lo contrario regresa un 0
+	 * 
+	 * @param folio
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(mc.id) FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.id IN :ids AND mcon.id_conciliacion = :folio) = :tam THEN 1 ELSE 0 END")
+	public Object checkIfFolioAndIdsRelationshipExist(@Param("folio") final Long folio,
+			@Param("ids") final List<Integer> ids, @Param("tam") final Integer tam);
+
 }

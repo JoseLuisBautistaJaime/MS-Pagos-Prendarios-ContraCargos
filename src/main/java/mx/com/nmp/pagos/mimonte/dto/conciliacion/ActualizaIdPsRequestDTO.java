@@ -14,7 +14,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class ActualizaIdPsRequestDTO implements Comparable<ActualizaIdPsRequestDTO>{
 	
-	private Integer folio;
+	private Long folio;
 	private Integer idPeopleSoft;
 	private Integer idEstatusConciliacion;
 
@@ -22,18 +22,18 @@ public class ActualizaIdPsRequestDTO implements Comparable<ActualizaIdPsRequestD
 		super();
 	}
 
-	public ActualizaIdPsRequestDTO(Integer folio, Integer idPeopleSoft, Integer idEstatusConciliacion) {
+	public ActualizaIdPsRequestDTO(Long folio, Integer idPeopleSoft, Integer idEstatusConciliacion) {
 		super();
 		this.folio = folio;
 		this.idPeopleSoft = idPeopleSoft;
 		this.idEstatusConciliacion = idEstatusConciliacion;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

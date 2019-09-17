@@ -17,7 +17,7 @@ import java.util.Objects;
  */
 public class ActualizarSubEstatusRequestDTO {
 
-	private Integer folio;
+	private Long folio;
 	private Long idSubEstatus;
 	private String descripcion;
 
@@ -25,18 +25,18 @@ public class ActualizarSubEstatusRequestDTO {
 		super();
 	}
 
-	public ActualizarSubEstatusRequestDTO(Integer folio, Long idSubEstatus, String descripcion) {
+	public ActualizarSubEstatusRequestDTO(Long folio, Long idSubEstatus, String descripcion) {
 		super();
 		this.folio = folio;
 		this.idSubEstatus = idSubEstatus;
 		this.descripcion = descripcion;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

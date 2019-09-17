@@ -17,27 +17,26 @@ import java.util.Date;
  */
 public class ConsultaActividadesRequest implements Comparable<ConsultaActividadesRequest>{
 
-	    private Integer folio;
+	    private Long folio;
 	    private Date fechaDesde;
 	    private Date fechaHasta;
 
 	public ConsultaActividadesRequest() {
 			super();
-			// TODO Auto-generated constructor stub
 		}
 
-	public ConsultaActividadesRequest(Integer folio, Date fechaDesde, Date fechaHasta) {
+	public ConsultaActividadesRequest(Long folio, Date fechaDesde, Date fechaHasta) {
 		super();
 		this.folio = folio;
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = fechaHasta;
 	}
 
-	public Integer getFolio() {
+	public Long getFolio() {
 		return folio;
 	}
 
-	public void setFolio(Integer folio) {
+	public void setFolio(Long folio) {
 		this.folio = folio;
 	}
 

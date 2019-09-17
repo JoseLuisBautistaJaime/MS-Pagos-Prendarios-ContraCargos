@@ -22,10 +22,9 @@ public class ResumenConciliacionesRequest implements Comparable<ResumenConciliac
 
 	public ResumenConciliacionesRequest() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public ResumenConciliacionesRequest(Integer folio, Date fechaInicial, Date fechaFinal) {
+	public ResumenConciliacionesRequest(Date fechaInicial, Date fechaFinal) {
 		super();
 		this.fechaInicial = fechaInicial;
 		this.fechaFinal = fechaFinal;

@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 
 /**
  * @name LayoutsRepository
@@ -51,9 +52,9 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	 * @param tipo
 	 * @return
 	 */
-	@Query("from Layout l inner join l.layoutHeader inner join l.layoutLineas where l.idConciliacion = :idConciliacion and l.tipo = :tipo")
-	public List<Object[]> findByIdConciliacionAndTipo(@Param("idConciliacion") final Long idConciliacion,
-			@Param("tipo") final String tipo);
+	@Query("from Layout l where l.idConciliacion = :idConciliacion and l.tipo = :tipo")
+	public List<Layout> findByIdConciliacionAndTipo(@Param("idConciliacion") final Long idConciliacion,
+			@Param("tipo") final TipoLayoutEnum tipo);
 
 	/**
 	 * Verifica si existe la conciliación en los layouts
@@ -69,6 +70,93 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	 * @param tipo
 	 * @return
 	 */
-	public List<Layout> findByTipo(@Param("tipo") final String tipo);
+	public List<Layout> findByTipo(@Param("tipo") final TipoLayoutEnum tipo);
+
+	/**
+	 * Regresa una lista de layouts por folio de conciliacion
+	 * 
+	 * @param idConciliacion
+	 * @return
+	 */
+	@Query("SELECT la FROM Layout la WHERE la.idConciliacion = :idConciliacion")
+	public List<Layout> checkFolioAndLayoutsRelationship(@Param("idConciliacion") final Long idConciliacion);
+
+	/**
+	 * Elimina los layouts que fueron creados a partir de movimientos generados en
+	 * la conciliacion
+	 * 
+	 * @param idConciliacion
+	 */
+	@Modifying
+	@Query("DELETE FROM LayoutLinea WHERE layout.id IN (SELECT id FROM Layout WHERE idConciliacion = :idConciliacion) AND nuevo = :nuevo")
+	public void deleteByIdConciliacionAndNuevo(@Param("idConciliacion") Long idConciliacion,
+			@Param("nuevo") boolean nuevo);
+
+	/**
+	 * Regresa un valor de 1 cuando el id de layout proporcionado si existe, de lo
+	 * contrario regresa un 0
+	 * 
+	 * @param idLayout
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(l.id) FROM to_layout l WHERE l.id = :idLayout) >= (SELECT 1)) THEN 1 ELSE 0 END")
+	public Object checkIfIdExist(@Param("idLayout") final Long idLayout);
+
+	/**
+	 * Regresa un valor de 1 cuando el folio de conciliacion y el id de layout
+	 * proporcionados tienen relacion, de loc ontrario regresa un 0
+	 * 
+	 * @param folio
+	 * @param idLayout
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(l.id) FROM to_layout l WHERE l.id = :idLayout AND l.id_conciliacion = :folio) >= (SELECT 1)) THEN 1 ELSE 0 END")
+	public Object checkIfFolioIdRelationshipExist(@Param("folio") final Integer folio,
+			@Param("idLayout") final Long idLayout);
+
+	/**
+	 * Regresa un valor 1 cuando el layout especificado existe y puede ser eliminado
+	 * (nuevo =1), de lo contrario regresa un 0
+	 * 
+	 * @param folio
+	 * @param idLayout
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(ll.id) FROM to_layout_linea ll INNER JOIN to_layout l ON ll.id_layout = l.id WHERE l.id = :idLayout AND l.id_conciliacion = :folio  AND ll.nuevo = 0) <> 0 ) THEN 0 ELSE 1 END")
+	public Object checkIfLineasAreNew(@Param("folio") final Long folio, @Param("idLayout") final Long idLayout);
+
+	/**
+	 * Regresa un valor de 1 cuando el id de conciliacion y el tipo de layout son
+	 * compatibles, de lo contrario regresa un 0
+	 * 
+	 * @param folio
+	 * @param tipo
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(l.id) FROM to_layout l WHERE l.id_conciliacion = :folio AND l.tipo = :tipo) > (SELECT 0)) THEN 1 ELSE 0 END")
+	public Object checkRightFolioAndTipoLayout(@Param("folio") final Long folio, @Param("tipo") final String tipo);
+
+	/**
+	 * Regrea un valor de 1 si todos los ids de lineas de layout pertenecen a la
+	 * conciliacion especificada y que son lineas eliminables (nuevo = 1)
+	 * 
+	 * @param folio
+	 * @param ids
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ((SELECT COUNT(ll.id) FROM to_layout_linea ll INNER JOIN to_layout l ON l.id = ll.id_layout WHERE ll.id IN :ids AND l.id_conciliacion = :folio AND ll.nuevo = 1) = :tam) THEN 1 ELSE 0 END")
+	public Object checkLineasIdsAndFolioRelationship(@Param("folio") final Long folio,
+			@Param("ids") final List<Long> ids, @Param("tam") final Integer tam);
+
+	/**
+	 * Regresa un valor de 0 cuando el folio especificado no tiene ningun layout, de
+	 * lo contrario regresa un 0
+	 * 
+	 * @param folio
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(l.id) FROM to_layout l where l.id_conciliacion = :folio) = 0 THEN 1 ELSE 0 END")
+	public Object checkIfLayoutIsNew(@Param("folio") final Long folio);
 
 }

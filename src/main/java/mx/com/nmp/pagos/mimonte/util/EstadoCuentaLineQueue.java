@@ -28,7 +28,7 @@ public class EstadoCuentaLineQueue {
 				substring.append(this.line.poll());
 			}
 		}
-		return substring.toString();
+		return substring.toString().trim();
 	}
 
 }

@@ -4,6 +4,10 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * @name ComisionesTransDTO
  * @description Clase que encapsula la información de una conciliación.
@@ -14,8 +18,14 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  */
 public class ComisionesTransDTO implements Comparable<ComisionesTransDTO> {
 
+	private Date fechaDesde;
+	private Date fechaHasta;
+	private BigDecimal comision;
+
 	private ComisionesTransProyeccionDTO proyeccion;
 	private ComisionesTransRealDTO real;
+
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public ComisionesTransDTO() {
 		super();
@@ -41,6 +51,30 @@ public class ComisionesTransDTO implements Comparable<ComisionesTransDTO> {
 
 	public void setReal(ComisionesTransRealDTO real) {
 		this.real = real;
+	}
+
+	public String getFechaDesde() {
+		return sdf.format(fechaDesde);
+	}
+
+	public void setFechaDesde(Date fechaDesde) {
+		this.fechaDesde = fechaDesde;
+	}
+
+	public String getFechaHasta() {
+		return sdf.format(fechaHasta);
+	}
+
+	public void setFechaHasta(Date fechaHasta) {
+		this.fechaHasta = fechaHasta;
+	}
+
+	public BigDecimal getComision() {
+		return comision;
+	}
+
+	public void setComision(BigDecimal comision) {
+		this.comision = comision;
 	}
 
 	@Override

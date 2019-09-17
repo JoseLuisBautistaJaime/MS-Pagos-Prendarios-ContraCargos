@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +14,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import mx.com.nmp.pagos.mimonte.model.Updatable;
 
@@ -37,31 +39,31 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 	private Integer id;
 
 	@Column(name = "id_conciliacion")
-	private Integer idConciliacion;
+	private Long idConciliacion;
 
 	@Column(name = "nuevo")
 	private Boolean nuevo;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_movimiento_midas")
 	private MovimientoMidas movimientoMidas;
 
 	public MovimientoConciliacion() {
 		super();
 	}
-
+	
 	public MovimientoConciliacion(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 	}
 
-	public MovimientoConciliacion(Integer id, Integer idConciliacion, Boolean nuevo) {
+	public MovimientoConciliacion(Integer id, Long idConciliacion, Boolean nuevo) {
 		super();
 		this.id = id;
 		this.idConciliacion = idConciliacion;
 		this.nuevo = nuevo;
 	}
 
-	public MovimientoConciliacion(Integer id, Integer idConciliacion, Boolean nuevo, MovimientoMidas movimientoMidas) {
+	public MovimientoConciliacion(Integer id, Long idConciliacion, Boolean nuevo, MovimientoMidas movimientoMidas) {
 		super();
 		this.id = id;
 		this.idConciliacion = idConciliacion;
@@ -85,11 +87,11 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 		this.id = id;
 	}
 
-	public Integer getIdConciliacion() {
+	public Long getIdConciliacion() {
 		return idConciliacion;
 	}
 
-	public void setIdConciliacion(Integer idConciliacion) {
+	public void setIdConciliacion(Long idConciliacion) {
 		this.idConciliacion = idConciliacion;
 	}
 
@@ -101,6 +103,10 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 		this.nuevo = nuevo;
 	}
 
+	@Transient
+	public abstract MovimientoConciliacionEnum getTipoMovimiento();
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -108,6 +114,7 @@ public abstract class MovimientoConciliacion extends Updatable implements Serial
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((idConciliacion == null) ? 0 : idConciliacion.hashCode());
 		result = prime * result + ((nuevo == null) ? 0 : nuevo.hashCode());
+		result = prime * result + ((movimientoMidas == null || movimientoMidas.getId() == null) ? 0 : movimientoMidas.getId().hashCode());
 		return result;
 	}
 

@@ -36,6 +36,7 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
@@ -48,6 +49,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -150,7 +152,7 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaFolio(@PathVariable(value = "folio", required = true) Integer folio) {
+	public Response consultaFolio(@PathVariable(value = "folio", required = true) Long folio) {
 
 		ConciliacionDTOList consultaFolio = conciliacionServiceImpl.consultaFolio(folio);
 
@@ -176,15 +178,17 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consulta(@RequestBody ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
-
+		ValidadorConciliacion.validateFechasPrimary(consultaConciliacionRequestDTO.getFechaDesde(),
+				consultaConciliacionRequestDTO.getFechaHasta());
 		List<ConsultaConciliacionDTO> consulta = conciliacionServiceImpl.consulta(consultaConciliacionRequestDTO);
 
 		if (consulta != null && !consulta.isEmpty()) {
 			for (ConsultaConciliacionDTO con : consulta) {
 				con.setNumeroMovimientos(consulta.size());
 			}
-		}
-
+		} else
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				consulta);
 	}
@@ -210,10 +214,24 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response actualizaConciliacion(
 			@RequestBody ActualizaionConciliacionRequestDTO actualizaionConciliacionRequestDTO,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String LastModifiedBy) {
-
-		conciliacionServiceImpl.actualizaConciliacion(actualizaionConciliacionRequestDTO);
-
+			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		// Validaciones generales del request
+		if (!ValidadorConciliacion.validateActualizaionConciliacionRequestDTO(actualizaionConciliacionRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		// Validacion de fechas de las comisiones
+		if (null != actualizaionConciliacionRequestDTO.getComisiones()
+				&& !actualizaionConciliacionRequestDTO.getComisiones().isEmpty()) {
+			for (ComisionesRequestDTO comision : actualizaionConciliacionRequestDTO.getComisiones()) {
+				if (!ValidadorConciliacion.validateFecha(comision.getFechaCargo()))
+					throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+							CodigoError.NMP_PMIMONTE_BUSINESS_088);
+				if (!ValidadorConciliacion.validateFecha(comision.getFechaOperacion()))
+					throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+							CodigoError.NMP_PMIMONTE_BUSINESS_088);
+			}
+		}
+		conciliacionServiceImpl.actualizaConciliacion(actualizaionConciliacionRequestDTO, lastModifiedBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_UPDATE,
 				null);
 	}
@@ -238,12 +256,17 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response enviaConciliacion(@PathVariable(value = "folio", required = true) Integer folio,
-			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		if (!ValidadorConciliacion.validateInteger(folio))
+	public Response enviaConciliacion(@PathVariable(value = "folio", required = true) Long folio,
+			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		// Valida el atributo
+		if (!ValidadorConciliacion.validateLong(folio))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
+		
+		// Realiza el envio d ela conciliacion
 		conciliacionServiceImpl.enviarConciliacion(folio, createdBy);
+		
+		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.CONCILIATION_SENT_SUCCESSFULLY, null);
 	}
@@ -266,8 +289,11 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Integer folio) {
+	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Long folio) {
 		List<MovTransitoDTO> response = conciliacionService.consultaMovimientosTransito(folio);
+		if (null == response || response.isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				response);
 	}
@@ -321,7 +347,9 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response marcarDevoluciones(@RequestBody SolicitarPagosRequestDTO solicitarPagosRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-
+		if (!ValidadorConciliacion.validateSolicitarPagosRequestDTO(solicitarPagosRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 		List<DevolucionConDTO> response = devolucionesServiceImpl.marcarDevolucion(solicitarPagosRequestDTO, createdBy);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
@@ -345,10 +373,12 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaMovimientosDevolucion(@PathVariable(value = "folio", required = true) Integer folio) {
+	public Response consultaMovimientosDevolucion(@PathVariable(value = "folio", required = true) Long folio) {
 
 		List<DevolucionConDTO> devoluciones = devolucionesServiceImpl.consultaDevolucion(folio);
-
+		if (null == devoluciones || devoluciones.isEmpty())
+			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
+					CodigoError.NMP_PMIMONTE_0009);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.SUCCESSFUL_RETURNS_CONSULTATION, devoluciones);
 	}
@@ -373,6 +403,9 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response devoluciones(@RequestBody FolioRequestDTO folioRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		if (!ValidadorConciliacion.validateFolioRequestDTO(folioRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 
 		List<DevolucionEntidadDTO> response = devolucionesServiceImpl.solicitarDevoluciones(folioRequestDTO, createdBy);
 
@@ -401,10 +434,22 @@ public class ConciliacionController {
 	public Response liquidacionMovimientos(
 			@RequestBody LiquidacionMovimientosRequestDTO liquidacionMovimientosRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		// Validacion de objeto y atributos
+		if (!ValidadorConciliacion.validateLiquidacionMovimientosRequestDTO(liquidacionMovimientosRequestDTO))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
 
+		// Valida las fechas del objeto
+		for (MovimientosDTO mov : liquidacionMovimientosRequestDTO.getMovimientos()) {
+			if (!ValidadorConciliacion.validateFecha(mov.getFecha())) {
+				throw new ConciliacionException(ConciliacionConstants.FECHA_IS_WRONG,
+						CodigoError.NMP_PMIMONTE_BUSINESS_088);
+			}
+		}
+		// Liquidar devoluciones
 		List<DevolucionEntidadDTO> response = devolucionesServiceImpl
 				.liquidarDevoluciones(liquidacionMovimientosRequestDTO, createdBy);
-
+		// Regresa respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.SUCCESSFUL_CLEARANCE_REQUEST, response
 		// buildLiquidacionMovimientosDummy()
@@ -430,16 +475,12 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response actualizaIdPs(
-			@RequestBody ActualizarIdPSRequest actualizarIdPSRequest/*
-																	 * ActualizaIdPsRequestDTO actualizaIdPsRequestDTO
-																	 */,
+	public Response actualizaIdPs(@RequestBody ActualizarIdPSRequest actualizarIdPSRequest,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
 		if (!ValidadorConciliacion.validateActualizarIdPSRequest(actualizarIdPSRequest))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-		// Comentado por ahora, hasta que la funcionalidad de la capa de servicio este
-		// completa
+
 		conciliacionServiceImpl.actualizarPS(actualizarIdPSRequest, lastModifiedBy);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.IDENTIFIER_PS_UPDATED_IN_THE_CONCILIATION, null);
@@ -464,9 +505,9 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Integer folio,
+	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Long folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {
-		if (!ValidadorConciliacion.validateInteger(folio))
+		if (!ValidadorConciliacion.validateLong(folio))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		conciliacionServiceImpl.generarConciliacion(folio, requestUser);
@@ -492,28 +533,8 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaActividades(@RequestBody ConsultaActividadesRequest consultaActividadesRequest) {
-		if ((null != consultaActividadesRequest && null != consultaActividadesRequest.getFechaDesde()
-				&& null != consultaActividadesRequest.getFechaHasta())
-				&& (!ValidadorConciliacion.validateFechasWithThemselves(consultaActividadesRequest.getFechaDesde(),
-						consultaActividadesRequest.getFechaHasta()))) {
-			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_078);
-		}
-		if ((null != consultaActividadesRequest && null != consultaActividadesRequest.getFechaDesde()
-				&& null != consultaActividadesRequest.getFechaHasta())
-				&& (!ValidadorConciliacion.validateFechasWithCurrent(consultaActividadesRequest.getFechaDesde(),
-						consultaActividadesRequest.getFechaHasta()))) {
-			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_082);
-		} else if (null != consultaActividadesRequest && null != consultaActividadesRequest.getFechaDesde()
-				&& !ValidadorConciliacion.validateFecha(consultaActividadesRequest.getFechaDesde())) {
-			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_080);
-		} else if (null != consultaActividadesRequest && null != consultaActividadesRequest.getFechaHasta()
-				&& !ValidadorConciliacion.validateFecha(consultaActividadesRequest.getFechaHasta())) {
-			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_081);
-		}
+		ValidadorConciliacion.validateFechasPrimary(consultaActividadesRequest.getFechaDesde(),
+				consultaActividadesRequest.getFechaHasta());
 		List<ConsultaActividadDTO> response = conciliacionService.consultaActividades(consultaActividadesRequest);
 		if (null == response || response.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
@@ -546,8 +567,8 @@ public class ConciliacionController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		conciliacionServiceImpl.actualizaSubEstatusConciliacion(actualizarSubEstatusRequestDTO, requestUser);
-		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUB_ESTATUS_UPDATED_OK,
-				null);
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				ConciliacionConstants.SUB_ESTATUS_UPDATED_OK, null);
 	}
 
 	/**
@@ -569,28 +590,8 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response resumenConciliaciones(@RequestBody ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
-		if ((null != resumenConciliacionRequestDTO && null != resumenConciliacionRequestDTO.getFechaInicial()
-				&& null != resumenConciliacionRequestDTO.getFechaFinal())
-				&& (!ValidadorConciliacion.validateFechasWithThemselves(resumenConciliacionRequestDTO.getFechaInicial(),
-						resumenConciliacionRequestDTO.getFechaFinal()))) {
-			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_078);
-		}
-		if ((null != resumenConciliacionRequestDTO && null != resumenConciliacionRequestDTO.getFechaInicial()
-				&& null != resumenConciliacionRequestDTO.getFechaFinal())
-				&& (!ValidadorConciliacion.validateFechasWithCurrent(resumenConciliacionRequestDTO.getFechaInicial(),
-						resumenConciliacionRequestDTO.getFechaFinal()))) {
-			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_082);
-		} else if (null != resumenConciliacionRequestDTO && null != resumenConciliacionRequestDTO.getFechaInicial()
-				&& !ValidadorConciliacion.validateFecha(resumenConciliacionRequestDTO.getFechaInicial())) {
-			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_080);
-		} else if (null != resumenConciliacionRequestDTO && null != resumenConciliacionRequestDTO.getFechaFinal()
-				&& !ValidadorConciliacion.validateFecha(resumenConciliacionRequestDTO.getFechaFinal())) {
-			throw new ConciliacionException(ConciliacionConstants.WRONG_OR_INCONSISTENT_FECHAS,
-					CodigoError.NMP_PMIMONTE_BUSINESS_081);
-		}
+		ValidadorConciliacion.validateFechasPrimary(resumenConciliacionRequestDTO.getFechaInicial(),
+				resumenConciliacionRequestDTO.getFechaFinal());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				conciliacionServiceImpl.resumenConciliaciones(resumenConciliacionRequestDTO));
 	}

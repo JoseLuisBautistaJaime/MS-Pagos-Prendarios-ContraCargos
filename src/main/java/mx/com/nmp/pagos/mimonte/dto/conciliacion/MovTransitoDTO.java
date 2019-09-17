@@ -28,6 +28,7 @@ public class MovTransitoDTO implements Comparable<MovTransitoDTO> {
 	private String esquemaTarjeta;
 	private String cuenta;
 	private String titularCuenta;
+	private String numAutorizacion;
 
 	public MovTransitoDTO() {
 		super();
@@ -149,6 +150,14 @@ public class MovTransitoDTO implements Comparable<MovTransitoDTO> {
 	@Override
 	public int compareTo(MovTransitoDTO o) {
 		return 0;
+	}
+
+	public String getNumAutorizacion() {
+		return numAutorizacion;
+	}
+
+	public void setNumAutorizacion(String numAutorizacion) {
+		this.numAutorizacion = numAutorizacion;
 	}
 
 }

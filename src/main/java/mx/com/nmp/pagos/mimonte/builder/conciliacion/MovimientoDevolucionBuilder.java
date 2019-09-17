@@ -49,7 +49,7 @@ public abstract class MovimientoDevolucionBuilder {
 			devolucionConDTO.setEsquemaTarjeta(movimientoDevolucion.getEsquemaTarjeta());
 			devolucionConDTO.setIdentificacionCuenta(movimientoDevolucion.getIdentificadorCuenta());
 			devolucionConDTO.setTitular(movimientoDevolucion.getTitular());
-			devolucionConDTO.setCodigiAutorizacion(movimientoDevolucion.getCodigoAutorizacion());
+			devolucionConDTO.setCodigoAutorizacion(movimientoDevolucion.getCodigoAutorizacion());
 			devolucionConDTO.setSucursal(movimientoDevolucion.getSucursal());
 			devolucionConDTO.setFechaLiquidacion(movimientoDevolucion.getFechaLiquidacion());
 
@@ -86,7 +86,7 @@ public abstract class MovimientoDevolucionBuilder {
 		MovimientoDevolucion movimientoDevolucion = new MovimientoDevolucion();
 		movimientoDevolucion.setIdConciliacion(mt.getIdConciliacion());
 		movimientoDevolucion.setCreatedBy(createdBy);
-		movimientoDevolucion.setCreatedDate(new Date());
+		movimientoDevolucion.setCreatedDate(null != mt.getCreatedDate() ? mt.getCreatedDate() : new Date());
 		movimientoDevolucion.setLastModifiedBy(null);
 		movimientoDevolucion.setLastModifiedDate(null);
 		movimientoDevolucion.setNuevo(true);
@@ -94,9 +94,9 @@ public abstract class MovimientoDevolucionBuilder {
 		movimientoDevolucion.setFecha(mt.getFecha());
 		movimientoDevolucion.setMonto(mt.getMonto());
 		movimientoDevolucion.setEsquemaTarjeta(mt.getEsquemaTarjeta());
-		movimientoDevolucion.setIdentificadorCuenta(null);
+		movimientoDevolucion.setIdentificadorCuenta(mt.getCuenta());
 		movimientoDevolucion.setTitular(mt.getTitular());
-		movimientoDevolucion.setCodigoAutorizacion(null);
+		movimientoDevolucion.setCodigoAutorizacion(mt.getNumAutorizacion());
 		movimientoDevolucion.setSucursal(mt.getSucursal());
 		movimientoDevolucion.setFechaLiquidacion(null);
 
@@ -109,7 +109,7 @@ public abstract class MovimientoDevolucionBuilder {
 	 * @param movEstadoCuenta
 	 * @return
 	 */
-	public static MovimientoDevolucion buildMovimientoFromMovEstadoCuenta(MovimientoEstadoCuenta movEstadoCuenta, Integer idConciliacion, String createdBy, EstadoCuentaCabecera cabecera) {
+	public static MovimientoDevolucion buildMovimientoFromMovEstadoCuenta(MovimientoEstadoCuenta movEstadoCuenta, Long idConciliacion, String createdBy, EstadoCuentaCabecera cabecera) {
 		MovimientoDevolucion movimientoDevolucion = new MovimientoDevolucion();
 		movimientoDevolucion.setIdConciliacion(idConciliacion);
 		movimientoDevolucion.setCreatedDate(new Date());

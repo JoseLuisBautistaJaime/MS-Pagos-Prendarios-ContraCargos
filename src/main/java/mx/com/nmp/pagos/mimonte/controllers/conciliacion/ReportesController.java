@@ -27,7 +27,6 @@ import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ReportePagosService;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -84,9 +83,8 @@ public class ReportesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getReportePagosEnLinea(@RequestBody ReporteRequestDTO reporteRequestDTO) {
-		if (!ValidadorConciliacion.validateReporteRequestDTO(reporteRequestDTO))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
+		ValidadorConciliacion.validateFechasPrimary(reporteRequestDTO.getFechaDesde(),
+				reporteRequestDTO.getFechaHasta());
 		ReportePagosEnLineaOuterDTO reportePagosEnLineaOuterDTO = reportePagosService
 				.getReportePagosEnLinea(reporteRequestDTO);
 		if (null == reportePagosEnLineaOuterDTO || null == reportePagosEnLineaOuterDTO.getMovimientos()

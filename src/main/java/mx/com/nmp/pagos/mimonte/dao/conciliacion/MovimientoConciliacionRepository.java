@@ -30,7 +30,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 public interface MovimientoConciliacionRepository extends JpaRepository<MovimientoConciliacion, Integer> {
 
 	@Query("SELECT mc FROM MovimientoConciliacion mc WHERE mc.idConciliacion = :folio")
-	public List<MovimientoConciliacion> findByFolio(@Param("folio") Integer folio);
+	public List<MovimientoConciliacion> findByFolio(@Param("folio") Long folio);
 
 	/**
 	 * Regresa una lista de MovimientoConciliacion por folio de conciliacion e ids
@@ -40,8 +40,8 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 * @param idMovimientos
 	 * @return
 	 */
-	@Query("SELECT mc FROM MovimientoConciliacion mc WHERE mc.idConciliacion = :folio AND mc.id IN :idMovimientos")
-	public List<MovimientoConciliacion> findByFolioAndIds(@Param("folio") final Integer folio,
+	@Query("SELECT mt FROM MovimientoTransito mt WHERE mt.idConciliacion = :folio AND mt.id IN :idMovimientos")
+	public List<MovimientoConciliacion> findByFolioAndIds(@Param("folio") final Long folio,
 			@Param("idMovimientos") final List<Integer> idMovimientos);
 
 	/**
@@ -52,7 +52,7 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 */
 	@Query("from MovimientoComision l  where l.idConciliacion = :idConciliacion")
 	public List<MovimientoComision> findMovimientoComisionByConciliacionId(
-			@Param("idConciliacion") final Integer idConciliacion);
+			@Param("idConciliacion") final Long idConciliacion);
 
 	/**
 	 * Regresa una lista de MovimientoDevolucion por folio de conciliacion
@@ -60,9 +60,10 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 * @param idConciliacion
 	 * @return
 	 */
-	@Query("from MovimientoDevolucion l  where l.idConciliacion = :idConciliacion")
-	public List<MovimientoDevolucion> findMovimientoDevolucionByConciliacionId(
-			@Param("idConciliacion") final Integer idConciliacion);
+	@Query("from MovimientoDevolucion l  where l.idConciliacion = :idConciliacion AND l.estatus.id = :idEstatus")
+	public List<MovimientoDevolucion> findMovimientoDevolucionByConciliacionIdAndStatus(
+			@Param("idConciliacion") final Long idConciliacion,
+			@Param("idEstatus") final Integer idEstatus);
 
 	/**
 	 * Regresa una lista de MovimientoPago por folio de conciliacion
@@ -71,6 +72,20 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	 * @return
 	 */
 	@Query("from MovimientoPago l  where l.idConciliacion = :idConciliacion")
-	public List<MovimientoPago> findMovimientoPagoByConciliacionId(
-			@Param("idConciliacion") final Integer idConciliacion);
+	public List<MovimientoPago> findMovimientoPagoByConciliacionId(@Param("idConciliacion") final Long idConciliacion);
+
+	/**
+	 * Regresa un valor de 1 cuando todos los ids de movimientos transito ingresados
+	 * existen, estan relacionados al folio especificado y no tienen un estatus 4
+	 * (No reconocido por Openpay)
+	 * 
+	 * @param folio
+	 * @param ids
+	 * @param estatusNROpenpay
+	 * @param tam
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(mt.id) FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mc ON mc.id = mt.id WHERE mt.id IN :ids AND mc.id_conciliacion = :folio AND mt.estatus <> :estatusNROpenpay) = :tam THEN 1 ELSE 0 END as RESULT")
+	public Object validaFolioAndIdsForMovPagos(@Param("folio") final Long folio, @Param("ids") final List<Integer> ids,
+			@Param("estatusNROpenpay") final Integer estatusNROpenpay, @Param("tam") final Integer tam);
 }

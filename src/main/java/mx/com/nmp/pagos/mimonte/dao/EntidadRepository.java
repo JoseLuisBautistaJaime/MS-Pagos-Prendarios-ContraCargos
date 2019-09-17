@@ -101,6 +101,6 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 	 * @return
 	 */
 	@Query("SELECT e FROM Entidad e, Conciliacion c WHERE c.entidad.id = e.id AND c.id = :idConciliacion")
-	public Entidad findByConciliacion(@Param("idConciliacion") Integer idConciliacion);
+	public Entidad findByConciliacion(@Param("idConciliacion") Long idConciliacion);
 
 }
