@@ -57,7 +57,6 @@ import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
-import mx.com.nmp.pagos.mimonte.model.EstatusTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
@@ -295,8 +294,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 		try {
 			// Se obtienen los movimientos por folio
-			List<Integer> idsEstatus = Arrays.asList(ConciliacionConstants.ESTATUS_DEVOLUCION_PENDIENTE,
-					ConciliacionConstants.ESTATUS_DEVOLUCION_SOLICITADA);
+			List<Integer> idsEstatus = Arrays.asList(ConciliacionConstants.ESTATUS_DEVOLUCION_PENDIENTE);
 			List<MovimientoDevolucion> movimientosDevolucion = movimientoDevolucionRepository
 					.findByIdConciliacionAndEstatusIdIn(folio.getFolio(), idsEstatus);
 
