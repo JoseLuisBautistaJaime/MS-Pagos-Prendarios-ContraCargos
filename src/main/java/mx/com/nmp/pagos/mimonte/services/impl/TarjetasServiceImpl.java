@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import mx.com.nmp.pagos.mimonte.config.Constants;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
-import mx.com.nmp.pagos.mimonte.controllers.TarjetasController;
 import mx.com.nmp.pagos.mimonte.dao.ClienteRepository;
 import mx.com.nmp.pagos.mimonte.dao.EstatusTarjetaRepository;
 import mx.com.nmp.pagos.mimonte.dao.TarjetaRepository;
@@ -194,6 +193,18 @@ public class TarjetasServiceImpl implements TarjetasService {
 		if (tarjeta.getCliente().getIdCliente() == null || tarjeta.getCliente().getIdCliente() < 1)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_ID_CLIENT_SHOULD_NOT_BE_NULL_OR_VOID);
 
+		// Nueva validacion
+		if(null != tarjeta.getCliente() && null != tarjeta.getCliente().getNombreTitular()) {
+			if(tarjeta.getCliente().getNombreTitular().trim().isEmpty())
+				throw new TarjetaException(TarjetaConstants.TITULAR_EMPTY);
+			else
+				tarjeta.getCliente().setNombreTitular(tarjeta.getCliente().getNombreTitular().trim());
+		}
+		
+		// Nueva validacion
+		if(tarjeta.getCliente().getNombreTitular().length() > TarjetaConstants.Constants.TITULAR_SIZE)
+			throw new TarjetaException(TarjetaConstants.TITULAR_TOO_LONG);
+		
 		if (tarjeta.getEstatus() == null)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_STATUS_SHOULD_NOT_BE_NULL_OR_VOID);
 
@@ -209,8 +220,20 @@ public class TarjetasServiceImpl implements TarjetasService {
 		if(null != tarjeta.getToken() && tarjeta.getToken().length() > Constants.LONGITUD_TOKEN)
 			throw new TarjetaException(TarjetaConstants.MSG_TOKEN_VALUE_TOO_LONG);
 		
+		// Nueva validacion
+		if(tarjeta.getToken().trim().isEmpty())
+			throw new TarjetaException(TarjetaConstants.TOKEN_EMPTY);
+		else
+			tarjeta.setToken(tarjeta.getToken().trim());
+		
 		if(null != tarjeta.getId_openpay() && tarjeta.getId_openpay().length() > Constants.LONGITUD_ID_OPENPAY)
 			throw new TarjetaException(TarjetaConstants.MSG_ID_OPENPAY_VALUE_TOO_LONG);
+		
+		// Nueva validacion
+		if(tarjeta.getId_openpay().trim().isEmpty())
+			throw new TarjetaException(TarjetaConstants.TOKEN_EMPTY);
+		else
+			tarjeta.setId_openpay(tarjeta.getId_openpay().trim());
 		
 		doTypeValidations(tarjeta);
 
