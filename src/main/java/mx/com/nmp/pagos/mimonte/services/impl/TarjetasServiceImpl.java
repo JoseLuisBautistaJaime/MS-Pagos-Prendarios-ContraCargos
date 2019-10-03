@@ -202,7 +202,7 @@ public class TarjetasServiceImpl implements TarjetasService {
 		}
 		
 		// Nueva validacion
-		if(tarjeta.getCliente().getNombreTitular().length() > TarjetaConstants.Constants.TITULAR_SIZE)
+		if( (null != tarjeta.getCliente().getNombreTitular()) && (tarjeta.getCliente().getNombreTitular().length() > TarjetaConstants.Constants.TITULAR_SIZE))
 			throw new TarjetaException(TarjetaConstants.TITULAR_TOO_LONG);
 		
 		if (tarjeta.getEstatus() == null)
