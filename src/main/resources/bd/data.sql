@@ -38,6 +38,8 @@ INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activ
 (5, 'Estatus Pago', 'Catalogo de estatus de pagos', 'tk_estatus_pago', 1);
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
 (6, 'Tipo Autorizacion', 'Catalogo de tipos de autorizacion', 'tk_tipo_autorizacion', 1);
+INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
+(7, 'Estatus Devolucion', 'Catalogo de estatus de devoluciones', 'tk_estatus_devolucion', 1);
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
