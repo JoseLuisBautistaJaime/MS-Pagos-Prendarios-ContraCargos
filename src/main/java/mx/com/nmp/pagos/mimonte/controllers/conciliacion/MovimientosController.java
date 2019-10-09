@@ -132,7 +132,41 @@ public class MovimientosController {
 	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		ValidadorConciliacion.validateFechasPrimary(movimientos.getFechaDesde(), movimientos.getFechaHasta());
-		movimientosMidasService.save(movimientos, userRequest);
+
+		Boolean procesoCorrecto = false;
+		String descripcionError = null;
+
+		try {
+			movimientosMidasService.save(movimientos, userRequest);
+			procesoCorrecto = true;
+		} catch (ConciliacionException cex) {
+			procesoCorrecto = false;
+			descripcionError = cex.getCodigoError().getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
+			throw cex;
+		} catch (Exception eex) {
+			procesoCorrecto = false;
+			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_130.getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_130.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_130);
+		} finally {
+			try {
+				// Se actualiza el sub estatus de la conciliacion en base al resultado
+				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
+						movimientos.getFolio(),
+						procesoCorrecto
+								? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA
+								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_ERROR,
+						descripcionError), userRequest);
+			} catch (Exception ex) {
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_030);
+			}
+		}
+
+		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 	}
@@ -212,8 +246,41 @@ public class MovimientosController {
 					CodigoError.NMP_PMIMONTE_0008);
 		}
 		ValidadorConciliacion.validateFechasPrimary(movimientos.getFechaDesde(), movimientos.getFechaHasta());
-		movimientosProveedorService.save(movimientos, userRequest);
 
+		Boolean procesoCorrecto = false;
+		String descripcionError = null;
+
+		try {
+			movimientosProveedorService.save(movimientos, userRequest);
+			procesoCorrecto = true;
+		} catch (ConciliacionException cex) {
+			procesoCorrecto = false;
+			descripcionError = cex.getCodigoError().getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
+			throw cex;
+		} catch (Exception eex) {
+			procesoCorrecto = false;
+			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_131.getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_131.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_131);
+		} finally {
+			try {
+				// Se actualiza el sub estatus de la conciliacion en base al resultado
+				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
+						movimientos.getFolio(),
+						procesoCorrecto
+								? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA
+								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_ERROR,
+						descripcionError), userRequest);
+			} catch (Exception ex) {
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_030);
+			}
+		}
+
+		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 	}
