@@ -242,6 +242,10 @@ public class ContactosController {
 
 		LOG.info(">> getNombreEmailContacto(" + contactoReqSearchDTO.toString() + ")");
 
+		if (contactoReqSearchDTO.getIdTipoContacto() == null || contactoReqSearchDTO.getIdTipoContacto() <= 0) {
+			contactoReqSearchDTO.setIdTipoContacto(CatalogConstants.TIPO_CONTACTO_MIDAS);
+		}
+
 		if (contactoReqSearchDTO.getEmail() != null && !ValidadorGenerico.validateEmail2(contactoReqSearchDTO.getEmail())) {
 			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT,
 					CodigoError.NMP_PMIMONTE_BUSINESS_013);
