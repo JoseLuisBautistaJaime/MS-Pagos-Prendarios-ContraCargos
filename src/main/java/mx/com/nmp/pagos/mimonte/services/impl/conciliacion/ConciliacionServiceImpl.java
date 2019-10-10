@@ -1104,7 +1104,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Valida que la conciliacion tenga alguno de los estatus validos para realizar
 		// esta operacion ([Edo. Cta. Comp=12 & Openpay Compl=6])
-		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion, Arrays.asList(6L, 12L));
+		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,
+				ConciliacionConstants.CON_SUB_ESTATUS_MERGE_CONCILIACION);
 
 		// Obtiene todos los reportes de la bd generados hasta el momento
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(idConciliacion);
