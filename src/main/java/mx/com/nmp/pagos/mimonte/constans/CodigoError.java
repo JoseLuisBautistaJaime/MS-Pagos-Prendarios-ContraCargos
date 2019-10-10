@@ -302,6 +302,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_130("Error al registrar los movimientos midas",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_131("Error al registrar los movimientos proveedor transaccional",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_132("Error al conciliar la informacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

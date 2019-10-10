@@ -480,10 +480,50 @@ public class ConciliacionController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 
+		try {
+			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
+					folio, ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION, null), requestUser);
+		} catch (Exception ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		}
 
-		conciliacionServiceImpl.generarConciliacion(folio, requestUser);
 
+		Boolean procesoCorrecto = false;
+		String descripcionError = null;
 
+		try {
+			conciliacionServiceImpl.generarConciliacion(folio, requestUser);
+			procesoCorrecto = true;
+		} catch (ConciliacionException cex) {
+			procesoCorrecto = false;
+			descripcionError = cex.getCodigoError().getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
+			throw cex;
+		} catch (Exception eex) {
+			procesoCorrecto = false;
+			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_132.getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_132.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_132);
+		} finally {
+			try {
+				// Se actualiza el sub estatus de la conciliacion en base al resultado
+				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
+						folio,
+						procesoCorrecto
+								? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA
+								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_ERROR,
+						descripcionError), requestUser);
+			} catch (Exception ex) {
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_030);
+			}
+		}
+
+		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.CONCILIATION_PROCESS_BEGINS, null);
 	}
