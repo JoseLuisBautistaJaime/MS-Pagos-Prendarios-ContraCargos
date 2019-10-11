@@ -102,8 +102,8 @@ public class DSSModule {
 		tipoAutorizacionDTOFinal = evaluateGreater(stack);
 		// Si el tipo de autorizacion es nulo se asigna por default el 1: Ningun tipo de
 		// autorizacion
-		if (null == tipoAutorizacionDTOFinal)
-			tipoAutorizacionDTOFinal = dssService.getTipoAutorizacionById(1);
+		//if (null == tipoAutorizacionDTOFinal)
+			tipoAutorizacionDTOFinal = dssService.getTipoAutorizacionById(2);
 		return tipoAutorizacionDTOFinal;
 	}
 
