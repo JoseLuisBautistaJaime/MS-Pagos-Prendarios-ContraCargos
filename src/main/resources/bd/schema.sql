@@ -809,7 +809,7 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_proveedor` (
   `description` VARCHAR(50) NOT NULL,
   `error_message` VARCHAR(50) DEFAULT NULL,
   `order_id` VARCHAR(50) DEFAULT NULL,
-  `customer_id` VARCHAR(50) NOT NULL,
+  `customer_id` VARCHAR(50) DEFAULT NULL,
   `error_code` VARCHAR(50) DEFAULT NULL,
   `currency` VARCHAR(50) NOT NULL,
   `amount` DECIMAL(16,4) NOT NULL,

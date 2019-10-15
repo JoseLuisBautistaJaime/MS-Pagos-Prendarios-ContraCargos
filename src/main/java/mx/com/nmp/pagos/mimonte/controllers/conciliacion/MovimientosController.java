@@ -57,6 +57,7 @@ import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
  * @creationDate 03/04/2019 09:06 hrs.
  * @version 0.1
  */
+@SuppressWarnings("JavaDoc")
 @RestController
 @RequestMapping(value = "/mimonte")
 @Api(value = "", description = "REST API para Movimientos", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
@@ -115,7 +116,7 @@ public class MovimientosController {
 	/**
 	 * Permite dar de alta movimientos resultado de los Procesos Nocturnos.
 	 * 
-	 * @param movimientoProcesosNocturnosDTO
+	 * @param movimientos
 	 * @param userRequest
 	 * @return
 	 */
@@ -133,37 +134,26 @@ public class MovimientosController {
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		ValidadorConciliacion.validateFechasPrimary(movimientos.getFechaDesde(), movimientos.getFechaHasta());
 
-		Boolean procesoCorrecto = false;
-		String descripcionError = null;
-
 		try {
 			movimientosMidasService.save(movimientos, userRequest);
-			procesoCorrecto = true;
 		} catch (ConciliacionException cex) {
-			procesoCorrecto = false;
-			descripcionError = cex.getCodigoError().getDescripcion();
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
 			throw cex;
 		} catch (Exception eex) {
-			procesoCorrecto = false;
-			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_130.getDescripcion();
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_130.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_130);
-		} finally {
-			try {
-				// Se actualiza el sub estatus de la conciliacion en base al resultado
-				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
-						movimientos.getFolio(),
-						procesoCorrecto
-								? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA
-								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_ERROR,
-						descripcionError), userRequest);
-			} catch (Exception ex) {
-				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
-						CodigoError.NMP_PMIMONTE_BUSINESS_030);
-			}
+		}
+
+		try {
+			// Se actualiza el sub estatus de la conciliacion a consulta MIDAS completada
+			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
+					movimientos.getFolio(), ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA,
+					null), userRequest);
+		} catch (Exception ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
 		}
 
 		// Regresa la respuesta exitosa
@@ -174,8 +164,7 @@ public class MovimientosController {
 	/**
 	 * Permite consultar los movimientos del resultado de los procesos nocturnos.
 	 * 
-	 * @param movimientosProveedorSaveDTO
-	 * @param userRequest
+	 * @param commonConciliacionRequestDTO
 	 * @return
 	 */
 	@ResponseBody
@@ -225,7 +214,7 @@ public class MovimientosController {
 	 * Permite dar de alta movimientos que provienen del Proveedor Transaccional
 	 * (Open Pay).
 	 * 
-	 * @param movimientoTransaccionalDTO
+	 * @param movimientos
 	 * @param userRequest
 	 * @return
 	 */
@@ -247,37 +236,26 @@ public class MovimientosController {
 		}
 		ValidadorConciliacion.validateFechasPrimary(movimientos.getFechaDesde(), movimientos.getFechaHasta());
 
-		Boolean procesoCorrecto = false;
-		String descripcionError = null;
-
 		try {
 			movimientosProveedorService.save(movimientos, userRequest);
-			procesoCorrecto = true;
 		} catch (ConciliacionException cex) {
-			procesoCorrecto = false;
-			descripcionError = cex.getCodigoError().getDescripcion();
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
 			throw cex;
 		} catch (Exception eex) {
-			procesoCorrecto = false;
-			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_131.getDescripcion();
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_131.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_131);
-		} finally {
-			try {
-				// Se actualiza el sub estatus de la conciliacion en base al resultado
-				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
-						movimientos.getFolio(),
-						procesoCorrecto
-								? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA
-								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_ERROR,
-						descripcionError), userRequest);
-			} catch (Exception ex) {
-				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
-						CodigoError.NMP_PMIMONTE_BUSINESS_030);
-			}
+		}
+
+		try {
+			// Se actualiza el sub estatus de la conciliacion a consulta OpenPay completada
+			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
+					movimientos.getFolio(), ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA,
+					null), userRequest);
+		} catch (Exception ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
 		}
 
 		// Regresa la respuesta exitosa
@@ -288,8 +266,7 @@ public class MovimientosController {
 	/**
 	 * Permite consultar los movimientos del proveedor transaccional. (Open Pay)
 	 * 
-	 * @param movimientosProveedorSaveDTO
-	 * @param userRequest
+	 * @param commonConciliacionRequestDTO
 	 * @return
 	 */
 	@ResponseBody
@@ -406,7 +383,6 @@ public class MovimientosController {
 	 * CommonConciliacionRequestDTO
 	 * 
 	 * @param commonConciliacionRequestDTO
-	 * @param userRequest
 	 * @return
 	 */
 	@ResponseBody
