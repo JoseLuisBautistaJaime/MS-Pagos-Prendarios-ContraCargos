@@ -19,13 +19,13 @@
     </STYLE>
   </HEAD>
   <BODY>
-    <span>${text1}</span>
+    <span>Buenas tardes.</span>
     <br>
     <br>
-    <span>${text2}</span>
+    <span>Solicito de su apreciable ayuda para aplicar los siguientes pagos a las partidas especificadas en la siguiente tabla en el barrido de la noche,  ya que el cliente realizó el pago en el portal de pago en línea, el cual fue aprobado, pero en Midas aún no se refleja el cobro.</span>
     <br>
     <br>
-    <span>${text3}</span>
+    <span>En espera de sus comentarios y apreciable ayuda. Gracias.</span>
     <br>
     <br>
     <table>
