@@ -57,6 +57,7 @@ import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
  * @creationDate 03/04/2019 09:06 hrs.
  * @version 0.1
  */
+@SuppressWarnings("JavaDoc")
 @RestController
 @RequestMapping(value = "/mimonte")
 @Api(value = "", description = "REST API para Movimientos", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
@@ -115,7 +116,7 @@ public class MovimientosController {
 	/**
 	 * Permite dar de alta movimientos resultado de los Procesos Nocturnos.
 	 * 
-	 * @param movimientoProcesosNocturnosDTO
+	 * @param movimientos
 	 * @param userRequest
 	 * @return
 	 */
@@ -132,7 +133,30 @@ public class MovimientosController {
 	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		ValidadorConciliacion.validateFechasPrimary(movimientos.getFechaDesde(), movimientos.getFechaHasta());
-		movimientosMidasService.save(movimientos, userRequest);
+
+		try {
+			movimientosMidasService.save(movimientos, userRequest);
+		} catch (ConciliacionException cex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
+			throw cex;
+		} catch (Exception eex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_130.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_130);
+		}
+
+		try {
+			// Se actualiza el sub estatus de la conciliacion a consulta MIDAS completada
+			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
+					movimientos.getFolio(), ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA,
+					null), userRequest);
+		} catch (Exception ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		}
+
+		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 	}
@@ -140,8 +164,7 @@ public class MovimientosController {
 	/**
 	 * Permite consultar los movimientos del resultado de los procesos nocturnos.
 	 * 
-	 * @param movimientosProveedorSaveDTO
-	 * @param userRequest
+	 * @param commonConciliacionRequestDTO
 	 * @return
 	 */
 	@ResponseBody
@@ -191,7 +214,7 @@ public class MovimientosController {
 	 * Permite dar de alta movimientos que provienen del Proveedor Transaccional
 	 * (Open Pay).
 	 * 
-	 * @param movimientoTransaccionalDTO
+	 * @param movimientos
 	 * @param userRequest
 	 * @return
 	 */
@@ -212,8 +235,30 @@ public class MovimientosController {
 					CodigoError.NMP_PMIMONTE_0008);
 		}
 		ValidadorConciliacion.validateFechasPrimary(movimientos.getFechaDesde(), movimientos.getFechaHasta());
-		movimientosProveedorService.save(movimientos, userRequest);
 
+		try {
+			movimientosProveedorService.save(movimientos, userRequest);
+		} catch (ConciliacionException cex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
+			throw cex;
+		} catch (Exception eex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_131.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_131);
+		}
+
+		try {
+			// Se actualiza el sub estatus de la conciliacion a consulta OpenPay completada
+			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
+					movimientos.getFolio(), ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA,
+					null), userRequest);
+		} catch (Exception ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		}
+
+		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 	}
@@ -221,8 +266,7 @@ public class MovimientosController {
 	/**
 	 * Permite consultar los movimientos del proveedor transaccional. (Open Pay)
 	 * 
-	 * @param movimientosProveedorSaveDTO
-	 * @param userRequest
+	 * @param commonConciliacionRequestDTO
 	 * @return
 	 */
 	@ResponseBody
@@ -339,7 +383,6 @@ public class MovimientosController {
 	 * CommonConciliacionRequestDTO
 	 * 
 	 * @param commonConciliacionRequestDTO
-	 * @param userRequest
 	 * @return
 	 */
 	@ResponseBody

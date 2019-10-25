@@ -7,6 +7,8 @@ import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @name ValidadorDatosPago
@@ -19,6 +21,11 @@ import mx.com.nmp.pagos.mimonte.exception.PagoException;
 public interface ValidadorDatosPago {
 
 	/**
+	 * Utilizada para manipular los mensajes informativos y de error.
+	 */
+	Logger LOG = LoggerFactory.getLogger(ValidadorDatosPago.class);
+
+	/**
 	 * Metodo que valida el objeto PagoRequestDTO para que no haya datos nulos
 	 * 
 	 * @param pagoRequestDTO
@@ -28,8 +35,11 @@ public interface ValidadorDatosPago {
 		ValidadorObjeto vo = new ValidadorObjeto();
 		vo.noNulo(pagoRequestDTO);
 		vo.noNulo(pagoRequestDTO.getConcepto());
-		if("".equals(pagoRequestDTO.getConcepto()))
+		// Modificacion de validacion
+		if("".equals(pagoRequestDTO.getConcepto()) || "".equals(pagoRequestDTO.getConcepto().trim()))
 			throw new PagoException(PagoConstants.CONCEPTO_PAGO_CANT_BE_EMPTY);
+		else
+			pagoRequestDTO.setConcepto(pagoRequestDTO.getConcepto().trim());		
 		vo.noNulo(pagoRequestDTO.getGuardaTarjeta());
 		vo.noNulo(pagoRequestDTO.getIdCliente());
 		vo.noNulo(pagoRequestDTO.getMontoTotal());
@@ -46,8 +56,11 @@ public interface ValidadorDatosPago {
 			vo.noNulo(operacion.getIdOperacion());
 			vo.noNulo(operacion.getMonto());
 			vo.noNulo(operacion.getNombreOperacion());
-			if("".equals(operacion.getNombreOperacion()))
+			// Modificacion de validacion
+			if("".equals(operacion.getNombreOperacion()) || "".equals(operacion.getNombreOperacion().trim()))
 				throw new PagoException(PagoConstants.NOMBRE_OPERACION_CANT_BE_EMPTY);
+			else
+				operacion.setNombreOperacion(operacion.getNombreOperacion().trim());
 			vo.noNulo(operacion.getFolioContrato());
 			vo.noNulo(operacion.getIdOperacion());
 		}
@@ -92,7 +105,11 @@ public interface ValidadorDatosPago {
 				throw new PagoException(PagoConstants.NUMBER_FORMAT_IN_FOLIO_CONTRATO);
 			}
 		}
-		if (!pagoRequestDTO.getMontoTotal().equals(sum))
+
+		LOG.debug(">> Suma de Montos Recibida [{}] vs Calculada [{}] ",
+				pagoRequestDTO.getMontoTotal().toString(), sum.toString());
+
+		if (pagoRequestDTO.getMontoTotal().compareTo(sum) != 0)
 			throw new PagoException(PagoConstants.IRREGULAR_OPERATIONS_AMOUNT);
 		try {
 			Long.parseLong(pagoRequestDTO.getIdTransaccionMidas());

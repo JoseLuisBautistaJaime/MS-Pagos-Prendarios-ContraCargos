@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import mx.com.nmp.pagos.mimonte.config.Constants;
 
@@ -33,6 +34,7 @@ public class Cliente implements Serializable {
 	@Column(name = "id_cliente", unique = true, nullable = false)
 	private Long idcliente;
 
+	@Size(max = 100)
 	@Column(name = "nombre_titular", length = Constants.LONGITUD_NOMBRE_TITULAR)
 	private String nombreTitular;
 

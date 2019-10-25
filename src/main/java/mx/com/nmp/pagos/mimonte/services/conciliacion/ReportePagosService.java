@@ -5,7 +5,9 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,6 +17,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
+import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 
 /**
  * @name ReportePagosService
@@ -43,9 +46,17 @@ public class ReportePagosService {
 	 * @return
 	 */
 	public ReportePagosEnLineaOuterDTO getReportePagosEnLinea(ReporteRequestDTO reporteRequestDTO) {
+		// Objetos necesarios
 		ReportePagosEnLineaOuterDTO reportePagosEnLineaOuterDTO = null;
+		Map<String, Date> mapD = null;
 		List<ReportePagosEnLineaDTO> reportePagosEnLineaDTOList = null;
 		BigDecimal sum = new BigDecimal("0.0");
+		
+		// Ajuste de fechas
+		mapD = FechasUtil.adjustDates(reporteRequestDTO.getFechaDesde(), reporteRequestDTO.getFechaHasta());
+		reporteRequestDTO.setFechaDesde(mapD.get("startDate"));
+		reporteRequestDTO.setFechaHasta(mapD.get("endDate"));
+		
 		// Querys con sucursales
 		if (null != reporteRequestDTO.getFechaDesde() && null != reporteRequestDTO.getFechaHasta()
 				&& null != reporteRequestDTO.getSucursales() && !reporteRequestDTO.getSucursales().isEmpty())
