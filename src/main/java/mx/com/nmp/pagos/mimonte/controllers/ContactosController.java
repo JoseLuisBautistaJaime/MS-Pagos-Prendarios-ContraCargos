@@ -4,30 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -35,16 +11,27 @@ import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.builder.ContactosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
-import mx.com.nmp.pagos.mimonte.dto.ContactoBaseDTO;
-import mx.com.nmp.pagos.mimonte.dto.ContactoReqUpdateDTO;
-import mx.com.nmp.pagos.mimonte.dto.ContactoRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.ContactoRespDTO;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dto.*;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.impl.ContactoServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorGenerico;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @name CatalogoController
@@ -78,7 +65,7 @@ public class ContactosController {
 	 * Instancia que registra los eventos en la bitacora
 	 */
 	@SuppressWarnings("unused")
-	private final Logger log = LoggerFactory.getLogger(ContactosController.class);
+	private final Logger LOG = LoggerFactory.getLogger(ContactosController.class);
 
 	/**
 	 * Realiza el alta de un contacto
@@ -235,36 +222,47 @@ public class ContactosController {
 	 * Realiza la consulta de contactos por nombre, email e id de tipo de contacto
 	 * (todos opcionales)
 	 * 
-	 * @param nombre
-	 * @param email
-	 * @param idTipoContacto
-	 * @return
+	 * @param contactoReqSearchDTO DTO con la información de los criterios de búsqueda.
+	 * @return La lista de resultados obtenidos con base en los criterios recibidos.
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = "/catalogos/contactos/consultas/{idTipoContacto}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Regresa la información de los contactos registrados con respecto al parámetro del nombre y del email.", tags = {
+	@PostMapping(value = "/catalogos/contactos/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Regresa la información de los contactos registrados que coincidan con los criterios de búsqueda indicados.", tags = {
 			"Contactos" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Registros obtenidos"),
 			@ApiResponse(code = 400, response = Response.class, message = "El parámetro especificado es invalido."),
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response getNombreEmailContacto(@RequestParam(name = "nombre", required = false) String nombre,
-			@RequestParam(name = "email", required = false) String email,
-			@PathVariable(name = "idTipoContacto", required = true) Long idTipoContacto) {
-		if (email != null && !ValidadorGenerico.validateEmail2(email)) {
+	public Response getNombreEmailContacto(@RequestBody ContactoReqSearchDTO contactoReqSearchDTO) {
+		// Valida que el objeto principal no sea nulo
+		if (null == contactoReqSearchDTO)
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+
+		LOG.info(">> getNombreEmailContacto(" + contactoReqSearchDTO.toString() + ")");
+
+		if (contactoReqSearchDTO.getIdTipoContacto() == null || contactoReqSearchDTO.getIdTipoContacto() <= 0) {
+			contactoReqSearchDTO.setIdTipoContacto(CatalogConstants.TIPO_CONTACTO_MIDAS);
+		}
+
+		if (contactoReqSearchDTO.getEmail() != null && !ValidadorGenerico.validateEmail2(contactoReqSearchDTO.getEmail())) {
 			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT,
 					CodigoError.NMP_PMIMONTE_BUSINESS_013);
 		}
-		List<ContactoRespDTO> lst = null;
+
+		List<ContactoRespDTO> lst;
 		try {
-			lst = contactoServiceImpl.findByIdTipoContactoAndNombreAndEmail(idTipoContacto, nombre, email);
+			lst = contactoServiceImpl.findByIdTipoContactoAndNombreAndEmail(
+					contactoReqSearchDTO.getIdTipoContacto(), contactoReqSearchDTO.getNombre(), contactoReqSearchDTO.getEmail());
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_AND_NAME_AND_EMAIL_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_BUSINESS_014);
 		}
+
 		if (lst == null || lst.isEmpty())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
 	}
 

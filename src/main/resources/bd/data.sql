@@ -38,6 +38,8 @@ INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activ
 (5, 'Estatus Pago', 'Catalogo de estatus de pagos', 'tk_estatus_pago', 1);
 INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
 (6, 'Tipo Autorizacion', 'Catalogo de tipos de autorizacion', 'tk_tipo_autorizacion', 1);
+INSERT INTO tk_catalogo (id, descripcion_corta, descripcion, nombre_tabla, activo) VALUES
+(7, 'Estatus Devolucion', 'Catalogo de estatus de devoluciones', 'tk_estatus_devolucion', 1);
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -374,30 +376,32 @@ INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_s
 VALUES (12, 'CONCILIACION_MERGE', 8, 10);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (13, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 9, 11);
+VALUES (13, 'CONCILIACION_MERGE', 9, 8);
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (14, 'ENVIO_CONCILIACION', 9, 14);
+VALUES (14, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 9, 11);
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
+VALUES (15, 'ENVIO_CONCILIACION', 9, 14);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (15, 'CONCILIACION_MERGE', 10, 8);
+VALUES (16, 'CONCILIACION_MERGE', 10, 8);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (16, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 11, 12);
+VALUES (17, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 11, 12);
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (17, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 11, 13);
+VALUES (18, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 11, 13);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (18, 'CONCILIACION_MERGE', 12, 8);
+VALUES (19, 'CONCILIACION_MERGE', 12, 8);
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (19, 'ENVIO_CONCILIACION', 12, 14);
+VALUES (20, 'ENVIO_CONCILIACION', 12, 14);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (20, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 13, 11);
+VALUES (21, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 13, 11);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (21, 'ENVIO_CONCILIACION', 14, 15);
+VALUES (22, 'ENVIO_CONCILIACION', 14, 15);
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (22, 'ENVIO_CONCILIACION', 14, 16);
+VALUES (23, 'ENVIO_CONCILIACION', 14, 16);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (23, 'ENVIO_CONCILIACION', 15, 14);
+VALUES (24, 'ENVIO_CONCILIACION', 15, 14);

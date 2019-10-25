@@ -9,6 +9,19 @@ public final class TarjetaConstants {
 	}
 
 	/**
+	 * Sublcase de constantes
+	 * @author user
+	 *
+	 */
+	public class Constants {
+		private Constants() {
+			super();
+		}
+		
+		public static final int TITULAR_SIZE = 100;
+	}
+	
+	/**
 	 * Mensaje que sera enviado si se recuperaron los registros correctamente
 	 */
 	public static final String MSG_SUCCESS = "Registros recuperados correctamente.";
@@ -223,5 +236,18 @@ public final class TarjetaConstants {
 	 */
 	public static final String MSG_TOKEN_VALUE_TOO_LONG = "La longitud del token es muy grande";
 	
+	/**
+	 * Mensaje que es mostrado cuando el nombre del titual es vacio
+	 */
+	public static final String TITULAR_EMPTY = "El nombre del titulas no puede ser vacio";
 	
+	/**
+	 * Mensaje que es mostrado cuando el token de tarjeta es vacio
+	 */
+	public static final String TOKEN_EMPTY = "El token no puede ser vacio";
+	
+	/**
+	 * Mensaje que es mostrado cuando se intenta ingresar un nombre de tituar con longitud superior a la permitida
+	 */
+	public static final String TITULAR_TOO_LONG = "El valor del titular excede la longitud permitida";
 }

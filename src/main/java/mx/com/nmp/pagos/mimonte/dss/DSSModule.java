@@ -104,6 +104,8 @@ public class DSSModule {
 		// autorizacion
 		if (null == tipoAutorizacionDTOFinal)
 			tipoAutorizacionDTOFinal = dssService.getTipoAutorizacionById(1);
+
+		LOG.debug("<< getNoAfiliacion - " + tipoAutorizacionDTOFinal.toString());
 		return tipoAutorizacionDTOFinal;
 	}
 

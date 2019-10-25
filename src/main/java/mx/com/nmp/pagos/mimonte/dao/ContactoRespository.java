@@ -46,7 +46,7 @@ public interface ContactoRespository extends JpaRepository<Contactos, Long> {
 	 * @return
 	 */
 	@Query("FROM Contactos c WHERE (:idTipoContacto IS NULL OR c.tipoContacto.id = :idTipoContacto) AND "
-			+ "(:nombre IS NULL OR c.nombre = :nombre) AND " + "(:email IS NULL OR c.email = :email)")
+			+ "(:nombre IS NULL OR c.nombre LIKE CONCAT('%',:nombre,'%')) AND " + "(:email IS NULL OR c.email = :email)")
 	public List<Contactos> findByIdTipoContactoOrNombreOrEmail(@Param("idTipoContacto") final Long idTipoContacto,
 			@Param("nombre") final String nombre, @Param("email") final String email);
 

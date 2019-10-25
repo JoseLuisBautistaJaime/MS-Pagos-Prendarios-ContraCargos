@@ -19,9 +19,9 @@
     </STYLE>
   </HEAD>
   <BODY>
-    <span>${text1}</span>
+    <span>Buena tarde.</span>
     <br>
-    <span>${text2}</span>
+    <span>Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario en la entidad ${entidad}, a la cuenta ${numeroCuenta}</span>
     <br>
     <br>
     <table>

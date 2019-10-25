@@ -226,7 +226,7 @@ public final class PagoConstants {
 	 * Mensaje que es enviado cuando la suma de el monto de las operaciones es
 	 * diferente al monto total
 	 */
-	public static final String IRREGULAR_OPERATIONS_AMOUNT = "La suma del monto de las operaciones debe ser igual a el total de el pago";
+	public static final String IRREGULAR_OPERATIONS_AMOUNT = "La suma del monto de las operaciones debe ser igual al total del pago";
 
 	/**
 	 * Mensaje que es mostrado cuando el monto total del pago es menor o igual 0

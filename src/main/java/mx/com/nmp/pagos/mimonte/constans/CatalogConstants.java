@@ -278,6 +278,11 @@ public final class CatalogConstants {
 	public static final String CATALOG_NOMBRE_TABLA_NOT_FOUND = "La tabla no cuenta con un valor de nombre";
 
 	/**
+	 * Identificador del tipo de contacto "MIDAS".
+	 */
+	public static final Long TIPO_CONTACTO_MIDAS = 1L;
+
+	/**
 	 * Clase interna que encapsula las constantes de la consulta de catalogos
 	 * 
 	 * @author user

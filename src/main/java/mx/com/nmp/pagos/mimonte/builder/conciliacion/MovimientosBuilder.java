@@ -32,6 +32,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TarjetaMovimientosProveedor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @name MovimientosBuilder
@@ -43,6 +45,11 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TarjetaMovimientosProveedor;
  * @version 0.1
  */
 public abstract class MovimientosBuilder {
+
+	/**
+	 * Utilizada para administrar los mensajes informativos y de error.
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(MovimientosBuilder.class);
 
 	private MovimientosBuilder() {
 		super();
@@ -108,6 +115,9 @@ public abstract class MovimientosBuilder {
 	 */
 	public static MovimientoProveedorDTO buildMovimientoProveedorDTOFromMovimientoProveedor(
 			MovimientoProveedor movimientoProveedor) {
+
+		LOG.debug(">> buildMovimientoProveedorDTOFromMovimientoProveedor(" +
+				movimientoProveedor.toString() + ")");
 		MovimientoProveedorDTO movimientoProveedorDTO = null;
 		if (null != movimientoProveedor) {
 			movimientoProveedorDTO = new MovimientoProveedorDTO();
@@ -150,10 +160,15 @@ public abstract class MovimientosBuilder {
 			movimientoProveedorDTO.setIdMovimiento(movimientoProveedor.getIdMovimiento());
 			movimientoProveedorDTO.setId(movimientoProveedor.getId());
 			movimientoProveedorDTO.setMethod(movimientoProveedor.getMethod());
-			movimientoProveedorDTO.getPaymentMethod()
-					.setType(movimientoProveedor.getMetodoPagoMovimientosProveedor().getType());
-			movimientoProveedorDTO.getPaymentMethod()
-					.setUrl(movimientoProveedor.getMetodoPagoMovimientosProveedor().getUrl());
+
+			if (movimientoProveedor.getMetodoPagoMovimientosProveedor() != null) {
+				movimientoProveedorDTO.getPaymentMethod().setType(movimientoProveedor.getMetodoPagoMovimientosProveedor().getType());
+				movimientoProveedorDTO.getPaymentMethod().setUrl(movimientoProveedor.getMetodoPagoMovimientosProveedor().getUrl());
+			} else {
+				movimientoProveedorDTO.getPaymentMethod().setType(null);
+				movimientoProveedorDTO.getPaymentMethod().setUrl(null);
+			}
+
 			movimientoProveedorDTO.setOperationDate(movimientoProveedor.getOperationDate());
 			movimientoProveedorDTO.setOperationType(movimientoProveedor.getOperationType());
 			movimientoProveedorDTO.setOrderId(movimientoProveedor.getOrderId());

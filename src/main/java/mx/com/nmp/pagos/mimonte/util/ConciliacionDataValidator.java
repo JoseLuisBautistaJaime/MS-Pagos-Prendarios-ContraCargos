@@ -127,7 +127,7 @@ public class ConciliacionDataValidator {
 	 * de conciliacion y sub-estatus recibido
 	 * 
 	 * @param folio
-	 * @param subEstatusConciliacion
+	 * @param subEstatusConciliacionList
 	 */
 	public void validateSubEstatusByFolioAndSubEstatus(final Long folio, final List<Long> subEstatusConciliacionList) {
 		Boolean flag = null;

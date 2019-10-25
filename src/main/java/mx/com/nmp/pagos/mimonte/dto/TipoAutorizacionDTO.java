@@ -47,7 +47,10 @@ public class TipoAutorizacionDTO implements Comparable<TipoAutorizacionDTO>, jav
 
 	@Override
 	public String toString() {
-		return "TipoAutorizacionDTO [id=" + id + ", descripcion=" + descripcion;
+		return "TipoAutorizacionDTO{" +
+				"id=" + id +
+				", descripcion='" + descripcion + '\'' +
+				'}';
 	}
 
 	@Override

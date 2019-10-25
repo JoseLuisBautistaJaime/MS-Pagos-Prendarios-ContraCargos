@@ -4,9 +4,13 @@
  */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import mx.com.nmp.pagos.mimonte.constans.RegexConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @name ValidadorGenerico
@@ -21,6 +25,8 @@ import mx.com.nmp.pagos.mimonte.constans.RegexConstants;
  * @version 0.1
  */
 public interface ValidadorGenerico {
+
+	Logger LOG = LoggerFactory.getLogger(ValidadorGenerico.class);
 
 	/**
 	 * Evalua si una direccion de email es correcta en base a un patron y regresa un
@@ -42,22 +48,17 @@ public interface ValidadorGenerico {
 	 * @throws PatternSyntaxException
 	 */
 	public static boolean validateEmail2(final String email) throws PatternSyntaxException {
-		if (null == email || email.equals(""))
+		LOG.debug(">> validateEmail2(" + email + ")");
+
+		if (email == null || email.equals(""))
 			return false;
-		if (email.contains("@@") || email.contains(".."))
-			return false;
-		else {
-			String[] arr = email.split("@");
-			if (arr.length != 2) {
-				return false;
-			} else {
-				String[] arr2 = arr[1].split("\\.");
-				if (arr2.length != 2) {
-					return false;
-				}
-			}
-		}
-		return true;
+
+		Pattern pattern = Pattern
+				.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+						+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+		Matcher mather = pattern.matcher(email);
+
+		return mather.find();
 	}
 
 	/**

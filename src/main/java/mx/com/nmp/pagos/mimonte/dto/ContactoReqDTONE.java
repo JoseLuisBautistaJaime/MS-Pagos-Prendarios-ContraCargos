@@ -15,7 +15,7 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class ContactoReqDTONE implements Comparable<ContactoReqDTONE> {
 
-	private Long id;
+	private Long id = 0L;
 	private String nombre;
 	private String email;
 

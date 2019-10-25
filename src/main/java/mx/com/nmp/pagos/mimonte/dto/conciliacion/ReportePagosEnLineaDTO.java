@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -19,6 +20,8 @@ import java.util.Objects;
  */
 public class ReportePagosEnLineaDTO {
 
+	private SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yyyy");
+	
 	private Date fecha;
 	private String canal;
 	private Long partida;
@@ -43,8 +46,8 @@ public class ReportePagosEnLineaDTO {
 		this.monto = monto;
 	}
 
-	public Date getFecha() {
-		return fecha;
+	public String getFecha() {
+		return sf.format(fecha);
 	}
 
 	public void setFecha(Date fecha) {
