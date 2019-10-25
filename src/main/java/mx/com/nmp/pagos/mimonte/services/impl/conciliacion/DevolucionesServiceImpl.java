@@ -337,7 +337,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	public List<DevolucionEntidadDTO> consulta(DevolucionRequestDTO devoluciones) {
 		// Objetos necesarios
 		Optional<Entidad> entidad = null;
-		Optional<EstatusConciliacion> estatusConcliacion = null;
+		Optional<EstatusDevolucion> estatusDevolcion= null;
 		List<DevolucionEntidadDetalleDTO> result = null;
 		Map<String, Date> datesMap = null;
 
@@ -353,12 +353,12 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				throw new ConciliacionException(CatalogConstants.NO_ENTIDAD_FOUND,
 						CodigoError.NMP_PMIMONTE_BUSINESS_060);
 		}
-		// Valida que el estatus de conciliacion exista
+		
 		if (null != devoluciones.getEstatus()) {
-			estatusConcliacion = estatusConciliacionRepository.findById(devoluciones.getEstatus());
-			if (!estatusConcliacion.isPresent())
-				throw new ConciliacionException(ConciliacionConstants.ESTATUS_CONCILIACION_DOESNT_EXISTS,
-						CodigoError.NMP_PMIMONTE_BUSINESS_091);
+			estatusDevolcion = estatusDevolucionRepository.findById(devoluciones.getEstatus());
+			if (!estatusDevolcion.isPresent())
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_133.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_133);
 		}
 		// Realiza los ajustes de las fechas de filtrado (pone las horas en 0 a la
 		// inicial y en 23 a la final)

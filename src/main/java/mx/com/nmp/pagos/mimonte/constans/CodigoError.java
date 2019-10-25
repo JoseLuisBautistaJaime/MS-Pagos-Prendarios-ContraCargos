@@ -221,7 +221,7 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_090("Uno o mas ids de movimientos tienen un estatus incorrecto",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
-	NMP_PMIMONTE_BUSINESS_091("El estatus de conciliacion expecificado no existe",
+	NMP_PMIMONTE_BUSINESS_091("El estatus de conciliacion especificado no existe",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_092("No existen movimientos-devolucion pendientes de solicitud",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
@@ -304,6 +304,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_131("Error al registrar los movimientos proveedor transaccional",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_132("Error al conciliar la informacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_133("El estatus de devolucion especificado no existe",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 
