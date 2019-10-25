@@ -7,6 +7,8 @@ import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.TarjetaPagoDTO;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @name ValidadorDatosPago
@@ -17,6 +19,11 @@ import mx.com.nmp.pagos.mimonte.exception.PagoException;
  * @version 0.1
  */
 public interface ValidadorDatosPago {
+
+	/**
+	 * Utilizada para manipular los mensajes informativos y de error.
+	 */
+	Logger LOG = LoggerFactory.getLogger(ValidadorDatosPago.class);
 
 	/**
 	 * Metodo que valida el objeto PagoRequestDTO para que no haya datos nulos
@@ -98,7 +105,11 @@ public interface ValidadorDatosPago {
 				throw new PagoException(PagoConstants.NUMBER_FORMAT_IN_FOLIO_CONTRATO);
 			}
 		}
-		if (!pagoRequestDTO.getMontoTotal().equals(sum))
+
+		LOG.debug(">> Suma de Montos Recibida [{}] vs Calculada [{}] ",
+				pagoRequestDTO.getMontoTotal().toString(), sum.toString());
+
+		if (pagoRequestDTO.getMontoTotal().compareTo(sum) != 0)
 			throw new PagoException(PagoConstants.IRREGULAR_OPERATIONS_AMOUNT);
 		try {
 			Long.parseLong(pagoRequestDTO.getIdTransaccionMidas());
