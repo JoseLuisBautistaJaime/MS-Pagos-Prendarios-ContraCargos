@@ -531,4 +531,9 @@ public final class ConciliacionConstants {
 	 */
 	public static final String MOVIMIENTOS_PROVEEDOR_SUCCESSFUL_STATUS = "%COMPLETE%";
 	
+	/**
+	 * Valor que indica que un registro de la aplicacion fue dado de alta por sistema
+	 */
+	public static final int ELEMENT_ADDED_BY_SYSTEM = 0;
+	
 }

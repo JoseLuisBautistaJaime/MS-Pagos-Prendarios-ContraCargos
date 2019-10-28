@@ -334,7 +334,7 @@ public class LayoutsService {
 					Layout layout = layoutsRepository.getOne(idLayout);// siLayoutPerteneceAConciliacion
 					List<Layout> layouts = layoutsRepository.findByTipo(layout.getTipo());// siLayoutEsElMismoTipo
 					for (Layout layout2 : layouts) {
-						if (layout2.getIdConciliacion() == idConciliacion) {
+						if (layout2.getIdConciliacion().equals(idConciliacion)) {
 							layoutsRepository.eliminarUnLayoutLineas(layout2.getId());
 							layoutsRepository.eliminarUnLayoutHeader(layout2.getId());
 							layoutsRepository.deleteById(layout2.getId());
@@ -391,7 +391,7 @@ public class LayoutsService {
 
 		// Se valida que la linea se pueda elimina, o sea que fue dada de alta desde la
 		// aplicacion (nuevo = 1)
-		flag = ((BigInteger) layoutLineasRepository.checkIfLineIsNew(idLinea)).compareTo(BigInteger.ONE) == 0;
+		flag = ((BigInteger) layoutLineasRepository.checkIfLineIsNew(idLinea, ConciliacionConstants.ELEMENT_ADDED_BY_SYSTEM)).compareTo(BigInteger.ONE) == 0;
 		if (!flag)
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_118.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_118);

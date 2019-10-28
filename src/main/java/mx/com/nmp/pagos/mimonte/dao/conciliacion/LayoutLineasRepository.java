@@ -44,7 +44,7 @@ public interface LayoutLineasRepository extends JpaRepository<LayoutLinea, Long>
 	 * @param idLinea
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT ll.id FROM to_layout_linea ll WHERE ll.id = :idLinea AND ll.nuevo = 1) IS NOT NULL THEN 1 ELSE 0 END")
-	public Object checkIfLineIsNew(@Param("idLinea") final Long idLinea);
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT ll.id FROM to_layout_linea ll WHERE ll.id = :idLinea AND ll.nuevo = :valorAltaSistema) IS NOT NULL THEN 1 ELSE 0 END")
+	public Object checkIfLineIsNew(@Param("idLinea") final Long idLinea, @Param("valorAltaSistema") final int valorAltaSistema);
 
 }
