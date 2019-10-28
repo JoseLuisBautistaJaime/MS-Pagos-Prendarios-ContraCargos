@@ -536,4 +536,9 @@ public final class ConciliacionConstants {
 	 */
 	public static final int ELEMENT_ADDED_BY_SYSTEM = 0;
 	
+	/**
+	 * Valor que indica que un registro de la aplicacion fue dado de alta por el usuario
+	 */
+	public static final int ELEMENT_ADDED_BY_USER = 1;
+	
 }

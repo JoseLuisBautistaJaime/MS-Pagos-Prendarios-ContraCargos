@@ -306,7 +306,9 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_132("Error al conciliar la informacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_133("El estatus de devolucion especificado no existe",
-			TipoError.CLIENTE, SeveridadError.MEDIA)
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_134("La linea no puede ser eliminada porque no se dio de alta desde la aplicacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
 	;
 
 	/**

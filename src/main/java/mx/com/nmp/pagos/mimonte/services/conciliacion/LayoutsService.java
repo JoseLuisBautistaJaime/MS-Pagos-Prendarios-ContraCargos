@@ -389,12 +389,11 @@ public class LayoutsService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_117);
 		}
 
-		// Se valida que la linea se pueda elimina, o sea que fue dada de alta desde la
-		// aplicacion (nuevo = 1)
-		flag = ((BigInteger) layoutLineasRepository.checkIfLineIsNew(idLinea, ConciliacionConstants.ELEMENT_ADDED_BY_SYSTEM)).compareTo(BigInteger.ONE) == 0;
+		// Se valida que la linea se pueda eliminar, o sea que fue dada de alta por el usuario (nuevo = 1)
+		flag = ((BigInteger) layoutLineasRepository.checkIfLineIsNew(idLinea, ConciliacionConstants.ELEMENT_ADDED_BY_USER)).compareTo(BigInteger.ONE) == 0;
 		if (!flag)
-			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_118.getDescripcion(),
-					CodigoError.NMP_PMIMONTE_BUSINESS_118);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_134.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_134);
 
 		// Se valida que la conciliacion asignada se encuentre en proceso
 		Long idConciliacion = linea.get().getLayout().getIdConciliacion();
