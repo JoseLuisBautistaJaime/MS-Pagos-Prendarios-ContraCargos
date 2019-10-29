@@ -113,7 +113,6 @@ CREATE TABLE IF NOT EXISTS `tk_tipo_autorizacion` (
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -133,7 +132,6 @@ CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
   PRIMARY KEY (`id`),
   INDEX `ca_fk_idx` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 15
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -167,7 +165,6 @@ CREATE TABLE IF NOT EXISTS `tk_categoria` (
   PRIMARY KEY (`id`),
   INDEX `idx_categoria` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -362,7 +359,6 @@ CREATE TABLE IF NOT EXISTS `tk_tipo_contacto` (
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -382,7 +378,6 @@ CREATE TABLE IF NOT EXISTS `tc_entidad` (
   PRIMARY KEY (`id`),
   INDEX `idx_entidad` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -402,7 +397,6 @@ CREATE TABLE IF NOT EXISTS `tc_cuenta` (
   PRIMARY KEY (`id`),
   INDEX `idx_cuenta` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -427,7 +421,6 @@ CREATE TABLE IF NOT EXISTS `tc_contactos` (
     FOREIGN KEY (`id_tipo_contacto`)
     REFERENCES `tk_tipo_contacto` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 12
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -457,7 +450,6 @@ CREATE TABLE IF NOT EXISTS `tc_codigo_estado_cuenta` (
     FOREIGN KEY (`id_entidad`)
     REFERENCES `tc_entidad` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 7
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -562,7 +554,6 @@ CREATE TABLE IF NOT EXISTS `tk_estatus_conciliacion` (
   `order_number` INT(11) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -616,7 +607,6 @@ CREATE TABLE IF NOT EXISTS `tk_sub_estatus_conciliacion` (
   `order_number` INT(11) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 17
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -690,7 +680,6 @@ CONSTRAINT `merge_fk`
     FOREIGN KEY (`id_merge`)
     REFERENCES `to_merge_conciliacion` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -740,7 +729,6 @@ CREATE TABLE IF NOT EXISTS `to_reporte` (
     FOREIGN KEY (`id_conciliacion`)
     REFERENCES `to_conciliacion` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -970,7 +958,6 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_conciliacion` (
     FOREIGN KEY (`id_movimiento_midas`)
     REFERENCES `to_movimiento_midas` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 9
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -1264,41 +1251,3 @@ CREATE TABLE IF NOT EXISTS `tb_actividad` (
   INDEX `idx_fecha_actividades` (`fecha` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
-
-
--- ------------------------------------------------------- --
--- -------- REINICIO DE CLAVES AUTO INCREMENTALES A 1----- --
--- ------------------------------------------------------- --
-ALTER TABLE `tc_layout_linea` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_layout_header` AUTO_INCREMENT = 1;
-ALTER TABLE `to_global` AUTO_INCREMENT = 1;
-ALTER TABLE `tb_actividad` AUTO_INCREMENT = 1;
-ALTER TABLE `to_layout` AUTO_INCREMENT = 1;
-ALTER TABLE `to_layout_header` AUTO_INCREMENT = 1;
-ALTER TABLE `to_layout_linea` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_devolucion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_comision` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_pago` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_transito` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_conciliacion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_midas` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_proveedor` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_estado_cuenta` AUTO_INCREMENT = 1;
-ALTER TABLE `to_estado_cuenta` AUTO_INCREMENT = 1;
-ALTER TABLE `to_estado_cuenta_totales_adicional` AUTO_INCREMENT = 1;
-ALTER TABLE `to_estado_cuenta_totales` AUTO_INCREMENT = 1;
-ALTER TABLE `to_estado_cuenta_cabecera` AUTO_INCREMENT = 1;
-ALTER TABLE `to_reporte` AUTO_INCREMENT = 1;
-ALTER TABLE `to_comision_transaccion_real` AUTO_INCREMENT = 1;
-ALTER TABLE `to_comision_transaccion_proyeccion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_comision_transaccion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_conciliacion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_merge_conciliacion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_pagos` AUTO_INCREMENT = 1;
-ALTER TABLE `to_pagos_partidas` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_codigo_estado_cuenta` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_afiliacion` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_contactos` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_cuenta` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_entidad` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_tarjetas` AUTO_INCREMENT = 1;
