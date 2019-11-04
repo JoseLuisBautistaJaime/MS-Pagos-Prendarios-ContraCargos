@@ -765,7 +765,17 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 
 		// Se crean los layouts correspondientes
-		layoutsService.enviarConciliacion(idConciliacion, usuario);
+		try {
+			layoutsService.enviarConciliacion(idConciliacion, usuario);	
+		}
+		catch(ConciliacionException ex) {
+			LOG.error(">>> ERROR: {}", ex);
+			throw ex;
+		}
+		catch(Exception ex) {
+			LOG.error(">>> ERROR: {}", ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_9999.getDescripcion(), CodigoError.NMP_PMIMONTE_9999);
+		}
 
 		try {
 			// Se actualiza el sub estatus a enviada
@@ -780,7 +790,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException("Error al actualizar los ids de asiento contable",
 					CodigoError.NMP_PMIMONTE_BUSINESS_031);
 		}
-
+		
 	}
 
 	/**

@@ -91,3 +91,29 @@ INSERT INTO tk_maquina_estados_subestatus_conciliacion
 	(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
 		VALUES
             (25, 'GENERACION_LAYOUTS', 16, 14);
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion
+	(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
+		VALUES
+		(27, 'GENERACION_LAYOUTS', 9, 15),
+        (28, 'GENERACION_LAYOUTS', 12, 15);
+        
+INSERT INTO tk_maquina_estados_subestatus_conciliacion
+	(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
+		VALUES
+		(29, 'GENERACION_LAYOUTS', 9, 16);
+        
+-- ------------------------------------------------------ --
+-- -- ACTUALIZACION RELACIONES ESTATUS - SUB-ESTATUS ---- --
+-- ------------------------------------------------------ --
+UPDATE tr_estatus_conciliacion_sub_estatus_conciliacion tr SET tr.id_estatus = 1 WHERE tr.id_sub_estatus = 16;
+
+INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus)
+VALUES (1, 17);
+
+INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus)
+VALUES (1, 18);
+
+INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus)
+VALUES (2, 19);
+
