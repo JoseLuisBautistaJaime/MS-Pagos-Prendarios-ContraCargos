@@ -4,19 +4,10 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
-import mx.com.nmp.pagos.mimonte.constans.CodigoError;
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
-import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +17,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
+import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 
 /**
  * @name MovimientosProveedorService
@@ -65,11 +72,12 @@ public class MovimientosProveedorService {
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
 
+	// TODO: Eliminar despues
 	/**
 	 * Conciliacion Helper
 	 */
-	@Autowired
-	private ConciliacionHelper conciliacionHelper;
+//	@Autowired
+//	private ConciliacionHelper conciliacionHelper;
 
 	/**
 	 * Registro de actividades
@@ -77,6 +85,9 @@ public class MovimientosProveedorService {
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
 
+	// Temporal format para los LOGs de timers
+	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	
 	public MovimientosProveedorService() {
 		super();
 	}
@@ -101,9 +112,20 @@ public class MovimientosProveedorService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void save(MovimientoTransaccionalListRequestDTO listRequestDTO, final String userRequest)
 			throws ConciliacionException {
+		long start = 0;
+		long finish = 0;
+		long bigStart = 0;
+		long bigFinsh = 0;		
 
+		bigStart = System.currentTimeMillis();
+		LOG.info("T>>> INICIA PERSISTENACIA GENERAL DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(bigStart)));
+		
 		LOG.debug("Save {} movimientos proveedor", listRequestDTO.getFolio());
+		start = System.currentTimeMillis();
+		LOG.info("T>>> INICIA OBTENCION DE CONBCILIACION POR FOLIO: {}", sdf.format(new Date(start)));
 		Conciliacion conciliacion = this.conciliacionRepository.findByFolio(listRequestDTO.getFolio());
+		finish = System.currentTimeMillis();
+		LOG.info("T>>> FINALIZA OBTENCION DE CONCILIACION POR FOLIO: {}, EN: {}", sdf.format(new Date(finish)), (finish-start));
 		if (conciliacion == null) {
 			throw new ConciliacionException("Conciliacion con el folio " + listRequestDTO.getFolio() + " no existe",
 					CodigoError.NMP_PMIMONTE_BUSINESS_045);
@@ -127,9 +149,14 @@ public class MovimientosProveedorService {
 
 		// Si no existe el reporte se crea uno nuevo
 		if (reporte == null) {
+			start = System.currentTimeMillis();
+			LOG.info("T>>> INICIA CONSTRUCCION DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
 			reporte = ReporteBuilder.buildReporte(conciliacion, listRequestDTO.getFechaDesde(),
 					listRequestDTO.getFechaHasta(), userRequest);
+			finish = System.currentTimeMillis();
+			LOG.info("T>>> FINALIZA CONSTRUCCION DE ENTIDAD REPORTE: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 		}
+		// TODO: Revizar si esto es importante sino eliminarlo
 		// En caso de existir se actualiza la fecha de la ultima modificacion
 		/*
 		 * else { reporte.setLastModifiedBy(userRequest);
@@ -139,31 +166,52 @@ public class MovimientosProveedorService {
 		// Se guarda el reporte y los movimientos
 		try {
 
+			start = System.currentTimeMillis();
+			LOG.info("T>>> INICIA PERSISTENCIA DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
 			reporte = reporteRepository.save(reporte);
+			finish = System.currentTimeMillis();
+			LOG.info("T>>> FINALIZA PERSISTENCIA DE ENTIDAD REPORTE: {}, EN: {}",sdf.format(new Date(finish)), (finish-start) );
+			
+			start = System.currentTimeMillis();
+			LOG.info("T>>> INICIA CONSTRUCCION DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(start)));
 			List<MovimientoProveedor> movimientoProveedorList = MovimientosBuilder
 					.buildMovimientoProveedorListFromMovimientoTransaccionalListRequestDTO(listRequestDTO,
 							reporte.getId());
+			finish = System.currentTimeMillis();
+			LOG.info("T>>> FINALIZA CONSTRUCCION DE MOVIMIENTOS PROVEEDOR: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
 			// Verificar si se guarda en batch
 			if (!CollectionUtils.isEmpty(movimientoProveedorList)) {
+				start = System.currentTimeMillis();
+				LOG.info("T>>> INICIA PERSISTENCIA DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(start)));
 				movimientoProveedorRepository.saveAll(movimientoProveedorList);
+				finish = System.currentTimeMillis();
+				LOG.info("T>>> FINALIZA PERSISTENCIA DE MOVIMEINTOS PROVEEDOR: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 			}
 
 			// Registro de actividad
+			start = System.currentTimeMillis();
+			LOG.info("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
 			actividadGenericMethod.registroActividad(listRequestDTO.getFolio(),
 					"Se registraron " + listRequestDTO.getMovimientos().size()
 							+ " movimientos provenientes del proveedor transaccional,"
 							+ " para la conciliacion con el folio: " + listRequestDTO.getFolio(),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+			finish = System.currentTimeMillis();
+			LOG.info("T>>> FINALIZA REGISTRO DE ACTIVIDADES: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
+			// TODO: Se comenta por que se hace en un endpoint independiente (POST /mimonte/conciliacion/generar/{folio}), eliminar despues.
 			// Notificar cambios o alta de reportes, si existen...
-			this.conciliacionHelper.generarConciliacion(conciliacion.getId(), Arrays.asList(reporte));
+//			this.conciliacionHelper.generarConciliacion(conciliacion.getId(), Arrays.asList(reporte));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
 					CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		}
+		
+		bigFinsh = System.currentTimeMillis();
+		LOG.info("T>>> FINALIZA PERSISTENCIA GENERAL D MOVIMIENTOS PROVEEDOR: {}, EN: {}", sdf.format(new Date(bigFinsh)), (bigFinsh- bigStart) );
 	}
 
 	/**
