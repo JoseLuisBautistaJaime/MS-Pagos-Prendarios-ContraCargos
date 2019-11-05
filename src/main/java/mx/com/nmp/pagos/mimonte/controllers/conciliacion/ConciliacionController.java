@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -107,6 +108,11 @@ public class ConciliacionController {
 	@Qualifier("solicitarPagosService")
 	private SolicitarPagosService solicitarPagosService;
 
+	/**
+	 * Temporal format para los LOGs de timers
+	 */
+	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
@@ -267,13 +273,18 @@ public class ConciliacionController {
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 		boolean status = true;
 		String statusError = null;
+		long start = 0;
+		long finish = 0;
+		
 		LOG.info(">> enviaConciliacion(" + folio + ", " + createdBy + ")");
 
 		// Valida el atributo
+		LOG.info(">>> INICIA VALIDACION DE FOLIO");
 		if (!ValidadorConciliacion.validateLong(folio))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
-
+		LOG.info(">>> FINALIZA VALIDACION DE FOLIO");
+		
 		// Realiza el envio d ela conciliacion
 		try {
 			conciliacionServiceImpl.enviarConciliacion(folio, createdBy);
@@ -293,7 +304,11 @@ public class ConciliacionController {
 			if(!status) {
 				try {
 					// Se actualiza el sub estatus a layouts generados con error
+					start = System.currentTimeMillis();
+					LOG.info("T >>> INICIA ACTUALIZACION DE SUB-ESTATUS CON ERROR: {}", sdf.format(new Date(start)));
 					conciliacionService.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio, ConciliacionConstants.SUBESTATUS_GENERACION_LAYOUTS_ERROR, statusError), createdBy);
+					finish = System.currentTimeMillis();
+					LOG.info("T >>> FINALIZA ACTUALIZACION DE SUB-ESTATUS CON ERROR: {}, EN: {}", sdf.format(new Date(finish)), (finish-start));
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					LOG.error(">>>ERROR: {}", ex);

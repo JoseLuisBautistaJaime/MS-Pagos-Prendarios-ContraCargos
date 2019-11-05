@@ -740,6 +740,17 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	@Transactional
 	public void enviarConciliacion(Long idConciliacion, String usuario) {
+		
+		long globalStart = 0;
+		long globalFinish = 0;
+		long start = 0;
+		long finish = 0;
+
+		globalStart = System.currentTimeMillis();
+		LOG.info("T>>> INICIA ENVIO DE CONCILIACION GENERAL: {} ", sdf.format(new Date(globalStart)));
+		
+		start = System.currentTimeMillis();
+		LOG.info("T >>> INICIN VALIDACIONES GENERALES: {}", sdf.format(new Date(start)));
 		// Validar conciliacion
 		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
 				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
@@ -751,18 +762,27 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// el estado cuenta
 		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,
 				ConciliacionConstants.CON_SUB_ESTATUS_ENVIO_CONCILIACION);
-
+		
+		finish = System.currentTimeMillis();
+		LOG.info("T >>> INICIN VALIDACIONES GENERALES: {}, EN: {}", sdf.format(new Date(start)), (finish-start));
+		
+		
 		// Validar conciliacion y actualizar estatus
 
 		// Se mueven los movimientos de transito a movimientos pago antes de generar los
 		// layouts
+		start = System.currentTimeMillis();
+		LOG.info("T >>> INCIA INCERSION DE MOVIMIENTOS DE PAGOS: {}", sdf.format(new Date(start)));
 		try {
 			solicitarPagosService.insertaMovimientosPagoFinal(idConciliacion, usuario);
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			LOG.error(">>> ERROR: ", ex);
 			throw new ConciliacionException("Error al actualizar los ids de asiento contable",
 					CodigoError.NMP_PMIMONTE_BUSINESS_031);
 		}
+		finish = System.currentTimeMillis();
+		LOG.info("T >>> FINALIZA INCERSION DE MOVIMIENTOS DE PAGOS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start));
 
 		// Se crean los layouts correspondientes
 		try {
@@ -777,10 +797,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_9999.getDescripcion(), CodigoError.NMP_PMIMONTE_9999);
 		}
 
+		start = System.currentTimeMillis();
+		LOG.info("T >>> INICIA ACTUALIZACION DE SUB-ESTATUS: {}", sdf.format(new Date(start)));
 		try {
 			// Se actualiza el sub estatus a enviada
 			conciliacion
-					.setSubEstatus(new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_GENERACION_LAYOUTS_COMPLETADA));
+					.setSubEstatus(new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_GENERACION_LAYOUTS_COMPLETADA, ""));
 			conciliacion.setLastModifiedBy(usuario);
 			conciliacion.setLastModifiedDate(new Date());
 			conciliacionRepository.save(conciliacion);
@@ -789,7 +811,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			ex.printStackTrace();
 			throw new ConciliacionException("Error al actualizar los ids de asiento contable",
 					CodigoError.NMP_PMIMONTE_BUSINESS_031);
-		}
+		}		
+		finish = System.currentTimeMillis();
+		LOG.info("T >>> FINALIZA ACTUALIZACION DE SUB-ESTATUS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start));
+		
+		globalFinish = System.currentTimeMillis();
+		LOG.info("T>>> INICIA ENVIO DE CONCILIACION GENERAL: {}, EN: {}", sdf.format(new Date(globalFinish)), (globalFinish-globalStart));
 		
 	}
 

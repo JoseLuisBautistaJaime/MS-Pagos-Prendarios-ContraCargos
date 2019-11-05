@@ -426,6 +426,12 @@ public class LayoutsService {
 	 */
 	@Transactional
 	public void enviarConciliacion(Long idConciliacion, String user) {
+		
+		long start = 0;
+		long finish = 0;
+
+		start = System.currentTimeMillis();
+		LOG.info("T >>> INCIA PROCESO DE GENERACION DE LAYOUTS: {}", start);
 
 		// Obtiene, valida la conciliacion (en proceso)
 		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(idConciliacion,
@@ -455,6 +461,9 @@ public class LayoutsService {
 			}
 		}
 
+		finish = System.currentTimeMillis();
+		LOG.info("T >>> INCIA PROCESO DE GENERACION DE LAYOUTS: {}", finish);
+		
 	}// End enviarConciliacion
 
 	// PRIVATES /////////////////////////////////////////////
