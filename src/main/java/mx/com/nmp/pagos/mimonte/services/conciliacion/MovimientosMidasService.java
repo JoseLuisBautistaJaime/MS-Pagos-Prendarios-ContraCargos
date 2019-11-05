@@ -121,6 +121,7 @@ public class MovimientosMidasService {
 
 		// Se valida que exista la conciliacion
 		Long folio = movimientoProcesosNocturnosDTOList.getFolio();
+		LOG.debug("getConciliacionByFolio({},{})", folio, ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio,
 				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
@@ -131,6 +132,7 @@ public class MovimientosMidasService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_030);
 		}
 
+		LOG.debug("buildReporte({})", conciliacion.getId());
 		Reporte reporte = buildReporte(conciliacion.getId(), movimientoProcesosNocturnosDTOList.getFechaDesde(),
 				movimientoProcesosNocturnosDTOList.getFechaHasta(), userRequest);
 		if (null == reporte)
@@ -138,18 +140,25 @@ public class MovimientosMidasService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		try {
 
+			LOG.debug("saveReporte");
 			reporte = reporteRepository.save(reporte);
 
+			LOG.debug("buildMovimientoMidasList({})", reporte.getId());
 			// Se persisten los movimientos midas
 			List<MovimientoMidas> movimientoMidasList = MovimientosBuilder
 					.buildMovimientoMidasListFromMovimientoProcesosNocturnosListResponseDTO(
 							movimientoProcesosNocturnosDTOList, reporte.getId());
 
+			LOG.debug("Se guardan los movimientos, total={}", movimientoMidasList.size());
+			long ini = System.nanoTime();
 			if (!CollectionUtils.isEmpty(movimientoMidasList)) {
 				movimientosMidasRepository.saveAll(movimientoMidasList);
 			}
+			long fin = System.nanoTime();
+			LOG.debug("Tiempo total: {}", (fin-ini)/1000000000);
 
 			// Registro de actividad
+			LOG.debug("registroActividad({})", conciliacion.getId());
 			actividadGenericMethod.registroActividad(movimientoProcesosNocturnosDTOList.getFolio(),
 					"Se registraron " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
 							+ " movimientos provenientes de procesos nocturnos,"
@@ -163,6 +172,7 @@ public class MovimientosMidasService {
 		}
 
 		// Notificar cambios o alta de reportes, si existen...
+		LOG.debug("generarConciliacion({}, {})", folio, reporte.getId());
 		this.conciliacionHelper.generarConciliacion(folio, Arrays.asList(reporte));
 	}
 
