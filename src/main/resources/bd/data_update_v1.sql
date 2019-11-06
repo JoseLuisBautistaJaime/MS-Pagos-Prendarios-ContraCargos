@@ -117,3 +117,26 @@ VALUES (1, 18);
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus)
 VALUES (2, 19);
 
+
+-- ------------------------------------------------------- --
+-- ----------- UPDATES EN MODULO DSS --------------------- --
+-- ----------- [ 2019-11-06 11:33:31 ] ------------------- --
+-- ------------------------------------------------------- --
+
+-- ------------------------------------------------------- --
+-- -------------- ACTUALIZACION DE VARIABLES ------------- --
+-- ------------------------------------------------------- --
+UPDATE tk_variable v SET v.valor = '5000' WHERE v.clave = '{sumaIni}' AND v.id_variable = 3;
+UPDATE tk_variable v SET v.valor = '10' WHERE v.clave = '{conteo}' AND v.id_variable = 6;
+
+-- ------------------------------------------------------- --
+-- ---------- ACTUALIZACION DE REGLAS DE NEGOCIO --------- --
+-- ------------------------------------------------------- --
+UPDATE tk_regla_negocio rn SET rn.consulta = 'SELECT CASE WHEN {currentTransactionAmount} > {sumaIni} THEN TRUE ELSE FALSE END AS ESTATUS' WHERE rn.id = 1;
+UPDATE tk_regla_negocio rn SET rn.consulta = 'SELECT CASE WHEN (SELECT COUNT(DISTINCT p.id_transaccion_midas) AS TOTAL FROM to_pagos p WHERE p.id_cliente = {idCliente}) > {totalIni} THEN TRUE ELSE FALSE END AS ESTATUS' WHERE rn.id = 2;
+
+-- ------------------------------------------------------- --
+-- -- ACTUALIZACION DE RELACION REGLA_NEGOCIO-VARIABLE --- --
+-- ------------------------------------------------------- --
+UPDATE tr_regla_negocio_variable rnv SET rnv.id_regla_negocio = 1 WHERE rnv.id_variable IN(3,4);
+UPDATE tr_regla_negocio_variable rnv SET rnv.id_regla_negocio = 2 WHERE rnv.id_variable IN(1,2);

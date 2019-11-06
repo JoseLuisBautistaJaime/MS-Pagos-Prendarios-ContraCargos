@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dss;
 
+import java.math.BigDecimal;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.util.List;
@@ -50,6 +51,12 @@ public class DSSModule {
 	 */
 	@Value(DSSConstants.ID_CLIENTE_PROP)
 	private String idClienteVar;
+	
+	/**
+	 * Propiedad para uso de variable currentTransactionAmount en consultas de reglas de negocio
+	 */
+	@Value(DSSConstants.TOTAL_AMOUNT_PROP)
+	private String currentTransactionAmount;
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
@@ -88,7 +95,7 @@ public class DSSModule {
 		LOG.debug("Inicia reemplazo de variables");
 		for (ReglaNegocioDTO reglaNegocioDTO : reglasNegocioDTO) {
 			replaceVariablesDB(reglaNegocioDTO);
-			replaceLocalVariables(reglaNegocioDTO, pagoRequestDTO.getIdCliente());
+			replaceLocalVariables(reglaNegocioDTO, pagoRequestDTO.getIdCliente(), pagoRequestDTO.getMontoTotal());
 			Boolean estatus = null;
 			LOG.debug("Inicia ejecucion de query: {}",
 					(null != reglaNegocioDTO.getConsulta() ? reglaNegocioDTO.getConsulta() : null));
@@ -144,14 +151,15 @@ public class DSSModule {
 	 * @param reglaNegocioDTO
 	 * @param idCliente
 	 */
-	private void replaceLocalVariables(ReglaNegocioDTO reglaNegocioDTO, Long idCliente) {
+	private void replaceLocalVariables(ReglaNegocioDTO reglaNegocioDTO, Long idCliente, BigDecimal montoTotalTransaccion) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Inicia reemplazo de variables de base de datos para query: {}",
 					(null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null));
 		}
 		String str = null != reglaNegocioDTO ? reglaNegocioDTO.getConsulta() : null;
-		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getId() && null != idCliente && idCliente != 0) {
+		if (null != reglaNegocioDTO && null != reglaNegocioDTO.getId() && null != idCliente && idCliente != 0 && null != montoTotalTransaccion) {
 			str = str.replace(idClienteVar, String.valueOf(idCliente));
+			str = str.replace(currentTransactionAmount, String.valueOf(montoTotalTransaccion));
 			reglaNegocioDTO.setConsulta(str);
 		}
 	}
