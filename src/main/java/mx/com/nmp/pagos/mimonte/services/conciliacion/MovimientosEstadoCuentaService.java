@@ -362,8 +362,10 @@ public class MovimientosEstadoCuentaService {
 			fechaEstadoCuenta = cal.getTime();
 		}
 
+		// TODO: Eliminar este comentario una vez que ya sea definitivo eliminar esta invocacion de este endpoint de ESTADO CUENTA
 		// Se regenera la conciliacion
-		this.conciliacionHelper.generarConciliacion(idConciliacion, Arrays.asList(reporte));
+//		this.conciliacionHelper.generarConciliacion(idConciliacion, Arrays.asList(reporte));
+		
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(idConciliacion,
 				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
