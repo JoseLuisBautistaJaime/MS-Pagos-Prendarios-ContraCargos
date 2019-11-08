@@ -73,7 +73,7 @@ import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
  * @creationDate 02/04/2019 16:38 hrs.
  * @version 0.1
  */
-@SuppressWarnings({"JavaDoc", "SpringAutowiredFieldsWarningInspection", "DefaultAnnotationParam"})
+@SuppressWarnings({ "JavaDoc", "SpringAutowiredFieldsWarningInspection", "DefaultAnnotationParam" })
 @RestController
 @RequestMapping(value = "/mimonte")
 @Api(value = "Servicio que permite realizar operciones sobre la conciliación.", description = "REST API para realizar operaciones sobre la conciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
@@ -112,7 +112,7 @@ public class ConciliacionController {
 	 * Temporal format para los LOGs de timers
 	 */
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-	
+
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
@@ -260,7 +260,7 @@ public class ConciliacionController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/conciliacion/enviar/{folio}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/conciliacion/generarlayouts/{folio}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.", tags = {
 			"Conciliación" })
 	@ApiResponses({
@@ -275,7 +275,7 @@ public class ConciliacionController {
 		String statusError = null;
 		long start = 0;
 		long finish = 0;
-		
+
 		LOG.info(">> enviaConciliacion(" + folio + ", " + createdBy + ")");
 
 		// Valida el atributo
@@ -284,7 +284,7 @@ public class ConciliacionController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		LOG.info(">>> FINALIZA VALIDACION DE FOLIO");
-		
+
 		// Realiza el envio d ela conciliacion
 		try {
 			conciliacionServiceImpl.enviarConciliacion(folio, createdBy);
@@ -299,16 +299,17 @@ public class ConciliacionController {
 			LOG.error(">>> ERROR DURANTE ENVIO DE CONCILIACION: {}", ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_9999.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_9999);
-		}
-		finally {
-			if(!status) {
+		} finally {
+			if (!status) {
 				try {
 					// Se actualiza el sub estatus a layouts generados con error
 					start = System.currentTimeMillis();
 					LOG.info("T >>> INICIA ACTUALIZACION DE SUB-ESTATUS CON ERROR: {}", sdf.format(new Date(start)));
-					conciliacionService.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio, ConciliacionConstants.SUBESTATUS_GENERACION_LAYOUTS_ERROR, statusError), createdBy);
+					conciliacionService.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
+							ConciliacionConstants.SUBESTATUS_GENERACION_LAYOUTS_ERROR, statusError), createdBy);
 					finish = System.currentTimeMillis();
-					LOG.info("T >>> FINALIZA ACTUALIZACION DE SUB-ESTATUS CON ERROR: {}, EN: {}", sdf.format(new Date(finish)), (finish-start));
+					LOG.info("T >>> FINALIZA ACTUALIZACION DE SUB-ESTATUS CON ERROR: {}, EN: {}",
+							sdf.format(new Date(finish)), (finish - start));
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					LOG.error(">>>ERROR: {}", ex);
@@ -318,7 +319,7 @@ public class ConciliacionController {
 				}
 			}
 		}
-		
+
 		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.CONCILIATION_SENT_SUCCESSFULLY, null);
