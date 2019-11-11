@@ -1274,5 +1274,15 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		LOG.info("T>>> FINALIZA VALIDACION GENERAL EN GENERACION DE CONCILIACION: {}, EN: {}", sdf.format(new Date(globalFinish)), (globalFinish - globalStart) );
 		
 	}
+
+	/**
+	 * Evalua si la ocnciliacion especificada tiene un id de merge
+	 */
+	@Override
+	public Boolean validateConciliacionMerge(Long folio) {
+		Boolean result = null;
+		result = conciliacionRepository.validateConciliacionMerge(folio).compareTo(BigInteger.ONE) == 0;
+		return result;
+	}
 	
 }

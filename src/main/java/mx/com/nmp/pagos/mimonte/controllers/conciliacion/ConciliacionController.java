@@ -271,8 +271,9 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response enviaConciliacion(@PathVariable(value = "folio", required = true) Long folio,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
-		boolean status = true;
+		Boolean flag = null;
 		String statusError = null;
+		boolean status = true;		
 		long start = 0;
 		long finish = 0;
 
@@ -285,7 +286,12 @@ public class ConciliacionController {
 					CodigoError.NMP_PMIMONTE_0008);
 		LOG.info(">>> FINALIZA VALIDACION DE FOLIO");
 
-		// Realiza el envio d ela conciliacion
+		// VALIDACION DE MERGE PREVIO
+		flag = conciliacionServiceImpl.validateConciliacionMerge(folio);
+		if(!flag)
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_135.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_135);
+		
+		// Realiza el envio de la conciliacion
 		try {
 			conciliacionServiceImpl.enviarConciliacion(folio, createdBy);
 		} catch (ConciliacionException ex) {
