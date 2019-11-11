@@ -288,6 +288,7 @@ INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date,
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
 (19, 'Finalizada', true, now(), 'Sistema', 19);
 
+
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA RELACIONAL - tr_estatus_conciliacion_sub_estatus_conciliacion
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -310,6 +311,7 @@ INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus) VALUES (1, 17);
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus) VALUES (1, 18);
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus) VALUES (2, 19);
+
 
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tc_layout_header
@@ -406,9 +408,9 @@ INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_s
 VALUES (21, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 13, 11);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (22, 'ENVIO_CONCILIACION', 14, 18);
+VALUES (22, 'GENERACION_LAYOUTS', 14, 15);
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (23, 'ENVIO_CONCILIACION', 14, 19);
+VALUES (23, 'GENERACION_LAYOUTS', 14, 16);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
 VALUES (24, 'ENVIO_CONCILIACION', 15, 17);
@@ -417,10 +419,9 @@ INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_s
 VALUES (25, 'GENERACION_LAYOUTS', 16, 14);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (26, 'GENERACION_LAYOUTS', 9, 15);
+VALUES (26, 'ENVIO_CONCILIACION', 17, 18);
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
+VALUES (27, 'ENVIO_CONCILIACION', 17, 19);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (27, 'GENERACION_LAYOUTS', 12, 15);
-        
-INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (28, 'GENERACION_LAYOUTS', 9, 16);
+VALUES (28, 'ENVIO_CONCILIACION', 18, 17);
