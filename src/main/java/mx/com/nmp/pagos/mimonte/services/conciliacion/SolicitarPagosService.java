@@ -25,6 +25,7 @@ import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.constans.EstatusMovimientosTransitoEnum;
 import mx.com.nmp.pagos.mimonte.constans.MailServiceConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAdjuntoDTO;
@@ -314,7 +315,7 @@ public class SolicitarPagosService {
 		List<MovimientoPago> movimientosPago = null;
 		List<MovimientoPagoDTO> movimientosPagoDTO = null;
 		if (null != folio) {
-			movimientosTransito = movimientoTransitoRepository.findByIdConciliacionPagos(folio);
+			movimientosTransito = movimientoTransitoRepository.findByIdConciliacionPagos(folio, EstatusMovimientosTransitoEnum.SOLICITADA.getNombre());
 			if (null != movimientosTransito && !movimientosTransito.isEmpty()) {
 				movimientosPagoDTO = MovimientosBuilder
 						.buildMovimientoPagoDTOListFromMovimientoTransitoList(movimientosTransito);
