@@ -25,6 +25,7 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
@@ -72,12 +73,9 @@ public class MovimientosProveedorService {
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
 
-	// TODO: Eliminar despues
-	/**
-	 * Conciliacion Helper
-	 */
-//	@Autowired
-//	private ConciliacionHelper conciliacionHelper;
+	@Autowired
+	private MovimientoJdbcRepository movimientoJdbcRepository;
+
 
 	/**
 	 * Registro de actividades
@@ -184,7 +182,8 @@ public class MovimientosProveedorService {
 			if (!CollectionUtils.isEmpty(movimientoProveedorList)) {
 				start = System.currentTimeMillis();
 				LOG.info("T>>> INICIA PERSISTENCIA DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(start)));
-				movimientoProveedorRepository.saveAll(movimientoProveedorList);
+				movimientoJdbcRepository.insertarLista(movimientoProveedorList);
+				//movimientoProveedorRepository.saveAll(movimientoProveedorList);
 				finish = System.currentTimeMillis();
 				LOG.info("T>>> FINALIZA PERSISTENCIA DE MOVIMEINTOS PROVEEDOR: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 			}

@@ -23,6 +23,7 @@ import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
@@ -58,6 +59,12 @@ public class MovimientosMidasService {
 	@Autowired
 	@Qualifier("movimientosMidasRepository")
 	private MovimientosMidasRepository movimientosMidasRepository;
+
+	/**
+	 * Servicio jdbc para operaciones batch de movimientos de tipo reporte
+	 */
+	@Autowired
+	private MovimientoJdbcRepository movimientoJdbcRepository;
 
 	/**
 	 * Repository de Reporte
@@ -181,7 +188,8 @@ public class MovimientosMidasService {
 			if (!CollectionUtils.isEmpty(movimientoMidasList)) {
 				start = System.currentTimeMillis();
 				LOG.info("T>>> INICIA PERSISTENCIA DE LISTA DE MOVIMIENTOS MIDAS: {}", sdf.format(new Date(start)));
-				movimientosMidasRepository.saveAll(movimientoMidasList);
+				//movimientosMidasRepository.saveAll(movimientoMidasList);
+				movimientoJdbcRepository.insertarLista(movimientoMidasList);
 				finish= System.currentTimeMillis();
 				LOG.info("T>>> FINALIZA PERSISTENCIA DE MOVIMIENTOS MIDAS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 			}
