@@ -368,4 +368,12 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query(nativeQuery = true, value = "SELECT me.id_sub_estatus_inicial FROM tk_maquina_estados_subestatus_conciliacion me WHERE me.id_sub_estatus_posible = :idSubEstatus")
 	public List<Object> getPossibleSubestatusList(@Param("idSubEstatus") final Long idSubEstatus);
 
+	/**
+	 * Regresa un 1 cuando la conciliacion especificada tiene un id de merge, de lo contrario regresa un 0
+	 * @param folio
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ( (SELECT c.id_merge FROM to_conciliacion c WHERE c.id = :folio) IS NOT NULL) THEN 1 ELSE 0 END")
+	public BigInteger validateConciliacionMerge(@Param("folio") final Long folio);
+	
 }

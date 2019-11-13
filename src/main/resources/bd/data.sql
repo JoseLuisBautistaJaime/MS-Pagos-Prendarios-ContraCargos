@@ -67,23 +67,21 @@ INSERT INTO tk_tipo_autorizacion (id, descripcion, descripcion_corta) VALUES (2,
 -- INSERTS INICIALES EN TABLA - tk_variable - SE USAN EN MODULO DSS
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- REGLA NEGOCIO - 1
-INSERT INTO tk_variable (id_variable, clave, valor) VALUES (1, '{totalIni}', '10');
-INSERT INTO tk_variable (id_variable, clave, valor) VALUES (2, '{totalFin}', '100');
+INSERT INTO tk_variable (id_variable, clave, valor) VALUES (1, '{total}', '10');
 -- REGLA NEGOCIO - 2
-INSERT INTO tk_variable (id_variable, clave, valor) VALUES (3, '{sumaIni}', '10000');
-INSERT INTO tk_variable (id_variable, clave, valor) VALUES (4, '{sumaFin}', '100000');
+INSERT INTO tk_variable (id_variable, clave, valor) VALUES (2, '{suma}', '5000');
 -- REGLA NEGOCIO - 3
-INSERT INTO tk_variable (id_variable, clave, valor) VALUES (5, '{idTipoAutorizacion}', '2');
-INSERT INTO tk_variable (id_variable, clave, valor) VALUES (6, '{conteo}', '20');
+INSERT INTO tk_variable (id_variable, clave, valor) VALUES (3, '{idTipoAutorizacion}', '2');
+INSERT INTO tk_variable (id_variable, clave, valor) VALUES (4, '{conteo}', '10');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_regla_negocio
 -- ------------------------------------------------------------------------------------------------------------------ --
 INSERT INTO tk_regla_negocio (id, nombre, descripcion, consulta) VALUES
-(1, 'Regla de Negocio 1', 'Evalua suma de montos con un monto total variable', 'SELECT CASE WHEN (SELECT COUNT(DISTINCT p.id_transaccion_midas) AS TOTAL FROM to_pagos p WHERE p.id_cliente = {idCliente}) BETWEEN {totalIni} AND {totalFin} THEN TRUE ELSE FALSE END AS ESTATUS');
+(1, 'Regla de Negocio 1', 'Evalua cantidad de transacciones con cantidad variable', 'SELECT CASE WHEN {currentTransactionAmount} > {suma} THEN TRUE ELSE FALSE END AS ESTATUS');
 INSERT INTO tk_regla_negocio (id, nombre, descripcion, consulta) VALUES
-(2, 'Regla de Negocio 2', 'Evalua cantidad de transacciones con cantidad variable', 'SELECT CASE WHEN (SELECT SUM(p.monto_total) AS SUMA FROM to_pagos p WHERE p.id_cliente = {idCliente}) BETWEEN {sumaIni} AND {sumaFin} THEN TRUE ELSE FALSE END AS ESTATUS');
+(2, 'Regla de Negocio 2', 'Evalua suma de montos con un monto total variable', 'SELECT CASE WHEN (SELECT COUNT(DISTINCT p.id_transaccion_midas) AS TOTAL FROM to_pagos p WHERE p.id_cliente = {idCliente}) > {total} THEN TRUE ELSE FALSE END AS ESTATUS');
 INSERT INTO tk_regla_negocio (id, nombre, descripcion, consulta) VALUES
 (3, 'Regla de Negocio 3', 'Evalua cantidad de transacciones con un determinado id de autorizacion variable', 'SELECT CASE WHEN (SELECT COUNT(DISTINCT p.id_transaccion_midas) AS CONTEO FROM to_pagos p WHERE p.id_cliente = {idCliente} AND p.id_tipo_autorizacion = {idTipoAutorizacion}) > {conteo} THEN TRUE ELSE FALSE END AS ESTATUS');
 
@@ -91,12 +89,10 @@ INSERT INTO tk_regla_negocio (id, nombre, descripcion, consulta) VALUES
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA RELACIONAL - tr_regla_negocio_variable
 -- ------------------------------------------------------------------------------------------------------------------ --
-INSERT INTO tr_regla_negocio_variable (id_regla_negocio, id_variable) VALUES (1, 1);
+INSERT INTO tr_regla_negocio_variable (id_regla_negocio, id_variable) VALUES (2, 1);
 INSERT INTO tr_regla_negocio_variable (id_regla_negocio, id_variable) VALUES (1, 2);
-INSERT INTO tr_regla_negocio_variable (id_regla_negocio, id_variable) VALUES (2, 3);
-INSERT INTO tr_regla_negocio_variable (id_regla_negocio, id_variable) VALUES (2, 4);
-INSERT INTO tr_regla_negocio_variable (id_regla_negocio, id_variable) VALUES (3, 5);
-INSERT INTO tr_regla_negocio_variable (id_regla_negocio, id_variable) VALUES (3, 6);
+INSERT INTO tr_regla_negocio_variable (id_regla_negocio, id_variable) VALUES (3, 3);
+INSERT INTO tr_regla_negocio_variable (id_regla_negocio, id_variable) VALUES (3, 4);
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -288,6 +284,7 @@ INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date,
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
 (19, 'Finalizada', true, now(), 'Sistema', 19);
 
+
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA RELACIONAL - tr_estatus_conciliacion_sub_estatus_conciliacion
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -310,6 +307,7 @@ INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus) VALUES (1, 17);
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus) VALUES (1, 18);
 INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub_estatus) VALUES (2, 19);
+
 
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tc_layout_header
@@ -406,9 +404,9 @@ INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_s
 VALUES (21, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 13, 11);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (22, 'ENVIO_CONCILIACION', 14, 18);
+VALUES (22, 'GENERACION_LAYOUTS', 14, 15);
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (23, 'ENVIO_CONCILIACION', 14, 19);
+VALUES (23, 'GENERACION_LAYOUTS', 14, 16);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
 VALUES (24, 'ENVIO_CONCILIACION', 15, 17);
@@ -417,10 +415,9 @@ INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_s
 VALUES (25, 'GENERACION_LAYOUTS', 16, 14);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (26, 'GENERACION_LAYOUTS', 9, 15);
+VALUES (26, 'ENVIO_CONCILIACION', 17, 18);
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
+VALUES (27, 'ENVIO_CONCILIACION', 17, 19);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (27, 'GENERACION_LAYOUTS', 12, 15);
-        
-INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-VALUES (28, 'GENERACION_LAYOUTS', 9, 16);
+VALUES (28, 'ENVIO_CONCILIACION', 18, 17);

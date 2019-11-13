@@ -87,6 +87,7 @@ mimonte:
         nombre: "'CLCO{CUENTA}'yyMMdd'.txt'"
     dss:
       idcliente: "{idCliente}"
+      currentTransactionAmount: "{currentTransactionAmount}"
     restTemplate:
       maxAttempt: 3
       retryTimeInterval: 3000
