@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstadoCuentaWraper;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovEstadoCuentaRequestDTO;
@@ -128,6 +130,12 @@ public class MovimientosEstadoCuentaService {
 	 */
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
+
+	/**
+	 * Registro de movimientos usando Jdbc
+	 */
+	@Autowired
+	private MovimientoJdbcRepository movimientoJdbcRepository;
 
 	/**
 	 * Log de la clase
@@ -411,7 +419,9 @@ public class MovimientosEstadoCuentaService {
 					movimiento.setIdEstadoCuenta(estadoCuenta.getId());
 				}
 
-				movimientoEstadoCuentaRepository.saveAll(movimientos);
+				LOG.info(">> Insertando movimientos Estado de cuenta...");
+				//movimientoEstadoCuentaRepository.saveAll(movimientos);
+				movimientoJdbcRepository.insertarLista(movimientos);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
