@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS `tk_sub_estatus_conciliacion` ;
 DROP TABLE IF EXISTS `tk_variable` ;
 DROP TABLE IF EXISTS `tk_tipo_contrato` ;
 DROP TABLE IF EXISTS `tk_estatus_pago` ;
-
+DROP TABLE IF EXISTS `seq_conciliacion` ;
 
 
 
@@ -1251,3 +1251,12 @@ CREATE TABLE IF NOT EXISTS `tb_actividad` (
   INDEX `idx_fecha_actividades` (`fecha` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
+
+
+-- Secuencia para los folios de conciliacion -------
+
+CREATE TABLE `seq_conciliacion` (
+  `seq_name` VARCHAR(45) NOT NULL,
+  `seq_value` BIGINT(20) DEFAULT '1',
+  PRIMARY KEY (`seq_name`)
+) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
