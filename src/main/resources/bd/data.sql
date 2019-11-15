@@ -180,6 +180,9 @@ INSERT INTO tc_codigo_estado_cuenta (codigo, id_categoria, id_entidad, descripti
 -- FASE 3 - CONCILIACION -------------------------------------------------------------------------------------------- --
 -- ------------------------------------------------------------------------------------------------------------------ --
 
+-- Secuencia para conciliacion
+INSERT INTO `conciliacion`.`seq_conciliacion` (`seq_name`, `seq_value`) VALUES ('folio_conciliacion', '1');
+
 
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_estatus_transaccion

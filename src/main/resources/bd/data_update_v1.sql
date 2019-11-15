@@ -140,3 +140,16 @@ UPDATE tk_regla_negocio rn SET rn.consulta = 'SELECT CASE WHEN (SELECT COUNT(DIS
 -- ------------------------------------------------------- --
 UPDATE tr_regla_negocio_variable rnv SET rnv.id_regla_negocio = 1 WHERE rnv.id_variable IN(3,4);
 UPDATE tr_regla_negocio_variable rnv SET rnv.id_regla_negocio = 2 WHERE rnv.id_variable IN(1,2);
+
+
+-- Actualizacion para asignacion de folio de conciliacion usando una "secuencia" en la bd
+
+-- Secuencia para los folios de conciliacion -------
+CREATE TABLE `seq_conciliacion` (
+  `seq_name` VARCHAR(45) NOT NULL,
+  `seq_value` BIGINT(20) DEFAULT '1',
+  PRIMARY KEY (`seq_name`)
+) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
+
+-- Secuencia para conciliacion
+INSERT INTO `conciliacion`.`seq_conciliacion` (`seq_name`, `seq_value`) VALUES ('folio_conciliacion', 1);

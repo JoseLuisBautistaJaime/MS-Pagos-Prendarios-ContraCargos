@@ -16,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.Updatable;
@@ -36,8 +38,9 @@ public class Conciliacion extends Updatable implements Serializable  {
 	 */
 	private static final long serialVersionUID = -3886314835601436753L;
 
+	@TableGenerator(name = "gen_folio_conciliacion", table = "seq_conciliacion", pkColumnName = "seq_name", valueColumnName = "seq_value", allocationSize = 1, pkColumnValue = "folio_conciliacion")
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "gen_folio_conciliacion")
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
