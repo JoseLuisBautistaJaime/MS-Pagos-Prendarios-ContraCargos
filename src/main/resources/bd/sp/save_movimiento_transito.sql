@@ -1,43 +1,47 @@
+DROP FUNCTION IF EXISTS `save_movimiento_transito`;
+DELIMITER $$
 CREATE FUNCTION `save_movimiento_transito`(
 
-	IN _id INT(11),
+	-- Campos para to_movimiento_transito
+    _estatus INT(11),
+    _folio INT(11),
+    _sucursal INT(11),
+    _fecha DATE,
+    _operacion_desc VARCHAR(45),
+    _monto DECIMAL(16, 4),
+    _tipo_contrato_desc VARCHAR(45),
+    _esquema_tarjeta VARCHAR(45),
+    _cuenta VARCHAR(45),
+    _titular VARCHAR(255),
+    _num_autorizacion VARCHAR(45),
 
 	-- Campos para to_movimiento_conciliacion
-	IN _id_conciliacion BIGINT(20),
-    IN _created_by VARCHAR(100),
-    IN _created_date DATETIME,
-    IN _last_modify_by VARCHAR(100),
-    IN _last_modified_date DATETIME,
-    IN _nuevo TINYINT(4),
-    IN _id_movimiento_midas INT(11),
+	_id INT(11),
+	_id_conciliacion BIGINT(20),
+    _nuevo TINYINT(4),
+    _id_movimiento_midas INT(11),
 
-	-- Campos para to_movimiento_transito
-    IN _estatus INT(11),
-    IN _folio INT(11),
-    IN _sucursal INT(11),
-    IN _fecha DATE,
-    IN _operacion_desc VARCHAR(45),
-    IN _monto DECIMAL(16, 4)
-    IN _tipo_contrato_desc VARCHAR(45),
-    IN _esquema_tarjeta VARCHAR(45),
-    IN _cuenta VARCHAR(45),
-    IN _titular VARCHAR(255),
-    IN _num_autorizacion(45)
+    -- Updatable
+    _created_date DATETIME,
+    _last_modified_date DATETIME,
+    _created_by VARCHAR(100),
+    _last_modify_by VARCHAR(100)
 )
 RETURNS INT(11)
-BEGIN
+MODIFIES SQL DATA
+MAIN: BEGIN
 	-- Funcion que inserta un movimiento conciliacion transito
 
 	DECLARE _id_movimiento_conciliacion INT(11);
 
 	-- En caso de error se hace rollback
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	BEGIN
-		ROLLBACK;
-		RESIGNAL;
-	END;
+	-- DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	-- BEGIN
+	-- 	ROLLBACK;
+	-- 	RESIGNAL;
+	-- END;
 
-	START TRANSACTION;
+	-- START TRANSACTION;
 	
 		-- Inserta/actualiza el movimiento conciliacion y regresa el id
 		SET _id_movimiento_conciliacion = save_movimiento_conciliacion(
@@ -71,10 +75,12 @@ BEGIN
 				num_autorizacion = _num_autorizacion
 			WHERE
 				id = _id_movimiento_conciliacion;
-		END IF
+		END IF;
 
-	COMMIT;
+	-- COMMIT;
 	
-	RETURN _id;
+	RETURN _id_movimiento_conciliacion;
 
-END;
+END MAIN;
+$$
+DELIMITER ;

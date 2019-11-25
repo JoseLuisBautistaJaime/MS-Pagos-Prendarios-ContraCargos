@@ -181,7 +181,7 @@ INSERT INTO tc_codigo_estado_cuenta (codigo, id_categoria, id_entidad, descripti
 -- ------------------------------------------------------------------------------------------------------------------ --
 
 -- Secuencia para conciliacion
-INSERT INTO `conciliacion`.`seq_conciliacion` (`seq_name`, `seq_value`) VALUES ('folio_conciliacion', '1');
+INSERT INTO `conciliacion`.`seq_conciliacion` (`seq_name`, `seq_value`) VALUES ('folio_conciliacion', '0');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --

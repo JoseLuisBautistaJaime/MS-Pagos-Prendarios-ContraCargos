@@ -149,7 +149,7 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_045("La conciliacion con el folio especificado no existe",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
-	NMP_PMIMONTE_BUSINESS_046("Error al gurdar la solicitud de consulta de estado de cuenta",
+	NMP_PMIMONTE_BUSINESS_046("Error al guardar la solicitud de consulta de estado de cuenta",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_047("Error al leer el archivo de estado de cuenta",
 			TipoError.CLIENTE, SeveridadError.MEDIA),

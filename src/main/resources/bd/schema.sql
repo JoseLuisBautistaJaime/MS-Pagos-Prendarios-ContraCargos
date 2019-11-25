@@ -1257,6 +1257,6 @@ DEFAULT CHARACTER SET = latin1;
 
 CREATE TABLE `seq_conciliacion` (
   `seq_name` VARCHAR(45) NOT NULL,
-  `seq_value` BIGINT(20) DEFAULT '1',
+  `seq_value` BIGINT(20) DEFAULT '0',
   PRIMARY KEY (`seq_name`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;

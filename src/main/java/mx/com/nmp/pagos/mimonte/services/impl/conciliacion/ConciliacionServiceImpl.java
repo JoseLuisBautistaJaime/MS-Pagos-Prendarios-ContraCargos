@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.util.Calendar;
 
-import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ComisionesBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstatusConciliacionBuilder;

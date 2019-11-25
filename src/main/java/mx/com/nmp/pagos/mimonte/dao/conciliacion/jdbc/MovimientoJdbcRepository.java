@@ -2,6 +2,7 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc;
 
 import java.util.List;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoReporte;
 
 /**
@@ -16,6 +17,14 @@ public interface MovimientoJdbcRepository {
 	 * @param lista
 	 * @throws Exception
 	 */
-	public void insertarLista(List<? extends MovimientoReporte> lista) throws Exception;
-	
+	public <T extends MovimientoReporte> void insertarLista(List<T> lista) throws Exception;
+
+	/**
+	 * Inserta en batch los movimientos de tipo reporte
+	 * @param lista
+	 * @param storedProcedure
+	 * @throws Exception
+	 */
+	public <T extends MovimientoConciliacion> void insertarLista(List<T> lista, String storedProcedure) throws Exception;
+
 }

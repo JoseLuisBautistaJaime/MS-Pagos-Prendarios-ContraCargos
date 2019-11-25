@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.LayoutsBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
