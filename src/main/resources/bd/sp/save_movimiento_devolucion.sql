@@ -11,7 +11,7 @@ CREATE FUNCTION `save_movimiento_devolucion`(
     _titular VARCHAR(255),
     _codigo_autorizacion VARCHAR(45),
     _sucursal INT(11),
-    _fecha_liquidacion DATE
+    _fecha_liquidacion DATE,
 
 	-- Campos para to_movimiento_conciliacion
 	_id INT(11),

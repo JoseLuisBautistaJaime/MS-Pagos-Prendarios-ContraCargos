@@ -49,15 +49,10 @@ public class AsyncLayer {
 			procesoCorrecto = false;
 			descripcionError = cex.getCodigoError().getDescripcion();
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
-			// TODO: Eliminar comentario
-			//			throw cex;
 		} catch (Exception eex) {
 			procesoCorrecto = false;
 			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_132.getDescripcion();
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
-			// TODO: Eliminar comentario
-//			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_132.getDescripcion(),
-//					CodigoError.NMP_PMIMONTE_BUSINESS_132);
 		} finally {
 			try {
 				// Se actualiza el sub estatus de la conciliacion en base al resultado
@@ -69,9 +64,6 @@ public class AsyncLayer {
 				LOG.info(">>> FINALIZA EXITOSAMENTE ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", folio);
 			} catch (Exception ex) {
 				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-				// TODO: Eliminar esta excepcion lanzada
-//				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
-//						CodigoError.NMP_PMIMONTE_BUSINESS_030);
 			}
 		}
 
