@@ -144,12 +144,5 @@ UPDATE tr_regla_negocio_variable rnv SET rnv.id_regla_negocio = 2 WHERE rnv.id_v
 
 -- Actualizacion para asignacion de folio de conciliacion usando una "secuencia" en la bd
 
--- Secuencia para los folios de conciliacion -------
-CREATE TABLE `seq_conciliacion` (
-  `seq_name` VARCHAR(45) NOT NULL,
-  `seq_value` BIGINT(20) DEFAULT '0',
-  PRIMARY KEY (`seq_name`)
-) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
-
 -- Secuencia para conciliacion
 INSERT INTO `conciliacion`.`seq_conciliacion` (`seq_name`, `seq_value`) VALUES ('folio_conciliacion', 0); -- OJO: Setear el folio actual de la conciliacion

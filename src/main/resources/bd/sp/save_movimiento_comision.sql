@@ -1,41 +1,46 @@
-CREATE /*DEFINER=`root`@`127.0.0.1`*/ FUNCTION `save_movimiento_comision`(
-
-	IN _id INT(11),
+DROP FUNCTION IF EXISTS `save_movimiento_comision`;
+DELIMITER $$
+CREATE FUNCTION `save_movimiento_comision`(
 
 	-- Campos para to_movimiento_comision
-    IN _fecha_operacion DATE,
-    IN _fecha_cargo DATE,
-    IN _monto DECIMAL(16, 4),
-    IN _tipo VARCHAR(50),
-    IN _id_movimiento_estado_cuenta BIGINT(20),
-    IN _descripcion VARCHAR(150),
-    IN _estatus,
+    _fecha_operacion DATE,
+    _fecha_cargo DATE,
+    _monto DECIMAL(16, 4),
+    _descripcion VARCHAR(150),
+    _estatus TINYINT(4),
+    _tipo VARCHAR(50),
+    _id_movimiento_estado_cuenta BIGINT(20),
 
 	-- Campos para to_movimiento_conciliacion
-	IN _id_conciliacion BIGINT(20),
-    IN _created_by VARCHAR(100),
-    IN _created_date DATETIME,
-    IN _last_modify_by VARCHAR(100),
-    IN _last_modified_date DATETIME,
-    IN _nuevo TINYINT(4),
-    IN _id_movimiento_midas INT(11)
+	_id INT(11),
+	_id_conciliacion BIGINT(20),
+    _nuevo TINYINT(4),
+    _id_movimiento_midas INT(11),
+
+    -- Updatable
+    _created_date DATETIME,
+    _last_modified_date DATETIME,
+    _created_by VARCHAR(100),
+    _last_modify_by VARCHAR(100)
 )
 RETURNS INT(11)
-BEGIN
+MODIFIES SQL DATA
+MAIN: BEGIN
+
 	-- Funcion que inserta un movimiento conciliacion comision
 	DECLARE _id_movimiento_conciliacion INT(11);
 
 	-- En caso de error se hace rollback
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	BEGIN
-		ROLLBACK;
-		RESIGNAL;
-	END;
+	--DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	-- BEGIN
+	--	ROLLBACK;
+	--	RESIGNAL;
+	-- END;
 
 
-	START TRANSACTION;
+	-- START TRANSACTION;
 
-		-- Inserta el movimiento conciliacion y regresa el id
+		-- Inserta/actualiza el movimiento conciliacion y regresa el id
 		SET _id_movimiento_conciliacion = save_movimiento_conciliacion(
 			_id,
 			_id_conciliacion,
@@ -48,7 +53,7 @@ BEGIN
 		);
 
 		-- Inserta el movimiento comision
-		IF (_id IS NULL) THEN
+		IF (_id IS NULL OR _id <= 0) THEN
 			INSERT INTO to_movimiento_comision(id, fecha_operacion, fecha_cargo, monto, tipo, id_movimiento_estado_cuenta, descripcion, estatus)
 			VALUES(_id_movimiento_conciliacion, _fecha_operacion, _fecha_cargo, _monto, _tipo, _id_movimiento_estado_cuenta, _descripcion, _estatus);
 		ELSE
@@ -63,10 +68,12 @@ BEGIN
 				estatus = _estatus
 			WHERE
 				id = _id_movimiento_conciliacion;
-		END IF
+		END IF;
 
-	COMMIT;
-	
-	RETURN _id;
+	-- COMMIT;
 
-END;
+	RETURN _id_movimiento_conciliacion;
+
+END MAIN;
+$$
+DELIMITER ;

@@ -42,7 +42,7 @@ MAIN: BEGIN
 	-- END;
 
 	-- START TRANSACTION;
-	
+
 		-- Inserta/actualiza el movimiento conciliacion y regresa el id
 		SET _id_movimiento_conciliacion = save_movimiento_conciliacion(
 			_id,
@@ -56,7 +56,7 @@ MAIN: BEGIN
 		);
 
 		-- Inserta/Actualiza el movimiento transito
-		IF (_id IS NULL) THEN
+		IF (_id IS NULL OR _id <= 0) THEN
 			INSERT INTO to_movimiento_transito(id, estatus, folio, sucursal, fecha, operacion_desc, monto, tipo_contrato_desc, esquema_tarjeta, cuenta, titular, num_autorizacion)
 			VALUES(_id_movimiento_conciliacion, _estatus, _folio, _sucursal, _fecha, _operacion_desc, _monto, _tipo_contrato_desc, _esquema_tarjeta, cuenta, _titular, _num_autorizacion);
 		ELSE
@@ -78,7 +78,7 @@ MAIN: BEGIN
 		END IF;
 
 	-- COMMIT;
-	
+
 	RETURN _id_movimiento_conciliacion;
 
 END MAIN;
