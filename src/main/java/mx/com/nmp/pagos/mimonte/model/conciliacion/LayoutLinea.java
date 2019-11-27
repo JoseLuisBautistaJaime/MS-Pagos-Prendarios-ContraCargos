@@ -26,6 +26,7 @@ public class LayoutLinea extends Updatable implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column
 	private Long id;
 
 	@Column(name = "cuenta")

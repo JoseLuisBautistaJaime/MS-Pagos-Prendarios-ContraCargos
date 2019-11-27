@@ -29,6 +29,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutLineaCatalogRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutLineasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutsRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.LayoutsJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
@@ -117,6 +118,9 @@ public class LayoutsService {
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
 
+	@Autowired
+	private LayoutsJdbcRepository layoutsJdbcRepository;
+	
 	/**
 	 * Logs de la clase
 	 */
@@ -265,7 +269,12 @@ public class LayoutsService {
 		// Se persisten los layouts
 		if (layouts != null && layouts.size() > 0) {
 			try {
-				this.layoutsRepository.saveAll(layouts);
+//				this.layoutsRepository.saveAll(layouts);
+				layoutsJdbcRepository.insertarListaLayout(layouts, ConciliacionConstants.StoreProcedureNames.SAVE_LAYOUT_FUNCTION_NAME);
+				// TODO: Falta poner los ids a los layouts para que no falle el insert de headers
+//				layoutsJdbcRepository.insertarListaLayoutHeader(getLayoutsHeaders(layouts), ConciliacionConstants.StoreProcedureNames.SAVE_LAYOUT_HEADER_FUNCTION_NAME);
+				// TODO: Falta poner los ids a los layouts para que no falle el insert de lineas
+//				layoutsJdbcRepository.insertarListaLayoutLinea(getLayoutsLineas(layouts), ConciliacionConstants.StoreProcedureNames.SAVE_LAYOUT_LINEA_FUNCTION_NAME);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				throw new ConciliacionException("Ocurrio un error al persistir los layouts",
@@ -997,4 +1006,28 @@ public class LayoutsService {
 				&& layoutDTO.getLineas().size() > 0;
 	}
 
+	private static List<LayoutHeader> getLayoutsHeaders(List<Layout> layoutList){
+		List<LayoutHeader> layoutHeaderList = null;
+		if(null != layoutList && !layoutList.isEmpty()) {
+			layoutHeaderList = new ArrayList<>();
+			LayoutHeader layoutHeader = null;
+			for(Layout layout : layoutList) {
+				layoutHeader = layout.getLayoutHeader();
+				layoutHeader.setLayout(layout);
+				layoutHeaderList.add(layout.getLayoutHeader());
+			}
+		}
+		return layoutHeaderList;
+	}
+	
+	private static List<LayoutLinea> getLayoutsLineas(List<Layout> layoutList){
+		List<LayoutLinea> layoutLineaList = null;
+		if(null != layoutList && !layoutList.isEmpty()) {
+			layoutLineaList = new ArrayList<>();
+			for(Layout layout : layoutList) {
+				layoutLineaList.addAll(layout.getLayoutLineas());
+			}
+		}
+		return layoutLineaList;
+	}
 }

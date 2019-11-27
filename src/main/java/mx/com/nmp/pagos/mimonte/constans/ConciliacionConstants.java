@@ -163,7 +163,7 @@ public final class ConciliacionConstants {
 	 * Mensaje mostrado para una consulta exitosa.
 	 */
 	public static final String SUCCESSFUL_DELETE = "Eliminacion exitosa.";
-	
+
 	/**
 	 * Mensaje mostrado para una consulta exitosa.
 	 */
@@ -502,12 +502,15 @@ public final class ConciliacionConstants {
 	public final static List<Long> CON_SUB_ESTATUS_ACTUALIZACION_PS = asList(SUBESTATUS_CONCILIACION_ENVIADA);
 	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PN = asList(SUBESTATUS_CONCILIACION_CONSULTA_MIDAS);
 	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PT = asList(SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY);
-	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_EC = asList(SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA);
+	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_EC = asList(
+			SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA);
 	public final static List<Long> CON_SUB_ESTATUS_MERGE_CONCILIACION = asList(SUBESTATUS_CONCILIACION_CONCILIACION);
 	public final static List<Long> CON_SUB_ESTATUS_ENVIO_CONCILIACION = asList(
-			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA, SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA, SUBESTATUS_GENERACION_LAYOUTS_ERROR);
+			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA,
+			SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA, SUBESTATUS_GENERACION_LAYOUTS_ERROR);
 	public final static List<Long> CON_SUB_ESTATUS_GENERAR_CONCILIACION = asList(
-			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA, SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA);
+			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA,
+			SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA);
 
 	/**
 	 * Mensaje generico inicial para mostrar excepciones en log
@@ -535,15 +538,51 @@ public final class ConciliacionConstants {
 	 * Estatus exitos de un movimiento proveedor
 	 */
 	public static final String MOVIMIENTOS_PROVEEDOR_SUCCESSFUL_STATUS = "%COMPLETE%";
-	
+
 	/**
-	 * Valor que indica que un registro de la aplicacion fue dado de alta por sistema
+	 * Valor que indica que un registro de la aplicacion fue dado de alta por
+	 * sistema
 	 */
 	public static final int ELEMENT_ADDED_BY_SYSTEM = 0;
-	
+
 	/**
-	 * Valor que indica que un registro de la aplicacion fue dado de alta por el usuario
+	 * Valor que indica que un registro de la aplicacion fue dado de alta por el
+	 * usuario
 	 */
 	public static final int ELEMENT_ADDED_BY_USER = 1;
+
+	/**
+	 * Calse interna que contine los nombres de los procedimientos almacenados y las
+	 * funciones que utiliza la aplicacion y estan relacionadas con conciliacion
+	 * 
+	 * @author user
+	 *
+	 */
+	public static final class StoreProcedureNames {
+
+		private StoreProcedureNames() {
+			super();
+		}
+
+		/**
+		 * Funcion para el alta de layouts
+		 */
+		public static final String SAVE_LAYOUT_FUNCTION_NAME = "save_layout";
+		
+		/**
+		 * Funcion para el alta de headers de layouts
+		 */
+		public static final String SAVE_LAYOUT_HEADER_FUNCTION_NAME = "save_layout_header";
+		
+		/**
+		 * Funcion para el alta de lineas de layouts
+		 */
+		public static final String SAVE_LAYOUT_LINEA_FUNCTION_NAME = "save_layout_linea";
+	}
+
+	/**
+	 * Magnitud comun para cargas mediante BATCH
+	 */
+	public static final int COMMON_BATCH_SIZE = 500;
 	
 }

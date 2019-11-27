@@ -27,6 +27,7 @@ public class Layout implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column
 	private Long id;
 
 	@Column(name = "id_conciliacion")

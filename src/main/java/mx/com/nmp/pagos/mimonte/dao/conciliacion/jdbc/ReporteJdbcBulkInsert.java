@@ -19,6 +19,8 @@ import org.springframework.util.Assert;
 import mx.com.nmp.pagos.mimonte.util.DateUtil;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -33,6 +35,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.spi.LoadState;
 
 /**
  * Utileria para generar una sentencia INSERT o CALL de SQL.
@@ -369,6 +372,9 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 		}
 
 		String value = TYPE_SEP + TYPE_SEP;
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
 		switch (columnDef.columnType) {
 			case BigDecimal:
 			case Long:
@@ -387,6 +393,9 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 				break;
 			case Timestamp:
 				value = propertyValue != null ? (TYPE_SEP + DateUtil.formatDate((Date)propertyValue, "yyyy-MM-dd HH:mm:ss") + TYPE_SEP) : "null";
+				break;
+			case LocalDate:
+				value = propertyValue != null ? (TYPE_SEP + formatter.format((LocalDate)propertyValue) + TYPE_SEP) : "null";
 				break;
 		}
 		return value;
@@ -463,12 +472,24 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 		BigDecimal,
 		Integer,
 		Float,
-		Date;
+		Date,
+		TipoLayoutEnum,
+		LocalDate;
 		public static JdbcColumnType get(String typeName) {
 			JdbcColumnType type = JdbcColumnType.Long; // Default
 			for (JdbcColumnType jdbcType : JdbcColumnType.values()) {
 				if (jdbcType.name().equalsIgnoreCase(typeName)) {
 					type = jdbcType;
+					break;
+				}
+				// TODO: ver la forma de modificar esto para que no quede en hardcode
+				// Hard code del tipo para el correcto casteo de este enum
+				else if(TipoLayoutEnum.name().equalsIgnoreCase(typeName)) {
+					type = String;
+					break;
+				}
+				else if(LocalDate.name().equalsIgnoreCase(typeName)) {
+					type = LocalDate;
 					break;
 				}
 			}
