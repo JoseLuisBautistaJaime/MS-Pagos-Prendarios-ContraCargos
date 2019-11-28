@@ -23,7 +23,7 @@ import mx.com.nmp.pagos.mimonte.model.Updatable;
  */
 @Entity
 @Table(name = "to_layout_header")
-public class LayoutHeader extends Updatable implements Serializable {
+public class LayoutHeader extends Updatable implements Serializable, LayoutReporte {
 	private static final long serialVersionUID = 1L;
 
 	@Id

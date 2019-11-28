@@ -319,16 +319,13 @@ public class ConciliacionController {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					LOG.error(">>>ERROR: {}", ex);
-					// TODO: Eliminar, no se deben lanzar excepciones dentro del bloque finally
-//					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_124.getDescripcion(),
-//							CodigoError.NMP_PMIMONTE_BUSINESS_124);
 				}
 			}
 		}
 
 		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				ConciliacionConstants.CONCILIATION_SENT_SUCCESSFULLY, null);
+				ConciliacionConstants.CONCILIATION_LAYOUTS_SUCCESSFULLY_CREATED, null);
 	}
 
 	/**
