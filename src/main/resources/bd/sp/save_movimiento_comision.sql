@@ -31,7 +31,7 @@ MAIN: BEGIN
 	DECLARE _id_movimiento_conciliacion INT(11);
 
 	-- En caso de error se hace rollback
-	--DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	-- DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	-- BEGIN
 	--	ROLLBACK;
 	--	RESIGNAL;
