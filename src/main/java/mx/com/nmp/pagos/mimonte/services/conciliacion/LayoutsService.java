@@ -6,16 +6,23 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,7 +127,10 @@ public class LayoutsService {
 
 	@Autowired
 	private LayoutsJdbcRepository layoutsJdbcRepository;
-	
+
+	@Inject
+	private JdbcTemplate jdbcTemplate;
+		
 	/**
 	 * Logs de la clase
 	 */
@@ -267,14 +277,9 @@ public class LayoutsService {
 		}
 
 		// Se persisten los layouts
-		if (layouts != null && layouts.size() > 0) {
+		if (layouts != null && !layouts.isEmpty()) {
 			try {
-//				this.layoutsRepository.saveAll(layouts);
-				layoutsJdbcRepository.insertarListaLayout(layouts, ConciliacionConstants.StoreProcedureNames.SAVE_LAYOUT_FUNCTION_NAME);
-				// TODO: Falta poner los ids a los layouts para que no falle el insert de headers
-//				layoutsJdbcRepository.insertarListaLayoutHeader(getLayoutsHeaders(layouts), ConciliacionConstants.StoreProcedureNames.SAVE_LAYOUT_HEADER_FUNCTION_NAME);
-				// TODO: Falta poner los ids a los layouts para que no falle el insert de lineas
-//				layoutsJdbcRepository.insertarListaLayoutLinea(getLayoutsLineas(layouts), ConciliacionConstants.StoreProcedureNames.SAVE_LAYOUT_LINEA_FUNCTION_NAME);
+				this.layoutsRepository.saveAll(layouts);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				throw new ConciliacionException("Ocurrio un error al persistir los layouts",
@@ -398,8 +403,10 @@ public class LayoutsService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_117);
 		}
 
-		// Se valida que la linea se pueda eliminar, o sea que fue dada de alta por el usuario (nuevo = 1)
-		flag = ((BigInteger) layoutLineasRepository.checkIfLineIsNew(idLinea, ConciliacionConstants.ELEMENT_ADDED_BY_USER)).compareTo(BigInteger.ONE) == 0;
+		// Se valida que la linea se pueda eliminar, o sea que fue dada de alta por el
+		// usuario (nuevo = 1)
+		flag = ((BigInteger) layoutLineasRepository.checkIfLineIsNew(idLinea,
+				ConciliacionConstants.ELEMENT_ADDED_BY_USER)).compareTo(BigInteger.ONE) == 0;
 		if (!flag)
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_134.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_134);
@@ -435,7 +442,7 @@ public class LayoutsService {
 	 */
 	@Transactional
 	public void enviarConciliacion(Long idConciliacion, String user) {
-		
+
 		long start = 0;
 		long finish = 0;
 
@@ -462,7 +469,46 @@ public class LayoutsService {
 
 			// Se persisten
 			try {
-				this.layoutsRepository.saveAll(layouts);
+				// TODO: Eliminar esta linea una vez que se defina que 
+//				this.layoutsRepository.saveAll(layouts);
+				
+				// INSERTA EL LAYOUT, HEADER Y LINEAS
+				for(Layout layout : layouts) {
+					KeyHolder keyHolder = new GeneratedKeyHolder();
+					List<LayoutLinea> layoutLineaList = null;
+					LayoutLinea layoutLinea = null;
+					long layoutId;
+
+					// Inserta el layout
+					String insertQuery = ConciliacionConstants.SQLSentences.INSERT_WHITIN_TO_LAYOUT;
+					    jdbcTemplate.update(connection -> {
+					        PreparedStatement ps = connection
+					          .prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+					          ps.setLong(1, layout.getIdConciliacion());
+					          ps.setString(2, layout.getTipo().toString());
+					          return ps;
+					        }, keyHolder);					    
+					    // Obtiene el id de layout
+					    layoutId = ((BigInteger) keyHolder.getKey()).longValue();
+					    
+					    // Setea el id de layout a el header
+					    layout.getLayoutHeader().setLayout(new Layout(layoutId));
+					    
+					    // Setea el id de layout a las lineas en una nueva lista 
+					    layoutLineaList = new ArrayList<>();
+					    for(LayoutLinea layoutLineaInner : layout.getLayoutLineas()) {
+					    	layoutLinea = layoutLineaInner;
+					    	layoutLinea.setLayout(new Layout(layoutId));
+					    	layoutLineaList.add(layoutLinea);
+					    }
+					    
+					    // Inserta el header
+					    layoutsJdbcRepository.insertarLista(Arrays.asList(layout.getLayoutHeader()));
+					    
+					    // Inserta las lineas
+					    layoutsJdbcRepository.insertarLista(layoutLineaList);
+				}
+				    
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				throw new ConciliacionException("Ocurrio un error al persistir los layouts",
@@ -472,7 +518,7 @@ public class LayoutsService {
 
 		finish = System.currentTimeMillis();
 		LOG.info("T >>> INCIA PROCESO DE GENERACION DE LAYOUTS: {}", finish);
-		
+
 	}// End enviarConciliacion
 
 	// PRIVATES /////////////////////////////////////////////
@@ -1006,28 +1052,4 @@ public class LayoutsService {
 				&& layoutDTO.getLineas().size() > 0;
 	}
 
-	private static List<LayoutHeader> getLayoutsHeaders(List<Layout> layoutList){
-		List<LayoutHeader> layoutHeaderList = null;
-		if(null != layoutList && !layoutList.isEmpty()) {
-			layoutHeaderList = new ArrayList<>();
-			LayoutHeader layoutHeader = null;
-			for(Layout layout : layoutList) {
-				layoutHeader = layout.getLayoutHeader();
-				layoutHeader.setLayout(layout);
-				layoutHeaderList.add(layout.getLayoutHeader());
-			}
-		}
-		return layoutHeaderList;
-	}
-	
-	private static List<LayoutLinea> getLayoutsLineas(List<Layout> layoutList){
-		List<LayoutLinea> layoutLineaList = null;
-		if(null != layoutList && !layoutList.isEmpty()) {
-			layoutLineaList = new ArrayList<>();
-			for(Layout layout : layoutList) {
-				layoutLineaList.addAll(layout.getLayoutLineas());
-			}
-		}
-		return layoutLineaList;
-	}
 }

@@ -1,3 +1,7 @@
+/*
+ * Proyecto:        NMP - MI MONTE FASE 2 - CONCILIACION.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.impl;
 
 import java.util.ArrayList;
@@ -17,10 +21,18 @@ import org.springframework.util.Assert;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.LayoutsJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.ReporteJdbcBulkInsert;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutReporte;
 
+/**
+ * @name LayoutsJdbcRepositoryImpl
+ * @description Clase que implementa la interfaz de las operaciones de
+ *              inserciones en base de datos relacionadas con layouts mediante
+ *              JDBC
+ *
+ * @author Ismael Flores iaguilar@quarksoft.net
+ * @creationDate 28/11/2019 17:28 hrs.
+ * @version 0.1
+ */
 @Component
 @Repository
 public class LayoutsJdbcRepositoryImpl implements LayoutsJdbcRepository {
@@ -36,91 +48,37 @@ public class LayoutsJdbcRepositoryImpl implements LayoutsJdbcRepository {
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
+	/**
+	 * Inserta una lista de sentencias insert SQL de objetos de algun tipo que
+	 * implemente LayoutReporte
+	 */
 	@Override
-	public void insertarListaLayout(List<Layout> layoutList, String functionName) throws Exception {
-		LOGGER.info(">> procesarLista({})", layoutList.size());
+	public <T extends LayoutReporte> void insertarLista(List<T> lista) throws Exception {
 
-		Assert.notEmpty(layoutList, "Lista a insertar esta vacia");
+		LOGGER.info(">> procesarLista({})", lista.size());
+		Assert.notEmpty(lista, "Lista a insertar esta vacia");
 
 		long inicio = System.nanoTime();
-		LOGGER.info(">> Insertando layout...");
+		LOGGER.info(">> Insertando movimientos...");
 
 		// Procesar en batch
-		Iterator<Layout> it = layoutList.iterator();
-		List<Layout> batchList = new ArrayList<>();
+		Iterator<T> it = lista.iterator();
+		List<T> batchList = new ArrayList<T>();
 		while (it.hasNext()) {
 			batchList.add(it.next());
-			if (batchList.size() >= ConciliacionConstants.COMMON_BATCH_SIZE || // Insertar registros en batch
-					(!it.hasNext() && !batchList.isEmpty())) { // Insertar registros restantes
+			if (batchList.size() >= ConciliacionConstants.COMMON_BATCH_SIZE || !it.hasNext()) { // Insertar registros en batch o Insertar registros restantes
 				LOGGER.info(">> Insertando {} registros", batchList.size());
-				ReporteJdbcBulkInsert<Layout> bulkInsert = new ReporteJdbcBulkInsert<>(layoutList, true);
-				String query = bulkInsert.buildCallSP(functionName);
+				ReporteJdbcBulkInsert<LayoutReporte> bulkInsert = new ReporteJdbcBulkInsert<LayoutReporte>(batchList,
+						false);
+				String query = bulkInsert.buildInsertQuery();
 				jdbcTemplate.execute(query);
 				batchList.clear();
 			}
 		}
 
 		long fin = System.nanoTime();
-
 		LOGGER.info(">> Tiempo total ejecucion: {}", TimeUnit.SECONDS.convert(fin - inicio, TimeUnit.NANOSECONDS));
-	}
 
-	@Override
-	public void insertarListaLayoutHeader(List<LayoutHeader> layoutHeaderList, String functionName) throws Exception {
-		LOGGER.info(">> procesarLista({})", layoutHeaderList.size());
-
-		Assert.notEmpty(layoutHeaderList, "Lista a insertar esta vacia");
-
-		long inicio = System.nanoTime();
-		LOGGER.info(">> Insertando header de layout...");
-
-		// Procesar en batch
-		Iterator<LayoutHeader> it = layoutHeaderList.iterator();
-		List<LayoutHeader> batchList = new ArrayList<>();
-		while (it.hasNext()) {
-			batchList.add(it.next());
-			if (batchList.size() >= ConciliacionConstants.COMMON_BATCH_SIZE || // Insertar registros en batch
-					(!it.hasNext() && !batchList.isEmpty())) { // Insertar registros restantes
-				LOGGER.info(">> Insertando {} registros", batchList.size());
-				ReporteJdbcBulkInsert<LayoutHeader> bulkInsert = new ReporteJdbcBulkInsert<>(layoutHeaderList, true);
-				String query = bulkInsert.buildCallSP(functionName);
-				jdbcTemplate.execute(query);
-				batchList.clear();
-			}
-		}
-
-		long fin = System.nanoTime();
-
-		LOGGER.info(">> Tiempo total ejecucion: {}", TimeUnit.SECONDS.convert(fin - inicio, TimeUnit.NANOSECONDS));
-	}
-
-	@Override
-	public void insertarListaLayoutLinea(List<LayoutLinea> layoutLineaList, String functionName) throws Exception {
-		LOGGER.info(">> procesarLista({})", layoutLineaList.size());
-
-		Assert.notEmpty(layoutLineaList, "Lista a insertar esta vacia");
-
-		long inicio = System.nanoTime();
-		LOGGER.info(">> Insertando linea de layout...");
-
-		// Procesar en batch
-		Iterator<LayoutLinea> it = layoutLineaList.iterator();
-		List<LayoutLinea> batchList = new ArrayList<>();
-		while (it.hasNext()) {
-			batchList.add(it.next());
-			if (batchList.size() >= ConciliacionConstants.COMMON_BATCH_SIZE || // Insertar registros en batch
-					(!it.hasNext() && !batchList.isEmpty())) { // Insertar registros restantes
-				LOGGER.info(">> Insertando {} registros", batchList.size());
-				ReporteJdbcBulkInsert<LayoutLinea> bulkInsert = new ReporteJdbcBulkInsert<>(layoutLineaList, true);
-				String query = bulkInsert.buildCallSP(functionName);
-				jdbcTemplate.execute(query);
-				batchList.clear();
-			}
-		}
-
-		long fin = System.nanoTime();
-
-		LOGGER.info(">> Tiempo total ejecucion: {}", TimeUnit.SECONDS.convert(fin - inicio, TimeUnit.NANOSECONDS));
 	}
 
 }

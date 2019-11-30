@@ -37,16 +37,21 @@ public class Layout implements Serializable {
 	@Column(name = "tipo")
 	private TipoLayoutEnum tipo;
 
-	@OneToOne(mappedBy = "layout", cascade= {CascadeType.PERSIST})
+	@OneToOne(mappedBy = "layout", cascade = CascadeType.PERSIST)
 	private LayoutHeader layoutHeader;
 
-	@OneToMany(mappedBy = "layout", cascade = {CascadeType.ALL})
+	@OneToMany(mappedBy = "layout", cascade = CascadeType.ALL)
 	private List<LayoutLinea> layoutLineas;
 
 	public Layout() {
 		super();
 	}
 
+	public Layout(Long id) {
+		super();
+		this.id = id;
+	}
+	
 	public Long getId() {
 		return this.id;
 	}

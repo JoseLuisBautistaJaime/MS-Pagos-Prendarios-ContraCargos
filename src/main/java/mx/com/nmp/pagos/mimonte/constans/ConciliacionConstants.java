@@ -596,8 +596,29 @@ public final class ConciliacionConstants {
 	}
 
 	/**
+	 * Clase interna que contiene sentencias SQL a utilizar con JDBC
+	 * @author user
+	 *
+	 */
+	public static class SQLSentences{
+		private SQLSentences() {
+			super();
+		}
+		
+		/**
+		 * Sentencia insert para la tabla to_layout (sin id)
+		 */
+		public static final String INSERT_WHITIN_TO_LAYOUT = "INSERT INTO to_layout(id_conciliacion, tipo) VALUES(?, ?)";
+	}
+	
+	/**
 	 * Magnitud comun para cargas mediante BATCH
 	 */
 	public static final int COMMON_BATCH_SIZE = 500;
+	
+	/**
+	 * Mensaje que es enviado cuando se realiza la generacion de layouts de manera exitosa
+	 */
+	public static final String CONCILIATION_LAYOUTS_SUCCESSFULLY_CREATED = "Layouts generados de forma exitosa.";
 	
 }
