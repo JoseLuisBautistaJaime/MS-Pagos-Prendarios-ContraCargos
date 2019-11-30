@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS `save_movimiento_transito`;
+DROP PROCEDURE IF EXISTS `save_movimiento_transito`;
 DELIMITER $$
-CREATE FUNCTION `save_movimiento_transito`(
+CREATE PROCEDURE `save_movimiento_transito`(
 
 	-- Campos para to_movimiento_transito
     _estatus INT(11),
@@ -27,7 +27,6 @@ CREATE FUNCTION `save_movimiento_transito`(
     _created_by VARCHAR(100),
     _last_modify_by VARCHAR(100)
 )
-RETURNS INT(11)
 MODIFIES SQL DATA
 MAIN: BEGIN
 	-- Funcion que inserta un movimiento conciliacion transito
@@ -79,7 +78,7 @@ MAIN: BEGIN
 
 	-- COMMIT;
 
-	RETURN _id_movimiento_conciliacion;
+	-- RETURN _id_movimiento_conciliacion;
 
 END MAIN;
 $$

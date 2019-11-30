@@ -578,6 +578,21 @@ public final class ConciliacionConstants {
 		 * Funcion para el alta de lineas de layouts
 		 */
 		public static final String SAVE_LAYOUT_LINEA_FUNCTION_NAME = "save_layout_linea";
+
+		/**
+		 * Funcion para alta de movimientos en transito
+		 */
+		public static final String SAVE_MOV_TRANSITO_FUNCTION_NAME = "save_movimiento_transito";
+
+		/**
+		 * Funcion para alta de movimientos devolucion
+		 */
+		public static final String SAVE_MOV_DEVOLUCION_FUNCTION_NAME = "save_movimiento_devolucion";
+
+		/**
+		 * Funcion para alta de movimientos comision
+		 */
+		public static final String SAVE_MOV_COMISION_FUNCTION_NAME = "save_movimiento_comision";
 	}
 
 	/**

@@ -70,7 +70,16 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 				}
 
 				// Se guardan las devoluciones
-				this.mergeReporteHandler.getMovimientoDevolucionRepository().saveAll(movimientosDevolucionSave);
+				//this.mergeReporteHandler.getMovimientoDevolucionRepository().saveAll(movimientosDevolucionSave);
+				try {
+					this.mergeReporteHandler.getMovimientoJdbcRepository().insertarLista(
+						movimientosDevolucionSave,
+						ConciliacionConstants.StoreProcedureNames.SAVE_MOV_DEVOLUCION_FUNCTION_NAME
+					);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					throw new ConciliacionException(ex.getMessage(), CodigoError.NMP_PMIMONTE_0011);
+				}
 			}
 
 
@@ -99,7 +108,16 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 				}
 
 				// Se guardan las comisiones
-				this.mergeReporteHandler.getMovimientoComisionRepository().saveAll(movimientosComisionSave);
+				//this.mergeReporteHandler.getMovimientoComisionRepository().saveAll(movimientosComisionSave);
+				try {
+					this.mergeReporteHandler.getMovimientoJdbcRepository().insertarLista(
+							movimientosComisionSave,
+						ConciliacionConstants.StoreProcedureNames.SAVE_MOV_COMISION_FUNCTION_NAME
+					);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					throw new ConciliacionException(ex.getMessage(), CodigoError.NMP_PMIMONTE_0011);
+				}
 			}
 		}
 

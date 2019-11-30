@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS `save_movimiento_devolucion`;
+DROP PROCEDURE IF EXISTS `save_movimiento_devolucion`;
 DELIMITER $$
-CREATE FUNCTION `save_movimiento_devolucion`(
+CREATE PROCEDURE `save_movimiento_devolucion`(
 
 	-- Campos para to_movimiento_devolucion
     _estatus INT(11),
@@ -25,7 +25,6 @@ CREATE FUNCTION `save_movimiento_devolucion`(
     _created_by VARCHAR(100),
     _last_modify_by VARCHAR(100)
 )
-RETURNS INT(11)
 MODIFIES SQL DATA
 MAIN: BEGIN
 
@@ -76,7 +75,7 @@ MAIN: BEGIN
 
 	-- COMMIT;
 	
-	RETURN _id_movimiento_conciliacion;
+	-- RETURN _id_movimiento_conciliacion;
 
 END MAIN;
 $$

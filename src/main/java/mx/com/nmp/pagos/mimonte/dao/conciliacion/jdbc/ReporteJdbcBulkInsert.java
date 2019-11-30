@@ -19,6 +19,7 @@ import org.springframework.util.Assert;
 import mx.com.nmp.pagos.mimonte.util.DateUtil;
 
 import java.lang.reflect.Field;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.spi.LoadState;
 
 /**
  * Utileria para generar una sentencia INSERT o CALL de SQL.
@@ -46,7 +46,7 @@ import javax.persistence.spi.LoadState;
 public class ReporteJdbcBulkInsert<T extends Object> {
 	private static final String QUERY_INSERT = "INSERT INTO ";
 	private static final String QUERY_VALUES = " VALUES";
-	private static final String CALL_SP = "SELECT ";
+	private static final String CALL_SP = "CALL ";
 
 	private static final String TYPE_SEP = "\"";
 	private static final String COMA = ", ";
@@ -88,7 +88,7 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 	public String buildInsertStatement() {
 		String tableName = getTableName(lista.get(0).getClass());
 		String columns = buildColumns();
-		String columnsParams = buildParams(); 
+		String columnsParams = buildParams(false); 
 		return QUERY_INSERT + tableName + PAR_LEF + columns + PAR_RIGHT + QUERY_VALUES + PAR_LEF + columnsParams + PAR_RIGHT;
 	}
 
@@ -98,9 +98,21 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 	 * @param storedProcedure
 	 * @return Sentencia CALL.
 	 */
-	public String buildCallSP(String storedProcedure) {
-		String valuesStr = buildValues(storedProcedure);
-		return valuesStr;
+	public List<String> buildCallSP(String storedProcedure) {
+		List<String> listSps = buildValues(storedProcedure, true, "");
+		return listSps;
+	}
+	
+
+	/**
+	 * Genera el call statement usando un SP 
+	 * @param storedProcedure
+	 * @param string 
+	 * @return
+	 */
+	public List<String> buildCallSPStatements(String storedProcedure, String outputParam) {
+		List<String> listSps = buildValues(storedProcedure, false, outputParam);
+		return listSps;
 	}
 
 
@@ -150,22 +162,29 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 	 * Especifica los valores que seran insertados.
 	 *
 	 * @param storedProcedure SP name
+	 * @param inlineValues Indica si se usaran los valores directamente en lugar de parametros (en combinacion con inlineValues)
+	 * @param outputParam Indica si el SP tiene un parametro de salida
 	 */
-	private String buildValues(String storedProcedure) {
-
-		StringBuilder val = new StringBuilder();
+	private List<String> buildValues(String storedProcedure, boolean inlineValues, String outputParam) {
+		List<String> sqls = new ArrayList<String>();
 		Iterator<? extends T> it = lista.iterator();
 
-		val.append(CALL_SP).append(storedProcedure);
+		String valueParams = inlineValues ? "" : gerateSingleValueParams(lista.get(0), outputParam);
+		
 		while (it.hasNext()) {
 			T row = it.next();
-			val.append(gerateSingleValue(row));
-			if (it.hasNext()) {
-				val.append(PUNTO_COMA).append(CALL_SP).append(storedProcedure);
+			sqls.add(
+				new StringBuilder(CALL_SP)
+					.append(storedProcedure)
+					.append(inlineValues ? gerateSingleValue(row) : valueParams)
+					.append(PUNTO_COMA).toString()
+			);
+			if (!inlineValues) { // Si es una sentencia usando nombres de parametros unicamente se requiere el primer registro.
+				break;
 			}
 		}
 
-		return val.append(PUNTO_COMA).toString();
+		return sqls;
 	}
 
 
@@ -213,6 +232,26 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 	}
 
 
+	/**
+	 * Genera el statement para insert usando named parameters en lugar de valores
+	 * @param movimiento
+	 * @param outpoutParam
+	 * @return
+	 */
+	private String gerateSingleValueParams(T movimiento, String outputParam) {
+		return new StringBuilder()
+			.append(PAR_LEF)
+			.append(buildParams(true))
+			.append(StringUtils.isNotBlank(outputParam) ? (", @" + outputParam + " => ?") : "")
+			.append(PAR_RIGHT).toString();
+	}
+
+
+	/**
+	 * Se encarga de generar los pares: parametro-valor para cada columna 
+	 * @param movimiento
+	 * @return
+	 */
 	private SqlParameterSource generateValues(T movimiento) {
 		MapSqlParameterSource values = new MapSqlParameterSource();
 
@@ -221,7 +260,7 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 
 		while (iteratorColumnDef.hasNext()) {
 			JdbcColumnDef columnDef = iteratorColumnDef.next();
-			values.addValue(buildParamName(columnDef.parentProperty, columnDef.propertyName), getBeanValue(beanWrapper, columnDef));
+			values.addValue(buildParamName(columnDef.parentProperty, columnDef.propertyName), getBeanValue(beanWrapper, columnDef), getBeanValueType(columnDef));
 		}
 
 		return values;
@@ -360,19 +399,8 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 	private Object getBeanValueString(BeanWrapper beanWrapper, JdbcColumnDef columnDef) {
 		
 		// Validate parent property name
-		Object propertyValue = null;
-		if (StringUtils.isNotBlank(columnDef.parentProperty)) {
-			// Check nulls
-			if (beanWrapper.getPropertyValue(columnDef.parentProperty) != null) {
-				propertyValue = beanWrapper.getPropertyValue(buildFieldPropertyName(columnDef.parentProperty, columnDef.propertyName));
-			}
-		}
-		else {
-			propertyValue = beanWrapper.getPropertyValue(columnDef.propertyName);
-		}
-
+		Object propertyValue = getBeanValue(beanWrapper, columnDef);
 		String value = TYPE_SEP + TYPE_SEP;
-		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		
 		switch (columnDef.columnType) {
@@ -397,8 +425,52 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 			case LocalDate:
 				value = propertyValue != null ? (TYPE_SEP + formatter.format((LocalDate)propertyValue) + TYPE_SEP) : "null";
 				break;
+			default:
+				break;
 		}
 		return value;
+	}
+
+
+	/**
+	 * Regresa el SQLType para la columna especificada
+	 * @param columnDef
+	 * @return
+	 */
+	private int getBeanValueType(JdbcColumnDef columnDef) {
+		int sqlType = Types.VARCHAR;
+		switch (columnDef.columnType) {
+			case BigDecimal:
+				sqlType = Types.DECIMAL;
+				break;
+			case Long:
+				sqlType = Types.BIGINT;
+				break;
+			case Float:
+				sqlType = Types.FLOAT;
+				break;
+			case Integer:
+				sqlType = Types.INTEGER;
+				break;
+			case Boolean:
+				sqlType = Types.BOOLEAN;
+				break;
+			case String:
+				sqlType = Types.VARCHAR;
+				break;
+			case Date:
+				sqlType = Types.DATE;
+				break;
+			case Timestamp:
+				sqlType = Types.TIMESTAMP;
+				break;
+			case LocalDate:
+				sqlType = Types.DATE;
+				break;
+			default:
+				break;
+		}
+		return sqlType;
 	}
 
 
@@ -417,13 +489,20 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 
 	/**
 	 * Crea el listado de columnas separadas por ,
-	 * @param columnsDef
+	 * @param namedParamForSP Indica si se usa nomenclatura para SPs (ex. statusId => ? )
 	 * @return
 	 */
-	private String buildParams() {
+	private String buildParams(boolean namedParamForSP) {
 		List<String> columns = new ArrayList<String>();
 		for (JdbcColumnDef columnDef : columnsDef) {
-			columns.add(":" + buildParamName(columnDef.parentProperty, columnDef.propertyName));
+			if (namedParamForSP) {
+				columns.add("?");
+			}
+			else {
+				columns.add(new StringBuilder().append(":")
+					.append(buildParamName(columnDef.parentProperty, columnDef.propertyName)).toString()
+				);
+			}
 		}
 		return StringUtils.join(columns, COMA);
 	}

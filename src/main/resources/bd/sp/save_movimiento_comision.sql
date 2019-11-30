@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS `save_movimiento_comision`;
+DROP PROCEDURE IF EXISTS `save_movimiento_comision`;
 DELIMITER $$
-CREATE FUNCTION `save_movimiento_comision`(
+CREATE PROCEDURE `save_movimiento_comision`(
 
 	-- Campos para to_movimiento_comision
     _fecha_operacion DATE,
@@ -23,7 +23,6 @@ CREATE FUNCTION `save_movimiento_comision`(
     _created_by VARCHAR(100),
     _last_modify_by VARCHAR(100)
 )
-RETURNS INT(11)
 MODIFIES SQL DATA
 MAIN: BEGIN
 
@@ -31,7 +30,7 @@ MAIN: BEGIN
 	DECLARE _id_movimiento_conciliacion INT(11);
 
 	-- En caso de error se hace rollback
-	--DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	-- DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	-- BEGIN
 	--	ROLLBACK;
 	--	RESIGNAL;
@@ -72,7 +71,7 @@ MAIN: BEGIN
 
 	-- COMMIT;
 
-	RETURN _id_movimiento_conciliacion;
+	-- RETURN _id_movimiento_conciliacion;
 
 END MAIN;
 $$

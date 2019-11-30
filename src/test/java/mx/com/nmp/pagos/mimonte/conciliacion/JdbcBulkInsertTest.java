@@ -3,6 +3,7 @@ package mx.com.nmp.pagos.mimonte.conciliacion;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.ReporteJdbcBulkInsert;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
@@ -49,7 +50,7 @@ public class JdbcBulkInsertTest {
 		movTransito.setTipoContratoDesc("56 - Pagos Libres");
 		movTransito.setTitular("Titular");
 		ReporteJdbcBulkInsert<MovimientoTransito> bulkTransito = new ReporteJdbcBulkInsert<MovimientoTransito>(Arrays.asList(movTransito), true);
-		String callSP = bulkTransito.buildCallSP("save_movimiento_transito");
+		List<String> callSP = bulkTransito.buildCallSP("save_movimiento_transito");
 		String insertStatement = bulkTransito.buildInsertStatement();
 		System.out.println(callSP);
 		System.out.println(insertStatement);
@@ -111,10 +112,10 @@ public class JdbcBulkInsertTest {
 		ReporteJdbcBulkInsert<MovimientoComision> bulk = new ReporteJdbcBulkInsert<MovimientoComision>(Arrays.asList(movComision), true);
 		String insertStatement = bulk.buildInsertStatement();
 		String query = bulk.buildInsertQuery();
-		String sp = bulk.buildCallSP("save_movimiento_comision");
+		List<String> sps = bulk.buildCallSP("save_movimiento_comision");
 		System.out.println(insertStatement);
 		System.out.println(query);
-		System.out.println(sp);
+		System.out.println(sps);
 	}
 
 
@@ -142,10 +143,10 @@ public class JdbcBulkInsertTest {
 		ReporteJdbcBulkInsert<MovimientoDevolucion> bulk = new ReporteJdbcBulkInsert<MovimientoDevolucion>(Arrays.asList(movDev), true);
 		String insertStatement = bulk.buildInsertStatement();
 		String query = bulk.buildInsertQuery();
-		String sp = bulk.buildCallSP("save_movimiento_devolucion");
+		List<String> sps = bulk.buildCallSP("save_movimiento_devolucion");
 		System.out.println(insertStatement);
 		System.out.println(query);
-		System.out.println(sp);
+		System.out.println(sps);
 	}
 
 
@@ -166,10 +167,10 @@ public class JdbcBulkInsertTest {
 		ReporteJdbcBulkInsert<MovimientoPago> bulk = new ReporteJdbcBulkInsert<MovimientoPago>(Arrays.asList(movPago), true);
 		String insertStatement = bulk.buildInsertStatement();
 		String query = bulk.buildInsertQuery();
-		String sp = bulk.buildCallSP("save_movimiento_pago");
+		List<String> sps = bulk.buildCallSP("save_movimiento_pago");
 		System.out.println(insertStatement);
 		System.out.println(query);
-		System.out.println(sp);
+		System.out.println(sps);
 	}
 
 }
