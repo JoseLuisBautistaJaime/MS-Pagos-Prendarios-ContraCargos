@@ -553,7 +553,8 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 		Float,
 		Date,
 		TipoLayoutEnum,
-		LocalDate;
+		LocalDate,
+		TipoMovimientoComisionEnum;
 		public static JdbcColumnType get(String typeName) {
 			JdbcColumnType type = JdbcColumnType.Long; // Default
 			for (JdbcColumnType jdbcType : JdbcColumnType.values()) {
@@ -561,9 +562,7 @@ public class ReporteJdbcBulkInsert<T extends Object> {
 					type = jdbcType;
 					break;
 				}
-				// TODO: ver la forma de modificar esto para que no quede en hardcode
-				// Hard code del tipo para el correcto casteo de este enum
-				else if(TipoLayoutEnum.name().equalsIgnoreCase(typeName)) {
+				else if(TipoLayoutEnum.name().equalsIgnoreCase(typeName) || TipoMovimientoComisionEnum.name().equalsIgnoreCase(typeName)) {
 					type = String;
 					break;
 				}
