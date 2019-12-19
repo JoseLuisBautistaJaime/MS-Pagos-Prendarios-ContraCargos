@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,7 @@ import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.GrupoLayoutEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.IMovTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
@@ -53,6 +55,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
@@ -706,7 +709,7 @@ public class LayoutsService {
 		LayoutDTO layoutDTO = null;
 
 		// Se obtienen los movimientos de acuerdo al tipo de layout
-		List<MovimientoConciliacion> movimientos = obtenerMovimientosConciliacion(idConciliacion, tipo);
+		List<IMovTransaccion> movimientos = obtenerMovimientosConciliacion(idConciliacion, tipo);
 		if (movimientos != null && movimientos.size() > 0) {
 
 			// Se construyen las lineas
@@ -758,14 +761,14 @@ public class LayoutsService {
 	 * @param grupo
 	 * @return
 	 */
-	private List<LayoutLineaDTO> buildLineasDTO(List<MovimientoConciliacion> movimientos, TipoLayoutEnum tipo,
+	private List<LayoutLineaDTO> buildLineasDTO(List<IMovTransaccion> movimientos, TipoLayoutEnum tipo,
 			GrupoLayoutEnum grupo) throws ConciliacionException {
 
 		// Genera las lineas
 		List<LayoutLineaDTO> lineasDTO = new ArrayList<LayoutLineaDTO>();
 
 		// Agrupar movimientos por tipo y grupo
-		List<MovimientoConciliacion> movimientosByGrupo = agruparMovimientos(movimientos, tipo, grupo);
+		List<IMovTransaccion> movimientosByGrupo = agruparMovimientos(movimientos, tipo, grupo);
 		LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipo, grupo);
 		if (lineaCatalog == null) {
 			throw new ConciliacionException(
@@ -773,7 +776,7 @@ public class LayoutsService {
 		}
 
 		// Genera las lineas de acuerdo al tipo y grupo
-		for (MovimientoConciliacion movimiento : movimientosByGrupo) {
+		for (IMovTransaccion movimiento : movimientosByGrupo) {
 			BigDecimal monto = getMontoMovimiento(movimiento, tipo, grupo);
 			String unidadOperativa = getUnidadOperativa(movimiento, lineaCatalog);
 			LayoutLineaDTO lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaCatalog, monto,
@@ -793,23 +796,22 @@ public class LayoutsService {
 	 * @param grupo
 	 * @return
 	 */
-	private List<MovimientoConciliacion> agruparMovimientos(List<MovimientoConciliacion> movimientos,
-			TipoLayoutEnum tipo, GrupoLayoutEnum grupo) {
-		List<MovimientoConciliacion> movimientosGrupo = new ArrayList<MovimientoConciliacion>();
+	private List<IMovTransaccion> agruparMovimientos(List<IMovTransaccion> movimientos, TipoLayoutEnum tipo, GrupoLayoutEnum grupo) {
+		List<IMovTransaccion> movimientosGrupo = new ArrayList<IMovTransaccion>();
 		if (movimientos != null && movimientos.size() > 0) {
-			for (MovimientoConciliacion movimiento : movimientos) {
+			for (IMovTransaccion movimiento : movimientos) {
 				switch (grupo) {
-				case BANCOS: // TODO: Comisiones u otro tipo de movimientos
-					if (movimiento.getMovimientoMidas() == null) {
-						movimientosGrupo.add(movimiento);
+					case BANCOS: // TODO: Comisiones u otro tipo de movimientos
+						if (movimiento.getMovimientoMidas() == null) {
+							movimientosGrupo.add(movimiento);
+						}
+						break;
+					case SUCURSALES:
+						if (movimiento.getMovimientoMidas() != null) {
+							movimientosGrupo.add(movimiento);
+						}
+						break;
 					}
-					break;
-				case SUCURSALES:
-					if (movimiento.getMovimientoMidas() != null) {
-						movimientosGrupo.add(movimiento);
-					}
-					break;
-				}
 			}
 		}
 		return movimientosGrupo;
@@ -824,7 +826,7 @@ public class LayoutsService {
 	 * @param grupo
 	 * @return
 	 */
-	private BigDecimal getMontoMovimiento(MovimientoConciliacion movimiento, TipoLayoutEnum tipo,
+	private BigDecimal getMontoMovimiento(IMovTransaccion movimiento, TipoLayoutEnum tipo,
 			GrupoLayoutEnum grupo) {
 		BigDecimal monto = new BigDecimal(0);
 		switch (tipo) {
@@ -855,7 +857,7 @@ public class LayoutsService {
 	 * @param lineaCatalog
 	 * @return
 	 */
-	private String getUnidadOperativa(MovimientoConciliacion movimiento, LayoutLineaCatalog lineaCatalog) {
+	private String getUnidadOperativa(IMovTransaccion movimiento, LayoutLineaCatalog lineaCatalog) {
 		String unidadOperativa = "";
 		if (StringUtils.isNotBlank(lineaCatalog.getUnidadOperativa())) {
 			switch (lineaCatalog.getTipo()) {
@@ -896,11 +898,13 @@ public class LayoutsService {
 	 * @param tipo
 	 * @return
 	 */
-	private List<MovimientoConciliacion> obtenerMovimientosConciliacion(Long idConciliacion, TipoLayoutEnum tipo) {
-		List<MovimientoConciliacion> movimientos = new ArrayList<MovimientoConciliacion>();
+	private List<IMovTransaccion> obtenerMovimientosConciliacion(Long idConciliacion, TipoLayoutEnum tipo) {
+		List<IMovTransaccion> movimientos = new ArrayList<IMovTransaccion>();
 		switch (tipo) {
 		case PAGOS:
 			movimientos.addAll(movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion));
+			// Se obtienen los movimientos de pagos midas
+			movimientos.addAll(obtenerMovimientosMidasPagos(idConciliacion, tipo));
 			break;
 		case DEVOLUCIONES:
 			movimientos.addAll(movimientoConciliacionRepository.findMovimientoDevolucionByConciliacionIdAndStatus(
@@ -916,6 +920,20 @@ public class LayoutsService {
 		}
 		return movimientos;
 	}
+
+
+	/**
+	 * Obtiene los movimientos midas DS, RF, APL correspondientes
+	 * @param idConciliacion
+	 * @param tipo
+	 * @return
+	 */
+	private List<MovimientoMidas> obtenerMovimientosMidasPagos(Long idConciliacion, TipoLayoutEnum tipo) {
+		List<MovimientoMidas> movimientosMidas = new ArrayList<MovimientoMidas>();
+		
+		return movimientosMidas;
+	}
+
 
 	/**
 	 * Se encarga de obtener el layout por tipo de layout

@@ -382,6 +382,11 @@ public class MovimientoMidas implements Comparable<MovimientoMidas>, java.io.Ser
 	}
 
 	@Override
+	public MovimientoMidas getMovimientoMidas() {
+		return this;
+	}
+
+	@Override
 	public String toString() {
 		return "MovimientoMidas [id=" + id + ", reporte=" + reporte + ", transaccion=" + transaccion
 				+ ", estadoTransaccion=" + estadoTransaccion + ", fecha=" + fecha + ", folio=" + folio + ", sucursal="

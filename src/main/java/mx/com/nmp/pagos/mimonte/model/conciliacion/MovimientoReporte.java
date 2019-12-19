@@ -8,6 +8,5 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  * Fecha: 04/06/2019 9:44 PM
  * @version 0.1
  */
-public interface MovimientoReporte {
-
+public interface MovimientoReporte extends IMovTransaccion {
 }

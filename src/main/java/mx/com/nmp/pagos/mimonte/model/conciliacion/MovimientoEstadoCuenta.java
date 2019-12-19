@@ -199,6 +199,11 @@ public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta
 	}
 
 	@Override
+	public MovimientoMidas getMovimientoMidas() {
+		return null;
+	}
+
+	@Override
 	public String toString() {
 		return "MovimientoEstadoCuenta [id=" + id + ", idEstadoCuenta=" + idEstadoCuenta + ", clavePais=" + clavePais
 				+ ", sucursal=" + sucursal + ", fechaOperacion=" + fechaOperacion + ", fechaValor=" + fechaValor

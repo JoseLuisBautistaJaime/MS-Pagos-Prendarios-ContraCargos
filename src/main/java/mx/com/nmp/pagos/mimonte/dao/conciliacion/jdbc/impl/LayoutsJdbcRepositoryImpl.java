@@ -68,8 +68,7 @@ public class LayoutsJdbcRepositoryImpl implements LayoutsJdbcRepository {
 			batchList.add(it.next());
 			if (batchList.size() >= ConciliacionConstants.COMMON_BATCH_SIZE || !it.hasNext()) { // Insertar registros en batch o Insertar registros restantes
 				LOGGER.info(">> Insertando {} registros", batchList.size());
-				ReporteJdbcBulkInsert<LayoutReporte> bulkInsert = new ReporteJdbcBulkInsert<LayoutReporte>(batchList,
-						false);
+				ReporteJdbcBulkInsert<LayoutReporte> bulkInsert = new ReporteJdbcBulkInsert<LayoutReporte>(batchList, false);
 				String query = bulkInsert.buildInsertQuery();
 				jdbcTemplate.execute(query);
 				batchList.clear();
