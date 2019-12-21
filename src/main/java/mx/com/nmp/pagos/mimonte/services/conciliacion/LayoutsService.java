@@ -10,13 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +37,12 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutLineaCatalogRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutLineasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutsRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.LayoutsJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
@@ -53,7 +55,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
@@ -133,7 +134,11 @@ public class LayoutsService {
 
 	@Inject
 	private JdbcTemplate jdbcTemplate;
-		
+
+	@Inject
+	private MovimientosMidasRepository movimientosMidasRepository;
+
+
 	/**
 	 * Logs de la clase
 	 */
@@ -830,18 +835,18 @@ public class LayoutsService {
 			GrupoLayoutEnum grupo) {
 		BigDecimal monto = new BigDecimal(0);
 		switch (tipo) {
-		case PAGOS:
-			monto = ((MovimientoPago) movimiento).getMonto();
-			break;
-		case DEVOLUCIONES:
-			monto = ((MovimientoDevolucion) movimiento).getMonto();
-			break;
-		case COMISIONES_GENERALES:
-		case COMISIONES_MOV:
-			monto = ((MovimientoComision) movimiento).getMonto();
-			break;
-		default:
-			break;
+			case PAGOS:
+				monto = ((MovimientoPago) movimiento).getMonto();
+				break;
+			case DEVOLUCIONES:
+				monto = ((MovimientoDevolucion) movimiento).getMonto();
+				break;
+			case COMISIONES_GENERALES:
+			case COMISIONES_MOV:
+				monto = ((MovimientoComision) movimiento).getMonto();
+				break;
+			default:
+				break;
 		}
 		if (monto != null) {
 			monto = (grupo == GrupoLayoutEnum.BANCOS ? monto.negate() : monto);
@@ -928,9 +933,32 @@ public class LayoutsService {
 	 * @param tipo
 	 * @return
 	 */
-	private List<MovimientoMidas> obtenerMovimientosMidasPagos(Long idConciliacion, TipoLayoutEnum tipo) {
-		List<MovimientoMidas> movimientosMidas = new ArrayList<MovimientoMidas>();
+	private List<MovimientoPago> obtenerMovimientosMidasPagos(Long idConciliacion, TipoLayoutEnum tipo) throws ConciliacionException {
+		List<MovimientoPago> movimientosMidas = new ArrayList<MovimientoPago>();
 		
+		try {
+			List<MovimientoMidasDTO> movMidasDTO = this.movimientosMidasRepository.getMovimientosMidasBySucursal(idConciliacion);
+			if (CollectionUtils.isNotEmpty(movMidasDTO)) {
+				for (MovimientoMidasDTO movDTO : movMidasDTO) {
+					// Se crea un movimiento pago incluyendo los datos del movimiento midas
+					MovimientoPago movPago = new MovimientoPago();
+					// Se crea un movimiento midas incluyendo monto, sucursal y operacion
+						MovimientoMidas movMidas = new MovimientoMidas();
+						movMidas.setMonto(movDTO.getMontoOperacion());
+						movMidas.setSucursal(movDTO.getSucursal());
+						movMidas.setOperacionAbr(movDTO.getOperacionAbr());
+					movPago.setMovimientoMidas(movMidas);
+					movPago.setMonto(movDTO.getMontoOperacion());
+					movPago.setNuevo(false);
+					movimientosMidas.add(movPago);
+				}
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException(ex.getMessage(), CodigoError.NMP_PMIMONTE_0011);
+		}
+
 		return movimientosMidas;
 	}
 
