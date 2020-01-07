@@ -497,7 +497,9 @@ public class LayoutsService {
 					          return ps;
 					        }, keyHolder);					    
 					    // Obtiene el id de layout
-					    layoutId = ((BigInteger) keyHolder.getKey()).longValue();
+//					    layoutId = ((BigInteger) keyHolder.getKey()).longValue();
+					    // Se castea a String para evitar errores de compatbili
+					    layoutId = ( new BigInteger(keyHolder.getKey().toString()) ).longValue();
 					    
 					    // Setea el id de layout a el header
 					    layout.getLayoutHeader().setLayout(new Layout(layoutId));
