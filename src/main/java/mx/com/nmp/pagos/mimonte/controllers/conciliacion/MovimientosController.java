@@ -137,6 +137,10 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /movimientos/nocturnos > REQUEST ENTRANTE: {}", movimientos.toString());
+		
 		long start = 0;
 		long finish = 0;
 		
@@ -196,6 +200,10 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientosNocturnos(
 			@RequestBody CommonConciliacionEstatusRequestDTO commonConciliacionRequestDTO) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /movimientos/nocturnos/consulta > REQUEST ENTRANTE: {}", commonConciliacionRequestDTO.toString());
+		
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
 		if (!ValidadorConciliacion.validateCommonConciliacionEstatusRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -247,6 +255,10 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalListRequestDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /movimientos/proveedor > REQUEST ENTRANTE: {}", movimientos.toString());
+		
 		long start = 0;
 		long finish = 0;
 		
@@ -313,6 +325,10 @@ public class MovimientosController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientosProvedor(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /movimientos/proveedor/consulta > REQUEST ENTRANTE: {}", commonConciliacionRequestDTO.toString());
+		
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -362,6 +378,10 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveMovimientoEsadoCuenta(@RequestBody SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /movimientos/estadocuenta > REQUEST ENTRANTE: {}", saveEstadoCuentaRequestDTO.toString());
+		
 		// Objetos necesarios
 		Boolean procesoCorrecto = null;
 		String descripcionError = null;
@@ -429,6 +449,10 @@ public class MovimientosController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientoEsadoCuenta(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /movimientos/estadocuenta/consulta > REQUEST ENTRANTE: {}", commonConciliacionRequestDTO.toString());
+		
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,

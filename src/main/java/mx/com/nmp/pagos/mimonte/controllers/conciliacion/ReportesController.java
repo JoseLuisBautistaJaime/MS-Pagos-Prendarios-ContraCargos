@@ -83,6 +83,10 @@ public class ReportesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getReportePagosEnLinea(@RequestBody ReporteRequestDTO reporteRequestDTO) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/reportes/pagosenlinea > REQUEST ENTRANTE: {}", reporteRequestDTO.toString());
+		
 		ValidadorConciliacion.validateFechasPrimary(reporteRequestDTO.getFechaDesde(),
 				reporteRequestDTO.getFechaHasta());
 		ReportePagosEnLineaOuterDTO reportePagosEnLineaOuterDTO = reportePagosService

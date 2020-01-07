@@ -140,6 +140,9 @@ public class ConciliacionController {
 	public Response saveConciliacion(@RequestBody ConciliacionRequestDTO conciliacionRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion > REQUEST ENTRANTE: {}", conciliacionRequestDTO.toString());
+		
 		ConciliacionResponseSaveDTO conciliacionResponseSaveDTO = ConciliacionBuilder
 				.buildConciliacionResponseSaveDTOFromConciliacionRequestDTO(conciliacionRequestDTO, new Date(), null,
 						createdBy);
@@ -167,8 +170,16 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaFolio(@PathVariable(value = "folio", required = true) Long folio) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /conciliacion/consulta/{folio} > REQUEST ENTRANTE: {}", folio);
+		
 		LOG.info(">> consultaFolio(" + folio + ")");
 		ConciliacionDTOList consultaFolio = conciliacionServiceImpl.consultaFolio(folio);
+		
+		// TODO: Log de request entrante
+				LOG.info(">>>URL: GET /conciliacion/consulta/{folio} > RESPONSE: {}", consultaFolio);
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				consultaFolio);
 	}
@@ -191,6 +202,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consulta(@RequestBody ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/consulta > REQUEST ENTRANTE: {}", consultaConciliacionRequestDTO.toString());
+		
 		ValidadorConciliacion.validateFechasPrimary(consultaConciliacionRequestDTO.getFechaDesde(),
 				consultaConciliacionRequestDTO.getFechaHasta());
 		List<ConsultaConciliacionDTO> consulta = conciliacionServiceImpl.consulta(consultaConciliacionRequestDTO);
@@ -228,6 +243,10 @@ public class ConciliacionController {
 	public Response actualizaConciliacion(
 			@RequestBody ActualizaionConciliacionRequestDTO actualizaionConciliacionRequestDTO,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: PUT /conciliacion > REQUEST ENTRANTE: {}", actualizaionConciliacionRequestDTO.toString());
+		
 		// Validaciones generales del request
 		if (!ValidadorConciliacion.validateActualizaionConciliacionRequestDTO(actualizaionConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -271,6 +290,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response enviaConciliacion(@PathVariable(value = "folio", required = true) Long folio,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/generarlayouts/{folio} > REQUEST ENTRANTE: {}", folio);
+		
 		Boolean flag = null;
 		String statusError = null;
 		boolean status = true;		
@@ -347,12 +370,20 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Long folio) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /conciliacion/transito/consulta/{folio} > REQUEST ENTRANTE: {}", folio);
+		
 		LOG.info(">> consultaTransitoFolio(" + folio + ")");
 
 		List<MovTransitoDTO> response = conciliacionService.consultaMovimientosTransito(folio);
 		if (null == response || response.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /conciliacion/transito/consulta/{folio} > RESPONSE: {}", response.toString());
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				response);
 	}
@@ -378,6 +409,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response solicitarPagos(@RequestBody SolicitarPagosRequestDTO solicitarPagosRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/solicitarpagos > REQUEST ENTRANTE: {}", solicitarPagosRequestDTO.toString());
+		
 		if (!ValidadorConciliacion.validateSolicitarPagosRequestDTO(solicitarPagosRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -408,6 +443,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response marcarDevoluciones(@RequestBody SolicitarPagosRequestDTO solicitarPagosRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/marcardevoluciones > REQUEST ENTRANTE: {}", solicitarPagosRequestDTO.toString());
+		
 		if (!ValidadorConciliacion.validateSolicitarPagosRequestDTO(solicitarPagosRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -435,12 +474,20 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaMovimientosDevolucion(@PathVariable(value = "folio", required = true) Long folio) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /conciliacion/devoluciones/consulta/{folio} > REQUEST ENTRANTE: {}", folio);
+		
 		LOG.info(">> consultaMovimientosDevolucion(" + folio + ")");
 
 		List<DevolucionConDTO> devoluciones = devolucionesServiceImpl.consultaDevolucion(folio);
 		if (null == devoluciones || devoluciones.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /conciliacion/transito/consulta/{folio} > RESPONSE: {}", devoluciones.toString());
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.SUCCESSFUL_RETURNS_CONSULTATION, devoluciones);
 	}
@@ -466,6 +513,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response devoluciones(@RequestBody FolioRequestDTO folioRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/devoluciones/solicitar > REQUEST ENTRANTE: {}", folioRequestDTO.toString());
+		
 		if (!ValidadorConciliacion.validateFolioRequestDTO(folioRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -498,6 +549,10 @@ public class ConciliacionController {
 	public Response liquidacionMovimientos(
 			@RequestBody LiquidacionMovimientosRequestDTO liquidacionMovimientosRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/devoluciones/liquidar > REQUEST ENTRANTE: {}", liquidacionMovimientosRequestDTO.toString());
+		
 		// Validacion de objeto y atributos
 		if (!ValidadorConciliacion.validateLiquidacionMovimientosRequestDTO(liquidacionMovimientosRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -540,6 +595,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response actualizaIdPs(@RequestBody ActualizarIdPSRequest actualizarIdPSRequest,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: PUT /conciliacion/actualizarPS > REQUEST ENTRANTE: {}", actualizarIdPSRequest.toString());
+		
 		if (!ValidadorConciliacion.validateActualizarIdPSRequest(actualizarIdPSRequest))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -571,6 +630,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Long folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/generar/{folio} > REQUEST ENTRANTE: {}", folio);
+		
 		LOG.info(">> consultaGenerarFolio(" + folio + ", " + requestUser + ")");
 
 		// VALIDACIONES INICIAN
@@ -617,6 +680,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaActividades(@RequestBody ConsultaActividadesRequest consultaActividadesRequest) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/actividades > REQUEST ENTRANTE: {}", consultaActividadesRequest.toString());
+		
 		ValidadorConciliacion.validateFechasPrimary(consultaActividadesRequest.getFechaDesde(),
 				consultaActividadesRequest.getFechaHasta());
 		List<ConsultaActividadDTO> response = conciliacionService.consultaActividades(consultaActividadesRequest);
@@ -648,6 +715,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response actualizaSubEstatus(@RequestBody ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			@RequestHeader(name = CatalogConstants.REQUEST_USER_HEADER, required = true) String requestUser) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: PUT /conciliacion/actualizarSubEstatus > REQUEST ENTRANTE: {}", actualizarSubEstatusRequestDTO.toString());
+		
 		if (!ValidadorConciliacion.validateActualizarSubEstatusRequestDTO(actualizarSubEstatusRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -675,6 +746,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response resumenConciliaciones(@RequestBody ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/resumen > REQUEST ENTRANTE: {}", resumenConciliacionRequestDTO.toString());
+		
 		ValidadorConciliacion.validateFechasPrimary(resumenConciliacionRequestDTO.getFechaInicial(),
 				resumenConciliacionRequestDTO.getFechaFinal());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
