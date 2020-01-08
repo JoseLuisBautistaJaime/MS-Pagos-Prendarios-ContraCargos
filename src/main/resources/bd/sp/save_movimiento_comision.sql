@@ -21,7 +21,7 @@ CREATE PROCEDURE `save_movimiento_comision`(
     _created_date DATETIME,
     _last_modified_date DATETIME,
     _created_by VARCHAR(100),
-    _last_modify_by VARCHAR(100)
+    _last_modified_by VARCHAR(100)
 )
 MODIFIES SQL DATA
 MAIN: BEGIN
@@ -40,16 +40,25 @@ MAIN: BEGIN
 	-- START TRANSACTION;
 
 		-- Inserta/actualiza el movimiento conciliacion y regresa el id
-		SET _id_movimiento_conciliacion = save_movimiento_conciliacion(
-			_id,
-			_id_conciliacion,
-	    	_created_by,
-	    	_created_date,
-	    	_last_modify_by,
-	    	_last_modified_date,
-	    	_nuevo,
-	    	_id_movimiento_midas
-		);
+		IF (_id IS NULL) THEN
+			INSERT INTO to_movimiento_conciliacion(id_conciliacion, created_by, created_date, last_modified_by, last_modified_date, nuevo, id_movimiento_midas)
+			VALUES(_id_conciliacion, _created_by, _created_date, _last_modified_by, _last_modified_date, _nuevo, _id_movimiento_midas);
+			
+			SET _id_movimiento_conciliacion = LAST_INSERT_ID();
+		ELSE
+			UPDATE to_movimiento_conciliacion
+			SET
+				id_concilacion = _id_concilacion,
+				created_by = _created_by,
+				created_date = _created_date,
+				last_modified_by = _last_modified_by,
+				last_modified_date = _last_modified_date,
+				nuevo = _nuevo,
+				id_movimiento_midas = _id_movimiento_midas
+			WHERE
+				id = _id;
+			SET _id_movimiento_conciliacion = _id;
+		END IF;
 
 		-- Inserta el movimiento comision
 		IF (_id IS NULL OR _id <= 0) THEN

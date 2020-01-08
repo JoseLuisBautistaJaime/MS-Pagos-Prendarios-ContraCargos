@@ -145,4 +145,4 @@ UPDATE tr_regla_negocio_variable rnv SET rnv.id_regla_negocio = 2 WHERE rnv.id_v
 -- Actualizacion para asignacion de folio de conciliacion usando una "secuencia" en la bd
 
 -- Secuencia para conciliacion
-INSERT INTO `conciliacion`.`seq_conciliacion` (`seq_name`, `seq_value`) VALUES ('folio_conciliacion', 0); -- OJO: Setear el folio actual de la conciliacion
+INSERT INTO `seq_conciliacion` (`seq_name`, `seq_value`) VALUES ('folio_conciliacion', 0); -- OJO: Setear el folio actual de la conciliacion
