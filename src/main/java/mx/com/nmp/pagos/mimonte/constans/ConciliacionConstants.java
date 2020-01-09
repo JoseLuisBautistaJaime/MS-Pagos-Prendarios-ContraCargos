@@ -8,6 +8,8 @@ import static mx.com.nmp.pagos.mimonte.util.CollectionUtil.asList;
 
 import java.util.List;
 
+import com.ibm.icu.math.BigDecimal;
+
 /**
  * @name ConciliacionConstants
  * @description Clase con valores con valores constantes utiliazados en los
@@ -620,5 +622,5 @@ public final class ConciliacionConstants {
 	 * Mensaje que es enviado cuando se realiza la generacion de layouts de manera exitosa
 	 */
 	public static final String CONCILIATION_LAYOUTS_SUCCESSFULLY_CREATED = "Layouts generados de forma exitosa.";
-	
+		
 }

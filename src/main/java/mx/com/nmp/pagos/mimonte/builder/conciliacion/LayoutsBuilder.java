@@ -222,10 +222,14 @@ public abstract class LayoutsBuilder {
 	 * @return
 	 */
 	public static List<LayoutLinea> buildLayoutLineaFromLayoutLineaDTO(List<LayoutLineaDTO> layoutLineaDTOs,
-			Layout layout, String requestUser) {
+			Layout layout, String requestUser, LayoutLineaCatalog layoutLineaCatalog) {
 		List<LayoutLinea> layoutLineas = new ArrayList<>();
-		layoutLineaDTOs.forEach(l -> {
-			LayoutLinea layoutLinea = new LayoutLinea();
+		LayoutLinea layoutLinea = null;
+		LayoutLinea layoutLineaFinal = null;
+		BigDecimal sumaMontos = BigDecimal.ZERO;
+		
+		for(LayoutLineaDTO l : layoutLineaDTOs){
+			layoutLinea = new LayoutLinea();
 			layoutLinea.setId(l.getId() != null && l.getId() > 0 ? l.getId() : null);
 			layoutLinea.setLinea(l.getLinea());
 			layoutLinea.setCuenta(l.getCuenta());
@@ -233,16 +237,56 @@ public abstract class LayoutsBuilder {
 			layoutLinea.setUnidadOperativa(l.getUnidadOperativa());
 			layoutLinea.setNegocio(l.getNegocio());
 			layoutLinea.setProyectoNmp(l.getProyectoNMP());
-			layoutLinea.setMonto(l.getMonto());
+			
+			// Si el layout es tipo es PAGOS el monto debe ser negativo, si es de tipo DEVOLCUONES DEBE SER POSITIVO
+			if(null != layout && null != layout.getTipo()) {
+				boolean flag = l.getMonto().compareTo(BigDecimal.ZERO) > 0;
+				switch(layout.getTipo()) {
+				case PAGOS:
+					if(flag)
+						layoutLinea.setMonto(l.getMonto().negate());	
+					else
+						layoutLinea.setMonto(l.getMonto());
+					break;
+				case DEVOLUCIONES:
+					if(!flag)
+						layoutLinea.setMonto(l.getMonto().negate());	
+					else
+						layoutLinea.setMonto(l.getMonto());
+					break;				
+				default:
+					layoutLinea.setMonto(l.getMonto());
+					break;
+				}
+				sumaMontos = sumaMontos.add(flag ? l.getMonto() : l.getMonto().negate());
+			}
+			
 			layoutLinea.setLayout(layout);
-			// TODO: Corroborar se cambia a true para estandarizar en alta por medio de app
-			// a: 1, igual que en comisiones
 			layoutLinea.setNuevo(true);
 			layoutLinea.setCreatedBy(requestUser);
 			layoutLinea.setCreatedDate(new Date());
 			layoutLineas.add(layoutLinea);
-		});
+		};
 
+		// Se agrega un registro final para el layout de pagos con el total de los movimientos en positivo y para devoluciones con el total en negativo
+				if(null != layout && null != layout.getTipo()) {
+					if(layout.getTipo().equals(TipoLayoutEnum.PAGOS) || layout.getTipo().equals(TipoLayoutEnum.DEVOLUCIONES)) {
+						layoutLineaFinal = new LayoutLinea();
+						layoutLineaFinal.setLinea(layoutLineaCatalog.getLinea());
+						layoutLineaFinal.setCuenta(layoutLineaCatalog.getCuenta());
+						layoutLineaFinal.setDepId(layoutLineaCatalog.getDepId());
+						layoutLineaFinal.setUnidadOperativa(layoutLineaCatalog.getUnidadOperativa());
+						layoutLineaFinal.setNegocio(layoutLineaCatalog.getNegocio());
+						layoutLineaFinal.setProyectoNmp(layoutLineaCatalog.getProyectoNmp());
+						layoutLineaFinal.setLayout(layout);
+						layoutLineaFinal.setNuevo(true);
+						layoutLineaFinal.setCreatedBy(requestUser);
+						layoutLineaFinal.setCreatedDate(new Date());
+						layoutLineaFinal.setMonto(layout.getTipo().equals(TipoLayoutEnum.PAGOS) ?  sumaMontos : sumaMontos.negate());
+						layoutLineas.add(layoutLineaFinal);
+					}
+				}
+		
 		return layoutLineas;
 	}
 

@@ -11,7 +11,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -611,8 +613,11 @@ public class LayoutsService {
 
 		if (lineasDTO != null && lineasDTO.size() > 0) {
 
+			// Se obtiene el catalogo de linea para la ultima linea del layout de pagos
+			LayoutLineaCatalog layoutLineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupo(layout.getTipo(), GrupoLayoutEnum.BANCOS);
+
 			List<LayoutLinea> lineas = LayoutsBuilder.buildLayoutLineaFromLayoutLineaDTO(lineasDTO, layout,
-					requestUser);
+					requestUser, layoutLineaCatalog);
 
 			// Existentes
 			for (LayoutLinea linea : lineas) {
@@ -907,9 +912,26 @@ public class LayoutsService {
 	 */
 	private List<IMovTransaccion> obtenerMovimientosConciliacion(Long idConciliacion, TipoLayoutEnum tipo) {
 		List<IMovTransaccion> movimientos = new ArrayList<IMovTransaccion>();
+		List<MovimientoPago> movimientoPagoList = null;
+		List<Integer> idsList = null;
+		Map<Integer, Integer> movimientosPagosSucursalesMap = null;
+		List<Object[]> result = null;
 		switch (tipo) {
 		case PAGOS:
-			movimientos.addAll(movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion));
+			// Se obtienen los movimientos de pagos
+			movimientoPagoList = movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion);
+			// Lo siguiente es para setear de manera manual los ids de sucursal a cada movimiento ya que la consulta no trae esa informacion
+			idsList = new ArrayList<>();
+			for(MovimientoPago movimientoPago : movimientoPagoList) {
+				idsList.add(movimientoPago.getId());
+			}
+			result = movimientoConciliacionRepository.getMapSucursalesByMovimientoConciliacionIds(idsList);
+			movimientosPagosSucursalesMap = getMapValues(result);
+			for (MovimientoPago movimientoPago : movimientoPagoList) {
+				movimientoPago.getMovimientoMidas().setSucursal( (movimientosPagosSucursalesMap.get(movimientoPago.getId())) );
+			}
+			
+			movimientos.addAll(movimientoPagoList);
 			// Se obtienen los movimientos de pagos midas
 			movimientos.addAll(obtenerMovimientosMidasPagos(idConciliacion, tipo));
 			break;
@@ -1100,4 +1122,19 @@ public class LayoutsService {
 				&& layoutDTO.getLineas().size() > 0;
 	}
 
+	/**
+	 * Obtiene el id de mov. conciliacion y sucursal de una lista de arreglo de objetos y los pone en un mapa para su mas rapido acceso
+	 * @param values
+	 * @return
+	 */
+	private static Map<Integer, Integer>getMapValues(List<Object[]> values) {
+		Map<Integer, Integer> map = new HashMap<>();;
+		if(null != values) {
+			for(Object[] obj : values) {
+				map.put(Integer.parseInt(obj[0].toString()), Integer.parseInt(obj[1].toString()));
+			}
+		}
+		return map;
+	}
+	
 }
