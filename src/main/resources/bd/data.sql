@@ -79,9 +79,9 @@ INSERT INTO tk_variable (id_variable, clave, valor) VALUES (4, '{conteo}', '10')
 -- INSERTS INICIALES EN TABLA - tk_regla_negocio
 -- ------------------------------------------------------------------------------------------------------------------ --
 INSERT INTO tk_regla_negocio (id, nombre, descripcion, consulta) VALUES
-(1, 'Regla de Negocio 1', 'Evalua cantidad de transacciones con cantidad variable', 'SELECT CASE WHEN {currentTransactionAmount} > {suma} THEN TRUE ELSE FALSE END AS ESTATUS');
+(1, 'Regla de Negocio 1', 'Evalua suma de montos con un monto total variable', 'SELECT CASE WHEN {currentTransactionAmount} > {suma} THEN TRUE ELSE FALSE END AS ESTATUS');
 INSERT INTO tk_regla_negocio (id, nombre, descripcion, consulta) VALUES
-(2, 'Regla de Negocio 2', 'Evalua suma de montos con un monto total variable', 'SELECT CASE WHEN (SELECT COUNT(DISTINCT p.id_transaccion_midas) AS TOTAL FROM to_pagos p WHERE p.id_cliente = {idCliente}) > {total} THEN TRUE ELSE FALSE END AS ESTATUS');
+(2, 'Regla de Negocio 2', 'Evalua cantidad de transacciones con cantidad variable', 'SELECT CASE WHEN (SELECT COUNT(DISTINCT p.id_transaccion_midas) AS TOTAL FROM to_pagos p WHERE p.id_cliente = {idCliente}) > {total} THEN TRUE ELSE FALSE END AS ESTATUS');
 INSERT INTO tk_regla_negocio (id, nombre, descripcion, consulta) VALUES
 (3, 'Regla de Negocio 3', 'Evalua cantidad de transacciones con un determinado id de autorizacion variable', 'SELECT CASE WHEN (SELECT COUNT(DISTINCT p.id_transaccion_midas) AS CONTEO FROM to_pagos p WHERE p.id_cliente = {idCliente} AND p.id_tipo_autorizacion = {idTipoAutorizacion}) > {conteo} THEN TRUE ELSE FALSE END AS ESTATUS');
 
