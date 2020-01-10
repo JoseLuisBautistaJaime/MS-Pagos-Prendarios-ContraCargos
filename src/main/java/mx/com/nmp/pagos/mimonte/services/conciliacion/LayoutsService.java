@@ -140,7 +140,6 @@ public class LayoutsService {
 	@Inject
 	private MovimientosMidasRepository movimientosMidasRepository;
 
-
 	/**
 	 * Logs de la clase
 	 */
@@ -479,11 +478,11 @@ public class LayoutsService {
 
 			// Se persisten
 			try {
-				// TODO: Eliminar esta linea una vez que se defina que 
+				// TODO: Eliminar esta linea una vez que se defina que
 //				this.layoutsRepository.saveAll(layouts);
-				
+
 				// INSERTA EL LAYOUT, HEADER Y LINEAS
-				for(Layout layout : layouts) {
+				for (Layout layout : layouts) {
 					KeyHolder keyHolder = new GeneratedKeyHolder();
 					List<LayoutLinea> layoutLineaList = null;
 					LayoutLinea layoutLinea = null;
@@ -491,36 +490,36 @@ public class LayoutsService {
 
 					// Inserta el layout
 					String insertQuery = ConciliacionConstants.SQLSentences.INSERT_WHITIN_TO_LAYOUT;
-					    jdbcTemplate.update(connection -> {
-					        PreparedStatement ps = connection
-					          .prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
-					          ps.setLong(1, layout.getIdConciliacion());
-					          ps.setString(2, layout.getTipo().toString());
-					          return ps;
-					        }, keyHolder);					    
-					    // Obtiene el id de layout
+					jdbcTemplate.update(connection -> {
+						PreparedStatement ps = connection.prepareStatement(insertQuery,
+								Statement.RETURN_GENERATED_KEYS);
+						ps.setLong(1, layout.getIdConciliacion());
+						ps.setString(2, layout.getTipo().toString());
+						return ps;
+					}, keyHolder);
+					// Obtiene el id de layout
 //					    layoutId = ((BigInteger) keyHolder.getKey()).longValue();
-					    // Se castea a String para evitar errores de compatbili
-					    layoutId = ( new BigInteger(keyHolder.getKey().toString()) ).longValue();
-					    
-					    // Setea el id de layout a el header
-					    layout.getLayoutHeader().setLayout(new Layout(layoutId));
-					    
-					    // Setea el id de layout a las lineas en una nueva lista 
-					    layoutLineaList = new ArrayList<>();
-					    for(LayoutLinea layoutLineaInner : layout.getLayoutLineas()) {
-					    	layoutLinea = layoutLineaInner;
-					    	layoutLinea.setLayout(new Layout(layoutId));
-					    	layoutLineaList.add(layoutLinea);
-					    }
-					    
-					    // Inserta el header
-					    layoutsJdbcRepository.insertarLista(Arrays.asList(layout.getLayoutHeader()));
-					    
-					    // Inserta las lineas
-					    layoutsJdbcRepository.insertarLista(layoutLineaList);
+					// Se castea a String para evitar errores de compatbili
+					layoutId = (new BigInteger(keyHolder.getKey().toString())).longValue();
+
+					// Setea el id de layout a el header
+					layout.getLayoutHeader().setLayout(new Layout(layoutId));
+
+					// Setea el id de layout a las lineas en una nueva lista
+					layoutLineaList = new ArrayList<>();
+					for (LayoutLinea layoutLineaInner : layout.getLayoutLineas()) {
+						layoutLinea = layoutLineaInner;
+						layoutLinea.setLayout(new Layout(layoutId));
+						layoutLineaList.add(layoutLinea);
+					}
+
+					// Inserta el header
+					layoutsJdbcRepository.insertarLista(Arrays.asList(layout.getLayoutHeader()));
+
+					// Inserta las lineas
+					layoutsJdbcRepository.insertarLista(layoutLineaList);
 				}
-				    
+
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				throw new ConciliacionException("Ocurrio un error al persistir los layouts",
@@ -614,10 +613,11 @@ public class LayoutsService {
 		if (lineasDTO != null && lineasDTO.size() > 0) {
 
 			// Se obtiene el catalogo de linea para la ultima linea del layout de pagos
-			LayoutLineaCatalog layoutLineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupo(layout.getTipo(), GrupoLayoutEnum.BANCOS);
+			LayoutLineaCatalog layoutLineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupo(layout.getTipo(),
+					GrupoLayoutEnum.BANCOS);
 
-			List<LayoutLinea> lineas = LayoutsBuilder.buildLayoutLineaFromLayoutLineaDTO(lineasDTO, layout,
-					requestUser, layoutLineaCatalog);
+			List<LayoutLinea> lineas = LayoutsBuilder.buildLayoutLineaFromLayoutLineaDTO(lineasDTO, layout, requestUser,
+					layoutLineaCatalog);
 
 			// Existentes
 			for (LayoutLinea linea : lineas) {
@@ -808,22 +808,99 @@ public class LayoutsService {
 	 * @param grupo
 	 * @return
 	 */
-	private List<IMovTransaccion> agruparMovimientos(List<IMovTransaccion> movimientos, TipoLayoutEnum tipo, GrupoLayoutEnum grupo) {
+	private List<IMovTransaccion> agruparMovimientos(List<IMovTransaccion> movimientos, TipoLayoutEnum tipo,
+			GrupoLayoutEnum grupo) {
 		List<IMovTransaccion> movimientosGrupo = new ArrayList<IMovTransaccion>();
+		Map<Integer, Map<IMovTransaccion, BigDecimal>> totalesMap = null;
+		Map<IMovTransaccion, BigDecimal> tempMap = null;
+		IMovTransaccion movimiento = null;
+		BigDecimal montoSucursal = null;
+		BigDecimal tempMonto = null;
+		BigDecimal ammount = null;
+		Integer sucursal = null;
+		boolean flagGrupo = false;
+
 		if (movimientos != null && movimientos.size() > 0) {
-			for (IMovTransaccion movimiento : movimientos) {
+			totalesMap = new HashMap<>();
+
+			for (int i = 0; i < movimientos.size(); i++) {
+				movimiento = movimientos.get(i);
 				switch (grupo) {
-					case BANCOS: // TODO: Comisiones u otro tipo de movimientos
+				// TODO: Comisiones u otro tipo de movimientos
+				case BANCOS:
+					// TODO: Borrar esto una vez que se pruebe la funcionalidad
+//						if (movimiento.getMovimientoMidas() == null) {
+//							movimientosGrupo.add(movimiento);
+//						}
+
+					// Aqui se verifica si es tipo pagos o devoluciones para hacer la suma en
+					// negativo o positivo
+					switch (tipo) {
+					case PAGOS:
+						sucursal = movimiento.getMovimientoMidas().getSucursal();
+						flagGrupo = true;
+						tempMonto = ((MovimientoPago) movimiento).getMonto();
+						if (tempMonto.compareTo(BigDecimal.ZERO) > 0)
+							montoSucursal = tempMonto.negate();
+						else
+							montoSucursal = tempMonto;
+						break;
+					case DEVOLUCIONES:
+						sucursal = movimiento.getMovimientoMidas().getSucursal();
+						flagGrupo = true;
+						tempMonto = ((MovimientoDevolucion) movimiento).getMonto();
+						if (tempMonto.compareTo(BigDecimal.ZERO) < 0)
+							montoSucursal = tempMonto.negate();
+						else
+							montoSucursal = tempMonto;
+						break;
+					default:
 						if (movimiento.getMovimientoMidas() == null) {
 							movimientosGrupo.add(movimiento);
 						}
 						break;
-					case SUCURSALES:
-						if (movimiento.getMovimientoMidas() != null) {
-							movimientosGrupo.add(movimiento);
-						}
-						break;
 					}
+					// Aqui se agrupan los totales de los movimientos cuando el grupo es BANCOS
+					if (flagGrupo && !totalesMap.containsKey(sucursal)) {
+						tempMap = new HashMap<>();
+						tempMap.put(movimiento, montoSucursal);
+						totalesMap.put(sucursal, tempMap);
+					} else if (flagGrupo && totalesMap.containsKey(sucursal)) {
+						tempMap = totalesMap.get(sucursal);
+						for (Map.Entry<IMovTransaccion, BigDecimal> entry : tempMap.entrySet()) {
+							ammount = entry.getValue().add(montoSucursal);
+							break;
+						}
+						tempMap.clear();
+						tempMap.put(movimiento, ammount);
+						totalesMap.put(sucursal, tempMap);
+					}
+					break;
+				case SUCURSALES:
+					if (movimiento.getMovimientoMidas() != null) {
+						movimientosGrupo.add(movimiento);
+					}
+					break;
+				}
+				// Si es el ultimo movimiento de la lista y fue del grupo BANCOS ya sea pagos o
+				// devoluciones se agregan a la lista con su total correspondiente
+				if (i == (movimientos.size() - 1) && flagGrupo) {
+					for (Map.Entry<Integer, Map<IMovTransaccion, BigDecimal>> entry : totalesMap.entrySet()) {
+						for (Map.Entry<IMovTransaccion, BigDecimal> entryInner : entry.getValue().entrySet()) {
+							IMovTransaccion mov = entryInner.getKey();
+							if(mov instanceof MovimientoPago) {
+								MovimientoPago movimientoPago = (MovimientoPago)mov;
+								((MovimientoPago) mov).setMonto(entryInner.getValue());
+								movimientosGrupo.add(movimientoPago);
+							}
+							else if (mov instanceof MovimientoDevolucion) {
+								MovimientoDevolucion movimientoDevolucion= (MovimientoDevolucion)mov;
+								((MovimientoDevolucion) mov).setMonto(entryInner.getValue());
+								movimientosGrupo.add(movimientoDevolucion);
+							}
+						}
+					}
+				}
 			}
 		}
 		return movimientosGrupo;
@@ -838,22 +915,30 @@ public class LayoutsService {
 	 * @param grupo
 	 * @return
 	 */
-	private BigDecimal getMontoMovimiento(IMovTransaccion movimiento, TipoLayoutEnum tipo,
-			GrupoLayoutEnum grupo) {
+	private BigDecimal getMontoMovimiento(IMovTransaccion movimiento, TipoLayoutEnum tipo, GrupoLayoutEnum grupo) {
 		BigDecimal monto = new BigDecimal(0);
+		boolean flag;
 		switch (tipo) {
-			case PAGOS:
+		case PAGOS:
+			flag = ((MovimientoPago) movimiento).getMonto().compareTo(BigDecimal.ZERO) > 0;
+			if (flag)
+				monto = ((MovimientoPago) movimiento).getMonto().negate();
+			else
 				monto = ((MovimientoPago) movimiento).getMonto();
-				break;
-			case DEVOLUCIONES:
+			break;
+		case DEVOLUCIONES:
+			flag = ((MovimientoDevolucion) movimiento).getMonto().compareTo(BigDecimal.ZERO) < 0;
+			if (flag)
+				monto = ((MovimientoDevolucion) movimiento).getMonto().negate();
+			else
 				monto = ((MovimientoDevolucion) movimiento).getMonto();
-				break;
-			case COMISIONES_GENERALES:
-			case COMISIONES_MOV:
-				monto = ((MovimientoComision) movimiento).getMonto();
-				break;
-			default:
-				break;
+			break;
+		case COMISIONES_GENERALES:
+		case COMISIONES_MOV:
+			monto = ((MovimientoComision) movimiento).getMonto();
+			break;
+		default:
+			break;
 		}
 		if (monto != null) {
 			monto = (grupo == GrupoLayoutEnum.BANCOS ? monto.negate() : monto);
@@ -920,17 +1005,19 @@ public class LayoutsService {
 		case PAGOS:
 			// Se obtienen los movimientos de pagos
 			movimientoPagoList = movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion);
-			// Lo siguiente es para setear de manera manual los ids de sucursal a cada movimiento ya que la consulta no trae esa informacion
+			// Lo siguiente es para setear de manera manual los ids de sucursal a cada
+			// movimiento ya que la consulta no trae esa informacion
 			idsList = new ArrayList<>();
-			for(MovimientoPago movimientoPago : movimientoPagoList) {
+			for (MovimientoPago movimientoPago : movimientoPagoList) {
 				idsList.add(movimientoPago.getId());
 			}
 			result = movimientoConciliacionRepository.getMapSucursalesByMovimientoConciliacionIds(idsList);
 			movimientosPagosSucursalesMap = getMapValues(result);
 			for (MovimientoPago movimientoPago : movimientoPagoList) {
-				movimientoPago.getMovimientoMidas().setSucursal( (movimientosPagosSucursalesMap.get(movimientoPago.getId())) );
+				movimientoPago.getMovimientoMidas()
+						.setSucursal((movimientosPagosSucursalesMap.get(movimientoPago.getId())));
 			}
-			
+
 			movimientos.addAll(movimientoPagoList);
 			// Se obtienen los movimientos de pagos midas
 			movimientos.addAll(obtenerMovimientosMidasPagos(idConciliacion, tipo));
@@ -950,42 +1037,42 @@ public class LayoutsService {
 		return movimientos;
 	}
 
-
 	/**
 	 * Obtiene los movimientos midas DS, RF, APL correspondientes
+	 * 
 	 * @param idConciliacion
 	 * @param tipo
 	 * @return
 	 */
-	private List<MovimientoPago> obtenerMovimientosMidasPagos(Long idConciliacion, TipoLayoutEnum tipo) throws ConciliacionException {
+	private List<MovimientoPago> obtenerMovimientosMidasPagos(Long idConciliacion, TipoLayoutEnum tipo)
+			throws ConciliacionException {
 		List<MovimientoPago> movimientosMidas = new ArrayList<MovimientoPago>();
-		
+
 		try {
-			List<MovimientoMidasDTO> movMidasDTO = this.movimientosMidasRepository.getMovimientosMidasBySucursal(idConciliacion);
+			List<MovimientoMidasDTO> movMidasDTO = this.movimientosMidasRepository
+					.getMovimientosMidasBySucursal(idConciliacion);
 			if (CollectionUtils.isNotEmpty(movMidasDTO)) {
 				for (MovimientoMidasDTO movDTO : movMidasDTO) {
 					// Se crea un movimiento pago incluyendo los datos del movimiento midas
 					MovimientoPago movPago = new MovimientoPago();
 					// Se crea un movimiento midas incluyendo monto, sucursal y operacion
-						MovimientoMidas movMidas = new MovimientoMidas();
-						movMidas.setMonto(movDTO.getMontoOperacion());
-						movMidas.setSucursal(movDTO.getSucursal());
-						movMidas.setOperacionAbr(movDTO.getOperacionAbr());
+					MovimientoMidas movMidas = new MovimientoMidas();
+					movMidas.setMonto(movDTO.getMontoOperacion());
+					movMidas.setSucursal(movDTO.getSucursal());
+					movMidas.setOperacionAbr(movDTO.getOperacionAbr());
 					movPago.setMovimientoMidas(movMidas);
 					movPago.setMonto(movDTO.getMontoOperacion());
 					movPago.setNuevo(false);
 					movimientosMidas.add(movPago);
 				}
 			}
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ConciliacionException(ex.getMessage(), CodigoError.NMP_PMIMONTE_0011);
 		}
 
 		return movimientosMidas;
 	}
-
 
 	/**
 	 * Se encarga de obtener el layout por tipo de layout
@@ -1123,18 +1210,21 @@ public class LayoutsService {
 	}
 
 	/**
-	 * Obtiene el id de mov. conciliacion y sucursal de una lista de arreglo de objetos y los pone en un mapa para su mas rapido acceso
+	 * Obtiene el id de mov. conciliacion y sucursal de una lista de arreglo de
+	 * objetos y los pone en un mapa para su mas rapido acceso
+	 * 
 	 * @param values
 	 * @return
 	 */
-	private static Map<Integer, Integer>getMapValues(List<Object[]> values) {
-		Map<Integer, Integer> map = new HashMap<>();;
-		if(null != values) {
-			for(Object[] obj : values) {
+	private static Map<Integer, Integer> getMapValues(List<Object[]> values) {
+		Map<Integer, Integer> map = new HashMap<>();
+		;
+		if (null != values) {
+			for (Object[] obj : values) {
 				map.put(Integer.parseInt(obj[0].toString()), Integer.parseInt(obj[1].toString()));
 			}
 		}
 		return map;
 	}
-	
+
 }
