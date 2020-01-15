@@ -8,8 +8,6 @@ import static mx.com.nmp.pagos.mimonte.util.CollectionUtil.asList;
 
 import java.util.List;
 
-import com.ibm.icu.math.BigDecimal;
-
 /**
  * @name ConciliacionConstants
  * @description Clase con valores con valores constantes utiliazados en los
