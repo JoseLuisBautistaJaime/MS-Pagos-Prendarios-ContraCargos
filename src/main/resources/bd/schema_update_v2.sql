@@ -17,3 +17,9 @@ UPDATE tc_layout_linea cta SET cta.cuenta = '1011001080' WHERE cta.tipo = 'PAGOS
 
 SET SQL_SAFE_UPDATES = 0;
 -- ----------------------------------------------- UPDATES ------------------------------------- --
+
+-- --------------------------------------------------------------------------------------------------- --
+-- ------------- INTERCAMBIA LAS DESCRIPCIONES DE LA REGLA 1 Y 2 PARA QUE SEAN LAS CORRECTAS ---------- --
+-- --------------------------------------------------------------------------------------------------- --
+UPDATE tk_regla_negocio rn SET rn.descripcion = 'Evalua cantidad de transacciones con cantidad variable' WHERE rn.id = 2;
+UPDATE tk_regla_negocio rn SET rn.descripcion = 'Evalua suma de montos con un monto total variable' WHERE rn.id = 1;

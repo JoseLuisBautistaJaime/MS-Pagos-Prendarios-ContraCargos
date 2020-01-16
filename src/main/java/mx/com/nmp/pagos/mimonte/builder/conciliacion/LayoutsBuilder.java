@@ -241,23 +241,7 @@ public abstract class LayoutsBuilder {
 			// Si el layout es tipo es PAGOS el monto debe ser negativo, si es de tipo DEVOLCUONES DEBE SER POSITIVO
 			if(null != layout && null != layout.getTipo()) {
 				boolean flag = l.getMonto().compareTo(BigDecimal.ZERO) > 0;
-				switch(layout.getTipo()) {
-				case PAGOS:
-					if(flag)
-						layoutLinea.setMonto(l.getMonto().negate());	
-					else
-						layoutLinea.setMonto(l.getMonto());
-					break;
-				case DEVOLUCIONES:
-					if(!flag)
-						layoutLinea.setMonto(l.getMonto().negate());	
-					else
-						layoutLinea.setMonto(l.getMonto());
-					break;				
-				default:
-					layoutLinea.setMonto(l.getMonto());
-					break;
-				}
+				layoutLinea.setMonto(l.getMonto());
 				sumaMontos = sumaMontos.add(flag ? l.getMonto() : l.getMonto().negate());
 			}
 			
@@ -268,24 +252,25 @@ public abstract class LayoutsBuilder {
 			layoutLineas.add(layoutLinea);
 		};
 
+		// Todo: eliminar esto una vez que se pruebe la nueva implementacion
 		// Se agrega un registro final para el layout de pagos con el total de los movimientos en positivo y para devoluciones con el total en negativo
-				if(null != layout && null != layout.getTipo()) {
-					if(layout.getTipo().equals(TipoLayoutEnum.PAGOS) || layout.getTipo().equals(TipoLayoutEnum.DEVOLUCIONES)) {
-						layoutLineaFinal = new LayoutLinea();
-						layoutLineaFinal.setLinea(layoutLineaCatalog.getLinea());
-						layoutLineaFinal.setCuenta(layoutLineaCatalog.getCuenta());
-						layoutLineaFinal.setDepId(layoutLineaCatalog.getDepId());
-						layoutLineaFinal.setUnidadOperativa(layoutLineaCatalog.getUnidadOperativa());
-						layoutLineaFinal.setNegocio(layoutLineaCatalog.getNegocio());
-						layoutLineaFinal.setProyectoNmp(layoutLineaCatalog.getProyectoNmp());
-						layoutLineaFinal.setLayout(layout);
-						layoutLineaFinal.setNuevo(true);
-						layoutLineaFinal.setCreatedBy(requestUser);
-						layoutLineaFinal.setCreatedDate(new Date());
-						layoutLineaFinal.setMonto(layout.getTipo().equals(TipoLayoutEnum.PAGOS) ?  sumaMontos : sumaMontos.negate());
-						layoutLineas.add(layoutLineaFinal);
-					}
-				}
+//				if(null != layout && null != layout.getTipo()) {
+//					if(layout.getTipo().equals(TipoLayoutEnum.PAGOS) || layout.getTipo().equals(TipoLayoutEnum.DEVOLUCIONES)) {
+//						layoutLineaFinal = new LayoutLinea();
+//						layoutLineaFinal.setLinea(layoutLineaCatalog.getLinea());
+//						layoutLineaFinal.setCuenta(layoutLineaCatalog.getCuenta());
+//						layoutLineaFinal.setDepId(layoutLineaCatalog.getDepId());
+//						layoutLineaFinal.setUnidadOperativa(layoutLineaCatalog.getUnidadOperativa());
+//						layoutLineaFinal.setNegocio(layoutLineaCatalog.getNegocio());
+//						layoutLineaFinal.setProyectoNmp(layoutLineaCatalog.getProyectoNmp());
+//						layoutLineaFinal.setLayout(layout);
+//						layoutLineaFinal.setNuevo(true);
+//						layoutLineaFinal.setCreatedBy(requestUser);
+//						layoutLineaFinal.setCreatedDate(new Date());
+//						layoutLineaFinal.setMonto(layout.getTipo().equals(TipoLayoutEnum.PAGOS) ?  sumaMontos : sumaMontos.negate());
+//						layoutLineas.add(layoutLineaFinal);
+//					}
+//				}
 		
 		return layoutLineas;
 	}
