@@ -46,15 +46,15 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 
 
 	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#isClaveCategoria(java.lang.String, java.lang.Long)
+	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#isClaveCategoria(java.lang.String, java.lang.Long, java.lang.Long)
 	 */
-	public boolean isClaveCategoria(String claveLeyenda, Long idCategoria) throws ConciliacionException {
+	public boolean isClaveCategoria(String claveLeyenda, Long idCategoria, Long idEntidad) throws ConciliacionException {
 
 		LOG.debug("isClaveCategoria {}, {}", claveLeyenda, idCategoria);
 
 		List<CodigoEstadoCuenta> codigos = null;
 		try {
-			codigos = codigoEstadoCuentaRepository.findByCategoriaIdAndEstatus(idCategoria, true);
+			codigos = codigoEstadoCuentaRepository.findByCategoriaIdAndEstatusAndEntidadId(idCategoria, true, idEntidad);
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -70,14 +70,14 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 
 
 	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getCategoriaFromClave(java.lang.String)
+	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getCategoriaFromClave(java.lang.String, java.lang.Long)
 	 */
 	@Override
-	public Long getCategoriaFromClave(String claveLeyenda) throws ConciliacionException {
+	public Long getCategoriaFromClave(String claveLeyenda, Long idEntidad) throws ConciliacionException {
 
 		List<CodigoEstadoCuenta> codigos = null;
 		try {
-			codigos = codigoEstadoCuentaRepository.findAllByEstatus(true);
+			codigos = codigoEstadoCuentaRepository.findAllByEstatusAndEntidadId(true, idEntidad);
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -93,13 +93,13 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 
 
 	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getCodigosEstadoCuenta(java.lang.Long)
+	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getCodigosEstadoCuenta(java.lang.Long, java.lang.Long)
 	 */
-	public List<String> getCodigosEstadoCuenta(Long categoriaEdoCuenta) throws ConciliacionException {
+	public List<String> getCodigosEstadoCuenta(Long idCategoria, Long idEntidad) throws ConciliacionException {
 
 		List<CodigoEstadoCuenta> codigosComisiones = null;
 		try {
-			codigosComisiones = this.codigoEstadoCuentaRepository.findByCategoriaIdAndEstatus(categoriaEdoCuenta, true);
+			codigosComisiones = this.codigoEstadoCuentaRepository.findByCategoriaIdAndEstatusAndEntidadId(idCategoria, true, idEntidad);
 		} catch (Exception ex) {
 			throw new ConciliacionException("Error al obtener los codigos de estado de cuenta",
 					CodigoError.NMP_PMIMONTE_BUSINESS_072);
@@ -122,11 +122,14 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 	}
 
 
-	public List<String> getCodigosEstadoCuenta() throws ConciliacionException {
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getCodigosEstadoCuenta(java.lang.Long)
+	 */
+	public List<String> getCodigosEstadoCuenta(Long idEntidad) throws ConciliacionException {
 
 		List<CodigoEstadoCuenta> codigos = null;
 		try {
-			codigos = this.codigoEstadoCuentaRepository.findAllByEstatus(true);
+			codigos = this.codigoEstadoCuentaRepository.findAllByEstatusAndEntidadId(true, idEntidad);
 		} catch (Exception ex) {
 			throw new ConciliacionException("Error al obtener los codigos de estado de cuenta",
 					CodigoError.NMP_PMIMONTE_BUSINESS_072);
@@ -168,11 +171,11 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 	/* (non-Javadoc)
 	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getCodigosEdoCuentaMap()
 	 */
-	public CodigosEdoCuentaMap getCodigosEdoCuentaMap() throws ConciliacionException {
+	public CodigosEdoCuentaMap getCodigosEdoCuentaMap(Long idEntidad) throws ConciliacionException {
 
 		List<CodigoEstadoCuenta> codigos = null;
 		try {
-			codigos = this.codigoEstadoCuentaRepository.findAllByEstatus(true);
+			codigos = this.codigoEstadoCuentaRepository.findAllByEstatusAndEntidadId(true, idEntidad);
 		} catch (Exception ex) {
 			throw new ConciliacionException("Error al obtener los codigos de estado de cuenta",
 					CodigoError.NMP_PMIMONTE_BUSINESS_072);
@@ -195,9 +198,7 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 	 * @return
 	 */
 	private boolean isClaveLeyendaInCodigos(List<CodigoEstadoCuenta> codigos, String claveLeyenda) {
-
 		Long idCategoria = getCategoriaFromClave(codigos, claveLeyenda);
-
 		return idCategoria != null;
 	}
 

@@ -5,7 +5,6 @@
 package mx.com.nmp.pagos.mimonte.constans;
 
 import static mx.com.nmp.pagos.mimonte.util.CollectionUtil.asList;
-
 import java.util.List;
 
 /**
@@ -63,6 +62,16 @@ public final class ConciliacionConstants {
 		 * Tipo Movimiento de retiro
 		 */
 		public static final int TIPO_RETIRO = 2;
+
+		/**
+		 * Tipo Movimiento de cargo
+		 */
+		public static final int TIPO_CARGO = 1;
+
+		/**
+		 * Tipo Movimiento de abono
+		 */
+		public static final int TIPO_ABONO = 2;
 
 	}
 
@@ -320,8 +329,10 @@ public final class ConciliacionConstants {
 	public static final String WRONG_ORDER_SUB_STATUS = "El subestatus que desea actualizar tiene un orden incorrecto.";
 
 	// CATALOGOS
-
+	public static final Long CATEGORIA_ESTADO_CUENTA_VENTAS = 1L;
 	public static final Long CATEGORIA_ESTADO_CUENTA_COMISIONES = 2L;
+	public static final Long CATEGORIA_ESTADO_CUENTA_CARGOS = 3L;
+	public static final Long CATEGORIA_ESTADO_CUENTA_ABONOS = 4L;
 	public static final Long CATEGORIA_ESTADO_CUENTA_IVA = 5L;
 	public static final Long CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES = 6L;
 
