@@ -837,15 +837,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		LOG.info("T>>> INICIA ACTUALIZACION DE SUB ESTATUS GENERAL: {}", sdf.format(new Date(globalStart)));
 		
 		Boolean subEstatusValido = null;
-		
-		// TODO: Eliminar esto ya no se usa dado que se valida esto antes en otro metodo
-		// Se valida si la conciliacion existe
-//		Optional<Conciliacion> conciliaicion = conciliacionRepository
-//				.findById(actualizarSubEstatusRequestDTO.getFolio());
-//		if (!conciliaicion.isPresent())
-//			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
-//					CodigoError.NMP_PMIMONTE_BUSINESS_045);
-		
+				
 		// Se obtienen: El id del estatus conciliacion el orden del mismo y el roden del
 		// subestatus de acuerdo al id de subestatus especificado como parametro
 		// mediante un query nativo

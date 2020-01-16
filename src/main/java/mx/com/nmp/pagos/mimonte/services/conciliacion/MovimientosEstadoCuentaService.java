@@ -268,9 +268,6 @@ public class MovimientosEstadoCuentaService {
 		List<Long> possibleSubEstatus = null;
 		EstatusConciliacion estatusConciliacion = null;
 
-		// Valida que la conciliacion exista
-		conciliacionDataValidator.validateFolioExists(request.getFolio());
-
 		// Ajuste de fechas
 		try {
 			datesMap = FechasUtil.adjustDates(request.getFechaInicial(), request.getFechaFinal());

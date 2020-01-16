@@ -47,6 +47,7 @@ import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosEstadoCuentaSer
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosProveedorService;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
@@ -111,6 +112,12 @@ public class MovimientosController {
 	@Autowired
 	private ConciliacionRepository conciliacionRepository;
 
+	/**
+	 * Validador generico para datos de conciliacion
+	 */
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+	
 	// Temporal format para los LOGs de timers
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	
@@ -395,10 +402,16 @@ public class MovimientosController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 
+		// Valida que la conciliacion exista
+		conciliacionDataValidator.validateFolioExists(saveEstadoCuentaRequestDTO.getFolio());
+		
 		// Validacion de fechas
 		ValidadorConciliacion.validateFechasPrimary(saveEstadoCuentaRequestDTO.getFechaInicial(),
 				saveEstadoCuentaRequestDTO.getFechaFinal());
 
+		// Actualiza el subestatus a Consulta estado de cuenta
+		conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(saveEstadoCuentaRequestDTO.getFolio(), ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA, null), userRequest);
+		
 		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste
 		// los movimientos del estado de cuenta
 		try {
