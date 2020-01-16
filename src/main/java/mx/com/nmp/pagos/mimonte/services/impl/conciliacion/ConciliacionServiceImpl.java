@@ -1196,7 +1196,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 
 		// Notificar cambios o alta de reportes, si existen...
-		this.conciliacionHelper.generarConciliacion(idConciliacion, reportes);
+		Long idEntidad = reportes.get(0).getConciliacion().getEntidad().getId(); // Se obtiene la entidad bancaria asociada
+		this.conciliacionHelper.generarConciliacion(idConciliacion, idEntidad, reportes);
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(idConciliacion,

@@ -93,10 +93,11 @@ public class MergeReporteHandler {
 	 * Se encarga de generar la cadena de procesadores de acuerdo al tipo de reporte
 	 * @param reportes
 	 * @param idConciliacion
+	 * @param idEntidad
 	 */
-	public void handle(List<Reporte> reportes, Long idConciliacion) {
+	public void handle(List<Reporte> reportes, Long idConciliacion, Long idEntidad) {
 
-		ReportesWrapper wrapper = new ReportesWrapper(idConciliacion);
+		ReportesWrapper wrapper = new ReportesWrapper(idConciliacion, idEntidad);
 
 		for (Reporte reporte : reportes) {
 			switch (reporte.getTipo()) {

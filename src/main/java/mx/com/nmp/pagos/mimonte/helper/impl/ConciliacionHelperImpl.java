@@ -87,10 +87,10 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 
 
 	/* (non-Javadoc)
-	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#generarConciliacion(java.lang.Long, mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte[])
+	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#generarConciliacion(java.lang.Long, java.lang.Long, java.util.List)
 	 */
-	public void generarConciliacion(Long folio, List<Reporte> reportes) throws ConciliacionException {
-		ReporteObservable reporteObservable = new ReporteObservable(reportes, folio);
+	public void generarConciliacion(Long folio, Long idEntidad, List<Reporte> reportes) throws ConciliacionException {
+		ReporteObservable reporteObservable = new ReporteObservable(reportes, folio, idEntidad);
 		reporteObservable.addObserver(reporteObserver);
 		reporteObservable.notifyObservers();
 	}
