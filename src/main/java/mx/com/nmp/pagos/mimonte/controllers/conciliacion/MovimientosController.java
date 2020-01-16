@@ -146,6 +146,10 @@ public class MovimientosController {
 		
 		start = System.currentTimeMillis();
 		
+		// Validaciones generales
+		if(!ValidadorConciliacion.validateMovimientoProcesosNocturnosListResponseDTO(movimientos))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,CodigoError.NMP_PMIMONTE_0008);
+		
 		LOG.info("T>>> INICIA VALIDACOIN INICIAL: {}", sdf.format(new Date(start)));
 		ValidadorConciliacion.validateFechasPrimary(movimientos.getFechaDesde(), movimientos.getFechaHasta());
 		finish = System.currentTimeMillis();

@@ -107,26 +107,12 @@ public interface ValidadorConciliacion {
 					assertNotNull(movimientoMidasRequestDTO.getMontoOperacion());
 					assertNotNull(movimientoMidasRequestDTO.getSucursal());
 					assertNotNull(movimientoMidasRequestDTO.getTransaccion());
-					// assertNotNull(movimientoMidasRequestDTO.getEstatus());
 					assertNotNull(movimientoMidasRequestDTO.getFecha());
 					assertNotNull(movimientoMidasRequestDTO.getNumAutorizacion());
 					assertNotNull(movimientoMidasRequestDTO.getOperacionAbr());
 					assertNotNull(movimientoMidasRequestDTO.getOperacionDesc());
 					assertNotNull(movimientoMidasRequestDTO.getTipoContratoAbr());
 					assertNotNull(movimientoMidasRequestDTO.getTipoContratoDesc());
-					// if (!movimientoMidasRequestDTO.getEstatus()) {
-					// assertNotNull(movimientoMidasRequestDTO.getCodigoError());
-					// assertNotNull(movimientoMidasRequestDTO.getMensajeError());
-					// assertNotNull(movimientoMidasRequestDTO.getIdTarjeta());
-					// assertNotNull(movimientoMidasRequestDTO.getMarcaTarjeta());
-					// assertNotNull(movimientoMidasRequestDTO.getTipoTarjeta());
-					// assertNotNull(movimientoMidasRequestDTO.getTarjeta());
-					// assertNotNull(movimientoMidasRequestDTO.getMonedaPago());
-					// } else {
-					// assertNotNull(movimientoMidasRequestDTO.getComisiones());
-					// assertNotNull(movimientoMidasRequestDTO.getInteres());
-					// }
-
 					assertNotNull(movimientoMidasRequestDTO.getImporteTransaccion());
 					assertNotNull(movimientoMidasRequestDTO.getIdOperacion());
 					assertNotNull(movimientoMidasRequestDTO.getIdTipoContrato());
