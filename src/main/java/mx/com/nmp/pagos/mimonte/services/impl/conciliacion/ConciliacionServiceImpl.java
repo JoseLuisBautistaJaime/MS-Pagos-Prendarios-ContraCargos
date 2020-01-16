@@ -192,7 +192,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 */
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
-
+	
 	/**
 	 * Valor maximo por default para resultados de actividades cuando no se
 	 * especifica folio
@@ -843,6 +843,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// mediante un query nativo
 		start = System.currentTimeMillis();
 		LOG.info("T>>> INICIA VALIDACION PARA QUE EL SUB ESTATUS PERTENEZCA A UN ESTATUS CORRECTO: {}", sdf.format(new Date(start)));
+		
+		// Valida si el folio existe
+		conciliacionDataValidator.validateFolioExists(actualizarSubEstatusRequestDTO.getFolio());
+		
 		Map<String, Object> map = conciliacionRepository
 				.findIdEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus());
 		if (null == map || null == map.get("estatus"))

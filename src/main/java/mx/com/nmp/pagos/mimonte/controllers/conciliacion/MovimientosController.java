@@ -408,9 +408,6 @@ public class MovimientosController {
 		// Validacion de fechas
 		ValidadorConciliacion.validateFechasPrimary(saveEstadoCuentaRequestDTO.getFechaInicial(),
 				saveEstadoCuentaRequestDTO.getFechaFinal());
-
-		// Actualiza el subestatus a Consulta estado de cuenta
-		conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(saveEstadoCuentaRequestDTO.getFolio(), ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA, null), userRequest);
 		
 		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste
 		// los movimientos del estado de cuenta
