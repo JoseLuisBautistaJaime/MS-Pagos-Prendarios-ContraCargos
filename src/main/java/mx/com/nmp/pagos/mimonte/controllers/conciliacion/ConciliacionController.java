@@ -4,23 +4,10 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
-import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
-import mx.com.nmp.pagos.mimonte.constans.CodigoError;
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
-import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
-import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
-import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
-import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.DevolucionesServiceImpl;
-import mx.com.nmp.pagos.mimonte.util.Response;
-import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -28,10 +15,55 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.List;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import mx.com.nmp.pagos.mimonte.async.AsyncLayer;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
+import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
+import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.DevolucionesServiceImpl;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
+import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
 /**
  * @name ConciliacionController
@@ -42,7 +74,7 @@ import java.util.List;
  * @creationDate 02/04/2019 16:38 hrs.
  * @version 0.1
  */
-@SuppressWarnings({"JavaDoc", "SpringAutowiredFieldsWarningInspection", "DefaultAnnotationParam"})
+@SuppressWarnings({ "JavaDoc", "SpringAutowiredFieldsWarningInspection", "DefaultAnnotationParam" })
 @RestController
 @RequestMapping(value = "/mimonte")
 @Api(value = "Servicio que permite realizar operciones sobre la conciliación.", description = "REST API para realizar operaciones sobre la conciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
@@ -65,6 +97,12 @@ public class ConciliacionController {
 	private DevolucionesServiceImpl devolucionesServiceImpl;
 
 	/**
+	 * Permite ejecutar procesos de manera asincrona
+	 */
+	@Autowired
+	AsyncLayer asyncLayer;
+
+	/**
 	 * Repository de SolicitarPagosService
 	 */
 	@Autowired
@@ -72,15 +110,28 @@ public class ConciliacionController {
 	private SolicitarPagosService solicitarPagosService;
 
 	/**
+	 * Validador generico de conciliacion
+	 */
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+	
+	/**
+	 * Temporal format para los LOGs de timers
+	 */
+	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
 	private final Logger LOG = LoggerFactory.getLogger(ConciliacionController.class);
 
 	/**
-	 * Servicio que permite dar de alta una nueva conciliación para entidad y cuenta seleccionados.
+	 * Servicio que permite dar de alta una nueva conciliación para entidad y cuenta
+	 * seleccionados.
 	 * 
-	 * @param conciliacionRequestDTO Request con la información para el alta de la conciliación.
-	 * @param createdBy Usuario que crea la conciliación.
+	 * @param conciliacionRequestDTO Request con la información para el alta de la
+	 *                               conciliación.
+	 * @param createdBy              Usuario que crea la conciliación.
 	 * @return La información de la conciliación registrada.
 	 */
 	@ResponseBody
@@ -96,6 +147,9 @@ public class ConciliacionController {
 	public Response saveConciliacion(@RequestBody ConciliacionRequestDTO conciliacionRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion > REQUEST ENTRANTE: {}", conciliacionRequestDTO.toString());
+		
 		ConciliacionResponseSaveDTO conciliacionResponseSaveDTO = ConciliacionBuilder
 				.buildConciliacionResponseSaveDTOFromConciliacionRequestDTO(conciliacionRequestDTO, new Date(), null,
 						createdBy);
@@ -106,7 +160,8 @@ public class ConciliacionController {
 	}
 
 	/**
-	 * Realiza la consulta de la conciliación desde la pantalla de consulta de conciliaciones.
+	 * Realiza la consulta de la conciliación desde la pantalla de consulta de
+	 * conciliaciones.
 	 * 
 	 * @param folio El identificador de la conciliación.
 	 * @return La información de la conciliación indicada.
@@ -122,8 +177,16 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaFolio(@PathVariable(value = "folio", required = true) Long folio) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /conciliacion/consulta/{folio} > REQUEST ENTRANTE: {}", folio);
+		
 		LOG.info(">> consultaFolio(" + folio + ")");
 		ConciliacionDTOList consultaFolio = conciliacionServiceImpl.consultaFolio(folio);
+		
+		// TODO: Log de request entrante
+				LOG.info(">>>URL: GET /conciliacion/consulta/{folio} > RESPONSE: {}", consultaFolio);
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				consultaFolio);
 	}
@@ -131,7 +194,8 @@ public class ConciliacionController {
 	/**
 	 * Realiza la consulta de las conciliaciones dadas de alta en el sistema.
 	 * 
-	 * @param consultaConciliacionRequestDTO Request con los criterios de búsqueda de las conciliaciones.
+	 * @param consultaConciliacionRequestDTO Request con los criterios de búsqueda
+	 *                                       de las conciliaciones.
 	 * @return El listado de conciliaciones que coincidieron con los criterios.
 	 */
 	@ResponseBody
@@ -145,6 +209,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consulta(@RequestBody ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/consulta > REQUEST ENTRANTE: {}", consultaConciliacionRequestDTO.toString());
+		
 		ValidadorConciliacion.validateFechasPrimary(consultaConciliacionRequestDTO.getFechaDesde(),
 				consultaConciliacionRequestDTO.getFechaHasta());
 		List<ConsultaConciliacionDTO> consulta = conciliacionServiceImpl.consulta(consultaConciliacionRequestDTO);
@@ -182,6 +250,10 @@ public class ConciliacionController {
 	public Response actualizaConciliacion(
 			@RequestBody ActualizaionConciliacionRequestDTO actualizaionConciliacionRequestDTO,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: PUT /conciliacion > REQUEST ENTRANTE: {}", actualizaionConciliacionRequestDTO.toString());
+		
 		// Validaciones generales del request
 		if (!ValidadorConciliacion.validateActualizaionConciliacionRequestDTO(actualizaionConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -208,13 +280,13 @@ public class ConciliacionController {
 	 * de la conciliación, y tendrá la posibilidad de visualizar y editar los layout
 	 * antes de enviarlos.
 	 * 
-	 * @param folio El identificador de la conciliación.
+	 * @param folio     El identificador de la conciliación.
 	 * @param createdBy Usuario que realiza la solicitud.
 	 * @return Mensaje de solicitud de envío.
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/conciliacion/enviar/{folio}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/conciliacion/generarlayouts/{folio}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Al confirmar que la información es correcta, el usuario solicitará el cierre de la conciliación, y tendrá la posibilidad de visualizar y editar los layout antes de enviarlos.", tags = {
 			"Conciliación" })
 	@ApiResponses({
@@ -225,26 +297,77 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response enviaConciliacion(@PathVariable(value = "folio", required = true) Long folio,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/generarlayouts/{folio} > REQUEST ENTRANTE: {}", folio);
+		
+		Boolean flag = null;
+		String statusError = null;
+		boolean status = true;		
+		long start = 0;
+		long finish = 0;
+
 		LOG.info(">> enviaConciliacion(" + folio + ", " + createdBy + ")");
 
 		// Valida el atributo
+		LOG.info(">>> INICIA VALIDACION DE FOLIO");
 		if (!ValidadorConciliacion.validateLong(folio))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
+		LOG.info(">>> FINALIZA VALIDACION DE FOLIO");
+
+		// Se valida que exista la conciliacion con el folio proporcionado
+		conciliacionDataValidator.validateFolioExists(folio);
 		
-		// Realiza el envio d ela conciliacion
-		conciliacionServiceImpl.enviarConciliacion(folio, createdBy);
+		// VALIDACION DE MERGE PREVIO
+		flag = conciliacionServiceImpl.validateConciliacionMerge(folio);
+		if(!flag)
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_135.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_135);
 		
+		// Realiza el envio de la conciliacion
+		try {
+			conciliacionServiceImpl.enviarConciliacion(folio, createdBy);
+		} catch (ConciliacionException ex) {
+			status = false;
+			statusError = ex.getMessage();
+			LOG.error(">>> ERROR DURANTE ENVIO DE CONCILIACION: {}", ex);
+			throw ex;
+		} catch (Exception ex) {
+			status = false;
+			statusError = ex.getMessage();
+			LOG.error(">>> ERROR DURANTE ENVIO DE CONCILIACION: {}", ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_9999.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_9999);
+		} finally {
+			if (!status) {
+				try {
+					// Se actualiza el sub estatus a layouts generados con error
+					start = System.currentTimeMillis();
+					LOG.info("T >>> INICIA ACTUALIZACION DE SUB-ESTATUS CON ERROR: {}", sdf.format(new Date(start)));
+					conciliacionService.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
+							ConciliacionConstants.SUBESTATUS_GENERACION_LAYOUTS_ERROR, statusError), createdBy);
+					finish = System.currentTimeMillis();
+					LOG.info("T >>> FINALIZA ACTUALIZACION DE SUB-ESTATUS CON ERROR: {}, EN: {}",
+							sdf.format(new Date(finish)), (finish - start));
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					LOG.error(">>>ERROR: {}", ex);
+				}
+			}
+		}
+
 		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
-				ConciliacionConstants.CONCILIATION_SENT_SUCCESSFULLY, null);
+				ConciliacionConstants.CONCILIATION_LAYOUTS_SUCCESSFULLY_CREATED, null);
 	}
 
 	/**
-	 * Realiza la consulta de los movimientos en tránsito de la conciliación (con error).
+	 * Realiza la consulta de los movimientos en tránsito de la conciliación (con
+	 * error).
 	 * 
 	 * @param folio El identificador de la conciliación.
-	 * @return La lista de movimientos en tránsito asociados a la conciliación indicada.
+	 * @return La lista de movimientos en tránsito asociados a la conciliación
+	 *         indicada.
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
@@ -257,12 +380,20 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Long folio) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /conciliacion/transito/consulta/{folio} > REQUEST ENTRANTE: {}", folio);
+		
 		LOG.info(">> consultaTransitoFolio(" + folio + ")");
 
 		List<MovTransitoDTO> response = conciliacionService.consultaMovimientosTransito(folio);
 		if (null == response || response.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /conciliacion/transito/consulta/{folio} > RESPONSE: {}", response.toString());
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				response);
 	}
@@ -271,8 +402,9 @@ public class ConciliacionController {
 	 * Permite realizar la solicitud de pagos no reflejados en Midas de los
 	 * movimientos que se encuentran en tránsito.
 	 * 
-	 * @param solicitarPagosRequestDTO Request con la información de los movimientos para los que se realiza la solicitud.
-	 * @param createdBy Usuario que realiza la solicitud.
+	 * @param solicitarPagosRequestDTO Request con la información de los movimientos
+	 *                                 para los que se realiza la solicitud.
+	 * @param createdBy                Usuario que realiza la solicitud.
 	 * @return Mensaje de solicitud de pagos.
 	 */
 	@ResponseBody
@@ -287,6 +419,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response solicitarPagos(@RequestBody SolicitarPagosRequestDTO solicitarPagosRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/solicitarpagos > REQUEST ENTRANTE: {}", solicitarPagosRequestDTO.toString());
+		
 		if (!ValidadorConciliacion.validateSolicitarPagosRequestDTO(solicitarPagosRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -300,8 +436,9 @@ public class ConciliacionController {
 	 * movimientos de devolución para cuando los pagos solicitados no fueron
 	 * realizados.
 	 * 
-	 * @param solicitarPagosRequestDTO Request con la información de los movimientos que se requieren marcar para devolución.
-	 * @param createdBy Usuario que realiza la solicitud.
+	 * @param solicitarPagosRequestDTO Request con la información de los movimientos
+	 *                                 que se requieren marcar para devolución.
+	 * @param createdBy                Usuario que realiza la solicitud.
 	 * @return Mensaje de solicitud de marcado de devoluciones.
 	 */
 	@ResponseBody
@@ -316,6 +453,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response marcarDevoluciones(@RequestBody SolicitarPagosRequestDTO solicitarPagosRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/marcardevoluciones > REQUEST ENTRANTE: {}", solicitarPagosRequestDTO.toString());
+		
 		if (!ValidadorConciliacion.validateSolicitarPagosRequestDTO(solicitarPagosRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -329,7 +470,8 @@ public class ConciliacionController {
 	 * Realiza la consulta de movimientos de devolución para la conciliación.
 	 * 
 	 * @param folio El identificador de la conciliación.
-	 * @return El listado de movimientos devolución asociados a la conciliación indicada.
+	 * @return El listado de movimientos devolución asociados a la conciliación
+	 *         indicada.
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
@@ -342,12 +484,20 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaMovimientosDevolucion(@PathVariable(value = "folio", required = true) Long folio) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /conciliacion/devoluciones/consulta/{folio} > REQUEST ENTRANTE: {}", folio);
+		
 		LOG.info(">> consultaMovimientosDevolucion(" + folio + ")");
 
 		List<DevolucionConDTO> devoluciones = devolucionesServiceImpl.consultaDevolucion(folio);
 		if (null == devoluciones || devoluciones.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /conciliacion/transito/consulta/{folio} > RESPONSE: {}", devoluciones.toString());
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.SUCCESSFUL_RETURNS_CONSULTATION, devoluciones);
 	}
@@ -356,8 +506,9 @@ public class ConciliacionController {
 	 * Realiza la notificación de devolución de las transacciones marcadas para la
 	 * devolución a las entidades bancarias.
 	 * 
-	 * @param folioRequestDTO Request con la información de la devolución que se quiere solicitar.
-	 * @param createdBy Usuario que solicita la devolución.
+	 * @param folioRequestDTO Request con la información de la devolución que se
+	 *                        quiere solicitar.
+	 * @param createdBy       Usuario que solicita la devolución.
 	 * @return Mensaje de solicitud de devolución.
 	 */
 	@ResponseBody
@@ -372,6 +523,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response devoluciones(@RequestBody FolioRequestDTO folioRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/devoluciones/solicitar > REQUEST ENTRANTE: {}", folioRequestDTO.toString());
+		
 		if (!ValidadorConciliacion.validateFolioRequestDTO(folioRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -386,8 +541,9 @@ public class ConciliacionController {
 	 * Realiza la liquidación de los movimientos seleccionados; se debe especificar
 	 * la fecha de liquidación para cada uno de los movimientos.
 	 * 
-	 * @param liquidacionMovimientosRequestDTO Request con la información de la devoluciones que se quieren liquidar.
-	 * @param createdBy Usuario que solicita la liquidación.
+	 * @param liquidacionMovimientosRequestDTO Request con la información de la
+	 *                                         devoluciones que se quieren liquidar.
+	 * @param createdBy                        Usuario que solicita la liquidación.
 	 * @return Mensaje de solicitud de liquidación.
 	 */
 	@ResponseBody
@@ -403,6 +559,10 @@ public class ConciliacionController {
 	public Response liquidacionMovimientos(
 			@RequestBody LiquidacionMovimientosRequestDTO liquidacionMovimientosRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/devoluciones/liquidar > REQUEST ENTRANTE: {}", liquidacionMovimientosRequestDTO.toString());
+		
 		// Validacion de objeto y atributos
 		if (!ValidadorConciliacion.validateLiquidacionMovimientosRequestDTO(liquidacionMovimientosRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -427,8 +587,9 @@ public class ConciliacionController {
 	 * Servicio callback que será usado para actualizar el id del registro de las
 	 * plantillas que será devuelto por PeopleSoft.
 	 * 
-	 * @param actualizarIdPSRequest Request con la información para realizar la acción.
-	 * @param lastModifiedBy Usuario que realiza la solicitud.
+	 * @param actualizarIdPSRequest Request con la información para realizar la
+	 *                              acción.
+	 * @param lastModifiedBy        Usuario que realiza la solicitud.
 	 * @return Mensaje de actualización del registro.
 	 */
 	@ResponseBody
@@ -444,6 +605,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response actualizaIdPs(@RequestBody ActualizarIdPSRequest actualizarIdPSRequest,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: PUT /conciliacion/actualizarPS > REQUEST ENTRANTE: {}", actualizarIdPSRequest.toString());
+		
 		if (!ValidadorConciliacion.validateActualizarIdPSRequest(actualizarIdPSRequest))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -458,8 +623,9 @@ public class ConciliacionController {
 	 * procesos nocturnos, del proveedor transaccional (open pay) y de estado de
 	 * cuenta de acuerdo a su disponibilidad.
 	 * 
-	 * @param folio El identificador de la conciliación.
-	 * @param requestUser Usuario que realiza la solicitud de la generación del merge de los movimientos.
+	 * @param folio       El identificador de la conciliación.
+	 * @param requestUser Usuario que realiza la solicitud de la generación del
+	 *                    merge de los movimientos.
 	 * @return Mensaje de solicitud de merge/conciliación.
 	 */
 	@ResponseBody
@@ -474,54 +640,31 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Long folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/generar/{folio} > REQUEST ENTRANTE: {}", folio);
+		
 		LOG.info(">> consultaGenerarFolio(" + folio + ", " + requestUser + ")");
 
-		if (!ValidadorConciliacion.validateLong(folio))
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
+		// VALIDACIONES INICIAN
+		conciliacionServiceImpl.validacionesIniciales(folio, requestUser);
+		// VALIDACIONES FINALIZAN
 
 		try {
-			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
-					folio, ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION, null), requestUser);
+			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
+					ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION, null), requestUser);
+		} catch (ConciliacionException ex) {
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw ex;
 		} catch (Exception ex) {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
-					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_9999.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_9999);
 		}
 
-
-		Boolean procesoCorrecto = false;
-		String descripcionError = null;
-
-		try {
-			conciliacionServiceImpl.generarConciliacion(folio, requestUser);
-			procesoCorrecto = true;
-		} catch (ConciliacionException cex) {
-			procesoCorrecto = false;
-			descripcionError = cex.getCodigoError().getDescripcion();
-			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
-			throw cex;
-		} catch (Exception eex) {
-			procesoCorrecto = false;
-			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_132.getDescripcion();
-			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
-			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_132.getDescripcion(),
-					CodigoError.NMP_PMIMONTE_BUSINESS_132);
-		} finally {
-			try {
-				// Se actualiza el sub estatus de la conciliacion en base al resultado
-				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
-						folio,
-						procesoCorrecto
-								? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA
-								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_ERROR,
-						descripcionError), requestUser);
-			} catch (Exception ex) {
-				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
-						CodigoError.NMP_PMIMONTE_BUSINESS_030);
-			}
-		}
+		// SE GENERA LA CONCILIACION DE MANERA ASICRONA
+		asyncLayer.generarConciliacion(folio, requestUser);
+		// FINALIZA GENERACION DE LA CONCILIACION DE MANERA ASINCRONA
 
 		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
@@ -529,9 +672,11 @@ public class ConciliacionController {
 	}
 
 	/**
-	 * Realiza la consulta de la bitácora de las últimas actividades realizadas en el sistema.
+	 * Realiza la consulta de la bitácora de las últimas actividades realizadas en
+	 * el sistema.
 	 * 
-	 * @param consultaActividadesRequest Request con los criterios de consulta de la bitácora.
+	 * @param consultaActividadesRequest Request con los criterios de consulta de la
+	 *                                   bitácora.
 	 * @return El listado de la bitácora que corresponde a los criterios indicados.
 	 */
 	@ResponseBody
@@ -545,6 +690,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaActividades(@RequestBody ConsultaActividadesRequest consultaActividadesRequest) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/actividades > REQUEST ENTRANTE: {}", consultaActividadesRequest.toString());
+		
 		ValidadorConciliacion.validateFechasPrimary(consultaActividadesRequest.getFechaDesde(),
 				consultaActividadesRequest.getFechaHasta());
 		List<ConsultaActividadDTO> response = conciliacionService.consultaActividades(consultaActividadesRequest);
@@ -558,8 +707,9 @@ public class ConciliacionController {
 	/**
 	 * Realiza la actualización del sub-estatus de una conciliación.
 	 * 
-	 * @param actualizarSubEstatusRequestDTO Request con la información para realizar la acción.
-	 * @param requestUser Usuario que realiza la solicitud.
+	 * @param actualizarSubEstatusRequestDTO Request con la información para
+	 *                                       realizar la acción.
+	 * @param requestUser                    Usuario que realiza la solicitud.
 	 * @return Mensaje de actualización de sub-estatus.
 	 */
 	@ResponseBody
@@ -575,6 +725,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response actualizaSubEstatus(@RequestBody ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			@RequestHeader(name = CatalogConstants.REQUEST_USER_HEADER, required = true) String requestUser) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: PUT /conciliacion/actualizarSubEstatus > REQUEST ENTRANTE: {}", actualizarSubEstatusRequestDTO.toString());
+		
 		if (!ValidadorConciliacion.validateActualizarSubEstatusRequestDTO(actualizarSubEstatusRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -586,7 +740,8 @@ public class ConciliacionController {
 	/**
 	 * Obtiene el resumen de conciliaciones realizadas.
 	 * 
-	 * @param resumenConciliacionRequestDTO Request con los criterios de búsqueda del resumen.
+	 * @param resumenConciliacionRequestDTO Request con los criterios de búsqueda
+	 *                                      del resumen.
 	 * @return La información del resumen obtenido.
 	 */
 	@ResponseBody
@@ -601,6 +756,10 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response resumenConciliaciones(@RequestBody ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /conciliacion/resumen > REQUEST ENTRANTE: {}", resumenConciliacionRequestDTO.toString());
+		
 		ValidadorConciliacion.validateFechasPrimary(resumenConciliacionRequestDTO.getFechaInicial(),
 				resumenConciliacionRequestDTO.getFechaFinal());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,

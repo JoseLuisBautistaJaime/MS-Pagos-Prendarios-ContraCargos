@@ -21,11 +21,12 @@ import mx.com.nmp.pagos.mimonte.model.Updatable;
  */
 @Entity
 @Table(name = "to_layout_linea")
-public class LayoutLinea extends Updatable implements Serializable {
+public class LayoutLinea extends Updatable implements Serializable, LayoutReporte {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column
 	private Long id;
 
 	@Column(name = "cuenta")

@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -30,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.util.Calendar;
 
-import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ComisionesBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstatusConciliacionBuilder;
@@ -191,7 +192,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 */
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
-
+	
 	/**
 	 * Valor maximo por default para resultados de actividades cuando no se
 	 * especifica folio
@@ -199,6 +200,14 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Value("${mimonte.variables.actividades-max-default}")
 	private Integer actividadesMaxDefaultValue;
 
+	/**
+	 * Instancia para impresion de LOG's
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(ConciliacionServiceImpl.class);
+	
+	// Temporal format para los LOGs de timers
+	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	
 	/**
 	 * Metodo que da de alta una conciliación regresando un folio a partir de un
 	 * objeto de tipo ConciliacionResponseSaveDTO
@@ -731,37 +740,66 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	@Transactional
 	public void enviarConciliacion(Long idConciliacion, String usuario) {
+		
+		long globalStart = 0;
+		long globalFinish = 0;
+		long start = 0;
+		long finish = 0;
+
+		globalStart = System.currentTimeMillis();
+		LOG.info("T>>> INICIA ENVIO DE CONCILIACION GENERAL: {} ", sdf.format(new Date(globalStart)));
+		
+		start = System.currentTimeMillis();
+		LOG.info("T >>> INICIN VALIDACIONES GENERALES: {}", sdf.format(new Date(start)));
 		// Validar conciliacion
 		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
 				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
-
-		// Se valida que exista la conciliacion con el folio proporcionado
-		conciliacionDataValidator.validateFolioExists(idConciliacion);
 
 		// Valida que la conciliacion tenga el estatus correcto para poder dar de alta
 		// el estado cuenta
 		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,
 				ConciliacionConstants.CON_SUB_ESTATUS_ENVIO_CONCILIACION);
-
+		
+		finish = System.currentTimeMillis();
+		LOG.info("T >>> INICIN VALIDACIONES GENERALES: {}, EN: {}", sdf.format(new Date(start)), (finish-start));
+		
+		
 		// Validar conciliacion y actualizar estatus
 
 		// Se mueven los movimientos de transito a movimientos pago antes de generar los
 		// layouts
+		start = System.currentTimeMillis();
+		LOG.info("T >>> INCIA INCERSION DE MOVIMIENTOS DE PAGOS: {}", sdf.format(new Date(start)));
 		try {
 			solicitarPagosService.insertaMovimientosPagoFinal(idConciliacion, usuario);
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			LOG.error(">>> ERROR: ", ex);
 			throw new ConciliacionException("Error al actualizar los ids de asiento contable",
 					CodigoError.NMP_PMIMONTE_BUSINESS_031);
 		}
+		finish = System.currentTimeMillis();
+		LOG.info("T >>> FINALIZA INCERSION DE MOVIMIENTOS DE PAGOS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start));
 
 		// Se crean los layouts correspondientes
-		layoutsService.enviarConciliacion(idConciliacion, usuario);
+		try {
+			layoutsService.enviarConciliacion(idConciliacion, usuario);	
+		}
+		catch(ConciliacionException ex) {
+			LOG.error(">>> ERROR: {}", ex);
+			throw ex;
+		}
+		catch(Exception ex) {
+			LOG.error(">>> ERROR: {}", ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_9999.getDescripcion(), CodigoError.NMP_PMIMONTE_9999);
+		}
 
+		start = System.currentTimeMillis();
+		LOG.info("T >>> INICIA ACTUALIZACION DE SUB-ESTATUS: {}", sdf.format(new Date(start)));
 		try {
 			// Se actualiza el sub estatus a enviada
 			conciliacion
-					.setSubEstatus(new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_ENVIADA));
+					.setSubEstatus(new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_GENERACION_LAYOUTS_COMPLETADA, ""));
 			conciliacion.setLastModifiedBy(usuario);
 			conciliacion.setLastModifiedDate(new Date());
 			conciliacionRepository.save(conciliacion);
@@ -770,8 +808,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			ex.printStackTrace();
 			throw new ConciliacionException("Error al actualizar los ids de asiento contable",
 					CodigoError.NMP_PMIMONTE_BUSINESS_031);
-		}
-
+		}		
+		finish = System.currentTimeMillis();
+		LOG.info("T >>> FINALIZA ACTUALIZACION DE SUB-ESTATUS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start));
+		
+		globalFinish = System.currentTimeMillis();
+		LOG.info("T>>> INICIA ENVIO DE CONCILIACION GENERAL: {}, EN: {}", sdf.format(new Date(globalFinish)), (globalFinish-globalStart));
+		
 	}
 
 	/**
@@ -781,28 +824,46 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			String usuario) {
+		
+		long start = 0;
+		long finish = 0;
+		long globalStart = 0;
+		long globalFinish = 0;
+		
+		globalStart = System.currentTimeMillis();
+		LOG.info("T>>> INICIA ACTUALIZACION DE SUB ESTATUS GENERAL: {}", sdf.format(new Date(globalStart)));
+		
 		Boolean subEstatusValido = null;
-		// Se valida si la conciliacion existe
-		Optional<Conciliacion> conciliaicion = conciliacionRepository
-				.findById(actualizarSubEstatusRequestDTO.getFolio());
-		if (!conciliaicion.isPresent())
-			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_BUSINESS_045);
+				
 		// Se obtienen: El id del estatus conciliacion el orden del mismo y el roden del
 		// subestatus de acuerdo al id de subestatus especificado como parametro
 		// mediante un query nativo
+		start = System.currentTimeMillis();
+		LOG.info("T>>> INICIA VALIDACION PARA QUE EL SUB ESTATUS PERTENEZCA A UN ESTATUS CORRECTO: {}", sdf.format(new Date(start)));
+		
+		// Valida si el folio existe
+		conciliacionDataValidator.validateFolioExists(actualizarSubEstatusRequestDTO.getFolio());
+		
 		Map<String, Object> map = conciliacionRepository
 				.findIdEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus());
 		if (null == map || null == map.get("estatus"))
 			throw new ConciliacionException(ConciliacionConstants.NO_STATUS_FOR_SUCH_SUB_STATUS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_027);
+		finish = System.currentTimeMillis();
+		LOG.info("T>>> FINALIZA VALIDACION PARA VER QUE EL SUB ESTATUS PERTENCE A UN ESTATUS CORRECTO: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		
 		// Se obtienen: el id del estatus conciliacion, el orden del mismo y el orden
 		// del subestatus por folio de conciliacion mediante un query nativo
+		start = System.currentTimeMillis();
+		LOG.info("T>>> INICIA OBTENCION DE ESTATUS DE CONCILIACION Y EL ORDEN QUE TIENE: {}", sdf.format(new Date(start)));
 		Map<String, Object> currenOrders = conciliacionRepository
 				.findOrderSubstatusAndStatusByFolio(actualizarSubEstatusRequestDTO.getFolio());
 		if (null == currenOrders || null == currenOrders.get("sub_estatus_order"))
 			throw new ConciliacionException(ConciliacionConstants.ERROR_GETTING_CURRENT_SUB_STATUS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_028);
+		finish = System.currentTimeMillis();
+		LOG.info("T>>> FINALIZA OBTENCION DE ESTATUS DE CONCILIACION Y EL ORDEN QUE TIENE: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		
 		// Se valida que el orden del estatus actual no sea mayor al orden dele status
 		// que se va a actualizar
 		if (Integer.parseInt(currenOrders.get("estatus_order").toString()) > Integer
@@ -812,6 +873,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Se valida que el estatus al que se quiere actualizar sea correcto en base a
 		// la maquina de estados de sub-estatus conciliacion
+		start = System.currentTimeMillis();
+		LOG.info("T>>> INICIA VALIDACION DE NUEVO ESTADO VS ESTADOS VALIDOS EN MAQUINA DE ESTADOS: {}", sdf.format(new Date(start)));
 		subEstatusValido = miniMaquinaEstadosConciliacion.checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(
 				actualizarSubEstatusRequestDTO.getFolio(), actualizarSubEstatusRequestDTO.getIdSubEstatus());
 		if (null != subEstatusValido && !subEstatusValido)
@@ -820,19 +883,31 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		else if (null == subEstatusValido)
 			throw new ConciliacionException(ConciliacionConstants.ERROR_WHILE_VALIDATING_SUB_ESTAUS,
 					CodigoError.NMP_PMIMONTE_BUSINESS_083);
+		finish = System.currentTimeMillis();
+		LOG.info("T>>> FINALIZA VALIDACION DE NUEVO ESTADO VS ESTADOS VALIDOS EN MAQUINA DE ESTADOS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
 		// Se actualiza el sub estatus de la conciliacion al que se recibio como
 		// parametro, adicionalmente se actualizan los campos createdBy y createdDate
+		start = System.currentTimeMillis();
+		LOG.info("T>>> INICIA ACTUALIZACION DE SUB ESTATUS EN BASE DE DATOS: {}", sdf.format(new Date(start)));
 		conciliacionRepository.actualizaSubEstatusConciliacion(actualizarSubEstatusRequestDTO.getFolio(),
 				new SubEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus()), usuario, new Date(),
 				new EstatusConciliacion(Integer.parseInt(map.get("estatus").toString())),
 				actualizarSubEstatusRequestDTO.getDescripcion());
+		finish = System.currentTimeMillis();
+		LOG.info("T>>> FINALIZA ACTUALIZACION DE SUB ESTATUS EN BASE DE DATOS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
 		// Se obtienen los datos del subestatus para el registro de actividades
+		start = System.currentTimeMillis();
+		LOG.info("T>>> INICIA OBTENCION DE SUB ESTATUS PARA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
 		Optional<SubEstatusConciliacion> subEstatus = subEstatusConciliacionRepository
 				.findById(actualizarSubEstatusRequestDTO.getIdSubEstatus());
+		finish = System.currentTimeMillis();
+		LOG.info("T>>> FINALIZA OBTENCION DE SUB ESTATUS PARA REGISTRO DE ACTIVIDADES: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
 		// Registro de actividad
+		start = System.currentTimeMillis();
+		LOG.info("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
 		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
 				"Se actualizo el sub-estado de la conciliacion con el folio "
 						+ actualizarSubEstatusRequestDTO.getFolio() + " a: "
@@ -840,6 +915,11 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 								? subEstatus.get().getDescription()
 								: actualizarSubEstatusRequestDTO.getIdSubEstatus()),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZACION_ESTATUS_CONCILIACION);
+		finish = System.currentTimeMillis();
+		LOG.info("T>>> FINALIZA REGISTRO DE ACTIVIDADES: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		
+		globalFinish = System.currentTimeMillis();
+		LOG.info("T>>> FINALIZA ACTUALIZACION DE SUB ESTATUS GENERAL: {}, EN: {}", sdf.format(new Date(globalFinish)), (globalFinish-globalStart) );
 	}
 
 	/**
@@ -1090,23 +1170,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 */
 	@Transactional
 	public void generarConciliacion(Long idConciliacion, String lastModifiedBy) throws ConciliacionException {
-		// Validación del request
-		if (idConciliacion == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
-
-		if (lastModifiedBy == null)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
-
-		// Valida que el folio sea valido
-		conciliacionDataValidator.validateFolioExists(idConciliacion);
-
-		// Valida que la conciliacion tenga alguno de los estatus validos para realizar esta operacion
-		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,
-				ConciliacionConstants.CON_SUB_ESTATUS_MERGE_CONCILIACION);
-
 		// Obtiene todos los reportes de la bd generados hasta el momento
+		
+		LOG.info("P>>> INICIA PROCESO TARDADO");
+				
 		List<Reporte> reportes = reporteRepository.findByIdConciliacion(idConciliacion);
 		if (reportes == null || reportes.size() == 0) {
 			throw new ConciliacionException("No se tiene disponible ningun reporte para generar la conciliacion",
@@ -1122,13 +1189,16 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 
 		// Notificar cambios o alta de reportes, si existen...
-		this.conciliacionHelper.generarConciliacion(idConciliacion, reportes);
+		Long idEntidad = reportes.get(0).getConciliacion().getEntidad().getId(); // Se obtiene la entidad bancaria asociada
+		this.conciliacionHelper.generarConciliacion(idConciliacion, idEntidad, reportes);
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(idConciliacion,
 				"Se genera la conciliacion con el folio " + idConciliacion, TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.GENERACION_CONCILIACION);
-
+		
+		LOG.info("P>>> FINALIZA PROCESO TARDADO");
+		
 	}
 
 	/**
@@ -1163,4 +1233,50 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 	}
 
+	/**
+	 * Realiza las validaciones iniciales para el metodo de generar conciliacion
+	 * @param folio
+	 * @param requestUser
+	 */
+	public void validacionesIniciales(Long folio, String requestUser) {
+		long globalStart = 0;
+		long globalFinish = 0;
+		
+		globalStart = System.currentTimeMillis();
+		LOG.info("T>>> INICIA VALIDACION GENERAL EN GENERACION DE CONCILIACION: {}", sdf.format(new Date(globalStart)));
+		
+		// Validación del request
+		if (folio == null)
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+
+		if (requestUser == null)
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+
+		// Valida que el folio sea valido
+		conciliacionDataValidator.validateFolioExists(folio);
+
+		// TODO: Quitar esta validacion esta demas.
+		// Valida que la conciliacion tenga alguno de los estatus validos para realizar esta operacion
+//		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(folio,
+//				ConciliacionConstants.CON_SUB_ESTATUS_MERGE_CONCILIACION);
+//		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(folio,
+//				ConciliacionConstants.CON_SUB_ESTATUS_GENERAR_CONCILIACION);
+		
+		globalFinish = System.currentTimeMillis();
+		LOG.info("T>>> FINALIZA VALIDACION GENERAL EN GENERACION DE CONCILIACION: {}, EN: {}", sdf.format(new Date(globalFinish)), (globalFinish - globalStart) );
+		
+	}
+
+	/**
+	 * Evalua si la ocnciliacion especificada tiene un id de merge
+	 */
+	@Override
+	public Boolean validateConciliacionMerge(Long folio) {
+		Boolean result = null;
+		result = conciliacionRepository.validateConciliacionMerge(folio).compareTo(BigInteger.ONE) == 0;
+		return result;
+	}
+	
 }

@@ -26,7 +26,7 @@ import mx.com.nmp.pagos.mimonte.model.Updatable;
 @Entity
 @Table(name = "to_movimiento_conciliacion")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class MovimientoConciliacion extends Updatable implements Serializable {
+public abstract class MovimientoConciliacion extends Updatable implements IMovTransaccion, Serializable {
 
 	/**
 	 * Serial id.

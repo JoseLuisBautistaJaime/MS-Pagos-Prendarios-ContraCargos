@@ -86,6 +86,10 @@ public class ComisionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody ComisionSaveDTO comisionSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /comisiones > REQUEST ENTRANTE: {}", comisionSaveDTO.toString());
+		
 		// Declaracion de objetos
 		Map<String, Object> result = null;
 		ComisionSaveResponseDTO comisionSaveResponseDTO = null;
@@ -139,6 +143,10 @@ public class ComisionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response delete(@RequestBody ComisionDeleteDTO comisionDeleteDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: PUT /comisiones > REQUEST ENTRANTE: {}", comisionDeleteDTO.toString());
+		
 		if (!ValidadorConciliacion.validateComisionDeleteDTO(comisionDeleteDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
@@ -177,6 +185,10 @@ public class ComisionesController {
 	public Response consultaComisionesTransacciones(
 			@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /comisiones/consulta/transacciones > REQUEST ENTRANTE: {}", comisionesTransaccionesRequestDTO.toString());
+		
 		// Valida el objeto y atributos del request
 		if (!ValidadorConciliacion.validateComisionesTransaccionesRequestDTO(comisionesTransaccionesRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -209,6 +221,10 @@ public class ComisionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaComisiones(@PathVariable(value = "folio", required = true) Long folio) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: GET /comisiones/consulta/{folio} > REQUEST ENTRANTE: {}", folio);
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa.",
 				comisionesService.findByFolio(folio));
 	}

@@ -251,6 +251,11 @@ public class MovimientoProveedor implements MovimientoReporte {
 	}
 
 	@Override
+	public MovimientoMidas getMovimientoMidas() {
+		return null;
+	}
+
+	@Override
 	public int hashCode() {
 		return Objects.hash(id, idMovimiento, reporte, authorization, operationType, method, transactionType, status,
 				conciliated, creationDate, operationDate, description, errorMessage, orderId, customerId, errorCode,

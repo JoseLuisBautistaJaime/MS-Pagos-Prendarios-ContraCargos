@@ -157,4 +157,11 @@ public interface ConciliacionService {
 	 */
 	public void generarConciliacion(Long folio, String lastModifiedBy) throws ConciliacionException;
 
+	/**
+	 * Valida que la conciliaicon con el folio especificado ya haya pasado por el proceso de merge
+	 * @param folio
+	 * @return
+	 */
+	public Boolean validateConciliacionMerge(Long folio);
+	
 }

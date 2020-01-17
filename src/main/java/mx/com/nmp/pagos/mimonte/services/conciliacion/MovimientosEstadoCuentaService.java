@@ -4,7 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.util.Calendar;
 
-import mx.com.nmp.pagos.mimonte.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
@@ -27,6 +26,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstadoCuentaWraper;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovEstadoCuentaRequestDTO;
@@ -128,6 +128,12 @@ public class MovimientosEstadoCuentaService {
 	 */
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
+
+	/**
+	 * Registro de movimientos usando Jdbc
+	 */
+	@Autowired
+	private MovimientoJdbcRepository movimientoJdbcRepository;
 
 	/**
 	 * Log de la clase
@@ -262,9 +268,6 @@ public class MovimientosEstadoCuentaService {
 		List<Long> possibleSubEstatus = null;
 		EstatusConciliacion estatusConciliacion = null;
 
-		// Valida que la conciliacion exista
-		conciliacionDataValidator.validateFolioExists(request.getFolio());
-
 		// Ajuste de fechas
 		try {
 			datesMap = FechasUtil.adjustDates(request.getFechaInicial(), request.getFechaFinal());
@@ -362,8 +365,10 @@ public class MovimientosEstadoCuentaService {
 			fechaEstadoCuenta = cal.getTime();
 		}
 
+		// TODO: Eliminar este comentario una vez que ya sea definitivo eliminar esta invocacion de este endpoint de ESTADO CUENTA
 		// Se regenera la conciliacion
-		this.conciliacionHelper.generarConciliacion(idConciliacion, Arrays.asList(reporte));
+//		this.conciliacionHelper.generarConciliacion(idConciliacion, Arrays.asList(reporte));
+		
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(idConciliacion,
 				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
@@ -409,7 +414,9 @@ public class MovimientosEstadoCuentaService {
 					movimiento.setIdEstadoCuenta(estadoCuenta.getId());
 				}
 
-				movimientoEstadoCuentaRepository.saveAll(movimientos);
+				LOG.info(">> Insertando movimientos Estado de cuenta...");
+				//movimientoEstadoCuentaRepository.saveAll(movimientos);
+				movimientoJdbcRepository.insertarLista(movimientos);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

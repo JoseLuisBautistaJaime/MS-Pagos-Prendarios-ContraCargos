@@ -41,6 +41,11 @@ public class SubEstatusConciliacion extends AbstractCatalogoAdm {
 		super.id = id;
 	}
 	
+	public SubEstatusConciliacion(Long id, String description) {
+		super.id = id;
+		super.description = description;
+	}
+	
 	public List<EstatusConciliacion> getEstatusList() {
 		return estatusList;
 	}

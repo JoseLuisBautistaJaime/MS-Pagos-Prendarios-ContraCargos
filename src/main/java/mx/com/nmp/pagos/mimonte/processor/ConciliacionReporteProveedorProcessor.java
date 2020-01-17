@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
@@ -60,7 +62,18 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 	
 				if (CollectionUtils.isNotEmpty(movsTransito)) {
 					if (CollectionUtils.isNotEmpty(movsTransito)) {
-						mergeReporteHandler.getMovimientoTransitoRepository().saveAll(movsTransito);
+						
+						// Get JDBC
+						try {
+							mergeReporteHandler.getMovimientoJdbcRepository().insertarLista(
+								movsTransito,
+								ConciliacionConstants.StoreProcedureNames.SAVE_MOV_TRANSITO_FUNCTION_NAME
+							);
+						}
+						catch (Exception ex) {
+							ex.printStackTrace();
+							throw new ConciliacionException(ex.getMessage(), CodigoError.NMP_PMIMONTE_0011);
+						}
 					}
 				}
 			}

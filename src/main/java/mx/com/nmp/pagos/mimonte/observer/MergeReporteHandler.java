@@ -22,6 +22,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
@@ -82,6 +83,9 @@ public class MergeReporteHandler {
 	@Inject
 	private EstadoCuentaHelper estadoCuentaHelper;
 
+	@Inject
+	private MovimientoJdbcRepository movimientoJdbcRepository;
+
 
 
 
@@ -89,10 +93,11 @@ public class MergeReporteHandler {
 	 * Se encarga de generar la cadena de procesadores de acuerdo al tipo de reporte
 	 * @param reportes
 	 * @param idConciliacion
+	 * @param idEntidad
 	 */
-	public void handle(List<Reporte> reportes, Long idConciliacion) {
+	public void handle(List<Reporte> reportes, Long idConciliacion, Long idEntidad) {
 
-		ReportesWrapper wrapper = new ReportesWrapper(idConciliacion);
+		ReportesWrapper wrapper = new ReportesWrapper(idConciliacion, idEntidad);
 
 		for (Reporte reporte : reportes) {
 			switch (reporte.getTipo()) {
@@ -192,6 +197,10 @@ public class MergeReporteHandler {
 
 	public EstadoCuentaHelper getEstadoCuentaHelper() {
 		return estadoCuentaHelper;
+	}
+
+	public MovimientoJdbcRepository getMovimientoJdbcRepository() {
+		return movimientoJdbcRepository;
 	}
 
 }

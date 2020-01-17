@@ -9,8 +9,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.retry.support.RetryTemplate;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
@@ -90,5 +92,10 @@ public class MimonteApplication {
 
         LOGGER.debug("DEBUG--------------");
         LOGGER.info("INFO--------------");
+    }
+    
+    @Bean
+    public RetryTemplate getRetryTemplate() {
+    	return new RetryTemplate();
     }
 }
