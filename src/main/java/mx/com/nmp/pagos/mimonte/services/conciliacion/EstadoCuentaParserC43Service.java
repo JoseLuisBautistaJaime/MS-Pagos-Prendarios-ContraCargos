@@ -24,6 +24,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaParserService;
 import mx.com.nmp.pagos.mimonte.util.DateUtil;
 import mx.com.nmp.pagos.mimonte.util.EstadoCuentaLineQueue;
+import mx.com.nmp.pagos.mimonte.util.EstadoCuentaUtil;
 
 /**
  * @name EstadoCuentaReader43
@@ -46,7 +47,6 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 			throw new ConciliacionException("Archivo de estado de cuenta invalido", CodigoError.NMP_PMIMONTE_BUSINESS_050);
 		}
 
-		
 		// Extraer cabecera del estado de cuenta
 		EstadoCuentaCabecera cabecera = extractCabecera(estadoCuentaFile);
 		List<MovimientoEstadoCuenta> movimientos = extractMovimientoEstadoCuenta(estadoCuentaFile);
@@ -129,9 +129,9 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 				movimiento.setFechaOperacion(DateUtil.getDate(lineQueue.get(6), "yyMMdd")); // Fecha operacion
 				movimiento.setFechaValor(DateUtil.getDate(lineQueue.get(6), "yyMMdd")); // Fecha valor
 				movimiento.setLibre(lineQueue.get(2)); // Uso futuro
-				movimiento.setClaveLeyenda(lineQueue.get(3)); // TODO: Catalogo de leyendas
+				movimiento.setClaveLeyenda(lineQueue.get(3)); // Catalogo de leyendas
 				movimiento.setTipoMovimiento(Integer.valueOf(lineQueue.get(1))); // Cargo = 1, Abono = 2
-				movimiento.setImporte(new BigDecimal(lineQueue.get(14))); // Importe
+				movimiento.setImporte(EstadoCuentaUtil.getDecimalFromString(lineQueue.get(14), 2)); // Importe // 2 decimales
 				movimiento.setDato(lineQueue.get(10)); // Dato
 				movimiento.setConcepto(lineQueue.get(28)); // Concepto
 
