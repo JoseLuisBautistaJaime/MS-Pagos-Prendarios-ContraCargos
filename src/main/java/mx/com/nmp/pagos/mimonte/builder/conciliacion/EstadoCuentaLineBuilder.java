@@ -22,6 +22,7 @@ public class EstadoCuentaLineBuilder {
 				if (fileLayout.getImplementacion() == implementacion) {
 					if (fileLayout.startWith(this.line)) {
 						estadoCuentaLine = fileLayout.getInstance(this.line);
+						break;
 					}
 				}
 			}
