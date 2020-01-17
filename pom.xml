@@ -261,6 +261,14 @@
         </dependencies>
     </dependencyManagement>
 
+	<repositories>
+	   <repository>
+	      <id>central maven repo</id>
+	      <name>central maven repo https</name>
+	      <url>https://repo.maven.apache.org/maven2</url>
+	   </repository>
+	</repositories>
+
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
