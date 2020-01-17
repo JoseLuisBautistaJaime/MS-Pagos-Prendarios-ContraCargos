@@ -61,6 +61,7 @@ import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.DevolucionesServiceImpl;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 
@@ -108,6 +109,12 @@ public class ConciliacionController {
 	@Qualifier("solicitarPagosService")
 	private SolicitarPagosService solicitarPagosService;
 
+	/**
+	 * Validador generico de conciliacion
+	 */
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+	
 	/**
 	 * Temporal format para los LOGs de timers
 	 */
@@ -309,6 +316,9 @@ public class ConciliacionController {
 					CodigoError.NMP_PMIMONTE_0008);
 		LOG.info(">>> FINALIZA VALIDACION DE FOLIO");
 
+		// Se valida que exista la conciliacion con el folio proporcionado
+		conciliacionDataValidator.validateFolioExists(folio);
+		
 		// VALIDACION DE MERGE PREVIO
 		flag = conciliacionServiceImpl.validateConciliacionMerge(folio);
 		if(!flag)

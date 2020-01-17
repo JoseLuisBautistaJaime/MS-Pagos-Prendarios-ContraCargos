@@ -1007,18 +1007,19 @@ public class LayoutsService {
 			movimientoPagoList = movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion);
 			// Lo siguiente es para setear de manera manual los ids de sucursal a cada
 			// movimiento ya que la consulta no trae esa informacion
-			idsList = new ArrayList<>();
-			for (MovimientoPago movimientoPago : movimientoPagoList) {
-				idsList.add(movimientoPago.getId());
+			if(null != movimientoPagoList && !movimientoPagoList.isEmpty()) {
+				idsList = new ArrayList<>();
+				for (MovimientoPago movimientoPago : movimientoPagoList) {
+					idsList.add(movimientoPago.getId());
+				}
+				result = movimientoConciliacionRepository.getMapSucursalesByMovimientoConciliacionIds(idsList);
+				movimientosPagosSucursalesMap = getMapValues(result);
+				for (MovimientoPago movimientoPago : movimientoPagoList) {
+					movimientoPago.getMovimientoMidas()
+							.setSucursal((movimientosPagosSucursalesMap.get(movimientoPago.getId())));
+				}
+				movimientos.addAll(movimientoPagoList);
 			}
-			result = movimientoConciliacionRepository.getMapSucursalesByMovimientoConciliacionIds(idsList);
-			movimientosPagosSucursalesMap = getMapValues(result);
-			for (MovimientoPago movimientoPago : movimientoPagoList) {
-				movimientoPago.getMovimientoMidas()
-						.setSucursal((movimientosPagosSucursalesMap.get(movimientoPago.getId())));
-			}
-
-			movimientos.addAll(movimientoPagoList);
 			// Se obtienen los movimientos de pagos midas
 			movimientos.addAll(obtenerMovimientosMidasPagos(idConciliacion, tipo));
 			break;
