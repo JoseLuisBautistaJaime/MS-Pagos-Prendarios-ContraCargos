@@ -54,7 +54,7 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 		if (reportesWrapper.contains(TipoReporteEnum.ESTADO_CUENTA)) {
 			
 			// Devoluciones
-			List<MovimientoDevolucion> movsDevoluciones = extraerMovimientoDevolucion(reportesWrapper.getIdConciliacion());
+			List<MovimientoDevolucion> movsDevoluciones = extraerMovimientoDevolucion(reportesWrapper.getIdConciliacion(), reportesWrapper.getIdEntidad());
 			if (CollectionUtils.isNotEmpty(movsDevoluciones)) {
 
 				List<MovimientoDevolucion> movimientosDevolucionSave = new ArrayList<MovimientoDevolucion>();
@@ -84,7 +84,7 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 
 
 			// Comisiones
-			List<MovimientoComision> movsComisiones = extraerMovimientoComision(reportesWrapper.getIdConciliacion());
+			List<MovimientoComision> movsComisiones = extraerMovimientoComision(reportesWrapper.getIdConciliacion(), reportesWrapper.getIdEntidad());
 			if (CollectionUtils.isNotEmpty(movsComisiones)) {
 
 				List<MovimientoComision> movimientosComisionSave = new ArrayList<MovimientoComision>();
@@ -130,14 +130,15 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 	 * Extrae los movimientos de tipo comision
 	 * 
 	 * @param idConciliacion
+	 * @param idEntidad
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	private List<MovimientoComision> extraerMovimientoComision(Long idConciliacion) throws ConciliacionException {
+	private List<MovimientoComision> extraerMovimientoComision(Long idConciliacion, Long idEntidad) throws ConciliacionException {
 		List<MovimientoComision> movsComision = new ArrayList<MovimientoComision>();
 
 		// Comisiones
-		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByCategoria(idConciliacion, ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_COMISIONES);
+		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByCategoria(idConciliacion, ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_COMISIONES, idEntidad);
 		if (CollectionUtils.isNotEmpty(movsEstadoCuenta)) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
 				MovimientoComision movComision = MovimientoComisionBuilder
@@ -147,7 +148,7 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 		}
 
 		// Iva
-		movsEstadoCuenta = getMovimientosEstadoCuentaByCategoria(idConciliacion, ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_IVA);
+		movsEstadoCuenta = getMovimientosEstadoCuentaByCategoria(idConciliacion, ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_IVA, idEntidad);
 		if (CollectionUtils.isNotEmpty(movsEstadoCuenta)) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
 				MovimientoComision movComision = MovimientoComisionBuilder
@@ -164,12 +165,13 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 	 * Extrae los movimientos de tipo comision
 	 * 
 	 * @param idConciliacion
+	 * @param idEntidad
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	private List<MovimientoDevolucion> extraerMovimientoDevolucion(Long idConciliacion) throws ConciliacionException {
+	private List<MovimientoDevolucion> extraerMovimientoDevolucion(Long idConciliacion, Long idEntidad) throws ConciliacionException {
 		
-		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByCategoria(idConciliacion, ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES);
+		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByCategoria(idConciliacion, ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES, idEntidad);
 		
 		List<MovimientoDevolucion> movsDevolucion = new ArrayList<MovimientoDevolucion>();
 		if (CollectionUtils.isNotEmpty(movsEstadoCuenta)) {
@@ -210,12 +212,13 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 	 * 
 	 * @param idConciliacion
 	 * @param idCategoria
+	 * @param idEntidad
 	 * @return
 	 */
-	private List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByCategoria(Long idConciliacion, Long idCategoria) throws ConciliacionException {
+	private List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByCategoria(Long idConciliacion, Long idCategoria, Long idEntidad) throws ConciliacionException {
 
 		// Codigos de Estado de Cuenta
-		List<String> codigosEstadoCuenta = this.mergeReporteHandler.getEstadoCuentaHelper().getCodigosEstadoCuenta(idCategoria);
+		List<String> codigosEstadoCuenta = this.mergeReporteHandler.getEstadoCuentaHelper().getCodigosEstadoCuenta(idCategoria, idEntidad);
 
 		// Obtiene los movimientos de estado de cuenta que contiene el codigo
 		// correspondiente
