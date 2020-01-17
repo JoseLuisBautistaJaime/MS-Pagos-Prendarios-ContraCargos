@@ -755,9 +755,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		Conciliacion conciliacion = conciliacionHelper.getConciliacionByFolio(idConciliacion,
 				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
-		// Se valida que exista la conciliacion con el folio proporcionado
-		conciliacionDataValidator.validateFolioExists(idConciliacion);
-
 		// Valida que la conciliacion tenga el estatus correcto para poder dar de alta
 		// el estado cuenta
 		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(idConciliacion,
