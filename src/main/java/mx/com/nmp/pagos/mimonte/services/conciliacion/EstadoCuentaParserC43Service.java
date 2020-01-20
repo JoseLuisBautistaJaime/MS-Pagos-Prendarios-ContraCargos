@@ -4,7 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +90,7 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 				cabecera.setFechaInicial(DateUtil.getDate(lineQueue.get(6), "yyMMdd")); // Fecha inicial
 				cabecera.setFechaFinal(DateUtil.getDate(lineQueue.get(6), "yyMMdd")); // Fecha final
 				cabecera.setTipoSaldo(Integer.valueOf(lineQueue.get(1))); // Tipo Saldo
-				cabecera.setSaldoInicial(new BigDecimal(lineQueue.get(14))); // Saldo inicial1
+				cabecera.setSaldoInicial(EstadoCuentaUtil.getDecimalFromString(lineQueue.get(14), 2)); // Saldo inicial1 // 2 decimales
 				cabecera.setMonedaAlfabetica(lineQueue.get(3)); // Moneda alfabetica
 				cabecera.setDigitoCuentaClabe(lineQueue.get(1)); // Digito cuenta clabe
 				cabecera.setTitularCuenta(lineQueue.get(23)); // Titular cuenta
@@ -195,11 +194,11 @@ public class EstadoCuentaParserC43Service implements EstadoCuentaParserService {
 				totalesAdicional.setSucursal(lineQueue.get(4)); // Sucursal Cuenta
 				totalesAdicional.setCuenta(lineQueue.get(10)); // Cuenta
 				totalesAdicional.setNoCargos(new Integer(lineQueue.get(5))); // No. de Cargos
-				totalesAdicional.setImporteTotalCargos(new BigDecimal(lineQueue.get(14))); // Total cargos
+				totalesAdicional.setImporteTotalCargos(EstadoCuentaUtil.getDecimalFromString(lineQueue.get(14), 2)); // Total cargos // 2 decimales
 				totalesAdicional.setNoAbonos(new Integer(lineQueue.get(5))); // No. de abonos
-				totalesAdicional.setImporteTotalAbonos(new BigDecimal(lineQueue.get(14))); // Total abonos
+				totalesAdicional.setImporteTotalAbonos(EstadoCuentaUtil.getDecimalFromString(lineQueue.get(14), 2)); // Total abonos // 2 decimales
 				totalesAdicional.setTipoSaldo(new Integer(lineQueue.get(1))); // Saldo 2(+) 1(-)
-				totalesAdicional.setSaldoFinal(new BigDecimal(lineQueue.get(14))); // Saldo final
+				totalesAdicional.setSaldoFinal(EstadoCuentaUtil.getDecimalFromString(lineQueue.get(14), 2)); // Saldo final // 2 decimales
 				totalesAdicional.setMonedaAlfabetica(lineQueue.get(3)); // Moneda alfabetica
 				break;
 			}
