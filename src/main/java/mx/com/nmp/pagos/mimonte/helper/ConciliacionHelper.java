@@ -33,10 +33,11 @@ public interface ConciliacionHelper {
 	/**
 	 * Se encarga de generar/regenerar la conciliacion en base a el(los) reporte(s) recibido(s)
 	 * @param folio
+	 * @param idEntidad
 	 * @param reportes
 	 * @throws ConciliacionException
 	 */
-	public void generarConciliacion(Long folio, List<Reporte> reportes) throws ConciliacionException;
+	public void generarConciliacion(Long folio, Long idEntidad, List<Reporte> reportes) throws ConciliacionException;
 
 	/**
 	 * Se encarga de obtener la proyeccion asignada a la conciliacion

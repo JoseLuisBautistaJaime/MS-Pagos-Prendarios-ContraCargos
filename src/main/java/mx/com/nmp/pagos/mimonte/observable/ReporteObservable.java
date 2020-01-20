@@ -24,16 +24,19 @@ public class ReporteObservable extends Observable {
 
 	private List<Reporte> reportes;
 	private Long idConciliacion;
+	private Long idEntidad;
 
-	public ReporteObservable(List<Reporte> reportes, Long idConciliacion) {
+	public ReporteObservable(List<Reporte> reportes, Long idConciliacion, Long idEntidad) {
 		this.reportes = null;
 		this.idConciliacion = idConciliacion;
+		this.idEntidad = idEntidad;
 		verifyReportes(reportes);
 	}
 
-	public ReporteObservable(Reporte reporte, Long idConciliacion) {
+	public ReporteObservable(Reporte reporte, Long idConciliacion, Long idEntidad) {
 		this.reportes = null;
 		this.idConciliacion = idConciliacion;
+		this.idEntidad = idEntidad;
 		verifyReportes(Arrays.asList(reporte));
 	}
 
@@ -57,6 +60,10 @@ public class ReporteObservable extends Observable {
 
 	public Long getIdConciliacion() {
 		return idConciliacion;
+	}
+
+	public Long getIdEntidad() {
+		return idEntidad;
 	}
 
 }

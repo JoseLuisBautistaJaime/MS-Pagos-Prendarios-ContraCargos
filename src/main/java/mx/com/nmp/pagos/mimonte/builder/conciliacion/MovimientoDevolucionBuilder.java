@@ -99,7 +99,8 @@ public abstract class MovimientoDevolucionBuilder {
 		movimientoDevolucion.setCodigoAutorizacion(mt.getNumAutorizacion());
 		movimientoDevolucion.setSucursal(mt.getSucursal());
 		movimientoDevolucion.setFechaLiquidacion(null);
-
+		movimientoDevolucion.setMovimientoMidas(mt.getMovimientoMidas());
+		
 		return movimientoDevolucion;
 	}
 

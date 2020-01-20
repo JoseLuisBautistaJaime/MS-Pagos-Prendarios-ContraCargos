@@ -35,6 +35,12 @@ public class DSSConstants {
 	public static final String ID_CLIENTE_PROP = "${mimonte.variables.dss.idcliente}";
 
 	/**
+	 * Propiedad para mapear el nombre de la variable currentTransactionAmount del archivo de
+	 * propiedades
+	 */
+	public static final String TOTAL_AMOUNT_PROP = "${mimonte.variables.dss.currentTransactionAmount}";
+	
+	/**
 	 * Propiedad para mapear el nombre de la variable idReglaNegocio del archivo de
 	 * propiedades
 	 */

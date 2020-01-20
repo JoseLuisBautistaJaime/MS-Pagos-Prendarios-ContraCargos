@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS `tk_sub_estatus_conciliacion` ;
 DROP TABLE IF EXISTS `tk_variable` ;
 DROP TABLE IF EXISTS `tk_tipo_contrato` ;
 DROP TABLE IF EXISTS `tk_estatus_pago` ;
-
+DROP TABLE IF EXISTS `seq_conciliacion` ;
 
 
 
@@ -113,7 +113,6 @@ CREATE TABLE IF NOT EXISTS `tk_tipo_autorizacion` (
   `descripcion` VARCHAR(200) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -133,7 +132,6 @@ CREATE TABLE IF NOT EXISTS `tc_afiliacion` (
   PRIMARY KEY (`id`),
   INDEX `ca_fk_idx` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 15
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -167,7 +165,6 @@ CREATE TABLE IF NOT EXISTS `tk_categoria` (
   PRIMARY KEY (`id`),
   INDEX `idx_categoria` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -362,7 +359,6 @@ CREATE TABLE IF NOT EXISTS `tk_tipo_contacto` (
   `short_description` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -382,7 +378,6 @@ CREATE TABLE IF NOT EXISTS `tc_entidad` (
   PRIMARY KEY (`id`),
   INDEX `idx_entidad` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -402,7 +397,6 @@ CREATE TABLE IF NOT EXISTS `tc_cuenta` (
   PRIMARY KEY (`id`),
   INDEX `idx_cuenta` (`id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -427,7 +421,6 @@ CREATE TABLE IF NOT EXISTS `tc_contactos` (
     FOREIGN KEY (`id_tipo_contacto`)
     REFERENCES `tk_tipo_contacto` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 12
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -457,7 +450,6 @@ CREATE TABLE IF NOT EXISTS `tc_codigo_estado_cuenta` (
     FOREIGN KEY (`id_entidad`)
     REFERENCES `tc_entidad` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 7
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -562,7 +554,6 @@ CREATE TABLE IF NOT EXISTS `tk_estatus_conciliacion` (
   `order_number` INT(11) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -616,7 +607,6 @@ CREATE TABLE IF NOT EXISTS `tk_sub_estatus_conciliacion` (
   `order_number` INT(11) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 17
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -690,7 +680,6 @@ CONSTRAINT `merge_fk`
     FOREIGN KEY (`id_merge`)
     REFERENCES `to_merge_conciliacion` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -740,7 +729,6 @@ CREATE TABLE IF NOT EXISTS `to_reporte` (
     FOREIGN KEY (`id_conciliacion`)
     REFERENCES `to_conciliacion` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -970,7 +958,6 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_conciliacion` (
     FOREIGN KEY (`id_movimiento_midas`)
     REFERENCES `to_movimiento_midas` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 9
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -1266,39 +1253,300 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
--- ------------------------------------------------------- --
--- -------- REINICIO DE CLAVES AUTO INCREMENTALES A 1----- --
--- ------------------------------------------------------- --
-ALTER TABLE `tc_layout_linea` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_layout_header` AUTO_INCREMENT = 1;
-ALTER TABLE `to_global` AUTO_INCREMENT = 1;
-ALTER TABLE `tb_actividad` AUTO_INCREMENT = 1;
-ALTER TABLE `to_layout` AUTO_INCREMENT = 1;
-ALTER TABLE `to_layout_header` AUTO_INCREMENT = 1;
-ALTER TABLE `to_layout_linea` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_devolucion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_comision` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_pago` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_transito` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_conciliacion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_midas` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_proveedor` AUTO_INCREMENT = 1;
-ALTER TABLE `to_movimiento_estado_cuenta` AUTO_INCREMENT = 1;
-ALTER TABLE `to_estado_cuenta` AUTO_INCREMENT = 1;
-ALTER TABLE `to_estado_cuenta_totales_adicional` AUTO_INCREMENT = 1;
-ALTER TABLE `to_estado_cuenta_totales` AUTO_INCREMENT = 1;
-ALTER TABLE `to_estado_cuenta_cabecera` AUTO_INCREMENT = 1;
-ALTER TABLE `to_reporte` AUTO_INCREMENT = 1;
-ALTER TABLE `to_comision_transaccion_real` AUTO_INCREMENT = 1;
-ALTER TABLE `to_comision_transaccion_proyeccion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_comision_transaccion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_conciliacion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_merge_conciliacion` AUTO_INCREMENT = 1;
-ALTER TABLE `to_pagos` AUTO_INCREMENT = 1;
-ALTER TABLE `to_pagos_partidas` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_codigo_estado_cuenta` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_afiliacion` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_contactos` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_cuenta` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_entidad` AUTO_INCREMENT = 1;
-ALTER TABLE `tc_tarjetas` AUTO_INCREMENT = 1;
+-- Secuencia para los folios de conciliacion -------
+
+CREATE TABLE `seq_conciliacion` (
+  `seq_name` VARCHAR(45) NOT NULL,
+  `seq_value` BIGINT(20) DEFAULT '0',
+  PRIMARY KEY (`seq_name`)
+) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
+
+-- ------------------------------------------------------------------------------------------------- --
+-- --------------------------------------- CREACION DE SP's ---------------------------------------- --
+-- ------------------------------------------------------------------------------------------------- --
+
+-- --------------------------------------------------------------------------------- --
+-- ----------------------- save_movimiento_comision -------------------------------- --
+-- --------------------------------------------------------------------------------- --
+DROP PROCEDURE IF EXISTS `save_movimiento_comision`;
+DELIMITER $$
+CREATE PROCEDURE `save_movimiento_comision`(
+
+	-- Campos para to_movimiento_comision
+    _fecha_operacion DATE,
+    _fecha_cargo DATE,
+    _monto DECIMAL(16, 4),
+    _descripcion VARCHAR(150),
+    _estatus TINYINT(4),
+    _tipo VARCHAR(50),
+    _id_movimiento_estado_cuenta BIGINT(20),
+
+	-- Campos para to_movimiento_conciliacion
+	_id INT(11),
+	_id_conciliacion BIGINT(20),
+    _nuevo TINYINT(4),
+    _id_movimiento_midas INT(11),
+
+    -- Updatable
+    _created_date DATETIME,
+    _last_modified_date DATETIME,
+    _created_by VARCHAR(100),
+    _last_modified_by VARCHAR(100)
+)
+MODIFIES SQL DATA
+MAIN: BEGIN
+
+	-- Funcion que inserta un movimiento conciliacion comision
+	DECLARE _id_movimiento_conciliacion INT(11);
+
+	-- En caso de error se hace rollback
+	-- DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	-- BEGIN
+	--	ROLLBACK;
+	--	RESIGNAL;
+	-- END;
+
+
+	-- START TRANSACTION;
+
+		-- Inserta/actualiza el movimiento conciliacion y regresa el id
+		IF (_id IS NULL) THEN
+			INSERT INTO to_movimiento_conciliacion(id_conciliacion, created_by, created_date, last_modified_by, last_modified_date, nuevo, id_movimiento_midas)
+			VALUES(_id_conciliacion, _created_by, _created_date, _last_modified_by, _last_modified_date, _nuevo, _id_movimiento_midas);
+			
+			SET _id_movimiento_conciliacion = LAST_INSERT_ID();
+		ELSE
+			UPDATE to_movimiento_conciliacion
+			SET
+				id_concilacion = _id_concilacion,
+				created_by = _created_by,
+				created_date = _created_date,
+				last_modified_by = _last_modified_by,
+				last_modified_date = _last_modified_date,
+				nuevo = _nuevo,
+				id_movimiento_midas = _id_movimiento_midas
+			WHERE
+				id = _id;
+			SET _id_movimiento_conciliacion = _id;
+		END IF;
+
+		-- Inserta el movimiento comision
+		IF (_id IS NULL OR _id <= 0) THEN
+			INSERT INTO to_movimiento_comision(id, fecha_operacion, fecha_cargo, monto, tipo, id_movimiento_estado_cuenta, descripcion, estatus)
+			VALUES(_id_movimiento_conciliacion, _fecha_operacion, _fecha_cargo, _monto, _tipo, _id_movimiento_estado_cuenta, _descripcion, _estatus);
+		ELSE
+			UPDATE to_movimiento_comision
+			SET
+				fecha_operacion = _fecha_operacion,
+				fecha_cargo = _fecha_cargo,
+				monto = _monto,
+				tipo = _tipo,
+				id_movimiento_estado_cuenta = _id_movimiento_estado_cuenta,
+				descripcion = _descripcion,
+				estatus = _estatus
+			WHERE
+				id = _id_movimiento_conciliacion;
+		END IF;
+
+	-- COMMIT;
+
+	-- RETURN _id_movimiento_conciliacion;
+
+END MAIN;
+$$
+DELIMITER ;
+
+
+-- --------------------------------------------------------------------------------- --
+-- ----------------------- save_movimiento_devolucion -------------------------------- --
+-- --------------------------------------------------------------------------------- --
+DROP PROCEDURE IF EXISTS `save_movimiento_devolucion`;
+DELIMITER $$
+CREATE PROCEDURE `save_movimiento_devolucion`(
+
+	-- Campos para to_movimiento_devolucion
+    _estatus INT(11),
+    _fecha DATE,
+    _monto DECIMAL(16, 4),
+    _esquema_tarjeta VARCHAR(45),
+    _identificador_cuenta VARCHAR(45),
+    _titular VARCHAR(255),
+    _codigo_autorizacion VARCHAR(45),
+    _sucursal INT(11),
+    _fecha_liquidacion DATE,
+
+	-- Campos para to_movimiento_conciliacion
+	_id INT(11),
+	_id_conciliacion BIGINT(20),
+    _nuevo TINYINT(4),
+    _id_movimiento_midas INT(11),
+
+    -- Updatable
+    _created_date DATETIME,
+    _last_modified_date DATETIME,
+    _created_by VARCHAR(100),
+    _last_modified_by VARCHAR(100)
+)
+MODIFIES SQL DATA
+MAIN: BEGIN
+
+	-- Funcion que inserta un movimiento conciliacion devolucion
+
+	DECLARE _id_movimiento_conciliacion INT(11);
+
+	-- En caso de error se hace rollback
+	-- DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	-- BEGIN
+	--	ROLLBACK;
+	--	RESIGNAL;
+	-- END;
+
+	-- START TRANSACTION;
+	
+		-- Inserta/actualiza el movimiento conciliacion y regresa el id
+		IF (_id IS NULL) THEN
+			INSERT INTO to_movimiento_conciliacion(id_conciliacion, created_by, created_date, last_modified_by, last_modified_date, nuevo, id_movimiento_midas)
+			VALUES(_id_conciliacion, _created_by, _created_date, _last_modified_by, _last_modified_date, _nuevo, _id_movimiento_midas);
+			
+			SET _id_movimiento_conciliacion = LAST_INSERT_ID();
+		ELSE
+			UPDATE to_movimiento_conciliacion
+			SET
+				id_concilacion = _id_concilacion,
+				created_by = _created_by,
+				created_date = _created_date,
+				last_modified_by = _last_modified_by,
+				last_modified_date = _last_modified_date,
+				nuevo = _nuevo,
+				id_movimiento_midas = _id_movimiento_midas
+			WHERE
+				id = _id;
+			SET _id_movimiento_conciliacion = _id;
+		END IF;
+
+		-- Inserta/Actualiza el movimiento devolucion
+		IF (_id IS NULL OR _id <= 0) THEN
+			INSERT INTO to_movimiento_devolucion(id, estatus, fecha, monto, esquema_tarjeta, identificador_cuenta, titular, codigo_autorizacion, sucursal, fecha_liquidacion)
+			VALUES(_id_movimiento_conciliacion, _estatus, _fecha, _monto, _esquema_tarjeta, _identificador_cuenta, _titular, _codigo_autorizacion, _sucursal, fecha_liquidacion);
+		ELSE
+			UPDATE to_movimiento_devolucion
+			SET
+				estatus = _estatus,
+				fecha = _fecha,
+				monto = _monto,
+				esquema_tarjeta = _esquema_tarjeta,
+				identificador_cuenta = _identificador_cuenta,
+				titular = _titular,
+				codigo_autorizacion = _codigo_autorizacion,
+				sucursal = _sucursal,
+				fecha_liquidacion = _fecha_liquidacion
+			WHERE
+				id = _id_movimiento_conciliacion;
+		END IF;
+
+	-- COMMIT;
+	
+	-- RETURN _id_movimiento_conciliacion;
+
+END MAIN;
+$$
+DELIMITER ;
+
+
+-- --------------------------------------------------------------------------------- --
+-- ----------------------- save_movimiento_transito -------------------------------- --
+-- --------------------------------------------------------------------------------- --
+DROP PROCEDURE IF EXISTS `save_movimiento_transito`;
+DELIMITER $$
+CREATE PROCEDURE `save_movimiento_transito`(
+
+	-- Campos para to_movimiento_transito
+    _estatus INT(11),
+    _folio INT(11),
+    _sucursal INT(11),
+    _fecha DATE,
+    _operacion_desc VARCHAR(45),
+    _monto DECIMAL(16, 4),
+    _tipo_contrato_desc VARCHAR(45),
+    _esquema_tarjeta VARCHAR(45),
+    _cuenta VARCHAR(45),
+    _titular VARCHAR(255),
+    _num_autorizacion VARCHAR(45),
+
+	-- Campos para to_movimiento_conciliacion
+	_id INT(11),
+	_id_conciliacion BIGINT(20),
+    _nuevo TINYINT(4),
+    _id_movimiento_midas INT(11),
+
+    -- Updatable
+    _created_date DATETIME,
+    _last_modified_date DATETIME,
+    _created_by VARCHAR(100),
+    _last_modified_by VARCHAR(100)
+)
+MODIFIES SQL DATA
+MAIN: BEGIN
+	-- Funcion que inserta un movimiento conciliacion transito
+
+	DECLARE _id_movimiento_conciliacion INT(11);
+
+	-- En caso de error se hace rollback
+	-- DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	-- BEGIN
+	-- 	ROLLBACK;
+	-- 	RESIGNAL;
+	-- END;
+
+	-- START TRANSACTION;
+
+		-- Inserta/actualiza el movimiento conciliacion y regresa el id
+		IF (_id IS NULL) THEN
+			INSERT INTO to_movimiento_conciliacion(id_conciliacion, created_by, created_date, last_modified_by, last_modified_date, nuevo, id_movimiento_midas)
+			VALUES(_id_conciliacion, _created_by, _created_date, _last_modified_by, _last_modified_date, _nuevo, _id_movimiento_midas);
+			
+			SET _id_movimiento_conciliacion = LAST_INSERT_ID();
+		ELSE
+			UPDATE to_movimiento_conciliacion
+			SET
+				id_concilacion = _id_concilacion,
+				created_by = _created_by,
+				created_date = _created_date,
+				last_modified_by = _last_modified_by,
+				last_modified_date = _last_modified_date,
+				nuevo = _nuevo,
+				id_movimiento_midas = _id_movimiento_midas
+			WHERE
+				id = _id;
+			SET _id_movimiento_conciliacion = _id;
+		END IF;
+
+		-- Inserta/Actualiza el movimiento transito
+		IF (_id IS NULL OR _id <= 0) THEN
+			INSERT INTO to_movimiento_transito(id, estatus, folio, sucursal, fecha, operacion_desc, monto, tipo_contrato_desc, esquema_tarjeta, cuenta, titular, num_autorizacion)
+			VALUES(_id_movimiento_conciliacion, _estatus, _folio, _sucursal, _fecha, _operacion_desc, _monto, _tipo_contrato_desc, _esquema_tarjeta, cuenta, _titular, _num_autorizacion);
+		ELSE
+			UPDATE to_movimiento_transito
+			SET
+				estatus = _estatus,
+				folio = _folio,
+				sucursal = _sucursal,
+				fecha = _fecha,
+				operacion_desc = _operacion_desc,
+				monto = _monto,
+				tipo_contrato_desc = _tipo_contrato_desc,
+				esquema_tarjeta = _esquema_tarjeta,
+				cuenta = _cuenta,
+				titular = _titular,
+				num_autorizacion = _num_autorizacion
+			WHERE
+				id = _id_movimiento_conciliacion;
+		END IF;
+
+	-- COMMIT;
+
+	-- RETURN _id_movimiento_conciliacion;
+
+END MAIN;
+$$
+DELIMITER ;

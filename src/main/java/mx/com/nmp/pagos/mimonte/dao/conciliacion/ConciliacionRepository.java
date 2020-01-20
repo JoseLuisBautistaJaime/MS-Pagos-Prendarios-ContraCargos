@@ -136,10 +136,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, md.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, md.estatus.id, md.estatus.nombre, md.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
-			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
+			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
 			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha BETWEEN :fechaDesde AND :fechaHasta")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursal(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
@@ -157,10 +157,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param fechaDesde
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, md.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, md.estatus.id, md.estatus.nombre, md.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
-			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
+			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
 			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha >= :fechaDesde")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaHasta(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
@@ -178,10 +178,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, md.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, md.estatus.id, md.estatus.nombre, md.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
-			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
+			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
 			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha <= :fechaHasta")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaDesde(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
@@ -198,10 +198,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param sucursal
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, md.estatus.id, c.estatus.descripcion, c.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO (md.id, c.entidad.id, c.entidad.nombre, c.entidad.description, md.fecha, md.estatus.id, md.estatus.nombre, md.estatus.estatus, md.sucursal,  md.identificadorCuenta, md.monto, md.esquemaTarjeta, md.titular, md.codigoAutorizacion, md.fechaLiquidacion ) FROM Conciliacion c INNER JOIN MovimientoConciliacion mc ON c.id = mc.idConciliacion INNER JOIN MovimientoDevolucion md ON mc.id = md.id "
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
-			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta = :identificadorCuenta ) AND "
+			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
 			+ "( :sucursal IS NULL OR md.sucursal = :sucursal )")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechas(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
@@ -368,4 +368,12 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query(nativeQuery = true, value = "SELECT me.id_sub_estatus_inicial FROM tk_maquina_estados_subestatus_conciliacion me WHERE me.id_sub_estatus_posible = :idSubEstatus")
 	public List<Object> getPossibleSubestatusList(@Param("idSubEstatus") final Long idSubEstatus);
 
+	/**
+	 * Regresa un 1 cuando la conciliacion especificada tiene un id de merge, de lo contrario regresa un 0
+	 * @param folio
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ( (SELECT c.id_merge FROM to_conciliacion c WHERE c.id = :folio) IS NOT NULL) THEN 1 ELSE 0 END")
+	public BigInteger validateConciliacionMerge(@Param("folio") final Long folio);
+	
 }

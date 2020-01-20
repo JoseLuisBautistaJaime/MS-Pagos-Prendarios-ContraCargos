@@ -90,6 +90,10 @@ public class DevolucionesController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultar(@RequestBody DevolucionRequestDTO devolucionDTO) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /devoluciones/consulta > REQUEST ENTRANTE: {}", devolucionDTO.toString());
+		
 		List<DevolucionEntidadDTO> respuesta = null;
 		// Valida que el objeto principal no sea nulo
 		if (null == devolucionDTO)
@@ -125,6 +129,10 @@ public class DevolucionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response actualizar(@RequestBody List<DevolucionUpdtDTO> devolucionUpdtDTOList,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: PUT /devoluciones/actualizacion > REQUEST ENTRANTE: {}", devolucionUpdtDTOList.toString());
+		
 		// Validacion de objeto y atributos
 		if (!ValidadorConciliacion.validateActualizarDevolucionRequest(devolucionUpdtDTOList) || userRequest == null
 				|| "".equals(userRequest))
@@ -164,6 +172,10 @@ public class DevolucionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response solicitar(@RequestBody DevolucionesIdsMovimientosDTO devolucionesIdsMovimientosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
+		
+		// TODO: Log de request entrante
+		LOG.info(">>>URL: POST /devoluciones/solicitar > REQUEST ENTRANTE: {}", devolucionesIdsMovimientosDTO.toString());
+		
 		if (!ValidadorConciliacion.validateDevolucionesIdsMovimientosDTO(devolucionesIdsMovimientosDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);

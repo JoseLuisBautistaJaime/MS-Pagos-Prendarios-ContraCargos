@@ -12,6 +12,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
@@ -223,5 +224,14 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	@Query("SELECT DISTINCT new mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO(mp.operationDate, mt.folio, mp.orderId, mt.operacionDesc, mt.monto, mp.currency, mp.tarjetaMovimientosProveedor.type, mp.status, mp.tarjetaMovimientosProveedor.brand, mp.tarjetaMovimientosProveedor.cardNumber, mp.tarjetaMovimientosProveedor.holderName, mp.authorization, mt.movimientoMidas.consumidor) FROM MovimientoTransito mt INNER JOIN MovimientoProveedor mp ON mt.movimientoMidas.numAutorizacion = mp.authorization WHERE mt.idConciliacion = :folio AND mt.id IN :idsComisiones")
 	public List<SolicitarPagosMailDataDTO> getDataByFolioAndIdMovimientos(@Param("folio") final Long folio,
 			@Param("idsComisiones") final List<Integer> idsComisiones);
+
+	/**
+	 * Regresa un listado de movimientos midas agrupados por sucursal y operacion.
+	 * Los atributos que devuelve son: Monto, Sucursal y Operacion
+	 * @param conciliacionId
+	 * @return
+	 */
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO(mm.sucursal, SUM(mm.monto), mm.operacionAbr) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id WHERE r.conciliacion.id = :conciliacionId AND mm.estatus = true GROUP BY mm.sucursal, mm.operacionAbr")
+	public List<MovimientoMidasDTO> getMovimientosMidasBySucursal(@Param("conciliacionId") final Long conciliacionId);
 
 }

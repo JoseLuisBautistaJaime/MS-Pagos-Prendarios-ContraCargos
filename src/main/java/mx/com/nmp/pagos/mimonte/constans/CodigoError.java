@@ -149,7 +149,7 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_045("La conciliacion con el folio especificado no existe",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
-	NMP_PMIMONTE_BUSINESS_046("Error al gurdar la solicitud de consulta de estado de cuenta",
+	NMP_PMIMONTE_BUSINESS_046("Error al guardar la solicitud de consulta de estado de cuenta",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_047("Error al leer el archivo de estado de cuenta",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
@@ -221,7 +221,7 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_090("Uno o mas ids de movimientos tienen un estatus incorrecto",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
-	NMP_PMIMONTE_BUSINESS_091("El estatus de conciliacion expecificado no existe",
+	NMP_PMIMONTE_BUSINESS_091("El estatus de conciliacion especificado no existe",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_092("No existen movimientos-devolucion pendientes de solicitud",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
@@ -304,6 +304,12 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_131("Error al registrar los movimientos proveedor transaccional",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_132("Error al conciliar la informacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_133("El estatus de devolucion especificado no existe",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_134("La linea no puede ser eliminada porque no se dio de alta desde la aplicacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_135("Aun no se ha realizado el merge de la conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

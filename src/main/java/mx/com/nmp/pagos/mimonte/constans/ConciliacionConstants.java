@@ -5,7 +5,6 @@
 package mx.com.nmp.pagos.mimonte.constans;
 
 import static mx.com.nmp.pagos.mimonte.util.CollectionUtil.asList;
-
 import java.util.List;
 
 /**
@@ -63,6 +62,16 @@ public final class ConciliacionConstants {
 		 * Tipo Movimiento de retiro
 		 */
 		public static final int TIPO_RETIRO = 2;
+
+		/**
+		 * Tipo Movimiento de cargo
+		 */
+		public static final int TIPO_CARGO = 1;
+
+		/**
+		 * Tipo Movimiento de abono
+		 */
+		public static final int TIPO_ABONO = 2;
 
 	}
 
@@ -163,7 +172,7 @@ public final class ConciliacionConstants {
 	 * Mensaje mostrado para una consulta exitosa.
 	 */
 	public static final String SUCCESSFUL_DELETE = "Eliminacion exitosa.";
-	
+
 	/**
 	 * Mensaje mostrado para una consulta exitosa.
 	 */
@@ -320,8 +329,10 @@ public final class ConciliacionConstants {
 	public static final String WRONG_ORDER_SUB_STATUS = "El subestatus que desea actualizar tiene un orden incorrecto.";
 
 	// CATALOGOS
-
+	public static final Long CATEGORIA_ESTADO_CUENTA_VENTAS = 1L;
 	public static final Long CATEGORIA_ESTADO_CUENTA_COMISIONES = 2L;
+	public static final Long CATEGORIA_ESTADO_CUENTA_CARGOS = 3L;
+	public static final Long CATEGORIA_ESTADO_CUENTA_ABONOS = 4L;
 	public static final Long CATEGORIA_ESTADO_CUENTA_IVA = 5L;
 	public static final Long CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES = 6L;
 
@@ -343,9 +354,12 @@ public final class ConciliacionConstants {
 	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA = 11L;
 	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA = 12L;
 	public static final Long SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR = 13L;
-	public static final Long SUBESTATUS_CONCILIACION_ENVIADA = 14L;
-	public static final Long SUBESTATUS_CONCILIACION_ENVIADA_ERROR = 15L;
-	public static final Long SUBESTATUS_CONCILIACION_FINALIZADA = 16L;
+	public static final Long SUBESTATUS_GENERACION_LAYOUTS = 14L;
+	public static final Long SUBESTATUS_GENERACION_LAYOUTS_COMPLETADA = 15L;
+	public static final Long SUBESTATUS_GENERACION_LAYOUTS_ERROR = 16L;
+	public static final Long SUBESTATUS_CONCILIACION_ENVIADA = 17L;
+	public static final Long SUBESTATUS_CONCILIACION_ENVIADA_ERROR = 18L;
+	public static final Long SUBESTATUS_CONCILIACION_FINALIZADA = 19L;
 
 	// Estatus devoluciones
 	public static final Integer ESTATUS_DEVOLUCION_PENDIENTE = 1;
@@ -499,10 +513,15 @@ public final class ConciliacionConstants {
 	public final static List<Long> CON_SUB_ESTATUS_ACTUALIZACION_PS = asList(SUBESTATUS_CONCILIACION_ENVIADA);
 	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PN = asList(SUBESTATUS_CONCILIACION_CONSULTA_MIDAS);
 	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_PT = asList(SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY);
-	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_EC = asList(SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA);
+	public final static List<Long> CON_SUB_ESTATUS_CARGA_MOV_EC = asList(
+			SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA);
 	public final static List<Long> CON_SUB_ESTATUS_MERGE_CONCILIACION = asList(SUBESTATUS_CONCILIACION_CONCILIACION);
 	public final static List<Long> CON_SUB_ESTATUS_ENVIO_CONCILIACION = asList(
-			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA, SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA);
+			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA,
+			SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA, SUBESTATUS_GENERACION_LAYOUTS_ERROR);
+	public final static List<Long> CON_SUB_ESTATUS_GENERAR_CONCILIACION = asList(
+			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA,
+			SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA);
 
 	/**
 	 * Mensaje generico inicial para mostrar excepciones en log
@@ -530,5 +549,87 @@ public final class ConciliacionConstants {
 	 * Estatus exitos de un movimiento proveedor
 	 */
 	public static final String MOVIMIENTOS_PROVEEDOR_SUCCESSFUL_STATUS = "%COMPLETE%";
+
+	/**
+	 * Valor que indica que un registro de la aplicacion fue dado de alta por
+	 * sistema
+	 */
+	public static final int ELEMENT_ADDED_BY_SYSTEM = 0;
+
+	/**
+	 * Valor que indica que un registro de la aplicacion fue dado de alta por el
+	 * usuario
+	 */
+	public static final int ELEMENT_ADDED_BY_USER = 1;
+
+	/**
+	 * Calse interna que contine los nombres de los procedimientos almacenados y las
+	 * funciones que utiliza la aplicacion y estan relacionadas con conciliacion
+	 * 
+	 * @author user
+	 *
+	 */
+	public static final class StoreProcedureNames {
+
+		private StoreProcedureNames() {
+			super();
+		}
+
+		/**
+		 * Funcion para el alta de layouts
+		 */
+		public static final String SAVE_LAYOUT_FUNCTION_NAME = "save_layout";
+		
+		/**
+		 * Funcion para el alta de headers de layouts
+		 */
+		public static final String SAVE_LAYOUT_HEADER_FUNCTION_NAME = "save_layout_header";
+		
+		/**
+		 * Funcion para el alta de lineas de layouts
+		 */
+		public static final String SAVE_LAYOUT_LINEA_FUNCTION_NAME = "save_layout_linea";
+
+		/**
+		 * Funcion para alta de movimientos en transito
+		 */
+		public static final String SAVE_MOV_TRANSITO_FUNCTION_NAME = "save_movimiento_transito";
+
+		/**
+		 * Funcion para alta de movimientos devolucion
+		 */
+		public static final String SAVE_MOV_DEVOLUCION_FUNCTION_NAME = "save_movimiento_devolucion";
+
+		/**
+		 * Funcion para alta de movimientos comision
+		 */
+		public static final String SAVE_MOV_COMISION_FUNCTION_NAME = "save_movimiento_comision";
+	}
+
+	/**
+	 * Clase interna que contiene sentencias SQL a utilizar con JDBC
+	 * @author user
+	 *
+	 */
+	public static class SQLSentences{
+		private SQLSentences() {
+			super();
+		}
+		
+		/**
+		 * Sentencia insert para la tabla to_layout (sin id)
+		 */
+		public static final String INSERT_WHITIN_TO_LAYOUT = "INSERT INTO to_layout(id_conciliacion, tipo) VALUES(?, ?)";
+	}
 	
+	/**
+	 * Magnitud comun para cargas mediante BATCH
+	 */
+	public static final int COMMON_BATCH_SIZE = 500;
+	
+	/**
+	 * Mensaje que es enviado cuando se realiza la generacion de layouts de manera exitosa
+	 */
+	public static final String CONCILIATION_LAYOUTS_SUCCESSFULLY_CREATED = "Layouts generados de forma exitosa.";
+		
 }

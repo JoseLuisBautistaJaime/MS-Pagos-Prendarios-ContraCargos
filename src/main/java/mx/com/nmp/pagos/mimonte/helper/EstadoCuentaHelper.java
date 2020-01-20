@@ -23,33 +23,37 @@ public interface EstadoCuentaHelper {
 	 * Valida si la clave de leyenda del estado de cuenta corresponde a una categoria especifica
 	 * @param claveLeyenda
 	 * @param idCategoria
+	 * @param idEntidad
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public boolean isClaveCategoria(String claveLeyenda, Long idCategoria) throws ConciliacionException;
+	public boolean isClaveCategoria(String claveLeyenda, Long idCategoria, Long idEntidad) throws ConciliacionException;
 
 	/**
 	 * Obtiene la clategoria asignada a la clave
 	 * @param claveLeyenda
+	 * @param idEntidad
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public Long getCategoriaFromClave(String claveLeyenda) throws ConciliacionException;
+	public Long getCategoriaFromClave(String claveLeyenda, Long idEntidad) throws ConciliacionException;
 
 	/**
 	 * Regresa el listado de codigos de estado de cuenta para la categoria indicada
-	 * @param categoriaEdoCuenta
+	 * @param idCategoria
+	 * @param idEntidad
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public List<String> getCodigosEstadoCuenta(Long categoriaEdoCuenta) throws ConciliacionException;
+	public List<String> getCodigosEstadoCuenta(Long idCategoria, Long idEntidad) throws ConciliacionException;
 
 	/**
 	 * Regresa el listado de codigos de estado de cuenta
+	 * @param idEntidad
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public List<String> getCodigosEstadoCuenta() throws ConciliacionException;
+	public List<String> getCodigosEstadoCuenta(Long idEntidad) throws ConciliacionException;
 
 	/**
 	 * Obtiene la categoria asignada a la clave leyenda si existe
@@ -61,9 +65,10 @@ public interface EstadoCuentaHelper {
 
 	/**
 	 * Obtiene los codigos de estado de cuenta agrupados por categoria
+	 * @param idEntidad
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public CodigosEdoCuentaMap getCodigosEdoCuentaMap() throws ConciliacionException;
+	public CodigosEdoCuentaMap getCodigosEdoCuentaMap(Long idEntidad) throws ConciliacionException;
 
 }
