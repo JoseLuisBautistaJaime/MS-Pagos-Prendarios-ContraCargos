@@ -261,7 +261,6 @@
         </dependencies>
     </dependencyManagement>
 
-	<!--
 	<repositories>
 	   <repository>
 	      <id>central maven repo</id>
@@ -278,7 +277,6 @@
 	        </snapshots>
 	    </pluginRepository>
 	</pluginRepositories>
--->
 
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
