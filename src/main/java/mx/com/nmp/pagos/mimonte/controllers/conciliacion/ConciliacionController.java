@@ -697,7 +697,7 @@ public class ConciliacionController {
 		ValidadorConciliacion.validateFechasPrimary(consultaActividadesRequest.getFechaDesde(),
 				consultaActividadesRequest.getFechaHasta());
 		List<ConsultaActividadDTO> response = conciliacionService.consultaActividades(consultaActividadesRequest);
-		if (null == response || response.isEmpty())
+		if (null == response)
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0005);
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
