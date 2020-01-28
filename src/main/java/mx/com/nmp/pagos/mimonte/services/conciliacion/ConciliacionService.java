@@ -20,8 +20,8 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionResponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
@@ -114,11 +114,10 @@ public interface ConciliacionService {
 
 	/**
 	 * Servicio que consulta el resumen de conciliaciones realizadas.
-	 * 
 	 * @param resumenConciliacionRequestDTO
 	 * @return
 	 */
-	public ResumenConciliacionDTO resumenConciliaciones(ResumenConciliacionRequestDTO resumenConciliacionRequestDTO);
+	public ResumenConciliacionResponseDTO resumenConciliaciones(ResumenConciliacionRequestDTO resumenConciliacionRequestDTO);
 
 	/**
 	 * Realiza la consulta del log de las ultimas actividades realizadas en el

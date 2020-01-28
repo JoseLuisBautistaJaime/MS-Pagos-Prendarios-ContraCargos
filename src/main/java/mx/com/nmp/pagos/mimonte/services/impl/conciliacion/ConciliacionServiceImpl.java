@@ -69,8 +69,8 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
@@ -928,9 +928,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 * fechas inicial y final como parametros
 	 */
 	@Override
-	public ResumenConciliacionDTO resumenConciliaciones(ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
-		Map<String, BigInteger> res = null;
-		ResumenConciliacionDTO resumenConciliacionDTO = null;
+	public ResumenConciliacionResponseDTO resumenConciliaciones(ResumenConciliacionRequestDTO resumenConciliacionRequestDTO){
+		ResumenConciliacionResponseDTO resumenConciliacionResponseDTO = null;
+		Map<String, Object> res = null;
 		// Se compara si la fecha inicial y final son nulas para plicar una consulta sin
 		// argumentos de rango de fechas o de lo contrario aplicar una consulta con
 		// argumentos de rango de fechas
@@ -967,17 +967,19 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					resumenConciliacionRequestDTO.getFechaFinal(),
 					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
 					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
-		} else {
+		} 
+		// Si no hay ninguna fecha especificada como parametro de filtrado
+		else {
 			res = conciliacionRepository.resumenConciliaciones(ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
 					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
 		}
-		if (null != res && !res.isEmpty())
-			resumenConciliacionDTO = new ResumenConciliacionDTO(res.get("en_proceso").longValue(),
-					res.get("dev_liquidadas").longValue(), res.get("conc_totales").longValue());
-		if (null == resumenConciliacionDTO)
+		if(null != res && !res.isEmpty()) {
+			resumenConciliacionResponseDTO = ConciliacionBuilder.buildResumenConciliacionResponseDTOFromMap(res);
+		}
+		if (null == resumenConciliacionResponseDTO)
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
-		return resumenConciliacionDTO;
+		return resumenConciliacionResponseDTO;
 	}
 
 	/**

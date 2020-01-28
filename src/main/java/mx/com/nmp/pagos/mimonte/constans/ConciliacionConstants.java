@@ -5,6 +5,9 @@
 package mx.com.nmp.pagos.mimonte.constans;
 
 import static mx.com.nmp.pagos.mimonte.util.CollectionUtil.asList;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -631,5 +634,5 @@ public final class ConciliacionConstants {
 	 * Mensaje que es enviado cuando se realiza la generacion de layouts de manera exitosa
 	 */
 	public static final String CONCILIATION_LAYOUTS_SUCCESSFULLY_CREATED = "Layouts generados de forma exitosa.";
-		
+
 }

@@ -218,11 +218,9 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	public List<Conciliacion> findByIdDevolucion(@Param("ids") final Integer ids);
 
 	/**
-	 * Regresa un mapa con tres valores, [en_proceso]: Con el total de las
-	 * conciliaciones en proceso, [dev_liquidadas]: Con el total de las devoluciones
-	 * liquidadas y [conc_totales]: Con el total de conciliaciones, esto con un
-	 * filtro de fecha que se aplica para la fecha y creacion o modificacion de la
-	 * conciliacion y el campo fecha de el movimiento devolucion
+	 * Regresa un set de resultados con los totales y fechas de inicio y fin para
+	 * las conciliaciones en proceso, devoluciones liquidadas y conciliaciones ne
+	 * general, en ese orden especificamente
 	 * 
 	 * @param fechaIncial
 	 * @param fechaFinal
@@ -230,32 +228,56 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param estatusDevLiquidada
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT " + "(SELECT COUNT(*) " + "FROM to_conciliacion "
-			+ "	WHERE id_estatus_conciliacion = :estatusConcProcesada " + "		AND " + "			CASE "
-			+ "				WHEN last_modified_date IS NOT NULL "
-			+ "					THEN last_modified_date BETWEEN :fechaIncial AND :fechaFinal "
-			+ "				ELSE created_date BETWEEN :fechaIncial AND :fechaFinal END " + "	) AS en_proceso, "
-			+ "(SELECT COUNT(*) " + "	FROM to_movimiento_devolucion " + "	WHERE estatus = :estatusDevLiquidada "
-			+ "		AND fecha BETWEEN :fechaIncial AND :fechaFinal " + "    ) AS dev_liquidadas, " + "(SELECT COUNT(*) "
-			+ "	FROM to_conciliacion " + "    ) AS conc_totales;")
-	public Map<String, BigInteger> resumenConciliaciones(@Param("fechaIncial") Date fechaIncial,
+	@Query(nativeQuery = true, value = "SELECT p.*, d.*, t.* " + 
+			"FROM " + 
+			"	(SELECT " + 
+			"		COUNT(*) AS p_total " + 
+			"        , CASE WHEN last_modified_date IS NULL THEN MIN(created_date) ELSE MIN(last_modified_date) END AS p_fechaInicio" + 
+			"        , CASE WHEN last_modified_date IS NULL THEN MAX(created_date) ELSE MAX(last_modified_date) END AS p_fechaFin " + 
+			"	FROM to_conciliacion c " + 
+			"    WHERE c.id_estatus_conciliacion = :estatusConcProcesada " + 
+			"		AND " + 
+			"			CASE " + 
+			"				WHEN c.last_modified_date IS NOT NULL" + 
+			"					THEN c.last_modified_date BETWEEN :fechaIncial AND :fechaFinal" + 
+			"					ELSE c.created_date BETWEEN :fechaIncial AND :fechaFinal END ) AS p " + 
+			"	, (SELECT " + 
+			"		COUNT(*) AS d_total " + 
+			"		, CASE WHEN last_modified_date IS NULL THEN MIN(created_date) ELSE MIN(last_modified_date) END AS d_fechaInicio" + 
+			"		, CASE WHEN last_modified_date IS NULL THEN MAX(created_date) ELSE MAX(last_modified_date) END AS d_fechaFin " + 
+			"	FROM to_movimiento_devolucion md " + 
+			"		INNER JOIN to_movimiento_conciliacion mc ON mc.id = md.id " + 
+			"	WHERE md.estatus = :estatusDevLiquidada " + 
+			"		AND " + 
+			"			CASE " + 
+			"				WHEN mc.last_modified_date IS NOT NULL" + 
+			"					THEN mc.last_modified_date BETWEEN :fechaIncial AND :fechaFinal" + 
+			"					ELSE mc.created_date BETWEEN :fechaIncial AND :fechaFinal END) AS d" + 
+			"    , (SELECT " + 
+			"		COUNT(*) AS t_total" + 
+			"        , CASE WHEN last_modified_date IS NULL THEN MIN(created_date) ELSE MIN(last_modified_date) END AS t_fechaInicio" + 
+			"        , CASE WHEN last_modified_date IS NULL THEN MAX(created_date) ELSE MAX(last_modified_date) END AS t_fechaFin " + 
+			"	FROM to_conciliacion c2" + 
+			"    WHERE" + 
+			"		CASE " + 
+			"			WHEN c2.last_modified_date IS NOT NULL" + 
+			"				THEN c2.last_modified_date BETWEEN :fechaIncial AND :fechaFinal" + 
+			"				ELSE c2.created_date BETWEEN :fechaIncial AND :fechaFinal END) AS t")
+	public Map<String, Object> resumenConciliaciones(@Param("fechaIncial") Date fechaIncial,
 			@Param("fechaFinal") Date fechaFinal, @Param("estatusConcProcesada") final Integer estatusConcProcesada,
 			@Param("estatusDevLiquidada") final Integer estatusDevLiquidada);
 
 	/**
-	 * Regresa un mapa con tres valores, [en_proceso]: Con el total de las
-	 * conciliaciones en proceso, [dev_liquidadas]: Con el total de las devoluciones
-	 * liquidadas y [conc_totales]: Con el total de conciliaciones
+	 * Regresa un set de resultados con los totales y fechas de inicio y fin para
+	 * las conciliaciones en proceso, devoluciones liquidadas y conciliaciones ne
+	 * general, en ese orden especificamente
 	 * 
 	 * @param estatusConcProcesada
 	 * @param estatusDevLiquidada
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT " + "(SELECT COUNT(*) " + "FROM to_conciliacion "
-			+ "	WHERE id_estatus_conciliacion = :estatusConcProcesada " + "	) AS en_proceso, " + "(SELECT COUNT(*) "
-			+ "	FROM to_movimiento_devolucion " + "	WHERE estatus = :estatusDevLiquidada " + "    ) AS dev_liquidadas, "
-			+ "(SELECT COUNT(*) " + "	FROM to_conciliacion " + "    ) AS conc_totales;")
-	public Map<String, BigInteger> resumenConciliaciones(
+	@Query(nativeQuery = true, value = "SELECT p.*, d.*, t.* FROM (SELECT COUNT(*) AS p_total, MIN(created_date) AS p_fechaInicio, MAX(created_date) AS p_fechaFin FROM to_conciliacion c WHERE c.id_estatus_conciliacion = :estatusConcProcesada) AS p, (SELECT COUNT(*) AS d_total, MIN(mc.created_date) AS d_fechaInicio, MAX(mc.created_date) AS d_fechaFin FROM to_movimiento_devolucion md INNER JOIN to_movimiento_conciliacion mc ON mc.id = md.id WHERE md.estatus = :estatusDevLiquidada) AS d, (SELECT COUNT(*)	AS t_total, MIN(c2.created_date) AS t_fechaInicio, MAX(c2.created_date) AS t_fechaFin FROM to_conciliacion c2) AS t")
+	public Map<String, Object> resumenConciliaciones(
 			@Param("estatusConcProcesada") final Integer estatusConcProcesada,
 			@Param("estatusDevLiquidada") final Integer estatusDevLiquidada);
 
@@ -369,11 +391,13 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	public List<Object> getPossibleSubestatusList(@Param("idSubEstatus") final Long idSubEstatus);
 
 	/**
-	 * Regresa un 1 cuando la conciliacion especificada tiene un id de merge, de lo contrario regresa un 0
+	 * Regresa un 1 cuando la conciliacion especificada tiene un id de merge, de lo
+	 * contrario regresa un 0
+	 * 
 	 * @param folio
 	 * @return
 	 */
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN ( (SELECT c.id_merge FROM to_conciliacion c WHERE c.id = :folio) IS NOT NULL) THEN 1 ELSE 0 END")
 	public BigInteger validateConciliacionMerge(@Param("folio") final Long folio);
-	
+
 }

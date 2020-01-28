@@ -4,9 +4,12 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransDTO;
@@ -19,6 +22,11 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.CuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionResponseDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalConciliacionesDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalDevolucionesLiquidadasDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalProcesoDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalResumenDTO;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
@@ -153,8 +161,8 @@ public abstract class ConciliacionBuilder {
 	 * @param entidad
 	 * @return
 	 */
-	public static ConciliacionDTO buildConciliacionDTOFromConciliacionCuentaAndEntidad(Conciliacion conciliacion, Cuenta cuenta,
-			Entidad entidad) {
+	public static ConciliacionDTO buildConciliacionDTOFromConciliacionCuentaAndEntidad(Conciliacion conciliacion,
+			Cuenta cuenta, Entidad entidad) {
 		ConciliacionDTO conciliacionDTO = null;
 		if (conciliacion != null) {
 			conciliacionDTO = new ConciliacionDTO();
@@ -269,8 +277,9 @@ public abstract class ConciliacionBuilder {
 	 * @return conciliacionDTOList
 	 */
 	public static ConciliacionDTOList buildConciliacionDTOListFromConciliacion(Conciliacion conciliacion,
-			List<Reporte> reportes, List<DevolucionConDTO> devolucionConDTOList, List<MovTransitoDTO> movTransitoDTOList,
-			List<ComisionesDTO> comisionesDTOList, ComisionesTransDTO comisionesTranDTO) {
+			List<Reporte> reportes, List<DevolucionConDTO> devolucionConDTOList,
+			List<MovTransitoDTO> movTransitoDTOList, List<ComisionesDTO> comisionesDTOList,
+			ComisionesTransDTO comisionesTranDTO) {
 		ConciliacionDTOList conciliacionDTOList = null;
 		if (conciliacion != null) {
 			conciliacionDTOList = new ConciliacionDTOList();
@@ -283,8 +292,8 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTOList.setCuenta(CuentaBuilder.buildCuentaDTOFromCuenta(conciliacion.getCuenta()));
 			conciliacionDTOList.setReporteProcesosNocturnos(
 					ReporteProcesosNocturnosBuilder.buildReporteProcesosNocturnosDTOSetFromReporteSet(reportes));
-			conciliacionDTOList.setReporteProveedorTransaccional(
-					ReporteProveedorTransaccionalBuilder.buildReporteProveedorTransaccionalDTOFromReporteList(reportes));
+			conciliacionDTOList.setReporteProveedorTransaccional(ReporteProveedorTransaccionalBuilder
+					.buildReporteProveedorTransaccionalDTOFromReporteList(reportes));
 			conciliacionDTOList.setReporteEstadoCuenta(
 					ReporteEstadoCuentaBuilder.buildReporteEstadoCuentaDTOFromReporteList(reportes));
 			conciliacionDTOList.setGlobal(GlobalBuilder.buildGlobalDTOFromGlobal(conciliacion.getGlobal()));
@@ -298,6 +307,74 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTOList.setLastModifiedBy(conciliacion.getLastModifiedBy());
 		}
 		return conciliacionDTOList;
+	}
+
+	/**
+	 * Convierte un mapa con los totales por tipos movimientos de resumen de
+	 * conciliacion en el correspondiente DTO de respuesta de dicho endpoint
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public static ResumenConciliacionResponseDTO buildResumenConciliacionResponseDTOFromMap(Map<String, Object> map){
+		// Objetos necesarios
+
+		ResumenConciliacionResponseDTO resumenConciliacionResponseDTO = null;
+		TotalProcesoDTO totalProcesoDTO = null;
+		TotalConciliacionesDTO totalConciliacionesDTO = null;
+		TotalDevolucionesLiquidadasDTO totalDevolucionesLiquidadasDTO = null;
+		// Valida que el mapa no sea nulo o vacio
+		if (null != map && !map.isEmpty()) {
+			resumenConciliacionResponseDTO = new ResumenConciliacionResponseDTO();
+
+			// Se setean los valores de cada sub-objeto
+			totalProcesoDTO = (TotalProcesoDTO) buildTotalProcesoDTOFromMap(new TotalProcesoDTO(), map);
+			totalDevolucionesLiquidadasDTO = (TotalDevolucionesLiquidadasDTO) buildTotalProcesoDTOFromMap(
+					new TotalDevolucionesLiquidadasDTO(), map);
+			totalConciliacionesDTO = (TotalConciliacionesDTO) buildTotalProcesoDTOFromMap(new TotalConciliacionesDTO(),
+					map);
+
+			// Se setean los valores al objeto principal
+			resumenConciliacionResponseDTO.setTotalProceso(totalProcesoDTO);
+			resumenConciliacionResponseDTO.setTotalDevolucionesLiquidadas(totalDevolucionesLiquidadasDTO);
+			resumenConciliacionResponseDTO.setTotalConciliaciones(totalConciliacionesDTO);
+		}
+		return resumenConciliacionResponseDTO;
+	}
+
+	/**
+	 * Construye un sub-objeto de TotalResumenDTO en base a un mapa de resultados
+	 * 
+	 * @param obj
+	 * @param map
+	 * @return
+	 */
+	public static TotalResumenDTO buildTotalProcesoDTOFromMap(TotalResumenDTO obj, Map<String, Object> map) {
+		TotalResumenDTO totalResumenDTO = null;
+
+		// Se crea la instancia correcta
+		if (obj instanceof TotalProcesoDTO) {
+			totalResumenDTO = new TotalProcesoDTO();
+		} else if (obj instanceof TotalDevolucionesLiquidadasDTO) {
+			totalResumenDTO = new TotalDevolucionesLiquidadasDTO();
+		} else if (obj instanceof TotalConciliacionesDTO) {
+			totalResumenDTO = new TotalConciliacionesDTO();
+		}
+
+		// Se setean las propiedades
+		if (null != totalResumenDTO) {
+			totalResumenDTO.setTotal(null != map.get(TotalResumenDTO.Tipos.P_TOTAL.getDescripcion())
+					? ((BigInteger) map.get(TotalResumenDTO.Tipos.P_TOTAL.getDescripcion())).longValue()
+					: null);
+			if (null != map.get(TotalResumenDTO.Tipos.P_FECHA_INICIO.getDescripcion())) {
+				totalResumenDTO
+						.setFechaInicio((Timestamp) map.get(TotalResumenDTO.Tipos.P_FECHA_INICIO.getDescripcion()));
+			}
+			if (null != map.get(TotalResumenDTO.Tipos.P_FECHA_FIN.getDescripcion())) {
+				totalResumenDTO.setFechaFin((Timestamp) map.get(TotalResumenDTO.Tipos.P_FECHA_FIN.getDescripcion()));
+			}
+		}
+		return totalResumenDTO;
 	}
 
 }

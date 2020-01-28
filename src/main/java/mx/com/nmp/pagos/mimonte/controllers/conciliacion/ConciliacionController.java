@@ -53,10 +53,10 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDT
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
@@ -755,15 +755,20 @@ public class ConciliacionController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response resumenConciliaciones(@RequestBody ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {
-		
-		// TODO: Log de request entrante
+	public Response resumenConciliaciones(@RequestBody ResumenConciliacionRequestDTO resumenConciliacionRequestDTO) {		
 		LOG.info(">>>URL: POST /conciliacion/resumen > REQUEST ENTRANTE: {}", resumenConciliacionRequestDTO.toString());
-		
+		ResumenConciliacionResponseDTO resumenConciliacionResponseDTO = null;		
 		ValidadorConciliacion.validateFechasPrimary(resumenConciliacionRequestDTO.getFechaInicial(),
 				resumenConciliacionRequestDTO.getFechaFinal());
+		try {
+			resumenConciliacionResponseDTO = conciliacionServiceImpl.resumenConciliaciones(resumenConciliacionRequestDTO);	
+		}
+		catch(Exception ex) {
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_9999.getDescripcion(), CodigoError.NMP_PMIMONTE_9999);
+		}
+		LOG.info(">>>URL: POST /conciliacion/resumen > RESPONSE: {}", resumenConciliacionResponseDTO.toString());
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
-				conciliacionServiceImpl.resumenConciliaciones(resumenConciliacionRequestDTO));
+				resumenConciliacionResponseDTO);
 	}
 
 }
