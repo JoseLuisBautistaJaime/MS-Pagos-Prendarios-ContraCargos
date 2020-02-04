@@ -7,6 +7,24 @@ applications:
   path: target/mimonte-0.0.1.war
   env:
     spring.profiles.active: cloud,swagger
-    TZ: America/Mexico_City
+    TZ: America/Mexico_City    
+    mimonte.variables.mail.auth.user: mimonte
+    mimonte.variables.mail.auth.password: iXjqY2ccS783PTF0
+    mimonte.variables.mail.common-headers.id-consumidor: idConsumidor
+    mimonte.variables.mail.common-headers.id-consumidor-value: 42
+    mimonte.variables.mail.common-headers.id-destino: idDestino
+    mimonte.variables.mail.common-headers.id-destino-value: 100
+    mimonte.variables.mail.common-headers.usuario: usuario
+    mimonte.variables.mail.common-headers.usuario-value: usuario
+    mimonte.variables.mail.token.url: https://iamdr.montepiedad.com.mx:4444/NMP/oauth2/v1
+    mimonte.variables.mail.send-mail.url: https://iamdr.montepiedad.com.mx:4444/NMP/Utileria/EnvioCorreo/v2
+    mimonte.variables.consultaEstadoCuenta.url: https://iamdr.montepiedad.com.mx:4444/NMP/GestionFinanzas/Conciliacion/DocEdoCuenta/v1
+    mimonte.variables.consultaEstadoCuenta.auth.usuario: mimonte
+    mimonte.variables.consultaEstadoCuenta.auth.password: iXjqY2ccS783PTF0
+    mimonte.variables.consultaEstadoCuenta.auth.header.usuario: usuario
+    mimonte.variables.consultaEstadoCuenta.header.idConsumidor: 42
+    mimonte.variables.consultaEstadoCuenta.header.idDestino: 100
+    mimonte.variables.consultaEstadoCuenta.archivo.ruta: "'/Automata SMV/CIE por Convenio/'ddMMyy"
+    mimonte.variables.consultaEstadoCuenta.archivo.nombre: "'MH43{CUENTA}'yyMMdd'0700.txt'"
   services:
     - 1775-pagosdb
