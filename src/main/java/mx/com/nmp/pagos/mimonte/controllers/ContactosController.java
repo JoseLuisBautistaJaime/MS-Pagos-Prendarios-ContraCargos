@@ -85,15 +85,23 @@ public class ContactosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveContacto(@RequestBody ContactoRequestDTO contacto,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		LOG.info(">>> POST /catalogos/contactos | REQUEST ENTRANTE: {}", contacto);
+		
 		if (!ValidadorCatalogo.validaContactoReqSaveDTO(contacto))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		if (!ValidadorGenerico.validateEmail2(contacto.getEmail()))
 			throw new CatalogoException(CatalogConstants.CATALOG_EMAIL_FORMAT_IS_NOT_CORRECT,
 					CodigoError.NMP_PMIMONTE_BUSINESS_013);
+		
+		ContactoRespDTO response = ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.save(
+				ContactosBuilder.buildContactoBaseDTOFromContactoRequestDTO(contacto, new Date(), null),
+				createdBy));
+		
+		LOG.info(">>> POST /catalogos/contactos | RESPONSE: {}", response);
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
-				(ContactoRespDTO) ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(contactoServiceImpl.save(
-						ContactosBuilder.buildContactoBaseDTOFromContactoRequestDTO(contacto, new Date(), null),
-						createdBy)));
+				response );
 	}
 
 	/**
@@ -117,6 +125,8 @@ public class ContactosController {
 		// Objectos necesarios
 		ContactoBaseDTO contactoBaseDTO = null;
 
+		LOG.info(">>> PUT /catalogos/contactos | REQUEST ENTRANTE: {}", contacto);
+		
 		// Valida el objeto y atributos
 		if (!ValidadorCatalogo.validaContactoReqUpdateDTO(contacto))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
@@ -134,6 +144,8 @@ public class ContactosController {
 		// Mapea el objetos a un objeto de respuesta
 		ContactoRespDTO contactoResp = ContactosBuilder.buildContactoRespDTOFromContactoBaseDTO(contactoBaseDTO);
 
+		LOG.info(">>> PUT /catalogos/contactos | RESPONSE: {}", contactoResp);
+		
 		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				contactoResp);
@@ -154,6 +166,9 @@ public class ContactosController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteContacto(@PathVariable("idContacto") Long idContacto) {
+		
+		LOG.info(">>> DELETE /catalogos/contactos/{idContacto} | REQUEST ENTRANTE: {}", idContacto);
+		
 		try {
 			contactoServiceImpl.deleteById(idContacto);
 		} catch (EmptyResultDataAccessException eex) {
@@ -180,6 +195,9 @@ public class ContactosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getIdContacto(@PathVariable(value = "idContacto", required = true) Long idContacto) {
 		ContactoRespDTO contactoRespDTO = null;
+		
+		LOG.info(">>> GET /catalogos/contactos/{idContacto} | REQUEST ENTRANTE: {}", idContacto);
+		
 		try {
 			contactoRespDTO = contactoServiceImpl.findById(idContacto);
 		} catch (EmptyResultDataAccessException eex) {
@@ -208,6 +226,9 @@ public class ContactosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getIdTipoContacto(@PathVariable(value = "idTipoContacto", required = true) Long idTipoContacto) {
 		List<ContactoRespDTO> lst = null;
+		
+		LOG.info(">>> GET /catalogos/contactos/tipocontacto/{idTipoContacto} | REQUEST ENTRANTE: {}", idTipoContacto);
+		
 		try {
 			lst = contactoServiceImpl.findByIdTipoContacto(idTipoContacto);
 		} catch (EmptyResultDataAccessException eex) {
@@ -215,6 +236,9 @@ public class ContactosController {
 		}
 		if (lst == null || lst.isEmpty())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
+		
+		LOG.info(">>> GET /catalogos/contactos/tipocontacto/{idTipoContacto} | RESPONSE: {}, TOTAL: {}", lst, lst.size());
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
 	}
 
@@ -235,6 +259,9 @@ public class ContactosController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response getNombreEmailContacto(@RequestBody ContactoReqSearchDTO contactoReqSearchDTO) {
+		
+		LOG.info(">>> POST /catalogos/contactos/consulta | REQUEST ENTRANTE: {}", contactoReqSearchDTO);
+		
 		// Valida que el objeto principal no sea nulo
 		if (null == contactoReqSearchDTO)
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
@@ -263,6 +290,8 @@ public class ContactosController {
 		if (lst == null || lst.isEmpty())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
 
+		LOG.info(">>> POST /catalogos/contactos/consulta | RESPONSE: {}, TOTAL: {}", lst, lst.size());
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, lst);
 	}
 
@@ -284,6 +313,9 @@ public class ContactosController {
 		@SuppressWarnings("unchecked")
 		List<ContactoRespDTO> lst = ContactosBuilder
 				.buildContactoBaseDTOListFromContactoRespDTOList((List<ContactoRespDTO>) contactoServiceImpl.findAll());
+		
+		LOG.info(">>> GET /catalogos/contactos | RESPONSE: {}, TOTAL: {}", lst, lst.size());
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
 	}
