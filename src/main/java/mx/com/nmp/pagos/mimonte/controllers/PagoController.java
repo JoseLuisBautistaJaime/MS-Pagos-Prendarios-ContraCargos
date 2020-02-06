@@ -87,6 +87,9 @@ public class PagoController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response post(@RequestBody PagoRequestDTO pagoRequestDTO) {
+		
+		log.info(">>> POST /v1/pago REQUEST: {}", null != pagoRequestDTO ? pagoRequestDTO : "");
+		
 		log.debug("Entrando a operacion de servicio PagoController.post()...");
 		log.debug("Received object: {}", pagoRequestDTO);
 		log.debug("Inician validaciones iniciales en validacionesInicialesPago(pagoRequestDTO)");
@@ -103,6 +106,9 @@ public class PagoController {
 		}
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", pagoResponseDTO);
+		
+		log.info(">>> POST /v1/pago RESPONSE: {}", null != pagoResponseDTO ? pagoResponseDTO : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), PagoConstants.MSG_SUCCESS,
 				pagoResponseDTO);
 	}

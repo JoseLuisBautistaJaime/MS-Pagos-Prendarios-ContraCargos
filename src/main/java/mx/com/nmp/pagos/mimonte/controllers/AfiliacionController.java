@@ -71,7 +71,6 @@ public class AfiliacionController {
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
-	@SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(AfiliacionController.class);
 
 	/**
@@ -99,6 +98,9 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody AfiliacionReqSaveDTO afiliacionReqSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		log.info(">>> POST /catalogos/afiliaciones REQUEST ENTRANTE: {}", null != afiliacionReqSaveDTO ? afiliacionReqSaveDTO: "");
+		
 		// Valida que el objeto y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateAfilacionSave(afiliacionReqSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
@@ -106,6 +108,9 @@ public class AfiliacionController {
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
 				(AfiliacionDTO) afiliacionServiceImpl.save(AfiliacionBuilder.buildAfiliacionDTOFromAfiliacionSaveReqDTO(
 						afiliacionReqSaveDTO, new Date(), null), createdBy));
+		
+		log.info(">>> POST /catalogos/afiliaciones RESPONSE: {}", null != afiliacionDTO ? afiliacionDTO : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				afiliacionDTO);
 	}
@@ -128,6 +133,9 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody AfiliacionReqDTO afiliacionDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		log.info(">>> PUT /catalogos/afiliaciones REQUEST ENTRANTE: {}", null != afiliacionDTOReq ? afiliacionDTOReq : "");
+		
 		// Valida que el objeto y sus atributos
 		if (!ValidadorCatalogo.validateAfilacionUpdt(afiliacionDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
@@ -136,6 +144,9 @@ public class AfiliacionController {
 				.buildAfiliacionRespPostDTOfromAfiliacionDTO((AfiliacionDTO) afiliacionServiceImpl.update(
 						AfiliacionBuilder.buildAfiliacionDTOFromAfiliacionReqDTO(afiliacionDTOReq, null, new Date()),
 						createdBy));
+		
+		log.info(">>> PUT /catalogos/afiliaciones RESPONSE: {}", null != afiliacionDTO ? afiliacionDTO : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				afiliacionDTO);
 	}
@@ -157,6 +168,9 @@ public class AfiliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "numeroAfiliacion", required = true) String numeroAfiliacion) {
+		
+		log.info(">>> GET /catalogos/afiliaciones/{numeroAfiliacion} REQUEST: {}", (null != numeroAfiliacion) ? numeroAfiliacion : "");
+		
 		AfiliacionRespPostDTO afiliacionDTO = null;
 		// Realiza la consulta
 		try {
@@ -169,6 +183,9 @@ public class AfiliacionController {
 		}
 		if (null == afiliacionDTO)
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
+		
+		log.info(">>> GET /catalogos/afiliaciones/{numeroAfiliacion} RESPONSE: {}", afiliacionDTO);
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				afiliacionDTO);
 	}
@@ -190,6 +207,9 @@ public class AfiliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByCuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta) {
+		
+		log.info(">>> GET /catalogos/afiliaciones/cuenta/{idCuenta} REQUEST: {}", null != idCuenta ? idCuenta : "");
+		
 		Set<AfiliacionRespPostDTO> afiliacionDTOSet = null;
 		// Realiza la consulta
 		try {
@@ -200,6 +220,9 @@ public class AfiliacionController {
 		}
 		if (null == afiliacionDTOSet || afiliacionDTOSet.isEmpty())
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND, CodigoError.NMP_PMIMONTE_0005);
+		
+		log.info(">>> GET /catalogos/afiliaciones/cuenta/{idCuenta} RESPONSE: {}", afiliacionDTOSet);
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				afiliacionDTOSet);
 	}
@@ -223,6 +246,9 @@ public class AfiliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteByidAfiliacion(@PathVariable(value = "idAfiliacion", required = true) Long idAfiliacion,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		log.info(">>> DELETE /catalogos/afiliaciones/{idAfiliacion} REQUEST: {}", null != idAfiliacion ? idAfiliacion : "");
+		
 		// Realiza la eliminacion
 		try {
 			afiliacionServiceImpl.deleteById(idAfiliacion);
@@ -233,6 +259,9 @@ public class AfiliacionController {
 		} catch (Exception ex) {
 			throw ex;
 		}
+		
+		log.info(">>> DELETE /catalogos/afiliaciones/{idAfiliacion} REQUEST: {}", "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
 	}
@@ -257,6 +286,9 @@ public class AfiliacionController {
 		List<AfiliacionRespPostDTO> afiliacionDTOList = AfiliacionBuilder
 				.buildAfiliacionRespPostDTOListfromAfiliacionDTOList(
 						(List<AfiliacionDTO>) afiliacionServiceImpl.findAll());
+		
+		log.info(">>> GET /catalogos/afiliaciones RESPONSE: {}", null != afiliacionDTOList ? afiliacionDTOList : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != afiliacionDTOList ? afiliacionDTOList : new ArrayList<>());
 	}

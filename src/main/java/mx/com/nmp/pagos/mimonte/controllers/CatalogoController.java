@@ -79,6 +79,9 @@ public class CatalogoController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response get(@PathVariable(value = "nombre", required = true) String nombreCatalogo) {
+		
+		log.info(">>> GET /v1/catalogo/{nombre} REQUEST: {}", null != nombreCatalogo ? nombreCatalogo : "");
+		
 		log.debug("Entrando a operacion de servicio CatalogoController.get()...");
 
 		log.debug("Validando parametro nombreCatalogo...");
@@ -87,7 +90,8 @@ public class CatalogoController {
 		log.debug("Intentando obtener el listado de registros para el catalogo {}...", nombreCatalogo);
 		CatalogoDTO catalogoDTO = catalogoService.getRegistrosCatalogo(nombreCatalogo);
 
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", catalogoDTO);
+		log.info(">>> GET /v1/catalogo/{nombre} RESPONSE: {}", null != catalogoDTO ? catalogoDTO : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), MSG_SUCCESS, catalogoDTO);
 	}
 
@@ -105,12 +109,14 @@ public class CatalogoController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para el catalogo especificado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response get() {
+				
 		log.debug("Entrando a operacion de servicio CatalogoController.getCatalogos()...");
 
 		log.debug("Intentando obtener el listado de extrafilter registrados en la base de datos...");
 		List<String> catalogos = catalogoService.getCatalogosSistema();
 
-		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", catalogos);
+		log.info(">>> GET /v1/catalogos RESPONSE: {}, TOTAL: {}", null != catalogos ? catalogos : "", null != catalogos ? catalogos.size() : "0");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), MSG_SUCCESS, catalogos);
 	}
 

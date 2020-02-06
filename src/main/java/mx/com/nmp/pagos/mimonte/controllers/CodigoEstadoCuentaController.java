@@ -97,6 +97,9 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CodigoEstadoCuentaReqSaveDTO codigoEstadoCuentaReqSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		log.info(">>> POST /catalogos/codigos REQUEST: {}", null != codigoEstadoCuentaReqSaveDTO ? codigoEstadoCuentaReqSaveDTO : "");
+		
 		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateCodigoEstadoCuentaSave(codigoEstadoCuentaReqSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
@@ -118,6 +121,9 @@ public class CodigoEstadoCuentaController {
 		} catch (RuntimeException rex) {
 			throw rex;
 		}
+		
+		log.info(">>> POST /catalogos/codigos RESPONSE: {}", null != codigo ? codigo : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				codigo);
 	}
@@ -142,6 +148,9 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CodigoEstadoCuentaReqUpdtDTO codigoEstadoCuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		
+		log.info(">>> PUT /catalogos/codigos REQUEST: {}", null != codigoEstadoCuentaDTOReq ? codigoEstadoCuentaDTOReq : "");
+		
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTOResp = null;
 		// Valida que el objeto de request y sus atributos sean correctos
@@ -155,6 +164,9 @@ public class CodigoEstadoCuentaController {
 		// Construye el objeto de respuesta
 		CodigoEstadoCuentaUpdtDTO codigo = CodigoEstadoCuentaBuilder
 				.buildCodigoEstadoCuentaUpdtDTOFromCodigoEstadoCuentaDTO(codigoEstadoCuentaDTOResp);
+		
+		log.info(">>> PUT /catalogos/codigos RESPONSE: {}", null != codigo ? codigo : "");
+		
 		// Regresa el resultado
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				codigo);
@@ -178,6 +190,9 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idCodigo", required = true) Long idCodigo) {
+		
+		log.info(">>> GET /catalogos/codigos/{idCodigo} REQUEST: {}", null != idCodigo ? idCodigo : "");
+		
 		CodigoEstadoCuentaUpdtDTO codigo = null;
 		CodigoEstadoCuentaDTO codigoEstadoCuentaDTO = null;
 		try {
@@ -189,6 +204,9 @@ public class CodigoEstadoCuentaController {
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
+		
+		log.info(">>> GET /catalogos/codigos/{idCodigo} RESPONSE: {}", null != codigo ? codigo : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS, codigo);
 	}
 
@@ -210,6 +228,9 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByEntidadId(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
+		
+		log.info(">>> GET /catalogos/codigos/entidad/{idEntidad} REQUEST: {}", null != idEntidad ? idEntidad : "");
+		
 		List<CodigoEstadoCuentaUpdtDTO> lst = null;
 		// Encuentra un codigo estado cuenta por id de entidad
 		try {
@@ -217,6 +238,9 @@ public class CodigoEstadoCuentaController {
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
+		
+		log.info(">>> GET /catalogos/codigos/entidad/{idEntidad} RESPONSE: {}, TOTAL: {}", null != lst ? lst : "", null != lst ? lst.size() : "0");
+		
 		// Regresa el resultado
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
@@ -242,12 +266,18 @@ public class CodigoEstadoCuentaController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteById(@PathVariable(value = "idCodigo", required = true) Long idCodigo,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		
+		log.info(">>> DELETE /catalogos/codigos/{idCodigo} REQUEST: {}", null != idCodigo ? idCodigo : "");
+		
 		// Elimina un codigo estado cuenta por id
 		try {
 			codigoEstadoCuentaServiceImpl.deleteById(idCodigo);
 		} catch (EmptyResultDataAccessException eex) {
 			throw new CatalogoNotFoundException(CatalogConstants.CATALOG_NOT_FOUND);
 		}
+		
+		log.info(">>> DELETE /catalogos/codigos/{idCodigo} RESPONSE: {}", "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
 	}
@@ -275,6 +305,9 @@ public class CodigoEstadoCuentaController {
 		List<CodigoEstadoCuentaDTO> lstResult = (List<CodigoEstadoCuentaDTO>) codigoEstadoCuentaServiceImpl.findAll();
 		// Se construye una lista de respuetsa de codigos de estado de cuenta
 		lst = CodigoEstadoCuentaBuilder.buildCodigoEstadoCuentaUpdtDTOListFromCodigoEstadoCuentaDTOList(lstResult);
+		
+		log.info(">>> GET /catalogos/codigos RESPONSE: {}, TOTAL: {}", null != lst ? lst : "", null != lst ? lst.size() : "0");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != lst ? lst : new ArrayList<>());
 	}
