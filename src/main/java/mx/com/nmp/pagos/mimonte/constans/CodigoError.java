@@ -39,6 +39,8 @@ public enum CodigoError {
 			TipoError.SERVIDOR, SeveridadError.ALTA),
 	NMP_PMIMONTE_0014("Se genero un error durante las validaciones",
 			TipoError.SERVIDOR, SeveridadError.ALTA),
+	NMP_PMIMONTE_0015("El valor no es un valor alfanumerico",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
 
 	// ERRORES RELACIONADOS CON REGLA DE NEGOCIO
 

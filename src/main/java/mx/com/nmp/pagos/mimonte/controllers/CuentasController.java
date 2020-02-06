@@ -40,8 +40,10 @@ import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaSaveDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.impl.CuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.UtilValidation;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 
 /**
@@ -102,6 +104,12 @@ public class CuentasController {
 		if (!ValidadorCatalogo.validateCuentaSave(cuentaSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		CuentaEntDTO cuentaEntDTO = null;
+		
+		// Valida que el numero de afiliacion sea un valor alfanumerico
+				if (!UtilValidation.validaCadenaAlfanumerica(cuentaSaveDTO.getNumero()))
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_0015);
+				
 		// Guarda una cuenta
 		cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
 				.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaSaveDTO(cuentaSaveDTO, new Date(), null), createdBy));
@@ -130,13 +138,19 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CuentaDTO cuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		CuentaEntDTO cuentaEntDTO = null;
 		
 		log.info(">>> PUT /catalogos/cuentas REQUEST: {}", null != cuentaDTOReq ? cuentaDTOReq : "");
 		
 		// Valida que el objeto de request y sus atributos sean validos
 		if (!ValidadorCatalogo.validateCuentaUpdate(cuentaDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
-		CuentaEntDTO cuentaEntDTO = null;
+		
+		// Valida que el numero de afiliacion sea un valor alfanumerico
+		if (!UtilValidation.validaCadenaAlfanumerica(cuentaDTOReq.getNumero()))
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_0015);
+		
 		// Actualiza una cuenta
 		cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
 				.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));

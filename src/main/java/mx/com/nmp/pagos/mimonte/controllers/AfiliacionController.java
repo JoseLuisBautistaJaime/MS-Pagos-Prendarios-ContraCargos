@@ -43,8 +43,10 @@ import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespPostDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.impl.AfiliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.UtilValidation;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 
 /**
@@ -60,7 +62,7 @@ import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 @RequestMapping(value = "/mimonte")
 @Api(value = "Servicio que permite realizar operciones sobre el catalogo de afiliacion.", description = "REST API para realizar operaciones sobre el catalogo de afiliacion", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
 		"Afiliacion" })
-public class AfiliacionController {
+public class AfiliacionController implements UtilValidation{
 
 	/**
 	 * Bean de la fabrica de instancias
@@ -104,6 +106,12 @@ public class AfiliacionController {
 		// Valida que el objeto y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateAfilacionSave(afiliacionReqSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
+
+		// Valida que el numero de afiliacion sea un valor alfanumerico
+		if (!UtilValidation.validaCadenaAlfanumerica(afiliacionReqSaveDTO.getNumero()))
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_0015);
+		
 		// Realiza el alta
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
 				(AfiliacionDTO) afiliacionServiceImpl.save(AfiliacionBuilder.buildAfiliacionDTOFromAfiliacionSaveReqDTO(
@@ -139,6 +147,12 @@ public class AfiliacionController {
 		// Valida que el objeto y sus atributos
 		if (!ValidadorCatalogo.validateAfilacionUpdt(afiliacionDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
+		
+		// Valida que el numero de afiliacion sea un valor alfanumerico
+				if (!UtilValidation.validaCadenaAlfanumerica(afiliacionDTOReq.getNumero()))
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_0015);
+		
 		// Realiza la actualizacion
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder
 				.buildAfiliacionRespPostDTOfromAfiliacionDTO((AfiliacionDTO) afiliacionServiceImpl.update(
