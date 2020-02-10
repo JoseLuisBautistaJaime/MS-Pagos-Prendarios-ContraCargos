@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
  */
 public abstract class ConciliacionBuilder {
 
-	public ConciliacionBuilder() {
+	private ConciliacionBuilder() {
 		super();
 	}
 
@@ -377,4 +378,20 @@ public abstract class ConciliacionBuilder {
 		return totalResumenDTO;
 	}
 
+	/**
+	 * Convierte un arreglo de objetos con el id de conciliacion y sus movimientos globales en un mapa con la misma informacion
+	 * @param objectArray
+	 * @return
+	 */
+	public static Map<Long, Integer> buildConciliacionMovsMapFromObjArray(List<Object[]> objectArray){
+		Map<Long, Integer> map = null;
+		if(null != objectArray && !objectArray.isEmpty()) {
+			map = new HashMap<>();
+			for(Object[] obj : objectArray) {
+				map.put(Long.parseLong(obj[0].toString()), Integer.parseInt(obj[1].toString()));
+			}
+		}
+		return map;
+	}
+	
 }

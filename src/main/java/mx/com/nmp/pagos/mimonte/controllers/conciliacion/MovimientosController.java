@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
@@ -41,7 +42,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequ
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosEstadoCuentaService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosMidasService;
@@ -228,14 +228,20 @@ public class MovimientosController {
 			movimientoProcesosNocturnosListDTO.setTotal(total);
 			movimientoProcesosNocturnosListDTO
 					.setMovimientos(movimientosMidasService.findByFolio(commonConciliacionRequestDTO));
-		} else
-			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+		} 
+		else
+			{
+			movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
+			movimientoProcesosNocturnosListDTO.setTotal(0L);
+			movimientoProcesosNocturnosListDTO.setMovimientos(new ArrayList<>());
+			}
 		if (null == movimientoProcesosNocturnosListDTO.getTotal()
 				|| null == movimientoProcesosNocturnosListDTO.getMovimientos()
-				|| movimientoProcesosNocturnosListDTO.getMovimientos().isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+				|| movimientoProcesosNocturnosListDTO.getMovimientos().isEmpty()){
+			movimientoProcesosNocturnosListDTO = new MovimientoProcesosNocturnosListDTO();
+			movimientoProcesosNocturnosListDTO.setTotal(0L);
+			movimientoProcesosNocturnosListDTO.setMovimientos(new ArrayList<>());
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoProcesosNocturnosListDTO);
 	}
@@ -350,13 +356,18 @@ public class MovimientosController {
 			movimientoTransaccionalListDTO.setTotal(total);
 			movimientoTransaccionalListDTO
 					.setMovimientos(movimientosProveedorService.findByFolio(commonConciliacionRequestDTO));
-		} else
-			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+		} 
+		else {
+			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
+			movimientoTransaccionalListDTO.setTotal(0L);
+			movimientoTransaccionalListDTO.setMovimientos(new ArrayList<>());
+		}
 		if (null == movimientoTransaccionalListDTO.getTotal() || null == movimientoTransaccionalListDTO.getMovimientos()
-				|| movimientoTransaccionalListDTO.getMovimientos().isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+				|| movimientoTransaccionalListDTO.getMovimientos().isEmpty()) {
+			movimientoTransaccionalListDTO = new MovimientoTransaccionalListDTO();
+			movimientoTransaccionalListDTO.setTotal(0L);
+			movimientoTransaccionalListDTO.setMovimientos(new ArrayList<>());
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoTransaccionalListDTO);
 	}
@@ -459,7 +470,7 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientoEsadoCuenta(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		
-		LOG.info(">>>URL: POST /movimientos/estadocuenta/consulta > REQUEST ENTRANTE: {}", commonConciliacionRequestDTO.toString());
+		LOG.info(">>>URL: POST /movimientos/estadocuenta/consulta > REQUEST ENTRANTE: {}", commonConciliacionRequestDTO);
 		
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;
 		if (!ValidadorConciliacion.validateCommonConciliacionRequestDTO(commonConciliacionRequestDTO))
@@ -476,13 +487,18 @@ public class MovimientosController {
 			movimientosEstadoCuentaDTO.setTotal(total);
 			movimientosEstadoCuentaDTO.setMovimientos(
 					movimientosEstadoCuentaService.findByFolioAndPagination(commonConciliacionRequestDTO));
-		} else
-			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+		} 
+		else {
+			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
+			movimientosEstadoCuentaDTO.setTotal(0L);
+			movimientosEstadoCuentaDTO.setMovimientos(new ArrayList<>());
+		}
 		if (null == movimientosEstadoCuentaDTO.getTotal() || null == movimientosEstadoCuentaDTO.getMovimientos()
-				|| movimientosEstadoCuentaDTO.getMovimientos().isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+				|| movimientosEstadoCuentaDTO.getMovimientos().isEmpty()){
+			movimientosEstadoCuentaDTO = new MovimientosEstadoCuentaDTO();
+			movimientosEstadoCuentaDTO.setTotal(0L);
+			movimientosEstadoCuentaDTO.setMovimientos(new ArrayList<>());
+		}
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.SUCCESSFUL_QUERY_ESTADO_CUENTA, movimientosEstadoCuentaDTO);

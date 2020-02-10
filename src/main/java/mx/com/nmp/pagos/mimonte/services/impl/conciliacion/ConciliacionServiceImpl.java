@@ -593,9 +593,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	public List<ConsultaConciliacionDTO> consulta(ConsultaConciliacionRequestDTO consultaConciliacionRequestDTO) {
 
 		// Declaracion de objetos necesarios
+		Map<Long, Integer> movimientosMap = null;
 		List<ConsultaConciliacionDTO> result = null;
+		List<Long> conciliacionIdList;
+		List<Object[]> objectResult = null;
 		Optional<Entidad> entidad = null;
-		Optional<EstatusConciliacion> estatusConciliacion = null;
+		Optional<EstatusConciliacion> estatusConciliacion = null;		
 
 		// Ajuste de fechas para filtros
 		if (null == consultaConciliacionRequestDTO.getFechaDesde()
@@ -678,6 +681,20 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 							consultaConciliacionRequestDTO.getIdEstatus()));
 		}
 
+		// SE REALIZA EL SET DE MOVIMIENTOS A LA(S) CONCILIACION(ES)
+		if(null != result && !result.isEmpty()) {
+			// Se obtienen los ids de las conciliaciones para consultar el total de sus movimientos			
+			conciliacionIdList = getConciliacionIds(result);
+			// Se obtienen los movimientos para las conciliaciones
+			objectResult = conciliacionRepository.findMovimientosByIdConciliacionList(conciliacionIdList);
+			// Se construye el mapa de relacion conciliacion - movimientos
+			movimientosMap = ConciliacionBuilder.buildConciliacionMovsMapFromObjArray(objectResult);
+			// se realiza el set de los movimientos en el objeto final
+			for(ConsultaConciliacionDTO consultaConciliacionDTO : result) {
+				consultaConciliacionDTO.setNumeroMovimientos(movimientosMap.get(consultaConciliacionDTO.getFolio()));
+			}
+		}
+		
 		return result;
 	}
 
@@ -1272,6 +1289,24 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		Boolean result = null;
 		result = conciliacionRepository.validateConciliacionMerge(folio).compareTo(BigInteger.ONE) == 0;
 		return result;
+	}
+	
+	/**
+	 * Extrae en una lista de tipo Long los folios de conciliacion de una lista de objetos de tipo ConsultaConciliacionDTO
+	 * @param consultaConciliacionDTOList
+	 * @return
+	 */
+	private static List<Long> getConciliacionIds(List<ConsultaConciliacionDTO> consultaConciliacionDTOList) {
+		List<Long> conciliacionIdList = null;
+		if(null != consultaConciliacionDTOList && !consultaConciliacionDTOList.isEmpty()) {
+			conciliacionIdList = new ArrayList<>();
+			for(ConsultaConciliacionDTO consultaConciliacionDTO : consultaConciliacionDTOList) {
+				if(null != consultaConciliacionDTO.getFolio()) {
+					conciliacionIdList.add(consultaConciliacionDTO.getFolio());	
+				}
+			}
+		}
+		return conciliacionIdList;
 	}
 	
 }

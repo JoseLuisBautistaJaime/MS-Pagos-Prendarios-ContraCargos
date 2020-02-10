@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -213,13 +214,10 @@ public class ConciliacionController {
 				consultaConciliacionRequestDTO.getFechaHasta());
 		List<ConsultaConciliacionDTO> consulta = conciliacionServiceImpl.consulta(consultaConciliacionRequestDTO);
 
-		if (consulta != null && !consulta.isEmpty()) {
-			for (ConsultaConciliacionDTO con : consulta) {
-				con.setNumeroMovimientos(consulta.size());
-			}
-		} else
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+		if (null == consulta) {
+			consulta = new ArrayList<>();
+		} 
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				consulta);
 	}
