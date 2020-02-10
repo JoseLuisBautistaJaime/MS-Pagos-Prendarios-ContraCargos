@@ -372,17 +372,28 @@ public class ConciliacionController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaTransitoFolio(@PathVariable(value = "folio", required = true) Long folio) {
-		
+
+		List<MovTransitoDTO> response = null;
+		// TODO: Log de request entrante
 		LOG.info(">>>URL: GET /conciliacion/transito/consulta/{folio} > REQUEST ENTRANTE: {}", folio);
 		
-		LOG.info(">> consultaTransitoFolio(" + folio + ")");
-
-		List<MovTransitoDTO> response = conciliacionService.consultaMovimientosTransito(folio);
-		if (null == response || response.isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+		try {
+			response = conciliacionService.consultaMovimientosTransito(folio);	
+		}
+		catch(InformationNotFoundException iex) {
+			LOG.warn("WARNING: {}", iex.getMessage());
+			response = new ArrayList<>();
+		}
+		catch(ConciliacionException cex) {
+			cex.printStackTrace();
+			throw cex;
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_9999.getDescripcion(), CodigoError.NMP_PMIMONTE_9999);
+		}
 		
-		LOG.info(">>>URL: GET /conciliacion/transito/consulta/{folio} > RESPONSE: {}", response.toString());
+		LOG.info(">>>URL: GET /conciliacion/transito/consulta/{folio} > RESPONSE: {}", null != response ? response.toString() : "");
 		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				response);
@@ -473,12 +484,27 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaMovimientosDevolucion(@PathVariable(value = "folio", required = true) Long folio) {
 		
+		List<DevolucionConDTO> devoluciones = null;
+		
 		LOG.info(">>>URL: GET /conciliacion/devoluciones/consulta/{folio} > REQUEST ENTRANTE: {}", folio);
 		
-		LOG.info(">> consultaMovimientosDevolucion(" + folio + ")");
+		try {
+			devoluciones = devolucionesServiceImpl.consultaDevolucion(folio);	
+		}
+		catch(InformationNotFoundException iex) {
+			LOG.warn(iex.getMessage());
+			devoluciones = new ArrayList<>();
+		}
+		catch(ConciliacionException cex) {
+			cex.printStackTrace();
+			throw cex;
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_9999.getDescripcion(), CodigoError.NMP_PMIMONTE_9999);
+		}
 
-		List<DevolucionConDTO> devoluciones = devolucionesServiceImpl.consultaDevolucion(folio);
-		if (null == devoluciones || devoluciones.isEmpty())
+		if (null == devoluciones)
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
 		

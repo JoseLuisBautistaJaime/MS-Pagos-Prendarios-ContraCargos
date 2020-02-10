@@ -64,7 +64,7 @@ public interface ValidadorLayout {
 	 * @return
 	 */
 	public static boolean validateLayoutDTOs(List<LayoutDTO> layoutDTOs) {
-		return null != layoutDTOs && layoutDTOs.size() > 0;
+		return null != layoutDTOs;
 	}
 
 	/**

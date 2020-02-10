@@ -242,6 +242,7 @@ public class MovimientosController {
 			movimientoProcesosNocturnosListDTO.setTotal(0L);
 			movimientoProcesosNocturnosListDTO.setMovimientos(new ArrayList<>());
 		}
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoProcesosNocturnosListDTO);
 	}
@@ -368,6 +369,7 @@ public class MovimientosController {
 			movimientoTransaccionalListDTO.setTotal(0L);
 			movimientoTransaccionalListDTO.setMovimientos(new ArrayList<>());
 		}
+
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.MSG_SUCCESSFUL_MOVIMIENTOS_QUERY, movimientoTransaccionalListDTO);
 	}

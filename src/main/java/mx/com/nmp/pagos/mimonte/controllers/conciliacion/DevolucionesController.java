@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -94,15 +95,12 @@ public class DevolucionesController {
 		LOG.info(">>>URL: POST /devoluciones/consulta > REQUEST ENTRANTE: {}", devolucionDTO);
 		
 		List<DevolucionEntidadDTO> respuesta = null;
-		// Valida que el objeto principal no sea nulo
-		if (null == devolucionDTO)
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
 		ValidadorConciliacion.validateFechasPrimary(devolucionDTO.getFechaDesde(), devolucionDTO.getFechaHasta());
 		respuesta = devolucionesServiceImpl.consulta(devolucionDTO);
-		if (null == respuesta || respuesta.isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+
+		if (null == respuesta)
+			respuesta = new ArrayList<>();
+			
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.SUCCESSFUL_RETURNS_CONSULTATION, respuesta);
 	}
