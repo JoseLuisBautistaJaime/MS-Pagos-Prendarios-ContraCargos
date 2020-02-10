@@ -83,7 +83,7 @@ mimonte:
         idConsumidor: 42
         idDestino: 100
       archivo:
-        ruta: "'/Automata SMV/CIE por Convenio/'ddMMyy"
+        ruta: "'/Extractos/MovimientosHistoricosC43/'ddMMyy"
         nombre: "'MH43{CUENTA}'yyMMdd'0700.txt'"
     dss:
       idcliente: "{idCliente}"

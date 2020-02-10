@@ -24,7 +24,7 @@ applications:
     mimonte.variables.consultaEstadoCuenta.auth.header.usuario: usuario
     mimonte.variables.consultaEstadoCuenta.header.idConsumidor: 42
     mimonte.variables.consultaEstadoCuenta.header.idDestino: 100
-    mimonte.variables.consultaEstadoCuenta.archivo.ruta: "'/Automata SMV/CIE por Convenio/'ddMMyy"
+    mimonte.variables.consultaEstadoCuenta.archivo.ruta: "'/Extractos/MovimientosHistoricosC43/'ddMMyy"
     mimonte.variables.consultaEstadoCuenta.archivo.nombre: "'MH43{CUENTA}'yyMMdd'0700.txt'"
   services:
     - 1775-pagosdb
