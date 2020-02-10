@@ -37,7 +37,6 @@ public class ReporteProcesosNocturnosDTO extends AbstractReporteDTO implements C
 
 	@Override
 	public int compareTo(ReporteProcesosNocturnosDTO o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

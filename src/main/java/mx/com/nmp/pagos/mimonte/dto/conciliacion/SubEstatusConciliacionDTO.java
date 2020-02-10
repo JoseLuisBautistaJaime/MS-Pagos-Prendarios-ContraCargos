@@ -20,7 +20,6 @@ public class SubEstatusConciliacionDTO implements Comparable<SubEstatusConciliac
 
 	public SubEstatusConciliacionDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public SubEstatusConciliacionDTO(Long id) {
@@ -57,7 +56,6 @@ public class SubEstatusConciliacionDTO implements Comparable<SubEstatusConciliac
 
 	@Override
 	public int compareTo(SubEstatusConciliacionDTO o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

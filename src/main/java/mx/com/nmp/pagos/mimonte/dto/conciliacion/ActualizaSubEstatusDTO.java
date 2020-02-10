@@ -62,7 +62,6 @@ public class ActualizaSubEstatusDTO implements Comparable<ActualizaSubEstatusDTO
 
 	@Override
 	public int compareTo(ActualizaSubEstatusDTO o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

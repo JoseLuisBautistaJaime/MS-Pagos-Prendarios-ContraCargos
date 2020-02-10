@@ -173,8 +173,6 @@ public class LayoutsService {
 			}
 		}
 
-		// TODO: Obtener el header para incrustar en el objeto de retorno
-
 		return LayoutsBuilder.buildLayoutDTOFromLayout(layout);
 	}
 
@@ -456,7 +454,7 @@ public class LayoutsService {
 		long finish = 0;
 
 		start = System.currentTimeMillis();
-		LOG.info("T >>> INCIA PROCESO DE GENERACION DE LAYOUTS: {}", start);
+		LOG.debug("T >>> INCIA PROCESO DE GENERACION DE LAYOUTS: {}", start);
 
 		// Obtiene, valida la conciliacion (en proceso)
 		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(idConciliacion,
@@ -478,9 +476,6 @@ public class LayoutsService {
 
 			// Se persisten
 			try {
-				// TODO: Eliminar esta linea una vez que se defina que
-//				this.layoutsRepository.saveAll(layouts);
-
 				// INSERTA EL LAYOUT, HEADER Y LINEAS
 				for (Layout layout : layouts) {
 					KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -528,7 +523,7 @@ public class LayoutsService {
 		}
 
 		finish = System.currentTimeMillis();
-		LOG.info("T >>> INCIA PROCESO DE GENERACION DE LAYOUTS: {}", finish);
+		LOG.debug("T >>> INCIA PROCESO DE GENERACION DE LAYOUTS: {}", finish);
 
 	}// End enviarConciliacion
 
@@ -826,13 +821,7 @@ public class LayoutsService {
 			for (int i = 0; i < movimientos.size(); i++) {
 				movimiento = movimientos.get(i);
 				switch (grupo) {
-				// TODO: Comisiones u otro tipo de movimientos
 				case BANCOS:
-					// TODO: Borrar esto una vez que se pruebe la funcionalidad
-//						if (movimiento.getMovimientoMidas() == null) {
-//							movimientosGrupo.add(movimiento);
-//						}
-
 					// Aqui se verifica si es tipo pagos o devoluciones para hacer la suma en
 					// negativo o positivo
 					switch (tipo) {
@@ -1029,7 +1018,6 @@ public class LayoutsService {
 			break;
 		case COMISIONES_MOV: // TipoMovimientoComisionEnum.OPENPAY
 			// movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
-			// // TODO: Verificar tipos
 			break;
 		case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.IVA_COMISION
 			movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));

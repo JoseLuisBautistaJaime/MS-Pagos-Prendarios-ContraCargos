@@ -60,12 +60,9 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 				List<MovimientoDevolucion> movimientosDevolucionSave = new ArrayList<MovimientoDevolucion>();
 
 				for (MovimientoDevolucion movDevolucion : movsDevoluciones) {
-
-					// TODO: Se verifica si ya existe
 					movDevolucion.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
 					movDevolucion.setCreatedDate(new Date());
-					movDevolucion.setIdConciliacion(reportesWrapper.getIdConciliacion());
-					
+					movDevolucion.setIdConciliacion(reportesWrapper.getIdConciliacion());					
 					movimientosDevolucionSave.add(movDevolucion);
 				}
 

@@ -111,7 +111,6 @@ public class DevolucionRequestDTO implements Comparable<DevolucionRequestDTO>{
 
 	@Override
 	public int compareTo(DevolucionRequestDTO o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

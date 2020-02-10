@@ -202,7 +202,6 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 				else {
 					movTransito.setIdConciliacion(reportesWrapper.getIdConciliacion());
 					// Verificar si ya existe el movimiento de transito con anteriodad
-					// TODO: Remover comentario
 //					this.mergeReporteHandler.getMovimientoTransitoCuentaRepository();
 					
 					transito.add(movTransito);

@@ -91,9 +91,6 @@ public abstract class ComisionesBuilder {
 			comisionTransaccion = new ComisionTransaccion();
 			comisionTransaccion.setLastModifiedBy(null != comisionTransaccionVer ? requestUser : null);
 			comisionTransaccion.setLastModifiedDate(null != comisionTransaccionVer ? new Date() : null);
-			// TODO: Checar si efectivamente se toma la comision recibida y entonces
-			// elimianr la linea comentada
-			// comisionTransaccion.setComision(comisionesTransDTO.getReal().getComision());
 			comisionTransaccion.setComision(comisionesTransaccionesRequestDTO.getComision());
 			comisionTransaccion.setCreatedBy(null == comisionTransaccionVer ? requestUser : null);
 			comisionTransaccion.setCreatedDate(null == comisionTransaccionVer ? new Date() : null);

@@ -91,8 +91,7 @@ public class DevolucionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultar(@RequestBody DevolucionRequestDTO devolucionDTO) {
 		
-		// TODO: Log de request entrante
-		LOG.info(">>>URL: POST /devoluciones/consulta > REQUEST ENTRANTE: {}", devolucionDTO.toString());
+		LOG.info(">>>URL: POST /devoluciones/consulta > REQUEST ENTRANTE: {}", devolucionDTO);
 		
 		List<DevolucionEntidadDTO> respuesta = null;
 		// Valida que el objeto principal no sea nulo
@@ -130,7 +129,6 @@ public class DevolucionesController {
 	public Response actualizar(@RequestBody List<DevolucionUpdtDTO> devolucionUpdtDTOList,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: PUT /devoluciones/actualizacion > REQUEST ENTRANTE: {}", devolucionUpdtDTOList.toString());
 		
 		// Validacion de objeto y atributos
@@ -173,7 +171,6 @@ public class DevolucionesController {
 	public Response solicitar(@RequestBody DevolucionesIdsMovimientosDTO devolucionesIdsMovimientosDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: POST /devoluciones/solicitar > REQUEST ENTRANTE: {}", devolucionesIdsMovimientosDTO.toString());
 		
 		if (!ValidadorConciliacion.validateDevolucionesIdsMovimientosDTO(devolucionesIdsMovimientosDTO))

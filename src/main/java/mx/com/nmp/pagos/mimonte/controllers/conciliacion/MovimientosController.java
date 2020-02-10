@@ -145,7 +145,6 @@ public class MovimientosController {
 	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: POST /movimientos/nocturnos > REQUEST ENTRANTE: {}", movimientos.toString());
 		
 		long start = 0;
@@ -157,10 +156,10 @@ public class MovimientosController {
 		if(!ValidadorConciliacion.validateMovimientoProcesosNocturnosListResponseDTO(movimientos))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,CodigoError.NMP_PMIMONTE_0008);
 		
-		LOG.info("T>>> INICIA VALIDACOIN INICIAL: {}", sdf.format(new Date(start)));
+		LOG.debug("T>>> INICIA VALIDACOIN INICIAL: {}", sdf.format(new Date(start)));
 		ValidadorConciliacion.validateFechasPrimary(movimientos.getFechaDesde(), movimientos.getFechaHasta());
 		finish = System.currentTimeMillis();
-		LOG.info("T>>> TERMINA VALIDACION INICIAL: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		LOG.debug("T>>> TERMINA VALIDACION INICIAL: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 		
 		try {
 			movimientosMidasService.save(movimientos, userRequest);
@@ -176,7 +175,7 @@ public class MovimientosController {
 		try {
 			// Se actualiza el sub estatus de la conciliacion a consulta MIDAS completada
 			start = System.currentTimeMillis();
-			LOG.info("T>>> INICIA ACTUALIZACION DE SUBESTATUS: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA ACTUALIZACION DE SUBESTATUS: {}", sdf.format(new Date(start)));
 			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
 					movimientos.getFolio(), ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA,
 					null), userRequest);			
@@ -186,7 +185,7 @@ public class MovimientosController {
 					CodigoError.NMP_PMIMONTE_BUSINESS_030);
 		}
 		finish = System.currentTimeMillis();
-		LOG.info("T>>> FINALIZA ACTUALIZACION DE SUBESTATUS: {}, EN: {}",sdf.format(new Date(finish)) , (finish - start) );
+		LOG.debug("T>>> FINALIZA ACTUALIZACION DE SUBESTATUS: {}, EN: {}",sdf.format(new Date(finish)) , (finish - start) );
 		
 		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
@@ -212,7 +211,6 @@ public class MovimientosController {
 	public Response findMovimientosNocturnos(
 			@RequestBody CommonConciliacionEstatusRequestDTO commonConciliacionRequestDTO) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: POST /movimientos/nocturnos/consulta > REQUEST ENTRANTE: {}", commonConciliacionRequestDTO.toString());
 		
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
@@ -267,26 +265,25 @@ public class MovimientosController {
 	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalListRequestDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: POST /movimientos/proveedor > REQUEST ENTRANTE: {}", movimientos.toString());
 		
 		long start = 0;
 		long finish = 0;
 		
 		start = System.currentTimeMillis();;
-		LOG.info("T>>> INICIAN VALIDACIONES PRIMARIAS: {}", sdf.format(new Date(start)));
+		LOG.debug("T>>> INICIAN VALIDACIONES PRIMARIAS: {}", sdf.format(new Date(start)));
 		if (!ValidadorConciliacion.validateMovimientoTransaccionalListRequestDTO(movimientos)) {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		}
 		finish = System.currentTimeMillis();
-		LOG.info("T>>> FINALIZAN VALIDACIONES PRIMARIAS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		LOG.debug("T>>> FINALIZAN VALIDACIONES PRIMARIAS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 		
 		start = System.currentTimeMillis();
-		LOG.info("T>>> INICIA VALIDACION GENERICA DE FECHAS: {}", sdf.format(new Date(start)));
+		LOG.debug("T>>> INICIA VALIDACION GENERICA DE FECHAS: {}", sdf.format(new Date(start)));
 		ValidadorConciliacion.validateFechasPrimary(movimientos.getFechaDesde(), movimientos.getFechaHasta());
 		finish = System.currentTimeMillis();
-		LOG.info("T>>> FINALIZA VALIDACION GENERICA DE FECHAS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		LOG.debug("T>>> FINALIZA VALIDACION GENERICA DE FECHAS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
 		try {
 			movimientosProveedorService.save(movimientos, userRequest);
@@ -302,7 +299,7 @@ public class MovimientosController {
 		try {
 			// Se actualiza el sub estatus de la conciliacion a consulta OpenPay completada
 			start = System.currentTimeMillis();
-			LOG.info("T>>> INICIA ACTUALIZACION DE SUB ESTATUS DE CONCILIACION: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA ACTUALIZACION DE SUB ESTATUS DE CONCILIACION: {}", sdf.format(new Date(start)));
 			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(
 					movimientos.getFolio(), ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA,
 					null), userRequest);
@@ -312,7 +309,7 @@ public class MovimientosController {
 					CodigoError.NMP_PMIMONTE_BUSINESS_030);
 		}
 		finish = System.currentTimeMillis();
-		LOG.info("T>>> FINALIZA ACTUALIZACION DE SUB ESTATUS DE CONCILIACION: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		LOG.debug("T>>> FINALIZA ACTUALIZACION DE SUB ESTATUS DE CONCILIACION: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
 		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
@@ -337,7 +334,6 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientosProvedor(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: POST /movimientos/proveedor/consulta > REQUEST ENTRANTE: {}", commonConciliacionRequestDTO.toString());
 		
 		MovimientoTransaccionalListDTO movimientoTransaccionalListDTO = null;
@@ -390,7 +386,6 @@ public class MovimientosController {
 	public Response saveMovimientoEsadoCuenta(@RequestBody SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: POST /movimientos/estadocuenta > REQUEST ENTRANTE: {}", saveEstadoCuentaRequestDTO.toString());
 		
 		// Objetos necesarios
@@ -464,7 +459,6 @@ public class MovimientosController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findMovimientoEsadoCuenta(@RequestBody CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: POST /movimientos/estadocuenta/consulta > REQUEST ENTRANTE: {}", commonConciliacionRequestDTO.toString());
 		
 		MovimientosEstadoCuentaDTO movimientosEstadoCuentaDTO = null;

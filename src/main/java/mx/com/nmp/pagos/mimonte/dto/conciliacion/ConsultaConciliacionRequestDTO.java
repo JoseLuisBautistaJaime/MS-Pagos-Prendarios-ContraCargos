@@ -21,7 +21,6 @@ public class ConsultaConciliacionRequestDTO {
 
 	public ConsultaConciliacionRequestDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ConsultaConciliacionRequestDTO(Long idEntidad, Long folio, Date fechaDesde, Date fechaHasta,

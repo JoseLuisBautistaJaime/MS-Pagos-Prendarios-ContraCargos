@@ -30,17 +30,14 @@ public class EstatusDevolucion extends AbstractCatalogo implements Serializable 
 
 	public EstatusDevolucion() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public EstatusDevolucion(Integer id, String descripcionCorta, String descripcion) {
 		super(id, descripcionCorta, descripcion);
-		// TODO Auto-generated constructor stub
 	}
 
 	public EstatusDevolucion(Integer id) {
 		super(id);
-		// TODO Auto-generated constructor stub
 	}
 
 	public EstatusDevolucion(String nombre, Boolean estatus) {

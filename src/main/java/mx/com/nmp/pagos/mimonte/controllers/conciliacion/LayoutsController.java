@@ -102,7 +102,6 @@ public class LayoutsController {
 	public Response findByFolioAndTipoLayout(@PathVariable(value = "folio", required = true) Long folio,
 			@PathVariable(value = "tipoLayout", required = true) TipoLayoutEnum tipoLayout) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: GET /layouts/{folio}/{tipoLayout} > REQUEST ENTRANTE: {}, {}", folio, tipoLayout);
 		
 		// Valida el objeto del request
@@ -121,7 +120,6 @@ public class LayoutsController {
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: GET /layouts/{folio}/{tipoLayout} > RESPONSE: {}",layoutDTO);
 		
 		// Regresa la respuesta
@@ -149,7 +147,6 @@ public class LayoutsController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByFolio(@PathVariable(value = "folio", required = true) Long folio) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: GET /layouts/{folio} > REQUEST ENTRANTE: {}", folio);
 		
 		// Valida el folio
@@ -165,7 +162,6 @@ public class LayoutsController {
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
 					CodigoError.NMP_PMIMONTE_0009);
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: GET /layouts/{folio} > RESPONSE: {}", layoutDTOs);
 		
 		// Regresa la respuesta
@@ -194,7 +190,6 @@ public class LayoutsController {
 	public Response saveLayout(@RequestBody LayoutRequestDTO layoutRequestDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: POST /layouts > REQUEST ENTRANTE: {}", layoutRequestDTO.toString());
 		
 		// Objetos necesarios
@@ -242,7 +237,6 @@ public class LayoutsController {
 	public Response deleteLayout(@PathVariable(name = "folio", required = true) Long folio,
 			@PathVariable(name = "idLayout", required = true) Long idLayout) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: DELETE /layouts/{folio}/{idLayout} > REQUEST ENTRANTE: {}, {}", folio, idLayout);
 		
 		// Valida que el objeto de request sea valido
@@ -282,7 +276,6 @@ public class LayoutsController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteLineaLayout(@PathVariable(name = "idLinea", required = true) Long idLinea) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: DELETE /layouts/{idLinea} > REQUEST ENTRANTE: {}", idLinea);
 		
 		// Valida el id de linea

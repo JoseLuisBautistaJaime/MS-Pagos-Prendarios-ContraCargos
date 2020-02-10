@@ -87,7 +87,6 @@ public class ComisionesController {
 	public Response save(@RequestBody ComisionSaveDTO comisionSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: POST /comisiones > REQUEST ENTRANTE: {}", comisionSaveDTO.toString());
 		
 		// Declaracion de objetos
@@ -144,7 +143,6 @@ public class ComisionesController {
 	public Response delete(@RequestBody ComisionDeleteDTO comisionDeleteDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: PUT /comisiones > REQUEST ENTRANTE: {}", comisionDeleteDTO.toString());
 		
 		if (!ValidadorConciliacion.validateComisionDeleteDTO(comisionDeleteDTO))
@@ -186,7 +184,6 @@ public class ComisionesController {
 			@RequestBody ComisionesTransaccionesRequestDTO comisionesTransaccionesRequestDTO,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: POST /comisiones/consulta/transacciones > REQUEST ENTRANTE: {}", comisionesTransaccionesRequestDTO.toString());
 		
 		// Valida el objeto y atributos del request
@@ -222,7 +219,6 @@ public class ComisionesController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaComisiones(@PathVariable(value = "folio", required = true) Long folio) {
 		
-		// TODO: Log de request entrante
 		LOG.info(">>>URL: GET /comisiones/consulta/{folio} > REQUEST ENTRANTE: {}", folio);
 		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa.",
