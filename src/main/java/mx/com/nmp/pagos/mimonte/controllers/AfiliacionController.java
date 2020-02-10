@@ -108,9 +108,10 @@ public class AfiliacionController implements UtilValidation{
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 
 		// Valida que el numero de afiliacion sea un valor alfanumerico
-		if (!UtilValidation.validaCadenaAlfanumerica(afiliacionReqSaveDTO.getNumero()))
-			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
-					CodigoError.NMP_PMIMONTE_0015);
+		// TODO: Pendiente
+//		if (!UtilValidation.validaCadenaAlfanumerica(afiliacionReqSaveDTO.getNumero()))
+//			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+//					CodigoError.NMP_PMIMONTE_0015);
 		
 		// Realiza el alta
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
@@ -148,10 +149,11 @@ public class AfiliacionController implements UtilValidation{
 		if (!ValidadorCatalogo.validateAfilacionUpdt(afiliacionDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		
+		// TODO: PENDIENTE
 		// Valida que el numero de afiliacion sea un valor alfanumerico
-				if (!UtilValidation.validaCadenaAlfanumerica(afiliacionDTOReq.getNumero()))
-					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
-							CodigoError.NMP_PMIMONTE_0015);
+//				if (!UtilValidation.validaCadenaAlfanumerica(afiliacionDTOReq.getNumero()))
+//					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+//							CodigoError.NMP_PMIMONTE_0015);
 		
 		// Realiza la actualizacion
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder
