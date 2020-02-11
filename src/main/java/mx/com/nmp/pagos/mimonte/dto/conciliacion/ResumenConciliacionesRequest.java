@@ -54,7 +54,6 @@ public class ResumenConciliacionesRequest implements Comparable<ResumenConciliac
 
 	@Override
 	public int compareTo(ResumenConciliacionesRequest o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

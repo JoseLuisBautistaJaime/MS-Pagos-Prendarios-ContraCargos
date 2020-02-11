@@ -14,7 +14,6 @@ public class getContactosDTO {
 
 	public getContactosDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public getContactosDTO(String nombre, String email) {

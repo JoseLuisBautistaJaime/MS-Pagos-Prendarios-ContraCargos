@@ -638,5 +638,5 @@ public interface ValidadorConciliacion {
 		}
 		return true;
 	}
-
+	
 }

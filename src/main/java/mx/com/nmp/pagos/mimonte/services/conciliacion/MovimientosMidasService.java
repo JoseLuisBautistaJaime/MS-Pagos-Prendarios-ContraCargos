@@ -142,16 +142,16 @@ public class MovimientosMidasService {
 		long finish = 0;
 		
 		bigStart = System.currentTimeMillis();
-		LOG.info("T>>> INICIA PERSISTENCIA GENERAL DE LOS MOVIMIENTOS: {}", sdf.format(new Date(bigStart)));
+		LOG.debug("T>>> INICIA PERSISTENCIA GENERAL DE LOS MOVIMIENTOS: {}", sdf.format(new Date(bigStart)));
 		
 		// Se valida que exista la conciliacion
 		start = System.currentTimeMillis();
-		LOG.info("T>>> SE OBTIENE LA CONCILIACION: {}", sdf.format(new Date(start)));
+		LOG.debug("T>>> SE OBTIENE LA CONCILIACION: {}", sdf.format(new Date(start)));
 		Long folio = movimientoProcesosNocturnosDTOList.getFolio();
 		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(folio,
 				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 		finish = System.currentTimeMillis();
-		LOG.info("T>>> TERMINA DE OBTENER LA CONCILIACION: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		LOG.debug("T>>> TERMINA DE OBTENER LA CONCILIACION: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 		
 		if (conciliacion.getSubEstatus() == null || conciliacion.getSubEstatus().getId() == null ||
 				!ConciliacionConstants.CON_SUB_ESTATUS_CARGA_MOV_PN.contains(conciliacion.getSubEstatus().getId())) {
@@ -161,49 +161,48 @@ public class MovimientosMidasService {
 		}
 
 		start = System.currentTimeMillis();
-		LOG.info("T>>> INICIA ONSTRUCCION DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
+		LOG.debug("T>>> INICIA ONSTRUCCION DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
 		Reporte reporte = buildReporte(conciliacion.getId(), movimientoProcesosNocturnosDTOList.getFechaDesde(),
 				movimientoProcesosNocturnosDTOList.getFechaHasta(), userRequest);
 		finish = System.currentTimeMillis();
-		LOG.info("T>>> FINALIZA CONSTRUCCION DE REPORTE: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		LOG.debug("T>>> FINALIZA CONSTRUCCION DE REPORTE: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 		if (null == reporte)
 			throw new MovimientosException(ConciliacionConstants.REPORT_GENERATION_ERROR_MESSAGE,
 					CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		try {
 			start = System.currentTimeMillis();
-			LOG.info("T>>> INICIA PERSISTENCIA DE REPORTE: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA PERSISTENCIA DE REPORTE: {}", sdf.format(new Date(start)));
 			reporte = reporteRepository.save(reporte);
 			finish = System.currentTimeMillis();
-			LOG.info("T>>> TERMINA PERSISTENCIA DE REPORTE: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+			LOG.debug("T>>> TERMINA PERSISTENCIA DE REPORTE: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
 			// Se persisten los movimientos midas
 			start = System.currentTimeMillis();
-			LOG.info("T>>> INICIA CONSTRUCCION DE LOISTA DE ENTIDADES MOV. MIDAS: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA CONSTRUCCION DE LOISTA DE ENTIDADES MOV. MIDAS: {}", sdf.format(new Date(start)));
 			List<MovimientoMidas> movimientoMidasList = MovimientosBuilder
 					.buildMovimientoMidasListFromMovimientoProcesosNocturnosListResponseDTO(
 							movimientoProcesosNocturnosDTOList, reporte.getId());
 			finish = System.currentTimeMillis();
-			LOG.info("T>>> FINALIZA CONSTRUCCION DE LISTA DE ENTIDADES MOV MIDAS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+			LOG.debug("T>>> FINALIZA CONSTRUCCION DE LISTA DE ENTIDADES MOV MIDAS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 						
 			if (!CollectionUtils.isEmpty(movimientoMidasList)) {
 				start = System.currentTimeMillis();
-				LOG.info("T>>> INICIA PERSISTENCIA DE LISTA DE MOVIMIENTOS MIDAS: {}", sdf.format(new Date(start)));
-				//movimientosMidasRepository.saveAll(movimientoMidasList);
+				LOG.debug("T>>> INICIA PERSISTENCIA DE LISTA DE MOVIMIENTOS MIDAS: {}", sdf.format(new Date(start)));
 				movimientoJdbcRepository.insertarLista(movimientoMidasList);
 				finish= System.currentTimeMillis();
-				LOG.info("T>>> FINALIZA PERSISTENCIA DE MOVIMIENTOS MIDAS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+				LOG.debug("T>>> FINALIZA PERSISTENCIA DE MOVIMIENTOS MIDAS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 			}
 
 			// Registro de actividad
 			start = System.currentTimeMillis();
-			LOG.info("T>>> INICIA REGISTRODE ACTIVIDADES: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA REGISTRODE ACTIVIDADES: {}", sdf.format(new Date(start)));
 			actividadGenericMethod.registroActividad(movimientoProcesosNocturnosDTOList.getFolio(),
 					"Se registraron " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
 							+ " movimientos provenientes de procesos nocturnos,"
 							+ " para la conciliacion con el folio: " + movimientoProcesosNocturnosDTOList.getFolio(),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);			
 			finish = System.currentTimeMillis();
-			LOG.info("T>>> FINALIZA REGISTRO DE ACTIVIDADES: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+			LOG.debug("T>>> FINALIZA REGISTRO DE ACTIVIDADES: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -211,12 +210,8 @@ public class MovimientosMidasService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_044);
 		}
 
-		// TODO: Eliminar esto ya que se hace en un endpoint especifico: (POST /mimonte/conciliacion/generar/{folio})
-		// Notificar cambios o alta de reportes, si existen...
-//		this.conciliacionHelper.generarConciliacion(folio, Arrays.asList(reporte));
-		
 		bigFinish = System.currentTimeMillis();
-		LOG.info("T>>> FINALIZA PERSISTENCIA GENERAL DE MOVIMIENTOS MIDAS: {}, EN: {}",sdf.format(new Date(bigFinish)) ,(bigFinish-bigStart) );
+		LOG.debug("T>>> FINALIZA PERSISTENCIA GENERAL DE MOVIMIENTOS MIDAS: {}, EN: {}",sdf.format(new Date(bigFinish)) ,(bigFinish-bigStart) );
 	}
 
 	/**

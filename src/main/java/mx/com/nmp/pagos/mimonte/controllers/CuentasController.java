@@ -40,8 +40,10 @@ import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaSaveDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.impl.CuentaServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
+import mx.com.nmp.pagos.mimonte.util.validacion.UtilValidation;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorCatalogo;
 
 /**
@@ -68,7 +70,6 @@ public class CuentasController {
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
-	@SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(CuentasController.class);
 
 	/**
@@ -96,13 +97,26 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody CuentaSaveDTO cuentaSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		log.info(">>> POST /catalogos/cuentas REQUEST: {}", null != cuentaSaveDTO ? cuentaSaveDTO : "");
+		
 		// Valida que el objeto de request y sus atributos sean validos
 		if (!ValidadorCatalogo.validateCuentaSave(cuentaSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		CuentaEntDTO cuentaEntDTO = null;
+		
+		// TODO: PENDIENTE
+		// Valida que el numero de afiliacion sea un valor alfanumerico
+//				if (!UtilValidation.validaCadenaAlfanumerica(cuentaSaveDTO.getNumero()))
+//					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+//							CodigoError.NMP_PMIMONTE_0015);
+				
 		// Guarda una cuenta
 		cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
 				.save(CuentaBuilder.buildCuentaBaseDTOFromCuentaSaveDTO(cuentaSaveDTO, new Date(), null), createdBy));
+		
+		log.info(">>> POST /catalogos/cuentas RESPONSE: {}", null != cuentaEntDTO ? cuentaEntDTO : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				cuentaEntDTO);
 	}
@@ -125,13 +139,26 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody CuentaDTO cuentaDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		CuentaEntDTO cuentaEntDTO = null;
+		
+		log.info(">>> PUT /catalogos/cuentas REQUEST: {}", null != cuentaDTOReq ? cuentaDTOReq : "");
+		
 		// Valida que el objeto de request y sus atributos sean validos
 		if (!ValidadorCatalogo.validateCuentaUpdate(cuentaDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
-		CuentaEntDTO cuentaEntDTO = null;
+		
+		// TODO: PENDIENTE
+		// Valida que el numero de afiliacion sea un valor alfanumerico
+//		if (!UtilValidation.validaCadenaAlfanumerica(cuentaDTOReq.getNumero()))
+//			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+//					CodigoError.NMP_PMIMONTE_0015);
+		
 		// Actualiza una cuenta
 		cuentaEntDTO = CuentaBuilder.buildCuentaEntDTOFromCuentaBaseDTO(cuentaServiceImpl
 				.update(CuentaBuilder.buildCuentaBaseDTOFromCuentaDTO(cuentaDTOReq, null, new Date()), lastModifiedBy));
+		
+		log.info(">>> PUT /catalogos/cuentas RESPONSE: {}", null != cuentaEntDTO ? cuentaEntDTO : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				cuentaEntDTO);
 	}
@@ -153,6 +180,9 @@ public class CuentasController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNumeroCuenta(@PathVariable String numeroCuenta) {
+		
+		log.info(">>> GET /catalogos/cuentas/{numeroCuenta} REQUEST: {}", null != numeroCuenta ? numeroCuenta : "");
+		
 		CuentaEntDTO cuentaEntDTO = null;
 		// Encuentra una cuenta por su numero
 		try {
@@ -165,6 +195,9 @@ public class CuentasController {
 		} catch (javax.persistence.NonUniqueResultException nuex) {
 			throw new CatalogoException(CatalogConstants.DB_INCONSISTENCY_EXCEPTION, CodigoError.NMP_PMIMONTE_BUSINESS_002);
 		}
+		
+		log.info(">>> GET /catalogos/cuentas/{numeroCuenta} RESPONSE: {}", null != cuentaEntDTO ? cuentaEntDTO : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				cuentaEntDTO);
 	}
@@ -185,6 +218,9 @@ public class CuentasController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByCuenta(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
+		
+		log.info(">>> GET /catalogos/cuentas/entidad/{idEntidad} REQUEST: {}", null != idEntidad ? idEntidad : "");
+		
 		List<CuentaEntDTO> cuentaEntDTOList = null;
 		// Encuentra una lista de cuentas por su id de entidad asociada
 		try {
@@ -192,6 +228,9 @@ public class CuentasController {
 		} catch (EmptyResultDataAccessException erdaex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
+		
+		log.info(">>> GET /catalogos/cuentas/entidad/{idEntidad} RESPONSE: {}", null != cuentaEntDTOList ? cuentaEntDTOList : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				cuentaEntDTOList);
 	}
@@ -214,12 +253,18 @@ public class CuentasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteByidcuenta(@PathVariable(value = "idCuenta", required = true) Long idCuenta,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		
+		log.info(">>> PUT /catalogos/cuentas/{idCuenta} REQUEST: {}", null != idCuenta ? idCuenta : "");
+		
 		// Elimina de manera logica una cuenta por su id
 		try {
 			cuentaServiceImpl.updateEstatusById(false, idCuenta, lastModifiedBy, new Date());
 		} catch (EmptyResultDataAccessException erdaex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
+		
+		log.info(">>> PUT /catalogos/cuentas/{idCuenta} RESPONSE: {}", "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
 	}
@@ -243,6 +288,9 @@ public class CuentasController {
 		@SuppressWarnings("unchecked")
 		List<CuentaEntDTO> cuentaEntDTOList = CuentaBuilder
 				.buildCuentaEntDTOListFromCuentaBaseDTOList((List<CuentaBaseDTO>) cuentaServiceImpl.findAll());
+		
+		log.info(">>> GET /catalogos/cuentas RESPONSE: {}, TOTAL: {}", null != cuentaEntDTOList ? cuentaEntDTOList : "", null != cuentaEntDTOList ? cuentaEntDTOList.size() : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != cuentaEntDTOList ? cuentaEntDTOList : new ArrayList<>());
 	}

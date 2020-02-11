@@ -400,4 +400,12 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN ( (SELECT c.id_merge FROM to_conciliacion c WHERE c.id = :folio) IS NOT NULL) THEN 1 ELSE 0 END")
 	public BigInteger validateConciliacionMerge(@Param("folio") final Long folio);
 
+	/**
+	 * Obtiene un arreglo de objetos con el id de conciliacion y sus movimientos, tomados de la tabla global
+	 * @param idConciliacionList
+	 * @return
+	 */
+	@Query("SELECT  g.conciliacion.id, g.movimientos FROM Global g WHERE g.conciliacion.id IN :idConciliacionList")
+	public List<Object[]> findMovimientosByIdConciliacionList(@Param("idConciliacionList") List<Long> idConciliacionList);
+	
 }

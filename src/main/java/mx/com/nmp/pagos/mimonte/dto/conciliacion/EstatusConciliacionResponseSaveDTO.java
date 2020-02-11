@@ -28,7 +28,6 @@ public class EstatusConciliacionResponseSaveDTO implements Serializable{
 	
 	public EstatusConciliacionResponseSaveDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public EstatusConciliacionResponseSaveDTO(Integer id, String descripcion, Boolean estatus) {

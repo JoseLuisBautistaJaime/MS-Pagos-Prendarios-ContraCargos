@@ -116,14 +116,14 @@ public class MovimientosProveedorService {
 		long bigFinsh = 0;		
 
 		bigStart = System.currentTimeMillis();
-		LOG.info("T>>> INICIA PERSISTENACIA GENERAL DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(bigStart)));
+		LOG.debug("T>>> INICIA PERSISTENACIA GENERAL DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(bigStart)));
 		
 		LOG.debug("Save {} movimientos proveedor", listRequestDTO.getFolio());
 		start = System.currentTimeMillis();
-		LOG.info("T>>> INICIA OBTENCION DE CONBCILIACION POR FOLIO: {}", sdf.format(new Date(start)));
+		LOG.debug("T>>> INICIA OBTENCION DE CONBCILIACION POR FOLIO: {}", sdf.format(new Date(start)));
 		Conciliacion conciliacion = this.conciliacionRepository.findByFolio(listRequestDTO.getFolio());
 		finish = System.currentTimeMillis();
-		LOG.info("T>>> FINALIZA OBTENCION DE CONCILIACION POR FOLIO: {}, EN: {}", sdf.format(new Date(finish)), (finish-start));
+		LOG.debug("T>>> FINALIZA OBTENCION DE CONCILIACION POR FOLIO: {}, EN: {}", sdf.format(new Date(finish)), (finish-start));
 		if (conciliacion == null) {
 			throw new ConciliacionException("Conciliacion con el folio " + listRequestDTO.getFolio() + " no existe",
 					CodigoError.NMP_PMIMONTE_BUSINESS_045);
@@ -148,60 +148,49 @@ public class MovimientosProveedorService {
 		// Si no existe el reporte se crea uno nuevo
 		if (reporte == null) {
 			start = System.currentTimeMillis();
-			LOG.info("T>>> INICIA CONSTRUCCION DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA CONSTRUCCION DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
 			reporte = ReporteBuilder.buildReporte(conciliacion, listRequestDTO.getFechaDesde(),
 					listRequestDTO.getFechaHasta(), userRequest);
 			finish = System.currentTimeMillis();
-			LOG.info("T>>> FINALIZA CONSTRUCCION DE ENTIDAD REPORTE: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+			LOG.debug("T>>> FINALIZA CONSTRUCCION DE ENTIDAD REPORTE: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 		}
-		// TODO: Revizar si esto es importante sino eliminarlo
-		// En caso de existir se actualiza la fecha de la ultima modificacion
-		/*
-		 * else { reporte.setLastModifiedBy(userRequest);
-		 * reporte.setLastModifiedDate(new Date()); }
-		 */
 
 		// Se guarda el reporte y los movimientos
 		try {
 
 			start = System.currentTimeMillis();
-			LOG.info("T>>> INICIA PERSISTENCIA DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA PERSISTENCIA DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
 			reporte = reporteRepository.save(reporte);
 			finish = System.currentTimeMillis();
-			LOG.info("T>>> FINALIZA PERSISTENCIA DE ENTIDAD REPORTE: {}, EN: {}",sdf.format(new Date(finish)), (finish-start) );
+			LOG.debug("T>>> FINALIZA PERSISTENCIA DE ENTIDAD REPORTE: {}, EN: {}",sdf.format(new Date(finish)), (finish-start) );
 			
 			start = System.currentTimeMillis();
-			LOG.info("T>>> INICIA CONSTRUCCION DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA CONSTRUCCION DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(start)));
 			List<MovimientoProveedor> movimientoProveedorList = MovimientosBuilder
 					.buildMovimientoProveedorListFromMovimientoTransaccionalListRequestDTO(listRequestDTO,
 							reporte.getId());
 			finish = System.currentTimeMillis();
-			LOG.info("T>>> FINALIZA CONSTRUCCION DE MOVIMIENTOS PROVEEDOR: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+			LOG.debug("T>>> FINALIZA CONSTRUCCION DE MOVIMIENTOS PROVEEDOR: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
 			// Verificar si se guarda en batch
 			if (!CollectionUtils.isEmpty(movimientoProveedorList)) {
 				start = System.currentTimeMillis();
-				LOG.info("T>>> INICIA PERSISTENCIA DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(start)));
+				LOG.debug("T>>> INICIA PERSISTENCIA DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(start)));
 				movimientoJdbcRepository.insertarLista(movimientoProveedorList);
-				//movimientoProveedorRepository.saveAll(movimientoProveedorList);
 				finish = System.currentTimeMillis();
-				LOG.info("T>>> FINALIZA PERSISTENCIA DE MOVIMEINTOS PROVEEDOR: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+				LOG.debug("T>>> FINALIZA PERSISTENCIA DE MOVIMEINTOS PROVEEDOR: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 			}
 
 			// Registro de actividad
 			start = System.currentTimeMillis();
-			LOG.info("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
 			actividadGenericMethod.registroActividad(listRequestDTO.getFolio(),
 					"Se registraron " + listRequestDTO.getMovimientos().size()
 							+ " movimientos provenientes del proveedor transaccional,"
 							+ " para la conciliacion con el folio: " + listRequestDTO.getFolio(),
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 			finish = System.currentTimeMillis();
-			LOG.info("T>>> FINALIZA REGISTRO DE ACTIVIDADES: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
-
-			// TODO: Se comenta por que se hace en un endpoint independiente (POST /mimonte/conciliacion/generar/{folio}), eliminar despues.
-			// Notificar cambios o alta de reportes, si existen...
-//			this.conciliacionHelper.generarConciliacion(conciliacion.getId(), Arrays.asList(reporte));
+			LOG.debug("T>>> FINALIZA REGISTRO DE ACTIVIDADES: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -210,7 +199,7 @@ public class MovimientosProveedorService {
 		}
 		
 		bigFinsh = System.currentTimeMillis();
-		LOG.info("T>>> FINALIZA PERSISTENCIA GENERAL D MOVIMIENTOS PROVEEDOR: {}, EN: {}", sdf.format(new Date(bigFinsh)), (bigFinsh- bigStart) );
+		LOG.debug("T>>> FINALIZA PERSISTENCIA GENERAL D MOVIMIENTOS PROVEEDOR: {}, EN: {}", sdf.format(new Date(bigFinsh)), (bigFinsh- bigStart) );
 	}
 
 	/**

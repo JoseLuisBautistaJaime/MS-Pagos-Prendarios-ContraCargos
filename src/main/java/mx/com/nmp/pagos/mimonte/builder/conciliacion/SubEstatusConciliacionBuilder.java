@@ -20,7 +20,6 @@ public abstract class SubEstatusConciliacionBuilder {
 
 	public SubEstatusConciliacionBuilder() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

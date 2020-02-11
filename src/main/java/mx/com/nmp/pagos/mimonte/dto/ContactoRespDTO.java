@@ -29,13 +29,11 @@ public class ContactoRespDTO extends AbstractCatalogoDTO {
 	
 	public ContactoRespDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ContactoRespDTO(Long id, Boolean estatus, Date createdDate, Date lastModifiedDate, String createdBy,
 			String lastModifiedBy, String description, String shortDescription) {
 		super(id, estatus, createdDate, lastModifiedDate, createdBy, lastModifiedBy, description, shortDescription);
-		// TODO Auto-generated constructor stub
 	}
 
 	public ContactoRespDTO(String nombre, String email, TipoContactoRespDTO tipoContacto) {

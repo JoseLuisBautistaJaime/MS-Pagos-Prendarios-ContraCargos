@@ -290,7 +290,6 @@ public class MovimientoTransaccionalRequestDTO implements Comparable<MovimientoT
 
 	@Override
 	public int compareTo(MovimientoTransaccionalRequestDTO o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

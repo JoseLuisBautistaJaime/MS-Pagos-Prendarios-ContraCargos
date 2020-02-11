@@ -64,7 +64,7 @@ public interface ValidadorLayout {
 	 * @return
 	 */
 	public static boolean validateLayoutDTOs(List<LayoutDTO> layoutDTOs) {
-		return null != layoutDTOs && layoutDTOs.size() > 0;
+		return null != layoutDTOs;
 	}
 
 	/**
@@ -129,10 +129,6 @@ public interface ValidadorLayout {
 				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getCuenta()))
 				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getDepId()))
 				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getLinea()))
-				// TODO: Eliminar estas lineas comentadas.
-				// Los campos de Negocio y ProyectoNMP son opcioanles.
-//				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getNegocio()))
-//				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getProyectoNMP()))
 				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getUnidadOperativa()))
 				&& (layoutLineaDTO.getMonto() != null && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0);
 	}

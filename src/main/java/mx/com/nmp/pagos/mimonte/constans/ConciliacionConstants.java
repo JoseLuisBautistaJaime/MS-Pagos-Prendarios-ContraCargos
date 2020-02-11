@@ -6,8 +6,6 @@ package mx.com.nmp.pagos.mimonte.constans;
 
 import static mx.com.nmp.pagos.mimonte.util.CollectionUtil.asList;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -635,4 +633,9 @@ public final class ConciliacionConstants {
 	 */
 	public static final String CONCILIATION_LAYOUTS_SUCCESSFULLY_CREATED = "Layouts generados de forma exitosa.";
 
+	/**
+	 * Especifica la expresion regular para el patron de una cadena de texto alfanumerica
+	 */
+	public static final String ALPHANUMERIC_PATTERN = "[a-zA-Z0-9]+";
+	
 }

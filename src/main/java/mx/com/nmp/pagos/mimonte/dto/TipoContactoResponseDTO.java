@@ -16,7 +16,6 @@ public class TipoContactoResponseDTO {
 	
 	public TipoContactoResponseDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public TipoContactoResponseDTO(Long id, String description) {

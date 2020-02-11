@@ -21,7 +21,6 @@ public class EntidadBuilder {
 
 	public EntidadBuilder() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

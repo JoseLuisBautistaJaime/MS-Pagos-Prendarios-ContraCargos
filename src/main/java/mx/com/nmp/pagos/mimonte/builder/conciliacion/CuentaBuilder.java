@@ -19,7 +19,6 @@ public class CuentaBuilder {
 
 	public CuentaBuilder() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

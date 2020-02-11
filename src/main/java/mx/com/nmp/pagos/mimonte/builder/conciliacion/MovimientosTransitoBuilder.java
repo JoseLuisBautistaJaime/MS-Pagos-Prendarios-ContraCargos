@@ -115,17 +115,17 @@ public abstract class MovimientosTransitoBuilder {
 		MovimientoTransito movTransito = new MovimientoTransito();
 		movTransito.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
 		movTransito.setCreatedDate(new Date());
-		movTransito.setFolio(null); // TODO: No folio
-		movTransito.setSucursal(null); // TODO: Sucursal
+		movTransito.setFolio(null);
+		movTransito.setSucursal(null);
 		movTransito.setFecha(movProveedor.getOperationDate());
-		movTransito.setOperacionDesc(null); // TODO: Operacion date
+		movTransito.setOperacionDesc(null);
 		movTransito.setMonto(movProveedor.getAmount());
-		movTransito.setTipoContratoDesc(null); // TODO: Tipo contrato
+		movTransito.setTipoContratoDesc(null);
 		movTransito.setEsquemaTarjeta(movProveedor.getTarjetaMovimientosProveedor().getBrand());
 		movTransito.setCuenta(movProveedor.getTarjetaMovimientosProveedor().getCardNumber());
 		movTransito.setTitular(movProveedor.getTarjetaMovimientosProveedor().getHolderName());
 		movTransito.setNumAutorizacion(movProveedor.getAuthorization());
-		movTransito.setMovimientoMidas(null); // TODO: No relacion
+		movTransito.setMovimientoMidas(null);
 		movTransito.setNuevo(false);
 		movTransito.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY.intValue()));
 		movTransito.setIdConciliacion(idConciliacion);

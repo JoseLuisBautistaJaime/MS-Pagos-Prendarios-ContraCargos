@@ -66,6 +66,8 @@ public class TarjetasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response get(@PathVariable(value = "idCliente", required = true) Long idCliente) {
 		
+		log.info(">>> GET /v1/tarjetas/cliente/{idCliente} REQUEST: {}", null != idCliente ? idCliente : "");
+		
 		log.debug("Entrando a operacion de servicio TarjetasController.get()...");
 
 
@@ -76,6 +78,8 @@ public class TarjetasController {
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetasCliente);
 
+		log.info(">>> GET /v1/tarjetas/cliente/{idCliente} RESPONSE: {}, TOTAL: {}", null != tarjetasCliente ? tarjetasCliente : "", null != tarjetasCliente ? tarjetasCliente.size() : "0");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS, tarjetasCliente);
 
 	}
@@ -90,6 +94,8 @@ public class TarjetasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response get(@PathVariable(value = "idCliente", required = true) Long idcliente, @PathVariable(value = "id_openpay", required = true) String id_openpay) {
 
+		log.info(">>> GET /v1/tarjetas/{id_openpay}/{idCliente} REQUEST: idCliente {}, idOpenpay {}", null != idcliente ? idcliente : "", null != id_openpay ? id_openpay : "");
+		
 		log.debug("Entrando a operacion de servicio TarjetasController.get()...");
 
 		log.debug("Validando parametro id_openpay...");
@@ -99,6 +105,8 @@ public class TarjetasController {
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaIdClienteAndIdOpenPay);
 
+		log.info(">>> GET /v1/tarjetas/{id_openpay}/{idCliente} RESPONSE: {}", null != tarjetaIdClienteAndIdOpenPay ? tarjetaIdClienteAndIdOpenPay : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS, tarjetaIdClienteAndIdOpenPay);
 
 	}
@@ -112,6 +120,8 @@ public class TarjetasController {
 			@ApiResponse(code = 404, response = Response.class, message = "No existen registros para la tarjeta especifica."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response get(@PathVariable(value = "id_openpay", required = true) String id_openpay) {
+		
+		log.info(">>> GET /v1/tarjetas/{id_openpay} REQUEST: {}", null != id_openpay ? id_openpay : "");
 
 		log.debug("Entrando a operacion de servicio TarjetasController.get()...");
 
@@ -124,6 +134,8 @@ public class TarjetasController {
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", tarjetaOpenPay);
 
+		log.info(">>> GET /v1/tarjetas/{id_openpay} RESPONSE: {}", null != tarjetaOpenPay ? tarjetaOpenPay : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS, tarjetaOpenPay);
 
 	}
@@ -140,6 +152,7 @@ public class TarjetasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response add(@RequestBody TarjetaDTO tarjeta) {
 
+		log.info(">>> POST /v1/tarjeta REQUEST: {}", null != tarjeta ? tarjeta : "");
 		
 		log.info("Intentando obtener el listado de registros para las tarjetas {}...", tarjeta);
 
@@ -147,6 +160,8 @@ public class TarjetasController {
 
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", guardaTarjeta);
 
+		log.info(">>> POST /v1/tarjeta RESPONSE: {}", null != guardaTarjeta ? guardaTarjeta : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_ADD, guardaTarjeta);
 
 	}
@@ -162,6 +177,8 @@ public class TarjetasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody AliasDTO  alias) {
 		
+		log.info(">>> PUT /v1/tarjeta/update REQUEST: {}", null != alias ? alias : "");
+		
 		log.debug("Entrando a operacion de servicio TarjetasController.update()...");
 
 	    log.debug("Validando parametro idOpenPay...");
@@ -174,6 +191,9 @@ public class TarjetasController {
 	    Tarjetas updateTarjetas = tarjetasService.updateTarjeta(alias.getId_openpay(), alias.getAlias());
 
 	    log.debug("Regresando instancia Response con la respuesta obtenida: {}...", updateTarjetas);
+	    
+	    log.info(">>> PUT /v1/tarjeta/update RESPONSE: {}", null != updateTarjetas ? updateTarjetas : "");
+	    
 	    return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_UPDATE, updateTarjetas);
 
 	}
@@ -188,6 +208,8 @@ public class TarjetasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response updateToken(@RequestBody TokenDTO  token) {
 		
+		log.info(">>> PUT /v1/tarjeta/updateToken REQUEST: {}", null != token ? token : "");
+		
 		log.debug("Entrando a operacion de servicio TarjetasController.updateToken()...");
 
 	    log.debug("Validando parametro idOpenPay...");
@@ -200,6 +222,9 @@ public class TarjetasController {
 	    Tarjetas updateTarjetas = tarjetasService.updateToken(token.getId_openpay(),token.getToken());
 
 	    log.debug("Regresando instancia Response con la respuesta obtenida: {}...", updateTarjetas);
+	    
+	    log.info(">>> PUT /v1/tarjeta/updateToken RESPONSE: {}", null != updateTarjetas ? updateTarjetas : "");
+	    
 	    return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_UPDATE, updateTarjetas);
 
 	}
@@ -215,6 +240,8 @@ public class TarjetasController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response delete(@PathVariable(value = "id_openpay", required = true) String id_openpay) {
 		
+		log.info(">>> DELETE /v1/tarjeta/{id_openpay} REQUEST: {}", null != id_openpay ? id_openpay : "");
+		
 		log.debug("Entrando a operacion de servicio TarjetasController.delete()...");
 		
 		log.debug("Validando parametro id_openpay...");
@@ -224,6 +251,9 @@ public class TarjetasController {
 		 Tarjetas deletetarjeta = tarjetasService.deleteTarjeta(id_openpay);
 		
 		log.debug("Regresando instancia Response con la respuesta obtenida: {}...", deletetarjeta);
+		
+		log.info(">>> DELETE /v1/tarjeta/{id_openpay} RESPONSE: {}", null != deletetarjeta ? deletetarjeta : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), TarjetaConstants.MSG_SUCCESS_DELETE, deletetarjeta);
 
 	}

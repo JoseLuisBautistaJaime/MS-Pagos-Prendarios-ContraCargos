@@ -322,9 +322,6 @@ public class MovimientosEstadoCuentaService {
 
 		// Valida que la conciliacion tenga el estatus correcto para poder dar de alta
 		// el estado cuenta
-		// TODO: Eliminar, ya no es necesario validar por segunda vez
-//		conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(request.getFolio(),
-//				Arrays.asList(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA));
 
 		// Obtiene el estatus de la conciliacion
 		estatusConciliacion = conciliacionRepository.findEstatusByConciliacionId(request.getFolio());
@@ -365,10 +362,6 @@ public class MovimientosEstadoCuentaService {
 			fechaEstadoCuenta = cal.getTime();
 		}
 
-		// TODO: Eliminar este comentario una vez que ya sea definitivo eliminar esta invocacion de este endpoint de ESTADO CUENTA
-		// Se regenera la conciliacion
-//		this.conciliacionHelper.generarConciliacion(idConciliacion, Arrays.asList(reporte));
-		
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(idConciliacion,
 				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
@@ -387,7 +380,6 @@ public class MovimientosEstadoCuentaService {
 		try {
 
 			// Se crea el nuevo estado de cuenta
-			// TODO: Agregar llave primaria compuesta, un estado de cuenta por dia
 			EstadoCuenta estadoCuenta = this.estadoCuentaRepository.findOneByIdReporteAndFechaCarga(idReporte,
 					fechaEstadoCuenta);
 			if (estadoCuenta == null) {

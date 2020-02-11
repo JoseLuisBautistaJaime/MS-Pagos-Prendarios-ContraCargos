@@ -46,14 +46,14 @@ public class DevolucionesBuilder {
 	 */
 	public static List<DevolucionConDTO> buildDevolucionConDTOListFromMovimientoDevolucionList(
 			List<MovimientoDevolucion> movimientoDevolucion) {
-		List<DevolucionConDTO> DevolucionConDTOList = null;
+		List<DevolucionConDTO> devolucionConDTOList = null;
 		if (movimientoDevolucion != null && !movimientoDevolucion.isEmpty()) {
-			DevolucionConDTOList = new ArrayList<>();
+			devolucionConDTOList = new ArrayList<>();
 			for (MovimientoDevolucion movimientosDevolucion : movimientoDevolucion) {
-				DevolucionConDTOList.add(buildDevolucionConDTOFromMovimientoDevolucion(movimientosDevolucion));
+				devolucionConDTOList.add(buildDevolucionConDTOFromMovimientoDevolucion(movimientosDevolucion));
 			}
 		}
-		return DevolucionConDTOList;
+		return devolucionConDTOList;
 	}
 
 	/**

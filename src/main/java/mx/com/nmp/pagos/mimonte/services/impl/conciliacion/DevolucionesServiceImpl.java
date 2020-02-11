@@ -518,7 +518,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				// Se obtiene el movimiento en transito asignado al folio y al id
 				MovimientoTransito movimientoTransito = movimientoTransitoRepository
 						.findByIdFolioAndIdMovimiento(marcarDevoluciones.getFolio(), idMovimientoTransito);
-				if (movimientoTransito == null) { // TODO: Validar el estatus del movimiento en transito
+				if (movimientoTransito == null) { 
 					throw new ConciliacionException(ConciliacionConstants.Validation.NO_INFORMATION_FOUND,
 							CodigoError.NMP_PMIMONTE_0009);
 				}
@@ -534,11 +534,6 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 				// Se actualiza el estatus del movimiento en transito como marcado para
 				// devolucion (borrado logico)
-				// TODO: Eliminar lineas comentadas una vez que se pruebe la funcionalidad
-//				movimientoTransito.setLastModifiedBy(createdBy);
-//				movimientoTransito.setLastModifiedDate(new Date());
-//				movimientoTransito.setEstatus(etMarcadoDev);
-//				movimientoConciliacionRepository.delete(movimientoTransito);
 				movimientoTransitoRepository.delete(movimientoTransito);
 
 			}
@@ -718,21 +713,6 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
 		}
-
-		// TODO: Analizar esta situacion y borrar si es necesario
-		// No se puede registrar dado que no se especifica el dato pricipal de la
-		// actividad (EL FOLIO DE CONCILIACiON)
-//		if (issueAnActivity) {
-//			// Registro de actividad
-//			actividadGenericMethod.registroActividad(folio, "Se solicitan devoluciones para "
-//					.concat(String
-//							.valueOf(null != devolucionesSolicitadasInner ? devolucionesSolicitadasInner.size() : null))
-//					.concat(" movimientos, pertenecientes a la conciliacion ").concat(String.valueOf(folio))
-//					.concat(" por un total de $ ")
-//					.concat(String.valueOf(getTotalFromDevolucionEntidadDTOList(devolucionesSolicitadas))),
-//					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
-//		}
-
 		return devolucionesSolicitadas;
 	}
 

@@ -99,6 +99,9 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response save(@RequestBody EntidadBaseSaveDTO entidadBaseSaveDTO,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
+		
+		log.info(">>> POST /catalogos/entidades REQUEST: {}", null != entidadBaseSaveDTO ? entidadBaseSaveDTO : "");
+		
 		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateEntidadBaseDTOSave(entidadBaseSaveDTO))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
@@ -119,6 +122,9 @@ public class EntidadController {
 		entidadDTOResp = entidadServiceImpl.save(entidadDTO, createdBy);
 		// Construye el objeto de respuesta
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
+		
+		log.info(">>> POST /catalogos/entidades RESPONSE: {}", null != entidadResponseDTO ? entidadResponseDTO : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				entidadResponseDTO);
 	}
@@ -141,6 +147,9 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response update(@RequestBody EntidadBaseDTO entidadDTOReq,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		
+		log.info(">>> PUT /catalogos/entidades REQUEST: {}", null != entidadDTOReq ? entidadDTOReq : "");
+		
 		// Valida que el objeto de request y sus atributos sean correctos
 		if (!ValidadorCatalogo.validateEntidadBaseDTOUpdt(entidadDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
@@ -174,6 +183,9 @@ public class EntidadController {
 		// FIN DE SETEO DE USUARIO Y FECHA CREACION
 		// Se constriye el objeto de respuesta y se regresa
 		entidadResponseDTO = EntidadBuilder.buildEntidadResponseDTOFromEntidadDTO(entidadDTOResp);
+		
+		log.info(">>> PUT /catalogos/entidades RESPONSE: {}", null != entidadResponseDTO ? entidadResponseDTO : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_UPDATE,
 				entidadResponseDTO);
 	}
@@ -195,6 +207,9 @@ public class EntidadController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findById(@PathVariable(value = "idEntidad", required = true) Long idEntidad) {
+		
+		log.info(">>> GET /catalogos/entidades REQUEST: {}", null != idEntidad ? idEntidad : "");
+		
 		EntidadResponseDTO entidadResponseDTO = null;
 		EntidadDTO entidadDTO = null;
 		// Se obtiene una entidad por id y se construye el objeto de respuesta
@@ -204,6 +219,9 @@ public class EntidadController {
 		} catch (EmptyResultDataAccessException erdex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
+		
+		log.info(">>> GET /catalogos/entidades RESPONSE: {}", null != entidadResponseDTO ? entidadResponseDTO : "");
+		
 		// Se regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				entidadResponseDTO);
@@ -228,6 +246,9 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response findByNombreAndEstatus(@RequestParam(name = "nombre", required = false) String nombre,
 			@RequestParam(name = "estatus", required = false) Boolean estatus) {
+		
+		log.info(">>> GET /catalogos/entidades/consultas REQUEST: nombre {}, estatus {}", null != nombre ? nombre : "", null != estatus ? estatus : "");
+		
 		List<EntidadResponseDTO> entidadResponseDTOList = null;
 		// Se encuentra una lista de entidades por nombre y estatus
 		try {
@@ -235,6 +256,9 @@ public class EntidadController {
 		} catch (EmptyResultDataAccessException erdex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
+		
+		log.info(">>> GET /catalogos/entidades/consultas RESPONSE: {}, TOTAL {}", null != entidadResponseDTOList ? entidadResponseDTOList : "", null != entidadResponseDTOList? entidadResponseDTOList.size() : "");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				null != entidadResponseDTOList ? entidadResponseDTOList : new ArrayList<>());
 	}
@@ -258,12 +282,18 @@ public class EntidadController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response deleteById(@PathVariable(value = "idEntidad", required = true) Long idEntidad,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String lastModifiedBy) {
+		
+		log.info(">>> PUT /catalogos/entidades/{idEntidad} RESPONSE: {}", null != idEntidad ? idEntidad : "");
+		
 		// Se elimina una entidad de manera logica (cambio de estatus a false) por id
 		try {
 			entidadServiceImpl.updateEstatusById(false, idEntidad, lastModifiedBy, new Date());
 		} catch (EmptyResultDataAccessException erdex) {
 			throw new CatalogoException(CatalogConstants.CATALOG_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_001);
 		}
+		
+		log.info(">>> PUT /catalogos/entidades/{idEntidad} RESPONSE: ");
+		
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_DELETE,
 				null);
 	}

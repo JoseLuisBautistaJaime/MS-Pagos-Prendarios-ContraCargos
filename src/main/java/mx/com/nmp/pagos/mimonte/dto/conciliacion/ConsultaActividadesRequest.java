@@ -64,7 +64,6 @@ public class ConsultaActividadesRequest implements Comparable<ConsultaActividade
 
 	@Override
 	public int compareTo(ConsultaActividadesRequest o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

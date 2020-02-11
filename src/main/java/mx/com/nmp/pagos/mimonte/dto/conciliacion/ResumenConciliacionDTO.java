@@ -13,7 +13,6 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  * @creationDate 15/05/2019 21:38 hrs.
  * @version 0.1
  */
-// TODO: Eliminar esta clase si solo se usa en el response del endpoint de resumen de conciliacion dentro del controlador de conciliacion si se detecta que no se usa
 public class ResumenConciliacionDTO implements Comparable<ResumenConciliacionDTO>{
 	
     private Long totalProceso;
