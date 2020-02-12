@@ -43,7 +43,6 @@ import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqSaveDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionRespPostDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoNotFoundException;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.impl.AfiliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.UtilValidation;
@@ -108,10 +107,9 @@ public class AfiliacionController implements UtilValidation{
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 
 		// Valida que el numero de afiliacion sea un valor alfanumerico
-		// TODO: Pendiente
-//		if (!UtilValidation.validaCadenaAlfanumerica(afiliacionReqSaveDTO.getNumero()))
-//			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
-//					CodigoError.NMP_PMIMONTE_0015);
+		if (!UtilValidation.validaCadenaAlfanumerica(afiliacionReqSaveDTO.getNumero()))
+			throw new CatalogoException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_0015);
 		
 		// Realiza el alta
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder.buildAfiliacionRespPostDTOfromAfiliacionDTO(
@@ -149,11 +147,10 @@ public class AfiliacionController implements UtilValidation{
 		if (!ValidadorCatalogo.validateAfilacionUpdt(afiliacionDTOReq))
 			throw new CatalogoException(CatalogConstants.CATALOG_VALIDATION_ERROR, CodigoError.NMP_PMIMONTE_0008);
 		
-		// TODO: PENDIENTE
 		// Valida que el numero de afiliacion sea un valor alfanumerico
-//				if (!UtilValidation.validaCadenaAlfanumerica(afiliacionDTOReq.getNumero()))
-//					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
-//							CodigoError.NMP_PMIMONTE_0015);
+				if (!UtilValidation.validaCadenaAlfanumerica(afiliacionDTOReq.getNumero()))
+					throw new CatalogoException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_0015);
 		
 		// Realiza la actualizacion
 		AfiliacionRespPostDTO afiliacionDTO = AfiliacionBuilder
@@ -186,6 +183,11 @@ public class AfiliacionController implements UtilValidation{
 	public Response findById(@PathVariable(value = "numeroAfiliacion", required = true) String numeroAfiliacion) {
 		
 		log.info(">>> GET /catalogos/afiliaciones/{numeroAfiliacion} REQUEST: {}", (null != numeroAfiliacion) ? numeroAfiliacion : "");
+		
+		// Valida que el numero de afiliacion sea un valor alfanumerico
+		if (!UtilValidation.validaCadenaAlfanumerica(numeroAfiliacion))
+			throw new CatalogoException(CodigoError.NMP_PMIMONTE_0015.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_0015);
 		
 		AfiliacionRespPostDTO afiliacionDTO = null;
 		// Realiza la consulta
