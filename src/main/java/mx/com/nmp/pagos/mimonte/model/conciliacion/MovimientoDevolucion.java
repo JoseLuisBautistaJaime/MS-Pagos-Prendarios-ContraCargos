@@ -41,7 +41,7 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 	@JoinColumn(name = "estatus")
 	private EstatusDevolucion estatus;
 	
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha")
 	private Date fecha;
 

@@ -360,13 +360,13 @@ public abstract class MovimientosBuilder {
 		if (null != movimientoEstadoCuentaDBDTO) {
 			movimientoEstadoCuentaDTO = new MovimientoEstadoCuentaDTO();
 			movimientoEstadoCuentaDTO.setDepositos(movimientoEstadoCuentaDBDTO.getTipoMovimiento().equals(
-					ConciliacionConstants.TipoMovimiento.TIPO_DEPOSITO) ? movimientoEstadoCuentaDBDTO.getImporte()
+					ConciliacionConstants.TipoMovimiento.TIPO_ABONO) ? movimientoEstadoCuentaDBDTO.getImporte()
 							: null);
 			movimientoEstadoCuentaDTO.setDescripcion(movimientoEstadoCuentaDBDTO.getDescripcion());
 			movimientoEstadoCuentaDTO.setFecha(movimientoEstadoCuentaDBDTO.getFecha());
 			movimientoEstadoCuentaDTO.setId(movimientoEstadoCuentaDBDTO.getId());
 			movimientoEstadoCuentaDTO.setRetiros(movimientoEstadoCuentaDBDTO.getTipoMovimiento()
-					.equals(ConciliacionConstants.TipoMovimiento.TIPO_RETIRO) ? movimientoEstadoCuentaDBDTO.getImporte()
+					.equals(ConciliacionConstants.TipoMovimiento.TIPO_CARGO) ? movimientoEstadoCuentaDBDTO.getImporte()
 							: null);
 			if (pos == 0)
 				movimientoEstadoCuentaDTO.setSaldo(movimientoEstadoCuentaDBDTO.getTotalInicial());

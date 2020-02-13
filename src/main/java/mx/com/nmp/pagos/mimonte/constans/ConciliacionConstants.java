@@ -55,16 +55,6 @@ public final class ConciliacionConstants {
 		}
 
 		/**
-		 * Tipo Movimiento de deposito
-		 */
-		public static final int TIPO_DEPOSITO = 1;
-
-		/**
-		 * Tipo Movimiento de retiro
-		 */
-		public static final int TIPO_RETIRO = 2;
-
-		/**
 		 * Tipo Movimiento de cargo
 		 */
 		public static final int TIPO_CARGO = 1;
