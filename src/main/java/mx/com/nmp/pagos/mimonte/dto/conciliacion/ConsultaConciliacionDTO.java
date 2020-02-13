@@ -17,8 +17,8 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
-	private Long idPolizaTesoreria;
-	private Long idAsientoContable;
+	private String idPolizaTesoreria;
+	private String idAsientoContable;
 	private Date createdDate;
 	private String createdBy;
 	private Date lastModifiedDate;
@@ -32,7 +32,7 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 	}
 	
 	public ConsultaConciliacionDTO(Long folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
-			String subEstatusDescripcion, Long idPolizaTesoreria, Long idAsientoContable, Date createdDate,
+			String subEstatusDescripcion, String idPolizaTesoreria, String idAsientoContable, Date createdDate,
 			String createdBy, Date lastModifiedDate, String lastModifiedBy, EntidadDTO entidad, CuentaDTO cuenta,
 			Integer numeroMovimientos) {
 		super();
@@ -83,19 +83,19 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 		this.subEstatusDescripcion = subEstatusDescripcion;
 	}
 
-	public Long getIdPolizaTesoreria() {
+	public String getIdPolizaTesoreria() {
 		return idPolizaTesoreria;
 	}
 
-	public void setIdPolizaTesoreria(Long idPolizaTesoreria) {
+	public void setIdPolizaTesoreria(String idPolizaTesoreria) {
 		this.idPolizaTesoreria = idPolizaTesoreria;
 	}
 
-	public Long getIdAsientoContable() {
+	public String getIdAsientoContable() {
 		return idAsientoContable;
 	}
 
-	public void setIdAsientoContable(Long idAsientoContable) {
+	public void setIdAsientoContable(String idAsientoContable) {
 		this.idAsientoContable = idAsientoContable;
 	}
 
