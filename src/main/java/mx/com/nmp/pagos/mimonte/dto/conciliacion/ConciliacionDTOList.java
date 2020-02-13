@@ -27,8 +27,8 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
-	private Long idTesoreria;
-	private Long idAsientoContable;
+	private String idTesoreria;
+	private String idAsientoContable;
 	private EntidadDTO entidad;
 	private CuentaDTO cuenta;
 	private ReporteProcesosNocturnosDTO reporteProcesosNocturnos;
@@ -50,7 +50,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 	}
 
 	public ConciliacionDTOList(Long folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
-			String subEstatusDescripcion, Long idTesoreria, Long idAsientoContable, EntidadDTO entidad,
+			String subEstatusDescripcion, String idTesoreria, String idAsientoContable, EntidadDTO entidad,
 			CuentaDTO cuenta, ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
 			GlobalDTO global, List<DevolucionConDTO> devoluciones, List<MovTransitoDTO> movimientosTransito,
@@ -105,19 +105,19 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 		this.subEstatusDescripcion = subEstatusDescripcion;
 	}
 
-	public Long getIdTesoreria() {
+	public String getIdTesoreria() {
 		return idTesoreria;
 	}
 
-	public void setIdTesoreria(Long idTesoreria) {
+	public void setIdTesoreria(String idTesoreria) {
 		this.idTesoreria = idTesoreria;
 	}
 
-	public Long getIdAsientoContable() {
+	public String getIdAsientoContable() {
 		return idAsientoContable;
 	}
 
-	public void setIdAsientoContable(Long idAsientoContable) {
+	public void setIdAsientoContable(String idAsientoContable) {
 		this.idAsientoContable = idAsientoContable;
 	}
 

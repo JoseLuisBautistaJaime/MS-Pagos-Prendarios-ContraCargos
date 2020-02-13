@@ -246,6 +246,8 @@ public abstract class ConciliacionBuilder {
 			consultaConciliacionDTO.setCreatedDate(conciliacion.getCreatedDate());
 			consultaConciliacionDTO.setLastModifiedBy(conciliacion.getLastModifiedBy());
 			consultaConciliacionDTO.setLastModifiedDate(conciliacion.getCompletedDate());
+			consultaConciliacionDTO.setIdAsientoContable(conciliacion.getIdAsientoContable());
+			consultaConciliacionDTO.setIdPolizaTesoreria(conciliacion.getIdPolizaTesoreria());
 		}
 		return consultaConciliacionDTO;
 	}
@@ -306,6 +308,8 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTOList.setLastModifiedDate(conciliacion.getLastModifiedDate());
 			conciliacionDTOList.setCreatedBy(conciliacion.getCreatedBy());
 			conciliacionDTOList.setLastModifiedBy(conciliacion.getLastModifiedBy());
+			conciliacionDTOList.setIdAsientoContable(conciliacion.getIdAsientoContable());
+			conciliacionDTOList.setIdTesoreria(conciliacion.getIdPolizaTesoreria());
 		}
 		return conciliacionDTOList;
 	}
