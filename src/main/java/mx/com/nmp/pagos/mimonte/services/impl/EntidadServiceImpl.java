@@ -427,9 +427,11 @@ public class EntidadServiceImpl implements EntidadService {
 			for (EntidadResponseDTO entidadResponseDTO : entidadResponseDTOList) {
 				// Obtiene la lista de asociaciones entre entidad - cuenta - afiliacion
 				lstECA = entidadCuentaAfiliacionRepository.findByEntidad_Id(entidadResponseDTO.getId());
+				EntidadCuentaAfiliacionBuilder
+				.buildEntidadCuentaAfiliacionDTOListFromEntidadCuentaAfiliacionList(lstECA);
 				// Construye el objeto de respuesta
 				entidadResponseDTO.setCuentas(
-						EntidadCuentaAfiliacionBuilder.buildCuentaEntDTOSetFromEntidadCuentaAfiliacionList(lstECA));
+						EntidadCuentaAfiliacionBuilder.buildIndeedCuentaEntDTOSetFromEntidadCuentaAfiliacionList(lstECA));
 			}
 		}
 		return entidadResponseDTOList;

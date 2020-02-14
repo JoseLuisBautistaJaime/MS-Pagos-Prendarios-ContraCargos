@@ -6,11 +6,13 @@ package mx.com.nmp.pagos.mimonte.builder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import mx.com.nmp.pagos.mimonte.dto.AfiliacionEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaEntDTO;
 import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
@@ -139,8 +141,8 @@ public abstract class EntidadCuentaAfiliacionBuilder {
 			cuentaEntDTO.setNumero(entidadCuentaAfiliacion.getCuenta().getNumeroCuenta());
 			cuentaEntDTO.setId(entidadCuentaAfiliacion.getCuenta().getId());
 			cuentaEntDTO.setEstatus(entidadCuentaAfiliacion.getCuenta().getEstatus());
-			cuentaEntDTO.setAfiliaciones(AfiliacionBuilder
-					.buildAfiliacionEntDTOListFromAfiliacionSet(entidadCuentaAfiliacion.getCuenta().getAfiliaciones()));
+			cuentaEntDTO.setAfiliaciones(
+					AfiliacionBuilder.buildAfiliacionEntDTOListFromAfiliacion(entidadCuentaAfiliacion.getAfiliacion()));
 		}
 		return cuentaEntDTO;
 	}
@@ -159,6 +161,46 @@ public abstract class EntidadCuentaAfiliacionBuilder {
 			cuentaEntDTO = new TreeSet<>();
 			for (EntidadCuentaAfiliacion entidadCuentaAfiliacion : entidadCuentaAfiliacionList) {
 				cuentaEntDTO.add(buildCuentaEntDTOFromEntidadCuentaAfiliacion(entidadCuentaAfiliacion));
+			}
+		}
+		return cuentaEntDTO;
+	}
+
+	/**
+	 * Construye la lista de cuentas con sus respectivas afiliaciones anidadas
+	 * 
+	 * @param entidadCuentaAfiliacionList
+	 * @return
+	 */
+	public static Set<CuentaEntDTO> buildIndeedCuentaEntDTOSetFromEntidadCuentaAfiliacionList(
+			List<EntidadCuentaAfiliacion> entidadCuentaAfiliacionList) {
+		Set<CuentaEntDTO> cuentaEntDTO = null;
+		Map<Long, List<AfiliacionEntDTO>> map = null;
+
+		if (null != entidadCuentaAfiliacionList && !entidadCuentaAfiliacionList.isEmpty()) {
+			map = new HashMap<>();
+			cuentaEntDTO = new HashSet<>();
+			// Itera los registros de cada relacion entidad-cuenta-afiliacion
+			for (EntidadCuentaAfiliacion entidadCuentaAfiliacion : entidadCuentaAfiliacionList) {
+				// Si el mapa aun no contiene la cuenta la agrega y su respectiva afiliacion
+				if (!map.containsKey(entidadCuentaAfiliacion.getCuenta().getId())) {
+					List<AfiliacionEntDTO> list = new ArrayList<>();
+					list.add(AfiliacionBuilder
+							.buildAfiliacionEntDTOFromAfiliacion(entidadCuentaAfiliacion.getAfiliacion()));
+					map.put(entidadCuentaAfiliacion.getCuenta().getId(), list);
+					cuentaEntDTO.add(new CuentaEntDTO(entidadCuentaAfiliacion.getCuenta().getId(),
+							entidadCuentaAfiliacion.getCuenta().getNumeroCuenta(),
+							entidadCuentaAfiliacion.getCuenta().getEstatus()));
+				}
+				// De lo contrario (si la cuenta ya existe dentro de mapa) simplemente agrega la
+				// nueva afiliacion
+				else {
+					map.get(entidadCuentaAfiliacion.getCuenta().getId()).add(AfiliacionBuilder
+							.buildAfiliacionEntDTOFromAfiliacion(entidadCuentaAfiliacion.getAfiliacion()));
+				}
+			}
+			for(CuentaEntDTO cuentaEntDTOElem : cuentaEntDTO) {
+				cuentaEntDTOElem.setAfiliaciones(map.get(cuentaEntDTOElem.getId()));
 			}
 		}
 		return cuentaEntDTO;
