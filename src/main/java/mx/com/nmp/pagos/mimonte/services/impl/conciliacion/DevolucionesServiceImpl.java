@@ -31,6 +31,7 @@ import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosTransitoBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusConciliacionRepository;
@@ -58,7 +59,6 @@ import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -94,6 +94,9 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 
 	@Autowired
 	private EntidadRepository entidadRepository;
+	
+	@Autowired
+	private CuentaRepository cuentaRepository;
 
 	@Autowired
 	private SolicitarDevolucionesService solicitarDevolucionesService;
@@ -640,6 +643,8 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 		List<DevolucionEntidadDTO2> devolucionesSolicitadasInner = null;
 		EstatusDevolucion edSolicitada = null;
 		Entidad entidad = null;
+		Long folioConciliacion = null;
+		String cuenta = null;
 
 		// Se procede al envio de las devoluciones
 		if (CollectionUtils.isNotEmpty(movimientosDevolucion)) {
@@ -667,16 +672,21 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 				md.setLastModifiedBy(usuario);
 				// Se guardan los movimientos devolucion
 				movimientoDevolucionRepository.saveAndFlush(md);
-				// Se obtiene la entidad para agregar a la respuesta
+				// Se obtiene la entidad y la cuenta para agregar a la respuesta
+				if(null == folioConciliacion) {
+					folioConciliacion = md.getIdConciliacion();
+				}
 				try {
 					entidad = entidadRepository.findByConciliacion(md.getIdConciliacion());
+					Object obj = cuentaRepository.findCuentaNumeroByConciliacionId(md.getIdConciliacion());
+					cuenta = null != obj ? obj.toString(): null;
 				} catch (Exception ex) {
 					LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 					throw ex;
 				}
 				// Se fabrica el objeto de respuesta
 				try {
-					map = DevolucionesBuilder.buildDevolucionEntidadDTOAndDTO2FromMovimientosDevolucion(md, entidad);
+					map = DevolucionesBuilder.buildDevolucionEntidadDTOAndDTO2FromMovimientosDevolucion(md, entidad, cuenta);
 					devolucionesSolicitadas.add((DevolucionEntidadDTO) map.get("DTO"));
 					devolucionesSolicitadasInner.add((DevolucionEntidadDTO2) map.get("DTO2"));
 				} catch (Exception ex) {
@@ -692,20 +702,20 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			// coniliacion
 			if (null == folio) {
 				// Se agrupan las devoluciones por entidad en una estructura Map
-				Map<Long, List<DevolucionEntidadDTO2>> mapByEntidad = new HashMap<>();
+				Map<String, List<DevolucionEntidadDTO2>> mapByEntidad = new HashMap<>();
 				for (DevolucionEntidadDTO2 elem : devolucionesSolicitadasInner) {
-					if (!mapByEntidad.containsKey(elem.getEntidad().getId())) {
+					if (!mapByEntidad.containsKey(elem.getEntidad().getId().toString().concat(elem.getCuenta()))) {
 						List<DevolucionEntidadDTO2> list = new LinkedList<>(Arrays.asList(elem));
-						mapByEntidad.put(elem.getEntidad().getId(), list);
+						mapByEntidad.put(elem.getEntidad().getId().toString().concat(elem.getCuenta()), list);
 					} else {
-						mapByEntidad.get(elem.getEntidad().getId()).add(elem);
+						mapByEntidad.get(elem.getEntidad().getId().toString().concat(elem.getCuenta())).add(elem);
 					}
 				}
 
 				// Se invoca el metodo de envio pr cada grupo de devoluciones que comparten una
 				// entidad en comun
-				for (Map.Entry<Long, List<DevolucionEntidadDTO2>> entry : mapByEntidad.entrySet()) {
-					solicitarDevolucionesService.enviarSolicitudDevoluciones(entry.getValue());
+				for (Map.Entry<String, List<DevolucionEntidadDTO2>> entry : mapByEntidad.entrySet()) {
+					solicitarDevolucionesService.enviarSolicitudDevoluciones(entry.getValue(), folioConciliacion);
 				}
 			} else
 				solicitarDevolucionesService.enviarSolicitudDevoluciones(devolucionesSolicitadasInner, folio);

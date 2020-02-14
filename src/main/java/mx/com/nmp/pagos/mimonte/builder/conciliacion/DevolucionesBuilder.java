@@ -283,7 +283,7 @@ public class DevolucionesBuilder {
 	 * @return
 	 */
 	public static Map<String, Object> buildDevolucionEntidadDTOAndDTO2FromMovimientosDevolucion(
-			MovimientoDevolucion movimientosDevolucion, Entidad entidad) {
+			MovimientoDevolucion movimientosDevolucion, Entidad entidad, String cuenta) {
 		DevolucionEntidadDTO devolucionEntidadDTO = null;
 		DevolucionEntidadDTO2 devolucionEntidadDTO2 = null;
 		Map<String, Object> map = null;
@@ -318,6 +318,7 @@ public class DevolucionesBuilder {
 			devolucionEntidadDTO2.setCodigoAutorizacion(movimientosDevolucion.getCodigoAutorizacion());
 			devolucionEntidadDTO2.setFechaLiquidacion(movimientosDevolucion.getFechaLiquidacion());
 			devolucionEntidadDTO2.setHora(movimientosDevolucion.getCreatedDate());
+			devolucionEntidadDTO2.setCuenta(cuenta);
 			map.put("DTO", devolucionEntidadDTO);
 			map.put("DTO2", devolucionEntidadDTO2);
 		}
