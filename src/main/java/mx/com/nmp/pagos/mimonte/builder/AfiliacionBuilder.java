@@ -370,6 +370,18 @@ public class AfiliacionBuilder {
 		}
 		return afiliacionEntDTO;
 	}
+	
+	/**
+	 * 
+	 * @param afiliacion
+	 * @return
+	 */
+	public static List<AfiliacionEntDTO> buildAfiliacionEntDTOListFromAfiliacion(Afiliacion afiliacion) {
+		List<AfiliacionEntDTO> afiliacionEntDTO = null;
+			afiliacionEntDTO = new ArrayList<>();
+				afiliacionEntDTO.add(buildAfiliacionEntDTOFromAfiliacion(afiliacion));
+		return afiliacionEntDTO;
+	}
 
 	/**
 	 * Construye un objeto de tipo AfiliacionEntDTOa partir de un objeto de tipo

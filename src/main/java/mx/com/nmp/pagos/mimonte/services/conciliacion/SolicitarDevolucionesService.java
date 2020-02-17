@@ -104,7 +104,12 @@ public class SolicitarDevolucionesService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_056);
 
 		// Se obtiene la cuenta y entidad para mostrar en la leyenda
-		if (null != folio) {
+		if (!devoluciones.isEmpty() && null != devoluciones.get(0) && null != devoluciones.get(0).getEntidad()
+				&& null != devoluciones.get(0).getEntidad().getNombre() && null != devoluciones.get(0).getCuenta()) {
+			entidad = devoluciones.get(0).getEntidad().getNombre();
+			cuenta = devoluciones.get(0).getCuenta();
+		}
+		else if (null != folio) {
 			res = conciliacionRepository.getEntidadNombreAndCuentaNumeroByConciliacionId(folio);
 			if (null != res && !res.isEmpty()) {
 				entidad = null != res.get("entidad") ? String.valueOf(res.get("entidad")) : null;

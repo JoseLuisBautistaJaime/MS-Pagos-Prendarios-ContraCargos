@@ -85,5 +85,13 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * Regesa todas las cuentas
 	 */
 	public List<Cuenta> findAll();
-
+	
+	/**
+	 * Regresa el numero de cuenta en base a el id de conciliacion asociado
+	 * @param conciliacionId
+	 * @return
+	 */
+	@Query("SELECT c.numeroCuenta FROM Cuenta c INNER JOIN Conciliacion con ON con.cuenta.id = c.id WHERE con.id = :conciliacionId")
+	public Object findCuentaNumeroByConciliacionId(Long conciliacionId);
+	
 }

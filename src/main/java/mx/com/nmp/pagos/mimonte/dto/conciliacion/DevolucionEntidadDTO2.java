@@ -36,6 +36,7 @@ public class DevolucionEntidadDTO2 {
 	private String titular;
 	private String codigoAutorizacion;
 	private Date fechaLiquidacion;
+	private String cuenta;
 
 	public DevolucionEntidadDTO2() {
 		super();
@@ -139,6 +140,14 @@ public class DevolucionEntidadDTO2 {
 
 	public void setFechaLiquidacion(Date fechaLiquidacion) {
 		this.fechaLiquidacion = fechaLiquidacion;
+	}
+
+	public String getCuenta() {
+		return cuenta;
+	}
+
+	public void setCuenta(String cuenta) {
+		this.cuenta = cuenta;
 	}
 
 }

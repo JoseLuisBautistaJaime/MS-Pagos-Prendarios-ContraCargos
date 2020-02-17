@@ -33,6 +33,13 @@ public class CuentaEntDTO implements Comparable<CuentaEntDTO> {
 		this.estatus = estatus;
 		this.afiliaciones = afiliaciones;
 	}
+	
+	public CuentaEntDTO(Long id, String numero, Boolean estatus) {
+		super();
+		this.id = id;
+		this.numero = numero;
+		this.estatus = estatus;
+	}
 
 	public Long getId() {
 		return id;
