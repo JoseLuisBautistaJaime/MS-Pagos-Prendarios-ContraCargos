@@ -1308,5 +1308,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 		return conciliacionIdList;
 	}
+
+	/**
+	 * Regresa el id de sub-estatus de conciliacion por medio de el folio de dicha conciliacion
+	 */
+	@Override
+	public Long findSubEstatusByFolio(Long folio) {
+		return conciliacionRepository.findSubEstatusByFolio(folio);
+	}
 	
 }

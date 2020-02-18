@@ -649,15 +649,19 @@ public class ConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Long folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {
+		Long subEstatusInicial = null;
 		
 		LOG.info(">>>URL: POST /conciliacion/generar/{folio} > REQUEST ENTRANTE: {}", folio);
 		
-		LOG.info(">> consultaGenerarFolio(" + folio + ", " + requestUser + ")");
-
-		// VALIDACIONES INICIAN
+		// VALIDACIONES INICIALES: datos no nulos y que el folio exista
 		conciliacionServiceImpl.validacionesIniciales(folio, requestUser);
-		// VALIDACIONES FINALIZAN
 
+		// Se obtiene elsubEstatusInicial para saber el punto de retorno en caso de error, dado que este endpoint puede ejecutarse desde dos procesos distintos (Proveedor transaccional Completado y Estado Cuenta Completado)
+		subEstatusInicial = conciliacionService.findSubEstatusByFolio(folio);
+		if(null == subEstatusInicial)
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		
+		// Se actualiza el sub-estatus a uno transitorio para indicar que se esta realizando el poceso de merge de la conciliacion
 		try {
 			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
 					ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION, null), requestUser);
@@ -671,7 +675,7 @@ public class ConciliacionController {
 		}
 
 		// SE GENERA LA CONCILIACION DE MANERA ASICRONA
-		asyncLayer.generarConciliacion(folio, requestUser);
+		asyncLayer.generarConciliacion(folio, requestUser, subEstatusInicial);
 		// FINALIZA GENERACION DE LA CONCILIACION DE MANERA ASINCRONA
 
 		// Regresa la respuesta exitosa
