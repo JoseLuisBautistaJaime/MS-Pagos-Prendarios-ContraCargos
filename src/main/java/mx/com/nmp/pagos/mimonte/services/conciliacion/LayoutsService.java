@@ -510,18 +510,33 @@ public class LayoutsService {
 					// Setea el id de layout a el header
 					layout.getLayoutHeader().setLayout(new Layout(layoutId));
 
+
 					// Setea el id de layout a las lineas en una nueva lista
-					List<LayoutLinea> layoutLineaList = new ArrayList<>();
+					/*List<LayoutLinea> layoutLineasNuevasList = new ArrayList<>();
+					List<LayoutLinea> layoutLineasExistentesList = new ArrayList<>();
 					for (LayoutLinea layoutLineaInner : layout.getLayoutLineas()) {
 						layoutLineaInner.setLayout(new Layout(layoutId));
-						layoutLineaList.add(layoutLineaInner);
+						if (layoutLineaInner.getId() == null  || layoutLineaInner.getId() <= 0) {
+							layoutLineasNuevasList.add(layoutLineaInner);
+						}
+						else {
+							layoutLineasExistentesList.add(layoutLineaInner);
+						}
 					}
 					// Inserta las lineas
-					//layoutsJdbcRepository.insertarLista(layoutLineaList);
+					if (layoutLineasNuevasList.size() > 0) {
+						layoutsJdbcRepository.insertarLista(layoutLineasNuevasList);
+					}
+					// Actualiza lineas
+					if (layoutLineasExistentesList.size() > 0) {
+						layoutLineasRepository.saveAll(layoutLineasExistentesList);
+					}*/
+					layoutsRepository.save(layout); // Persiste
 
-					// Inserta el header
+
+					// Inserta/Actualiza el header
 					//layoutsJdbcRepository.insertarLista(Arrays.asList(layout.getLayoutHeader()));
-					layoutsRepository.save(layout);
+					layoutHeadersRepository.save(layout.getLayoutHeader());
 				}
 
 			} catch (Exception ex) {
