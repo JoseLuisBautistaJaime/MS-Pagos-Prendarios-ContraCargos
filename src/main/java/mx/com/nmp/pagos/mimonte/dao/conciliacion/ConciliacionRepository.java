@@ -408,4 +408,12 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query("SELECT  g.conciliacion.id, g.movimientos FROM Global g WHERE g.conciliacion.id IN :idConciliacionList")
 	public List<Object[]> findMovimientosByIdConciliacionList(@Param("idConciliacionList") List<Long> idConciliacionList);
 	
+	/**
+	 * Regresa el id de sub estatus de una conciliacion por su folio
+	 * @param folio
+	 * @return
+	 */
+	@Query("SELECT c.subEstatus.id FROM Conciliacion c WHERE c.id = :folio")
+	public Long findSubEstatusByFolio(Long folio);
+	
 }

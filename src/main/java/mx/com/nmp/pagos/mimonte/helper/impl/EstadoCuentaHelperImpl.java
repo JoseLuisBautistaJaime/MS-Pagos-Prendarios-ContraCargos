@@ -14,9 +14,13 @@ import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.CodigoEstadoCuentaRepository;
+import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper;
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
+import mx.com.nmp.pagos.mimonte.model.Entidad;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.util.CodigosEdoCuentaMap;
 
 /**
@@ -41,6 +45,18 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 	 */
 	@Autowired
 	private CodigoEstadoCuentaRepository codigoEstadoCuentaRepository;
+
+	/**
+	 * Movimiento estado de cuenta repository
+	 */
+	@Autowired
+	private MovimientoEstadoCuentaRepository movimientoEstadoCuentaRepository;
+
+	/**
+	 * Entidad repository
+	 */
+	@Autowired
+	private EntidadRepository entidadRepository;
 
 
 
@@ -100,6 +116,41 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 		List<CodigoEstadoCuenta> codigosComisiones = null;
 		try {
 			codigosComisiones = this.codigoEstadoCuentaRepository.findByCategoriaIdAndEstatusAndEntidadId(idCategoria, true, idEntidad);
+		} catch (Exception ex) {
+			throw new ConciliacionException("Error al obtener los codigos de estado de cuenta",
+					CodigoError.NMP_PMIMONTE_BUSINESS_072);
+		}
+
+		if (CollectionUtils.isEmpty(codigosComisiones)) {
+			throw new ConciliacionException(
+					"No existen codigos de estado de cuenta para la categoria de comisiones configurados",
+					CodigoError.NMP_PMIMONTE_BUSINESS_073);
+		}
+
+		List<String> codigosEstadoCuenta = new ArrayList<String>();
+		if (CollectionUtils.isNotEmpty(codigosComisiones)) {
+			for (CodigoEstadoCuenta codigoComision : codigosComisiones) {
+				codigosEstadoCuenta.add(codigoComision.getCodigo());
+			}
+		}
+
+		return codigosEstadoCuenta;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getCodigosEstadoCuenta(java.lang.Long, java.lang.Long)
+	 */
+	public List<String> getCodigosEstadoCuentaByConciliacion(Long idCategoria, Long idConciliacion) throws ConciliacionException {
+
+		List<CodigoEstadoCuenta> codigosComisiones = null;
+		try {
+			
+			Entidad entidad = this.entidadRepository.findByConciliacion(idConciliacion);
+			if (entidad == null) {
+				throw new ConciliacionException("La conciliacion " + idConciliacion + " no tiene asignada una entidad");
+			}
+			codigosComisiones = this.codigoEstadoCuentaRepository.findByCategoriaIdAndEstatusAndEntidadId(idCategoria, true, entidad.getId());
 		} catch (Exception ex) {
 			throw new ConciliacionException("Error al obtener los codigos de estado de cuenta",
 					CodigoError.NMP_PMIMONTE_BUSINESS_072);
@@ -188,6 +239,38 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 		}
 
 		return new CodigosEdoCuentaMap(codigos);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getMovimientosEstadoCuentaByCategoria(java.lang.Long, java.lang.Long, java.lang.Long)
+	 */
+	public List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByCategoria(Long idConciliacion, Long idCategoria, Long idEntidad) throws ConciliacionException {
+
+		// Codigos de Estado de Cuenta
+		List<String> codigosEstadoCuenta = getCodigosEstadoCuenta(idCategoria, idEntidad);
+
+		// Obtiene los movimientos de estado de cuenta que contiene el codigo
+		// correspondiente
+		List<MovimientoEstadoCuenta> movimientosEstadoCuenta = movimientoEstadoCuentaRepository.findByConciliacionAndClaveLeyendaIn(idConciliacion, codigosEstadoCuenta);
+
+		return movimientosEstadoCuenta;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getMovimientosEstadoCuentaByCategoria(java.lang.Long, java.lang.Long)
+	 */
+	public List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByCategoria(Long idConciliacion, Long idCategoria) throws ConciliacionException {
+
+		// Codigos de Estado de Cuenta
+		List<String> codigosEstadoCuenta = getCodigosEstadoCuentaByConciliacion(idCategoria, idConciliacion);
+
+		// Obtiene los movimientos de estado de cuenta que contiene el codigo
+		// correspondiente
+		List<MovimientoEstadoCuenta> movimientosEstadoCuenta = movimientoEstadoCuentaRepository.findByConciliacionAndClaveLeyendaIn(idConciliacion, codigosEstadoCuenta);
+
+		return movimientosEstadoCuenta;
 	}
 
 

@@ -45,6 +45,11 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 		this.operacionAbr = operacionAbr;
 	}
 
+	public MovimientoMidasDTO(Integer sucursal, BigDecimal montoOperacion) {
+		this.sucursal = sucursal;
+		this.montoOperacion = montoOperacion;
+	}
+
 
 	public MovimientoMidasDTO(Long id) {
 		super();

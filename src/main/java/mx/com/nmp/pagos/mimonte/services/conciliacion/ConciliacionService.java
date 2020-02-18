@@ -163,4 +163,11 @@ public interface ConciliacionService {
 	 */
 	public Boolean validateConciliacionMerge(Long folio);
 	
+	/**
+	 * Regresa el sub estatus de una conciliacion por folio
+	 * @param folio
+	 * @return
+	 */
+	public Long findSubEstatusByFolio(Long folio);
+	
 }

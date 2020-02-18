@@ -92,9 +92,9 @@ public class ConciliacionMathUtil {
 		if (movsEstadoCuenta != null) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
 				if (codigosEdoCuenta.containsClave(movEstadoCuenta.getClaveLeyenda())) {
-					// Monto liquidacion (solo ventas/devoluciones)
-					if (codigosEdoCuenta.containsClaveInCategoria(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_VENTAS, movEstadoCuenta.getClaveLeyenda()) ||
-						(codigosEdoCuenta.containsClaveInCategoria(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES, movEstadoCuenta.getClaveLeyenda()))) {
+					// Monto liquidacion (solo ventas)
+					if (codigosEdoCuenta.containsClaveInCategoria(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_VENTAS, movEstadoCuenta.getClaveLeyenda())/* ||
+						(codigosEdoCuenta.containsClaveInCategoria(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES, movEstadoCuenta.getClaveLeyenda()))*/) {
 						if (movEstadoCuenta.getTipoMovimiento() != null && movEstadoCuenta.getTipoMovimiento() == ConciliacionConstants.TipoMovimiento.TIPO_ABONO) {
 							montoLiquidacion = montoLiquidacion.add(movEstadoCuenta.getImporte());
 						}

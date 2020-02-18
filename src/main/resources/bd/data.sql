@@ -426,3 +426,6 @@ VALUES (27, 'ENVIO_CONCILIACION', 17, 19);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
 VALUES (28, 'ENVIO_CONCILIACION', 18, 17);
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
+VALUES( 29, 'CONCILIACION_MERGE', 8, 12);

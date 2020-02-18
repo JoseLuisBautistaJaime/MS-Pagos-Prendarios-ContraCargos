@@ -39,7 +39,7 @@ public class AsyncLayer {
 	private static final Logger LOG = LoggerFactory.getLogger(AsyncLayer.class);
 
 	@Async("conciliacionAsyncExecutor")
-	public void generarConciliacion(Long folio, String requestUser) throws ConciliacionException {
+	public void generarConciliacion(Long folio, String requestUser, Long subEstatusInicial) throws ConciliacionException {
 		Boolean procesoCorrecto = false;
 		String descripcionError = null;
 		try {
@@ -55,13 +55,26 @@ public class AsyncLayer {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
 		} finally {
 			try {
+				// Si la conciliacion se realizo despues de completar el alta de movs. proveedor transaccional
+				if(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA.equals(subEstatusInicial)) {
+					// Se actualiza el sub estatus de la conciliacion en base al resultado
+					LOG.info(">>> INICIA ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", folio);
+					conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
+							procesoCorrecto ? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA
+									: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_ERROR,
+							descripcionError), requestUser);
+					LOG.info(">>> FINALIZA EXITOSAMENTE ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", folio);
+				}
+			// Si la conciliacion se realizo despues de completar el alta de movs. de edo. cta.
+			else if(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA.equals(subEstatusInicial)) {
 				// Se actualiza el sub estatus de la conciliacion en base al resultado
 				LOG.info(">>> INICIA ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", folio);
 				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
-						procesoCorrecto ? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA
-								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_ERROR,
+						procesoCorrecto ? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
+								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA,
 						descripcionError), requestUser);
 				LOG.info(">>> FINALIZA EXITOSAMENTE ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", folio);
+				}
 			} catch (Exception ex) {
 				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			}
