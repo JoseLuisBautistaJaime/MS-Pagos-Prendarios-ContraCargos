@@ -70,8 +70,8 @@ public class AsyncLayer {
 				// Se actualiza el sub estatus de la conciliacion en base al resultado
 				LOG.info(">>> INICIA ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", folio);
 				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
-						procesoCorrecto ? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA
-								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
+						procesoCorrecto ? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
+								: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA,
 						descripcionError), requestUser);
 				LOG.info(">>> FINALIZA EXITOSAMENTE ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", folio);
 				}
