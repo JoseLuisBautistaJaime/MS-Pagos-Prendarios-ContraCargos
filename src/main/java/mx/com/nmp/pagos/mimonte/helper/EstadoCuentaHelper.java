@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.helper;
 import java.util.List;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.util.CodigosEdoCuentaMap;
 
 /**
@@ -48,6 +49,15 @@ public interface EstadoCuentaHelper {
 	public List<String> getCodigosEstadoCuenta(Long idCategoria, Long idEntidad) throws ConciliacionException;
 
 	/**
+	 * Regresa el listado de codigos de estado de cuenta para la categoria y conciliacion.
+	 * @param idCategoria
+	 * @param idConciliacion
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public List<String> getCodigosEstadoCuentaByConciliacion(Long idCategoria, Long idConciliacion) throws ConciliacionException;
+
+	/**
 	 * Regresa el listado de codigos de estado de cuenta
 	 * @param idEntidad
 	 * @return
@@ -71,4 +81,23 @@ public interface EstadoCuentaHelper {
 	 */
 	public CodigosEdoCuentaMap getCodigosEdoCuentaMap(Long idEntidad) throws ConciliacionException;
 
+	/**
+	 * Obtiene los movimientos de estado de cuenta por categoria
+	 * 
+	 * @param idConciliacion
+	 * @param idCategoria
+	 * @param idEntidad
+	 * @return
+	 */
+	public List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByCategoria(Long idConciliacion, Long idCategoria, Long idEntidad) throws ConciliacionException;
+
+	/**
+	 * Obtiene los movimientos del estado de cuenta por category y conciliacion
+	 * @param idConciliacion
+	 * @param idCategoria
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByCategoria(Long idConciliacion, Long idCategoria) throws ConciliacionException;
+	
 }

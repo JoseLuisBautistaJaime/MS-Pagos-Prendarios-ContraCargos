@@ -55,7 +55,7 @@ public class LayoutsJdbcRepositoryImpl implements LayoutsJdbcRepository {
 	@Override
 	public <T extends LayoutReporte> void insertarLista(List<T> lista) throws Exception {
 
-		LOGGER.info(">> procesarLista({})", lista.size());
+		LOGGER.info(">> insertarLista({})", lista.size());
 		Assert.notEmpty(lista, "Lista a insertar esta vacia");
 
 		long inicio = System.nanoTime();
