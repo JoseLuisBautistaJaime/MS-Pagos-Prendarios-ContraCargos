@@ -6,8 +6,6 @@ package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -15,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants.TipoMovimiento;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
@@ -40,10 +37,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TarjetaMovimientosProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
-import mx.com.nmp.pagos.mimonte.util.CollectionUtil;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.assertj.core.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
