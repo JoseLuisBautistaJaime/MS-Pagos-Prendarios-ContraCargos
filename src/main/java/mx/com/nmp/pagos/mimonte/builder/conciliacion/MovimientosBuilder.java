@@ -4,13 +4,18 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants.TipoMovimiento;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MetodoPagoMovimientosProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
@@ -25,13 +30,20 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequ
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TarjetaMovimientosProveedorDTO;
 import mx.com.nmp.pagos.mimonte.model.EstatusPago;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.IMovTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MetodoPagoMovimientosProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TarjetaMovimientosProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
+import mx.com.nmp.pagos.mimonte.util.CollectionUtil;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.assertj.core.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -623,6 +635,63 @@ public abstract class MovimientosBuilder {
 			}
 		}
 		return longList;
+	}
+
+
+	/**
+	 * Realiza la agrupacion de montos de los movimientos por sucursal
+	 * @param movimientos
+	 * @param tipoMov
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends IMovTransaccion> List<T> groupMovimientosBySucursal(List<T> movimientos, TipoMovimientoEnum tipoMov) {
+		
+		List<IMovTransaccion> allMovs = new ArrayList<IMovTransaccion>();
+		
+		if (movimientos != null && movimientos.size() > 0) {
+
+			Map<Integer, IMovTransaccion> bySuc = new LinkedHashMap<Integer, IMovTransaccion>();
+			for (IMovTransaccion mov : movimientos) {
+
+				// Solo movimientos de tipo sucursal
+				if (mov.getMovimientoMidas() != null && mov.getMovimientoMidas().getSucursal() != null) {
+					Integer suc = mov.getMovimientoMidas().getSucursal();
+					IMovTransaccion movBySuc = bySuc.get(suc);
+					if (movBySuc == null) {
+						movBySuc = mov;
+						bySuc.put(suc, mov);
+					}
+					else {
+						switch (tipoMov) {
+							case DEVOLUCION:
+								// Se agrega el monto al total
+								MovimientoDevolucion movDev = (MovimientoDevolucion) mov;
+								MovimientoDevolucion movDevBySuc = (MovimientoDevolucion) movBySuc;
+								BigDecimal montoBySuc = movDevBySuc.getMonto() != null ? movDevBySuc.getMonto() : new BigDecimal(0);
+								montoBySuc = montoBySuc.add(movDev.getMonto() != null ? movDev.getMonto() : new BigDecimal(0));
+								movDevBySuc.setMonto(montoBySuc);
+								break;
+							case MIDAS:
+								// Se agrega el monto al total
+								MovimientoMidas movMidas = (MovimientoMidas) mov;
+								MovimientoMidas movMidasBySuc = (MovimientoMidas) movBySuc;
+								BigDecimal montoMidasBySuc = movMidasBySuc.getMonto() != null ? movMidasBySuc.getMonto() : new BigDecimal(0);
+								montoMidasBySuc = montoMidasBySuc.add(movMidas.getMonto() != null ? movMidas.getMonto() : new BigDecimal(0));
+								movMidasBySuc.setMonto(montoMidasBySuc);
+								break;
+						}
+					}
+				}
+				else {
+					allMovs.add(mov);
+				}
+			}
+			
+			// Se agregan todos los movs por sucursal
+			allMovs.addAll(bySuc.values());
+		}
+		return (List<T>) allMovs;
 	}
 
 }

@@ -179,6 +179,11 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 		return MovimientoConciliacionEnum.TRANSITO;
 	}
 
+	@Override
+	public TipoMovimientoEnum getTipoMovimientoBD() {
+		return TipoMovimientoEnum.TRANSITO;
+	}
+
 
 	@Override
 	public int hashCode() {

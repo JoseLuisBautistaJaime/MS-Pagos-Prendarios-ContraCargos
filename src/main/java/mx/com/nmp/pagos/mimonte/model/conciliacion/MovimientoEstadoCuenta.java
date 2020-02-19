@@ -204,6 +204,12 @@ public class MovimientoEstadoCuenta implements Comparable<MovimientoEstadoCuenta
 	}
 
 	@Override
+	public TipoMovimientoEnum getTipoMovimientoBD() {
+		return TipoMovimientoEnum.ESTADO_CUENTA;
+	}
+
+	
+	@Override
 	public String toString() {
 		return "MovimientoEstadoCuenta [id=" + id + ", idEstadoCuenta=" + idEstadoCuenta + ", clavePais=" + clavePais
 				+ ", sucursal=" + sucursal + ", fechaOperacion=" + fechaOperacion + ", fechaValor=" + fechaValor

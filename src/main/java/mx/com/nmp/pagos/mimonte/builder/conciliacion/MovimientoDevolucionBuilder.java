@@ -118,7 +118,7 @@ public abstract class MovimientoDevolucionBuilder {
 		movimientoDevolucion.setLastModifiedBy(null);
 		movimientoDevolucion.setLastModifiedDate(null);
 		movimientoDevolucion.setNuevo(false);
-		movimientoDevolucion.setEstatus(new EstatusDevolucion(ConciliacionConstants.ESTATUS_DEVOLUCION_PENDIENTE));
+		movimientoDevolucion.setEstatus(new EstatusDevolucion(ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA));
 		movimientoDevolucion.setFecha(movEstadoCuenta.getFechaOperacion());
 		movimientoDevolucion.setMonto(movEstadoCuenta.getImporte());
 		movimientoDevolucion.setEsquemaTarjeta(""); // TODO: Estado de cuenta no cuenta con esquema

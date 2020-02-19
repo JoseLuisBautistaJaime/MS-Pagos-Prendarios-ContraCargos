@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.LayoutsBuilder;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutHeaderCatalogRepository;
@@ -65,6 +66,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 
 /**
@@ -485,7 +487,7 @@ public class LayoutsService {
 			try {
 				// INSERTA EL LAYOUT, HEADER Y LINEAS
 				for (Layout layout : layouts) {
-					KeyHolder keyHolder = new GeneratedKeyHolder();
+					/*KeyHolder keyHolder = new GeneratedKeyHolder();
 					long layoutId;
 
 					// Inserta el layout si es nuevo
@@ -505,10 +507,10 @@ public class LayoutsService {
 					}
 					else {
 						layoutId = layout.getId();
-					}
+					}*/
 
 					// Setea el id de layout a el header
-					layout.getLayoutHeader().setLayout(new Layout(layoutId));
+					layout.getLayoutHeader().setLayout(layout);
 
 
 					// Setea el id de layout a las lineas en una nueva lista
@@ -970,8 +972,15 @@ public class LayoutsService {
 
 			break;
 		case DEVOLUCIONES:
-			movimientos.addAll(movimientoConciliacionRepository.findMovimientoDevolucionByConciliacionIdAndStatus(
-					idConciliacion, ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA));
+			// Movimientos devoluciones sucursal
+			List<MovimientoDevolucion> movimientosDev = movimientoConciliacionRepository
+				.findMovimientoDevolucionByConciliacionIdAndStatus(idConciliacion, ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
+			// Agrupar por sucursal
+			movimientosDev = MovimientosBuilder.groupMovimientosBySucursal(movimientosDev, TipoMovimientoEnum.DEVOLUCION);
+			movimientos.addAll(movimientosDev);
+			// Movimientos devoluciones estado cuenta
+			
+			
 			break;
 		case COMISIONES_MOV: // TipoMovimientoComisionEnum.OPENPAY
 			// movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
@@ -982,6 +991,7 @@ public class LayoutsService {
 		}
 		return movimientos;
 	}
+
 
 	/**
 	 * Obtiene los movimientos midas DS, RF, APL correspondientes

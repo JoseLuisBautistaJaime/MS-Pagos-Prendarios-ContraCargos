@@ -256,6 +256,12 @@ public class MovimientoProveedor implements MovimientoReporte {
 	}
 
 	@Override
+	public TipoMovimientoEnum getTipoMovimientoBD() {
+		return TipoMovimientoEnum.PROVEEDOR;
+	}
+
+
+	@Override
 	public int hashCode() {
 		return Objects.hash(id, idMovimiento, reporte, authorization, operationType, method, transactionType, status,
 				conciliated, creationDate, operationDate, description, errorMessage, orderId, customerId, errorCode,

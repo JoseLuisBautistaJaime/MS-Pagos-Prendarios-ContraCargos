@@ -48,9 +48,9 @@ public class ConciliacionMathUtil {
 		BigDecimal importeMidas = new BigDecimal(0);
 		if (movsMidas != null) {
 			for (MovimientoMidas movMidas : movsMidas) {
-				if (movMidas.getEstatus()) {
+				//if (movMidas.getEstatus()) { // Se consideran todos los movimientos exitosos y erroneos
 					importeMidas = importeMidas.add(movMidas.getMonto());
-				}
+				//}
 			}
 		}
 		return importeMidas;
@@ -93,14 +93,13 @@ public class ConciliacionMathUtil {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
 				if (codigosEdoCuenta.containsClave(movEstadoCuenta.getClaveLeyenda())) {
 					// Monto liquidacion (solo ventas)
-					if (codigosEdoCuenta.containsClaveInCategoria(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_VENTAS, movEstadoCuenta.getClaveLeyenda())/* ||
-						(codigosEdoCuenta.containsClaveInCategoria(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES, movEstadoCuenta.getClaveLeyenda()))*/) {
+					if (codigosEdoCuenta.containsClaveInCategoria(ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_VENTAS, movEstadoCuenta.getClaveLeyenda())) {
 						if (movEstadoCuenta.getTipoMovimiento() != null && movEstadoCuenta.getTipoMovimiento() == ConciliacionConstants.TipoMovimiento.TIPO_ABONO) {
 							montoLiquidacion = montoLiquidacion.add(movEstadoCuenta.getImporte());
 						}
-						else {
-							montoLiquidacion = montoLiquidacion.subtract(movEstadoCuenta.getImporte());
-						}
+						//else {
+						//	montoLiquidacion = montoLiquidacion.subtract(movEstadoCuenta.getImporte());
+						//}
 					}
 				}
 			}

@@ -414,6 +414,6 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @return
 	 */
 	@Query("SELECT c.subEstatus.id FROM Conciliacion c WHERE c.id = :folio")
-	public Long findSubEstatusByFolio(Long folio);
+	public Long findSubEstatusByFolio(@Param("folio") Long folio);
 	
 }

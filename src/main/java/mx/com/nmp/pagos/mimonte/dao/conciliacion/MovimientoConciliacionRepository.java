@@ -4,12 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
-import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

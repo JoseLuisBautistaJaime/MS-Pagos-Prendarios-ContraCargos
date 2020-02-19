@@ -1318,7 +1318,7 @@ MAIN: BEGIN
 		ELSE
 			UPDATE to_movimiento_conciliacion
 			SET
-				id_concilacion = _id_concilacion,
+				id_conciliacion = _id_conciliacion,
 				created_by = _created_by,
 				created_date = _created_date,
 				last_modified_by = _last_modified_by,
@@ -1412,7 +1412,7 @@ MAIN: BEGIN
 		ELSE
 			UPDATE to_movimiento_conciliacion
 			SET
-				id_concilacion = _id_concilacion,
+				id_conciliacion = _id_conciliacion,
 				created_by = _created_by,
 				created_date = _created_date,
 				last_modified_by = _last_modified_by,
@@ -1509,7 +1509,7 @@ MAIN: BEGIN
 		ELSE
 			UPDATE to_movimiento_conciliacion
 			SET
-				id_concilacion = _id_concilacion,
+				id_conciliacion = _id_conciliacion,
 				created_by = _created_by,
 				created_date = _created_date,
 				last_modified_by = _last_modified_by,
