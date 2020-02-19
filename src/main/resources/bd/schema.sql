@@ -1300,14 +1300,14 @@ MAIN: BEGIN
 	DECLARE _id_movimiento_conciliacion INT(11);
 
 	-- En caso de error se hace rollback
-	-- DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	-- BEGIN
-	--	ROLLBACK;
-	--	RESIGNAL;
-	-- END;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	 BEGIN
+		ROLLBACK;
+		RESIGNAL;
+	 END;
 
 
-	-- START TRANSACTION;
+	START TRANSACTION;
 
 		-- Inserta/actualiza el movimiento conciliacion y regresa el id
 		IF (_id IS NULL) THEN
@@ -1348,7 +1348,7 @@ MAIN: BEGIN
 				id = _id_movimiento_conciliacion;
 		END IF;
 
-	-- COMMIT;
+	COMMIT;
 
 	-- RETURN _id_movimiento_conciliacion;
 
@@ -1395,13 +1395,13 @@ MAIN: BEGIN
 	DECLARE _id_movimiento_conciliacion INT(11);
 
 	-- En caso de error se hace rollback
-	-- DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	-- BEGIN
-	--	ROLLBACK;
-	--	RESIGNAL;
-	-- END;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		RESIGNAL;
+	END;
 
-	-- START TRANSACTION;
+	START TRANSACTION;
 	
 		-- Inserta/actualiza el movimiento conciliacion y regresa el id
 		IF (_id IS NULL) THEN
@@ -1427,7 +1427,7 @@ MAIN: BEGIN
 		-- Inserta/Actualiza el movimiento devolucion
 		IF (_id IS NULL OR _id <= 0) THEN
 			INSERT INTO to_movimiento_devolucion(id, estatus, fecha, monto, esquema_tarjeta, identificador_cuenta, titular, codigo_autorizacion, sucursal, fecha_liquidacion)
-			VALUES(_id_movimiento_conciliacion, _estatus, _fecha, _monto, _esquema_tarjeta, _identificador_cuenta, _titular, _codigo_autorizacion, _sucursal, fecha_liquidacion);
+			VALUES(_id_movimiento_conciliacion, _estatus, _fecha, _monto, _esquema_tarjeta, _identificador_cuenta, _titular, _codigo_autorizacion, _sucursal, _fecha_liquidacion);
 		ELSE
 			UPDATE to_movimiento_devolucion
 			SET
@@ -1444,7 +1444,7 @@ MAIN: BEGIN
 				id = _id_movimiento_conciliacion;
 		END IF;
 
-	-- COMMIT;
+	COMMIT;
 	
 	-- RETURN _id_movimiento_conciliacion;
 
@@ -1492,13 +1492,13 @@ MAIN: BEGIN
 	DECLARE _id_movimiento_conciliacion INT(11);
 
 	-- En caso de error se hace rollback
-	-- DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	-- BEGIN
-	-- 	ROLLBACK;
-	-- 	RESIGNAL;
-	-- END;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+		RESIGNAL;
+	END;
 
-	-- START TRANSACTION;
+	START TRANSACTION;
 
 		-- Inserta/actualiza el movimiento conciliacion y regresa el id
 		IF (_id IS NULL) THEN
@@ -1524,7 +1524,7 @@ MAIN: BEGIN
 		-- Inserta/Actualiza el movimiento transito
 		IF (_id IS NULL OR _id <= 0) THEN
 			INSERT INTO to_movimiento_transito(id, estatus, folio, sucursal, fecha, operacion_desc, monto, tipo_contrato_desc, esquema_tarjeta, cuenta, titular, num_autorizacion)
-			VALUES(_id_movimiento_conciliacion, _estatus, _folio, _sucursal, _fecha, _operacion_desc, _monto, _tipo_contrato_desc, _esquema_tarjeta, cuenta, _titular, _num_autorizacion);
+			VALUES(_id_movimiento_conciliacion, _estatus, _folio, _sucursal, _fecha, _operacion_desc, _monto, _tipo_contrato_desc, _esquema_tarjeta, _cuenta, _titular, _num_autorizacion);
 		ELSE
 			UPDATE to_movimiento_transito
 			SET
@@ -1543,7 +1543,7 @@ MAIN: BEGIN
 				id = _id_movimiento_conciliacion;
 		END IF;
 
-	-- COMMIT;
+	COMMIT;
 
 	-- RETURN _id_movimiento_conciliacion;
 
