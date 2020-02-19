@@ -16,6 +16,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * @name MovimientosMidasRepository
@@ -54,10 +55,11 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param pageable
 	 * @return
 	 */
-	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
+	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus AND r.id = (SELECT MAX(rr.id) FROM Reporte rr WHERE rr.conciliacion.id = :conciliacionId AND rr.tipo = :tipoReporte)")
 	public List<MovimientoMidas> findByReporteConciliacionIdAndEstatus(
 			@Param("conciliacionId") final Long conciliacionId,
-			@Param("estatus") final Boolean estatus/* , Pageable pageable */);
+			@Param("estatus") final Boolean estatus,
+			@Param("tipoReporte") TipoReporteEnum tipoReporte/* , Pageable pageable */);
 
 	/**
 	 * Regresa una lista de entities de tipo MovimientoMidas por id de conciliacion
@@ -65,8 +67,8 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param conciliacionId
 	 * @return
 	 */
-	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId);
+	@Query("SELECT mm FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND r.id = (SELECT MAX(rr.id) FROM Reporte rr WHERE rr.conciliacion.id = :conciliacionId AND rr.tipo = :tipoReporte)")
+	public List<MovimientoMidas> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId, @Param("tipoReporte") TipoReporteEnum tipoReporte);
 
 	/**
 	 * Regresa el total de registros movimientos midas por id de conciliacion y
@@ -75,9 +77,9 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param conciliacionId
 	 * @return
 	 */
-	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus")
+	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mm.estatus = :estatus AND r.id = (SELECT MAX(rr.id) FROM Reporte rr WHERE rr.conciliacion.id = :conciliacionId AND rr.tipo = :tipoReporte)")
 	public Long countByReporteConciliacionIdAndEstatus(@Param("conciliacionId") final Long conciliacionId,
-			@Param("estatus") final Boolean estatus);
+			@Param("estatus") final Boolean estatus, @Param("tipoReporte") TipoReporteEnum tipoReporte);
 
 	/**
 	 * Regresa el total de registros movimientos midas por id de conciliacion
@@ -85,8 +87,8 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param conciliacionId
 	 * @return
 	 */
-	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId);
+	@Query("SELECT COUNT(mm.id) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND r.id = (SELECT MAX(rr.id) FROM Reporte rr WHERE rr.conciliacion.id = :conciliacionId AND rr.tipo = :tipoReporte)")
+	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId, @Param("tipoReporte") TipoReporteEnum tipoReporte);
 
 	/**
 	 * Regresa un reporte de movimientos de pagos en linea (midas)

@@ -13,6 +13,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 
 /**
@@ -72,7 +73,7 @@ public abstract class ConciliacionProcessorChain {
 		List<MovimientoProveedor> movimientosProveedor = null;
 		try {
 			movimientosProveedor = this.mergeReporteHandler.getMovimientoProveedorRepository()
-					.findByReporteConciliacionId(idConciliacion);
+					.findByReporteConciliacionId(idConciliacion, TipoReporteEnum.PROVEEDOR);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ConciliacionException("Error al consultar movimientos proveedor",

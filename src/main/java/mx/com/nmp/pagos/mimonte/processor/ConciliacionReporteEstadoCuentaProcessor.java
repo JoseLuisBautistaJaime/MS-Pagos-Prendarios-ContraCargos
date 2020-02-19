@@ -7,11 +7,9 @@ package mx.com.nmp.pagos.mimonte.processor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoComisionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
@@ -89,17 +87,17 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 				for (MovimientoComision movComision : movsComisiones) {
 
 					// Se verifica si ya existe
-					MovimientoComision movComisionBD = this.mergeReporteHandler.getMovimientoComisionRepository()
-							.findByIdMovimientoEstadoCuenta(movComision.getIdMovimientoEstadoCuenta());
-					if (movComisionBD != null) { // Update last modified
-						movComision = movComisionBD;
-						movComision.setLastModifiedBy(ConciliacionConstants.USER_SYSTEM);
-						movComision.setLastModifiedDate(new Date());
-					} else { // Crear nueva
+					//MovimientoComision movComisionBD = this.mergeReporteHandler.getMovimientoComisionRepository()
+					//		.findByIdMovimientoEstadoCuenta(movComision.getIdMovimientoEstadoCuenta());
+					//if (movComisionBD != null) { // Update last modified
+					//	movComision = movComisionBD;
+					//	movComision.setLastModifiedBy(ConciliacionConstants.USER_SYSTEM);
+					//	movComision.setLastModifiedDate(new Date());
+					//} else { // Crear nueva
 						movComision.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
 						movComision.setCreatedDate(new Date());
 						movComision.setIdConciliacion(reportesWrapper.getIdConciliacion());
-					}
+					//}
 					
 					movimientosComisionSave.add(movComision);
 				}
@@ -140,7 +138,7 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 		if (CollectionUtils.isNotEmpty(movsEstadoCuenta)) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
 				MovimientoComision movComision = MovimientoComisionBuilder
-						.buildMovComisionFromMovEstadoCuenta(movEstadoCuenta, TipoMovimientoComisionEnum.COMISION);
+						.buildMovComisionFromMovEstadoCuenta(movEstadoCuenta, idConciliacion, TipoMovimientoComisionEnum.COMISION);
 				movsComision.add(movComision);
 			}
 		}
@@ -151,7 +149,7 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 		if (CollectionUtils.isNotEmpty(movsEstadoCuenta)) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
 				MovimientoComision movComision = MovimientoComisionBuilder
-						.buildMovComisionFromMovEstadoCuenta(movEstadoCuenta, TipoMovimientoComisionEnum.IVA_COMISION);
+						.buildMovComisionFromMovEstadoCuenta(movEstadoCuenta, idConciliacion, TipoMovimientoComisionEnum.IVA_COMISION);
 				movsComision.add(movComision);
 			}
 		}
@@ -177,9 +175,9 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 		if (CollectionUtils.isNotEmpty(movsEstadoCuenta)) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
 				EstadoCuentaCabecera cabecera = getEstadoCuentaCabecera(movEstadoCuenta.getIdEstadoCuenta());
-				MovimientoDevolucion movComision = MovimientoDevolucionBuilder
+				MovimientoDevolucion movDevolucion = MovimientoDevolucionBuilder
 						.buildMovimientoFromMovEstadoCuenta(movEstadoCuenta, idConciliacion, null, cabecera);
-				movsDevolucion.add(movComision);
+				movsDevolucion.add(movDevolucion);
 			}
 		}
 

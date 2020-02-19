@@ -79,6 +79,11 @@ public class MovimientoPago extends MovimientoConciliacion implements Comparable
 		return MovimientoConciliacionEnum.PAGOS;
 	}
 
+	@Override
+	public TipoMovimientoEnum getTipoMovimientoBD() {
+		return TipoMovimientoEnum.PAGO;
+	}
+
 
 
 	@Override

@@ -6,4 +6,5 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  */
 public interface IMovTransaccion {
 	public MovimientoMidas getMovimientoMidas();
+	public TipoMovimientoEnum getTipoMovimientoBD();
 }

@@ -36,6 +36,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * @name MovimientosProveedorService
@@ -98,7 +99,7 @@ public class MovimientosProveedorService {
 	 * @return
 	 */
 	public Long countByConciliacionId(final Long idConciliacion) {
-		return movimientoProveedorRepository.countByReporteConciliacionId(idConciliacion);
+		return movimientoProveedorRepository.countByReporteConciliacionId(idConciliacion, TipoReporteEnum.PROVEEDOR);
 	}
 
 
@@ -211,7 +212,7 @@ public class MovimientosProveedorService {
 	 */
 	public List<MovimientoProveedorDTO> findByFolio(final CommonConciliacionRequestDTO commonConciliacionRequestDTO) {
 		return MovimientosBuilder.buildMovimientoProveedorDTOListFromMovimientoProveedorList(
-				movimientoProveedorRepository.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()));
+				movimientoProveedorRepository.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio(), TipoReporteEnum.PROVEEDOR));
 	}
 
 }

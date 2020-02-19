@@ -109,16 +109,18 @@ public class MovimientoJdbcRepositoryImpl implements MovimientoJdbcRepository {
 				SqlParameterSource[] paramSourceList = bulkInsert.buildBatchValues();
 				
 				LOGGER.info(">> Agregando registros y valores al batch...");
-				CallableStatement callableStatement = jdbcTemplate.getDataSource().getConnection().prepareCall(querySps.get(0));
-				for (SqlParameterSource paramSource : paramSourceList) {
-					int index = 1;
-					for (String paramName : paramSource.getParameterNames()) {
-						callableStatement.setObject(index++, paramSource.getValue(paramName), paramSource.getSqlType(paramName));
+				int[] res = null;
+				try (CallableStatement callableStatement = jdbcTemplate.getDataSource().getConnection().prepareCall(querySps.get(0))) {
+					for (SqlParameterSource paramSource : paramSourceList) {
+						int index = 1;
+						for (String paramName : paramSource.getParameterNames()) {
+							callableStatement.setObject(index++, paramSource.getValue(paramName), paramSource.getSqlType(paramName));
+						}
+						callableStatement.addBatch();
 					}
-					callableStatement.addBatch();
+					LOGGER.info(">> Insertando {} registros", batchList.size());
+					res = callableStatement.executeBatch();
 				}
-				LOGGER.info(">> Insertando {} registros", batchList.size());
-				int[] res = callableStatement.executeBatch();
 				LOGGER.info("Resultado: " + (res != null && res.length > 0 ? res[0] : ""));
 				batchList.clear();
 			}

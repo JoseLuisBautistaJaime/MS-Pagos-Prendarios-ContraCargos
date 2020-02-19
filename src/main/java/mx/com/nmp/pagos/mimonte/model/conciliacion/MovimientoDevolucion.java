@@ -167,6 +167,11 @@ public class MovimientoDevolucion extends MovimientoConciliacion implements Seri
 		return MovimientoConciliacionEnum.DEVOLUCIONES;
 	}
 
+	@Override
+	public TipoMovimientoEnum getTipoMovimientoBD() {
+		return TipoMovimientoEnum.DEVOLUCION;
+	}
+
 
 	@Override
 	public int hashCode() {

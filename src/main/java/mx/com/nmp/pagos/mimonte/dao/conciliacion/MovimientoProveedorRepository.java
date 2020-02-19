@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * @name MovimientoProveedorRepository
@@ -31,8 +32,8 @@ public interface MovimientoProveedorRepository extends PagingAndSortingRepositor
 	 * @param pageable
 	 * @return
 	 */
-	@Query("SELECT mp FROM MovimientoProveedor mp INNER JOIN Reporte r ON mp.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public List<MovimientoProveedor> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId
+	@Query("SELECT mp FROM MovimientoProveedor mp INNER JOIN Reporte r ON mp.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND r.id = (SELECT MAX(rr.id) FROM Reporte rr WHERE rr.conciliacion.id = :conciliacionId  AND rr.tipo = :tipoReporte)")
+	public List<MovimientoProveedor> findByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId, @Param("tipoReporte") TipoReporteEnum tipoReporte
 			/*,Pageable pageable*/);
 
 	/**
@@ -41,8 +42,8 @@ public interface MovimientoProveedorRepository extends PagingAndSortingRepositor
 	 * @param conciliacionId
 	 * @return
 	 */
-	@Query("SELECT COUNT(mp.id) FROM MovimientoProveedor mp INNER JOIN Reporte r ON mp.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId")
-	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId);
+	@Query("SELECT COUNT(mp.id) FROM MovimientoProveedor mp INNER JOIN Reporte r ON mp.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND r.id = (SELECT MAX(rr.id) FROM Reporte rr WHERE rr.conciliacion.id = :conciliacionId AND rr.tipo = :tipoReporte)")
+	public Long countByReporteConciliacionId(@Param("conciliacionId") final Long conciliacionId, @Param("tipoReporte") TipoReporteEnum tipoReporte);
 
 	/**
 	 * Regresa los movimientos proveedor por id de reporte

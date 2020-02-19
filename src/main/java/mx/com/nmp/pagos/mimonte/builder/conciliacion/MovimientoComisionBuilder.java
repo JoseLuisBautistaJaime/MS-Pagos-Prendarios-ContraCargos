@@ -69,10 +69,11 @@ public abstract class MovimientoComisionBuilder {
 	/**
 	 * Se construye movimiento comisiones a partir de la entidad estado de cuenta
 	 * @param movEstadoCuenta
+	 * @param idConciliacion
 	 * @param tipoComision
 	 * @return
 	 */
-	public static MovimientoComision buildMovComisionFromMovEstadoCuenta(MovimientoEstadoCuenta movEstadoCuenta, TipoMovimientoComisionEnum tipoComision) {
+	public static MovimientoComision buildMovComisionFromMovEstadoCuenta(MovimientoEstadoCuenta movEstadoCuenta, Long idConciliacion, TipoMovimientoComisionEnum tipoComision) {
 		MovimientoComision movComision = new MovimientoComision();
 		movComision.setDescripcion(movEstadoCuenta.getConcepto());
 		movComision.setEstatus(true);
@@ -82,6 +83,7 @@ public abstract class MovimientoComisionBuilder {
 		movComision.setMonto(movEstadoCuenta.getImporte());
 		movComision.setNuevo(false);
 		movComision.setTipoComision(tipoComision);
+		movComision.setIdConciliacion(idConciliacion);
 		return movComision;
 	}
 

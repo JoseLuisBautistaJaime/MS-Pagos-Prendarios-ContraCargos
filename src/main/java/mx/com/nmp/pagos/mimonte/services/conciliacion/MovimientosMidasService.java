@@ -21,6 +21,7 @@ import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.constans.TipoError;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
@@ -102,9 +103,9 @@ public class MovimientosMidasService {
 	public Long countByConciliacionId(final Long idConciliacion, final Boolean estatus) {
 		LOG.debug("countByConciliacionId {}, {}", idConciliacion, estatus);
 		if (null != estatus)
-			return movimientosMidasRepository.countByReporteConciliacionIdAndEstatus(idConciliacion, estatus);
+			return movimientosMidasRepository.countByReporteConciliacionIdAndEstatus(idConciliacion, estatus, TipoReporteEnum.MIDAS);
 		else
-			return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion);
+			return movimientosMidasRepository.countByReporteConciliacionId(idConciliacion, TipoReporteEnum.MIDAS);
 	}
 
 
@@ -123,9 +124,9 @@ public class MovimientosMidasService {
 				.buildMovimientoMidasDTOListFromMovimientoMidasList(null != commonConciliacionRequestDTO.getEstatus()
 						? movimientosMidasRepository
 								.findByReporteConciliacionIdAndEstatus(commonConciliacionRequestDTO.getFolio(),
-										commonConciliacionRequestDTO.getEstatus()/* , pageable */)
+										commonConciliacionRequestDTO.getEstatus(), TipoReporteEnum.MIDAS/* , pageable */)
 						: movimientosMidasRepository
-								.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio()));
+								.findByReporteConciliacionId(commonConciliacionRequestDTO.getFolio(), TipoReporteEnum.MIDAS));
 	}
 
 	/**

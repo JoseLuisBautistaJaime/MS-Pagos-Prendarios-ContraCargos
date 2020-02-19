@@ -132,6 +132,11 @@ public class MovimientoComision extends MovimientoConciliacion implements Serial
 		return MovimientoConciliacionEnum.COMISIONES;
 	}
 
+	@Override
+	public TipoMovimientoEnum getTipoMovimientoBD() {
+		return TipoMovimientoEnum.COMISION;
+	}
+
 
 	@Override
 	public int hashCode() {
