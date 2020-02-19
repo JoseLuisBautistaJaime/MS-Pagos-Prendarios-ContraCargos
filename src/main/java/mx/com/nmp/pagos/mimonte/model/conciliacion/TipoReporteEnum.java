@@ -9,4 +9,5 @@ public enum TipoReporteEnum  {
 	MIDAS,
 	PROVEEDOR,
 	ESTADO_CUENTA
+
 }
