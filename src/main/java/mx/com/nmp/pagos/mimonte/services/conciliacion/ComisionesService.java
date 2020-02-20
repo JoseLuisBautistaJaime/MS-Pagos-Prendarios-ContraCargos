@@ -495,7 +495,7 @@ public class ComisionesService {
 		movimiento.setOperacion(operacion);
 		movimiento.setTransacciones(transacciones);
 		movimiento.setComision(comision.multiply(BigDecimal.valueOf(transacciones)));
-		movimiento.setIvaComision(comision.multiply(new BigDecimal(iva)));
+		movimiento.setIvaComision(movimiento.getComision().multiply(new BigDecimal(iva)));
 		movimiento.setTotalComision(movimiento.getComision().add(movimiento.getIvaComision()));
 	}
 
