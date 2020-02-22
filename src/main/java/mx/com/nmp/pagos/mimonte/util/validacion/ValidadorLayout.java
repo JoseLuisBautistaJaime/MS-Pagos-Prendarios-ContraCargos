@@ -4,14 +4,14 @@
  */
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.util.StringUtil;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @name ValidadorLayout
@@ -75,14 +75,13 @@ public interface ValidadorLayout {
 	 * @return
 	 */
 	public static boolean validateSaveLayout(LayoutRequestDTO layoutRequestDTO) {
-		return layoutRequestDTO != null
-				&& (layoutRequestDTO.getFolio() != null && layoutRequestDTO.getFolio() > 0L)
+		return layoutRequestDTO != null && (layoutRequestDTO.getFolio() != null && layoutRequestDTO.getFolio() > 0L)
 				&& (layoutRequestDTO.getTipoLayout() != null
-					&& (layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.PAGOS ||
-						layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.COMISIONES_MOV ||
-						layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.COMISIONES_GENERALES ||
-						layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.DEVOLUCIONES))
-				&& validaLineas(layoutRequestDTO.getLineas());
+						&& (layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.PAGOS
+								|| layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.COMISIONES_MOV
+								|| layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.COMISIONES_GENERALES
+								|| layoutRequestDTO.getTipoLayout() == TipoLayoutEnum.DEVOLUCIONES))
+				&& validaLineas(layoutRequestDTO.getLineas(), layoutRequestDTO.getTipoLayout());
 	}
 
 	/**
@@ -100,13 +99,14 @@ public interface ValidadorLayout {
 	 * Valida las líneas de un Layout
 	 * 
 	 * @param layoutLineaDTOs
+	 * @param tipo
 	 * @return
 	 */
-	public static boolean validaLineas(List<LayoutLineaDTO> layoutLineaDTOs) {
+	public static boolean validaLineas(List<LayoutLineaDTO> layoutLineaDTOs, TipoLayoutEnum tipo) {
 		boolean valor = false;
-		if (null != layoutLineaDTOs && layoutLineaDTOs.size() > 0) {
+		if (null != layoutLineaDTOs && !layoutLineaDTOs.isEmpty()) {
 			for (LayoutLineaDTO layoutLineaDTO : layoutLineaDTOs) {
-				if (validar(layoutLineaDTO)) {
+				if (validar(layoutLineaDTO, tipo)) {
 					valor = true;
 				} else {
 					valor = false;
@@ -121,16 +121,37 @@ public interface ValidadorLayout {
 	 * Valida los campos requeridos de LayoutLineaDTO
 	 * 
 	 * @param layoutLineaDTO
+	 * @param tipo
 	 * @return
 	 */
-	public static boolean validar(LayoutLineaDTO layoutLineaDTO) {
-		return layoutLineaDTO != null
-				&& (layoutLineaDTO.getId() != null && layoutLineaDTO.getId() >= 0L)
-				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getCuenta()))
-				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getDepId()))
-				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getLinea()))
-				&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getUnidadOperativa()))
-				&& (layoutLineaDTO.getMonto() != null && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0);
+	public static boolean validar(LayoutLineaDTO layoutLineaDTO, TipoLayoutEnum tipo) {
+		boolean flag = true;
+		switch (tipo) {
+		case PAGOS:
+			flag = layoutLineaDTO != null && (layoutLineaDTO.getId() != null && layoutLineaDTO.getId() >= 0L)
+					&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getLinea()))
+					&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getCuenta()))
+					&& (layoutLineaDTO.getMonto() != null && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0);
+			break;
+		case COMISIONES_GENERALES:
+		case COMISIONES_MOV:
+			flag = layoutLineaDTO != null && (layoutLineaDTO.getId() != null && layoutLineaDTO.getId() >= 0L)
+					&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getLinea()))
+					&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getCuenta()))
+					&& (layoutLineaDTO.getMonto() != null && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0);
+			break;
+		case DEVOLUCIONES:
+			flag = layoutLineaDTO != null && (layoutLineaDTO.getId() != null && layoutLineaDTO.getId() >= 0L)
+					&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getCuenta()))
+					&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getDepId()))
+					&& (StringUtil.isNotNullNorEmpty(layoutLineaDTO.getLinea()))
+					&& (layoutLineaDTO.getMonto() != null && layoutLineaDTO.getMonto().compareTo(BigDecimal.ZERO) != 0);
+			break;
+		default:
+			flag = false;
+			break;
+		}
+		return flag;
 	}
 
 }
