@@ -6,11 +6,15 @@ package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
@@ -21,7 +25,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
-import mx.com.nmp.pagos.mimonte.util.DateUtil;
 
 /**
  * @name LayoutsBuilder
@@ -299,23 +302,61 @@ public abstract class LayoutsBuilder {
 	 * @param layoutHeaderCatalog
 	 * @return
 	 */
-	public static LayoutCabeceraDTO buildLayoutCabeceraDTOFromLayoutHeaderCatalog(
-			LayoutHeaderCatalog layoutHeaderCatalog) {
-
-		LocalDate localDate = LocalDate.now();
-		if (layoutHeaderCatalog.getTipo() == TipoLayoutEnum.PAGOS && localDate.getDayOfWeek().getValue() == 5) {
-			localDate = localDate.plusDays(3);
+	public static LayoutCabeceraDTO buildLayoutCabeceraDTOFromLayoutHeaderCatalog(LayoutHeaderCatalog layoutHeaderCatalog, Date fechaOperacion) {
+		
+		if (fechaOperacion == null) { // No existen operaciones del estado cuenta ?
+			fechaOperacion = new Date();
 		}
+
+		LocalDate localFecha = getFechaHeader(layoutHeaderCatalog.getTipo(), fechaOperacion);
+		String fechaDescripcion = getFechaDescripcionHeader(layoutHeaderCatalog.getTipo(), fechaOperacion);
+
 		LayoutCabeceraDTO layoutHeaderDTO = new LayoutCabeceraDTO();
 		layoutHeaderDTO.setCabecera(layoutHeaderCatalog.getCabecera());
 		layoutHeaderDTO.setCodigoOrigen(layoutHeaderCatalog.getCodigoOrigen());
-		layoutHeaderDTO.setDescripcion(MessageFormat.format(layoutHeaderCatalog.getDescripcion(),
-				DateUtil.formatDate(new Date(), "ddMMyyyy")));
-		layoutHeaderDTO.setFecha(localDate);
+		layoutHeaderDTO.setDescripcion(MessageFormat.format(layoutHeaderCatalog.getDescripcion(), fechaDescripcion));
+		layoutHeaderDTO.setFecha(localFecha);
 		layoutHeaderDTO.setUnidadNegocio(layoutHeaderCatalog.getUnidadNegocio());
 
 		return layoutHeaderDTO;
 	}
+
+
+	/**
+	 * Obtiene la fecha para la description header para el tipo de layout
+	 * @param tipo
+	 * @param fechaConciliacion
+	 * @return
+	 */
+	private static String getFechaDescripcionHeader(TipoLayoutEnum tipo, Date fecha) {
+		Instant instant = Instant.ofEpochMilli(fecha.getTime());
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+		LocalDate localDate = localDateTime.toLocalDate();
+		String fechaDescripcion = localDate.format(DateTimeFormatter.ofPattern("ddMMyyyy"));
+		return fechaDescripcion;
+	}
+
+
+	/**
+	 * Obtiene la fecha del header para el tipo de layout
+	 * @param tipoLayout
+	 * @param fecha
+	 * @return
+	 */
+	private static LocalDate getFechaHeader(TipoLayoutEnum tipoLayout, Date fecha) {
+		Instant instant = Instant.ofEpochMilli(fecha.getTime());
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+		LocalDate localDate = localDateTime.toLocalDate();
+
+		if (tipoLayout == TipoLayoutEnum.PAGOS) {
+			localDate = localDate.plusDays(1); // Dia posterior a la operacion
+			if (localDate.getDayOfWeek() == DayOfWeek.FRIDAY) {
+				localDate =  localDate.plusDays(3); // Fecha de pago (BANCO) correspondiente al día posterior de la operación. (Cuando es viernes el pago seria el lunes)
+			}
+		}
+		return localDate;
+	}
+
 
 	public static void mergeLinea(LayoutLinea lineaBD, LayoutLinea linea, String requestUser) {
 		lineaBD.setLinea(linea.getLinea());
@@ -328,6 +369,7 @@ public abstract class LayoutsBuilder {
 		lineaBD.setLastModifiedBy(requestUser);
 		lineaBD.setLastModifiedDate(new Date());
 	}
+
 
 	/**
 	 * Construye un objeto de tipo LayoutDTO a partir de un objeto de tipo

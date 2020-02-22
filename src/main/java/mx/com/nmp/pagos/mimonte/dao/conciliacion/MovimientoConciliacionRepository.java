@@ -14,6 +14,8 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 
 /**
  * @name MovimientoConciliacionRepository
@@ -52,6 +54,16 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	@Query("from MovimientoComision l  where l.idConciliacion = :idConciliacion")
 	public List<MovimientoComision> findMovimientoComisionByConciliacionId(
 			@Param("idConciliacion") final Long idConciliacion);
+
+	/**
+	 * Regresa una lista de MovimientoComision por folio de conciliacion y tipo
+	 * 
+	 * @param idConciliacion
+	 * @return
+	 */
+	@Query("from MovimientoComision l  where l.idConciliacion = :idConciliacion AND l.tipoComision = :tipo")
+	public List<MovimientoComision> findMovimientoComisionByConciliacionIdAndTipo(
+			@Param("idConciliacion") final Long idConciliacion, @Param("tipo") TipoMovimientoComisionEnum tipo);
 
 	/**
 	 * Regresa una lista de MovimientoDevolucion por folio de conciliacion

@@ -66,6 +66,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 
@@ -592,7 +593,8 @@ public class LayoutsService {
 				if (layoutHeaderBD == null) {
 					if (headerDTO == null) {
 						LayoutHeaderCatalog headerCatalog = getCabeceraCatalog(layoutDTO.getTipoLayout());
-						headerDTO = LayoutsBuilder.buildLayoutCabeceraDTOFromLayoutHeaderCatalog(headerCatalog);
+						Date fechaOperacion = this.estadoCuentaHelper.getFechaOperacionEstadoCuenta(idConciliacion, layoutDTO.getTipoLayout());
+						headerDTO = LayoutsBuilder.buildLayoutCabeceraDTOFromLayoutHeaderCatalog(headerCatalog, fechaOperacion);
 					}
 					layoutHeaderBD = LayoutsBuilder.buildLayoutHeaderFromLayoutCabeceraDTO(headerDTO, layoutDB,
 							requestUser);
@@ -710,17 +712,17 @@ public class LayoutsService {
 			layoutsDTO.add(layoutDTO);
 		}
 
-		// COMISIONES OPEN PAY ??
+		// COMISIONES MOVIMIENTOS SE OBTIENEN DEL ESTADO DE CUENTA
 		layoutDTO = buildLayoutDTO(idConciliacion, TipoLayoutEnum.COMISIONES_MOV);
 		if (layoutDTO != null) {
 			layoutsDTO.add(layoutDTO);
 		}
 
-		// COMISIONES GENERALES
-		layoutDTO = buildLayoutDTO(idConciliacion, TipoLayoutEnum.COMISIONES_GENERALES);
-		if (layoutDTO != null) {
-			layoutsDTO.add(layoutDTO);
-		}
+		// COMISIONES GENERALES: // TODO: NO SE TIENE IDENTIFICADO AUN
+		//layoutDTO = buildLayoutDTO(idConciliacion, TipoLayoutEnum.COMISIONES_GENERALES);
+		//if (layoutDTO != null) {
+		//	layoutsDTO.add(layoutDTO);
+		//}
 
 		return layoutsDTO;
 	}
@@ -742,11 +744,19 @@ public class LayoutsService {
 
 			// Se construyen las lineas
 			List<LayoutLineaDTO> lineasDTO = new ArrayList<LayoutLineaDTO>();
-			if (tipo != TipoLayoutEnum.COMISIONES_GENERALES) {
-				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.SUCURSALES));
+			
+			// Extraer operaciones de Estado cuenta
+			lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.BANCOS));
+
+			// Layout especial : Extraer tambien comisiones IVA al extraer comisiones del estado de cuenta
+			if (tipo == TipoLayoutEnum.COMISIONES_MOV) {
+				movimientos = obtenerMovimientosConciliacion(idConciliacion, TipoLayoutEnum.COMISIONES_IVA);
+				lineasDTO.addAll(buildLineasDTO(movimientos, TipoLayoutEnum.COMISIONES_IVA, GrupoLayoutEnum.BANCOS));
 			}
-			if (tipo != TipoLayoutEnum.COMISIONES_MOV) {
-				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.BANCOS));
+
+			// Extraer operaciones de sucursales
+			if (tipo != TipoLayoutEnum.COMISIONES_MOV && tipo != TipoLayoutEnum.COMISIONES_IVA) { // TODO: Remover IF cuando se defina prorateo para comisiones de sucursales
+				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.SUCURSALES));
 			}
 
 			// Se genera la cabecera correspondiente
@@ -777,7 +787,8 @@ public class LayoutsService {
 		LayoutHeaderCatalog layoutHeaderCatalog = getCabeceraCatalog(tipoLayout);
 
 		// Se construye la cabecera
-		LayoutCabeceraDTO cabecera = LayoutsBuilder.buildLayoutCabeceraDTOFromLayoutHeaderCatalog(layoutHeaderCatalog);
+		Date fechaOperacion = this.estadoCuentaHelper.getFechaOperacionEstadoCuenta(idConciliacion, tipoLayout);
+		LayoutCabeceraDTO cabecera = LayoutsBuilder.buildLayoutCabeceraDTOFromLayoutHeaderCatalog(layoutHeaderCatalog, fechaOperacion);
 		return cabecera;
 	}
 
@@ -877,6 +888,7 @@ public class LayoutsService {
 				break;
 			case COMISIONES_GENERALES:
 			case COMISIONES_MOV:
+			case COMISIONES_IVA:
 				monto = ((MovimientoComision) movimiento).getMonto();
 				//cantidad total por sucursal positivo
 				//cantidad extraída del estado de cuenta cuando la leyenda sea comisiones. Valores serán colocaos en negativo
@@ -920,6 +932,7 @@ public class LayoutsService {
 				break;
 			case COMISIONES_MOV:
 			case COMISIONES_GENERALES:
+			case COMISIONES_IVA:
 				MovimientoComision movimientoComision = (MovimientoComision) movimiento;
 				if (movimientoComision.getMovimientoMidas() != null
 						&& movimientoComision.getMovimientoMidas().getSucursal() != null) {
@@ -940,54 +953,55 @@ public class LayoutsService {
 	 * @return
 	 */
 	private List<IMovTransaccion> obtenerMovimientosConciliacion(Long idConciliacion, TipoLayoutEnum tipo) {
+
 		List<IMovTransaccion> movimientos = new ArrayList<IMovTransaccion>();
-		List<MovimientoPago> movimientoPagoList = null;
-		List<Integer> idsList = null;
-		Map<Integer, Integer> movimientosPagosSucursalesMap = null;
-		List<Object[]> result = null;
+
 		switch (tipo) {
-		case PAGOS:
-			// Se obtienen los movimientos de pagos
-			movimientoPagoList = movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion);
-			// Lo siguiente es para setear de manera manual los ids de sucursal a cada
-			// movimiento ya que la consulta no trae esa informacion
-			if(null != movimientoPagoList && !movimientoPagoList.isEmpty()) {
-				idsList = new ArrayList<>();
-				for (MovimientoPago movimientoPago : movimientoPagoList) {
-					idsList.add(movimientoPago.getId());
+			case PAGOS:
+				// Se obtienen los movimientos de pagos // Remover esta consulta
+				List<MovimientoPago> movimientoPagoList = movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion);
+				// Lo siguiente es para setear de manera manual los ids de sucursal a cada
+				// movimiento ya que la consulta no trae esa informacion
+				if(null != movimientoPagoList && !movimientoPagoList.isEmpty()) {
+					List<Integer> idsList = new ArrayList<>();
+					for (MovimientoPago movimientoPago : movimientoPagoList) {
+						idsList.add(movimientoPago.getId());
+					}
+					List<Object[]> result = movimientoConciliacionRepository.getMapSucursalesByMovimientoConciliacionIds(idsList);
+					Map<Integer, Integer> movimientosPagosSucursalesMap = getMapValues(result);
+					for (MovimientoPago movimientoPago : movimientoPagoList) {
+						movimientoPago.getMovimientoMidas()
+								.setSucursal((movimientosPagosSucursalesMap.get(movimientoPago.getId())));
+					}
+					movimientos.addAll(movimientoPagoList);
 				}
-				result = movimientoConciliacionRepository.getMapSucursalesByMovimientoConciliacionIds(idsList);
-				movimientosPagosSucursalesMap = getMapValues(result);
-				for (MovimientoPago movimientoPago : movimientoPagoList) {
-					movimientoPago.getMovimientoMidas()
-							.setSucursal((movimientosPagosSucursalesMap.get(movimientoPago.getId())));
-				}
-				movimientos.addAll(movimientoPagoList);
-			}
-			// Se obtienen los movimientos de pagos midas
-			movimientos.addAll(obtenerMovimientosMidasPagos(idConciliacion, tipo));
-
-			// Se obtienen los movimientos de pagos estado de cuenta
-			movimientos.addAll(obtenerMovimientosEstadoCuentaPagos(idConciliacion, tipo));
-
-			break;
-		case DEVOLUCIONES:
-			// Movimientos devoluciones sucursal
-			List<MovimientoDevolucion> movimientosDev = movimientoConciliacionRepository
-				.findMovimientoDevolucionByConciliacionIdAndStatus(idConciliacion, ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
-			// Agrupar por sucursal
-			movimientosDev = MovimientosBuilder.groupMovimientosBySucursal(movimientosDev, TipoMovimientoEnum.DEVOLUCION);
-			movimientos.addAll(movimientosDev);
-			// Movimientos devoluciones estado cuenta
-			
-			
-			break;
-		case COMISIONES_MOV: // TipoMovimientoComisionEnum.OPENPAY
-			// movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
-			break;
-		case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.IVA_COMISION
-			movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
-			break;
+				// Se obtienen los movimientos de pagos midas // MOVIMIENTOS SUCURSAL
+				movimientos.addAll(obtenerMovimientosMidasPagos(idConciliacion, tipo));
+	
+				// Se obtienen los movimientos de pagos estado de cuenta // MOVIMIENTOS BANCO
+				movimientos.addAll(obtenerMovimientosEstadoCuentaPagos(idConciliacion, tipo));
+	
+				break;
+			case DEVOLUCIONES:
+				// Movimientos devoluciones sucursal y banco en la misma consulta
+				List<MovimientoDevolucion> movimientosDev = movimientoConciliacionRepository
+					.findMovimientoDevolucionByConciliacionIdAndStatus(idConciliacion, ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
+				// Agrupar por sucursal
+				movimientosDev = MovimientosBuilder.groupMovimientosBySucursal(movimientosDev, TipoMovimientoEnum.DEVOLUCION);
+				movimientos.addAll(movimientosDev);
+				// Movimientos devoluciones estado cuenta
+	
+				break;
+			case COMISIONES_MOV:
+				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionIdAndTipo(idConciliacion, TipoMovimientoComisionEnum.COMISION));
+				break;
+			case COMISIONES_IVA:
+				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionIdAndTipo(idConciliacion, TipoMovimientoComisionEnum.IVA_COMISION));
+				break;
+			//TODO: No identificados aun
+			//case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.GENERALES
+				//movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionIdAndTipo(idConciliacion, TipoMovimientoComisionEnum.GENERAL));
+				//break;
 		}
 		return movimientos;
 	}

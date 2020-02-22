@@ -76,7 +76,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param estatusId
 	 * @return
 	 */
-	@Query("SELECT COUNT(md.id) AS countId FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON md.id = mc.id WHERE mc.createdDate BETWEEN :fechaDesde AND :fechaHasta AND md.estatus.id = :estatusId")
+	@Query("SELECT COUNT(md.id) AS countId FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON md.id = mc.id WHERE md.fecha BETWEEN :fechaDesde AND :fechaHasta AND md.estatus.id = :estatusId")
 	public Map<String, Object> findDataByFechas(@Param("fechaDesde") final Date fechaDesde,
 			@Param("fechaHasta") final Date fechaHasta, @Param("estatusId") final Integer estatusId);
 
@@ -86,11 +86,12 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * 
 	 * @param tipoComisionPago
 	 * @param tipoComisionIva
+	 * @param idConciliacion
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT comision, iva FROM (SELECT SUM(mc.monto) AS comision FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.tipo = :tipoComisionPago  AND mcon.nuevo = 0) comision, (SELECT SUM(mc.monto) AS iva FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.tipo = :tipoComisionIva  AND mcon.nuevo = 0) iva")
+	@Query(nativeQuery = true, value = "SELECT comision, iva FROM (SELECT SUM(mc.monto) AS comision FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.tipo = :tipoComisionPago  AND mcon.nuevo = 0 AND mcon.id_conciliacion = :idConciliacion) comision, (SELECT SUM(mc.monto) AS iva FROM to_movimiento_comision mc INNER JOIN to_movimiento_conciliacion mcon ON mc.id = mcon.id WHERE mc.tipo = :tipoComisionIva  AND mcon.nuevo = 0 AND mcon.id_conciliacion = :idConciliacion) iva")
 	public Map<String, BigDecimal> findMovimientosSum(@Param("tipoComisionPago") final String tipoComisionPago,
-			@Param("tipoComisionIva") final String tipoComisionIva);
+			@Param("tipoComisionIva") final String tipoComisionIva, @Param("idConciliacion") Long idConciliacion);
 
 	/**
 	 * Rehresa las comisiones por tipo de operacion (COMISION E IVA_COMISION)

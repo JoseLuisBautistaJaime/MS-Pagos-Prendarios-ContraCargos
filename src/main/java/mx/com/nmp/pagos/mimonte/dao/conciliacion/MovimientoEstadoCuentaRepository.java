@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -71,5 +72,13 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	 */
 	@Query("SELECT mm FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte INNER JOIN r.conciliacion con WHERE con.id = :idConciliacion")
 	public List<MovimientoEstadoCuenta> findByConciliacion(@Param("idConciliacion") final Long idConciliacion);
+
+	/**
+	 * Obtiene los movimientos de estado de cuenta asignados a una conciliacion
+	 * @param idConciliacion
+	 * @return
+	 */
+	@Query("SELECT MAX(mm.fechaOperacion) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte INNER JOIN r.conciliacion con WHERE con.id = :idConciliacion")
+	public Date findFechaOperacionByConciliacion(@Param("idConciliacion") final Long idConciliacion);
 
 }
