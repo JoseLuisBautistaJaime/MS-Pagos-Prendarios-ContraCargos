@@ -66,6 +66,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
 
@@ -743,10 +744,18 @@ public class LayoutsService {
 
 			// Se construyen las lineas
 			List<LayoutLineaDTO> lineasDTO = new ArrayList<LayoutLineaDTO>();
-			if (tipo != TipoLayoutEnum.COMISIONES_GENERALES) {
-				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.BANCOS));
+			
+			// Extraer operaciones de Estado cuenta
+			lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.BANCOS));
+
+			// Layout especial : Extraer tambien comisiones IVA al extraer comisiones del estado de cuenta
+			if (tipo == TipoLayoutEnum.COMISIONES_MOV) {
+				movimientos = obtenerMovimientosConciliacion(idConciliacion, TipoLayoutEnum.COMISIONES_IVA);
+				lineasDTO.addAll(buildLineasDTO(movimientos, TipoLayoutEnum.COMISIONES_IVA, GrupoLayoutEnum.BANCOS));
 			}
-			if (tipo != TipoLayoutEnum.COMISIONES_MOV) {
+
+			// Extraer operaciones de sucursales
+			if (tipo != TipoLayoutEnum.COMISIONES_MOV && tipo != TipoLayoutEnum.COMISIONES_IVA) { // TODO: Remover IF cuando se defina prorateo para comisiones de sucursales
 				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.SUCURSALES));
 			}
 
@@ -879,6 +888,7 @@ public class LayoutsService {
 				break;
 			case COMISIONES_GENERALES:
 			case COMISIONES_MOV:
+			case COMISIONES_IVA:
 				monto = ((MovimientoComision) movimiento).getMonto();
 				//cantidad total por sucursal positivo
 				//cantidad extraída del estado de cuenta cuando la leyenda sea comisiones. Valores serán colocaos en negativo
@@ -922,6 +932,7 @@ public class LayoutsService {
 				break;
 			case COMISIONES_MOV:
 			case COMISIONES_GENERALES:
+			case COMISIONES_IVA:
 				MovimientoComision movimientoComision = (MovimientoComision) movimiento;
 				if (movimientoComision.getMovimientoMidas() != null
 						&& movimientoComision.getMovimientoMidas().getSucursal() != null) {
@@ -981,13 +992,16 @@ public class LayoutsService {
 				// Movimientos devoluciones estado cuenta
 	
 				break;
-			case COMISIONES_MOV: // TipoMovimientoComisionEnum.OPENPAY
-				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
+			case COMISIONES_MOV:
+				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionIdAndTipo(idConciliacion, TipoMovimientoComisionEnum.COMISION));
 				break;
-			// TODO: NO IDENTIFICADOS AUN
-			//case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.IVA_COMISION 
-			//	movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionId(idConciliacion));
-			//	break;
+			case COMISIONES_IVA:
+				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionIdAndTipo(idConciliacion, TipoMovimientoComisionEnum.IVA_COMISION));
+				break;
+			//TODO: No identificados aun
+			//case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.GENERALES
+				//movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionIdAndTipo(idConciliacion, TipoMovimientoComisionEnum.GENERAL));
+				//break;
 		}
 		return movimientos;
 	}
