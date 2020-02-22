@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.helper.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper;
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.util.CodigosEdoCuentaMap;
 
 /**
@@ -271,6 +273,15 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 		List<MovimientoEstadoCuenta> movimientosEstadoCuenta = movimientoEstadoCuentaRepository.findByConciliacionAndClaveLeyendaIn(idConciliacion, codigosEstadoCuenta);
 
 		return movimientosEstadoCuenta;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getFechaOperacionEstadoCuenta(java.lang.Long, mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum)
+	 */
+	public Date getFechaOperacionEstadoCuenta(Long idConciliacion, TipoLayoutEnum tipoLayout) throws ConciliacionException {
+		Date date = movimientoEstadoCuentaRepository.findFechaOperacionByConciliacion(idConciliacion);
+		return date;
 	}
 
 

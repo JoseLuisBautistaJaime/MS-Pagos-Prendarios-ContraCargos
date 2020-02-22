@@ -4,10 +4,12 @@
  */
 package mx.com.nmp.pagos.mimonte.helper;
 
+import java.util.Date;
 import java.util.List;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.util.CodigosEdoCuentaMap;
 
 /**
@@ -99,5 +101,14 @@ public interface EstadoCuentaHelper {
 	 * @throws ConciliacionException
 	 */
 	public List<MovimientoEstadoCuenta> getMovimientosEstadoCuentaByCategoria(Long idConciliacion, Long idCategoria) throws ConciliacionException;
-	
+
+	/**
+	 * Obtiene un movimiento del estado de cuenta cargado a la conciliacion para obtener la fecha de la operacion
+	 * @param idConciliacion
+	 * @param tipoLayout 
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public Date getFechaOperacionEstadoCuenta(Long idConciliacion, TipoLayoutEnum tipoLayout) throws ConciliacionException;
+
 }
