@@ -259,7 +259,7 @@ public class ComisionesService {
 
 		// Realiza suma de comisiones e ivas
 		sums = comisionesRepository.findMovimientosSum(TipoMovimientoComisionEnum.COMISION.getDescripcion(),
-				TipoMovimientoComisionEnum.IVA_COMISION.getDescripcion());
+				TipoMovimientoComisionEnum.IVA_COMISION.getDescripcion(), comisionesTransaccionesRequestDTO.getIdConciliacion());
 		sumaComision = sums.get("comision");
 		sumaIva = sums.get("iva");
 		sumaComision = null != sumaComision ? sumaComision : new BigDecimal("0");
