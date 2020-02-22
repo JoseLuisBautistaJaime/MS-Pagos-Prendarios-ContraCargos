@@ -233,7 +233,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param conciliacionId
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO(mm.sucursal, SUM(mm.monto)) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id WHERE r.conciliacion.id = :conciliacionId AND mm.estatus = true GROUP BY mm.sucursal")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO(mm.sucursal, SUM(mm.monto)) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id WHERE r.conciliacion.id = :conciliacionId GROUP BY mm.sucursal")
 	public List<MovimientoMidasDTO> getMovimientosMidasBySucursal(@Param("conciliacionId") final Long conciliacionId);
 
 }
