@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -235,5 +236,38 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 */
 	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO(mm.sucursal, SUM(mm.monto)) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id WHERE r.conciliacion.id = :conciliacionId GROUP BY mm.sucursal")
 	public List<MovimientoMidasDTO> getMovimientosMidasBySucursal(@Param("conciliacionId") final Long conciliacionId);
+
+	/**
+	 * Regresa un listado de operaciones unicas (no repetidas entre conciliaciones) agrupadas por sucursal y especificados por el rango de fechas capturadas en la seccion proyeccion
+	 * @param idConciliacion
+	 * @param fechaInicial
+	 * @param fechaFinal
+	 * @return
+	 */
+	@Query(value =
+		"SELECT " +
+			//"new mx.com.nmp.pagos.mimonte.dto.conciliacion.OperacionesPorSucursalDTO(" +
+			    "movMidas.sucursal, " +
+			    "COUNT(movMidas.folio) " +
+			//") " +
+		"FROM " +
+			"(SELECT " +
+				"DISTINCT folio, sucursal, operacion_abr, operacion_desc, monto, tipo_contrato_abr, tipo_contrato_desc, num_autorizacion, capital, comisiones, interes, estatus, " +
+				"transaccion, fecha, estado_transaccion, consumidor, id_operacion, id_tipo_contrato, codigo_error, mensaje_error, id_tarjeta, marca_tarjeta, tipo_tarjeta, tarjeta, moneda_pago, " +
+				"importe_transaccion " +
+			"FROM " +
+				"`tst1775-pagosdb`.to_movimiento_midas mm " +
+				"INNER JOIN to_reporte r ON r.id = mm.id_reporte " +
+				"INNER JOIN to_conciliacion c ON c.id = r.id_conciliacion " +
+		        //"INNER JOIN to_comision_transaccion ct ON mm.fecha >= ct.fecha_desde AND mm.fecha < DATE_ADD(ct.fecha_hasta, INTERVAL 1 DAY) " +
+			"WHERE " +
+				//"ct.id_conciliacion = :idConciliacion " +
+				"mm.fecha >= :fechaDesde AND mm.fecha < DATE_ADD(:fechaHasta, INTERVAL 1 DAY) " +
+			") AS movMidas " +
+		"GROUP BY " +
+			"movMidas.sucursal",
+		nativeQuery = true
+	)
+	public List<Object[]> getTotalOperacionesRealesPorSucursal(@Param("fechaDesde") Date fechaDesde, @Param("fechaHasta") Date fechaHasta);
 
 }

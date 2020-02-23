@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.MessageFormat;
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -19,6 +20,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.OperacionesPorSucursalDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeader;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
@@ -426,5 +428,73 @@ public abstract class LayoutsBuilder {
 		}
 		return lst;
 	}
-	
+
+
+	// Prorrateo sucursales ///////////////////////////////////////////////
+
+	/**
+	 * Obtiene el monto total de las lineas especificadas
+	 * @param lineasDTO
+	 * @return
+	 */
+	public static BigDecimal getMontoLineas(List<LayoutLineaDTO> lineasDTO) {
+		BigDecimal total = new BigDecimal(0);
+		if (lineasDTO != null && lineasDTO.size() > 0) {
+			for (LayoutLineaDTO layout : lineasDTO) {
+				if (layout.getMonto() != null) {
+					total = total.add(layout.getMonto().abs());
+				}
+			}
+		}
+		return total;
+	}
+
+
+	/**
+	 * Obtiene el total de operaciones de todas las sucursales
+	 * @param totalOpPorSuc
+	 * @return
+	 */
+	public static int getTotalOperaciones(List<OperacionesPorSucursalDTO> totalOpPorSuc) {
+		int total = 0;
+		if (totalOpPorSuc != null && totalOpPorSuc.size() > 0) {
+			for (OperacionesPorSucursalDTO opPorSucursal : totalOpPorSuc) {
+				total += opPorSucursal.getTotal();
+			}
+		}
+		return total;
+	}
+
+
+	/**
+	 * Obtiene el peso de la sucursal en base al total de movimientos
+	 * @param operaciones
+	 * @param total
+	 * @return
+	 */
+	public static BigDecimal getPesoOperacionesSuc(int operaciones, int total) {
+		BigDecimal peso = new BigDecimal(0);
+		if (operaciones > 0  && total > 0) {
+			peso = new BigDecimal(operaciones)
+					.multiply(new BigDecimal(100))
+					.divide(new BigDecimal(total), RoundingMode.HALF_UP).setScale(1);
+		}
+		return peso;
+	}
+
+
+	/**
+	 * Calcula el monto asignado a la sucursal en base al peso de la sucursal
+	 * @param monto
+	 * @param peso
+	 * @return
+	 */
+	public static BigDecimal getPorcentajeSucursal(BigDecimal monto, BigDecimal peso) {
+		BigDecimal montoSuc = new BigDecimal(0);
+		if (monto != null && peso != null) {
+			montoSuc = monto.multiply(peso).divide(new BigDecimal(100), RoundingMode.HALF_UP).setScale(4, RoundingMode.HALF_UP);
+		}
+		return montoSuc;
+	}
+
 }
