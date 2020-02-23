@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import mx.com.nmp.pagos.mimonte.builder.conciliacion.LayoutsBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionTransaccionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutHeaderCatalogRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutHeadersRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutLineaCatalogRepository;
@@ -46,10 +48,12 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.OperacionesPorSucursalDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.GrupoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.IMovTransaccion;
@@ -69,6 +73,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
+import mx.com.nmp.pagos.mimonte.util.DateUtil;
 
 /**
  * * @name LayoutsService
@@ -148,6 +153,8 @@ public class LayoutsService {
 	@Inject
 	private EstadoCuentaHelper estadoCuentaHelper;
 
+	@Inject
+	private ComisionTransaccionRepository comisionTransaccionRepository;
 
 
 	/**
@@ -744,23 +751,31 @@ public class LayoutsService {
 
 			// Se construyen las lineas
 			List<LayoutLineaDTO> lineasDTO = new ArrayList<LayoutLineaDTO>();
+			List<LayoutLineaDTO> lineasIVADTO = new ArrayList<LayoutLineaDTO>();
 			
 			// Extraer operaciones de Estado cuenta
 			lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.BANCOS));
 
 			// Layout especial : Extraer tambien comisiones IVA al extraer comisiones del estado de cuenta
 			if (tipo == TipoLayoutEnum.COMISIONES_MOV) {
-				movimientos = obtenerMovimientosConciliacion(idConciliacion, TipoLayoutEnum.COMISIONES_IVA);
-				lineasDTO.addAll(buildLineasDTO(movimientos, TipoLayoutEnum.COMISIONES_IVA, GrupoLayoutEnum.BANCOS));
+				List<IMovTransaccion> movimientosIVA = obtenerMovimientosConciliacion(idConciliacion, TipoLayoutEnum.COMISIONES_IVA);
+				lineasIVADTO.addAll(buildLineasDTO(movimientosIVA, TipoLayoutEnum.COMISIONES_IVA, GrupoLayoutEnum.BANCOS));
 			}
 
 			// Extraer operaciones de sucursales
 			if (tipo != TipoLayoutEnum.COMISIONES_MOV && tipo != TipoLayoutEnum.COMISIONES_IVA) { // TODO: Remover IF cuando se defina prorateo para comisiones de sucursales
 				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.SUCURSALES));
 			}
+			else {
+				// Prorrateo comisiones por sucursal, iva 
+				lineasDTO.addAll(buildLineasComisionesSucursal(lineasDTO, lineasIVADTO, idConciliacion));
+			}
 
 			// Se genera la cabecera correspondiente
 			LayoutCabeceraDTO cabeceraDTO = buildCabeceraDTO(idConciliacion, tipo);
+
+			// Suma las lineas IVA (en caso de existir)
+			lineasDTO.addAll(lineasIVADTO);
 
 			// Se crea el layout correspondiente
 			layoutDTO = new LayoutDTO();
@@ -772,6 +787,144 @@ public class LayoutsService {
 
 		return layoutDTO;
 	}
+
+
+	/**
+	 * Comisión - Obtengo el número de operaciones por sucursal que será prorrateado por la comisión cobrada (cantidad acordada con la entidad bancaria por operación).
+	 * IVA - se saca el IVA (%16) por operación
+	 * @param lineasDTO
+	 * @param lineasIVADTO 
+	 * @param idConciliacion
+	 * @return
+	 */
+	private Collection<? extends LayoutLineaDTO> buildLineasComisionesSucursal(List<LayoutLineaDTO> lineasDTO,
+			List<LayoutLineaDTO> lineasIVADTO, long idConciliacion) {
+
+		List<LayoutLineaDTO> lineasComisionIVA = new ArrayList<LayoutLineaDTO>();
+
+		if (CollectionUtils.isNotEmpty(lineasDTO)) {
+
+			// Obtiene el total de operaciones por sucursal
+			List<OperacionesPorSucursalDTO> totalOpPorSuc = obtenerTotalOperacionesPorSucursal(idConciliacion, TipoLayoutEnum.COMISIONES_MOV);
+
+			if (totalOpPorSuc != null && totalOpPorSuc.size() > 0) {
+				LOG.debug("Existen " + totalOpPorSuc.size() + " sucursales con operaciones para el rango de fechas");
+
+				// Inicia el proceso de prorrateo
+				LOG.debug("Inicia el proceso de prorrateo");
+
+				// Obtiene el monto total de comisiones
+				BigDecimal montoTotalComisiones = LayoutsBuilder.getMontoLineas(lineasDTO);
+				BigDecimal montoTotalIVA = LayoutsBuilder.getMontoLineas(lineasIVADTO);
+				LOG.debug("Total monto Comisiones: " + montoTotalComisiones);
+				LOG.debug("Total monto IVA: " + montoTotalIVA);
+
+				// Total de operaciones realizadas
+				int totalOperaciones = LayoutsBuilder.getTotalOperaciones(totalOpPorSuc);
+				LOG.debug("Total operaciones realizadas en todas las sucursales: " + totalOperaciones);
+
+				// Se prorratean layouts para comisiones y se generan las lineas
+				if (montoTotalComisiones.compareTo(new BigDecimal(0)) > 0) {
+					lineasComisionIVA.addAll(buildLineasComisionesProrrateado(totalOpPorSuc, montoTotalComisiones, totalOperaciones, TipoLayoutEnum.COMISIONES_MOV));
+				}
+
+				// Se prorratean layouts para IVA y se generan las lineas
+				if (montoTotalIVA.compareTo(new BigDecimal(0)) > 0) {
+					lineasComisionIVA.addAll(buildLineasComisionesProrrateado(totalOpPorSuc, montoTotalIVA, totalOperaciones, TipoLayoutEnum.COMISIONES_IVA));
+				}
+
+			}
+			else {
+				LOG.debug("No existen operaciones para el rango de fechas");
+			}
+		}
+
+		return lineasComisionIVA;
+	}
+
+
+	/**
+	 * Genera las lineas de comisiones sucursal acuerdo al monto de comisiones a distribuir 
+	 * @param totalOpPorSuc
+	 * @param montoTotalComisiones
+	 * @param totalOperaciones
+	 * @param tipoLayout
+	 */
+	private List<LayoutLineaDTO> buildLineasComisionesProrrateado(List<OperacionesPorSucursalDTO> totalOpPorSuc,
+			BigDecimal montoTotal, int totalOperaciones, TipoLayoutEnum tipoLayout) {
+
+		List<LayoutLineaDTO> lineasComision = new ArrayList<LayoutLineaDTO>();
+		for (OperacionesPorSucursalDTO opPorSuc : totalOpPorSuc) {
+			if (opPorSuc.getTotal() > 0) {
+
+				// Peso
+				BigDecimal pesoSucursal = LayoutsBuilder.getPesoOperacionesSuc(opPorSuc.getTotal(), totalOperaciones);
+				LOG.debug("Sucursal {} tiene {} operaciones con un peso de {}%", opPorSuc.getSucursal(), opPorSuc.getTotal(), pesoSucursal);
+				
+				// Se prorratea el monto de acuerdo al peso de la sucursal
+				BigDecimal montoSucursal = LayoutsBuilder.getPorcentajeSucursal(montoTotal, pesoSucursal);
+				LOG.debug("Sucursal tiene un monto asignado de {}/{} para {}", montoSucursal, montoTotal, tipoLayout);
+
+				// Se genera la linea correspondiente
+				MovimientoComision movimientoComision = new MovimientoComision();
+				movimientoComision.setMovimientoMidas(new MovimientoMidas());
+				movimientoComision.getMovimientoMidas().setSucursal(opPorSuc.getSucursal());
+				LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipoLayout, GrupoLayoutEnum.SUCURSALES);
+				String unidadOperativa = getUnidadOperativa(movimientoComision, lineaCatalog);
+				LayoutLineaDTO lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaCatalog, montoSucursal, unidadOperativa);
+
+				lineasComision.add(lineaDTO);
+			}
+		}
+		return lineasComision;
+	}
+
+
+	/**
+	 * Obtiene el total de operaciones por sucursal para el rango capturado en el modulo de comisiones transaccion
+	 * @param idConciliacion
+	 * @param tipoLayout
+	 * @return
+	 */
+	private List<OperacionesPorSucursalDTO> obtenerTotalOperacionesPorSucursal(long idConciliacion, TipoLayoutEnum tipoLayout) {
+		// Se obtienen el rango de fechas de la proyeccion para obtener el total de movimientos realizados
+		LOG.debug("obtenerTotalOperacionesPorSucursal {}", idConciliacion);
+
+		Date fechaDesde = DateUtil.getDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd");
+		Date fechaHasta = DateUtil.getDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd");
+
+		ComisionTransaccion comisionTransaccion  = comisionTransaccionRepository.findByConciliacionId(idConciliacion);
+		if (comisionTransaccion != null) {
+			LOG.debug("Usando fechas del rango de comision transaccion");
+			fechaDesde = comisionTransaccion.getFechaDesde();
+			fechaHasta = comisionTransaccion.getFechaHasta();
+		}
+		else {
+			Date fechaOperacion = this.estadoCuentaHelper.getFechaOperacionEstadoCuenta(idConciliacion, tipoLayout);
+			fechaDesde = fechaOperacion;
+			fechaHasta = fechaOperacion;
+		}
+
+		LOG.debug("Fecha inicial: " + fechaDesde);
+		LOG.debug("Fecha final: " + fechaHasta);
+		
+		// Se obtienen el total de partidas con pagos por sucursal en el rango de fechas
+		List<OperacionesPorSucursalDTO> totalOpPorSuc = new ArrayList<OperacionesPorSucursalDTO>();
+		List<Object[]> listObject = this.movimientosMidasRepository.getTotalOperacionesRealesPorSucursal(fechaDesde, fechaHasta);
+		if (listObject != null && listObject.size() > 0) {
+			for (Object[] object : listObject) {
+				if (object != null && object.length > 0 && object[0] != null) {
+					totalOpPorSuc.add(new OperacionesPorSucursalDTO(
+						Integer.valueOf(object[0].toString()),
+						object.length > 1 && object[1] != null ? Integer.valueOf(object[1].toString()) : 0
+					));
+				}
+			}
+		}
+
+		return totalOpPorSuc;
+	}
+
 
 	/**
 	 * Construye la cabecera para el tipo de layout especificado usando los valores
@@ -791,6 +944,7 @@ public class LayoutsService {
 		LayoutCabeceraDTO cabecera = LayoutsBuilder.buildLayoutCabeceraDTOFromLayoutHeaderCatalog(layoutHeaderCatalog, fechaOperacion);
 		return cabecera;
 	}
+
 
 	/**
 	 * Se construyen las lineas de acuerdo al tipo de layout y grupo
