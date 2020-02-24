@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dao.TipoContactoRepository;
 import mx.com.nmp.pagos.mimonte.dto.AbstractCatalogoDTO;
 import mx.com.nmp.pagos.mimonte.dto.AfiliacionReqDTO;
+import mx.com.nmp.pagos.mimonte.dto.ContactoReqDTONE;
 import mx.com.nmp.pagos.mimonte.dto.CuentaReqDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadCuentaAfiliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.EntidadDTO;
@@ -428,10 +430,10 @@ public class EntidadServiceImpl implements EntidadService {
 				// Obtiene la lista de asociaciones entre entidad - cuenta - afiliacion
 				lstECA = entidadCuentaAfiliacionRepository.findByEntidad_Id(entidadResponseDTO.getId());
 				EntidadCuentaAfiliacionBuilder
-				.buildEntidadCuentaAfiliacionDTOListFromEntidadCuentaAfiliacionList(lstECA);
+						.buildEntidadCuentaAfiliacionDTOListFromEntidadCuentaAfiliacionList(lstECA);
 				// Construye el objeto de respuesta
-				entidadResponseDTO.setCuentas(
-						EntidadCuentaAfiliacionBuilder.buildIndeedCuentaEntDTOSetFromEntidadCuentaAfiliacionList(lstECA));
+				entidadResponseDTO.setCuentas(EntidadCuentaAfiliacionBuilder
+						.buildIndeedCuentaEntDTOSetFromEntidadCuentaAfiliacionList(lstECA));
 			}
 		}
 		return entidadResponseDTOList;
@@ -518,6 +520,52 @@ public class EntidadServiceImpl implements EntidadService {
 			}
 		}
 		return resultMap;
+	}
+
+	/**
+	 * Actualiza nombre e email de contactos por id
+	 * 
+	 * @param contactoReqDTONESet
+	 * @param idEntidad
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void updateContactos(Set<ContactoReqDTONE> contactoReqDTONESet, Long idEntidad) {
+		List<Long> contactoIdsList = null;
+		boolean flag = true;
+		contactoIdsList = getContactoIds(contactoReqDTONESet);
+		if (null != contactoReqDTONESet && !contactoReqDTONESet.isEmpty() && null != contactoIdsList
+				&& !contactoIdsList.isEmpty()) {
+			flag = ((BigInteger) (contactoRespository.validaIds(contactoIdsList, contactoIdsList.size(), idEntidad)))
+					.compareTo(BigInteger.ONE) == 0;
+			if (!flag)
+				throw new CatalogoException(CodigoError.NMP_PMIMONTE_BUSINESS_137.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_137);
+			for (ContactoReqDTONE contactoReqDTONE : contactoReqDTONESet) {
+				if (null != contactoReqDTONE.getId() && !contactoReqDTONE.getId().equals(0L)) {
+					contactoRespository.updateNombreAndEmailById(contactoReqDTONE.getId(), contactoReqDTONE.getNombre(),
+							contactoReqDTONE.getEmail());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Fabrica una lista de Ids de Contactos para validarlos en BD y ver si existen
+	 * 
+	 * @param contactoReqDTONESet
+	 * @return
+	 */
+	private static List<Long> getContactoIds(Set<ContactoReqDTONE> contactoReqDTONESet) {
+		List<Long> contactoIdsList = null;
+		if (null != contactoReqDTONESet && !contactoReqDTONESet.isEmpty()) {
+			contactoIdsList = new ArrayList<>();
+			for (ContactoReqDTONE contactoReqDTONE : contactoReqDTONESet) {
+				if (null != contactoReqDTONE.getId() && !contactoReqDTONE.getId().equals(0L)) {
+					contactoIdsList.add(contactoReqDTONE.getId());
+				}
+			}
+		}
+		return contactoIdsList;
 	}
 
 }

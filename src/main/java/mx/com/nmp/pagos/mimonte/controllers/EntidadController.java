@@ -73,7 +73,7 @@ public class EntidadController {
 	 */
 	@SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(EntidadController.class);
-
+	
 	/**
 	 * Service para catalogo de entidades
 	 */
@@ -165,6 +165,20 @@ public class EntidadController {
 		EntidadDTO entidadDTOResp = null;
 		// Construye un objeto DTO estandar a partir del objeto recibido
 		entidadDTO = EntidadBuilder.buildEntidadDTOFromEntidadBaseDTO(entidadDTOReq, null, new Date());
+		
+		// Actualiza los contactos actualizables (con id diferente de 0) para evitar errores de duplicidad de PK
+		try {
+			entidadServiceImpl.updateContactos(entidadDTOReq.getContactos(), entidadDTOReq.getId());
+		}
+		catch(CatalogoException ex){
+			ex.printStackTrace();
+			throw ex;
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			throw new CatalogoException(CodigoError.NMP_PMIMONTE_BUSINESS_136.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_136);
+		}
+		
 		// Actualiza una entidad
 		entidadDTOResp = entidadServiceImpl.update(entidadDTO, lastModifiedBy);
 		// SETEO DE USUARIO Y FECHA CREACION YA QUE NO SE HACE EL FETCH AL GUARDAR NI

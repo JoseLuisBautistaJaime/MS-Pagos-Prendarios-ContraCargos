@@ -91,6 +91,10 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_077("El nombre del catalogo no fue encontrado",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_136("Se genero un problema al actualizar los contactos",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_137("Uno o mas contactos no existen o no pertenecen a la entidad",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
 
 	// CONCILIACION
 	NMP_PMIMONTE_BUSINESS_017("No se encontraron conciliaciones para los parametros especificados",
