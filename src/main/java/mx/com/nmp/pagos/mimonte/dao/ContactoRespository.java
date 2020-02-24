@@ -111,4 +111,26 @@ public interface ContactoRespository extends JpaRepository<Contactos, Long> {
 	@Query("SELECT cto.createdBy FROM Contactos cto WHERE cto.id = :idCto")
 	public Object getCreatedByById(@Param("idCto") final Long idCto);
 
+	/**
+	 * Actualiza el nombre e email de un contacto por id
+	 * 
+	 * @param id
+	 * @param nombre
+	 * @param email
+	 */
+	@Modifying
+	@Query("UPDATE Contactos c SET c.nombre = :nombre, c.email = :email WHERE c.id = :id")
+	public void updateNombreAndEmailById(@Param("id") Long id, @Param("nombre") String nombre, @Param("email") String email);
+
+	/**
+	 * Query que regresa un 1 si los ids de contactos especificados existen y si pertenecen a la entidad especificada
+	 * 
+	 * @param idContactosList
+	 * @param tam
+	 * @param idEntidad
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN ( SELECT COUNT(ec.id_contacto) FROM tr_entidad_contactos ec WHERE ec.id_entidad = :idEntidad AND ec.id_contacto IN :idContactosList ) = :tam THEN 1 ELSE 0 END")
+	public Object validaIds(@Param("idContactosList") List<Long> idContactosList, @Param("tam") Integer tam, @Param("idEntidad") Long idEntidad);
+	
 }

@@ -76,7 +76,7 @@ public interface ComisionesRepository extends JpaRepository<MovimientoComision, 
 	 * @param estatusId
 	 * @return
 	 */
-	@Query("SELECT COUNT(md.id) AS countId FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON md.id = mc.id WHERE md.fecha BETWEEN :fechaDesde AND :fechaHasta AND md.estatus.id = :estatusId")
+	@Query("SELECT COUNT(md.id) AS countId FROM MovimientoConciliacion mc INNER JOIN MovimientoDevolucion md ON md.id = mc.id WHERE md.fechaLiquidacion BETWEEN :fechaDesde AND :fechaHasta AND md.estatus.id = :estatusId")
 	public Map<String, Object> findDataByFechas(@Param("fechaDesde") final Date fechaDesde,
 			@Param("fechaHasta") final Date fechaHasta, @Param("estatusId") final Integer estatusId);
 
