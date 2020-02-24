@@ -52,7 +52,7 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 		if (reportesWrapper.contains(TipoReporteEnum.ESTADO_CUENTA)) {
 			
 			// Devoluciones
-			List<MovimientoDevolucion> movsDevoluciones = extraerMovimientoDevolucion(reportesWrapper.getIdConciliacion(), reportesWrapper.getIdEntidad());
+			/*List<MovimientoDevolucion> movsDevoluciones = extraerMovimientoDevolucion(reportesWrapper.getIdConciliacion(), reportesWrapper.getIdEntidad());
 			if (CollectionUtils.isNotEmpty(movsDevoluciones)) {
 
 				List<MovimientoDevolucion> movimientosDevolucionSave = new ArrayList<MovimientoDevolucion>();
@@ -75,7 +75,7 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 					ex.printStackTrace();
 					throw new ConciliacionException(ex.getMessage(), CodigoError.NMP_PMIMONTE_0011);
 				}
-			}
+			}*/
 
 
 			// Comisiones

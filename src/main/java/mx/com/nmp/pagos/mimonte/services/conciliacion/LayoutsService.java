@@ -13,9 +13,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.LayoutsBuilder;
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -55,6 +58,7 @@ import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuentaCabecera;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.GrupoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.IMovTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
@@ -1137,14 +1141,38 @@ public class LayoutsService {
 	
 				break;
 			case DEVOLUCIONES:
-				// Movimientos devoluciones sucursal y banco en la misma consulta
-				List<MovimientoDevolucion> movimientosDev = movimientoConciliacionRepository
-					.findMovimientoDevolucionByConciliacionIdAndStatus(idConciliacion, ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
-				// Agrupar por sucursal
-				movimientosDev = MovimientosBuilder.groupMovimientosBySucursal(movimientosDev, TipoMovimientoEnum.DEVOLUCION);
-				movimientos.addAll(movimientosDev);
-				// Movimientos devoluciones estado cuenta
-	
+
+				// Movimientos devoluciones Estado Cuenta.
+				// Si no existen movimientos de estado de cuenta no se extraen los movimientos liquidados
+				List<MovimientoEstadoCuenta> movsEstadoCuentaDevolucion = estadoCuentaHelper
+						.getMovimientosEstadoCuentaByCategoria(idConciliacion, ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES);
+				if (CollectionUtils.isNotEmpty(movsEstadoCuentaDevolucion)) {
+					
+					Set<Date> fechasDevoluciones = new LinkedHashSet<Date>();
+					for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuentaDevolucion) {
+						
+						// Se obtienen todas las fechas de devoluciones
+						Date fechaMovEstadoCuenta = movEstadoCuenta.getFechaOperacion();
+						fechasDevoluciones.add(fechaMovEstadoCuenta);
+
+						// Se mapean los movs estado de cuenta en movs devoluciones
+						MovimientoDevolucion movDevolucion = MovimientoDevolucionBuilder
+								.buildMovimientoFromMovEstadoCuenta(movEstadoCuenta, idConciliacion, null, null);
+						movimientos.add(movDevolucion);
+					}
+
+					// Movimientos devoluciones Sucursal ///////
+
+					// Movimientos sucursal liquidados consultando por fechas de operacion
+					List<Date> fechasLiquidacion = Arrays.asList(fechasDevoluciones.toArray(new Date[0]));
+					List<MovimientoDevolucion> movimientosDev = movimientoConciliacionRepository
+						.findMovimientoDevolucionByFechaLiquidacionInAndStatus(fechasLiquidacion, ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
+					// Movimientos 
+
+					// Agrupar por sucursal
+					movimientosDev = MovimientosBuilder.groupMovimientosBySucursal(movimientosDev, TipoMovimientoEnum.DEVOLUCION);
+					movimientos.addAll(movimientosDev);
+				}
 				break;
 			case COMISIONES_MOV:
 				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionIdAndTipo(idConciliacion, TipoMovimientoComisionEnum.COMISION));
