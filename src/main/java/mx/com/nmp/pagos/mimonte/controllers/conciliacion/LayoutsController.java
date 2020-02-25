@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -31,11 +32,11 @@ import mx.com.nmp.pagos.mimonte.builder.conciliacion.LayoutsBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.LayoutsService;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
@@ -117,8 +118,13 @@ public class LayoutsController {
 		
 		// Valida que el objeto de respuesta no se anulo o vacio
 		if (!ValidadorLayout.validateLayoutDTO(layoutDTO))
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+		{
+			layoutDTO = new LayoutDTO();
+			layoutDTO.setFolio(folio);
+			layoutDTO.setTipoLayout(tipoLayout);
+			layoutDTO.setCabecera(new LayoutCabeceraDTO());
+			layoutDTO.setLineas(new ArrayList<>());
+		}
 		
 		LOG.info(">>>URL: GET /layouts/{folio}/{tipoLayout} > RESPONSE: {}",layoutDTO);
 		
@@ -159,8 +165,9 @@ public class LayoutsController {
 		
 		// Valida que la lista no sea vacia o nula
 		if (!ValidadorLayout.validateLayoutDTOs(layoutDTOs))
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+		{
+			layoutDTOs = new ArrayList<>();
+		}
 		
 		LOG.info(">>>URL: GET /layouts/{folio} > RESPONSE: {}", layoutDTOs);
 		

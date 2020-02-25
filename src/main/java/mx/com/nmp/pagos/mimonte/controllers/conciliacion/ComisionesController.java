@@ -13,7 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,7 +36,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDeleteDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionSaveResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ComisionesService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
@@ -110,15 +118,18 @@ public class ComisionesController {
 		// Se guarda la comision
 		result = comisionesService.save(comisionSaveDTO, userRequest);
 		// Se valida que el resultado del guardado no sea nulo
-		if (null == result)
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
-		// Se asigna la bandera de registro uevo y el objeto de resultado a un mapa para
-		// saber que mensaje mostrar en el response
-		comisionSaveResponseDTO = (ComisionSaveResponseDTO) result.get("result");
-		msgResponse = null != result.get("flag") && ((Boolean) result.get("flag")) ? "Alta exitosa."
-				: null != result.get("flag") && !((Boolean) result.get("flag")) ? "Actualizacion exitosa."
-						: "Operacion exitosa.";
+		if (null == result) {
+			msgResponse = "Operacion fallida";
+			comisionSaveResponseDTO = new ComisionSaveResponseDTO();			
+		}
+		else {
+			// Se asigna la bandera de registro uevo y el objeto de resultado a un mapa para
+			// saber que mensaje mostrar en el response
+			comisionSaveResponseDTO = (ComisionSaveResponseDTO) result.get("result");
+			msgResponse = null != result.get("flag") && ((Boolean) result.get("flag")) ? "Alta exitosa."
+					: null != result.get("flag") && !((Boolean) result.get("flag")) ? "Actualizacion exitosa."
+							: "Operacion exitosa.";	
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), msgResponse, comisionSaveResponseDTO);
 	}
 

@@ -505,8 +505,7 @@ public class ConciliacionController {
 		}
 
 		if (null == devoluciones)
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+			devoluciones = new ArrayList<>();
 		
 		LOG.info(">>>URL: GET /conciliacion/transito/consulta/{folio} > RESPONSE: {}", devoluciones.toString());
 		
@@ -709,8 +708,8 @@ public class ConciliacionController {
 				consultaActividadesRequest.getFechaHasta());
 		List<ConsultaActividadDTO> response = conciliacionService.consultaActividades(consultaActividadesRequest);
 		if (null == response)
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0005);
+			response = new ArrayList<>();
+			
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH,
 				response);
 	}

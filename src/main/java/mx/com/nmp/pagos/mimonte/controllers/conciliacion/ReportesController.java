@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -23,11 +25,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
-import mx.com.nmp.pagos.mimonte.constans.CodigoError;
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaOuterDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReporteRequestDTO;
-import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ReportePagosService;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
@@ -56,7 +55,6 @@ public class ReportesController {
 	/**
 	 * Imprime logs de la aplicacion
 	 */
-	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(ReportesController.class);
 
 	/**
@@ -90,10 +88,13 @@ public class ReportesController {
 				reporteRequestDTO.getFechaHasta());
 		ReportePagosEnLineaOuterDTO reportePagosEnLineaOuterDTO = reportePagosService
 				.getReportePagosEnLinea(reporteRequestDTO);
-		if (null == reportePagosEnLineaOuterDTO || null == reportePagosEnLineaOuterDTO.getMovimientos()
-				|| reportePagosEnLineaOuterDTO.getMovimientos().isEmpty())
-			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+		if (null == reportePagosEnLineaOuterDTO)
+		{
+			reportePagosEnLineaOuterDTO = new ReportePagosEnLineaOuterDTO();
+			if(null == reportePagosEnLineaOuterDTO.getMovimientos()) {
+				reportePagosEnLineaOuterDTO.setMovimientos(new ArrayList<>());
+			}
+		}
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS,
 				reportePagosEnLineaOuterDTO);
 	}
