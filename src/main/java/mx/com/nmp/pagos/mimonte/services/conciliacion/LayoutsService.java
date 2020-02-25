@@ -767,7 +767,7 @@ public class LayoutsService {
 			}
 
 			// Extraer operaciones de sucursales
-			if (tipo != TipoLayoutEnum.COMISIONES_MOV && tipo != TipoLayoutEnum.COMISIONES_IVA) { // TODO: Remover IF cuando se defina prorateo para comisiones de sucursales
+			if (tipo != TipoLayoutEnum.COMISIONES_MOV && tipo != TipoLayoutEnum.COMISIONES_IVA) {
 				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.SUCURSALES));
 			}
 			else {
@@ -1152,8 +1152,7 @@ public class LayoutsService {
 					for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuentaDevolucion) {
 						
 						// Se obtienen todas las fechas de devoluciones
-						Date fechaMovEstadoCuenta = movEstadoCuenta.getFechaOperacion();
-						fechasDevoluciones.add(fechaMovEstadoCuenta);
+						fechasDevoluciones.add(movEstadoCuenta.getFechaOperacion());
 
 						// Se mapean los movs estado de cuenta en movs devoluciones
 						MovimientoDevolucion movDevolucion = MovimientoDevolucionBuilder
