@@ -350,12 +350,12 @@ public abstract class LayoutsBuilder {
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 		LocalDate localDate = localDateTime.toLocalDate();
 
-		if (tipoLayout == TipoLayoutEnum.PAGOS) {
+		/*if (tipoLayout == TipoLayoutEnum.PAGOS) {
 			localDate = localDate.plusDays(1); // Dia posterior a la operacion
 			if (localDate.getDayOfWeek() == DayOfWeek.FRIDAY) {
 				localDate =  localDate.plusDays(3); // Fecha de pago (BANCO) correspondiente al día posterior de la operación. (Cuando es viernes el pago seria el lunes)
 			}
-		}
+		}*/
 		return localDate;
 	}
 

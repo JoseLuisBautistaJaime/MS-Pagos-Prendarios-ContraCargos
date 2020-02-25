@@ -652,8 +652,22 @@ public abstract class MovimientosBuilder {
 					Integer suc = mov.getMovimientoMidas().getSucursal();
 					IMovTransaccion movBySuc = bySuc.get(suc);
 					if (movBySuc == null) {
-						movBySuc = mov;
-						bySuc.put(suc, mov);
+						switch (tipoMov) {
+							case DEVOLUCION:
+								MovimientoDevolucion movDevNew = new MovimientoDevolucion();
+								movDevNew.setMovimientoMidas(mov.getMovimientoMidas());
+								movDevNew.setSucursal(((MovimientoDevolucion)mov).getSucursal());
+								movDevNew.setMonto(((MovimientoDevolucion)mov).getMonto());
+								movBySuc = movDevNew;
+								break;
+							case MIDAS:
+								MovimientoMidas movMidasNew = new MovimientoMidas();
+								movMidasNew.setMonto(((MovimientoDevolucion)mov).getMonto());
+								movMidasNew.setSucursal(((MovimientoMidas)mov).getSucursal());
+								movBySuc = movMidasNew;
+								break;
+						}
+						bySuc.put(suc, movBySuc);
 					}
 					else {
 						switch (tipoMov) {

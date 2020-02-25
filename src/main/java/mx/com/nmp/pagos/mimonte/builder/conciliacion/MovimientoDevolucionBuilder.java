@@ -123,7 +123,7 @@ public abstract class MovimientoDevolucionBuilder {
 		movimientoDevolucion.setMonto(movEstadoCuenta.getImporte());
 		movimientoDevolucion.setEsquemaTarjeta(""); // TODO: Estado de cuenta no cuenta con esquema
 		movimientoDevolucion.setIdentificadorCuenta(""); // TODO: Identificador de la cuenta es = no cuenta ?
-		movimientoDevolucion.setTitular(cabecera.getTitularCuenta());
+		movimientoDevolucion.setTitular(cabecera != null ? cabecera.getTitularCuenta() : null);
 		movimientoDevolucion.setCodigoAutorizacion(null); // TODO: ??
 		//movimientoDevolucion.setSucursal(); // TODO: 
 		movimientoDevolucion.setFechaLiquidacion(movEstadoCuenta.getFechaOperacion());

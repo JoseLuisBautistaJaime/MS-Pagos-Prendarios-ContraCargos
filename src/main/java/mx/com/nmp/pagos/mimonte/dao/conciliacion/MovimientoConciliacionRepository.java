@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +16,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoEnum;
 
 /**
  * @name MovimientoConciliacionRepository
@@ -74,6 +74,17 @@ public interface MovimientoConciliacionRepository extends JpaRepository<Movimien
 	@Query("from MovimientoDevolucion l  where l.idConciliacion = :idConciliacion AND l.estatus.id = :idEstatus")
 	public List<MovimientoDevolucion> findMovimientoDevolucionByConciliacionIdAndStatus(
 			@Param("idConciliacion") final Long idConciliacion,
+			@Param("idEstatus") final Integer idEstatus);
+
+	/**
+	 * Regresa una lista de MovimientoDevolucion por folio de conciliacion
+	 * 
+	 * @param idConciliacion
+	 * @return
+	 */
+	@Query("from MovimientoDevolucion l  where l.fechaLiquidacion IN (:fechasLiquidacion) AND l.estatus.id = :idEstatus")
+	public List<MovimientoDevolucion> findMovimientoDevolucionByFechaLiquidacionInAndStatus(
+			@Param("fechasLiquidacion") final List<Date> fechasLiquidacion,
 			@Param("idEstatus") final Integer idEstatus);
 
 	/**
