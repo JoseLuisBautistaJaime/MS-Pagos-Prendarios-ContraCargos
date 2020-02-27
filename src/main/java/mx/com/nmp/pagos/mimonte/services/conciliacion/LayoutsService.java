@@ -194,7 +194,33 @@ public class LayoutsService {
 			}
 		}
 
-		return LayoutsBuilder.buildLayoutDTOFromLayout(layout);
+		LayoutDTO layoutDTO = LayoutsBuilder.buildLayoutDTOFromLayout(layout);
+
+		// Ordenar lineas de los layouts layout//
+		// Primero positivos arriba y negativos abajo
+		if (layoutDTO != null && layoutDTO.getLineas() != null && layoutDTO.getLineas().size() > 0) {
+
+			List<LayoutLineaDTO> lineasPositivosDTO = new ArrayList<LayoutLineaDTO>();
+			List<LayoutLineaDTO> lineasNegativosDTO = new ArrayList<LayoutLineaDTO>();
+
+			// Se validan positivos y negativos
+			for (LayoutLineaDTO lineaDTO : layoutDTO.getLineas()) {
+				// Positivos
+				if (lineaDTO.getMonto() != null && lineaDTO.getMonto().compareTo(new BigDecimal(0)) >= 0) {
+					lineasPositivosDTO.add(lineaDTO);
+				}
+				else {
+					lineasNegativosDTO.add(lineaDTO);
+				}
+			}
+
+			// Se setean los montos positivos primero
+			layoutDTO.setLineas(new ArrayList<LayoutLineaDTO>());
+			layoutDTO.getLineas().addAll(lineasPositivosDTO);
+			layoutDTO.getLineas().addAll(lineasNegativosDTO);
+		}
+
+		return layoutDTO;
 	}
 
 	/**
