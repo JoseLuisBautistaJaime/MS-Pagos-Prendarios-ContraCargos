@@ -35,6 +35,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListDTO;
@@ -76,7 +77,6 @@ public class MovimientosController {
 	/**
 	 * Instancia que imprime logs de los eventos
 	 */
-	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(MovimientosController.class);
 
 	/**
@@ -156,6 +156,9 @@ public class MovimientosController {
 		if(!ValidadorConciliacion.validateMovimientoProcesosNocturnosListResponseDTO(movimientos))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,CodigoError.NMP_PMIMONTE_0008);
 		
+		// Se aplica trim() a elementos del objeto
+		applyTrimToMovimientoProcesosNocturnosListResponseDTO(movimientos);
+		
 		LOG.debug("T>>> INICIA VALIDACOIN INICIAL: {}", sdf.format(new Date(start)));
 		ValidadorConciliacion.validateFechasPrimary(movimientos.getFechaDesde(), movimientos.getFechaHasta());
 		finish = System.currentTimeMillis();
@@ -214,9 +217,12 @@ public class MovimientosController {
 		LOG.info(">>>URL: POST /movimientos/nocturnos/consulta > REQUEST ENTRANTE: {}", commonConciliacionRequestDTO.toString());
 		
 		MovimientoProcesosNocturnosListDTO movimientoProcesosNocturnosListDTO = null;
+		
+		// Se realizan validaciones del objeto
 		if (!ValidadorConciliacion.validateCommonConciliacionEstatusRequestDTO(commonConciliacionRequestDTO))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
+		
 		Optional<Conciliacion> conciliacion = conciliacionRepository.findById(commonConciliacionRequestDTO.getFolio());
 		if (!conciliacion.isPresent())
 			throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND,
@@ -506,4 +512,19 @@ public class MovimientosController {
 				ConciliacionConstants.SUCCESSFUL_QUERY_ESTADO_CUENTA, movimientosEstadoCuentaDTO);
 	}
 
+	/**
+	 * Aplica un trim() (elimina espacios antes y despues de una cadena de caracteres) a algunos de los elementos de un objeto de tipo MovimientoProcesosNocturnosListResponseDTO
+	 * 
+	 * @param movimientoProcesosNocturnosListResponseDTO
+	 */
+	private static void applyTrimToMovimientoProcesosNocturnosListResponseDTO(MovimientoProcesosNocturnosListResponseDTO movimientoProcesosNocturnosListResponseDTO) {
+		if(null != movimientoProcesosNocturnosListResponseDTO) {
+			if(null != movimientoProcesosNocturnosListResponseDTO.getMovimientos() && !movimientoProcesosNocturnosListResponseDTO.getMovimientos().isEmpty()) {
+				for(MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO.getMovimientos()) {
+					movimientoMidasRequestDTO.setTipoContratoAbr(movimientoMidasRequestDTO.getTipoContratoAbr().trim());
+				}
+			}
+		}
+	}
+	
 }
