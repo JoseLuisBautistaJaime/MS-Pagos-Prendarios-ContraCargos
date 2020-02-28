@@ -21,7 +21,7 @@
   <BODY>
     <span>Buena tarde.</span>
     <br>
-    <span>Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario en la entidad ${entidad}, a la cuenta ${numeroCuenta}</span>
+    <span>Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario en la entidad ${entidad}, a la cuenta ${numeroCuenta}, y la(s) afiliacion(es): ${afiliaciones}</span>
     <br>
     <br>
     <table>

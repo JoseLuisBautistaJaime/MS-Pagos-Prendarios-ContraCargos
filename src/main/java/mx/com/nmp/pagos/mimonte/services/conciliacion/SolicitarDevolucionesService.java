@@ -6,6 +6,7 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -94,6 +95,7 @@ public class SolicitarDevolucionesService {
 
 		// Objetos necesarios
 		Map<String, Object> res = null;
+		List<Object[]> afiliacionesList = null;
 		String entidad = null;
 		String cuenta = null;
 
@@ -108,12 +110,19 @@ public class SolicitarDevolucionesService {
 				&& null != devoluciones.get(0).getEntidad().getNombre() && null != devoluciones.get(0).getCuenta()) {
 			entidad = devoluciones.get(0).getEntidad().getNombre();
 			cuenta = devoluciones.get(0).getCuenta();
+			if(null != entidad && null != cuenta) {
+				afiliacionesList = conciliacionRepository.getAfiliacionByFolioConciliacion(folio);
+			}
 		}
 		else if (null != folio) {
 			res = conciliacionRepository.getEntidadNombreAndCuentaNumeroByConciliacionId(folio);
 			if (null != res && !res.isEmpty()) {
 				entidad = null != res.get("entidad") ? String.valueOf(res.get("entidad")) : null;
 				cuenta = null != res.get("cuenta") ? String.valueOf(res.get("cuenta")) : null;
+				if(null != entidad && null != cuenta) {
+					afiliacionesList = conciliacionRepository.getAfiliacionByFolioConciliacion(folio);
+				}
+				
 			} else {
 				entidad = "";
 				cuenta = "";
@@ -124,7 +133,7 @@ public class SolicitarDevolucionesService {
 		}
 
 		// Construye el objeto email
-		BusRestMailDTO generalBusMailDTO = buildBusMailDTO(devoluciones, contactos, entidad, cuenta);
+		BusRestMailDTO generalBusMailDTO = buildBusMailDTO(devoluciones, contactos, entidad, cuenta, getSimpleListFromObjectArray(afiliacionesList));
 
 		// Envia e-mail
 		try {
@@ -161,8 +170,9 @@ public class SolicitarDevolucionesService {
 		entidad = lst.get(0).getEntidad().getNombre();
 		cuenta = "";
 
+		// TODO: Checar bien, este metodo tal vez nunca es invocado
 		// Construye el objeto email
-		BusRestMailDTO generalBusMailDTO = buildBusMailDTO(lst, contactos, entidad, cuenta);
+		BusRestMailDTO generalBusMailDTO = buildBusMailDTO(lst, contactos, entidad, cuenta, null);
 
 		// Envia e-mail
 		try {
@@ -182,7 +192,7 @@ public class SolicitarDevolucionesService {
 	 * @return
 	 */
 	public BusRestMailDTO buildBusMailDTO(List<DevolucionEntidadDTO2> devoluciones, Set<Contactos> contactos,
-			final String entidad, final String cuenta) throws ConciliacionException {
+			final String entidad, final String cuenta, String afiliaciones) throws ConciliacionException {
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
@@ -191,7 +201,7 @@ public class SolicitarDevolucionesService {
 		String destinatarios = contactos.stream().map(Contactos::getEmail).collect(Collectors.joining(","));
 		String template = applicationProperties.getMimonte().getVariables().getMail().getSolicitudDevolucion()
 				.getVelocityTemplate();
-		String contenidoHtml = getContenidoHtml(devoluciones, template, entidad, cuenta);
+		String contenidoHtml = getContenidoHtml(devoluciones, template, entidad, cuenta, afiliaciones);
 
 		// Se construye el DTO
 		BusRestMailDTO mailDTO = new BusRestMailDTO();
@@ -213,11 +223,12 @@ public class SolicitarDevolucionesService {
 	 * @throws ConciliacionException
 	 */
 	private String getContenidoHtml(List<DevolucionEntidadDTO2> devoluciones, String template, final String entidad,
-			final String cuenta) throws ConciliacionException {
+			final String cuenta, String afiliaciones) throws ConciliacionException {
 		Map<String, Object> modelo = new LinkedHashMap<String, Object>();
 		// Se sustituyen los valores
 		modelo.put("numeroCuenta", cuenta);
 		modelo.put("entidad", entidad);
+		modelo.put("afiliaciones", afiliaciones);
 		modelo.put("devoluciones", devoluciones);
 		// Se reemplazan posibles EL en las leyendas y el modelo
 		modelo.put("devoluciones", replaceNullValues(modelo.get("devoluciones")));
@@ -273,4 +284,26 @@ public class SolicitarDevolucionesService {
 		return respDev;
 	}
 
+	/**
+	 * Construye una lista de objetos en forma de cadena de caracteres a partir de un arreglo de objetos con numeros de afiliaciones
+	 * 
+	 * @param arrayList
+	 * @return
+	 */
+	private static String getSimpleListFromObjectArray(List<Object[]> arrayList) {
+		StringBuilder numeroAfiliacionList = null;
+		if(null != arrayList && !arrayList.isEmpty()) {
+			numeroAfiliacionList = new StringBuilder("");
+			for(int i = 0; i< arrayList.size(); i++) {
+				if(i > 0) {
+					numeroAfiliacionList = numeroAfiliacionList.append(", ").append(arrayList.get(i));
+				}
+				else {
+					numeroAfiliacionList = numeroAfiliacionList.append(arrayList.get(i));
+				}
+			}
+		}
+		return null != numeroAfiliacionList ? numeroAfiliacionList.toString() : "";
+	}
+	
 }
