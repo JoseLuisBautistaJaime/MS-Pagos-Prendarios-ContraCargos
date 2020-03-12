@@ -1,0 +1,56 @@
+<!DOCTYPE>
+<HTML>
+  <HEAD>
+    <STYLE>
+    span {
+      font-size: 15px;
+      color: #0C5D89;
+      font-family: georgia, serif;
+    }
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+    }
+    tr td{
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    </STYLE>
+  </HEAD>
+  <BODY>
+    <span>Buena tarde.</span>
+    <br>
+    <span>Por favor nos apoyan a realizar las siguientes devoluciones al cliente, así mismo se autoriza el cargo bancario en la entidad ${entidad}, a la cuenta ${numeroCuenta}, y la(s) afiliacion(es): ${afiliaciones}</span>
+    <br>
+    <br>
+    <table>
+      <thead>
+        <tr style="background-color: #dddddd;">
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Monto</th>
+          <th>Esquema Tarjeta</th>
+          <th>Identificador de cuenta</th>
+          <th>Titular de cuenta</th>
+          <th>C&oacute;digo de autorizaci&oacute;n</th>
+          <th>Sucursal</th>
+        </tr>
+      </thead>
+      <tbody>
+        #foreach( $dev in $devoluciones )
+          <tr>
+            <td>$dev.fecha</td>
+            <td>$dev.hora</td>
+            <td>$dev.monto</td>
+            <td>$dev.esquemaTarjeta</td>
+            <td>$dev.identificadorCuenta</td>
+            <td>$dev.titular</td>
+            <td>$dev.codigoAutorizacion</td>
+            <td>$dev.sucursal</td>
+          </tr>
+        #end
+      </tbody>
+    </table>
+  </BODY>
+</HTML>

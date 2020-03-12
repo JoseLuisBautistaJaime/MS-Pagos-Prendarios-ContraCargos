@@ -1,0 +1,12 @@
+---
+applications:
+- name: dev1775-mimonte-conciliacion
+  buildpack: https://github.com/cloudfoundry/java-buildpack.git
+  memory: 1G
+  timeout: 460
+  path: target/mimonte-0.0.1.war
+  env:
+    spring.profiles.active: cloud,swagger
+    TZ: America/Mexico_City
+  services:
+    - 1775-pagosdb

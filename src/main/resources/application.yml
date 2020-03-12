@@ -1,0 +1,93 @@
+# ===================================================================================================
+# Configuración Spring Boot - PRINCIPAL
+#
+# Configuración base de la aplicación, actúa en conjunto con el application-PROFILE.yml.
+# Aquí se establece la configuración base que normalmente no debería cambiar de acuerdo al
+# profile, o que podría aplicar para más de un profile.
+# ===================================================================================================
+
+# ===================================================================================================
+# Propiedades estandar de Spring.
+# Referencia completa en:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================================================
+
+management:
+  context-path: /mimonte
+security:
+  ignored: /,/index.html,/favicon.png,/logo.png,
+
+info:
+  project:
+    version: 0.0.1
+
+spring:
+  application:
+    name: mimonte
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  datasource:
+    initialize: false
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: MYSQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+logging:
+  config: classpath:logback-spring.xml
+
+# Variables utiles para app microservicios mimonte
+#Pagos
+mimonte:
+  variables:
+    mail:
+      solicitud-pagos:
+        title: "Solicitud de Pagos"
+        velocity-layout: "/templates/mailHtml.vm"
+      solicitudDevolucion:
+        title: "Solicitud de Devoluciones"
+        velocityTemplate: "/templates/solicitudDevoluciones.vm"
+      from: mail@nmp.com
+      auth:
+        user: mimonte
+        password: iXjqY2ccS783PTF0
+      common-headers:
+        id-consumidor: idConsumidor
+        id-consumidor-value: 42
+        id-destino: idDestino
+        id-destino-value: 100
+        usuario: usuario
+        usuario-value: usuario
+      token:
+        url: https://iamdr.montepiedad.com.mx:4444/NMP/oauth2/v1
+      send-mail:
+        url: https://iamdr.montepiedad.com.mx:4444/NMP/Utileria/EnvioCorreo/v2
+    consultaEstadoCuenta:
+      url: https://iamdr.montepiedad.com.mx:4444/NMP/GestionFinanzas/Conciliacion/DocEdoCuenta/v1
+      auth:
+        usuario: mimonte
+        password: iXjqY2ccS783PTF0
+      header:
+        usuario: usuario
+        idConsumidor: 42
+        idDestino: 100
+      archivo:
+        ruta: "'/'ddMMyy"
+        nombre: "'CLCO{CUENTA}'yyMMdd'.txt'"
+    dss:
+      idcliente: "{idCliente}"
+      currentTransactionAmount: "{currentTransactionAmount}"
+    restTemplate:
+      maxAttempt: 3
+      retryTimeInterval: 3000
+    actividades-max-default: 10
+    cantidad-maxima-tarjetas: 3
+    cantidad-maxima-partidas: 10
+    iva: 0.16
