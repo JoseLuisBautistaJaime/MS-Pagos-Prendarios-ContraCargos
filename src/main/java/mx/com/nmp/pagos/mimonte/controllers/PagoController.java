@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.controllers;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import org.jfree.util.Log;
 import org.slf4j.Logger;
@@ -27,10 +28,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
+import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.PagoException;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
+import mx.com.nmp.pagos.mimonte.services.impl.ClienteServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorDatosPago;
 
@@ -65,6 +68,12 @@ public class PagoController {
 	 */
 	private final Logger log = LoggerFactory.getLogger(PagoController.class);
 
+	/*
+	 * Servicio para guardar el cliente
+	 */
+	@Autowired
+	ClienteServiceImpl clienteServiceImpl;
+	
 	/**
 	 * Propiedad con cantidad maxima posible de partidas a pagar
 	 */
@@ -87,6 +96,8 @@ public class PagoController {
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response post(@RequestBody PagoRequestDTO pagoRequestDTO) {
+				
+		ClienteDTO cliente = null;
 		
 		log.info(">>> POST /v1/pago REQUEST: {}", null != pagoRequestDTO ? pagoRequestDTO : "");
 		
@@ -96,7 +107,23 @@ public class PagoController {
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO, cantidadMaximaPartidas);
 		PagoResponseDTO pagoResponseDTO = null;
 		log.debug("Invocando servicio pagoService.savePago(pagoRequestDTO)");
+		
+		// Se guarda el cliente (si es que no existe)
+		if(null != pagoRequestDTO && null != pagoRequestDTO.getIdCliente()){
+			cliente = clienteServiceImpl.getClienteById(pagoRequestDTO.getIdCliente());
+			if(null == cliente) {
+				try {
+					clienteServiceImpl.saveCliente(new ClienteDTO(pagoRequestDTO.getIdCliente(), null, new Date()));
+				}	
+				catch(Exception ex) {
+					log.info("INFO >>> Cliente no guardado por duplicidad");
+				}	
+			}
+		}
+		
+		
 		try {
+			// Se guarda el pago
 			pagoResponseDTO = pagoService.savePago(pagoRequestDTO);
 		} catch (DataIntegrityViolationException | SQLException ex) {
 			Log.error("Error guardando el pago");
