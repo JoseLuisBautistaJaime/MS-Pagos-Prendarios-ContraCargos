@@ -135,8 +135,8 @@ public class PagoServiceImpl implements PagoService {
 				validaDatos(pagoRequestDTO.getTarjeta());
 				flagOkCardData = true;
 			} else {
-				LOG.info(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
-				throw new PagoException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+				// Solo se muestra un log de info que la tarjeta no se guardo, pero el proceso de pago se realiza de forma correcta
+				LOG.info("INFO >>> " + PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 			}
 		}
 		// Finalizan validaciones de tarjeta
