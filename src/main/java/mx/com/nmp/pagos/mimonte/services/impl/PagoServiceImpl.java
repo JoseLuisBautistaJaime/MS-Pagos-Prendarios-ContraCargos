@@ -7,7 +7,6 @@ package mx.com.nmp.pagos.mimonte.services.impl;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -136,8 +135,8 @@ public class PagoServiceImpl implements PagoService {
 				validaDatos(pagoRequestDTO.getTarjeta());
 				flagOkCardData = true;
 			} else {
-				LOG.info(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
-				throw new PagoException(PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
+				// Solo se muestra un log de info que la tarjeta no se guardo, pero el proceso de pago se realiza de forma correcta
+				LOG.info("INFO >>> " + PagoConstants.MAXIMUM_AMOUNT_OF_CARDS_ACHIEVED);
 			}
 		}
 		// Finalizan validaciones de tarjeta
@@ -145,9 +144,14 @@ public class PagoServiceImpl implements PagoService {
 		Integer flag = 0;
 		flag = pagoRepository.countByIdTransaccionMidas(Long.parseLong(pagoRequestDTO.getIdTransaccionMidas()));
 		// Finaliza validacion de id transaccion
+		
 		ClienteDTO cl = clienteService.getClienteById(pagoRequestDTO.getIdCliente());
-		if (null == cl)
-			cl = clienteService.saveCliente(new ClienteDTO(pagoRequestDTO.getIdCliente(), null, new Date()));
+		
+		// TODO: Un vez validada esta funcionalidad eliminar este bloque comentado
+//		if (null == cl) {
+//			cl = clienteService.saveCliente(new ClienteDTO(pagoRequestDTO.getIdCliente(), null, new Date()));
+//		}
+		
 		// Se realizan validacion propias del negocio
 		LOG.debug("Se inician validaciones respecto a objeto pagoRequestDTO.getTarjeta()");
 		if (flagOkCardData && (null != flag && flag == 0)) {

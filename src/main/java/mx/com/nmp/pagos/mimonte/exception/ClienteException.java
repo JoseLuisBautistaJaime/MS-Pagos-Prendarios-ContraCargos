@@ -9,7 +9,7 @@ package mx.com.nmp.pagos.mimonte.exception;
  * @creationDate 29/11/2018 11:16 hrs.
  * @version: 0.1
  */
-public abstract class ClienteException extends RuntimeException {
+public class ClienteException extends RuntimeException {
 
 	/**
 	 * Serial number

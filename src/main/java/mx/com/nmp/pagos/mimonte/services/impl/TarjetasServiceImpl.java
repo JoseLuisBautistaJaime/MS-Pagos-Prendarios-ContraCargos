@@ -77,24 +77,22 @@ public class TarjetasServiceImpl implements TarjetasService {
 		if (idCliente == null || idCliente < 1)
 			throw new TarjetaException(TarjetaConstants.MSG_FAIL_PARAMETER);
 
+		List<TarjeDTO> tarjetaCliente = new ArrayList<TarjeDTO>();;
+		TarjeDTO tarjeDto = null;
+
 		// Obtiene los registros
 		List<Tarjetas> tarjetasCliente = clienteRepository.findByIdCliente(idCliente);
 
-		if (CollectionUtils.isEmpty(tarjetasCliente))
-			throw new TarjetaException(TarjetaConstants.MSG_FAILURE);
+		if(null != tarjetasCliente && !tarjetasCliente.isEmpty()){
+			for (Tarjetas tarjetaClie : tarjetasCliente) {
 
-		List<TarjeDTO> tarjetaCliente = new ArrayList<TarjeDTO>();
+				tarjeDto = getTarjetas(tarjetaClie);
 
-		TarjeDTO tarjeDto = null;
+				tarjetaCliente.add(tarjeDto);
 
-		for (Tarjetas tarjetaClie : tarjetasCliente) {
-
-			tarjeDto = getTarjetas(tarjetaClie);
-
-			tarjetaCliente.add(tarjeDto);
-
+			}	
 		}
-
+		
 		return tarjetaCliente;
 	}
 
