@@ -225,6 +225,8 @@ INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
 (116, 'APL', 'Abono - Pagos Libres');
 INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
 (148, 'DSO', 'Cobro Desempeño en Linea');
+INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
+(191, 'DEX', 'Cobro Desempeño Extemporaneo');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
