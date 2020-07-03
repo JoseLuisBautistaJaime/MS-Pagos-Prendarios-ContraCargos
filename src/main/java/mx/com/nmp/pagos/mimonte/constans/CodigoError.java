@@ -316,6 +316,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_134("La linea no puede ser eliminada porque no se dio de alta desde la aplicacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_135("Aun no se ha realizado el merge de la conciliacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_138("Los montos del layout no cuadran a cero.",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 
