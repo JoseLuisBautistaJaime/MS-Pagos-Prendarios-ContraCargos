@@ -256,7 +256,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 				"transaccion, fecha, estado_transaccion, consumidor, id_operacion, id_tipo_contrato, codigo_error, mensaje_error, id_tarjeta, marca_tarjeta, tipo_tarjeta, tarjeta, moneda_pago, " +
 				"importe_transaccion " +
 			"FROM " +
-				"`tst1775-pagosdb`.to_movimiento_midas mm " +
+				"to_movimiento_midas mm " +
 				"INNER JOIN to_reporte r ON r.id = mm.id_reporte " +
 				"INNER JOIN to_conciliacion c ON c.id = r.id_conciliacion " +
 		        //"INNER JOIN to_comision_transaccion ct ON mm.fecha >= ct.fecha_desde AND mm.fecha < DATE_ADD(ct.fecha_hasta, INTERVAL 1 DAY) " +
