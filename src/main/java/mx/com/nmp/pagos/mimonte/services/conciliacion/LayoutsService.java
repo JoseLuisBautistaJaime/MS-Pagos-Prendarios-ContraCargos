@@ -518,8 +518,37 @@ public class LayoutsService {
 		if (layoutsDTO != null && layoutsDTO.size() > 0) {
 
 			// Se generan todos los layouts, incluyendo cabeceras
-			List<Layout> layouts = mergeLayouts(conciliacion.getId(), layoutsDTO, user, false); // Genera layouts a
-																								// partir de movimientos
+			List<Layout> layouts = mergeLayouts(conciliacion.getId(), layoutsDTO, user, false); // Genera layouts a partir de movimientos
+
+
+			// Se validan
+			for (Layout layout : layouts) {
+				if (layout != null && layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
+					BigDecimal montosPositivos = new BigDecimal(0);
+					BigDecimal montosNegativos = new BigDecimal(0);
+					for (LayoutLinea linea : layout.getLayoutLineas()) {
+						if (linea.getMonto().compareTo(BigDecimal.ZERO) >= 0) {
+							montosPositivos = montosPositivos.add(linea.getMonto());
+						} else {
+							montosNegativos = montosNegativos.add(linea.getMonto());
+						}
+					}
+
+					LOG.debug(">>>> Tipo Layout: [" + layout.getTipo().name() + "], Montos Positivos: [" + montosPositivos.toString() + "], Montos Negativos: [" + montosNegativos.toString() + "]");
+
+					BigDecimal totalMontos = new BigDecimal(0);
+					totalMontos = totalMontos.add(montosPositivos);
+					totalMontos = totalMontos.add(montosNegativos);
+
+					LOG.debug(">>>> Tipo Layout: [" + layout.getTipo().name() + "], Total Montos: [" + totalMontos.toString() + "]");
+
+					if (totalMontos.compareTo(BigDecimal.ZERO) != 0) {
+						throw new ConciliacionException("Montos de layout de " + layout.getTipo().name() + " incorrectos.",
+								CodigoError.NMP_PMIMONTE_BUSINESS_138);
+					}
+				}
+			}
+
 
 			// Se persisten
 			try {
@@ -571,6 +600,7 @@ public class LayoutsService {
 					if (layoutLineasExistentesList.size() > 0) {
 						layoutLineasRepository.saveAll(layoutLineasExistentesList);
 					}*/
+
 					layoutsRepository.save(layout); // Persiste
 
 
@@ -1142,29 +1172,12 @@ public class LayoutsService {
 
 		switch (tipo) {
 			case PAGOS:
-				// Se obtienen los movimientos de pagos // Remover esta consulta
-				List<MovimientoPago> movimientoPagoList = movimientoConciliacionRepository.findMovimientoPagoByConciliacionId(idConciliacion);
-				// Lo siguiente es para setear de manera manual los ids de sucursal a cada
-				// movimiento ya que la consulta no trae esa informacion
-				if(null != movimientoPagoList && !movimientoPagoList.isEmpty()) {
-					List<Integer> idsList = new ArrayList<>();
-					for (MovimientoPago movimientoPago : movimientoPagoList) {
-						idsList.add(movimientoPago.getId());
-					}
-					List<Object[]> result = movimientoConciliacionRepository.getMapSucursalesByMovimientoConciliacionIds(idsList);
-					Map<Integer, Integer> movimientosPagosSucursalesMap = getMapValues(result);
-					for (MovimientoPago movimientoPago : movimientoPagoList) {
-						movimientoPago.getMovimientoMidas()
-								.setSucursal((movimientosPagosSucursalesMap.get(movimientoPago.getId())));
-					}
-					movimientos.addAll(movimientoPagoList);
-				}
 				// Se obtienen los movimientos de pagos midas // MOVIMIENTOS SUCURSAL
 				movimientos.addAll(obtenerMovimientosMidasPagos(idConciliacion, tipo));
 	
 				// Se obtienen los movimientos de pagos estado de cuenta // MOVIMIENTOS BANCO
 				movimientos.addAll(obtenerMovimientosEstadoCuentaPagos(idConciliacion, tipo));
-	
+
 				break;
 			case DEVOLUCIONES:
 
