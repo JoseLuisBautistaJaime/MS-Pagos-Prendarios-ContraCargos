@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.util.validacion;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.dto.OperacionDTO;
@@ -107,8 +108,10 @@ public interface ValidadorDatosPago {
 		}
 
 		LOG.debug(">> Suma de Montos Recibida [{}] vs Calculada [{}] ",
-				pagoRequestDTO.getMontoTotal().toString(), sum.toString());
+				pagoRequestDTO.getMontoTotal().setScale(2, RoundingMode.HALF_UP).toString(), sum.setScale(2, RoundingMode.HALF_UP).toString());
 
+		if (pagoRequestDTO.getMontoTotal().setScale(2, RoundingMode.HALF_UP).compareTo(sum.setScale(2, RoundingMode.HALF_UP)) != 0)
+			throw new PagoException(PagoConstants.IRREGULAR_OPERATIONS_AMOUNT);
 		try {
 			Long.parseLong(pagoRequestDTO.getIdTransaccionMidas());
 		} catch (NumberFormatException nex) {
