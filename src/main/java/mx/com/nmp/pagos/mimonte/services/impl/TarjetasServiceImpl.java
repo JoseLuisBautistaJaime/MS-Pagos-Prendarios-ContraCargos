@@ -316,13 +316,14 @@ public class TarjetasServiceImpl implements TarjetasService {
 			for (Tarjetas tarjetaVal : tarjetasList) {
 
 				String aliasBd = tarjetaVal.getAlias().toUpperCase().trim();
+				
+				String idOpenpayBd = tarjetaVal.getId_openpay();
 
 				String aliasUsu = alias.toUpperCase().trim();
 
 				// Evalua si ya existe el mismo alias en la tarjeta
-				if (null != tarjetaVal && null != aliasBd && aliasBd.equals(aliasUsu))
+				if (null != tarjetaVal && null != aliasBd && aliasBd.equals(aliasUsu) && !idOpenpayBd.equals(id_openpay))
 					throw new TarjetaException(TarjetaConstants.ALIAS_ALREADY_EXIST_FOR_CURRENT_CLIENT);
-
 			}
 
 		}

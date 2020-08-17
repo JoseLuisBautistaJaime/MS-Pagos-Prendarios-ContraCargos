@@ -109,8 +109,6 @@ public interface ValidadorDatosPago {
 		LOG.debug(">> Suma de Montos Recibida [{}] vs Calculada [{}] ",
 				pagoRequestDTO.getMontoTotal().toString(), sum.toString());
 
-		if (pagoRequestDTO.getMontoTotal().compareTo(sum) != 0)
-			throw new PagoException(PagoConstants.IRREGULAR_OPERATIONS_AMOUNT);
 		try {
 			Long.parseLong(pagoRequestDTO.getIdTransaccionMidas());
 		} catch (NumberFormatException nex) {
