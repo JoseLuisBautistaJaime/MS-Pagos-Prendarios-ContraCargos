@@ -92,6 +92,6 @@ public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 	 * @return
 	 */
 	@Query("SELECT c.numeroCuenta FROM Cuenta c INNER JOIN Conciliacion con ON con.cuenta.id = c.id WHERE con.id = :conciliacionId")
-	public Object findCuentaNumeroByConciliacionId(Long conciliacionId);
+	public Object findCuentaNumeroByConciliacionId(@Param("conciliacionId") Long conciliacionId);
 	
 }
