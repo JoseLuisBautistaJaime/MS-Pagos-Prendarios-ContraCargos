@@ -38,6 +38,7 @@ public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 	private DevolucionConDTO devoluciones;
 	private MovTransitoDTO movimientosTransito;
 	private ComisionesDTO comisiones;
+	private Long idProveedor;
 
 	public ConciliacionResponseSaveDTO() {
 		super();
@@ -71,6 +72,14 @@ public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 		this.devoluciones = devoluciones;
 		this.movimientosTransito = movimientosTransito;
 		this.comisiones = comisiones;
+	}
+	
+	public Long getIdProveedor() {
+		return idProveedor;
+	}
+
+	public void setIdProveedor(Long idProveedor) {
+		this.idProveedor = idProveedor;
 	}
 
 	public Long getFolio() {
