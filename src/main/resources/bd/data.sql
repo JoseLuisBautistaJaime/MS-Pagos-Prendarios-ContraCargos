@@ -446,3 +446,12 @@ VALUES (28, 'ENVIO_CONCILIACION', 18, 17);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
 VALUES( 29, 'CONCILIACION_MERGE', 8, 12);
+
+
+-- ---------------------------------------------------------------------------------- --
+-- --------------- INSERT DE LOS PROVEEDORES / CORRESPONSALES ------------------------ --
+-- ---------------------------------------------------------------------------------- --
+INSERT INTO tk_proveedor (id, nombre, descripcion) 
+	VALUES
+		(1,'OPENPAY', 'Proveedor transaccional')
+        , (2, 'OXXO', 'Proveedor oxxo');

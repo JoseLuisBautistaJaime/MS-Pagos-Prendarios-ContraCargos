@@ -228,6 +228,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		}
+		
+		// Validacion del id de proveedor distinto de 0
+		if (conciliacionRequestDTO.getIdProveedor() == null || conciliacionRequestDTO.getIdProveedor() < 1) {
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		}
 
 		// Validación del atributo createdBy
 		if (StringUtils.isBlank(createdBy)) {

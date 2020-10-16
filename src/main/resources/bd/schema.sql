@@ -57,6 +57,7 @@ DROP TABLE IF EXISTS `tk_variable` ;
 DROP TABLE IF EXISTS `tk_tipo_contrato` ;
 DROP TABLE IF EXISTS `tk_estatus_pago` ;
 DROP TABLE IF EXISTS `seq_conciliacion` ;
+DROP TABLE IF EXISTS `fk_proveedor` ;
 
 
 
@@ -648,6 +649,7 @@ CREATE TABLE IF NOT EXISTS `to_conciliacion` (
   `id_estatus_conciliacion` BIGINT(20) NOT NULL,
   `id_entidad` BIGINT(20) NOT NULL,
   `id_cuenta` BIGINT(20) NOT NULL,
+  `id_proveedor` BIGINT(20) NOT NULL,
   `id_sub_estatus_conciliacion` BIGINT(20) NOT NULL,
   `sub_estatus_descripcion` VARCHAR(250) NULL DEFAULT NULL,
   `id_poliza_tesoreria` VARCHAR(20) NULL DEFAULT NULL,
@@ -664,6 +666,7 @@ CREATE TABLE IF NOT EXISTS `to_conciliacion` (
   INDEX `cuenta_fk_idx` (`id_cuenta` ASC),
   INDEX `sub_estatus_conciliacion_fk_idx` (`id_sub_estatus_conciliacion` ASC),
   INDEX `merge_fk_idx` (`id_merge` ASC),
+  INDEX `proveedor_con_fk_idx` (`id_proveedor` ASC),
   CONSTRAINT `cuenta_fk`
     FOREIGN KEY (`id_cuenta`)
     REFERENCES `tc_cuenta` (`id`),
@@ -678,7 +681,10 @@ CREATE TABLE IF NOT EXISTS `to_conciliacion` (
     REFERENCES `tk_sub_estatus_conciliacion` (`id`),
 CONSTRAINT `merge_fk`
     FOREIGN KEY (`id_merge`)
-    REFERENCES `to_merge_conciliacion` (`id`))
+    REFERENCES `to_merge_conciliacion` (`id`),
+CONSTRAINT `proveedor_con_fk`
+    FOREIGN KEY (`id_proveedor`)
+    REFERENCES `tk_proveedor` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -794,13 +800,13 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_proveedor` (
   `conciliated` BIT(1) DEFAULT b'0',
   `creation_date` DATETIME NOT NULL,
   `operation_date` DATETIME NOT NULL,
-  `description` VARCHAR(50) NOT NULL,
+  `description` VARCHAR(50) NULL,
   `error_message` VARCHAR(50) DEFAULT NULL,
-  `order_id` VARCHAR(50) DEFAULT NULL,
+  `order_id` VARCHAR(50) NOT NULL DEFAULT '',
   `customer_id` VARCHAR(50) DEFAULT NULL,
   `error_code` VARCHAR(50) DEFAULT NULL,
-  `currency` VARCHAR(50) NOT NULL,
-  `amount` DECIMAL(16,4) NOT NULL,
+  `currency` VARCHAR(50) NULL,
+  `amount` DECIMAL(16,4) NOT NULL DEFAULT 0.0,
   `payment_method_type` VARCHAR(50) DEFAULT NULL,
   `payment_method_url` VARCHAR(1024) DEFAULT NULL,
   `card_id` VARCHAR(50) DEFAULT NULL,
@@ -1259,6 +1265,16 @@ CREATE TABLE `seq_conciliacion` (
   `seq_name` VARCHAR(45) NOT NULL,
   `seq_value` BIGINT(20) DEFAULT '0',
   PRIMARY KEY (`seq_name`)
+) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
+
+-- -------------------------------------------------------------- --
+-- ------------ TABLA PROVEEDOR / CORRESPONSAL ------------------ --
+-- -------------------------------------------------------------- --
+CREATE TABLE `tk_proveedor` (
+`id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+`nombre` VARCHAR(150),
+`descripcion` VARCHAR(250),
+PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
 
 -- ------------------------------------------------------------------------------------------------- --
