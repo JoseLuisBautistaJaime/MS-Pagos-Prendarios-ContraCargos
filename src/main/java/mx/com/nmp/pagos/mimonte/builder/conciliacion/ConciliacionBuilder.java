@@ -114,7 +114,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setDevoluciones(null);
 			conciliacionResponseSaveDTO.setMovimientosTransito(null);
 			conciliacionResponseSaveDTO.setComisiones(null);
-			conciliacionResponseSaveDTO.setIdProveedor(conciliacionRequestDTO.getIdProveedor());
+			conciliacionResponseSaveDTO.setIdProveedor(conciliacionRequestDTO.getCorresponsal().getId());
 		}
 		return conciliacionResponseSaveDTO;
 	}

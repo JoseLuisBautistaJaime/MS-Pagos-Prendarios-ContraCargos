@@ -4,14 +4,11 @@
  */
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -50,9 +47,6 @@ public class Proveedor implements java.io.Serializable{
 	@Column(name = "descripcion", nullable = true)
 	private String descripcion;
 	
-	@OneToMany(mappedBy = "proveedor")
-	private Set<Conciliacion> conciliaciones;
-
 	public Long getId() {
 		return id;
 	}

@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @name ConciliacionRequestDTO
  * @description Clase que encapsula la información de una conciliación.
@@ -12,35 +14,35 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  * @creationDate 02/04/2019 16:50 hrs.
  * @version 0.1
  */
-public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO>{
-	
+public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO> {
+
 	private Long idEntidad;
 	private Long idCuenta;
-	private Long idProveedor;
+	private CorresponsalEnum corresponsal;
 
 	public ConciliacionRequestDTO() {
 		super();
 	}
-	
+
 	public ConciliacionRequestDTO(Long idEntidad, Long idCuenta) {
 		super();
 		this.idEntidad = idEntidad;
 		this.idCuenta = idCuenta;
 	}
 
-	public ConciliacionRequestDTO(Long idEntidad, Long idCuenta, Long idProveedor) {
+	public ConciliacionRequestDTO(Long idEntidad, Long idCuenta, CorresponsalEnum corresponsal) {
 		super();
 		this.idEntidad = idEntidad;
 		this.idCuenta = idCuenta;
-		this.idProveedor = idProveedor;
-	}
-	
-	public Long getIdProveedor() {
-		return idProveedor;
+		this.corresponsal = corresponsal;
 	}
 
-	public void setIdProveedor(Long idProveedor) {
-		this.idProveedor = idProveedor;
+	public CorresponsalEnum getCorresponsal() {
+		return corresponsal;
+	}
+
+	public void setCorresponsal(CorresponsalEnum corresponsal) {
+		this.corresponsal = corresponsal;
 	}
 
 	public Long getIdEntidad() {
@@ -58,18 +60,16 @@ public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO
 	public void setIdCuenta(Long idCuenta) {
 		this.idCuenta = idCuenta;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "ConciliacionRequestDTO [idEntidad=" + idEntidad + ", idCuenta=" + idCuenta + ", idProveedor="
-				+ idProveedor + "]";
+		return "ConciliacionRequestDTO [idEntidad=" + idEntidad + ", idCuenta=" + idCuenta + ", corresponsal="
+				+ corresponsal + "]";
 	}
 
 	@Override
 	public int compareTo(ConciliacionRequestDTO arg0) {
 		return 0;
 	}
-
-	
 
 }
