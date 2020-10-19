@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @name ConciliacionRequestDTO
  * @description Clase que encapsula la información de una conciliación.
@@ -12,19 +14,35 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  * @creationDate 02/04/2019 16:50 hrs.
  * @version 0.1
  */
-public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO>{
-	
+public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO> {
+
 	private Long idEntidad;
 	private Long idCuenta;
+	private CorresponsalEnum corresponsal;
 
 	public ConciliacionRequestDTO() {
 		super();
 	}
-	
+
 	public ConciliacionRequestDTO(Long idEntidad, Long idCuenta) {
 		super();
 		this.idEntidad = idEntidad;
 		this.idCuenta = idCuenta;
+	}
+
+	public ConciliacionRequestDTO(Long idEntidad, Long idCuenta, CorresponsalEnum corresponsal) {
+		super();
+		this.idEntidad = idEntidad;
+		this.idCuenta = idCuenta;
+		this.corresponsal = corresponsal;
+	}
+
+	public CorresponsalEnum getCorresponsal() {
+		return corresponsal;
+	}
+
+	public void setCorresponsal(CorresponsalEnum corresponsal) {
+		this.corresponsal = corresponsal;
 	}
 
 	public Long getIdEntidad() {
@@ -45,14 +63,13 @@ public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO
 
 	@Override
 	public String toString() {
-		return "ConciliacionRequestDTO [idEntidad=" + idEntidad + ", idCuenta=" + idCuenta + "]";
+		return "ConciliacionRequestDTO [idEntidad=" + idEntidad + ", idCuenta=" + idCuenta + ", corresponsal="
+				+ corresponsal + "]";
 	}
 
 	@Override
 	public int compareTo(ConciliacionRequestDTO arg0) {
 		return 0;
 	}
-
-	
 
 }

@@ -220,6 +220,8 @@ INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus
 -- INSERTS INICIALES EN TABLA - tk_operacion
 -- ------------------------------------------------------------------------------------------------------------------ --
 INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
+(2, 'VP', 'Venta al Publico');
+INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
 (8, 'RF', 'Cobro Refrendo');
 INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
 (116, 'APL', 'Abono - Pagos Libres');
@@ -227,6 +229,8 @@ INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
 (148, 'DSO', 'Cobro Desempeño en Linea');
 INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
 (191, 'DEX', 'Cobro Desempeño Extemporaneo');
+INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
+(198, 'RFE', 'Cobro Refrendo Extemporaneo');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -442,3 +446,12 @@ VALUES (28, 'ENVIO_CONCILIACION', 18, 17);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
 VALUES( 29, 'CONCILIACION_MERGE', 8, 12);
+
+
+-- ---------------------------------------------------------------------------------- --
+-- --------------- INSERT DE LOS PROVEEDORES / CORRESPONSALES ------------------------ --
+-- ---------------------------------------------------------------------------------- --
+INSERT INTO tk_proveedor (id, nombre, descripcion) 
+	VALUES
+		(1,'OPENPAY', 'Proveedor transaccional')
+        , (2, 'OXXO', 'Proveedor oxxo');

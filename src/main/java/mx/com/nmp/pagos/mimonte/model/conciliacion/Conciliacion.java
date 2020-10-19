@@ -79,6 +79,10 @@ public class Conciliacion extends Updatable implements Serializable  {
 	@JoinColumn(name = "id_merge")
 	private ConciliacionMerge merge;
 	
+	@ManyToOne
+	@JoinColumn(name = "id_proveedor")
+	private Proveedor proveedor;
+	
 	public Conciliacion() {
 		super();
 	}
@@ -195,6 +199,14 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.merge = merge;
 	}
 	
+	public Proveedor getProveedor() {
+		return proveedor;
+	}
+
+	public void setProveedor(Proveedor proveedor) {
+		this.proveedor = proveedor;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -229,8 +241,8 @@ public class Conciliacion extends Updatable implements Serializable  {
 	public String toString() {
 		return "Conciliacion [id=" + id + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta=" + cuenta
 				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idPolizaTesoreria=" + idPolizaTesoreria
-				+ ", idAsientoContable=" + idAsientoContable + ", completedDate=" + completedDate + ", global=" + (global != null ? global.getId() : 0)
-				+ ", subEstatus=" + subEstatus + "]";
+				+ ", idAsientoContable=" + idAsientoContable + ", completedDate=" + completedDate + ", global=" + global
+				+ ", subEstatus=" + subEstatus + ", merge=" + merge + ", proveedor=" + proveedor + "]";
 	}
 
 }
