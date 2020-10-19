@@ -31,6 +31,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalResumenDTO;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Proveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 
@@ -114,7 +115,11 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setDevoluciones(null);
 			conciliacionResponseSaveDTO.setMovimientosTransito(null);
 			conciliacionResponseSaveDTO.setComisiones(null);
-			conciliacionResponseSaveDTO.setIdProveedor(conciliacionRequestDTO.getCorresponsal().getId());
+			// Se setea el corresponsal, si es nulo se setea por default el corresponsal OPEN_PAY
+			if(null != conciliacionRequestDTO.getCorresponsal())
+				conciliacionResponseSaveDTO.setIdProveedor(conciliacionRequestDTO.getCorresponsal().getId());
+			else
+				conciliacionResponseSaveDTO.setIdProveedor(CorresponsalEnum.OPEN_PAY.getId());
 		}
 		return conciliacionResponseSaveDTO;
 	}
