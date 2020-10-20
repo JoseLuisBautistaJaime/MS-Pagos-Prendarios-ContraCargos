@@ -17,7 +17,9 @@ PRIMARY KEY (id)
 -- -------------------------------------------------------------- -- 
 ALTER TABLE `to_conciliacion` ADD COLUMN id_proveedor BIGINT(20) NOT NULL DEFAULT 1;
 ALTER TABLE `to_conciliacion` ADD INDEX `proveedor_con_fk_idx` (`id_proveedor` ASC);
+SET FOREIGN_KEY_CHECKS=0;
 ALTER TABLE `to_conciliacion` ADD CONSTRAINT `proveedor_con_fk` FOREIGN KEY (`id_proveedor`) REFERENCES `tk_proveedor` (`id`);
+SET FOREIGN_KEY_CHECKS=1;
 
 -- -------------------------------------------------------------- --
 -- ---------- DATOS OBLIGATORIOS MOVIMIENTOS PROVEEDOR ---------- --
