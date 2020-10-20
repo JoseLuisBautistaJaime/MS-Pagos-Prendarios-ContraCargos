@@ -66,19 +66,19 @@ ALTER TABLE `to_reporte` DROP FOREIGN KEY `FK_to_carga_reporte_to_conciliacion`;
 ALTER TABLE `to_reporte` DROP INDEX `FK_to_carga_reporte_to_conciliacion_idx`;
 
 -- Se cambian tipo de dato INT(11) a BIGINT(20)
-ALTER TABLE `to_movimiento_conciliacion` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL,
+ALTER TABLE `to_movimiento_conciliacion` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
 			CHANGE COLUMN `id_movimiento_midas` `id_movimiento_midas` BIGINT(20) NULL DEFAULT NULL;
 ALTER TABLE `to_movimiento_comision` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_movimiento_devolucion` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_movimiento_pago` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_movimiento_transito` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_estado_cuenta` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
-ALTER TABLE `to_reporte` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
-ALTER TABLE `to_movimiento_estado_cuenta` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL,
+ALTER TABLE `to_reporte` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `to_movimiento_estado_cuenta` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
 			CHANGE COLUMN `estado_cuenta` `estado_cuenta` BIGINT(20) NULL DEFAULT NULL;
-ALTER TABLE `to_estado_cuenta` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL,
+ALTER TABLE `to_estado_cuenta` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
 			CHANGE COLUMN `reporte` `reporte` BIGINT(20) NULL DEFAULT NULL;
-ALTER TABLE `to_movimiento_midas` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL,
+ALTER TABLE `to_movimiento_midas` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
 			CHANGE COLUMN `id_reporte` `id_reporte` BIGINT(20) NOT NULL;
 ALTER TABLE `to_movimiento_proveedor` CHANGE COLUMN `id_reporte` `id_reporte` BIGINT(20) NOT NULL;
 

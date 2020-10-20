@@ -728,7 +728,7 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_reporte`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_reporte` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `id_conciliacion` BIGINT(20) NOT NULL,
   `tipo` VARCHAR(45) NOT NULL,
   `disponible` TINYINT(4) NOT NULL DEFAULT '0',
@@ -751,8 +751,8 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_movimiento_midas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_movimiento_midas` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `id_reporte` INT(11) NOT NULL,
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `id_reporte` BIGINT(20) NOT NULL,
   `folio` INT(11) NULL DEFAULT NULL,
   `sucursal` INT(11) NULL DEFAULT NULL,
   `operacion_abr` VARCHAR(10) NULL DEFAULT NULL,
@@ -800,7 +800,7 @@ DEFAULT CHARACTER SET = latin1;
 CREATE TABLE IF NOT EXISTS `to_movimiento_proveedor` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `id_movimiento` VARCHAR(100) NOT NULL,
-  `id_reporte` INT(11) NOT NULL,
+  `id_reporte` BIGINT(20) NOT NULL,
   `authorization` VARCHAR(50) DEFAULT NULL,
   `operation_type` VARCHAR(50) DEFAULT NULL,
   `method` VARCHAR(50) DEFAULT NULL,
@@ -902,8 +902,8 @@ CREATE TABLE to_estado_cuenta_cabecera
 -- -----------------------------------------------------
 CREATE TABLE to_estado_cuenta
 (
-  id INTEGER NOT NULL AUTO_INCREMENT,
-  reporte INTEGER,
+  id BIGINT(20) NOT NULL AUTO_INCREMENT,
+  reporte BIGINT(20),
   cabecera INTEGER,
   total_movimientos INTEGER,
   totales INTEGER,
@@ -929,8 +929,8 @@ CREATE TABLE to_estado_cuenta
 -- -----------------------------------------------------
 CREATE TABLE to_movimiento_estado_cuenta
 (
-  id INTEGER NOT NULL AUTO_INCREMENT,
-  estado_cuenta INTEGER,
+  id BIGINT(20) NOT NULL AUTO_INCREMENT,
+  estado_cuenta BIGINT(20),
   clave_pais VARCHAR(4),
   sucursal VARCHAR(4),
   fecha_operacion DATE,
@@ -955,14 +955,14 @@ CREATE TABLE to_movimiento_estado_cuenta
 -- Table `to_movimiento_conciliacion`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_movimiento_conciliacion` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `id_conciliacion` BIGINT(20) NOT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `created_date` DATETIME NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `nuevo` TINYINT(4) NULL DEFAULT NULL,
-  `id_movimiento_midas` INT(11) NULL DEFAULT NULL,
+  `id_movimiento_midas` BIGINT(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `FK_to_movimiento_conciliacion_to_conciliacion_idx` (`id_conciliacion` ASC),
   INDEX `id_movimiento_midas` (`id_movimiento_midas` ASC),
@@ -980,7 +980,7 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_movimiento_comision`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_movimiento_comision` (
-  `id` INT(11) NOT NULL,
+  `id` BIGINT(20) NOT NULL,
   `fecha_operacion` DATE NULL DEFAULT NULL,
   `fecha_cargo` DATE NULL DEFAULT NULL,
   `monto` DECIMAL(16,4) NOT NULL,
@@ -1000,7 +1000,7 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_movimiento_devolucion`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_movimiento_devolucion` (
-  `id` INT(11) NOT NULL,
+  `id` BIGINT(20) NOT NULL,
   `estatus` INT(11) NOT NULL,
   `fecha` DATETIME NOT NULL,
   `monto` DECIMAL(16,4) NOT NULL,
@@ -1026,7 +1026,7 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_movimiento_pago`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_movimiento_pago` (
-  `id` INT(11) NOT NULL,
+  `id` BIGINT(20) NOT NULL,
   `estatus` INT(11) NOT NULL,
   `monto` DECIMAL(16,4),
   PRIMARY KEY (`id`),
@@ -1041,7 +1041,7 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `to_movimiento_transito`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_movimiento_transito` (
-  `id` INT(11) NOT NULL,
+  `id` BIGINT(20) NOT NULL,
   `estatus` INT(11) NOT NULL,
   `folio` INT(11) NULL DEFAULT NULL,
   `sucursal` INT(11) NULL DEFAULT NULL,
@@ -1297,10 +1297,10 @@ CREATE PROCEDURE `save_movimiento_comision`(
     _id_movimiento_estado_cuenta BIGINT(20),
 
 	-- Campos para to_movimiento_conciliacion
-	_id INT(11),
+	_id BIGINT(20),
 	_id_conciliacion BIGINT(20),
     _nuevo TINYINT(4),
-    _id_movimiento_midas INT(11),
+    _id_movimiento_midas BIGINT(20),
 
     -- Updatable
     _created_date DATETIME,
@@ -1312,7 +1312,7 @@ MODIFIES SQL DATA
 MAIN: BEGIN
 
 	-- Funcion que inserta un movimiento conciliacion comision
-	DECLARE _id_movimiento_conciliacion INT(11);
+	DECLARE _id_movimiento_conciliacion BIGINT(20);
 
 	-- En caso de error se hace rollback
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -1391,10 +1391,10 @@ CREATE PROCEDURE `save_movimiento_devolucion`(
     _fecha_liquidacion DATE,
 
 	-- Campos para to_movimiento_conciliacion
-	_id INT(11),
+	_id BIGINT(20),
 	_id_conciliacion BIGINT(20),
     _nuevo TINYINT(4),
-    _id_movimiento_midas INT(11),
+    _id_movimiento_midas BIGINT(20),
 
     -- Updatable
     _created_date DATETIME,
@@ -1407,7 +1407,7 @@ MAIN: BEGIN
 
 	-- Funcion que inserta un movimiento conciliacion devolucion
 
-	DECLARE _id_movimiento_conciliacion INT(11);
+	DECLARE _id_movimiento_conciliacion BIGINT(20);
 
 	-- En caso de error se hace rollback
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -1489,10 +1489,10 @@ CREATE PROCEDURE `save_movimiento_transito`(
     _num_autorizacion VARCHAR(45),
 
 	-- Campos para to_movimiento_conciliacion
-	_id INT(11),
+	_id BIGINT(20),
 	_id_conciliacion BIGINT(20),
     _nuevo TINYINT(4),
-    _id_movimiento_midas INT(11),
+    _id_movimiento_midas BIGINT(20),
 
     -- Updatable
     _created_date DATETIME,
@@ -1504,7 +1504,7 @@ MODIFIES SQL DATA
 MAIN: BEGIN
 	-- Funcion que inserta un movimiento conciliacion transito
 
-	DECLARE _id_movimiento_conciliacion INT(11);
+	DECLARE _id_movimiento_conciliacion BIGINT(20);
 
 	-- En caso de error se hace rollback
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
