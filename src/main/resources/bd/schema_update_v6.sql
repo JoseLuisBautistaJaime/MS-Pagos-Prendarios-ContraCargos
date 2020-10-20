@@ -70,7 +70,7 @@ ALTER TABLE `to_movimiento_conciliacion` CHANGE COLUMN `id` `id` BIGINT(20) NOT 
 			CHANGE COLUMN `id_movimiento_midas` `id_movimiento_midas` BIGINT(20) NULL DEFAULT NULL;
 ALTER TABLE `to_movimiento_comision` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_movimiento_devolucion` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
-ALTER TABLE `to_movimiento_pago` CHANGE COLUMN `id` `id` BIGINT(11) NOT NULL;
+ALTER TABLE `to_movimiento_pago` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_movimiento_transito` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_estado_cuenta` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_reporte` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
