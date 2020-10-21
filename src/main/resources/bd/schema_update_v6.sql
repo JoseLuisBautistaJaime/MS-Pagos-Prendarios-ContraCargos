@@ -137,3 +137,15 @@ ALTER TABLE `to_movimiento_transito` ADD (
     FOREIGN KEY (`id`)
     REFERENCES `to_movimiento_conciliacion` (`id`)
 );
+
+
+-- -------------------------------------------------------------- --
+-- ------------------ TABLA TC_LAYOUT_HEADER -------------------- --
+-- -------------------------------------------------------------- -- 
+ALTER TABLE `tc_layout_header` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY';
+
+
+-- -------------------------------------------------------------- --
+-- ------------------ TABLA TC_LAYOUT_LINEA --------------------- --
+-- -------------------------------------------------------------- --
+ALTER TABLE `tc_layout_linea` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY'; 

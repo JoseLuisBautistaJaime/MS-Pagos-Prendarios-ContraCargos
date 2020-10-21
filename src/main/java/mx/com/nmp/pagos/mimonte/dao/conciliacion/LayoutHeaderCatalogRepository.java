@@ -5,8 +5,10 @@
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 
@@ -24,5 +26,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 public interface LayoutHeaderCatalogRepository extends JpaRepository<LayoutHeaderCatalog, Long> {
 
 	public LayoutHeaderCatalog findByTipo(TipoLayoutEnum tipo);
+	
+	public LayoutHeaderCatalog findByTipoAndCorresponsal(TipoLayoutEnum tipo, CorresponsalEnum corresponsal);
 
 }

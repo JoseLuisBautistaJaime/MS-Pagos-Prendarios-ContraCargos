@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.GrupoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
@@ -24,6 +25,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 @Repository
 public interface LayoutLineaCatalogRepository extends JpaRepository<LayoutLineaCatalog, Long> {
 
-	public LayoutLineaCatalog findByTipoAndGrupo(TipoLayoutEnum tipoLayout, GrupoLayoutEnum grupo);
+	public LayoutLineaCatalog findByTipoAndGrupoAndCorresponsal(TipoLayoutEnum tipoLayout, GrupoLayoutEnum grupo, CorresponsalEnum corresponsal);
 
 }
