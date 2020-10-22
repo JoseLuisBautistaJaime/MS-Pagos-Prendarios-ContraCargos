@@ -19,6 +19,7 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
 import mx.com.nmp.pagos.mimonte.observer.ReporteObserver;
@@ -89,8 +90,8 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 	/* (non-Javadoc)
 	 * @see mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper#generarConciliacion(java.lang.Long, java.lang.Long, java.util.List)
 	 */
-	public void generarConciliacion(Long folio, Long idEntidad, List<Reporte> reportes) throws ConciliacionException {
-		ReporteObservable reporteObservable = new ReporteObservable(reportes, folio, idEntidad);
+	public void generarConciliacion(Long folio, Long idEntidad, List<Reporte> reportes, CorresponsalEnum corresponsal) throws ConciliacionException {
+		ReporteObservable reporteObservable = new ReporteObservable(reportes, folio, idEntidad, corresponsal);
 		reporteObservable.addObserver(reporteObserver);
 		reporteObservable.notifyObservers();
 	}

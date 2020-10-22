@@ -79,6 +79,7 @@ import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
@@ -1215,7 +1216,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Notificar cambios o alta de reportes, si existen...
 		Long idEntidad = reportes.get(0).getConciliacion().getEntidad().getId(); // Se obtiene la entidad bancaria asociada
-		this.conciliacionHelper.generarConciliacion(idConciliacion, idEntidad, reportes);
+		CorresponsalEnum corresponsal = CorresponsalEnum.OPEN_PAY; // TODO: Persistir el corresponsal
+		this.conciliacionHelper.generarConciliacion(idConciliacion, idEntidad, reportes, corresponsal);
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(idConciliacion,

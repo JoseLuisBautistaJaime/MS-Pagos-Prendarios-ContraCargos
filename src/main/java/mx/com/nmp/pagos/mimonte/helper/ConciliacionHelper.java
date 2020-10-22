@@ -9,6 +9,7 @@ import java.util.List;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 
 /**
@@ -35,9 +36,10 @@ public interface ConciliacionHelper {
 	 * @param folio
 	 * @param idEntidad
 	 * @param reportes
+	 * @param corresponsal
 	 * @throws ConciliacionException
 	 */
-	public void generarConciliacion(Long folio, Long idEntidad, List<Reporte> reportes) throws ConciliacionException;
+	public void generarConciliacion(Long folio, Long idEntidad, List<Reporte> reportes, CorresponsalEnum corresponsal) throws ConciliacionException;
 
 	/**
 	 * Se encarga de obtener la proyeccion asignada a la conciliacion
