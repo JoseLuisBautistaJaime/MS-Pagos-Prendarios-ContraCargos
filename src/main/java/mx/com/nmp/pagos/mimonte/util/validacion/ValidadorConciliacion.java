@@ -38,6 +38,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestMultipleDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoActualizacionTransito;
@@ -172,6 +173,19 @@ public interface ValidadorConciliacion {
 			assertNotNull(saveEstadoCuentaRequestDTO.getFolio());
 			assertNotNull(saveEstadoCuentaRequestDTO.getFechaInicial());
 			assertNotNull(saveEstadoCuentaRequestDTO.getFechaFinal());
+		} catch (java.lang.AssertionError | Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public static boolean validateSaveEstadoCuentaRequestMultipleDTO(SaveEstadoCuentaRequestMultipleDTO saveEstadoCuentaRequestMultipleDTO) {
+		try {
+			assertNotNull(saveEstadoCuentaRequestMultipleDTO);
+			assertNotNull(saveEstadoCuentaRequestMultipleDTO.getFolios());
+			assertNotNull(saveEstadoCuentaRequestMultipleDTO.getFechaInicial());
+			assertNotNull(saveEstadoCuentaRequestMultipleDTO.getFechaFinal());
 		} catch (java.lang.AssertionError | Exception ex) {
 			ex.printStackTrace();
 			return false;

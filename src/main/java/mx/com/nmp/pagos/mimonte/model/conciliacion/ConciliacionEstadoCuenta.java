@@ -7,6 +7,9 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -21,6 +24,11 @@ import javax.persistence.Table;
 @Table(name = "tr_conciliacion_estado_cuenta")
 public class ConciliacionEstadoCuenta {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Long id;
+	
 	@Column(name = "id_conciliacion", nullable = false)
 	private Long idConciliacion;
 
@@ -30,6 +38,12 @@ public class ConciliacionEstadoCuenta {
 
 	public ConciliacionEstadoCuenta() {
 		super();
+	}
+	
+	public ConciliacionEstadoCuenta(Long idConciliacion, Long idReporte) {
+		super();
+		this.idConciliacion = idConciliacion;
+		this.idReporte = idReporte;
 	}
 
 	public Long getIdConciliacion() {

@@ -33,11 +33,12 @@ ALTER TABLE `to_movimiento_proveedor` CHANGE COLUMN `amount` `amount` DECIMAL(16
 -- ---------- ASOCIA UN ESTADO DE CUENTA A VARIAS CONCILIACIONES ---------- --
 -- ------------------------------------------------------------------------ -- 
 CREATE TABLE `tr_conciliacion_estado_cuenta` (
+	`id` BIGINT(20) NOT NULL AUTO_INCREMENT,
 	`id_conciliacion` BIGINT(20) NOT NULL,
 	`id_reporte` BIGINT(20) NOT NULL,
-	PRIMARY KEY (`id_conciliacion`, `id_reporte`),
-	CONSTRAINT "fk_tr_conciliacion_estado_cuenta_conciliacion" FOREIGN KEY(id_conciliacion) REFERENCES to_conciliacion(id),
-	CONSTRAINT "fk_tr_conciliacion_estado_cuenta_report" FOREIGN KEY(id_reporte) REFERENCES to_reporte(id)
+	PRIMARY KEY (`id`, `id_conciliacion`, `id_reporte`),
+	CONSTRAINT `fk_tr_conciliacion_estado_cuenta_conciliacion` FOREIGN KEY(id_conciliacion) REFERENCES to_conciliacion(id),
+	CONSTRAINT `fk_tr_conciliacion_estado_cuenta_report` FOREIGN KEY(id_reporte) REFERENCES to_reporte(id)
 ) ENGINE = InnoDB;
 
 
