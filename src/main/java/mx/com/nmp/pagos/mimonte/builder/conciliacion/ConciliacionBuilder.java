@@ -24,6 +24,8 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionResponseDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestMultipleDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalConciliacionesDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalDevolucionesLiquidadasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalProcesoDTO;

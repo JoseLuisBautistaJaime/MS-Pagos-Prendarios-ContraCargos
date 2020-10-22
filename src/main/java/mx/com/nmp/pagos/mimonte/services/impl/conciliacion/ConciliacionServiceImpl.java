@@ -1257,6 +1257,20 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		subEstatusConciliacionRepository.flush();
 
 	}
+	
+	/**
+	 * Actualiza el sub-estatus de n conciliaciones por folio, crea una transaccion
+	 * nueva para esto
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void actualizaSubEstatusConciliacionMultipleNT(List<Long> folios, SubEstatusConciliacion subEstatus, String usuario,
+			Date fecha, EstatusConciliacion estatusConciliacion, String descripcion) {
+		subEstatusConciliacionRepository.actualizaSubEstatusConciliacionMultiple(folios, subEstatus, usuario, fecha,
+				estatusConciliacion, descripcion);
+		subEstatusConciliacionRepository.flush();
+
+	}
 
 	/**
 	 * Realiza las validaciones iniciales para el metodo de generar conciliacion

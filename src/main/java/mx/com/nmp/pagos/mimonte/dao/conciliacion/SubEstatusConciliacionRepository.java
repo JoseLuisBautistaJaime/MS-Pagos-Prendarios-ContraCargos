@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -48,6 +49,14 @@ public interface SubEstatusConciliacionRepository extends JpaRepository<SubEstat
 	@Modifying
 	@Query(nativeQuery = true, value = "UPDATE to_conciliacion SET id_sub_estatus_conciliacion = :subEstatus, id_estatus_conciliacion = :estatusConciliacion, sub_estatus_descripcion = :descripcion, last_modified_by = :usuario, last_modified_date = :fecha WHERE id = :folio")
 	public void actualizaSubEstatusConciliacion(@Param("folio") final Long folio,
+			@Param("subEstatus") SubEstatusConciliacion subEstatus, @Param("usuario") final String usuario,
+			@Param("fecha") Date fecha, @Param("estatusConciliacion") final EstatusConciliacion estatusConciliacion,
+			@Param("descripcion") final String descripcion);
+	
+	
+	@Modifying
+	@Query(nativeQuery = true, value = "UPDATE to_conciliacion SET id_sub_estatus_conciliacion = :subEstatus, id_estatus_conciliacion = :estatusConciliacion, sub_estatus_descripcion = :descripcion, last_modified_by = :usuario, last_modified_date = :fecha WHERE id IN (:folios)")
+	public void actualizaSubEstatusConciliacionMultiple(@Param("folios") final List<Long> folios,
 			@Param("subEstatus") SubEstatusConciliacion subEstatus, @Param("usuario") final String usuario,
 			@Param("fecha") Date fecha, @Param("estatusConciliacion") final EstatusConciliacion estatusConciliacion,
 			@Param("descripcion") final String descripcion);
