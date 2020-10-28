@@ -37,4 +37,13 @@ public enum CorresponsalEnum {
 		return descripcion;
 	}
 
+	public static CorresponsalEnum getById(Long id) {
+		for(CorresponsalEnum corresponsalEnum : CorresponsalEnum.values() ){
+			if(corresponsalEnum.getId().equals(id)) {
+				return corresponsalEnum;
+			}
+		}
+		return null;
+	}
+	
 }

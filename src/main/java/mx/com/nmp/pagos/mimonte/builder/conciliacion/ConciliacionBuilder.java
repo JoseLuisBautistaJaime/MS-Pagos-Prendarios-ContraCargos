@@ -84,6 +84,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setDevoluciones(null);
 			conciliacionResponseSaveDTO.setMovimientosTransito(null);
 			conciliacionResponseSaveDTO.setComisiones(null);
+			conciliacionResponseSaveDTO.setIdProveedor(null != conciliacionDTO.getCorresponsal() ? conciliacionDTO.getCorresponsal().getId(): null);
 		}
 		return conciliacionResponseSaveDTO;
 	}
@@ -197,6 +198,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTO.setDevoluciones(null);
 			conciliacionDTO.setMovimientosTransito(null);
 			conciliacionDTO.setComisiones(null);
+			conciliacionDTO.setCorresponsal(null != conciliacion.getProveedor() ? CorresponsalEnum.getById(conciliacion.getProveedor().getId()): null);
 		}
 		return conciliacionDTO;
 	}

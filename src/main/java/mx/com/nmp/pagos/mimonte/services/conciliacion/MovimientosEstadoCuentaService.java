@@ -384,7 +384,6 @@ public class MovimientosEstadoCuentaService {
 		List<Long> possibleSubEstatus = null;
 		EstatusConciliacion estatusConciliacion = null;
 		Map<Long, EstatusConciliacion> mapSubEstatusConciliacion = null;
-		Map<Long, EstatusConciliacion> mapEstatusConciliacion = null;
 
 		// Ajuste de fechas
 		try {
@@ -458,7 +457,7 @@ public class MovimientosEstadoCuentaService {
 		SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO = new SaveEstadoCuentaRequestDTO();
 		saveEstadoCuentaRequestDTO.setFechaFinal(request.getFechaFinal());
 		saveEstadoCuentaRequestDTO.setFechaInicial(request.getFechaInicial());
-		saveEstadoCuentaRequestDTO.setFolio(0L);
+		saveEstadoCuentaRequestDTO.setFolio(null != request.getFolios() && !request.getFolios().isEmpty() ? request.getFolios().get(0): 0L);
 		Reporte reporte = save(saveEstadoCuentaRequestDTO, userRequest);
 
 		// Se guarda la asociacion entre conciliaciones y el estado cuenta
