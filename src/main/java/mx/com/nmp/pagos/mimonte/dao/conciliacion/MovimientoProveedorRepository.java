@@ -52,4 +52,7 @@ public interface MovimientoProveedorRepository extends PagingAndSortingRepositor
 	 */
 	public List<MovimientoProveedor> findByReporte(@Param("reporteId") final Integer reporteId);
 
+	@Query("SELECT mp FROM MovimientoProveedor mp INNER JOIN Reporte r ON mp.reporte = r.id INNER JOIN r.conciliacion con WHERE con.id = :conciliacionId AND mp.orderId = :transaccion")
+	public MovimientoProveedor findByOrderIdAndIdConciliacion(@Param("transaccion") String transaccion, @Param("conciliacionId") Long conciliacionId);
+
 }

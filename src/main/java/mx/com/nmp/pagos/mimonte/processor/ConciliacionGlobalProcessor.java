@@ -6,12 +6,17 @@ package mx.com.nmp.pagos.mimonte.processor;
 
 import java.util.List;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.GlobalBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.Entidad;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 import mx.com.nmp.pagos.mimonte.util.CodigosEdoCuentaMap;
 
@@ -36,24 +41,86 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 	 */
 	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
 
-		// Obtener seccion global
-		Global global = this.mergeReporteHandler.getGlobalRepository().findByIdConciliacion(reportesWrapper.getIdConciliacion());
-		
-		// Obtiene los movimientos de los reportes en base a la conciliacion
-		List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(reportesWrapper.getIdConciliacion());
-		List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(reportesWrapper.getIdConciliacion());
-		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByConciliacion(reportesWrapper.getIdConciliacion());
+		// Se actualiza la seccion global para la conciliacion actual
+		actualizarSeccionGlobal(reportesWrapper.getIdConciliacion());
 
-		CodigosEdoCuentaMap codigosEdoCuenta = this.mergeReporteHandler.getEstadoCuentaHelper().getCodigosEdoCuentaMap(reportesWrapper.getIdEntidad());
-		
-		// Actualizar seccion global
-		global = GlobalBuilder.updateGlobal(global, reportesWrapper, movsMidas, movsProveedor, movsEstadoCuenta, codigosEdoCuenta);
-
-		// Guardar global en la bd
-		this.mergeReporteHandler.getGlobalRepository().saveAndFlush(global);
+		// Se actualiza la seccion global para conciliacion anteriores que sufrieron afectaciones en los movimientos transito
+		if (reportesWrapper.getIdsConciliacionesActualizar() != null && reportesWrapper.getIdsConciliacionesActualizar().size() > 0) {
+			for (Long idConciliacionAnterior : reportesWrapper.getIdsConciliacionesActualizar()) {
+				actualizarSeccionGlobal(idConciliacionAnterior);
+			}
+		}
 
 		// Siguiente procesador
 		processNext(reportesWrapper);
+	}
+
+
+	private void actualizarSeccionGlobal(Long idConciliacion) {
+		// Obtener seccion global
+		Global global = this.mergeReporteHandler.getGlobalRepository().findByIdConciliacion(idConciliacion);
+		if (global == null) {
+			global = new Global();
+			global.setConciliacion(new Conciliacion(idConciliacion));
+		}
+
+		// Obtiene los movimientos de los reportes en base a la conciliacion
+		List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(idConciliacion);
+		List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(idConciliacion);
+		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByConciliacion(idConciliacion);
+		Entidad entidadConciliacion = getEntidadByConciliacion(idConciliacion);
+		Reporte reporteProveedor = getReporteProveedor(idConciliacion);
+
+		CodigosEdoCuentaMap codigosEdoCuenta = this.mergeReporteHandler.getEstadoCuentaHelper().getCodigosEdoCuentaMap(entidadConciliacion.getId());
+		
+		// Actualizar seccion global
+		global = GlobalBuilder.updateGlobal(global, movsMidas, movsProveedor, movsEstadoCuenta, codigosEdoCuenta);
+
+		// Reporte de proveedor transaccional / Consulta reporte de procesos nocturnos - formato: DD/MM/AA)
+		if (reporteProveedor != null) {
+			global.setFecha(reporteProveedor.getCreatedDate());
+		}
+
+		// Guardar global en la bd
+		this.mergeReporteHandler.getGlobalRepository().saveAndFlush(global);
+	}
+
+
+	/**
+	 * Consulta la entidad relacionada a la conciliacion
+	 * @param idConciliacion
+	 * @return
+	 */
+	private Entidad getEntidadByConciliacion(Long idConciliacion) {
+		Entidad entidad = null;
+		try {
+			entidad = this.mergeReporteHandler.getConciliacionRepository()
+					.findEntidadByConciliacion(idConciliacion);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar la entidad relacionada a la conciliacion",
+					CodigoError.NMP_PMIMONTE_0005);
+		}
+		return entidad;
+	}
+
+
+	/**
+	 * Obtiene el reporte a partir de la conciliacion
+	 * @param idConciliacion
+	 * @return
+	 */
+	private Reporte getReporteProveedor(Long idConciliacion) {
+		Reporte reporte = null;
+		try {
+			reporte = this.mergeReporteHandler.getReporteRepository()
+					.findLastByIdConciliacionAndTipo(idConciliacion, TipoReporteEnum.PROVEEDOR);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar el reporte proveedor para la conciliacion",
+					CodigoError.NMP_PMIMONTE_0005);
+		}
+		return reporte;
 	}
 
 }

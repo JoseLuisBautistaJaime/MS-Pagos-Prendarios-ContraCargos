@@ -174,7 +174,7 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	 * @param estatusId
 	 * @return
 	 */
-	@Query("SELECT mt FROM MovimientoTransito mt INNER JOIN Conciliacion c ON c.id = mt.idConciliacion WHERE c.estatus.id = :idEstatusConciliacion AND mt.estatus.id = :estatusId AND mt.fecha BETWEEN :fechaInicio AND :fechaFin")
-	public List<MovimientoTransito> findMovsTransitoNoIdentificadosMidas(@Param("fechaInicio") Date fechaInicio, @Param("fechaFin") Date fechaFin, @Param("idEstatusConciliacion") Integer idEstatusConciliacion, @Param("estatusId") Integer estatusId);
+	@Query("SELECT mt FROM MovimientoTransito mt INNER JOIN Conciliacion c ON c.id = mt.idConciliacion WHERE c.estatus.id = :idEstatusConciliacion AND mt.estatus.id = :estatusId AND mt.transaccion in (:transacciones)")
+	public List<MovimientoTransito> findMovsTransitoByTransaccion(@Param("transacciones") List<String> transacciones, @Param("idEstatusConciliacion") Integer idEstatusConciliacion, @Param("estatusId") Integer estatusId);
 
 }

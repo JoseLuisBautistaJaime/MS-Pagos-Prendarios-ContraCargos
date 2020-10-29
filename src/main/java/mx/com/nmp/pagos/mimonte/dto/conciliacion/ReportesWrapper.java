@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.List;
+
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
@@ -26,6 +28,8 @@ public class ReportesWrapper {
 	private Reporte reporteEstadoCuenta;
 	
 	private CorresponsalEnum corresponsal;
+	
+	private List<Long> idsConciliacionesActualizar;
 	
 
 
@@ -102,6 +106,14 @@ public class ReportesWrapper {
 
 	public CorresponsalEnum getCorresponsal() {
 		return corresponsal;
+	}
+
+	public List<Long> getIdsConciliacionesActualizar() {
+		return idsConciliacionesActualizar;
+	}
+
+	public void setIdsConciliacionesActualizar(List<Long> idsConciliacionesActualizar) {
+		this.idsConciliacionesActualizar = idsConciliacionesActualizar;
 	}
 
 }

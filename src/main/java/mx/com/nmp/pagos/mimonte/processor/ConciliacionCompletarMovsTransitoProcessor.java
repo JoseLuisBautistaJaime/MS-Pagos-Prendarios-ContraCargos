@@ -5,11 +5,11 @@
 package mx.com.nmp.pagos.mimonte.processor;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,6 @@ import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
@@ -47,24 +46,27 @@ public class ConciliacionCompletarMovsTransitoProcessor extends ConciliacionProc
 	 * @see mx.com.nmp.pagos.mimonte.processor.ConciliacionProcessorChain#process(mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper)
 	 */
 	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
-	
+
 		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR)) {
-			
+
 			// Verificar si ya se cargaron al menos 2 reportes (incluyendo el recibido)
 			if (isReportesCargados(reportesWrapper)) {
 
-				// Se obtienen los movimientos en transito de la conciliacion actual
-				List<MovimientoTransito> movsTransitoNoIdentificadosMidas = listMovimientosTransito(reportesWrapper.getIdConciliacion());
-	
-				if (CollectionUtils.isNotEmpty(movsTransitoNoIdentificadosMidas)) {
-					
-					// Se obtienen los movimientos no identificados en oxxo de conciliaciones de dias anteriores
-					List<MovimientoTransito> movsTransitoNoIdentificadosProveedor = getMovsTransitoConciliacionesDiasAnteriores(null);
+				// Se obtienen los movimientos en transito de la conciliacion actual con estatus no identificados en midas
+				// Esto significa que posiblemente un movimiento del proveedor corresponde a un movimiento en transito de un dia anterior
+				List<MovimientoTransito> movsNoIdentificados = listMovimientosTransito(
+						reportesWrapper.getIdConciliacion(),
+						ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS
+					);
 
+				// Se obtienen los movimientos no identificados en el proveedor de conciliaciones de dias anteriores
+				// Y se completan si aplica
+				if (CollectionUtils.isNotEmpty(movsNoIdentificados)) {
+					List<MovimientoTransito> movsAnteriores = listMovimientosTransitoAnteriores(movsNoIdentificados);
 					// Se verifica si existen movimientos que se puedan complementar
-					if (movsTransitoNoIdentificadosProveedor != null && movsTransitoNoIdentificadosProveedor.size() > 0) {
-						// TODO: Complementar movs transito y actualizar seccion global
-					}
+					List<Long> idsConciliacionesActualizar = completarTransaccionesPendientes(movsNoIdentificados, movsAnteriores);
+					// Se agregan las conciliaciones que requieren ser actualizadas
+					reportesWrapper.setIdsConciliacionesActualizar(idsConciliacionesActualizar);
 				}
 			}
 		}
@@ -73,19 +75,51 @@ public class ConciliacionCompletarMovsTransitoProcessor extends ConciliacionProc
 
 
 	/**
-	 * Se obtiene los movimientos en transito y se filtran los que estan en proveedor pero no en Midas
+	 * Se obtiene los movimientos en transito y se filtran por estatus
 	 * @param movsMidas
+	 * @param idEstatus
 	 * @return
 	 */
-	private List<MovimientoTransito> listMovimientosTransito(Long idConciliacion) throws ConciliacionException {
-
+	private List<MovimientoTransito> listMovimientosTransito(Long idConciliacion, Integer idEstatus) throws ConciliacionException {
 		List<MovimientoTransito> movsTransito = mergeReporteHandler.getMovimientoTransitoRepository().findByIdConciliacion(idConciliacion);
+		// Se filtran movimientos por estatus
+		List<MovimientoTransito> movsTransitoFiltrados = filtrarPorEstatus(movsTransito, idEstatus);
+		return movsTransitoFiltrados;
+	}
 
-		// Exiten movimientos oxxo que no se encuentran en midas
+
+	/**
+	 * Obtiene los movimientos en transito no identificados en open pay de dias anteriores considerando conciliaciones pendientes
+	 * @param movsNoIdentificados
+	 * @return
+	 */
+	private List<MovimientoTransito> listMovimientosTransitoAnteriores(List<MovimientoTransito> movsNoIdentificados) throws ConciliacionException {
+		
+		// Se obtienen las transacciones
+		List<String> transacciones = movsNoIdentificados.stream()
+				.map(MovimientoTransito::getTransaccion)
+				.collect(Collectors.toList());
+
+		// Se obtienen movimientos en transito correspondientes a las transacciones
+		List<MovimientoTransito> movsTransito = mergeReporteHandler.getMovimientoTransitoRepository()
+				.findMovsTransitoByTransaccion(transacciones, ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
+						ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY
+		);
+		return movsTransito;
+	}
+
+
+	/**
+	 * Filtra los movimientos en transito de acuerdo al estatus
+	 * @param movsTransito
+	 * @param idEstatus
+	 * @return
+	 */
+	private List<MovimientoTransito> filtrarPorEstatus(List<MovimientoTransito> movsTransito, Integer idEstatus) {
 		List<MovimientoTransito> movsTransitoFiltrados = new ArrayList<MovimientoTransito>();
 		if (movsTransito != null && movsTransito.size() > 0) {
 			for (MovimientoTransito movTransito : movsTransito) {
-				if (movTransito.getEstatus().getId() == ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS) {
+				if (movTransito.getEstatus().getId() == idEstatus) {
 					movsTransitoFiltrados.add(movTransito);
 				}
 			}
@@ -95,29 +129,91 @@ public class ConciliacionCompletarMovsTransitoProcessor extends ConciliacionProc
 
 
 	/**
-	 * Obtiene los movimientos en transito no identificados en open pay de dias anteriores considerando conciliaciones pendientes
-	 * @param movsMidas
-	 * @return
+	 * Se complementan transacciones
+	 * @param movsNoIdentificados
+	 * @param movsAnteriores
 	 */
-	private List<MovimientoTransito> getMovsTransitoConciliacionesDiasAnteriores(Date fechaConciliacion) throws ConciliacionException {
+	private List<Long> completarTransaccionesPendientes(List<MovimientoTransito> movsNoIdentificados,
+			List<MovimientoTransito> movsAnteriores) {
 
-		// Se consideran conciliaciones de 7 dias atras
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(fechaConciliacion);
-		cal.add(Calendar.DAY_OF_WEEK, 7);
+		Set<Long> idsConciliacionesActualizar = new LinkedHashSet<Long>();
+		
+		// Por cada movimiento en transito que no esta identificado en midas,
+		// se verifica si existe en alguna conciliacion anterior
+		if (movsAnteriores != null && movsAnteriores.size() > 0 &&
+				movsNoIdentificados != null && movsNoIdentificados.size() > 0) {
+			
+			List<Integer> movsEliminar = new ArrayList<Integer>();
 
-		Date fechaInicio = cal.getTime();
-		Date fechaFin = fechaConciliacion;
+			// Si se encuentra un movimiento transito a completar:
+			// 1-Se eliminan los movs en transito
+			// 2-Se asignan los movimientos proveedor a la conciliacion correspondiente
+			for (MovimientoTransito movNoIdentificado : movsNoIdentificados) {
+				for (MovimientoTransito movAnterior : movsAnteriores) {
+					if (movAnterior.getTransaccion().equals(movNoIdentificado.getTransaccion())) {
+						movsEliminar.add(movNoIdentificado.getId());
+						movsEliminar.add(movAnterior.getId());
+						moverMovimientoProveedor(movNoIdentificado.getTransaccion(), movNoIdentificado.getIdConciliacion(), movAnterior.getIdConciliacion()); //
+						idsConciliacionesActualizar.add(movAnterior.getIdConciliacion());
+						break;
+					}
+				}
 
-		List<MovimientoTransito> movsTransito = mergeReporteHandler.getMovimientoTransitoRepository()
-				.findMovsTransitoNoIdentificadosMidas(fechaInicio, fechaFin,
-						ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
-						ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY
-		);
+				// Se eliminan los movimientos en transito
+				eliminarMovimientosTransito(movsEliminar);
+			}
+		}
 
-		return movsTransito;
+		return Arrays.asList(idsConciliacionesActualizar.toArray(new Long[0]));
 	}
 
+
+	/**
+	 * Elimina los movimientos en transito completados
+	 * @param movsEliminar
+	 */
+	private void eliminarMovimientosTransito(List<Integer> movsEliminar) throws ConciliacionException {
+		// Se eliminan los movimientos transaccion
+		if (movsEliminar.size() > 0) {
+			for (Integer movTransitoEliminar : movsEliminar) {
+				try {
+					this.mergeReporteHandler.getMovimientoProveedorRepository().deleteById(movTransitoEliminar.longValue());
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+					throw new ConciliacionException(ex.getMessage(), CodigoError.NMP_PMIMONTE_BUSINESS_PROCESAR_CONCILIACION);
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * Reasigna el movimiento proveedor 
+	 * @param idConciliacion
+	 * @param transaccion
+	 */
+	private void moverMovimientoProveedor(String transaccion, Long idConciliacionOrigen, Long idConcilacionDestino) throws ConciliacionException {
+		try {
+			
+			// Se obtiene el movimiento proveedor de la conciliacion actual usando el numero de transaccion
+			MovimientoProveedor movProveedor = this.mergeReporteHandler.getMovimientoProveedorRepository()
+				.findByOrderIdAndIdConciliacion(transaccion, idConciliacionOrigen);
+
+			// Se obtiene el reporte de la conciliacion destino
+			Reporte reporteConciliacionDestino = this.mergeReporteHandler.getReporteRepository().findLastByIdConciliacionAndTipo(idConcilacionDestino, TipoReporteEnum.PROVEEDOR);
+
+			// Se reasigna el movimiento a la conciliacion anterior (reporte)
+			movProveedor.setReporte(reporteConciliacionDestino.getId());
+
+			// Se actualiza el movimiento proveedor con la conciliacion destino 
+			this.mergeReporteHandler.getMovimientoProveedorRepository().save(movProveedor);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException(ex.getMessage(), CodigoError.NMP_PMIMONTE_BUSINESS_PROCESAR_CONCILIACION);
+		}
+	}
 
 
 	/**

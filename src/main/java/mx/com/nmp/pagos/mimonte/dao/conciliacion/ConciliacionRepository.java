@@ -424,5 +424,14 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 */
 	@Query(nativeQuery = true, value = "SELECT af.numero FROM tr_entidad_cuenta_afiliacion eca INNER JOIN tc_afiliacion af ON af.id = eca.id_afiliacion INNER JOIN to_conciliacion con ON con.id_entidad = eca.id_entidad AND con.id_cuenta = eca.id_cuenta AND con.id = :folio")
 	public List<Object[]> getAfiliacionByFolioConciliacion(@Param("folio") Long folio);
-	
+
+	/**
+	 * Búsqueda de la conciliacíon a partir de la entidad.
+	 * 
+	 * @param entidad
+	 * @return
+	 */
+	@Query("SELECT en FROM Conciliacion c JOIN c.entidad en WHERE c.id = :idConciliacion")
+	public Entidad findEntidadByConciliacion(@Param("idConciliacion") Long idConciliacion);
+
 }

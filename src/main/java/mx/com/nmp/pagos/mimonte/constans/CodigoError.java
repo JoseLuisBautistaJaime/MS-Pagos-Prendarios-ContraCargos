@@ -318,6 +318,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_135("Aun no se ha realizado el merge de la conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_138("Los montos del layout no cuadran a cero.",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_PROCESAR_CONCILIACION("Error al procesar la conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 
