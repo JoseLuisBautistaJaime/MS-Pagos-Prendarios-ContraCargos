@@ -27,21 +27,6 @@ ALTER TABLE `to_movimiento_proveedor` CHANGE COLUMN `currency` `currency` VARCHA
 ALTER TABLE `to_movimiento_proveedor` CHANGE COLUMN `order_id` `order_id` VARCHAR(50) NOT NULL DEFAULT '';
 ALTER TABLE `to_movimiento_proveedor` CHANGE COLUMN `amount` `amount` DECIMAL(16,4) NOT NULL DEFAULT 0.0;
 
-
-
--- ------------------------------------------------------------------------ --
--- ---------- ASOCIA UN ESTADO DE CUENTA A VARIAS CONCILIACIONES ---------- --
--- ------------------------------------------------------------------------ -- 
-CREATE TABLE `tr_conciliacion_estado_cuenta` (
-	`id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-	`id_conciliacion` BIGINT(20) NOT NULL,
-	`id_reporte` BIGINT(20) NOT NULL,
-	PRIMARY KEY (`id`, `id_conciliacion`, `id_reporte`),
-	CONSTRAINT `fk_tr_conciliacion_estado_cuenta_conciliacion` FOREIGN KEY(id_conciliacion) REFERENCES to_conciliacion(id),
-	CONSTRAINT `fk_tr_conciliacion_estado_cuenta_report` FOREIGN KEY(id_reporte) REFERENCES to_reporte(id)
-) ENGINE = InnoDB;
-
-
 -- ------------------------------------------------------------------------ --
 -- ----------------- SE ACTUALIZA TIPO DATO INT A BIGINT ------------------ --
 -- ------------------------------------------------------------------------ -- 
@@ -139,6 +124,17 @@ ALTER TABLE `to_movimiento_transito` ADD (
     REFERENCES `to_movimiento_conciliacion` (`id`)
 );
 
+-- ------------------------------------------------------------------------ --
+-- ---------- ASOCIA UN ESTADO DE CUENTA A VARIAS CONCILIACIONES ---------- --
+-- ------------------------------------------------------------------------ -- 
+CREATE TABLE `tr_conciliacion_estado_cuenta` (
+	`id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+	`id_conciliacion` BIGINT(20) NOT NULL,
+	`id_reporte` BIGINT(20) NOT NULL,
+	PRIMARY KEY (`id`, `id_conciliacion`, `id_reporte`),
+	CONSTRAINT `fk_tr_conciliacion_estado_cuenta_conciliacion` FOREIGN KEY(id_conciliacion) REFERENCES to_conciliacion(id),
+	CONSTRAINT `fk_tr_conciliacion_estado_cuenta_report` FOREIGN KEY(id_reporte) REFERENCES to_reporte(id)
+) ENGINE = InnoDB;
 
 -- -------------------------------------------------------------- --
 -- ------------------ TABLA TC_LAYOUT_HEADER -------------------- --
