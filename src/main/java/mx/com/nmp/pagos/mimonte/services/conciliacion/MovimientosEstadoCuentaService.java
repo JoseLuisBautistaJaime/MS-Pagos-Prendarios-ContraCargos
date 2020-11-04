@@ -467,7 +467,7 @@ public class MovimientosEstadoCuentaService {
 		
 		// Consulta los diferentes estados de cuenta por cada fecha
 		Date fechaEstadoCuenta = reporte.getFechaDesde();
-		Long idConciliacion = reporte.getConciliacion().getId().longValue();
+		Long idConciliacion = request.getFolios().get(0); // primer conciliacion del set (solo se requiere para obtener la cuenta asignada)
 		long idReporte = reporte.getId();
 
 		while (!fechaEstadoCuenta.after(reporte.getFechaHasta())) {
@@ -499,6 +499,7 @@ public class MovimientosEstadoCuentaService {
 		}
 
 		// Registro de actividad
+		// TODO: Registrar para todas las conciliaciones
 		actividadGenericMethod.registroActividad(idConciliacion,
 				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
