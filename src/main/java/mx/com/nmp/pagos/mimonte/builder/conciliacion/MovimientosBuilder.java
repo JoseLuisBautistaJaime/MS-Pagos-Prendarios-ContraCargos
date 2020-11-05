@@ -31,6 +31,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.IMovTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MetodoPagoMovimientosProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
@@ -699,6 +700,36 @@ public abstract class MovimientosBuilder {
 			allMovs.addAll(bySuc.values());
 		}
 		return (List<T>) allMovs;
+	}
+
+
+	/**
+	 * Clona los movimientos del estado de cuenta y los asigna a otro estado de cuenta
+	 * @param movsEdoCuentaOriginal
+	 * @param idConciliacion
+	 * @return
+	 */
+	public static List<MovimientoEstadoCuenta> clonarMovsEdoCuenta(List<MovimientoEstadoCuenta> movsEdoCuentaOriginal, Long idConciliacion) {
+		List<MovimientoEstadoCuenta> movsEdoCuenta = new ArrayList<MovimientoEstadoCuenta>();
+		for (MovimientoEstadoCuenta movOriginal : movsEdoCuentaOriginal) {
+			MovimientoEstadoCuenta movEdoCuenta = new MovimientoEstadoCuenta();
+			movEdoCuenta.setClaveLeyenda(movOriginal.getClaveLeyenda());
+			movEdoCuenta.setClavePais(movOriginal.getClavePais());
+			movEdoCuenta.setCodigoDato(movOriginal.getCodigoDato());
+			movEdoCuenta.setConcepto(movOriginal.getConcepto());
+			movEdoCuenta.setDato(movOriginal.getDato());
+			movEdoCuenta.setFechaOperacion(movOriginal.getFechaOperacion());
+			movEdoCuenta.setFechaValor(movOriginal.getFechaValor());
+			movEdoCuenta.setImporte(movOriginal.getImporte());
+			movEdoCuenta.setLibre(movOriginal.getLibre());
+			movEdoCuenta.setReferencia(movOriginal.getReferencia());
+			movEdoCuenta.setReferenciaAmpliada(movOriginal.getReferenciaAmpliada());
+			movEdoCuenta.setSucursal(movOriginal.getSucursal());
+			movEdoCuenta.setTipoMovimiento(movOriginal.getTipoMovimiento());
+			movEdoCuenta.setIdEstadoCuenta(idConciliacion);
+			movsEdoCuenta.add(movEdoCuenta);
+		}
+		return movsEdoCuenta;
 	}
 
 }
