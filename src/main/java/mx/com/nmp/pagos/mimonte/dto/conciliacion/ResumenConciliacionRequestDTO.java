@@ -19,6 +19,7 @@ public class ResumenConciliacionRequestDTO {
 
 	private Date fechaInicial;
 	private Date fechaFinal;
+	private Long idCorresponsal;
 
 	public ResumenConciliacionRequestDTO() {
 		super();
@@ -64,9 +65,18 @@ public class ResumenConciliacionRequestDTO {
 
 	}
 
+	public Long getIdCorresponsal() {
+		return idCorresponsal;
+	}
+
+	public void setIdCorresponsal(Long idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
+	}
+
 	@Override
 	public String toString() {
-		return "ResumenConciliacionRequestDTO [fechaInicial=" + fechaInicial + ", fechaFinal=" + fechaFinal + "]";
+		return "ResumenConciliacionRequestDTO [fechaInicial=" + fechaInicial + ", fechaFinal=" + fechaFinal
+				+ ", idCorresponsal=" + idCorresponsal + "]";
 	}
 
 }

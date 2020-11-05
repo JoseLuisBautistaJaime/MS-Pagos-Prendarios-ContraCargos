@@ -666,26 +666,26 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
 							consultaConciliacionRequestDTO.getIdEstatus(),
 							consultaConciliacionRequestDTO.getFechaDesde(),
-							consultaConciliacionRequestDTO.getFechaHasta()));
+							consultaConciliacionRequestDTO.getFechaHasta(), consultaConciliacionRequestDTO.getIdCorresponsal() ));
 		} else if (null != consultaConciliacionRequestDTO.getFechaDesde()
 				&& null == consultaConciliacionRequestDTO.getFechaHasta()) {
 			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
 					conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFechaDesde(
 							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
 							consultaConciliacionRequestDTO.getIdEstatus(),
-							consultaConciliacionRequestDTO.getFechaDesde()));
+							consultaConciliacionRequestDTO.getFechaDesde(), consultaConciliacionRequestDTO.getIdCorresponsal()));
 		} else if (null == consultaConciliacionRequestDTO.getFechaDesde()
 				&& null != consultaConciliacionRequestDTO.getFechaHasta()) {
 			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
 					conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFechaHasta(
 							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
 							consultaConciliacionRequestDTO.getIdEstatus(),
-							consultaConciliacionRequestDTO.getFechaHasta()));
+							consultaConciliacionRequestDTO.getFechaHasta(), consultaConciliacionRequestDTO.getIdCorresponsal()));
 		} else {
 			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
 					conciliacionRepository.findByFolioAndIdEntidadAndIdEstatus(
 							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
-							consultaConciliacionRequestDTO.getIdEstatus()));
+							consultaConciliacionRequestDTO.getIdEstatus(), consultaConciliacionRequestDTO.getIdCorresponsal()));
 		}
 
 		// SE REALIZA EL SET DE MOVIMIENTOS A LA(S) CONCILIACION(ES)
@@ -990,12 +990,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			res = conciliacionRepository.resumenConciliaciones(resumenConciliacionRequestDTO.getFechaInicial(),
 					resumenConciliacionRequestDTO.getFechaFinal(),
 					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
-					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
+					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA,
+					resumenConciliacionRequestDTO.getIdCorresponsal());
 		} 
 		// Si no hay ninguna fecha especificada como parametro de filtrado
 		else {
 			res = conciliacionRepository.resumenConciliaciones(ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
-					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
+					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA, resumenConciliacionRequestDTO.getIdCorresponsal());
 		}
 		if(null != res && !res.isEmpty()) {
 			resumenConciliacionResponseDTO = ConciliacionBuilder.buildResumenConciliacionResponseDTOFromMap(res);

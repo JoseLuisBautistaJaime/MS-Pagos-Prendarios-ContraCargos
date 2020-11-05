@@ -18,6 +18,7 @@ public class ConsultaConciliacionRequestDTO {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private Integer idEstatus;
+	private Long idCorresponsal;
 
 	public ConsultaConciliacionRequestDTO() {
 		super();
@@ -69,6 +70,14 @@ public class ConsultaConciliacionRequestDTO {
 		return idEstatus;
 	}
 
+	public Long getIdCorresponsal() {
+		return idCorresponsal;
+	}
+
+	public void setIdCorresponsal(Long idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
+	}
+
 	public void setIdEstatus(Integer idEstatus) {
 		this.idEstatus = idEstatus;
 	}
@@ -76,7 +85,8 @@ public class ConsultaConciliacionRequestDTO {
 	@Override
 	public String toString() {
 		return "ConsultaConciliacionRequestDTO [idEntidad=" + idEntidad + ", folio=" + folio + ", fechaDesde="
-				+ fechaDesde + ", fechaHasta=" + fechaHasta + ", idEstatus=" + idEstatus + "]";
+				+ fechaDesde + ", fechaHasta=" + fechaHasta + ", idEstatus=" + idEstatus + ", idCorresponsal="
+				+ idCorresponsal + "]";
 	}
 
 }
