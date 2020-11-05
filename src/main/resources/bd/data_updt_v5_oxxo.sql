@@ -9,3 +9,9 @@ INSERT INTO tk_proveedor (id, nombre, descripcion)
 	VALUES
 		(1,'OPENPAY', 'Proveedor transaccional')
         , (2, 'OXXO', 'Proveedor oxxo');
+
+-- ---------------------------------------------------------------------------------- --
+-- --------------- INSERT DE LAS COMISIONES PROVEEDORES / CORRESPONSALES ------------------------ --
+-- ---------------------------------------------------------------------------------- --
+INSERT INTO `conciliacion`.`tc_comision_proveedor` (`id`, `corresponsal`, `comision`, `iva`) 
+	VALUES ('1', 'OXXO', '15.52', '2.48');

@@ -58,6 +58,7 @@ DROP TABLE IF EXISTS `tk_tipo_contrato` ;
 DROP TABLE IF EXISTS `tk_estatus_pago` ;
 DROP TABLE IF EXISTS `seq_conciliacion` ;
 DROP TABLE IF EXISTS `fk_proveedor` ;
+DROP TABLE IF EXISTS `tc_comision_proveedor` ;
 
 
 
@@ -1277,6 +1278,20 @@ CREATE TABLE `seq_conciliacion` (
   `seq_value` BIGINT(20) DEFAULT '0',
   PRIMARY KEY (`seq_name`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `tc_comision_proveedor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tc_comision_proveedor` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY',
+  `comision` DECIMAL(5,2) NOT NULL,
+  `iva` DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `cp_fk_idx` (`id` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
 
 -- ------------------------------------------------------------------------------------------------- --
 -- --------------------------------------- CREACION DE SP's ---------------------------------------- --

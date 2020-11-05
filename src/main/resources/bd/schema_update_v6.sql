@@ -154,6 +154,19 @@ ALTER TABLE `tc_layout_linea` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAU
 ALTER TABLE `to_movimiento_proveedor` ADD COLUMN `transaccion` VARCHAR(50) NULL DEFAULT '';
 
 
+-- -----------------------------------------------------
+-- ---------- TABLA tc_comision_proveedor ----------- --
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tc_comision_proveedor` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY',
+  `comision` DECIMAL(5,2) NOT NULL,
+  `iva` DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `cp_fk_idx` (`id` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
 
 -- ------------------------------------------------------------------------------------------------- --
 -- --------------------------------------- CREACION DE SP's ---------------------------------------- --
@@ -444,3 +457,4 @@ MAIN: BEGIN
 END MAIN;
 $$
 DELIMITER ;
+
