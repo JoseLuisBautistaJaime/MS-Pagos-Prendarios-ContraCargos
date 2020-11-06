@@ -7,6 +7,8 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 import java.util.Date;
 import java.util.Objects;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @name ResumenConciliacionRequestDTO
  * @description Clase que encapsula informacion del request para consulta de
@@ -19,7 +21,7 @@ public class ResumenConciliacionRequestDTO {
 
 	private Date fechaInicial;
 	private Date fechaFinal;
-	private Long idCorresponsal;
+	private CorresponsalEnum corresponsal;
 
 	public ResumenConciliacionRequestDTO() {
 		super();
@@ -65,18 +67,18 @@ public class ResumenConciliacionRequestDTO {
 
 	}
 
-	public Long getIdCorresponsal() {
-		return idCorresponsal;
+	public CorresponsalEnum getCorresponsal() {
+		return corresponsal;
 	}
 
-	public void setIdCorresponsal(Long idCorresponsal) {
-		this.idCorresponsal = idCorresponsal;
+	public void setCorresponsal(CorresponsalEnum corresponsal) {
+		this.corresponsal = corresponsal;
 	}
 
 	@Override
 	public String toString() {
 		return "ResumenConciliacionRequestDTO [fechaInicial=" + fechaInicial + ", fechaFinal=" + fechaFinal
-				+ ", idCorresponsal=" + idCorresponsal + "]";
+				+ ", corresponsal=" + corresponsal + "]";
 	}
 
 }

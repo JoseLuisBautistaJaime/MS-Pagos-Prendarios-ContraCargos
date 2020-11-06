@@ -76,10 +76,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :idCorresponsal IS NULL OR c.proveedor.id = :idCorresponsal) AND c.createdDate BETWEEN :fechaDesde AND :fechaHasta")
+	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :corresponsal IS NULL OR c.proveedor.nombre = :corresponsal) AND c.createdDate BETWEEN :fechaDesde AND :fechaHasta")
 	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechas(@Param("folio") final Long folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus,
-			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta, @Param("idCorresponsal") final Long idCorresponsal);
+			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta, @Param("corresponsal") final String corresponsal);
 
 	/**
 	 * Búsqueda de la conciliacion a partir del folio, id entidad e id estatus de la
@@ -90,9 +90,9 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param idEstatus
 	 * @return
 	 */
-	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :idCorresponsal IS NULL OR c.proveedor.id = :idCorresponsal)")
+	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :corresponsal IS NULL OR c.proveedor.nombre = :corresponsal)")
 	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatus(@Param("folio") final Long folio,
-			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus, @Param("idCorresponsal") final Long idCorresponsal);
+			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus, @Param("corresponsal") final String corresponsal);
 
 	/**
 	 * Busqueda de la conciliacion a partir del folio, id entidad, id estatus de la
@@ -104,10 +104,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param fechaDesde
 	 * @return
 	 */
-	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :idCorresponsal IS NULL OR c.proveedor.id = :idCorresponsal) AND c.createdDate >= :fechaDesde")
+	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :corresponsal IS NULL OR c.proveedor.nombre = :corresponsal) AND c.createdDate >= :fechaDesde")
 	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechaDesde(@Param("folio") final Long folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus,
-			@Param("fechaDesde") final Date fechaDesde, @Param("idCorresponsal") final Long idCorresponsal);
+			@Param("fechaDesde") final Date fechaDesde, @Param("corresponsal") final String corresponsal);
 
 	/**
 	 * Busqueda de la conciliacion a partir del folio, id entidad, id estatus de la
@@ -119,10 +119,10 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :idCorresponsal IS NULL OR c.proveedor.id = :idCorresponsal) AND c.createdDate <= :fechaHasta")
+	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :corresponsal IS NULL OR c.proveedor.nombre = :corresponsal) AND c.createdDate <= :fechaHasta")
 	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechaHasta(@Param("folio") final Long folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus,
-			@Param("fechaHasta") final Date fechaHasta, @Param("idCorresponsal") final Long idCorresponsal);
+			@Param("fechaHasta") final Date fechaHasta, @Param("corresponsal") final String corresponsal);
 
 	/**
 	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
@@ -236,7 +236,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			"        , CASE WHEN last_modified_date IS NULL THEN MAX(created_date) ELSE MAX(last_modified_date) END AS p_fechaFin " + 
 			"	FROM to_conciliacion c " + 
 			"    WHERE c.id_estatus_conciliacion = :estatusConcProcesada " + 
-			"       AND ( :idCorresponsal IS NULL OR c.id_proveedor = :idCorresponsal) " +
+			"       AND ( :corresponsal IS NULL OR c.proveedor = :corresponsal) " +
 			"		AND " + 
 			"			CASE " + 
 			"				WHEN c.last_modified_date IS NOT NULL" + 
@@ -250,7 +250,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			"		INNER JOIN to_movimiento_conciliacion mc ON mc.id = md.id " +
 			"       INNER JOIN to_conciliacion conn on conn.id = mc.id_conciliacion " + 
 			"	WHERE md.estatus = :estatusDevLiquidada " + 
-			"       AND ( :idCorresponsal IS NULL OR conn.id_proveedor = :idCorresponsal ) " + 
+			"       AND ( :corresponsal IS NULL OR conn.proveedor = :corresponsal ) " + 
 			"		AND " + 
 			"			CASE " + 
 			"				WHEN mc.last_modified_date IS NOT NULL" + 
@@ -262,7 +262,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			"        , CASE WHEN last_modified_date IS NULL THEN MAX(created_date) ELSE MAX(last_modified_date) END AS t_fechaFin " + 
 			"	FROM to_conciliacion c2" + 
 			"    WHERE" + 
-			"       ( :idCorresponsal IS NULL OR c2.id_proveedor = :idCorresponsal ) " +
+			"       ( :corresponsal IS NULL OR c2.proveedor = :corresponsal ) " +
 			"       AND " + 
 			"		CASE " + 
 			"			WHEN c2.last_modified_date IS NOT NULL" + 
@@ -271,7 +271,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	public Map<String, Object> resumenConciliaciones(@Param("fechaIncial") Date fechaIncial,
 			@Param("fechaFinal") Date fechaFinal, @Param("estatusConcProcesada") final Integer estatusConcProcesada,
 			@Param("estatusDevLiquidada") final Integer estatusDevLiquidada,
-			@Param("idCorresponsal") final Long idCorresponsal);
+			@Param("corresponsal") final String corresponsal);
 
 	/**
 	 * Regresa un set de resultados con los totales y fechas de inicio y fin para
@@ -282,11 +282,11 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param estatusDevLiquidada
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT p.*, d.*, t.* FROM (SELECT COUNT(*) AS p_total, MIN(created_date) AS p_fechaInicio, MAX(created_date) AS p_fechaFin FROM to_conciliacion c WHERE c.id_estatus_conciliacion = :estatusConcProcesada AND c.id_proveedor = :idCorresponsal) AS p, (SELECT COUNT(*) AS d_total, MIN(mc.created_date) AS d_fechaInicio, MAX(mc.created_date) AS d_fechaFin FROM to_movimiento_devolucion md INNER JOIN to_movimiento_conciliacion mc ON mc.id = md.id INNER JOIN to_conciliacion conn ON conn.id = mc.id_conciliacion WHERE md.estatus = :estatusDevLiquidada AND conn.id_proveedor = :idCorresponsal) AS d, (SELECT COUNT(*)	AS t_total, MIN(c2.created_date) AS t_fechaInicio, MAX(c2.created_date) AS t_fechaFin FROM to_conciliacion c2 WHERE c2.id_proveedor = :idCorresponsal) AS t")
+	@Query(nativeQuery = true, value = "SELECT p.*, d.*, t.* FROM (SELECT COUNT(*) AS p_total, MIN(created_date) AS p_fechaInicio, MAX(created_date) AS p_fechaFin FROM to_conciliacion c WHERE c.id_estatus_conciliacion = :estatusConcProcesada AND c.proveedor = :corresponsal) AS p, (SELECT COUNT(*) AS d_total, MIN(mc.created_date) AS d_fechaInicio, MAX(mc.created_date) AS d_fechaFin FROM to_movimiento_devolucion md INNER JOIN to_movimiento_conciliacion mc ON mc.id = md.id INNER JOIN to_conciliacion conn ON conn.id = mc.id_conciliacion WHERE md.estatus = :estatusDevLiquidada AND conn.proveedor = :corresponsal) AS d, (SELECT COUNT(*)	AS t_total, MIN(c2.created_date) AS t_fechaInicio, MAX(c2.created_date) AS t_fechaFin FROM to_conciliacion c2 WHERE c2.proveedor = :corresponsal) AS t")
 	public Map<String, Object> resumenConciliaciones(
 			@Param("estatusConcProcesada") final Integer estatusConcProcesada,
 			@Param("estatusDevLiquidada") final Integer estatusDevLiquidada,
-			@Param("idCorresponsal") final Long idCorresponsal);
+			@Param("corresponsal") final String corresponsal);
 
 	/**
 	 * Regresa el id de estatus de una conciliacion dependiendo de su id de

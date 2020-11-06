@@ -6,6 +6,8 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.Date;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @author Quarksoft
  * @version 1.0
@@ -18,7 +20,7 @@ public class ConsultaConciliacionRequestDTO {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private Integer idEstatus;
-	private Long idCorresponsal;
+	private CorresponsalEnum corresponsal;
 
 	public ConsultaConciliacionRequestDTO() {
 		super();
@@ -70,23 +72,23 @@ public class ConsultaConciliacionRequestDTO {
 		return idEstatus;
 	}
 
-	public Long getIdCorresponsal() {
-		return idCorresponsal;
-	}
-
-	public void setIdCorresponsal(Long idCorresponsal) {
-		this.idCorresponsal = idCorresponsal;
-	}
-
 	public void setIdEstatus(Integer idEstatus) {
 		this.idEstatus = idEstatus;
+	}
+
+	public CorresponsalEnum getCorresponsal() {
+		return corresponsal;
+	}
+
+	public void setCorresponsal(CorresponsalEnum corresponsal) {
+		this.corresponsal = corresponsal;
 	}
 
 	@Override
 	public String toString() {
 		return "ConsultaConciliacionRequestDTO [idEntidad=" + idEntidad + ", folio=" + folio + ", fechaDesde="
-				+ fechaDesde + ", fechaHasta=" + fechaHasta + ", idEstatus=" + idEstatus + ", idCorresponsal="
-				+ idCorresponsal + "]";
+				+ fechaDesde + ", fechaHasta=" + fechaHasta + ", idEstatus=" + idEstatus + ", corresponsal="
+				+ corresponsal + "]";
 	}
 
 }

@@ -13,20 +13,14 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  */
 public enum CorresponsalEnum {
 
-	OPEN_PAY(1L, "OPEN_PAY", "Proveedor transaccional"), OXXO(2L, "OXXO", "Proveedor Oxxo");
+	OPENPAY("OPENPAY", "Proveedor transaccional"), OXXO("OXXO", "Proveedor Oxxo");
 
-	private Long id;
 	private String nombre;
 	private String descripcion;
 
-	private CorresponsalEnum(Long id, String nombre, String descripcion) {
-		this.id = id;
+	private CorresponsalEnum(String nombre, String descripcion) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public String getNombre() {
@@ -37,13 +31,13 @@ public enum CorresponsalEnum {
 		return descripcion;
 	}
 
-	public static CorresponsalEnum getById(Long id) {
-		for(CorresponsalEnum corresponsalEnum : CorresponsalEnum.values() ){
-			if(corresponsalEnum.getId().equals(id)) {
+	public static CorresponsalEnum getByNombre(String nombre) {
+		for (CorresponsalEnum corresponsalEnum : CorresponsalEnum.values()) {
+			if (corresponsalEnum.getNombre().equals(nombre)) {
 				return corresponsalEnum;
 			}
 		}
 		return null;
 	}
-	
+
 }

@@ -6,25 +6,24 @@
 -- ------------ TABLA PROVEEDOR / CORRESPONSAL ------------------ --
 -- -------------------------------------------------------------- --
 CREATE TABLE `tk_proveedor` (
-`id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-`nombre` VARCHAR(150),
+`nombre` VARCHAR(150) PRIMARY KEY NOT NULL,
 `descripcion` VARCHAR(250),
 PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
 
 
 -- Se requiere insertar los corresponsables para poder crear la foreign key
-INSERT INTO tk_proveedor (id, nombre, descripcion) 
+INSERT INTO tk_proveedor (nombre, descripcion) 
 	VALUES
-		(1,'OPENPAY', 'Proveedor transaccional')
-        , (2, 'OXXO', 'Proveedor oxxo');
+		('OPENPAY', 'Proveedor transaccional')
+        , ('OXXO', 'Proveedor oxxo');
 
 -- -------------------------------------------------------------- --
 -- ------------ RELACION PROVEEDOR - CONCILIACION --------------- --
 -- -------------------------------------------------------------- -- 
-ALTER TABLE `to_conciliacion` ADD COLUMN id_proveedor BIGINT(20) NOT NULL DEFAULT 1;
-ALTER TABLE `to_conciliacion` ADD INDEX `proveedor_con_fk_idx` (`id_proveedor` ASC);
-ALTER TABLE `to_conciliacion` ADD CONSTRAINT `proveedor_con_fk` FOREIGN KEY (`id_proveedor`) REFERENCES `tk_proveedor` (`id`);
+ALTER TABLE `to_conciliacion` ADD COLUMN proveedor VARCHAR(150) NOT NULL DEFAULT 'OPEN_PAY';
+ALTER TABLE `to_conciliacion` ADD INDEX `proveedor_con_fk_idx` (`proveedor` ASC);
+ALTER TABLE `to_conciliacion` ADD CONSTRAINT `proveedor_con_fk` FOREIGN KEY (`proveedor`) REFERENCES `tk_proveedor` (`nombre`);
 
 -- Se agrega campo folio, indice y se agrega llave unica folio-proveedor
 ALTER TABLE `to_conciliacion` ADD COLUMN folio BIGINT(20) NOT NULL DEFAULT 1;

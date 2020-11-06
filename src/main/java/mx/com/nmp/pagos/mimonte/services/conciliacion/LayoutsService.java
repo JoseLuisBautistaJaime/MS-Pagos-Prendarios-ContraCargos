@@ -666,8 +666,8 @@ public class LayoutsService {
 					if (headerDTO == null) {
 						
 						LayoutHeaderCatalog headerCatalog=null;
-						if(proveedor.equals(CorresponsalEnum.OPEN_PAY.getNombre())) {
-							headerCatalog = getCabeceraCatalog(layoutDTO.getTipoLayout(), CorresponsalEnum.OPEN_PAY);
+						if(proveedor.equals(CorresponsalEnum.OPENPAY.getNombre())) {
+							headerCatalog = getCabeceraCatalog(layoutDTO.getTipoLayout(), CorresponsalEnum.OPENPAY);
 						} else if(proveedor.equals(CorresponsalEnum.OXXO.getNombre())) {
 							headerCatalog = getCabeceraCatalog(layoutDTO.getTipoLayout(), CorresponsalEnum.OXXO);
 						}
@@ -1013,8 +1013,8 @@ public class LayoutsService {
 		// Obtiene la cabecera del catalogo correspondiente al tipo layout
 		LayoutHeaderCatalog layoutHeaderCatalog = null;
 		
-		if(proveedor.equals(CorresponsalEnum.OPEN_PAY.getNombre())) {
-			layoutHeaderCatalog = getCabeceraCatalog(tipoLayout, CorresponsalEnum.OPEN_PAY);
+		if(proveedor.equals(CorresponsalEnum.OPENPAY.getNombre())) {
+			layoutHeaderCatalog = getCabeceraCatalog(tipoLayout, CorresponsalEnum.OPENPAY);
 		} else if(proveedor.equals(CorresponsalEnum.OXXO.getNombre())) {
 			layoutHeaderCatalog = getCabeceraCatalog(tipoLayout, CorresponsalEnum.OXXO);
 		}
@@ -1378,8 +1378,8 @@ public class LayoutsService {
 
 		// Se obtienen los valores por default de la linea de acuerdo al tipo de layout, grupo y corresponsal
 		try {
-			if(proveedor.equals(CorresponsalEnum.OPEN_PAY.getNombre())) {
-				lineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupoAndCorresponsal(tipoLayout, grupo, CorresponsalEnum.OPEN_PAY);
+			if(proveedor.equals(CorresponsalEnum.OPENPAY.getNombre())) {
+				lineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupoAndCorresponsal(tipoLayout, grupo, CorresponsalEnum.OPENPAY);
 			} else if(proveedor.equals(CorresponsalEnum.OXXO.getNombre())) {
 				lineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupoAndCorresponsal(tipoLayout, grupo, CorresponsalEnum.OXXO);
 			}
