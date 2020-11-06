@@ -6,6 +6,8 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.Date;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @author Quarksoft
  * @version 1.0
@@ -34,7 +36,7 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	private MovTransitoDTO movimientosTransito;
 	private ComisionesDTO comisiones;
 	private ComisionesTransProyeccionDTO comisionesTransacciones;
-
+	private CorresponsalEnum corresponsal;
 
 	public ConciliacionDTO() {
 		super();
@@ -68,6 +70,14 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 		this.comisiones = comisiones;
 	}
 
+	public CorresponsalEnum getCorresponsal() {
+		return corresponsal;
+	}
+
+	public void setCorresponsal(CorresponsalEnum corresponsal) {
+		this.corresponsal = corresponsal;
+	}
+	
 	public Long getFolio() {
 		return folio;
 	}

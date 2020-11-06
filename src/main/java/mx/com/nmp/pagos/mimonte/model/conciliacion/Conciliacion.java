@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Transient;
 
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
@@ -48,6 +49,10 @@ public class Conciliacion extends Updatable implements Serializable  {
 	@JoinColumn(name = "id_estatus_conciliacion")
 	private EstatusConciliacion estatus;
 
+//	@Column(name = "folio")
+	@Transient
+	private Long folio;
+	
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "id_entidad")
 	private Entidad entidad;
@@ -80,18 +85,19 @@ public class Conciliacion extends Updatable implements Serializable  {
 	private ConciliacionMerge merge;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_proveedor")
+	@JoinColumn(name = "proveedor")
 	private Proveedor proveedor;
 	
 	public Conciliacion() {
 		super();
 	}
 
-	public Conciliacion(Long id, EstatusConciliacion estatus, Entidad entidad, Cuenta cuenta,
+	public Conciliacion(Long id, Long folio, EstatusConciliacion estatus, Entidad entidad, Cuenta cuenta,
 			String subEstatusDescripcion, String idPolizaTesoreria, String idAsientoContable, Date completedDate,
 			Global global, SubEstatusConciliacion subEstatus) {
 		super();
 		this.id = id;
+		this.folio = folio;
 		this.estatus = estatus;
 		this.entidad = entidad;
 		this.cuenta = cuenta;
@@ -103,12 +109,8 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.subEstatus = subEstatus;
 	}
 
-	public Conciliacion(long folio) {
-		this.id = folio;
-	}
-	
-	public Conciliacion(Long id) {
-		this.id = id;
+	public Conciliacion(Long folio) {
+		this.folio = folio;
 	}
 
 	public Long getId() {
@@ -207,10 +209,19 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.proveedor = proveedor;
 	}
 
+	public Long getFolio() {
+		return folio;
+	}
+
+	public void setFolio(Long folio) {
+		this.folio = folio;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
+		result = prime * result + ((folio == null) ? 0 : folio.hashCode());
 		result = prime * result + ((completedDate == null) ? 0 : completedDate.hashCode());
 		result = prime * result + ((cuenta == null) ? 0 : cuenta.hashCode());
 		result = prime * result + ((entidad == null) ? 0 : entidad.hashCode());
@@ -239,7 +250,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 
 	@Override
 	public String toString() {
-		return "Conciliacion [id=" + id + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta=" + cuenta
+		return "Conciliacion [id=" + id + ", folio=" + folio + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta=" + cuenta
 				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idPolizaTesoreria=" + idPolizaTesoreria
 				+ ", idAsientoContable=" + idAsientoContable + ", completedDate=" + completedDate + ", global=" + global
 				+ ", subEstatus=" + subEstatus + ", merge=" + merge + ", proveedor=" + proveedor + "]";

@@ -41,7 +41,7 @@ public class ReporteObserver implements Observer {
 		// Obtiene el listado de reportes actualizados
 		List<Reporte> reportesActualizados = reporteObservable.getReportes();
 		if (CollectionUtils.isNotEmpty(reportesActualizados)) {
-			reporteHandler.handle(reportesActualizados, reporteObservable.getIdConciliacion(), reporteObservable.getIdEntidad());
+			reporteHandler.handle(reportesActualizados, reporteObservable.getIdConciliacion(), reporteObservable.getIdEntidad(), reporteObservable.getCorresponsal());
 		}
 	}
 

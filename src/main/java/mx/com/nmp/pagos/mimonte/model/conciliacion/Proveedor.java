@@ -6,8 +6,6 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -20,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tk_proveedor")
-public class Proveedor implements java.io.Serializable{
+public class Proveedor implements java.io.Serializable {
 
 	/**
 	 * Serial id
@@ -30,30 +28,18 @@ public class Proveedor implements java.io.Serializable{
 	public Proveedor() {
 		super();
 	}
-	
-	public Proveedor(Long id) {
-		super();
-		this.id = id;
-	}
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
-	private Long id;
 
+	public Proveedor(String nombre) {
+		super();
+		this.nombre = nombre;
+	}
+
+	@Id
 	@Column(name = "nombre", nullable = true)
 	private String nombre;
 
 	@Column(name = "descripcion", nullable = true)
 	private String descripcion;
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getNombre() {
 		return nombre;
@@ -73,7 +59,7 @@ public class Proveedor implements java.io.Serializable{
 
 	@Override
 	public String toString() {
-		return "Proveedor [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
+		return "Proveedor [nombre=" + nombre + ", descripcion=" + descripcion + "]";
 	}
 
 }

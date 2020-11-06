@@ -59,9 +59,4 @@ public class ConciliacionUpdateReporteProcessor extends ConciliacionProcessorCha
 		processNext(reportesWrapper);
 	}
 
-
-	public void updateConciliacionStatus(ReportesWrapper reportesWrapper) {
-		
-	}
-
 }

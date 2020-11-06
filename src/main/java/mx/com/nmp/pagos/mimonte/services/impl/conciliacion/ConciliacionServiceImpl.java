@@ -79,6 +79,7 @@ import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
@@ -230,7 +231,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 		
 		// Validacion del id de proveedor distinto de 0
-		if (conciliacionRequestDTO.getIdProveedor() == null || conciliacionRequestDTO.getIdProveedor() < 1) {
+		if (conciliacionRequestDTO.getProveedor() == null || conciliacionRequestDTO.getProveedor().isEmpty()) {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		}
@@ -665,26 +666,26 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
 							consultaConciliacionRequestDTO.getIdEstatus(),
 							consultaConciliacionRequestDTO.getFechaDesde(),
-							consultaConciliacionRequestDTO.getFechaHasta()));
+							consultaConciliacionRequestDTO.getFechaHasta(), null != consultaConciliacionRequestDTO.getCorresponsal() ? consultaConciliacionRequestDTO.getCorresponsal().getNombre() : null ));
 		} else if (null != consultaConciliacionRequestDTO.getFechaDesde()
 				&& null == consultaConciliacionRequestDTO.getFechaHasta()) {
 			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
 					conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFechaDesde(
 							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
 							consultaConciliacionRequestDTO.getIdEstatus(),
-							consultaConciliacionRequestDTO.getFechaDesde()));
+							consultaConciliacionRequestDTO.getFechaDesde(), null != consultaConciliacionRequestDTO.getCorresponsal() ? consultaConciliacionRequestDTO.getCorresponsal().getNombre() :null ));
 		} else if (null == consultaConciliacionRequestDTO.getFechaDesde()
 				&& null != consultaConciliacionRequestDTO.getFechaHasta()) {
 			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
 					conciliacionRepository.findByFolioAndIdEntidadAndIdEstatusAndFechaHasta(
 							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
 							consultaConciliacionRequestDTO.getIdEstatus(),
-							consultaConciliacionRequestDTO.getFechaHasta()));
+							consultaConciliacionRequestDTO.getFechaHasta(), null != consultaConciliacionRequestDTO.getCorresponsal() ? consultaConciliacionRequestDTO.getCorresponsal().getNombre() : null ));
 		} else {
 			result = ConciliacionBuilder.buildConsultaConciliacionDTOListFromConciliacionList(
 					conciliacionRepository.findByFolioAndIdEntidadAndIdEstatus(
 							consultaConciliacionRequestDTO.getFolio(), consultaConciliacionRequestDTO.getIdEntidad(),
-							consultaConciliacionRequestDTO.getIdEstatus()));
+							consultaConciliacionRequestDTO.getIdEstatus(), null != consultaConciliacionRequestDTO.getCorresponsal() ? consultaConciliacionRequestDTO.getCorresponsal().getNombre() : null ));
 		}
 
 		// SE REALIZA EL SET DE MOVIMIENTOS A LA(S) CONCILIACION(ES)
@@ -989,12 +990,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			res = conciliacionRepository.resumenConciliaciones(resumenConciliacionRequestDTO.getFechaInicial(),
 					resumenConciliacionRequestDTO.getFechaFinal(),
 					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
-					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
+					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA,
+					null != resumenConciliacionRequestDTO.getCorresponsal() ? resumenConciliacionRequestDTO.getCorresponsal().getNombre() : null);
 		} 
 		// Si no hay ninguna fecha especificada como parametro de filtrado
 		else {
 			res = conciliacionRepository.resumenConciliaciones(ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
-					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA);
+					ConciliacionConstants.ESTATUS_DEVOLUCION_LIQUIDADA, resumenConciliacionRequestDTO.getCorresponsal().getNombre());
 		}
 		if(null != res && !res.isEmpty()) {
 			resumenConciliacionResponseDTO = ConciliacionBuilder.buildResumenConciliacionResponseDTOFromMap(res);
@@ -1215,7 +1217,8 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Notificar cambios o alta de reportes, si existen...
 		Long idEntidad = reportes.get(0).getConciliacion().getEntidad().getId(); // Se obtiene la entidad bancaria asociada
-		this.conciliacionHelper.generarConciliacion(idConciliacion, idEntidad, reportes);
+		CorresponsalEnum corresponsal = CorresponsalEnum.OPENPAY; // TODO: Persistir el corresponsal
+		this.conciliacionHelper.generarConciliacion(idConciliacion, idEntidad, reportes, corresponsal);
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividad(idConciliacion,
@@ -1253,6 +1256,20 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	public void actualizaSubEstatusConciliacionNT(Long folio, SubEstatusConciliacion subEstatus, String usuario,
 			Date fecha, EstatusConciliacion estatusConciliacion, String descripcion) {
 		subEstatusConciliacionRepository.actualizaSubEstatusConciliacion(folio, subEstatus, usuario, fecha,
+				estatusConciliacion, descripcion);
+		subEstatusConciliacionRepository.flush();
+
+	}
+	
+	/**
+	 * Actualiza el sub-estatus de n conciliaciones por folio, crea una transaccion
+	 * nueva para esto
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void actualizaSubEstatusConciliacionMultipleNT(List<Long> folios, SubEstatusConciliacion subEstatus, String usuario,
+			Date fecha, EstatusConciliacion estatusConciliacion, String descripcion) {
+		subEstatusConciliacionRepository.actualizaSubEstatusConciliacionMultiple(folios, subEstatus, usuario, fecha,
 				estatusConciliacion, descripcion);
 		subEstatusConciliacionRepository.flush();
 

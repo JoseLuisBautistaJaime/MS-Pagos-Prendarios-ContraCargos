@@ -24,6 +24,8 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionConDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EntidadDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionResponseDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestMultipleDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalConciliacionesDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalDevolucionesLiquidadasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalProcesoDTO;
@@ -82,6 +84,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setDevoluciones(null);
 			conciliacionResponseSaveDTO.setMovimientosTransito(null);
 			conciliacionResponseSaveDTO.setComisiones(null);
+			conciliacionResponseSaveDTO.setProveedor(null != conciliacionDTO.getCorresponsal() ? conciliacionDTO.getCorresponsal().getNombre(): null);
 		}
 		return conciliacionResponseSaveDTO;
 	}
@@ -117,9 +120,9 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setComisiones(null);
 			// Se setea el corresponsal, si es nulo se setea por default el corresponsal OPEN_PAY
 			if(null != conciliacionRequestDTO.getCorresponsal())
-				conciliacionResponseSaveDTO.setIdProveedor(conciliacionRequestDTO.getCorresponsal().getId());
+				conciliacionResponseSaveDTO.setProveedor(conciliacionRequestDTO.getCorresponsal().getNombre());
 			else
-				conciliacionResponseSaveDTO.setIdProveedor(CorresponsalEnum.OPEN_PAY.getId());
+				conciliacionResponseSaveDTO.setProveedor(CorresponsalEnum.OPENPAY.getNombre());
 		}
 		return conciliacionResponseSaveDTO;
 	}
@@ -195,6 +198,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTO.setDevoluciones(null);
 			conciliacionDTO.setMovimientosTransito(null);
 			conciliacionDTO.setComisiones(null);
+			conciliacionDTO.setCorresponsal(null != conciliacion.getProveedor() ? CorresponsalEnum.getByNombre(conciliacion.getProveedor().getNombre()): null);
 		}
 		return conciliacionDTO;
 	}
@@ -227,7 +231,7 @@ public abstract class ConciliacionBuilder {
 			conciliacion.setSubEstatusDescripcion(null);
 			conciliacion.setIdAsientoContable(null);
 			conciliacion.setIdPolizaTesoreria(null);
-			conciliacion.setProveedor(new Proveedor(conciliacionResponseSaveDTO.getIdProveedor()));
+			conciliacion.setProveedor(new Proveedor(conciliacionResponseSaveDTO.getProveedor()));
 		}
 		return conciliacion;
 	}

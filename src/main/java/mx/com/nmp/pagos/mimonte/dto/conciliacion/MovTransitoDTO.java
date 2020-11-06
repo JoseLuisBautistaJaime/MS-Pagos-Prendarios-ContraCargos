@@ -29,6 +29,7 @@ public class MovTransitoDTO implements Comparable<MovTransitoDTO> {
 	private String cuenta;
 	private String titularCuenta;
 	private String numAutorizacion;
+	private String transaccion;
 
 	public MovTransitoDTO() {
 		super();
@@ -36,7 +37,7 @@ public class MovTransitoDTO implements Comparable<MovTransitoDTO> {
 
 	public MovTransitoDTO(Integer id, EstatusMovTransitoDTO estatus, Integer folio, Integer sucursal, Date fecha,
 			String operacion, BigDecimal monto, String tipoContrato, String esquemaTarjeta, String cuenta,
-			String titularCuenta) {
+			String titularCuenta, String transaccion) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
@@ -49,6 +50,7 @@ public class MovTransitoDTO implements Comparable<MovTransitoDTO> {
 		this.esquemaTarjeta = esquemaTarjeta;
 		this.cuenta = cuenta;
 		this.titularCuenta = titularCuenta;
+		this.transaccion = transaccion;
 	}
 
 	public Integer getId() {
@@ -158,6 +160,14 @@ public class MovTransitoDTO implements Comparable<MovTransitoDTO> {
 
 	public void setNumAutorizacion(String numAutorizacion) {
 		this.numAutorizacion = numAutorizacion;
+	}
+
+	public String getTransaccion() {
+		return transaccion;
+	}
+
+	public void setTransaccion(String transaccion) {
+		this.transaccion = transaccion;
 	}
 
 }

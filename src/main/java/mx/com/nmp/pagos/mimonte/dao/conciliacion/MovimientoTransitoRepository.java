@@ -4,13 +4,13 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 
 /**
@@ -166,5 +166,15 @@ public interface MovimientoTransitoRepository extends JpaRepository<MovimientoTr
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN ( (SELECT COUNT(mt.id) FROM to_movimiento_transito mt INNER JOIN to_movimiento_conciliacion mcon ON mt.id = mcon.id WHERE mt.id IN :ids AND mcon.id_conciliacion = :folio AND mt.estatus NOT IN :estatusList) = (SELECT :tam) ) THEN 1 ELSE 0 END")
 	public Object verifyRightStatus(@Param("folio") final Long folio, @Param("ids") final List<Integer> ids,
 			@Param("tam") final Integer tam, @Param("estatusList") final List<Integer> estatusList);
+
+	/**
+	 * Obtiene el listado de movimientos en transito de dias anteriores con el estatus no identificado en openpay y en conciliaciones no completadas
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param estatusId
+	 * @return
+	 */
+	@Query("SELECT mt FROM MovimientoTransito mt INNER JOIN Conciliacion c ON c.id = mt.idConciliacion WHERE c.estatus.id = :idEstatusConciliacion AND mt.estatus.id = :estatusId AND mt.transaccion in (:transacciones)")
+	public List<MovimientoTransito> findMovsTransitoByTransaccion(@Param("transacciones") List<String> transacciones, @Param("idEstatusConciliacion") Integer idEstatusConciliacion, @Param("estatusId") Integer estatusId);
 
 }
