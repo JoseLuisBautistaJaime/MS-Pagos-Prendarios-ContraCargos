@@ -21,7 +21,7 @@ public class ResumenConciliacionRequestDTO {
 
 	private Date fechaInicial;
 	private Date fechaFinal;
-	private CorresponsalEnum corresponsal;
+	private CorresponsalEnum idCorresponsal;
 
 	public ResumenConciliacionRequestDTO() {
 		super();
@@ -66,19 +66,19 @@ public class ResumenConciliacionRequestDTO {
 		return (this.hashCode() == other.hashCode());
 
 	}
-
-	public CorresponsalEnum getCorresponsal() {
-		return corresponsal;
+	
+	public CorresponsalEnum getIdCorresponsal() {
+		return idCorresponsal;
 	}
 
-	public void setCorresponsal(CorresponsalEnum corresponsal) {
-		this.corresponsal = corresponsal;
+	public void setIdCorresponsal(CorresponsalEnum idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
 	}
 
 	@Override
 	public String toString() {
 		return "ResumenConciliacionRequestDTO [fechaInicial=" + fechaInicial + ", fechaFinal=" + fechaFinal
-				+ ", corresponsal=" + corresponsal + "]";
+				+ ", idCorresponsal=" + idCorresponsal + "]";
 	}
 
 }

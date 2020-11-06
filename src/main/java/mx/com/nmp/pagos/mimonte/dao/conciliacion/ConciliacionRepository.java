@@ -441,4 +441,12 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query("SELECT en FROM Conciliacion c JOIN c.entidad en WHERE c.id = :idConciliacion")
 	public Entidad findEntidadByConciliacion(@Param("idConciliacion") Long idConciliacion);
 
+	/**
+	 * Obtiene una lista de ids de conciliacion asociados con un id de conciliacion (para oxxo cuando tiene n ids asociados a un reporte)
+	 * @param folio
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT cec2.id_conciliacion FROM tr_conciliacion_estado_cuenta cec2 WHERE cec2.id_reporte = (SELECT cec.id_reporte FROM tr_conciliacion_estado_cuenta cec WHERE cec.id_conciliacion = :folio )")
+	public List<Object> getConciliacionesAsociadas(@Param("folio") Long folio);
+	
 }

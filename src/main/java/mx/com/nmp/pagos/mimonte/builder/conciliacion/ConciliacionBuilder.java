@@ -53,6 +53,22 @@ public abstract class ConciliacionBuilder {
 	}
 
 	/**
+	 * Construye una lista de datos tipo Long a partir de una lista de datos tipo Object
+	 * @param objectList
+	 * @return
+	 */
+	public static List<Long> buildLongListFromObjectList(List<Object> objectList){
+		List<Long> longList = null;
+		if(null != objectList && !objectList.isEmpty()) {
+			longList = new ArrayList<>();
+			for(Object obj : objectList) {
+				longList.add(Long.valueOf(obj.toString()));
+			}
+		}
+		return longList;
+	}
+	
+	/**
 	 * Construye un objeto de tipo ConciliacionResponseSaveDTO a partir de un objeto
 	 * de tipo ConciliacionDTO.
 	 * 
@@ -84,7 +100,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setDevoluciones(null);
 			conciliacionResponseSaveDTO.setMovimientosTransito(null);
 			conciliacionResponseSaveDTO.setComisiones(null);
-			conciliacionResponseSaveDTO.setProveedor(null != conciliacionDTO.getCorresponsal() ? conciliacionDTO.getCorresponsal().getNombre(): null);
+			conciliacionResponseSaveDTO.setIdCorresponsal(null != conciliacionDTO.getCorresponsal() ? conciliacionDTO.getCorresponsal().getNombre(): null);
 		}
 		return conciliacionResponseSaveDTO;
 	}
@@ -119,10 +135,10 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setMovimientosTransito(null);
 			conciliacionResponseSaveDTO.setComisiones(null);
 			// Se setea el corresponsal, si es nulo se setea por default el corresponsal OPEN_PAY
-			if(null != conciliacionRequestDTO.getCorresponsal())
-				conciliacionResponseSaveDTO.setProveedor(conciliacionRequestDTO.getCorresponsal().getNombre());
+			if(null != conciliacionRequestDTO.getIdCorresponsal())
+				conciliacionResponseSaveDTO.setIdCorresponsal(conciliacionRequestDTO.getIdCorresponsal().getNombre());
 			else
-				conciliacionResponseSaveDTO.setProveedor(CorresponsalEnum.OPENPAY.getNombre());
+				conciliacionResponseSaveDTO.setIdCorresponsal(CorresponsalEnum.OPENPAY.getNombre());
 		}
 		return conciliacionResponseSaveDTO;
 	}
@@ -231,7 +247,7 @@ public abstract class ConciliacionBuilder {
 			conciliacion.setSubEstatusDescripcion(null);
 			conciliacion.setIdAsientoContable(null);
 			conciliacion.setIdPolizaTesoreria(null);
-			conciliacion.setProveedor(new Proveedor(conciliacionResponseSaveDTO.getProveedor()));
+			conciliacion.setProveedor(new Proveedor(conciliacionResponseSaveDTO.getIdCorresponsal()));
 		}
 		return conciliacion;
 	}

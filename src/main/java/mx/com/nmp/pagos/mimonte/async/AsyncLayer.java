@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.async;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,56 @@ public class AsyncLayer {
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(AsyncLayer.class);
 
+	@Async("conciliacionAsyncExecutor")
+	public void generarConciliacionList(List<Long> ids, String requestUser, Long subEstatusInicial) throws ConciliacionException {
+		Boolean procesoCorrecto = false;
+		String descripcionError = null;
+		try {
+			for(Long id : ids) {
+				conciliacionServiceImpl.generarConciliacion(id, requestUser);	
+			}
+			procesoCorrecto = true;
+		} catch (ConciliacionException cex) {
+			procesoCorrecto = false;
+			descripcionError = cex.getCodigoError().getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
+		} catch (Exception eex) {
+			procesoCorrecto = false;
+			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_132.getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
+		} finally {
+			try {
+				// Si la conciliacion se realizo despues de completar el alta de movs. proveedor transaccional
+				if(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA.equals(subEstatusInicial)) {
+					// Se actualiza el sub estatus de la conciliacion en base al resultado
+					for(Long id : ids) {
+						LOG.info(">>> INICIA ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", id);
+						conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(id,
+								procesoCorrecto ? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA
+										: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_ERROR,
+								descripcionError), requestUser);
+						LOG.info(">>> FINALIZA EXITOSAMENTE ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", id);	
+					}
+				}
+			// Si la conciliacion se realizo despues de completar el alta de movs. de edo. cta.
+			else if(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA.equals(subEstatusInicial)) {
+				// Se actualiza el sub estatus de la conciliacion en base al resultado
+				for(Long id : ids) {
+					LOG.info(">>> INICIA ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", id);
+					conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(id,
+							procesoCorrecto ? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
+									: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA,
+							descripcionError), requestUser);
+					LOG.info(">>> FINALIZA EXITOSAMENTE ACTUALIZACION DE SUB ESTATUS DE CONCILIACION, DESPUES DE HABER HECHO LA CONCILIACION FOLIO: {}", id);
+				}
+				}
+			} catch (Exception ex) {
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			}
+		}
+
+	}
+	
 	@Async("conciliacionAsyncExecutor")
 	public void generarConciliacion(Long folio, String requestUser, Long subEstatusInicial) throws ConciliacionException {
 		Boolean procesoCorrecto = false;
