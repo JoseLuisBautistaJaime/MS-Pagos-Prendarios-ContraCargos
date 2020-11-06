@@ -12,12 +12,25 @@ CREATE TABLE `tk_proveedor` (
 PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
 
+
+-- Se requiere insertar los corresponsables para poder crear la foreign key
+INSERT INTO tk_proveedor (id, nombre, descripcion) 
+	VALUES
+		(1,'OPENPAY', 'Proveedor transaccional')
+        , (2, 'OXXO', 'Proveedor oxxo');
+
 -- -------------------------------------------------------------- --
 -- ------------ RELACION PROVEEDOR - CONCILIACION --------------- --
 -- -------------------------------------------------------------- -- 
 ALTER TABLE `to_conciliacion` ADD COLUMN id_proveedor BIGINT(20) NOT NULL DEFAULT 1;
 ALTER TABLE `to_conciliacion` ADD INDEX `proveedor_con_fk_idx` (`id_proveedor` ASC);
 ALTER TABLE `to_conciliacion` ADD CONSTRAINT `proveedor_con_fk` FOREIGN KEY (`id_proveedor`) REFERENCES `tk_proveedor` (`id`);
+
+-- Se agrega campo folio, indice y se agrega llave unica folio-proveedor
+ALTER TABLE `to_conciliacion` ADD COLUMN folio BIGINT(20) NOT NULL DEFAULT 1;
+ALTER TABLE `to_conciliacion` ADD INDEX `to_conciliacion_folio_idx` (`folio`);
+ALTER TABLE `to_conciliacion` ADD UNIQUE `to_conciliacion_folio_proveedor_unq` (`folio`, id_proveedor);
+
 
 -- -------------------------------------------------------------- --
 -- ---------- DATOS OBLIGATORIOS MOVIMIENTOS PROVEEDOR ---------- --

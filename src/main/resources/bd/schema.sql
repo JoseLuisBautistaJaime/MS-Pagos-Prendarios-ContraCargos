@@ -656,6 +656,7 @@ PRIMARY KEY (id)
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_conciliacion` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `folio` BIGINT(20) NOT NULL,
   `id_estatus_conciliacion` BIGINT(20) NOT NULL,
   `id_entidad` BIGINT(20) NOT NULL,
   `id_cuenta` BIGINT(20) NOT NULL,
@@ -677,6 +678,8 @@ CREATE TABLE IF NOT EXISTS `to_conciliacion` (
   INDEX `sub_estatus_conciliacion_fk_idx` (`id_sub_estatus_conciliacion` ASC),
   INDEX `merge_fk_idx` (`id_merge` ASC),
   INDEX `proveedor_con_fk_idx` (`id_proveedor` ASC),
+  INDEX `to_conciliacion_folio_idx` (`folio`),
+  UNIQUE `to_conciliacion_folio_proveedor_unq` (`folio`, id_proveedor),
   CONSTRAINT `cuenta_fk`
     FOREIGN KEY (`id_cuenta`)
     REFERENCES `tc_cuenta` (`id`),

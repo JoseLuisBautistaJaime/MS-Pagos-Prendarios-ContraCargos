@@ -2,13 +2,9 @@
 -- -------------------- INSERTS INICIALES PARA FASE OXXO ------------------------------------ --
 -- ------------------------------------------------------------------------------------------ --
 
--- ---------------------------------------------------------------------------------- --
--- --------------- INSERT DE LOS PROVEEDORES / CORRESPONSALES ------------------------ --
--- ---------------------------------------------------------------------------------- --
-INSERT INTO tk_proveedor (id, nombre, descripcion) 
-	VALUES
-		(1,'OPENPAY', 'Proveedor transaccional')
-        , (2, 'OXXO', 'Proveedor oxxo');
+-- Se asigna el campo folio usando el id de la conciliacion para los registros existentes de openpay
+UPDATE to_conciliacion SET folio = id WHERE id_proveedor = 1;
+
 
 -- ---------------------------------------------------------------------------------- --
 -- --------------- INSERT DE LAS COMISIONES PROVEEDORES / CORRESPONSALES ------------------------ --
