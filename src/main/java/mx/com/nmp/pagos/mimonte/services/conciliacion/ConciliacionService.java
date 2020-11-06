@@ -182,4 +182,11 @@ public interface ConciliacionService {
 	 */
 	public Long findSubEstatusByFolio(Long folio);
 	
+	/**
+	 * Obtiene la lista de ids de conciliacion asociadas a un folio de conciliacion (lista de longitud 1 para open pay y longitud n para oxxo)
+	 * @param folio
+	 * @return
+	 */
+	public List<Long> getConciliacionesAsociadas(Long folio);
+	
 }

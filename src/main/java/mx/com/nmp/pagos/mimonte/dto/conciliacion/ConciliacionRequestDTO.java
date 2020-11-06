@@ -18,7 +18,7 @@ public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO
 
 	private Long idEntidad;
 	private Long idCuenta;
-	private CorresponsalEnum corresponsal;
+	private CorresponsalEnum idCorresponsal;
 
 	public ConciliacionRequestDTO() {
 		super();
@@ -30,19 +30,19 @@ public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO
 		this.idCuenta = idCuenta;
 	}
 
-	public ConciliacionRequestDTO(Long idEntidad, Long idCuenta, CorresponsalEnum corresponsal) {
+	public ConciliacionRequestDTO(Long idEntidad, Long idCuenta, CorresponsalEnum idCorresponsal) {
 		super();
 		this.idEntidad = idEntidad;
 		this.idCuenta = idCuenta;
-		this.corresponsal = corresponsal;
+		this.idCorresponsal = idCorresponsal;
 	}
 
-	public CorresponsalEnum getCorresponsal() {
-		return corresponsal;
+	public CorresponsalEnum getIdCorresponsal() {
+		return idCorresponsal;
 	}
 
-	public void setCorresponsal(CorresponsalEnum corresponsal) {
-		this.corresponsal = corresponsal;
+	public void setIdCorresponsal(CorresponsalEnum idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
 	}
 
 	public Long getIdEntidad() {
@@ -63,8 +63,8 @@ public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO
 
 	@Override
 	public String toString() {
-		return "ConciliacionRequestDTO [idEntidad=" + idEntidad + ", idCuenta=" + idCuenta + ", corresponsal="
-				+ corresponsal + "]";
+		return "ConciliacionRequestDTO [idEntidad=" + idEntidad + ", idCuenta=" + idCuenta + ", idCorresponsal="
+				+ idCorresponsal + "]";
 	}
 
 	@Override
