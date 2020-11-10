@@ -8,7 +8,7 @@
 CREATE TABLE `tk_proveedor` (
 `nombre` VARCHAR(150) PRIMARY KEY NOT NULL,
 `descripcion` VARCHAR(250),
-PRIMARY KEY (id)
+UNIQUE(nombre)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
 
 
@@ -21,14 +21,14 @@ INSERT INTO tk_proveedor (nombre, descripcion)
 -- -------------------------------------------------------------- --
 -- ------------ RELACION PROVEEDOR - CONCILIACION --------------- --
 -- -------------------------------------------------------------- -- 
-ALTER TABLE `to_conciliacion` ADD COLUMN proveedor VARCHAR(150) NOT NULL DEFAULT 'OPEN_PAY';
+ALTER TABLE `to_conciliacion` ADD COLUMN proveedor VARCHAR(150) NOT NULL DEFAULT 'OPENPAY';
 ALTER TABLE `to_conciliacion` ADD INDEX `proveedor_con_fk_idx` (`proveedor` ASC);
 ALTER TABLE `to_conciliacion` ADD CONSTRAINT `proveedor_con_fk` FOREIGN KEY (`proveedor`) REFERENCES `tk_proveedor` (`nombre`);
 
 -- Se agrega campo folio, indice y se agrega llave unica folio-proveedor
 ALTER TABLE `to_conciliacion` ADD COLUMN folio BIGINT(20) NOT NULL DEFAULT 1;
 ALTER TABLE `to_conciliacion` ADD INDEX `to_conciliacion_folio_idx` (`folio`);
-ALTER TABLE `to_conciliacion` ADD UNIQUE `to_conciliacion_folio_proveedor_unq` (`folio`, id_proveedor);
+ALTER TABLE `to_conciliacion` ADD UNIQUE `to_conciliacion_folio_proveedor_unq` (`folio`, proveedor);
 
 
 -- -------------------------------------------------------------- --

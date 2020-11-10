@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @name CorresponsalDTO
  * @description Clase que encapsula la informacion perteneciente a un tipo de Corresponsal del catalogo.
@@ -13,21 +15,21 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class CorresponsalDTO implements Comparable<CorresponsalDTO> {
 
-	private String nombre;
+	private CorresponsalEnum nombre;
 	private String descripcion;
 	
 	public CorresponsalDTO() {}
 
-	public CorresponsalDTO(String nombre, String descripcion) {
+	public CorresponsalDTO(CorresponsalEnum nombre, String descripcion) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 	}
 
-	public String getNombre() {
+	public CorresponsalEnum getNombre() {
 		return nombre;
 	}
 	
-	public void setNombre(String nombre) {
+	public void setNombre(CorresponsalEnum nombre) {
 		this.nombre = nombre;
 	}
 	

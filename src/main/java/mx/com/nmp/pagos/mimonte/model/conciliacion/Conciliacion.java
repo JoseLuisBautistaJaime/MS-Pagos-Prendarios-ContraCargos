@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
 
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
@@ -49,8 +48,7 @@ public class Conciliacion extends Updatable implements Serializable  {
 	@JoinColumn(name = "id_estatus_conciliacion")
 	private EstatusConciliacion estatus;
 
-//	@Column(name = "folio")
-	@Transient
+	@Column(name = "folio")
 	private Long folio;
 	
 	@ManyToOne(cascade = CascadeType.REFRESH)

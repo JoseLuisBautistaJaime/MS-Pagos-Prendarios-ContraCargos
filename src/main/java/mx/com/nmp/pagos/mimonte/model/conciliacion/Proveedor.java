@@ -6,6 +6,8 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -29,23 +31,24 @@ public class Proveedor implements java.io.Serializable {
 		super();
 	}
 
-	public Proveedor(String nombre) {
+	public Proveedor(CorresponsalEnum nombre) {
 		super();
 		this.nombre = nombre;
 	}
 
 	@Id
+	@Enumerated(EnumType.STRING)
 	@Column(name = "nombre", nullable = true)
-	private String nombre;
+	private CorresponsalEnum nombre;
 
 	@Column(name = "descripcion", nullable = true)
 	private String descripcion;
 
-	public String getNombre() {
+	public CorresponsalEnum getNombre() {
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
+	public void setNombre(CorresponsalEnum nombre) {
 		this.nombre = nombre;
 	}
 

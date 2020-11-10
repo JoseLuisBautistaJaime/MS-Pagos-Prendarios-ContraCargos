@@ -33,7 +33,7 @@ public enum CorresponsalEnum {
 
 	public static CorresponsalEnum getByNombre(String nombre) {
 		for (CorresponsalEnum corresponsalEnum : CorresponsalEnum.values()) {
-			if (corresponsalEnum.getNombre().equals(nombre)) {
+			if (corresponsalEnum.getNombre().equalsIgnoreCase(nombre)) {
 				return corresponsalEnum;
 			}
 		}

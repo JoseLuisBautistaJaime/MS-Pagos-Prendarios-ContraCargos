@@ -639,7 +639,7 @@ public class LayoutsService {
 			boolean nuevo) throws ConciliacionException {
 		List<Layout> layouts = null;
 		Long idConciliacion = conciliacion.getId();
-		String proveedor = conciliacion.getProveedor().getNombre() != null ? conciliacion.getProveedor().getNombre(): "OPENPAY";
+		CorresponsalEnum corresponsal = conciliacion.getProveedor() != null && conciliacion.getProveedor().getNombre() != null ? conciliacion.getProveedor().getNombre(): CorresponsalEnum.OPENPAY;
 		
 		if (layoutsDTO != null && layoutsDTO.size() > 0) {
 
@@ -666,9 +666,9 @@ public class LayoutsService {
 					if (headerDTO == null) {
 						
 						LayoutHeaderCatalog headerCatalog=null;
-						if(proveedor.equals(CorresponsalEnum.OPENPAY.getNombre())) {
+						if(corresponsal == CorresponsalEnum.OPENPAY) {
 							headerCatalog = getCabeceraCatalog(layoutDTO.getTipoLayout(), CorresponsalEnum.OPENPAY);
-						} else if(proveedor.equals(CorresponsalEnum.OXXO.getNombre())) {
+						} else if(corresponsal == CorresponsalEnum.OXXO) {
 							headerCatalog = getCabeceraCatalog(layoutDTO.getTipoLayout(), CorresponsalEnum.OXXO);
 						}
 						
@@ -779,22 +779,22 @@ public class LayoutsService {
 		// devoluciones, comisiones
 		List<LayoutDTO> layoutsDTO = new ArrayList<LayoutDTO>();
 		Long idConciliacion = conciliacion.getId();
-		Proveedor provedor = conciliacion.getProveedor();
+		CorresponsalEnum idCorresponsal = conciliacion.getProveedor() != null ? conciliacion.getProveedor().getNombre() : CorresponsalEnum.OPENPAY;
 		
 		// PAGOS /////
-		LayoutDTO layoutDTO = buildLayoutDTO(idConciliacion, provedor.getNombre(), TipoLayoutEnum.PAGOS);
+		LayoutDTO layoutDTO = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.PAGOS);
 		if (layoutDTO != null) {
 			layoutsDTO.add(layoutDTO);
 		}
 
 		// DEVOLUCIONES ////
-		layoutDTO = buildLayoutDTO(idConciliacion, provedor.getNombre(), TipoLayoutEnum.DEVOLUCIONES);
+		layoutDTO = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.DEVOLUCIONES);
 		if (layoutDTO != null) {
 			layoutsDTO.add(layoutDTO);
 		}
 
 		// COMISIONES MOVIMIENTOS SE OBTIENEN DEL ESTADO DE CUENTA
-		layoutDTO = buildLayoutDTO(idConciliacion, provedor.getNombre(), TipoLayoutEnum.COMISIONES_MOV);
+		layoutDTO = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.COMISIONES_MOV);
 		if (layoutDTO != null) {
 			layoutsDTO.add(layoutDTO);
 		}
@@ -812,10 +812,11 @@ public class LayoutsService {
 	 * Genera los layouts para el movimiento solo si existen movimientos
 	 * 
 	 * @param idConciliacion
+	 * @param idCorresponsal
 	 * @param tipo
 	 * @return
 	 */
-	private LayoutDTO buildLayoutDTO(Long idConciliacion, String proveedor, TipoLayoutEnum tipo) throws ConciliacionException {
+	private LayoutDTO buildLayoutDTO(Long idConciliacion, CorresponsalEnum idCorresponsal, TipoLayoutEnum tipo) throws ConciliacionException {
 
 		LayoutDTO layoutDTO = null;
 
@@ -828,25 +829,25 @@ public class LayoutsService {
 			List<LayoutLineaDTO> lineasIVADTO = new ArrayList<LayoutLineaDTO>();
 			
 			// Extraer operaciones de Estado cuenta
-			lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.BANCOS, proveedor));
+			lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.BANCOS, idCorresponsal));
 
 			// Layout especial : Extraer tambien comisiones IVA al extraer comisiones del estado de cuenta
 			if (tipo == TipoLayoutEnum.COMISIONES_MOV) {
 				List<IMovTransaccion> movimientosIVA = obtenerMovimientosConciliacion(idConciliacion, TipoLayoutEnum.COMISIONES_IVA);
-				lineasIVADTO.addAll(buildLineasDTO(movimientosIVA, TipoLayoutEnum.COMISIONES_IVA, GrupoLayoutEnum.BANCOS, proveedor));
+				lineasIVADTO.addAll(buildLineasDTO(movimientosIVA, TipoLayoutEnum.COMISIONES_IVA, GrupoLayoutEnum.BANCOS, idCorresponsal));
 			}
 
 			// Extraer operaciones de sucursales
 			if (tipo != TipoLayoutEnum.COMISIONES_MOV && tipo != TipoLayoutEnum.COMISIONES_IVA) {
-				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.SUCURSALES, proveedor));
+				lineasDTO.addAll(buildLineasDTO(movimientos, tipo, GrupoLayoutEnum.SUCURSALES, idCorresponsal));
 			}
 			else {
 				// Prorrateo comisiones por sucursal, iva 
-				lineasDTO.addAll(buildLineasComisionesSucursal(lineasDTO, lineasIVADTO, idConciliacion, proveedor));
+				lineasDTO.addAll(buildLineasComisionesSucursal(lineasDTO, lineasIVADTO, idConciliacion, idCorresponsal));
 			}
 
 			// Se genera la cabecera correspondiente
-			LayoutCabeceraDTO cabeceraDTO = buildCabeceraDTO(idConciliacion, proveedor, tipo);
+			LayoutCabeceraDTO cabeceraDTO = buildCabeceraDTO(idConciliacion, idCorresponsal, tipo);
 
 			// Suma las lineas IVA (en caso de existir)
 			lineasDTO.addAll(lineasIVADTO);
@@ -869,10 +870,11 @@ public class LayoutsService {
 	 * @param lineasDTO
 	 * @param lineasIVADTO 
 	 * @param idConciliacion
+	 * @param idCorresponsal
 	 * @return
 	 */
 	private Collection<? extends LayoutLineaDTO> buildLineasComisionesSucursal(List<LayoutLineaDTO> lineasDTO,
-			List<LayoutLineaDTO> lineasIVADTO, long idConciliacion, String proveedor) {
+			List<LayoutLineaDTO> lineasIVADTO, long idConciliacion, CorresponsalEnum idCorresponsal) {
 
 		List<LayoutLineaDTO> lineasComisionIVA = new ArrayList<LayoutLineaDTO>();
 
@@ -899,12 +901,12 @@ public class LayoutsService {
 
 				// Se prorratean layouts para comisiones y se generan las lineas
 				if (montoTotalComisiones.compareTo(new BigDecimal(0)) > 0) {
-					lineasComisionIVA.addAll(buildLineasComisionesProrrateado(totalOpPorSuc, montoTotalComisiones, totalOperaciones, TipoLayoutEnum.COMISIONES_MOV, proveedor));
+					lineasComisionIVA.addAll(buildLineasComisionesProrrateado(totalOpPorSuc, montoTotalComisiones, totalOperaciones, TipoLayoutEnum.COMISIONES_MOV, idCorresponsal));
 				}
 
 				// Se prorratean layouts para IVA y se generan las lineas
 				if (montoTotalIVA.compareTo(new BigDecimal(0)) > 0) {
-					lineasComisionIVA.addAll(buildLineasComisionesProrrateado(totalOpPorSuc, montoTotalIVA, totalOperaciones, TipoLayoutEnum.COMISIONES_IVA, proveedor));
+					lineasComisionIVA.addAll(buildLineasComisionesProrrateado(totalOpPorSuc, montoTotalIVA, totalOperaciones, TipoLayoutEnum.COMISIONES_IVA, idCorresponsal));
 				}
 
 			}
@@ -923,9 +925,10 @@ public class LayoutsService {
 	 * @param montoTotalComisiones
 	 * @param totalOperaciones
 	 * @param tipoLayout
+	 * @param idCorresponsal
 	 */
 	private List<LayoutLineaDTO> buildLineasComisionesProrrateado(List<OperacionesPorSucursalDTO> totalOpPorSuc,
-			BigDecimal montoTotal, int totalOperaciones, TipoLayoutEnum tipoLayout, String proveedor) {
+			BigDecimal montoTotal, int totalOperaciones, TipoLayoutEnum tipoLayout, CorresponsalEnum idCorresponsal) {
 
 		List<LayoutLineaDTO> lineasComision = new ArrayList<LayoutLineaDTO>();
 		for (OperacionesPorSucursalDTO opPorSuc : totalOpPorSuc) {
@@ -937,13 +940,13 @@ public class LayoutsService {
 				
 				// Se prorratea el monto de acuerdo al peso de la sucursal
 				BigDecimal montoSucursal = LayoutsBuilder.getPorcentajeSucursal(montoTotal, pesoSucursal);
-				LOG.debug("Sucursal tiene un monto asignado de {}/{} para {} para el corresponsal {} ", montoSucursal, montoTotal, tipoLayout, proveedor);
+				LOG.debug("Sucursal tiene un monto asignado de {}/{} para {} para el corresponsal {} ", montoSucursal, montoTotal, tipoLayout, idCorresponsal);
 
 				// Se genera la linea correspondiente
 				MovimientoComision movimientoComision = new MovimientoComision();
 				movimientoComision.setMovimientoMidas(new MovimientoMidas());
 				movimientoComision.getMovimientoMidas().setSucursal(opPorSuc.getSucursal());
-				LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipoLayout, GrupoLayoutEnum.SUCURSALES, proveedor);
+				LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipoLayout, GrupoLayoutEnum.SUCURSALES, idCorresponsal);
 				String unidadOperativa = getUnidadOperativa(movimientoComision, lineaCatalog);
 				LayoutLineaDTO lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaCatalog, montoSucursal, unidadOperativa);
 
@@ -1005,17 +1008,18 @@ public class LayoutsService {
 	 * por default configurados en la bd
 	 * 
 	 * @param idConciliacion
+	 * @param idCorresponsal
 	 * @param tipoLayout
 	 * @return
 	 */
-	private LayoutCabeceraDTO buildCabeceraDTO(Long idConciliacion, String proveedor, TipoLayoutEnum tipoLayout) {
+	private LayoutCabeceraDTO buildCabeceraDTO(Long idConciliacion, CorresponsalEnum idCorresponsal, TipoLayoutEnum tipoLayout) {
 
 		// Obtiene la cabecera del catalogo correspondiente al tipo layout
 		LayoutHeaderCatalog layoutHeaderCatalog = null;
 		
-		if(proveedor.equals(CorresponsalEnum.OPENPAY.getNombre())) {
+		if(idCorresponsal == CorresponsalEnum.OPENPAY) {
 			layoutHeaderCatalog = getCabeceraCatalog(tipoLayout, CorresponsalEnum.OPENPAY);
-		} else if(proveedor.equals(CorresponsalEnum.OXXO.getNombre())) {
+		} else if(idCorresponsal == CorresponsalEnum.OXXO) {
 			layoutHeaderCatalog = getCabeceraCatalog(tipoLayout, CorresponsalEnum.OXXO);
 		}
 		
@@ -1032,17 +1036,18 @@ public class LayoutsService {
 	 * @param movimientos
 	 * @param tipo
 	 * @param grupo
+	 * @param idCorresponsal
 	 * @return
 	 */
 	private List<LayoutLineaDTO> buildLineasDTO(List<IMovTransaccion> movimientos, TipoLayoutEnum tipo,
-			GrupoLayoutEnum grupo, String proveedor) throws ConciliacionException {
+			GrupoLayoutEnum grupo, CorresponsalEnum idCorresponsal) throws ConciliacionException {
 
 		// Genera las lineas
 		List<LayoutLineaDTO> lineasDTO = new ArrayList<LayoutLineaDTO>();
 
 		// Agrupar movimientos por tipo y grupo
 		List<IMovTransaccion> movimientosByGrupo = agruparMovimientos(movimientos, tipo, grupo);
-		LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipo, grupo, proveedor);
+		LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipo, grupo, idCorresponsal);
 		if (lineaCatalog == null) {
 			throw new ConciliacionException(
 					"No existe configuracion de la linea para el layout " + tipo + " y grupo " + grupo);
@@ -1369,18 +1374,20 @@ public class LayoutsService {
 	 * Obtiene la linea del catalogo de acuerdo tipo de layout
 	 * 
 	 * @param tipoLayout
+	 * @param grupo
+	 * @param idCorresponsal
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	private LayoutLineaCatalog getLayoutLineaCatalog(TipoLayoutEnum tipoLayout, GrupoLayoutEnum grupo, String proveedor)
+	private LayoutLineaCatalog getLayoutLineaCatalog(TipoLayoutEnum tipoLayout, GrupoLayoutEnum grupo, CorresponsalEnum idCorresponsal)
 			throws ConciliacionException {
 		LayoutLineaCatalog lineaCatalog = null;
 
 		// Se obtienen los valores por default de la linea de acuerdo al tipo de layout, grupo y corresponsal
 		try {
-			if(proveedor.equals(CorresponsalEnum.OPENPAY.getNombre())) {
+			if(idCorresponsal == CorresponsalEnum.OPENPAY) {
 				lineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupoAndCorresponsal(tipoLayout, grupo, CorresponsalEnum.OPENPAY);
-			} else if(proveedor.equals(CorresponsalEnum.OXXO.getNombre())) {
+			} else if(idCorresponsal == CorresponsalEnum.OXXO) {
 				lineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupoAndCorresponsal(tipoLayout, grupo, CorresponsalEnum.OXXO);
 			}
 			

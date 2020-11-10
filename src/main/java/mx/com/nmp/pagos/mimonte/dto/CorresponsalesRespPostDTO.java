@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @name CorresponsalesRespPostDTO
  * @description Clase que encapsula la informacion perteneciente a un
@@ -15,24 +17,24 @@ package mx.com.nmp.pagos.mimonte.dto;
  */
 public class CorresponsalesRespPostDTO implements Comparable<CorresponsalesRespPostDTO> {
 
-	private String nombre;
+	private CorresponsalEnum nombre;
 	private String descripcion;
 
 	public CorresponsalesRespPostDTO() {
 		super();
 	}
 
-	public CorresponsalesRespPostDTO(String nombre, String descripcion) {
+	public CorresponsalesRespPostDTO(CorresponsalEnum nombre, String descripcion) {
 		super();
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 	}
 
-	public String getNombre() {
+	public CorresponsalEnum getNombre() {
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
+	public void setNombre(CorresponsalEnum nombre) {
 		this.nombre = nombre;
 	}
 
