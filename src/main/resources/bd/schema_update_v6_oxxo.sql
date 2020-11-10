@@ -28,6 +28,8 @@ ALTER TABLE `to_conciliacion` ADD CONSTRAINT `proveedor_con_fk` FOREIGN KEY (`pr
 -- Se agrega campo folio, indice y se agrega llave unica folio-proveedor
 ALTER TABLE `to_conciliacion` ADD COLUMN folio BIGINT(20) NOT NULL DEFAULT 1;
 ALTER TABLE `to_conciliacion` ADD INDEX `to_conciliacion_folio_idx` (`folio`);
+-- Se asigna el campo folio usando el id de la conciliacion para los registros existentes de openpay
+UPDATE to_conciliacion SET folio = id WHERE proveedor = "OPENPAY";
 ALTER TABLE `to_conciliacion` ADD UNIQUE `to_conciliacion_folio_proveedor_unq` (`folio`, proveedor);
 
 
@@ -469,20 +471,3 @@ MAIN: BEGIN
 END MAIN;
 $$
 DELIMITER ;
-
-
--- ---------------- MODIFICACIONES EN TABLA CATALOGO DE CORRESPONSALES : BEGIN--------------- --
-SET FOREIGN_KEY_CHECKS=0;
-ALTER TABLE to_conciliacion DROP FOREIGN KEY proveedor_con_fk;
-ALTER TABLE to_conciliacion DROP INDEX proveedor_con_fk_idx;
-ALTER TABLE to_conciliacion DROP COLUMN id_proveedor;
-
-ALTER TABLE tk_proveedor DROP COLUMN id;
-ALTER TABLE tk_proveedor CHANGE nombre nombre VARCHAR(150) PRIMARY KEY NOT NULL;
-
-ALTER TABLE to_conciliacion ADD COLUMN proveedor VARCHAR(150) NOT NULL DEFAULT 'OPENPAY';
-ALTER TABLE `to_conciliacion` ADD INDEX `proveedor_con_fk_idx` (`proveedor` ASC);
-ALTER TABLE `to_conciliacion` ADD CONSTRAINT `proveedor_con_fk` FOREIGN KEY (`proveedor`) REFERENCES `tk_proveedor` (`nombre`);
-
-SET FOREIGN_KEY_CHECKS=1;
--- ---------------- MODIFICACIONES EN TABLA CATALOGO DE CORRESPONSALES : END --------------- --
