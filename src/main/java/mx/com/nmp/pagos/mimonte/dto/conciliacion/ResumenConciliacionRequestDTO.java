@@ -21,7 +21,7 @@ public class ResumenConciliacionRequestDTO {
 
 	private Date fechaInicial;
 	private Date fechaFinal;
-	private CorresponsalEnum idCorresponsal;
+	private String idCorresponsal;
 
 	public ResumenConciliacionRequestDTO() {
 		super();
@@ -67,11 +67,11 @@ public class ResumenConciliacionRequestDTO {
 
 	}
 	
-	public CorresponsalEnum getIdCorresponsal() {
+	public String getIdCorresponsal() {
 		return idCorresponsal;
 	}
 
-	public void setIdCorresponsal(CorresponsalEnum idCorresponsal) {
+	public void setIdCorresponsal(String idCorresponsal) {
 		this.idCorresponsal = idCorresponsal;
 	}
 
