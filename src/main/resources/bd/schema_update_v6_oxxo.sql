@@ -163,9 +163,9 @@ ALTER TABLE `tc_layout_linea` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAU
 
 
 -- -------------------------------------------------------------- --
--- ------------------ TABLA Proveedor --------------------------- --
+-- ------------------ TABLA Transito --------------------------- --
 -- -------------------------------------------------------------- --
-ALTER TABLE `to_movimiento_proveedor` ADD COLUMN `transaccion` VARCHAR(50) NULL DEFAULT '';
+ALTER TABLE `to_movimiento_transito` ADD COLUMN `transaccion` VARCHAR(50) NULL DEFAULT '';
 
 
 -- -----------------------------------------------------

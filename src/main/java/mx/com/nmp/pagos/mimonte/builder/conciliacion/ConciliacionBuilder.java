@@ -317,6 +317,7 @@ public abstract class ConciliacionBuilder {
 		if (conciliacion != null) {
 			conciliacionDTOList = new ConciliacionDTOList();
 			conciliacionDTOList.setFolio(conciliacion.getId());
+			conciliacionDTOList.setFolioConciliacion(conciliacion.getFolio());
 			conciliacionDTOList.setEstatus(EstatusConciliacionBuilder
 					.buildEstatusConciliacionDTOFromEstatusConciliacion(conciliacion.getEstatus()));
 			conciliacionDTOList.setSubEstatus(SubEstatusConciliacionBuilder
@@ -340,6 +341,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTOList.setLastModifiedBy(conciliacion.getLastModifiedBy());
 			conciliacionDTOList.setIdAsientoContable(conciliacion.getIdAsientoContable());
 			conciliacionDTOList.setIdTesoreria(conciliacion.getIdPolizaTesoreria());
+			conciliacionDTOList.setIdCorresponsal(conciliacion.getProveedor() != null ? conciliacion.getProveedor().getNombre() : CorresponsalEnum.OPENPAY);
 		}
 		return conciliacionDTOList;
 	}
