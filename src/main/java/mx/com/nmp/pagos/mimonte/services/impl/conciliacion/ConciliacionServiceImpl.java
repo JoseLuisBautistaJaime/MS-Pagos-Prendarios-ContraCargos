@@ -75,6 +75,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
+import mx.com.nmp.pagos.mimonte.helper.FolioConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
@@ -112,9 +113,10 @@ import mx.com.nmp.pagos.mimonte.util.StringUtil;
 public class ConciliacionServiceImpl implements ConciliacionService {
 
 	/**
-	 * Logger para registro para registro de actividad.
+	 * Instancia para impresion de LOG's
 	 */
-	private final Logger log = LoggerFactory.getLogger(ConciliacionServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ConciliacionServiceImpl.class);
+
 
 	@Autowired
 	private CuentaRepository cuentaRepository;
@@ -153,7 +155,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	private LayoutsService layoutsService;
 
 	@Autowired
-	private ConciliacionDataValidator conciliacionDataValidator;
+	private FolioConciliacionHelper folioConciliacionHelper;
 
 	/**
 	 * Mini maquina de estados para actualizacion de subestatus de conciliacion
@@ -201,10 +203,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Value("${mimonte.variables.actividades-max-default}")
 	private Integer actividadesMaxDefaultValue;
 
-	/**
-	 * Instancia para impresion de LOG's
-	 */
-	private static final Logger LOG = LoggerFactory.getLogger(ConciliacionServiceImpl.class);
+	@Autowired
+	private ConciliacionDataValidator conciliacionDataValidator;
+
 	
 	// Temporal format para los LOGs de timers
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -231,10 +232,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 		
 		// Validacion del id de proveedor distinto de 0
-		if (conciliacionRequestDTO.getIdCorresponsal() == null || conciliacionRequestDTO.getIdCorresponsal().isEmpty()) {
-			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
-					CodigoError.NMP_PMIMONTE_0008);
-		}
+		//if (conciliacionRequestDTO.getIdCorresponsal() == null) {
+		//	throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+		//			CodigoError.NMP_PMIMONTE_0008);
+		//}
 
 		// Validación del atributo createdBy
 		if (StringUtils.isBlank(createdBy)) {
@@ -288,11 +289,16 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_026);
 		}
 
-		log.debug("Creando conciliacion...");
+		LOG.debug("Creando conciliacion...");
 
 		// Se construye la conciliacion y se guarda
 		Conciliacion conciliacion = ConciliacionBuilder
 				.buildConciliacionFromConciliacionResponseSaveDTO(conciliacionRequestDTO);
+		
+		// Se genera el folio de acuerdo al corresponsal
+		Long folioConciliacion = folioConciliacionHelper.getNextFolio(conciliacionRequestDTO.getIdCorresponsal());
+		conciliacion.setFolio(folioConciliacion);
+
 		conciliacion = conciliacionRepository.save(conciliacion);
 
 		// Se crea el objeto global vacio
@@ -380,10 +386,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				}
 
 			} catch (ConciliacionException ex) {
-				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw ex;
 			} catch (Exception ex) {
-				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_038.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_038);
 			}
@@ -461,7 +467,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		} catch (ConciliacionException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_103.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_103);
 		}
@@ -471,7 +477,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			conciliacion = conciliacionHelper.getConciliacionByFolio(actualizaionConciliacionRequestDTO.getFolio(),
 					ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 		} catch (Exception ex) {
-			log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_094.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_094);
 		}
@@ -504,10 +510,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					movimientoComisionRepository.flush();
 				}
 			} catch (ConciliacionException ex) {
-				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw ex;
 			} catch (Exception ex) {
-				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_039.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_039);
 			}
@@ -563,7 +569,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 				if (null != idsComDel && !idsComDel.isEmpty())
 					movimientoComisionRepository.deleteByIds(idsComDel);
 			} catch (Exception ex) {
-				log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_101.getDescripcion(),
 						CodigoError.NMP_PMIMONTE_BUSINESS_101);
 			}
@@ -582,7 +588,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 							+ " comisiones",
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZAR_CONCILIACION);
 		} catch (Exception ex) {
-			log.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0012.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_0012);
 		}
@@ -609,6 +615,11 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Se hace UPPERCASE de nombre corresponsal
 		consultaConciliacionRequestDTO.setIdCorresponsal(null != consultaConciliacionRequestDTO.getIdCorresponsal() ? consultaConciliacionRequestDTO.getIdCorresponsal().toUpperCase() : null);
+
+		// Se setea el corresponsal por default a OPENPAY
+		if (consultaConciliacionRequestDTO.getIdCorresponsal() == null) {
+			consultaConciliacionRequestDTO.setIdCorresponsal(CorresponsalEnum.OPENPAY.getNombre());
+		}
 		
 		// Ajuste de fechas para filtros
 		if (null == consultaConciliacionRequestDTO.getFechaDesde()
@@ -1113,7 +1124,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 */
 	@Transactional
 	public void actualizarPS(ActualizarIdPSRequest actualizarIdPSRequest, String usuario) {
-		log.info(">> actualizarPS");
+		LOG.info(">> actualizarPS");
 
 		// SE VALIDA EL FOLIO DE LA CONCILIACION
 		conciliacionDataValidator.validateFolioExists(actualizarIdPSRequest.getFolio());
@@ -1121,7 +1132,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// SE VALIDAN LOS ID'S DE ASIENTO CONTABLE Y POLIZA TESORERIA
 		if (StringUtil.isNullOrEmpty(actualizarIdPSRequest.getIdAsientoContable())
 				&& StringUtil.isNullOrEmpty(actualizarIdPSRequest.getIdPolizaTesoreria())) {
-			log.error("Valores nulos o vacios. IdAsientoContable: [" + actualizarIdPSRequest.getIdAsientoContable()
+			LOG.error("Valores nulos o vacios. IdAsientoContable: [" + actualizarIdPSRequest.getIdAsientoContable()
 					+ "], " + "IdPolizaTesoreria: [" + actualizarIdPSRequest.getIdPolizaTesoreria() + "]");
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_095.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_095);
@@ -1131,7 +1142,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		try {
 			conciliacion = conciliacionRepository.findByFolio(actualizarIdPSRequest.getFolio());
 		} catch (Exception ex) {
-			log.error("Error al obtener la conciliacion para el folio: [" + actualizarIdPSRequest.getFolio() + "]", ex);
+			LOG.error("Error al obtener la conciliacion para el folio: [" + actualizarIdPSRequest.getFolio() + "]", ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_094.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_094);
 		}
@@ -1140,7 +1151,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		if (conciliacion.getSubEstatus() == null || conciliacion.getSubEstatus().getId() == null
 				|| !ConciliacionConstants.CON_SUB_ESTATUS_ACTUALIZACION_PS
 						.contains(conciliacion.getSubEstatus().getId())) {
-			log.error("La conciliacion no tiene un sub-estatus valido. Sub-estatus: [" + conciliacion.getSubEstatus()
+			LOG.error("La conciliacion no tiene un sub-estatus valido. Sub-estatus: [" + conciliacion.getSubEstatus()
 					+ "]");
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_030);
@@ -1164,7 +1175,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 
 		if (conciliacionFinalizada) {
-			log.debug("Finalizando la conciliacion ...");
+			LOG.debug("Finalizando la conciliacion ...");
 			conciliacion.setEstatus(new EstatusConciliacion(ConciliacionConstants.ESTATUS_CONCILIACION_FINALIZADA));
 			conciliacion.setSubEstatus(
 					new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_FINALIZADA));
@@ -1173,7 +1184,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		try {
 			conciliacionRepository.save(conciliacion);
 		} catch (Exception ex) {
-			log.error("Error al actualizar la conciliacion.", ex);
+			LOG.error("Error al actualizar la conciliacion.", ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_031.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_031);
 		}

@@ -8,7 +8,7 @@
 CREATE TABLE `tk_proveedor` (
 `nombre` VARCHAR(150) PRIMARY KEY NOT NULL,
 `descripcion` VARCHAR(250),
-PRIMARY KEY (id)
+UNIQUE(nombre)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET = latin1;
 
 
@@ -21,14 +21,16 @@ INSERT INTO tk_proveedor (nombre, descripcion)
 -- -------------------------------------------------------------- --
 -- ------------ RELACION PROVEEDOR - CONCILIACION --------------- --
 -- -------------------------------------------------------------- -- 
-ALTER TABLE `to_conciliacion` ADD COLUMN proveedor VARCHAR(150) NOT NULL DEFAULT 'OPEN_PAY';
+ALTER TABLE `to_conciliacion` ADD COLUMN proveedor VARCHAR(150) NOT NULL DEFAULT 'OPENPAY';
 ALTER TABLE `to_conciliacion` ADD INDEX `proveedor_con_fk_idx` (`proveedor` ASC);
 ALTER TABLE `to_conciliacion` ADD CONSTRAINT `proveedor_con_fk` FOREIGN KEY (`proveedor`) REFERENCES `tk_proveedor` (`nombre`);
 
 -- Se agrega campo folio, indice y se agrega llave unica folio-proveedor
 ALTER TABLE `to_conciliacion` ADD COLUMN folio BIGINT(20) NOT NULL DEFAULT 1;
 ALTER TABLE `to_conciliacion` ADD INDEX `to_conciliacion_folio_idx` (`folio`);
-ALTER TABLE `to_conciliacion` ADD UNIQUE `to_conciliacion_folio_proveedor_unq` (`folio`, id_proveedor);
+-- Se asigna el campo folio usando el id de la conciliacion para los registros existentes de openpay
+UPDATE to_conciliacion SET folio = id WHERE proveedor = "OPENPAY";
+ALTER TABLE `to_conciliacion` ADD UNIQUE `to_conciliacion_folio_proveedor_unq` (`folio`, proveedor);
 
 
 -- -------------------------------------------------------------- --
@@ -161,9 +163,9 @@ ALTER TABLE `tc_layout_linea` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAU
 
 
 -- -------------------------------------------------------------- --
--- ------------------ TABLA Proveedor --------------------------- --
+-- ------------------ TABLA Transito --------------------------- --
 -- -------------------------------------------------------------- --
-ALTER TABLE `to_movimiento_proveedor` ADD COLUMN `transaccion` VARCHAR(50) NULL DEFAULT '';
+ALTER TABLE `to_movimiento_transito` ADD COLUMN `transaccion` VARCHAR(50) NULL DEFAULT '';
 
 
 -- -----------------------------------------------------
@@ -469,20 +471,3 @@ MAIN: BEGIN
 END MAIN;
 $$
 DELIMITER ;
-
-
--- ---------------- MODIFICACIONES EN TABLA CATALOGO DE CORRESPONSALES : BEGIN--------------- --
-SET FOREIGN_KEY_CHECKS=0;
-ALTER TABLE to_conciliacion DROP FOREIGN KEY proveedor_con_fk;
-ALTER TABLE to_conciliacion DROP INDEX proveedor_con_fk_idx;
-ALTER TABLE to_conciliacion DROP COLUMN id_proveedor;
-
-ALTER TABLE tk_proveedor DROP COLUMN id;
-ALTER TABLE tk_proveedor CHANGE nombre nombre VARCHAR(150) PRIMARY KEY NOT NULL;
-
-ALTER TABLE to_conciliacion ADD COLUMN proveedor VARCHAR(150) NOT NULL DEFAULT 'OPENPAY';
-ALTER TABLE `to_conciliacion` ADD INDEX `proveedor_con_fk_idx` (`proveedor` ASC);
-ALTER TABLE `to_conciliacion` ADD CONSTRAINT `proveedor_con_fk` FOREIGN KEY (`proveedor`) REFERENCES `tk_proveedor` (`nombre`);
-
-SET FOREIGN_KEY_CHECKS=1;
--- ---------------- MODIFICACIONES EN TABLA CATALOGO DE CORRESPONSALES : END --------------- --
