@@ -146,7 +146,7 @@ public class MovimientosController {
 	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		/*
+		
 		LOG.info(">>>URL: POST /movimientos/nocturnos > REQUEST ENTRANTE: {}", movimientos.toString());
 		
 		long start = 0;
@@ -195,15 +195,15 @@ public class MovimientosController {
 		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
-		
-		*/
+		// TODO: Dummy code
+/*		
 		if(movimientos.getFolio().equals(1L))
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 		else
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_030);
-			
+	*/		
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class MovimientosController {
 	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalListRequestDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		/*
+		
 		LOG.info(">>>URL: POST /movimientos/proveedor > REQUEST ENTRANTE: {}", movimientos.toString());
 		
 		long start = 0;
@@ -339,14 +339,15 @@ public class MovimientosController {
 		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
-		*/
+		// TODO: Dummy code
+		/*
 		if(movimientos.getFolio().equals(1L))
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
 		else
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_030);
-			
+			*/
 	}
 
 	/**
