@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Actividad;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 
 /**
  * @name ActividadRepository
@@ -37,9 +38,9 @@ public interface ActividadRepository extends JpaRepository<Actividad, Long> {
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.folio = :folio AND act.fecha BETWEEN :fechaDesde AND :fechaHasta  ORDER BY act.fecha DESC")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act INNER JOIN Conciliacion c ON c.id = act.folio WHERE act.folio = :folio AND act.fecha BETWEEN :fechaDesde AND :fechaHasta AND ( :idCorresponsal IS NULL OR c.proveedor.id = :idCorresponsal ) ORDER BY act.fecha DESC")
 	public List<ConsultaActividadDTO> findByFolioFechaDesdeAndFechaHasta(@Param("folio") final Long folio,
-			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta);
+			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta, @Param("idCorresponsal") final CorresponsalEnum idCorresponsal);
 
 	/**
 	 * Regresa las actividades por fechas
@@ -48,8 +49,8 @@ public interface ActividadRepository extends JpaRepository<Actividad, Long> {
 	 * @param fechaHasta
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act WHERE act.fecha BETWEEN :fechaDesde AND :fechaHasta  ORDER BY act.fecha DESC")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act INNER JOIN Conciliacion c ON c.id = act.folio WHERE act.fecha BETWEEN :fechaDesde AND :fechaHasta AND ( :idCorresponsal IS NULL OR c.proveedor.id = :idCorresponsal ) ORDER BY act.fecha DESC")
 	public List<ConsultaActividadDTO> findByFechaDesdeAndFechaHasta(@Param("fechaDesde") final Date fechaDesde,
-			@Param("fechaHasta") final Date fechaHasta);
+			@Param("fechaHasta") final Date fechaHasta, @Param("idCorresponsal") final CorresponsalEnum idCorresponsal);
 
 }

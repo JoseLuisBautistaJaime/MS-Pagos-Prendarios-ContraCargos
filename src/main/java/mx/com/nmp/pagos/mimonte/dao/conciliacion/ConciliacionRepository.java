@@ -141,11 +141,13 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha BETWEEN :fechaDesde AND :fechaHasta")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " 
+			+ "( :idCorresponsal IS NULL OR c.proveedor.id = :idCorresponsal ) AND "
+			+ " md.fecha BETWEEN :fechaDesde AND :fechaHasta")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursal(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
 			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
-			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta);
+			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta, @Param("idCorresponsal")final CorresponsalEnum idCorresponsal);
 
 	/**
 	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
@@ -162,11 +164,13 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha >= :fechaDesde")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND "
+			+ "( :idCorresponsal IS NULL OR c.proveedor.nombre = :idCorresponsal ) AND "
+			+ " md.fecha >= :fechaDesde")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaHasta(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
 			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
-			@Param("fechaDesde") final Date fechaDesde);
+			@Param("fechaDesde") final Date fechaDesde, @Param("idCorresponsal") final CorresponsalEnum idCorresponsal);
 
 	/**
 	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
@@ -183,11 +187,13 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha <= :fechaHasta")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND "
+			+ "( :idCorresponsal IS NULL OR c.proveedor.nombre = :idCorresponsal ) AND "
+			+ " md.fecha <= :fechaHasta")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaDesde(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
 			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
-			@Param("fechaHasta") final Date fechaHasta);
+			@Param("fechaHasta") final Date fechaHasta, @Param("idCorresponsal") final CorresponsalEnum idCorresponsal);
 
 	/**
 	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
@@ -203,10 +209,12 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal )")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND "
+			+ "( :idCorresponsal IS NULL OR c.proveedor.nombre = :idCorresponsal )"
+			)
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechas(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
-			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal);
+			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal, @Param("idCorresponsal") final CorresponsalEnum idCorresponsal);
 
 	/**
 	 * Regresa una lista de entities de tipo Conciliacion en base a los ids de

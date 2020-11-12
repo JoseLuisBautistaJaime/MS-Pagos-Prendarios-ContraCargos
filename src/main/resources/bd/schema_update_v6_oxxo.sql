@@ -153,13 +153,13 @@ CREATE TABLE `tr_conciliacion_estado_cuenta` (
 -- -------------------------------------------------------------- --
 -- ------------------ TABLA TC_LAYOUT_HEADER -------------------- --
 -- -------------------------------------------------------------- -- 
-ALTER TABLE `tc_layout_header` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY';
+ALTER TABLE `tc_layout_header` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAULT 'OPENPAY';
 
 
 -- -------------------------------------------------------------- --
 -- ------------------ TABLA TC_LAYOUT_LINEA --------------------- --
 -- -------------------------------------------------------------- --
-ALTER TABLE `tc_layout_linea` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY'; 
+ALTER TABLE `tc_layout_linea` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAULT 'OPENPAY'; 
 
 
 -- -------------------------------------------------------------- --
@@ -173,7 +173,7 @@ ALTER TABLE `to_movimiento_transito` ADD COLUMN `transaccion` VARCHAR(50) NULL D
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tc_comision_proveedor` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY',
+  `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPENPAY',
   `comision` DECIMAL(5,2) NOT NULL,
   `iva` DECIMAL(5,2) NOT NULL,
   PRIMARY KEY (`id`),

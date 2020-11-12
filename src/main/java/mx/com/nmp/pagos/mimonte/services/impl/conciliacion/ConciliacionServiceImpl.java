@@ -1060,7 +1060,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 						&& null != consultaActividadesRequest.getFechaHasta()) {
 					consultaActividadDTOList = actividadRepository.findByFolioFechaDesdeAndFechaHasta(
 							consultaActividadesRequest.getFolio(), consultaActividadesRequest.getFechaDesde(),
-							consultaActividadesRequest.getFechaHasta());
+							consultaActividadesRequest.getFechaHasta(), CorresponsalEnum.getByNombre(consultaActividadesRequest.getIdCorresponsal()) );
 				}
 
 				// El folio es nulo y las fechas no
@@ -1068,13 +1068,13 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 						&& null != consultaActividadesRequest.getFechaDesde()
 						&& null != consultaActividadesRequest.getFechaHasta()) {
 					consultaActividadDTOList = actividadRepository.findByFechaDesdeAndFechaHasta(
-							consultaActividadesRequest.getFechaDesde(), consultaActividadesRequest.getFechaHasta());
+							consultaActividadesRequest.getFechaDesde(), consultaActividadesRequest.getFechaHasta(), CorresponsalEnum.getByNombre(consultaActividadesRequest.getIdCorresponsal()));
 				}
 			} else {
 				// Todos los atributos son nulos se consultan los ultimos 10 por default
 				Pageable pageable = PageRequest.of(0,
 						null != actividadesMaxDefaultValue ? actividadesMaxDefaultValue : 10);
-				consultaActividadDTOList = actividadPaginRepository.nGetTopXActividades(pageable);
+				consultaActividadDTOList = actividadPaginRepository.nGetTopXActividades(pageable, CorresponsalEnum.getByNombre(consultaActividadesRequest.getIdCorresponsal()));
 			}
 		} catch (java.lang.IllegalArgumentException ex) {
 			throw new ConciliacionException(ConciliacionConstants.ENUM_TYPE_OR_SUB_TYPE_INCONCISTENCY,
