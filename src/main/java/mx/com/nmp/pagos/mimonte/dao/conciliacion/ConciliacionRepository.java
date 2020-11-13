@@ -461,4 +461,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query(nativeQuery = true, value="INSERT INTO seq_conciliacion(seq_name, seq_value) VALUES(:name, :value)")
 	public void crearSeqConciliacion(@Param("name") String name, @Param("value") Long value);
 
+	@Query(nativeQuery = true, value = "SELECT c.folio FROM to_conciliacion c WHERE c.id = :idConciliacion")
+	public Long findFolioById(@Param("idConciliacion") Long idConciliacion);
+
 }

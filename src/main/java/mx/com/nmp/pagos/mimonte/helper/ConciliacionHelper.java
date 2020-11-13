@@ -49,4 +49,12 @@ public interface ConciliacionHelper {
 	 */
 	public ComisionTransaccion getComisionTransaccion(Long folio) throws ConciliacionException;
 
+	/**
+	 * Obtiene el folio de la conciliacion por id
+	 * @param idConciliacion
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public Long getFolioConciliacionById(Long idConciliacion) throws ConciliacionException;
+
 }
