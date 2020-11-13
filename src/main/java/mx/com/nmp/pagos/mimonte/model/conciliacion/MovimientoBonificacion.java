@@ -42,7 +42,7 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 	private Long id;
 
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name = "estatus")
+	@JoinColumn(name = "id_estatus_bonificacion")
 	private EstatusBonificacion estatus;
 	
 	@Temporal(TemporalType.TIMESTAMP)

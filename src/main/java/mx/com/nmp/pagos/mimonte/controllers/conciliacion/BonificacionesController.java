@@ -13,9 +13,10 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,7 +77,7 @@ public class BonificacionesController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/bonificaciones/consulta/{folio}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/bonificaciones/consulta/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Consulta las bonificaciones para la conciliacion.", tags = {
 			"Bonificaciones" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta Bonificaciones Exitosa."),
@@ -107,7 +108,7 @@ public class BonificacionesController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = "/bonificaciones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/bonificaciones", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Permite agregar una nueva bonificacion.", tags = {
 			"Bonificaciones" })
 	@ApiResponses({
@@ -116,13 +117,13 @@ public class BonificacionesController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response actualizar(@RequestBody BonificacionDTO bonificacion,
+	public Response agregar(@RequestBody BonificacionDTO bonificacion,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
 		LOG.info(">>>URL: PUT /bonificaciones > REQUEST ENTRANTE: {}", bonificacion);
 		
 		// Validacion de objeto y atributos
-		if (bonificacion != null || userRequest == null || "".equals(userRequest))
+		if (bonificacion == null || userRequest == null || "".equals(userRequest))
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 
@@ -144,7 +145,7 @@ public class BonificacionesController {
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/bonificaciones/{idBonificacion}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(value = "/bonificaciones/{idBonificacion}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "DELETE", value = "Elimina una bonificacion de la conciliacion.", tags = {
 			"Bonificaciones" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Eliminacion bonificacion exitosa."),
@@ -152,7 +153,7 @@ public class BonificacionesController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response solicitar(@PathVariable(value = "folio", required = true) Long idBonificacion,
+	public Response solicitar(@PathVariable(value = "idBonificacion", required = true) Long idBonificacion,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
 		LOG.info(">>>URL: DELETE /bonificaciones/{idBonificacion} > REQUEST ENTRANTE: {}", idBonificacion);

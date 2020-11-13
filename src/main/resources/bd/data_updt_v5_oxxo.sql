@@ -11,5 +11,13 @@ INSERT INTO seq_conciliacion(seq_name, seq_value) VALUES('OXXO', 0);
 -- ---------------------------------------------------------------------------------- --
 -- --------------- INSERT DE LAS COMISIONES PROVEEDORES / CORRESPONSALES ------------------------ --
 -- ---------------------------------------------------------------------------------- --
-INSERT INTO `conciliacion`.`tc_comision_proveedor` (`id`, `corresponsal`, `comision`, `iva`) 
+INSERT INTO `tc_comision_proveedor` (`id`, `corresponsal`, `comision`, `iva`) 
 	VALUES ('1', 'OXXO', '15.52', '2.48');
+
+
+-- ---------------------------------------------------------------------------------- --
+-- --------------- INSERT DE LAS COMISIONES PROVEEDORES / CORRESPONSALES ------------------------ --
+-- ---------------------------------------------------------------------------------- --
+INSERT INTO `tk_estatus_bonificacion` (`id`, `nombre`, `descripcion`, `descripcion_corta`) 
+	VALUES (1, 'Pendiente', 'Pendiente', 'Pendiente');
+
