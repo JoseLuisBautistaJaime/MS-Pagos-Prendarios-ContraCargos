@@ -59,6 +59,7 @@ import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.EstatusDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -377,28 +378,28 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 		if (null != devoluciones.getFechaDesde() && null != devoluciones.getFechaHasta()) {
 			result = conciliacionRepository.findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursal(
 					devoluciones.getEstatus(), devoluciones.getIdEntidad(), devoluciones.getIdentificadorCuenta(),
-					devoluciones.getSucursal(), devoluciones.getFechaDesde(), devoluciones.getFechaHasta());
+					devoluciones.getSucursal(), devoluciones.getFechaDesde(), devoluciones.getFechaHasta(), CorresponsalEnum.getByNombre(devoluciones.getIdCorresponsal()) );
 		}
 
 		// La fecha final nula
 		else if (null != devoluciones.getFechaDesde() && null == devoluciones.getFechaHasta()) {
 			result = conciliacionRepository.findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaHasta(
 					devoluciones.getEstatus(), devoluciones.getIdEntidad(), devoluciones.getIdentificadorCuenta(),
-					devoluciones.getSucursal(), devoluciones.getFechaDesde());
+					devoluciones.getSucursal(), devoluciones.getFechaDesde(), CorresponsalEnum.getByNombre(devoluciones.getIdCorresponsal()) );
 		}
 
 		// La fecha inicial nula
 		else if (null == devoluciones.getFechaDesde() && null != devoluciones.getFechaHasta()) {
 			result = conciliacionRepository.findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaDesde(
 					devoluciones.getEstatus(), devoluciones.getIdEntidad(), devoluciones.getIdentificadorCuenta(),
-					devoluciones.getSucursal(), devoluciones.getFechaHasta());
+					devoluciones.getSucursal(), devoluciones.getFechaHasta(), CorresponsalEnum.getByNombre(devoluciones.getIdCorresponsal()) );
 		}
 
 		// Ambas fechas nulas
 		else {
 			result = conciliacionRepository.findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechas(
 					devoluciones.getEstatus(), devoluciones.getIdEntidad(), devoluciones.getIdentificadorCuenta(),
-					devoluciones.getSucursal());
+					devoluciones.getSucursal(), CorresponsalEnum.getByNombre(devoluciones.getIdCorresponsal()) );
 		}
 
 		// Crea el DTO de respuesta y lo regresa

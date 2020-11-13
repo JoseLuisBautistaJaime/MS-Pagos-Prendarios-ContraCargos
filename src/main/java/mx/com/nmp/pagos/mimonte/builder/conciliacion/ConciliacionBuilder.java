@@ -135,7 +135,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setComisiones(null);
 			// Se setea el corresponsal, si es nulo se setea por default el corresponsal OPEN_PAY
 			if(null != conciliacionRequestDTO.getIdCorresponsal())
-				conciliacionResponseSaveDTO.setIdCorresponsal(conciliacionRequestDTO.getIdCorresponsal());
+				conciliacionResponseSaveDTO.setIdCorresponsal(null != conciliacionRequestDTO.getIdCorresponsal() ? CorresponsalEnum.getByNombre(conciliacionRequestDTO.getIdCorresponsal().toUpperCase()) : CorresponsalEnum.OPENPAY );
 			else
 				conciliacionResponseSaveDTO.setIdCorresponsal(CorresponsalEnum.OPENPAY);
 		}

@@ -153,13 +153,13 @@ CREATE TABLE `tr_conciliacion_estado_cuenta` (
 -- -------------------------------------------------------------- --
 -- ------------------ TABLA TC_LAYOUT_HEADER -------------------- --
 -- -------------------------------------------------------------- -- 
-ALTER TABLE `tc_layout_header` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY';
+ALTER TABLE `tc_layout_header` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAULT 'OPENPAY';
 
 
 -- -------------------------------------------------------------- --
 -- ------------------ TABLA TC_LAYOUT_LINEA --------------------- --
 -- -------------------------------------------------------------- --
-ALTER TABLE `tc_layout_linea` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY'; 
+ALTER TABLE `tc_layout_linea` ADD COLUMN corresponsal VARCHAR(50) NOT NULL DEFAULT 'OPENPAY'; 
 
 
 -- -------------------------------------------------------------- --
