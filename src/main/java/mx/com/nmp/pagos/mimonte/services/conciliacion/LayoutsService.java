@@ -6,13 +6,12 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +25,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,12 +42,13 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutLineasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.LayoutsRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.LayoutsJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutLineaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.OperacionesPorSucursalDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenLayoutDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenLayoutTipoDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
@@ -59,7 +56,6 @@ import mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuentaCabecera;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.GrupoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.IMovTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Layout;
@@ -72,7 +68,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.Proveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
@@ -146,12 +141,6 @@ public class LayoutsService {
 	 */
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
-
-	@Autowired
-	private LayoutsJdbcRepository layoutsJdbcRepository;
-
-	@Inject
-	private JdbcTemplate jdbcTemplate;
 
 	@Inject
 	private MovimientosMidasRepository movimientosMidasRepository;
@@ -623,6 +612,50 @@ public class LayoutsService {
 
 	}// End enviarConciliacion
 
+
+	/**
+	 * Se encarga de obtener el resumen de montos por conciliacion
+	 * @param idConciliacion
+	 */
+	public ResumenLayoutDTO obtenerResumen(Long idConciliacion) throws ConciliacionException {
+
+		ResumenLayoutDTO resumen = new ResumenLayoutDTO();
+
+		try {
+			List<LayoutLinea> lineas = this.layoutLineasRepository.findByLayoutIdConciliacion(idConciliacion);
+			if (lineas != null && lineas.size() > 0) {
+				Map<TipoLayoutEnum, ResumenLayoutTipoDTO> mapResumen = new LinkedHashMap<TipoLayoutEnum, ResumenLayoutTipoDTO>();
+				
+				// Se obtiene el monto negativo y positivo por tipo de layout
+				for (LayoutLinea linea : lineas) {
+					TipoLayoutEnum tipo = linea.getLayout().getTipo();
+					// Se agrupan las comisiones iva y mov en comisiones
+					if (tipo == TipoLayoutEnum.COMISIONES_IVA || tipo == TipoLayoutEnum.COMISIONES_MOV) {
+						tipo = TipoLayoutEnum.COMISIONES;
+					}
+					ResumenLayoutTipoDTO resumenPorTipo = mapResumen.get(tipo);
+					if (resumenPorTipo == null) {
+						resumenPorTipo = new ResumenLayoutTipoDTO(tipo);
+						mapResumen.put(tipo, resumenPorTipo);
+					}
+					resumenPorTipo.add(linea.getMonto()); // Se agrega el monto por tipo
+					resumen.add(linea.getMonto()); // Se agrega el monto total
+				}
+
+				// Se agregan los subtotales al resumen
+				resumen.setDetalle(new ArrayList<ResumenLayoutTipoDTO>(mapResumen.values()));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al obtener las lineas de la conciliacion id " + idConciliacion,
+					CodigoError.NMP_PMIMONTE_BUSINESS_085);
+		}
+
+		return resumen;
+	}
+
+	
+	
 	// PRIVATES /////////////////////////////////////////////
 
 	/**
