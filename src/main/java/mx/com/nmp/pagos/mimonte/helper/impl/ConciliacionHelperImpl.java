@@ -112,4 +112,18 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 		return comisionTransaccion;
 	}
 
+
+	@Override
+	public Long getFolioConciliacionById(Long idConciliacion) throws ConciliacionException {
+		Long folio = null;
+		try {
+			folio = this.conciliacionRepository.findFolioById(idConciliacion);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar el folio de la conciliacion", CodigoError.NMP_PMIMONTE_0011);
+		}
+		return folio;
+	}
+
 }

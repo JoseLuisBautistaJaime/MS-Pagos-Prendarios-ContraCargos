@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS `to_reporte` ;
 DROP TABLE IF EXISTS `to_comision_transaccion_real`;
 DROP TABLE IF EXISTS `to_comision_transaccion_proyeccion`;
 DROP TABLE IF EXISTS `to_comision_transaccion`;
+DROP TABLE IF EXISTS `to_movimiento_bonificacion` ;
 DROP TABLE IF EXISTS `to_conciliacion` ;
 DROP TABLE IF EXISTS `to_merge_conciliacion`;
 DROP TABLE IF EXISTS `tr_regla_negocio_variable` ;
@@ -57,8 +58,9 @@ DROP TABLE IF EXISTS `tk_variable` ;
 DROP TABLE IF EXISTS `tk_tipo_contrato` ;
 DROP TABLE IF EXISTS `tk_estatus_pago` ;
 DROP TABLE IF EXISTS `seq_conciliacion` ;
-DROP TABLE IF EXISTS `fk_proveedor` ;
+DROP TABLE IF EXISTS `tk_proveedor` ;
 DROP TABLE IF EXISTS `tc_comision_proveedor` ;
+DROP TABLE IF EXISTS `tk_estatus_bonificacion`;
 
 
 
@@ -607,6 +609,18 @@ CREATE TABLE IF NOT EXISTS `tk_sub_estatus_conciliacion` (
   `last_modified_date` DATETIME NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
   `order_number` INT(11) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- Estatus Bonificacion
+CREATE TABLE IF NOT EXISTS `tk_estatus_bonificacion` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(100) NOT NULL,
+  `descripcion` VARCHAR(150) NULL DEFAULT NULL,
+  `estatus` BIT(1) NOT NULL DEFAULT b'1',
+  `descripcion_corta` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
@@ -1295,6 +1309,34 @@ CREATE TABLE IF NOT EXISTS `tc_comision_proveedor` (
   INDEX `cp_fk_idx` (`id` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
+
+
+
+-- Movimientos Bonificacion
+
+CREATE TABLE IF NOT EXISTS `to_movimiento_bonificacion` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `id_estatus_bonificacion` INT(11) NOT NULL,
+  `fecha` DATETIME DEFAULT NULL,
+  `monto` DECIMAL(5,2) NOT NULL,
+  `id_conciliacion` BIGINT(20) NOT NULL,
+  `created_by` VARCHAR(100) NOT NULL,
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `estatus_fk_idx` (`id_estatus_bonificacion`),
+  CONSTRAINT `estatus_fk`
+    FOREIGN KEY (`id_estatus_bonificacion`)
+    REFERENCES `tk_estatus_bonificacion` (`id`),
+  INDEX `bonificacion_id_conciliacion_fk_idx` (`id_conciliacion`),
+  CONSTRAINT `bonificacion_id_conciliacion_fk`
+    FOREIGN KEY (`id_conciliacion`)
+    REFERENCES `to_conciliacion` (`id`)
+) ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
 
 -- ------------------------------------------------------------------------------------------------- --
 -- --------------------------------------- CREACION DE SP's ---------------------------------------- --
