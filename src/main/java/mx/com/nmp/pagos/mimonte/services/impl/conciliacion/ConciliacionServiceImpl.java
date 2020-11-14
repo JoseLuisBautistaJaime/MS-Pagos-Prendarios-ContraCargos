@@ -913,7 +913,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// la maquina de estados de sub-estatus conciliacion
 		start = System.currentTimeMillis();
 		LOG.debug("T>>> INICIA VALIDACION DE NUEVO ESTADO VS ESTADOS VALIDOS EN MAQUINA DE ESTADOS: {}", sdf.format(new Date(start)));
-		subEstatusValido = miniMaquinaEstadosConciliacion.checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(
+		subEstatusValido = miniMaquinaEstadosConciliacion.checkIfSubEstatusIsRightByFolioAndIdSubEstatus(
 				actualizarSubEstatusRequestDTO.getFolio(), actualizarSubEstatusRequestDTO.getIdSubEstatus());
 		if (null != subEstatusValido && !subEstatusValido)
 			throw new ConciliacionException(ConciliacionConstants.WRONG_ORDER_SUB_STATUS,

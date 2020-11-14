@@ -316,7 +316,7 @@ public class MovimientosEstadoCuentaService {
 		try {
 			possibleSubEstatus = MovimientosBuilder
 					.buildLongListFromObjectList(conciliacionRepository.getPossibleSubestatusList(
-							ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA));
+							ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA, request.getFolio()));
 			conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(request.getFolio(), possibleSubEstatus);
 		} catch (ConciliacionException ex) {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
@@ -426,10 +426,10 @@ public class MovimientosEstadoCuentaService {
 
 		// Valida que tenga un sub.estatus valido
 		try {
-			possibleSubEstatus = MovimientosBuilder
-					.buildLongListFromObjectList(conciliacionRepository.getPossibleSubestatusList(
-							ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA));
 			for(Long folio : request.getFolios()) {
+				possibleSubEstatus = MovimientosBuilder
+						.buildLongListFromObjectList(conciliacionRepository.getPossibleSubestatusList(
+								ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA, folio));
 				conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(folio, possibleSubEstatus);
 			}
 			

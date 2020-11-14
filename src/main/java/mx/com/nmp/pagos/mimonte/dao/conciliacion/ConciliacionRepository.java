@@ -362,8 +362,21 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param idSubEstatus
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN :idSubEstatus IN (SELECT id_sub_estatus_posible FROM tk_maquina_estados_subestatus_conciliacion WHERE id_sub_estatus_inicial = (SELECT id_sub_estatus_conciliacion FROM to_conciliacion WHERE id = :folio)) THEN TRUE ELSE FALSE END AS RESULT")
-	public Object checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(@Param("folio") final Long folio,
+//	@Query(nativeQuery = true, value = "SELECT CASE WHEN :idSubEstatus IN (SELECT id_sub_estatus_posible FROM tk_maquina_estados_subestatus_conciliacion WHERE id_sub_estatus_inicial = (SELECT id_sub_estatus_conciliacion FROM to_conciliacion WHERE id = :folio) AND corresponsal = :corresponsal ) THEN TRUE ELSE FALSE END AS RESULT")
+	@Query(nativeQuery = true, value = "SELECT " + 
+			"	CASE " + 
+			"		WHEN :idSubEstatus IN " + 
+			"			(" + 
+			"            SELECT me.id_sub_estatus_posible" + 
+			"			 FROM tk_maquina_estados_subestatus_conciliacion  me" + 
+			"            INNER JOIN to_conciliacion con ON con.proveedor = me.corresponsal" + 
+			"			WHERE me.id_sub_estatus_inicial = " + 
+			"				(SELECT id_sub_estatus_conciliacion " + 
+			"                FROM to_conciliacion " + 
+			"                WHERE id = :folio) " + 
+			"            AND con.id = :folio    " + 
+			"			) THEN TRUE ELSE FALSE END AS RESULT")
+	public Object checkIfSubEstatusIsRightByFolioAndIdSubEstatus(@Param("folio") final Long folio,
 			@Param("idSubEstatus") final Long idSubEstatus);
 
 	/**
@@ -403,8 +416,17 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param idSubEstatus
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT me.id_sub_estatus_inicial FROM tk_maquina_estados_subestatus_conciliacion me WHERE me.id_sub_estatus_posible = :idSubEstatus")
-	public List<Object> getPossibleSubestatusList(@Param("idSubEstatus") final Long idSubEstatus);
+//	@Query(nativeQuery = true, value = "SELECT me.id_sub_estatus_inicial FROM tk_maquina_estados_subestatus_conciliacion me WHERE me.id_sub_estatus_posible = :idSubEstatus")
+	@Query(nativeQuery = true, value = "SELECT me.id_sub_estatus_inicial " + 
+			"FROM tk_maquina_estados_subestatus_conciliacion me " + 
+			"WHERE me.id_sub_estatus_posible = :idSubEstatus " + 
+			"	AND me.corresponsal = " + 
+			"    (" + 
+			"    SELECT conn.proveedor " + 
+			"    FROM to_conciliacion conn " + 
+			"    WHERE conn.id = :folio " + 
+			"    )")
+	public List<Object> getPossibleSubestatusList(@Param("idSubEstatus") final Long idSubEstatus, @Param("folio") final Long folio);
 
 	/**
 	 * Regresa un 1 cuando la conciliacion especificada tiene un id de merge, de lo
