@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  */
 public enum TipoLayoutEnum {
 	PAGOS,
+	COMISIONES,
 	COMISIONES_MOV,
 	COMISIONES_GENERALES,
 	COMISIONES_IVA,

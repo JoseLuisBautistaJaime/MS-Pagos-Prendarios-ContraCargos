@@ -120,7 +120,7 @@ public class BonificacionesController {
 	public Response agregar(@RequestBody BonificacionDTO bonificacion,
 			@RequestHeader(required = true, value = CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
-		LOG.info(">>>URL: PUT /bonificaciones > REQUEST ENTRANTE: {}", bonificacion);
+		LOG.info(">>>URL: POST /bonificaciones > REQUEST ENTRANTE: {}", bonificacion);
 		
 		// Validacion de objeto y atributos
 		if (bonificacion == null || userRequest == null || "".equals(userRequest))
@@ -153,7 +153,7 @@ public class BonificacionesController {
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
 			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response solicitar(@PathVariable(value = "idBonificacion", required = true) Long idBonificacion,
+	public Response delete(@PathVariable(value = "idBonificacion", required = true) Long idBonificacion,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
 		LOG.info(">>>URL: DELETE /bonificaciones/{idBonificacion} > REQUEST ENTRANTE: {}", idBonificacion);

@@ -47,4 +47,12 @@ public interface LayoutLineasRepository extends JpaRepository<LayoutLinea, Long>
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT ll.id FROM to_layout_linea ll WHERE ll.id = :idLinea AND ll.nuevo = :valorAltaSistema) IS NOT NULL THEN 1 ELSE 0 END")
 	public Object checkIfLineIsNew(@Param("idLinea") final Long idLinea, @Param("valorAltaSistema") final int valorAltaSistema);
 
+	/**
+	 * Obtiene las lineas por id de conciliacion
+	 * @param idConciliacion
+	 * @return
+	 */
+	//@Query(value = "FROM LayoutLinea WHERE layout.idConciliacion = :idConciliacion")
+	public List<LayoutLinea> findByLayoutIdConciliacion(/*@Param("idConciliacion") */Long idConciliacion);
+
 }
