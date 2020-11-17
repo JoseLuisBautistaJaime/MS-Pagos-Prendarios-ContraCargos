@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.DevolucionesBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
@@ -127,6 +130,9 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
+	
 	/**
 	 * Log de actividades en el servidor
 	 */
@@ -257,7 +263,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			// Registro de actividad
 			if (null != liquidarDevoluciones.getFolio()) {
 				actividadGenericMethod
-						.registroActividad(liquidarDevoluciones.getFolio(),
+						.registroActividadV2(objectsInSession.getFolioByIdConciliacion(liquidarDevoluciones.getFolio()),
 								"Se realizo la liquidacion de ".concat(String.valueOf(movimientosLiquidados.size()))
 										.concat(" devolucion(es) de la conciliacion con el folio: ")
 										.concat(String.valueOf(null != liquidarDevoluciones.getFolio()
@@ -310,7 +316,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			movimientosSolicitados = solicitarDevoluciones(movimientosDevolucion, modifiedBy, folio.getFolio(), false);
 
 			// Registro de actividad
-			actividadGenericMethod.registroActividad(folio.getFolio(), "Se realizo la solicitud de devolucion de "
+			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(folio.getFolio()), "Se realizo la solicitud de devolucion de "
 					.concat(String.valueOf(null != movimientosSolicitados ? movimientosSolicitados.size() : null))
 					.concat(" movimiento(s) de la conciliacion con el folio: ").concat(String.valueOf(folio.getFolio()))
 					.concat(", por un total de: $ ")
@@ -543,7 +549,7 @@ public class DevolucionesServiceImpl implements DevolucionesService {
 			}
 
 			// Registro de actividad
-			actividadGenericMethod.registroActividad(marcarDevoluciones.getFolio(),
+			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(marcarDevoluciones.getFolio()),
 					"Se realizo el marcado para devolucion de "
 							.concat(String.valueOf(marcarDevoluciones.getIdMovimientos().size()))
 							.concat(" movimiento(s) de la conciliacion con el folio: "

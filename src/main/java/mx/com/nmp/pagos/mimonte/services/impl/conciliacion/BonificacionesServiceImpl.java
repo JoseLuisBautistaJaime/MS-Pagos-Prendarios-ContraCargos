@@ -7,12 +7,16 @@ package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.BonificacionesBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -63,6 +67,8 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
 
 	public List<BonificacionDTO> consulta(Long folio) {
 
@@ -129,7 +135,7 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 			Long folioConciliacion = this.conciliacionHelper.getFolioConciliacionById(bonificacion.getIdConciliacion());
 
 			// Registro de actividad
-			actividadGenericMethod.registroActividad(bonificacion.getIdConciliacion(), "Se elimino la bonificacion para la conciliacion " + folioConciliacion,
+			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(bonificacion.getIdConciliacion()), "Se elimino la bonificacion para la conciliacion " + folioConciliacion,
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
 		} catch (Exception ex) {

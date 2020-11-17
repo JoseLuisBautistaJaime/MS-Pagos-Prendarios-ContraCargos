@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ibm.icu.util.Calendar;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
@@ -149,6 +152,9 @@ public class MovimientosEstadoCuentaService {
 	@Autowired
 	private MovimientoJdbcRepository movimientoJdbcRepository;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
+	
 	/**
 	 * Log de la clase
 	 */
@@ -380,7 +386,7 @@ public class MovimientosEstadoCuentaService {
 		}
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(idConciliacion,
+		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion),
 				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 	}
@@ -600,7 +606,7 @@ public class MovimientosEstadoCuentaService {
 				// TODO: Se ejecuta el merge y se actualiza el subestatus de la conciliacion
 
 				// Registro de actividad
-				actividadGenericMethod.registroActividad(idConciliacion,
+				actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion),
 						"Se distribuyo el estado de cuenta para la conciliacion con el folio " + idConciliacion,
 						TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 			}

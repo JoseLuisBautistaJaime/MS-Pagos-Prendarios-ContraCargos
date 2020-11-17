@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 //import mx.com.nmp.pagos.mimonte.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ibm.icu.util.Calendar;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ComisionesBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.EstatusConciliacionBuilder;
@@ -157,6 +160,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Autowired
 	private FolioConciliacionHelper folioConciliacionHelper;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
+	
 	/**
 	 * Mini maquina de estados para actualizacion de subestatus de conciliacion
 	 */
@@ -306,7 +312,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		globalRepository.save(global);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(conciliacion.getId(), "Se creo la conciliacion con el folio "
+		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(conciliacion.getId()), "Se creo la conciliacion con el folio "
 				+ conciliacion.getId() + " para la entidad "
 				+ (entidad.isPresent() && null != entidad.get().getNombre() ? entidad.get().getNombre() : "")
 				+ ", y la cuenta "
@@ -576,7 +582,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 		// REGISTRO DE ACTIVIDAD
 		try {
-			actividadGenericMethod.registroActividad(conciliacion.getId(),
+			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(conciliacion.getId()),
 					"Se actualiza la conciliacion con el folio " + conciliacion.getId() + " con "
 							+ (null != actualizaionConciliacionRequestDTO.getMovimientosTransito()
 									? actualizaionConciliacionRequestDTO.getMovimientosTransito().size()
@@ -946,7 +952,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		// Registro de actividad
 		start = System.currentTimeMillis();
 		LOG.debug("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
-		actividadGenericMethod.registroActividad(actualizarSubEstatusRequestDTO.getFolio(),
+		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(actualizarSubEstatusRequestDTO.getFolio()),
 				"Se actualizo el sub-estado de la conciliacion con el folio "
 						+ actualizarSubEstatusRequestDTO.getFolio() + " a: "
 						+ (subEstatus.isPresent() && null != subEstatus.get().getDescription()
@@ -1203,7 +1209,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 					+ String.valueOf(actualizarIdPSRequest.getIdPolizaTesoreria());
 		}
 
-		actividadGenericMethod.registroActividad(actualizarIdPSRequest.getFolio(), descripcionActividad,
+		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(actualizarIdPSRequest.getFolio()), descripcionActividad,
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZACION_ID_PEOPLE_SOFT);
 	}
 
@@ -1239,7 +1245,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		this.conciliacionHelper.generarConciliacion(idConciliacion, idEntidad, reportes, corresponsal);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(idConciliacion,
+		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion),
 				"Se genera la conciliacion con el folio " + idConciliacion, TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.GENERACION_CONCILIACION);
 		

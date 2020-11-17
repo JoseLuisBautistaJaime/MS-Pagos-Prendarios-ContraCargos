@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.LayoutsBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
@@ -162,6 +163,8 @@ public class LayoutsService {
 	@Inject
 	private ComisionTransaccionRepository comisionTransaccionRepository;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
 
 	/**
 	 * Logs de la clase
@@ -348,7 +351,7 @@ public class LayoutsService {
 			String desc = "Se crea el layout del tipo: ".concat(layoutDTO.getTipoLayout().toString())
 					.concat(", con un total de ").concat(String.valueOf(layoutDTO.getLineas().size()))
 					.concat(" lineas, pertenecirente a la conciliacion: ").concat(String.valueOf(layoutDTO.getFolio()));
-			actividadGenericMethod.registroActividad(layoutDTO.getFolio(), desc, TipoActividadEnum.ACTIVIDAD,
+			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(layoutDTO.getFolio()), desc, TipoActividadEnum.ACTIVIDAD,
 					SubTipoActividadEnum.LAYOUTS);
 		}
 	}
@@ -428,7 +431,7 @@ public class LayoutsService {
 			if (flagAct && null != idConciliacion && null != idLayout) {
 				String desc = "Se elimino el layout con id: ".concat(String.valueOf(idLayout))
 						.concat(", perteneciente a la conciliacion: ").concat(String.valueOf(idConciliacion));
-				actividadGenericMethod.registroActividad(idConciliacion, desc, TipoActividadEnum.ACTIVIDAD,
+				actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion), desc, TipoActividadEnum.ACTIVIDAD,
 						SubTipoActividadEnum.LAYOUTS);
 			}
 		}
@@ -484,7 +487,7 @@ public class LayoutsService {
 			if (flagAct && null != idLinea && null != idConciliacion) {
 				String desc = "Se elimino la linea con id: ".concat(String.valueOf(idLinea))
 						.concat(", perteneciente a la conciliacion: ").concat(String.valueOf(idConciliacion));
-				actividadGenericMethod.registroActividad(idConciliacion, desc, TipoActividadEnum.ACTIVIDAD,
+				actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion), desc, TipoActividadEnum.ACTIVIDAD,
 						SubTipoActividadEnum.LAYOUTS);
 			}
 		}

@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ComisionesBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -121,6 +124,9 @@ public class ComisionesService {
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
+	
 	/**
 	 * Propiedad IVA
 	 */
@@ -305,7 +311,7 @@ public class ComisionesService {
 				comisionTransaccionRealSet, comisionTransaccion, comisionesTransDTO));
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(comisionesTransaccionesRequestDTO.getIdConciliacion(),
+		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(comisionesTransaccionesRequestDTO.getIdConciliacion()),
 				"Se genero la consulta de Comisiones/Transacciones para la conciliacion con el folio: "
 						.concat(String.valueOf(comisionesTransaccionesRequestDTO.getIdConciliacion()))
 						.concat(", con una comision bancaria de: ")
@@ -386,7 +392,7 @@ public class ComisionesService {
 		result.put("flag", flagNew);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(comisionSaveDTO.getFolio(),
+		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(comisionSaveDTO.getFolio()),
 				(flagNew ? "Se agrego una nueva comision para la conciliacion con el folio: "
 						: "Se actualizo una comision de la conciliacion con el folio ").concat(String.valueOf(comisionSaveDTO.getFolio()))
 								.concat(", por el concepto: ").concat(comisionSaveDTO.getDescripcion())
@@ -475,7 +481,7 @@ public class ComisionesService {
 		}
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(comisionDeleteDTO.getFolio(),
+		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(comisionDeleteDTO.getFolio()),
 				"Se realizo la eliminacion de ".concat(String.valueOf(comisionDeleteDTO.getIdComisiones().size()))
 						.concat(" comision(es) de la conciliacion con el folio: ")
 						.concat(String.valueOf(comisionDeleteDTO.getFolio())),

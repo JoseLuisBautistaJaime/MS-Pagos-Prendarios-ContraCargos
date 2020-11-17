@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -86,6 +89,9 @@ public class MovimientosMidasService {
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
+	
 	// Temporal format para los LOGs de timers
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	
@@ -197,7 +203,7 @@ public class MovimientosMidasService {
 			// Registro de actividad
 			start = System.currentTimeMillis();
 			LOG.debug("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
-			actividadGenericMethod.registroActividad(movimientoProcesosNocturnosDTOList.getFolio(),
+			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(movimientoProcesosNocturnosDTOList.getFolio()),
 					"Se registraron " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
 							+ " movimientos provenientes de procesos nocturnos,"
 							+ " para la conciliacion con el folio: " + movimientoProcesosNocturnosDTOList.getFolio(),
