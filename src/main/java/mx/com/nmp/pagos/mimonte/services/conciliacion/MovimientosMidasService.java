@@ -236,7 +236,9 @@ public class MovimientosMidasService {
 		Reporte reporte = new Reporte();
 		if (null == folio || null == fechaDesde || null == fechaHasta || null == userRequest)
 			return null;
-		reporte.setConciliacion(new Conciliacion(folio));
+		Conciliacion con = new Conciliacion();
+		con.setId(folio);
+		reporte.setConciliacion(con);
 		reporte.setCreatedBy(userRequest);
 		reporte.setCreatedDate(new Date());
 		reporte.setDisponible(true);
