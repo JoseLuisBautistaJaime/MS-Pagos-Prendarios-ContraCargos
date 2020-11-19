@@ -1,3 +1,8 @@
+--
+-- Proyecto:        NMP - MIDAS - OXXO.
+-- Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+--
+
 -- ----------------------------------------------------------------------------------------------- --
 -- -------------------------- ACTUALIZACION CONCILIACION OXXO ------------------------------------- --
 -- ----------------------------------------------------------------------------------------------- --
@@ -219,6 +224,18 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_bonificacion` (
 ) ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
+-- --------------------------- CAMBIOS NUEVOS EN MAQUINA DE ESTADOS INICIO ----------------- --
+-- ------------------- SE DUPLICAN LOS ACTUALES ESTADOS DE OPENPAY PARA OXXO ------------ --
+-- INSERT INTO tk_maquina_estados_subestatus_conciliacion (nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
+-- 	SELECT me.nombre_proceso, me.id_sub_estatus_inicial, me.id_sub_estatus_posible FROM tk_maquina_estados_subestatus_conciliacion me;
+
+-- ------------------- SE AGREGA LA NUEVA COLUMNA DE CORRESPONSAL ------------ --
+ALTER TABLE tk_maquina_estados_subestatus_conciliacion ADD COLUMN corresponsal VARCHAR(150) NOT NULL DEFAULT 'OPENPAY';
+
+-- ------------------- SE ACTUALIZA EL CORRESPONSAL PARA LOS ESTADOS DE OXXO ------------ --
+-- UPDATE tk_maquina_estados_subestatus_conciliacion SET corresponsal = 'OXXO' WHERE ID >= 30;
+
+-- --------------------------- CAMBIOS NUEVOS EN MAQUINA DE ESTADOS FIN ----------------- --
 
 -- ------------------------------------------------------------------------------------------------- --
 -- --------------------------------------- CREACION DE SP's ---------------------------------------- --
@@ -509,16 +526,3 @@ MAIN: BEGIN
 END MAIN;
 $$
 DELIMITER ;
-
--- --------------------------- CAMBIOS NUEVOS EN MAQUINA DE ESTADOS ----------------- --
--- ------------------- SE DUPLICAN LOS ACTUALES ESTADOS DE OPENPAY PARA OXXO ------------ --
-INSERT INTO tk_maquina_estados_subestatus_conciliacion (nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
-	SELECT me.nombre_proceso, me.id_sub_estatus_inicial, me.id_sub_estatus_posible FROM tk_maquina_estados_subestatus_conciliacion me;
-
--- ------------------- SE AGREGA LA NUEVA COLUMNA DE CORRESPONSAL ------------ --
-ALTER TABLE tk_maquina_estados_subestatus_conciliacion ADD COLUMN corresponsal VARCHAR(150) NOT NULL DEFAULT 'OPENPAY';
-
--- ------------------- SE ACTUALIZA EL CORRESPONSAL PARA LOS ESTADOS DE OXXO ------------ --
-UPDATE tk_maquina_estados_subestatus_conciliacion SET corresponsal = 'OXXO' WHERE ID BETWEEN 30 AND 58;
-
--- --------------------------- CAMBIOS NUEVOS EN MAQUINA DE ESTADOS ----------------- --
