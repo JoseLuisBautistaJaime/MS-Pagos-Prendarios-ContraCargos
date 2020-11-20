@@ -76,7 +76,7 @@ public class CorresponsalesController {
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/catalogos/corresponsales", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Regresa todos los objetos del catalogo de Corresponsales.", tags = {
-			"Corresponsal" })
+			"Corresponsales" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Corresponsales Encontradas"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
