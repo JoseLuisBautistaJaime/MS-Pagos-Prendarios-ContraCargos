@@ -661,18 +661,28 @@ public class ConciliacionController {
 		List<Long> conciliacionesAsociadas = conciliacionService.getConciliacionesAsociadas(folio);
 		
 		// Se obtiene elsubEstatusInicial para saber el punto de retorno en caso de error, dado que este endpoint puede ejecutarse desde dos procesos distintos (Proveedor transaccional Completado y Estado Cuenta Completado)
-		for(Long id : conciliacionesAsociadas) {
-			subEstatusInicial = conciliacionService.findSubEstatusByFolio(id);
-			mapSubEstatusIniciales.put(id, subEstatusInicial);
-			if(null == subEstatusInicial)
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_030);			
+		if(null != conciliacionesAsociadas && !conciliacionesAsociadas.isEmpty()) {
+			for(Long id : conciliacionesAsociadas) {
+				subEstatusInicial = conciliacionService.findSubEstatusByFolio(id);
+				mapSubEstatusIniciales.put(id, subEstatusInicial);
+				if(null == subEstatusInicial)
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_030);			
+			}	
 		}
-		
+		else {
+			subEstatusInicial = conciliacionService.findSubEstatusByFolio(folio);
+		}
 		// Se actualiza el sub-estatus a uno transitorio para indicar que se esta realizando el poceso de merge de la conciliacion
 		try {
-			for(Long id : conciliacionesAsociadas) {
-				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(id,
-						ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION, null), requestUser);	
+			if(null != conciliacionesAsociadas && !conciliacionesAsociadas.isEmpty()) {
+				for(Long id : conciliacionesAsociadas) {
+					conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(id,
+							ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION, null), requestUser);	
+				}	
+			}
+			else {
+				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
+						ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION, null), requestUser);
 			}
 		} catch (ConciliacionException ex) {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
@@ -684,8 +694,12 @@ public class ConciliacionController {
 		}
 
 		// SE GENERA LA CONCILIACION DE MANERA ASICRONA
-//		asyncLayer.generarConciliacion(folio, requestUser, subEstatusInicial);
-		asyncLayer.generarConciliacionList(conciliacionesAsociadas, requestUser, subEstatusInicial);
+		if(null != conciliacionesAsociadas && !conciliacionesAsociadas.isEmpty()) {
+			asyncLayer.generarConciliacionList(conciliacionesAsociadas, requestUser, subEstatusInicial);	
+		}
+		else {
+			asyncLayer.generarConciliacion(folio, requestUser, subEstatusInicial);
+		}
 		// FINALIZA GENERACION DE LA CONCILIACION DE MANERA ASINCRONA
 
 		// Regresa la respuesta exitosa
