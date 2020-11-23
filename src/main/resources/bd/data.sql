@@ -335,35 +335,35 @@ INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_
 
 -- Pagos
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(1, 'L', '1220001013', '', '13%03d', '', '', 'PAGOS', 'SUCURSALES', 'OPEN_PAY', now(), null, 'Sistema', null); -- Movimientos/Sucursales
+(1, 'L', '1220001013', '', '13%03d', '', '', 'PAGOS', 'SUCURSALES', 'OPENPAY', now(), null, 'Sistema', null); -- Movimientos/Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(2, 'L', '1011001078', '15000', '', '', '', 'PAGOS', 'BANCOS', 'OPEN_PAY', now(), null, 'Sistema', null); -- Banco
+(2, 'L', '1011001078', '15000', '', '', '', 'PAGOS', 'BANCOS', 'OPENPAY', now(), null, 'Sistema', null); -- Banco
 -- (2, 'L', '1011001063', '15000', '', '', '', 'PAGOS', 'BANCOS', now(), null, 'Sistema', null); -- Banco
 
 -- Comisiones
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(3, 'L', '6402001001', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_MOV', 'SUCURSALES', 'OPEN_PAY', now(), null, 'Sistema', null); -- Sucursales
+(3, 'L', '6402001001', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_MOV', 'SUCURSALES', 'OPENPAY', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(4, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_GENERALES', 'BANCOS', 'OPEN_PAY', now(), null, 'Sistema', null); -- Bancos
+(4, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_GENERALES', 'BANCOS', 'OPENPAY', now(), null, 'Sistema', null); -- Bancos
 
 -- Devoluciones
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(5, 'L', '1220001013', '', '13%03d', '', '', 'DEVOLUCIONES', 'SUCURSALES', 'OPEN_PAY', now(), null, 'Sistema', null); -- Sucursales
+(5, 'L', '1220001013', '', '13%03d', '', '', 'DEVOLUCIONES', 'SUCURSALES', 'OPENPAY', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(6, 'L', '1011001078', '15000', '', '', '', 'DEVOLUCIONES', 'BANCOS', 'OPEN_PAY', now(), null, 'Sistema', null); -- Bancos
+(6, 'L', '1011001078', '15000', '', '', '', 'DEVOLUCIONES', 'BANCOS', 'OPENPAY', now(), null, 'Sistema', null); -- Bancos
 -- (6, 'L', '1011001063', '15000', '', '', '', 'DEVOLUCIONES', 'BANCOS', now(), null, 'Sistema', null); -- Bancos
 
 -- Comisiones
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(7, 'L', '6402001001', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_GENERALES', 'SUCURSALES', 'OPEN_PAY', now(), null, 'Sistema', null); -- Sucursales
+(7, 'L', '6402001001', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_GENERALES', 'SUCURSALES', 'OPENPAY', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(8, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', 'OPEN_PAY', now(), null, 'Sistema', null); -- Bancos
+(8, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', 'OPENPAY', now(), null, 'Sistema', null); -- Bancos
 
 -- Comisiones Iva
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(9, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'SUCURSALES', 'OPEN_PAY', now(), null, 'Sistema', null); -- Sucursales
+(9, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'SUCURSALES', 'OPENPAY', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(10, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OPEN_PAY', now(), null, 'Sistema', null); -- Bancos
+(10, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OPENPAY', now(), null, 'Sistema', null); -- Bancos
 
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_maquina_estados_subestatus_conciliacion
