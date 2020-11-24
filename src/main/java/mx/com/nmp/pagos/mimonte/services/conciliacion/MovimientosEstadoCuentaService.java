@@ -5,12 +5,10 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -38,7 +36,6 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstadoCuentaWraper;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaImplementacionEnum;
@@ -51,7 +48,6 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ConciliacionEstadoCuenta;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
@@ -477,11 +473,11 @@ public class MovimientosEstadoCuentaService {
 			mapSubEstatusConciliacion.put(folio, estatusConciliacion);
 		}
 
-		// Guarda un nuevo reporte con id de conciliacion 0
+		// OXXO: Guarda un nuevo reporte con id de conciliacion null
 		SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO = new SaveEstadoCuentaRequestDTO();
 		saveEstadoCuentaRequestDTO.setFechaFinal(request.getFechaFinal());
 		saveEstadoCuentaRequestDTO.setFechaInicial(request.getFechaInicial());
-		saveEstadoCuentaRequestDTO.setFolio(null != request.getFolios() && !request.getFolios().isEmpty() ? request.getFolios().get(0): 0L);
+		saveEstadoCuentaRequestDTO.setFolio(null);
 		Reporte reporte = save(saveEstadoCuentaRequestDTO, userRequest);
 
 		// Se guarda la asociacion entre conciliaciones y el estado cuenta
