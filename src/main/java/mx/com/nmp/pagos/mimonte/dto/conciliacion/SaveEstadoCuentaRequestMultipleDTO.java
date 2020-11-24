@@ -24,6 +24,7 @@ public class SaveEstadoCuentaRequestMultipleDTO {
 	private List<Long> folios;
 	private Date fechaInicial;
 	private Date fechaFinal;
+	private String idCorresponsal;
 
 	public Date getFechaInicial() {
 		return fechaInicial;
@@ -48,10 +49,18 @@ public class SaveEstadoCuentaRequestMultipleDTO {
 	public void setFolios(List<Long> folios) {
 		this.folios = folios;
 	}
+	
+	public String getIdCorresponsal() {
+		return idCorresponsal;
+	}
+
+	public void setIdCorresponsal(String idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(folios, fechaInicial, fechaFinal);
+		return Objects.hash(folios, fechaInicial, fechaFinal, idCorresponsal);
 	}
 
 	@Override

@@ -109,6 +109,11 @@ public final class ConciliacionConstants {
 		 */
 		public static final String VALIDATION_PARAM_ERROR = "Se genero un error de validacion.";
 
+		/**
+		 * Mensaje que es mostrado cuando se intenta realizar una operacion del corresponsal X y folios de conciliacion que no pertenecen a dicho corresponsal
+		 */
+		public static final String NO_OXXO_AND_CONCILIACION_RELATIONSHIP = "No existe relacion entre uno o mas folios y el corresponsal";
+		
 	}
 
 	/**

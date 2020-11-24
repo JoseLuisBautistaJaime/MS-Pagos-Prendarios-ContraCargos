@@ -320,6 +320,8 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_138("Los montos del layout no cuadran a cero.",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_PROCESAR_CONCILIACION("Error al procesar la conciliacion",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_CORRESPONSAL_CONCILIACION("No hay relacion entre el corresponsal y una o mas conciliaciones",
 			TipoError.CLIENTE, SeveridadError.MEDIA)
 	;
 

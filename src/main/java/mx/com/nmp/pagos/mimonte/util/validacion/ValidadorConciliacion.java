@@ -186,6 +186,7 @@ public interface ValidadorConciliacion {
 			assertNotNull(saveEstadoCuentaRequestMultipleDTO.getFolios());
 			assertNotNull(saveEstadoCuentaRequestMultipleDTO.getFechaInicial());
 			assertNotNull(saveEstadoCuentaRequestMultipleDTO.getFechaFinal());
+			assertNotNull(saveEstadoCuentaRequestMultipleDTO.getIdCorresponsal());
 		} catch (java.lang.AssertionError | Exception ex) {
 			ex.printStackTrace();
 			return false;

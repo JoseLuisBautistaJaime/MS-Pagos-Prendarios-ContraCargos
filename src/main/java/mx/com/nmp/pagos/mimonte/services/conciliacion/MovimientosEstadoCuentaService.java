@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,6 +51,7 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ConciliacionEstadoCuenta;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
@@ -417,6 +419,14 @@ public class MovimientosEstadoCuentaService {
 					CodigoError.NMP_PMIMONTE_0013);
 		}
 
+		// Valida que los folios pertenezcan al proveedor OXXO
+		boolean oxxoFlag = ( (BigInteger) conciliacionRepository.validateCorresponsalOxxoAndFolios(request.getFolios(), request.getIdCorresponsal()) ).compareTo(BigInteger.ONE) == 0 ? true : false;
+		if(!oxxoFlag) {
+			LOG.error(ConciliacionConstants.Validation.NO_OXXO_AND_CONCILIACION_RELATIONSHIP);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_CORRESPONSAL_CONCILIACION.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		}
+		
 		// Se obtien el estatus de la conciliacion
 		mapSubEstatusConciliacion = new HashMap<>();
 		try {
@@ -447,7 +457,7 @@ public class MovimientosEstadoCuentaService {
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_030);
 		}
-
+		
 		// Actualiza el sub-estatus para realizar el registro del estado de cuenta (invoca un metodo de actualizacion con una nueva transaccion)
 		if (null != estatusConciliacion) {
 			conciliacionService.actualizaSubEstatusConciliacionMultipleNT(request.getFolios(),
