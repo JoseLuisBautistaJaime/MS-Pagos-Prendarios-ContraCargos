@@ -621,11 +621,6 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Se hace UPPERCASE de nombre corresponsal
 		consultaConciliacionRequestDTO.setIdCorresponsal(null != consultaConciliacionRequestDTO.getIdCorresponsal() ? consultaConciliacionRequestDTO.getIdCorresponsal().toUpperCase() : null);
-
-		// Se setea el corresponsal por default a OPENPAY
-		if (consultaConciliacionRequestDTO.getIdCorresponsal() == null) {
-			consultaConciliacionRequestDTO.setIdCorresponsal(CorresponsalEnum.OPENPAY.getNombre());
-		}
 		
 		// Ajuste de fechas para filtros
 		if (null == consultaConciliacionRequestDTO.getFechaDesde()
