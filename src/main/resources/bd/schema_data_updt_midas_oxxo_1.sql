@@ -79,6 +79,7 @@ ALTER TABLE `to_movimiento_pago` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_movimiento_transito` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_estado_cuenta` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL;
 ALTER TABLE `to_reporte` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `to_reporte` CHANGE COLUMN `id_conciliacion` `id_conciliacion` BIGINT(20) NULL;
 ALTER TABLE `to_movimiento_estado_cuenta` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
 			CHANGE COLUMN `estado_cuenta` `estado_cuenta` BIGINT(20) NULL DEFAULT NULL;
 ALTER TABLE `to_estado_cuenta` CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT,

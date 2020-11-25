@@ -88,6 +88,8 @@ ALTER TABLE to_movimiento_estado_cuenta CHANGE COLUMN id id INT(11) NOT NULL AUT
 
 ALTER TABLE to_reporte CHANGE COLUMN id id INT(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `to_reporte` CHANGE COLUMN `id_conciliacion` `id_conciliacion` INT(11) NOT NULL;
+
 ALTER TABLE to_estado_cuenta CHANGE COLUMN id id INT(11) NOT NULL;
 
 ALTER TABLE to_movimiento_transito CHANGE COLUMN id id INT(11) NOT NULL;

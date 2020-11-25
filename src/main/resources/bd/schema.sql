@@ -747,7 +747,7 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_reporte` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `id_conciliacion` BIGINT(20) NOT NULL,
+  `id_conciliacion` BIGINT(20) NULL,
   `tipo` VARCHAR(45) NOT NULL,
   `disponible` TINYINT(4) NOT NULL DEFAULT '0',
   `fecha_desde` DATE NOT NULL,
