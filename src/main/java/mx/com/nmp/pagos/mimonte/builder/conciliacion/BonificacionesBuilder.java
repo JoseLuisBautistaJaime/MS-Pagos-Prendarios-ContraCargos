@@ -54,10 +54,15 @@ public class BonificacionesBuilder {
 		if (bonificacion != null) {
 			dto = new BonificacionDTO();
 			dto.setId(bonificacion.getId());
-			dto.setFolio(bonificacion.getIdConciliacion());
+			dto.setAsignacion(bonificacion.getAsignacion());
+			dto.setNumDoc(bonificacion.getNumDoc());
+			dto.setFechaDoc(bonificacion.getFechaDoc());
+			dto.setTienda(bonificacion.getTienda());
+			dto.setPlaza(bonificacion.getPlaza());
+			dto.setImporteML(bonificacion.getImporteML());
+			dto.setFolioBonificacion(bonificacion.getFolioBonificacion());
 			dto.setEstatus(EstatusBonificacionesBuilder.buildDTO(bonificacion.getEstatus()));
-			dto.setMonto(bonificacion.getMonto());
-			dto.setFecha(bonificacion.getFecha());
+			dto.setFolio(bonificacion.getIdConciliacion());
 			dto.setCreatedBy(bonificacion.getCreatedBy());
 			dto.setCreatedDate(bonificacion.getCreatedDate());
 			dto.setLastModifiedBy(bonificacion.getLastModifiedBy());
@@ -76,10 +81,15 @@ public class BonificacionesBuilder {
 		if (dto != null) {
 			bonificacion = new MovimientoBonificacion();
 			bonificacion.setId(dto.getId());
-			bonificacion.setIdConciliacion(dto.getFolio());
+			bonificacion.setAsignacion(dto.getAsignacion());
+			bonificacion.setNumDoc(dto.getNumDoc());
+			bonificacion.setFechaDoc(dto.getFechaDoc());
+			bonificacion.setTienda(dto.getTienda());
+			bonificacion.setPlaza(dto.getPlaza());
+			bonificacion.setImporteML(dto.getImporteML());
+			bonificacion.setFolioBonificacion(dto.getFolioBonificacion());
 			bonificacion.setEstatus(EstatusBonificacionesBuilder.build(dto.getEstatus()));
-			bonificacion.setMonto(dto.getMonto());
-			bonificacion.setFecha(dto.getFecha());
+			bonificacion.setIdConciliacion(dto.getFolio());
 			bonificacion.setCreatedBy(dto.getCreatedBy());
 			bonificacion.setCreatedDate(dto.getCreatedDate());
 			bonificacion.setLastModifiedBy(dto.getLastModifiedBy());

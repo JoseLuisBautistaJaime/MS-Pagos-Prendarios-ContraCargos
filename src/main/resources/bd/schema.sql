@@ -1316,9 +1316,14 @@ DEFAULT CHARACTER SET = latin1;
 
 CREATE TABLE IF NOT EXISTS `to_movimiento_bonificacion` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `asignacion` VARCHAR(50),
+  `num_doc` VARCHAR(50),
+  `fecha_doc` DATE DEFAULT NULL,
+  `tienda` VARCHAR(50),
+  `plaza` VARCHAR(50),
+  `importe_ml` DECIMAL(5,2) NOT NULL,
+  `folio_bonificacion` VARCHAR(50),
   `id_estatus_bonificacion` INT(11) NOT NULL,
-  `fecha` DATETIME DEFAULT NULL,
-  `monto` DECIMAL(5,2) NOT NULL,
   `id_conciliacion` BIGINT(20) NOT NULL,
   `created_by` VARCHAR(100) NOT NULL,
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -19,5 +19,9 @@ INSERT INTO `tc_comision_proveedor` (`id`, `corresponsal`, `comision`, `iva`)
 -- --------------- INSERT DE LAS COMISIONES PROVEEDORES / CORRESPONSALES ------------------------ --
 -- ---------------------------------------------------------------------------------- --
 INSERT INTO `tk_estatus_bonificacion` (`id`, `nombre`, `descripcion`, `descripcion_corta`) 
-	VALUES (1, 'Pendiente', 'Pendiente', 'Pendiente');
+	VALUES (1, 'Pendiente', 'Pendiente', 'PE');
+INSERT INTO `tk_estatus_bonificacion` (`id`, `nombre`, `descripcion`, `descripcion_corta`) 
+	VALUES (2, 'Reversa', 'Reversa', 'RV');
+INSERT INTO `tk_estatus_bonificacion` (`id`, `nombre`, `descripcion`, `descripcion_corta`) 
+	VALUES (3, 'Conciliada', 'Conciliada', 'CON');
 

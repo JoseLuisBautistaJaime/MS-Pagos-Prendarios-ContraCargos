@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.io.Serializable;
+
 /**
  * @name EstatusBonificacionDTO
  * @description Clase que encapsula la informacion del estatus bonificacion
@@ -11,9 +13,11 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
  * @creationDate 11/11/2020 23:12 hrs.
  * @version 0.1
  */
-public class EstatusBonificacionDTO implements Comparable<EstatusBonificacionDTO> {
+public class EstatusBonificacionDTO implements Serializable {
 
-	private Integer id;
+	private static final long serialVersionUID = 6530936570284122162L;
+
+	private Long id;
 	private String descripcion;
 	private Boolean estatus;
 
@@ -21,18 +25,18 @@ public class EstatusBonificacionDTO implements Comparable<EstatusBonificacionDTO
 		super();
 	}
 
-	public EstatusBonificacionDTO(Integer id, String descripcion, Boolean estatus) {
+	public EstatusBonificacionDTO(Long id, String descripcion, Boolean estatus) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
 		this.estatus = estatus;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -55,11 +59,6 @@ public class EstatusBonificacionDTO implements Comparable<EstatusBonificacionDTO
 	@Override
 	public String toString() {
 		return "EstatusDevolucionDTO [id=" + id + ", descripcion=" + descripcion + ", estatus=" + estatus + "]";
-	}
-
-	@Override
-	public int compareTo(EstatusBonificacionDTO o) {
-		return 0;
 	}
 
 }

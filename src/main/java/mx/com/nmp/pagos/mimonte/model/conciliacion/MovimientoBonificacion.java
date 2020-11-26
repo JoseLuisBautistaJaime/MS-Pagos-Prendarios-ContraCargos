@@ -41,16 +41,31 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
+	@Column(name = "asignacion")
+	private String asignacion;
+
+	@Column(name = "num_doc")
+	private String numDoc;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "fecha_doc")
+	private Date fechaDoc;
+
+	@Column(name = "tienda")
+	private String tienda;
+
+	@Column(name = "plaza")
+	private String plaza;
+
+	@Column(name = "importe_ml")
+	private BigDecimal importeML;
+
+	@Column(name = "folio_bonificacion")
+	private String folioBonificacion;
+
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "id_estatus_bonificacion")
 	private EstatusBonificacion estatus;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha")
-	private Date fecha;
-
-	@Column(name = "monto")
-	private BigDecimal monto;
 
 	@Column(name = "id_conciliacion")
 	private Long idConciliacion;
@@ -64,16 +79,6 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 	}
 
-	
-
-	public MovimientoBonificacion(Long id, EstatusBonificacion estatus, Date fecha, BigDecimal monto) {
-		super();
-		this.id = id;
-		this.estatus = estatus;
-		this.fecha = fecha;
-		this.monto = monto;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -82,28 +87,68 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 		this.id = id;
 	}
 
+	public String getAsignacion() {
+		return asignacion;
+	}
+
+	public void setAsignacion(String asignacion) {
+		this.asignacion = asignacion;
+	}
+
+	public String getNumDoc() {
+		return numDoc;
+	}
+
+	public void setNumDoc(String numDoc) {
+		this.numDoc = numDoc;
+	}
+
+	public Date getFechaDoc() {
+		return fechaDoc;
+	}
+
+	public void setFechaDoc(Date fechaDoc) {
+		this.fechaDoc = fechaDoc;
+	}
+
+	public String getTienda() {
+		return tienda;
+	}
+
+	public void setTienda(String tienda) {
+		this.tienda = tienda;
+	}
+
+	public String getPlaza() {
+		return plaza;
+	}
+
+	public void setPlaza(String plaza) {
+		this.plaza = plaza;
+	}
+
+	public BigDecimal getImporteML() {
+		return importeML;
+	}
+
+	public void setImporteML(BigDecimal importeML) {
+		this.importeML = importeML;
+	}
+
+	public String getFolioBonificacion() {
+		return folioBonificacion;
+	}
+
+	public void setFolioBonificacion(String folioBonificacion) {
+		this.folioBonificacion = folioBonificacion;
+	}
+
 	public EstatusBonificacion getEstatus() {
 		return estatus;
 	}
 
 	public void setEstatus(EstatusBonificacion estatus) {
 		this.estatus = estatus;
-	}
-
-	public Date getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
-	}
-
-	public BigDecimal getMonto() {
-		return monto;
-	}
-
-	public void setMonto(BigDecimal monto) {
-		this.monto = monto;
 	}
 
 	public Long getIdConciliacion() {
@@ -117,7 +162,8 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, estatus, fecha, monto, idConciliacion, super.createdBy, super.createdDate, super.lastModifiedBy, super.lastModifiedDate);
+		return Objects.hash(id, asignacion, fechaDoc, tienda, plaza, importeML, folioBonificacion,
+				estatus, idConciliacion, super.createdBy, super.createdDate, super.lastModifiedBy, super.lastModifiedDate);
 	}
 
 
@@ -133,11 +179,11 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 		return (this.hashCode() == other.hashCode());
 	}
 
-
 	@Override
 	public String toString() {
-		return "MovimientoBonificacion [id=" + id + ", estatus=" + estatus + ", fecha=" + fecha + ", monto=" + monto
-				+ ", idConciliacion=" + idConciliacion + "]";
+		return "MovimientoBonificacion [id=" + id + ", asignacion=" + asignacion + ", numDoc=" + numDoc + ", fechaDoc="
+				+ fechaDoc + ", tienda=" + tienda + ", plaza=" + plaza + ", importeML=" + importeML + ", folioBonificacion=" + folioBonificacion
+				+ ", estatus=" + estatus + ", idConciliacion=" + idConciliacion + "]";
 	}
 
 }

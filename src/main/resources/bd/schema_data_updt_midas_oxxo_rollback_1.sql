@@ -24,7 +24,7 @@ DELETE FROM tc_comision_proveedor WHERE id = '1';
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- -------------- Borrado de bonificacion proveedor 1 ---------------
 -- ------------------------------------------------------------------------------------------------------------------ --
-DELETE FROM tk_estatus_bonificacion WHERE id= 1;
+DELETE FROM tk_estatus_bonificacion WHERE id>0;
 
 
 -- DELETE NECESARIO EN ESTE ARCHIVO POR INTEGRIDAD REFERENCIAL EN FUTUROS INDICES

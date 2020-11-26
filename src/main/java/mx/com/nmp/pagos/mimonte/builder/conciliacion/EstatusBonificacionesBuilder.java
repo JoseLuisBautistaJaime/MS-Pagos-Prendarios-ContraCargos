@@ -30,7 +30,7 @@ public abstract class EstatusBonificacionesBuilder {
 		EstatusBonificacionDTO dto = null;
 		if(estatusBonificacion != null) {
 			dto = new EstatusBonificacionDTO();
-			dto.setId(estatusBonificacion.getId());
+			dto.setId(estatusBonificacion.getId() != null ? estatusBonificacion.getId().longValue() : null);
 			dto.setDescripcion(estatusBonificacion.getDescripcion());
 			dto.setEstatus(estatusBonificacion.getEstatus());
 		}
@@ -46,7 +46,7 @@ public abstract class EstatusBonificacionesBuilder {
 		EstatusBonificacion bonificacion = null;
 		if(dto != null) {
 			bonificacion = new EstatusBonificacion();
-			bonificacion.setId(dto.getId());
+			bonificacion.setId(dto.getId() != null ? dto.getId().intValue() : null);
 			bonificacion.setDescripcion(dto.getDescripcion());
 		}
 		return bonificacion;

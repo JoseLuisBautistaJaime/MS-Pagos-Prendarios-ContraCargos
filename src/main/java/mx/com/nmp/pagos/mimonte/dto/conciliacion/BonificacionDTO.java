@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -15,12 +16,19 @@ import java.util.Date;
  * @creationDate 03/04/2019 12:06 hrs.
  * @version 0.1
  */
-public class BonificacionDTO implements Comparable<BonificacionDTO> {
+public class BonificacionDTO implements Serializable {
+
+	private static final long serialVersionUID = -7611838730669432090L;
 
 	private Long id;
-	private Date fecha;
+	private String asignacion;
+	private String numDoc;
+	private Date fechaDoc;
+	private String tienda;
+	private String plaza;
+	private BigDecimal importeML;
+	private String folioBonificacion;
 	private EstatusBonificacionDTO estatus;
-	private BigDecimal monto;
 	private Long folio;
 	private Date createdDate;
 	private Date lastModifiedDate;
@@ -40,12 +48,52 @@ public class BonificacionDTO implements Comparable<BonificacionDTO> {
 		this.id = id;
 	}
 
-	public Date getFecha() {
-		return fecha;
+	public String getAsignacion() {
+		return asignacion;
 	}
 
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
+	public void setAsignacion(String asignacion) {
+		this.asignacion = asignacion;
+	}
+
+	public String getNumDoc() {
+		return numDoc;
+	}
+
+	public void setNumDoc(String numDoc) {
+		this.numDoc = numDoc;
+	}
+
+	public Date getFechaDoc() {
+		return fechaDoc;
+	}
+
+	public void setFechaDoc(Date fechaDoc) {
+		this.fechaDoc = fechaDoc;
+	}
+
+	public String getTienda() {
+		return tienda;
+	}
+
+	public void setTienda(String tienda) {
+		this.tienda = tienda;
+	}
+
+	public String getPlaza() {
+		return plaza;
+	}
+
+	public void setPlaza(String plaza) {
+		this.plaza = plaza;
+	}
+
+	public BigDecimal getImporteML() {
+		return importeML;
+	}
+
+	public void setImporteML(BigDecimal importeML) {
+		this.importeML = importeML;
 	}
 
 	public EstatusBonificacionDTO getEstatus() {
@@ -56,20 +104,20 @@ public class BonificacionDTO implements Comparable<BonificacionDTO> {
 		this.estatus = estatus;
 	}
 
-	public BigDecimal getMonto() {
-		return monto;
+	public String getFolioBonificacion() {
+		return folioBonificacion;
 	}
 
-	public void setMonto(BigDecimal monto) {
-		this.monto = monto;
-	}
-
-	public Long getFolio() {
-		return folio;
+	public void setFolioBonificacion(String folioBonificacion) {
+		this.folioBonificacion = folioBonificacion;
 	}
 
 	public void setFolio(Long folio) {
 		this.folio = folio;
+	}
+
+	public Long getFolio() {
+		return folio;
 	}
 
 	public Date getCreatedDate() {
@@ -104,17 +152,13 @@ public class BonificacionDTO implements Comparable<BonificacionDTO> {
 		this.lastModifiedBy = lastModifiedBy;
 	}
 
-
-	@Override
-	public int compareTo(BonificacionDTO o) {
-		return o.id.compareTo(this.id);
-	}
-
 	@Override
 	public String toString() {
-		return "BonificacionDTO [id=" + id + ", fecha=" + fecha + ", estatus=" + estatus + ", monto=" + monto
-				+ ", folio=" + folio + ", createdDate=" + createdDate + ", lastModifiedDate=" + lastModifiedDate
-				+ ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy + "]";
+		return "BonificacionDTO [id=" + id + ", asignacion=" + asignacion + ", numDoc=" + numDoc + ", fechaDoc="
+				+ fechaDoc + ", tienda=" + tienda + ", plaza=" + plaza + ", importeML=" + importeML
+				+ ", folioBonificacion=" + folioBonificacion + ", estatus=" + estatus + ", folio=" + folio
+				+ ", createdDate=" + createdDate + ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy
+				+ ", lastModifiedBy=" + lastModifiedBy + "]";
 	}
 
 }

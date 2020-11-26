@@ -20,11 +20,13 @@ import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.BonificacionesBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusBonificacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoBonificacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.BonificacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
+import mx.com.nmp.pagos.mimonte.model.EstatusBonificacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoBonificacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -51,6 +53,9 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 
 	@Autowired
 	private MovimientoBonificacionRepository movimientoBonificacionRepository;
+
+	@Autowired
+	private EstatusBonificacionRepository estatusBonificacionRepository;
 
 	@Autowired
 	private ConciliacionHelper conciliacionHelper;
@@ -94,9 +99,36 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 		// Valida que el folio de conciliacion exista
 		conciliacionDataValidator.validateFolioExists(dto.getFolio());
 
+		// Validar campos
+		if (dto.getEstatus() == null || dto.getEstatus().getId() == 0) {
+			throw new ConciliacionException("Estatus incorrecto",
+					CodigoError.NMP_PMIMONTE_0001);
+		}
+
 		// Extrae los ids y los pone en una lista
+		MovimientoBonificacion bonificacion = BonificacionesBuilder.build(dto);
 		try {
-			MovimientoBonificacion bonificacion = BonificacionesBuilder.build(dto);
+
+			// Se obtiene de la BD
+			if (bonificacion.getId() != null && bonificacion.getId() > 0) {
+				Optional<MovimientoBonificacion> movBonificacionOpt = movimientoBonificacionRepository.findById(bonificacion.getId());
+				if (!movBonificacionOpt.isPresent()) {
+					throw new ConciliacionException("Bonificacion con id " + bonificacion.getId() + " no existe",
+							CodigoError.NMP_PMIMONTE_0001);
+				}
+				MovimientoBonificacion bonificacionBD = movBonificacionOpt.get();
+				bonificacion.setCreatedBy(bonificacionBD.getCreatedBy());
+				bonificacion.setCreatedDate(bonificacionBD.getCreatedDate());
+			}
+			
+			// Get status
+			Optional<EstatusBonificacion> estatusBonificacionOpt = estatusBonificacionRepository.findById(dto.getEstatus().getId().intValue());
+			if (!estatusBonificacionOpt.isPresent()) {
+				throw new ConciliacionException("Estatus no existe",
+						CodigoError.NMP_PMIMONTE_0001);
+			}
+			bonificacion.setEstatus(estatusBonificacionOpt.get());
+
 			if (bonificacion.getId() == null || bonificacion.getId() <= 0) { // New
 				bonificacion.setCreatedBy(usuario);
 				bonificacion.setCreatedDate(new Date());
@@ -105,7 +137,7 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 				bonificacion.setLastModifiedBy(usuario);
 				bonificacion.setLastModifiedDate(new Date());
 			}
-			this.movimientoBonificacionRepository.save(bonificacion);
+			bonificacion = this.movimientoBonificacionRepository.save(bonificacion);
 		} catch (ConciliacionException ex) {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
@@ -113,7 +145,7 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0011.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_0011);
 		}
-		return dto;
+		return BonificacionesBuilder.buildDTO(bonificacion);
 	}
 
 
