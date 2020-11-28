@@ -647,12 +647,11 @@ VALUES( 58, 'CONCILIACION_MERGE', 8, 12, 'OXXO');
 -- LINEAS DE LAYOUTS OXXO
 -- ------------------------------------------------------------------------------------------------------------------ --
 
--- Pagos
+-- PAGOS
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(11, 'L', '1011001', '', '13%03d', '', '', 'PAGOS', 'SUCURSALES', 'OXXO', now(), null, 'Sistema', null); -- Movimientos/Sucursales
+(11, 'L', '1220001014', '', '13%03d', 'PRENDA', 'SUCS_NB', 'PAGOS', 'SUCURSALES', 'OXXO', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(12, 'L', '1011001', '15000', '', '', '', 'PAGOS', 'BANCOS', 'OXXO', now(), null, 'Sistema', null); -- Banco
--- (2, 'L', '1011001063', '15000', '', '', '', 'PAGOS', 'BANCOS', now(), null, 'Sistema', null); -- Banco
+(12, 'L', '1220001014', '15000', '', '', '', 'PAGOS', 'BANCOS', 'OXXO', now(), null, 'Sistema', null); -- Bancos
 
 -- Comisiones OXXO (MOV)
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
@@ -665,9 +664,3 @@ INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negoci
 (15, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'SUCURSALES', 'OXXO', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (16, 'L', '1219001003', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OXXO', now(), null, 'Sistema', null); -- Bancos
-
--- DEPOSITOS OXXO
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(17, 'L', '1220001014', '', '13%03d', 'PRENDA', 'SUCS_NB', 'DEPOSITOS', 'SUCURSALES', 'OXXO', now(), null, 'Sistema', null); -- Sucursales
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(18, 'L', '1220001014', '15000', '', '', '', 'DEPOSITOS', 'BANCOS', 'OXXO', now(), null, 'Sistema', null); -- Bancos
