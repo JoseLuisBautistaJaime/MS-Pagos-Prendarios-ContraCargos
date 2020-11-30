@@ -320,13 +320,13 @@ INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub
 -- INSERTS INICIALES EN TABLA - tc_layout_header
 -- ------------------------------------------------------------------------------------------------------------------ --
 INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-('1', 'H', 'NMP01', 'COB RF Y DS EN L {0}', 'B', 'PAGOS', 'OPEN_PAY', now(), null, 'Sistema', null);
+('1', 'H', 'NMP01', 'COB RF Y DS EN L {0}', 'B', 'PAGOS', 'OPENPAY', now(), null, 'Sistema', null);
 INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-('2', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_MOV', 'OPEN_PAY', now(), null, 'Sistema', null);
+('2', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_MOV', 'OPENPAY', now(), null, 'Sistema', null);
 INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-('3', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_GENERALES', 'OPEN_PAY', now(), null, 'Sistema', null);
+('3', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_GENERALES', 'OPENPAY', now(), null, 'Sistema', null);
 INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
-('4', 'H', 'NMP01', 'DEV RF Y DS EN LINEA {0}', 'B', 'DEVOLUCIONES', 'OPEN_PAY', now(), null, 'Sistema', null);
+('4', 'H', 'NMP01', 'DEV RF Y DS EN LINEA {0}', 'B', 'DEVOLUCIONES', 'OPENPAY', now(), null, 'Sistema', null);
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -483,3 +483,15 @@ INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negoci
 (15, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'SUCURSALES', 'OXXO', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (16, 'L', '1219001003', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OXXO', now(), null, 'Sistema', null); -- Bancos
+
+-- --------------------------------------------------------------------------------------------- --
+-- ----------- INSERCIONES DE CATALOGO DE HEADERS DE LAYOUTS PARA CORRESPONSAL OXXO ------------- --
+-- --------------------------------------------------------------------------------------------- --
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('5', 'H', 'NMP01', 'COB RF Y DS EN L {0}', 'B', 'PAGOS', 'OXXO', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('6', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_MOV', 'OXXO', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('7', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_GENERALES', 'OXXO', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('8', 'H', 'NMP01', 'DEV RF Y DS EN LINEA {0}', 'B', 'DEVOLUCIONES', 'OXXO', now(), null, 'Sistema', null);

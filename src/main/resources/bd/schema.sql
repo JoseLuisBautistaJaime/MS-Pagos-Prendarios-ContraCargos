@@ -1554,7 +1554,9 @@ CREATE PROCEDURE `save_movimiento_transito`(
     _cuenta VARCHAR(45),
     _titular VARCHAR(255),
     _num_autorizacion VARCHAR(45),
-
+    -- campo nuevo
+     _transaccion VARCHAR(50),
+    
 	-- Campos para to_movimiento_conciliacion
 	_id BIGINT(20),
 	_id_conciliacion BIGINT(20),
@@ -1566,6 +1568,7 @@ CREATE PROCEDURE `save_movimiento_transito`(
     _last_modified_date DATETIME,
     _created_by VARCHAR(100),
     _last_modified_by VARCHAR(100)
+
 )
 MODIFIES SQL DATA
 MAIN: BEGIN
@@ -1605,8 +1608,8 @@ MAIN: BEGIN
 
 		-- Inserta/Actualiza el movimiento transito
 		IF (_id IS NULL OR _id <= 0) THEN
-			INSERT INTO to_movimiento_transito(id, estatus, folio, sucursal, fecha, operacion_desc, monto, tipo_contrato_desc, esquema_tarjeta, cuenta, titular, num_autorizacion)
-			VALUES(_id_movimiento_conciliacion, _estatus, _folio, _sucursal, _fecha, _operacion_desc, _monto, _tipo_contrato_desc, _esquema_tarjeta, _cuenta, _titular, _num_autorizacion);
+			INSERT INTO to_movimiento_transito(id, estatus, folio, sucursal, fecha, operacion_desc, monto, tipo_contrato_desc, esquema_tarjeta, cuenta, titular, num_autorizacion, transaccion)
+			VALUES(_id_movimiento_conciliacion, _estatus, _folio, _sucursal, _fecha, _operacion_desc, _monto, _tipo_contrato_desc, _esquema_tarjeta, _cuenta, _titular, _num_autorizacion, _transaccion);
 		ELSE
 			UPDATE to_movimiento_transito
 			SET
@@ -1621,6 +1624,7 @@ MAIN: BEGIN
 				cuenta = _cuenta,
 				titular = _titular,
 				num_autorizacion = _num_autorizacion
+                , transaccion = _transaccion
 			WHERE
 				id = _id_movimiento_conciliacion;
 		END IF;

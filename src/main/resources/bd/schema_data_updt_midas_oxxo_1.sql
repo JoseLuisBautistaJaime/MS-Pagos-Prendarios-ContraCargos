@@ -454,7 +454,9 @@ CREATE PROCEDURE `save_movimiento_transito`(
     _cuenta VARCHAR(45),
     _titular VARCHAR(255),
     _num_autorizacion VARCHAR(45),
-
+    -- nuevo campo
+     _transaccion VARCHAR(50),
+    
 	-- Campos para to_movimiento_conciliacion
 	_id BIGINT(20),
 	_id_conciliacion BIGINT(20),
@@ -505,8 +507,8 @@ MAIN: BEGIN
 
 		-- Inserta/Actualiza el movimiento transito
 		IF (_id IS NULL OR _id <= 0) THEN
-			INSERT INTO to_movimiento_transito(id, estatus, folio, sucursal, fecha, operacion_desc, monto, tipo_contrato_desc, esquema_tarjeta, cuenta, titular, num_autorizacion)
-			VALUES(_id_movimiento_conciliacion, _estatus, _folio, _sucursal, _fecha, _operacion_desc, _monto, _tipo_contrato_desc, _esquema_tarjeta, _cuenta, _titular, _num_autorizacion);
+			INSERT INTO to_movimiento_transito(id, estatus, folio, sucursal, fecha, operacion_desc, monto, tipo_contrato_desc, esquema_tarjeta, cuenta, titular, num_autorizacion, _transaccion)
+			VALUES(_id_movimiento_conciliacion, _estatus, _folio, _sucursal, _fecha, _operacion_desc, _monto, _tipo_contrato_desc, _esquema_tarjeta, _cuenta, _titular, _num_autorizacion, transaccion);
 		ELSE
 			UPDATE to_movimiento_transito
 			SET
@@ -521,6 +523,7 @@ MAIN: BEGIN
 				cuenta = _cuenta,
 				titular = _titular,
 				num_autorizacion = _num_autorizacion
+                , transaccion = _transaccion
 			WHERE
 				id = _id_movimiento_conciliacion;
 		END IF;
@@ -664,3 +667,16 @@ INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negoci
 (15, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'SUCURSALES', 'OXXO', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (16, 'L', '1219001003', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OXXO', now(), null, 'Sistema', null); -- Bancos
+
+
+-- --------------------------------------------------------------------------------------------- --
+-- ----------- INSERCIONES DE CATALOGO DE HEADERS DE LAYOUTS PARA CORRESPONSAL OXXO ------------- --
+-- --------------------------------------------------------------------------------------------- --
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('5', 'H', 'NMP01', 'COB RF Y DS EN L {0}', 'B', 'PAGOS', 'OXXO', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('6', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_MOV', 'OXXO', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('7', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_GENERALES', 'OXXO', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('8', 'H', 'NMP01', 'DEV RF Y DS EN LINEA {0}', 'B', 'DEVOLUCIONES', 'OXXO', now(), null, 'Sistema', null);
