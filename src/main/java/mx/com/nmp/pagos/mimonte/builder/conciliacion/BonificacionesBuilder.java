@@ -33,7 +33,7 @@ public class BonificacionesBuilder {
 	 * @return
 	 */
 	public static List<BonificacionDTO> buildListDTO(List<MovimientoBonificacion> bonificaciones) {
-		List<BonificacionDTO> listDTO = null;
+		List<BonificacionDTO> listDTO = new ArrayList<BonificacionDTO>();
 		if (bonificaciones != null && !bonificaciones.isEmpty()) {
 			listDTO = new ArrayList<BonificacionDTO>();
 			for (MovimientoBonificacion bonificacion : bonificaciones) {

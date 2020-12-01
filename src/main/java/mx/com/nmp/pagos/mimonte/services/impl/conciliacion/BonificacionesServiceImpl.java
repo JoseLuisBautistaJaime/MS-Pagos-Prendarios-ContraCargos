@@ -85,9 +85,9 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 
 		List<MovimientoBonificacion> bonificaciones = movimientoBonificacionRepository
 				.findByIdConciliacion(conciliacion.getId());
-		if (bonificaciones == null || bonificaciones.isEmpty())
+		/*if (bonificaciones == null || bonificaciones.isEmpty())
 			throw new InformationNotFoundException(ConciliacionConstants.INFORMATION_NOT_FOUND,
-					CodigoError.NMP_PMIMONTE_0009);
+					CodigoError.NMP_PMIMONTE_0009);*/
 
 		return BonificacionesBuilder.buildListDTO(bonificaciones);
 	}
