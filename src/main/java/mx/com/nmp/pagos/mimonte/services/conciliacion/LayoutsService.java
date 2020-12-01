@@ -616,6 +616,85 @@ public class LayoutsService {
 	}// End enviarConciliacion
 
 
+	@Transactional
+	public void enviarConciliacionOXXO(Long idConciliacion, String user) {
+
+		long start = 0;
+		long finish = 0;
+
+		start = System.currentTimeMillis();
+		LOG.debug("T >>> INCIA PROCESO DE GENERACION DE LAYOUTS: {}", start);
+
+		// Obtiene, valida la conciliacion (en proceso)
+		Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(idConciliacion,
+				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
+
+		// Se verifican duplicados o cargados con anterioridad (nuevo = false)
+		limpiarLayoutsGeneradosAll(conciliacion.getId());
+
+		// Se obtienen todos los layouts en base a los movimientos generados durante la
+		// conciliacion
+		List<LayoutDTO> layoutsDTO = buildLayoutsDTOOXXO(conciliacion);
+
+		// Se persisten los layouts
+		if (layoutsDTO != null && layoutsDTO.size() > 0) {
+
+			// Se generan todos los layouts, incluyendo cabeceras
+			List<Layout> layouts = mergeLayouts(conciliacion, layoutsDTO, user, false); // Genera layouts a partir de movimientos
+
+			// Se validan
+			for (Layout layout : layouts) {
+				if (layout != null && layout.getLayoutLineas() != null && layout.getLayoutLineas().size() > 0) {
+					BigDecimal montosPositivos = new BigDecimal(0);
+					BigDecimal montosNegativos = new BigDecimal(0);
+					for (LayoutLinea linea : layout.getLayoutLineas()) {
+						if (linea.getMonto().compareTo(BigDecimal.ZERO) >= 0) {
+							montosPositivos = montosPositivos.add(linea.getMonto());
+						} else {
+							montosNegativos = montosNegativos.add(linea.getMonto());
+						}
+					}
+
+					LOG.debug(">>>> Tipo Layout: [" + layout.getTipo().name() + "], Montos Positivos: [" + montosPositivos.toString() + "], Montos Negativos: [" + montosNegativos.toString() + "]");
+
+					BigDecimal totalMontos = new BigDecimal(0);
+					totalMontos = totalMontos.add(montosPositivos);
+					totalMontos = totalMontos.add(montosNegativos);
+
+					LOG.debug(">>>> Tipo Layout: [" + layout.getTipo().name() + "], Total Montos: [" + totalMontos.toString() + "]");
+
+					if (totalMontos.compareTo(BigDecimal.ZERO) != 0) {
+						throw new ConciliacionException("Montos de layout de " + layout.getTipo().name() + " incorrectos.",
+								CodigoError.NMP_PMIMONTE_BUSINESS_138);
+					}
+				}
+			}
+
+			// Se persisten
+			try {
+				// INSERTA EL LAYOUT, HEADER Y LINEAS
+				for (Layout layout : layouts) {
+					// Setea el id de layout a el header
+					layout.getLayoutHeader().setLayout(layout);
+
+					layoutsRepository.save(layout); // Persiste
+
+					// Inserta/Actualiza el header
+					layoutHeadersRepository.save(layout.getLayoutHeader());
+				}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				throw new ConciliacionException("Ocurrio un error al persistir los layouts",
+						CodigoError.NMP_PMIMONTE_0011);
+			}
+		}
+
+		finish = System.currentTimeMillis();
+		LOG.debug("T >>> INCIA PROCESO DE GENERACION DE LAYOUTS: {}", finish);
+
+	}
+	
 	/**
 	 * Se encarga de obtener el resumen de montos por conciliacion
 	 * @param idConciliacion
@@ -844,6 +923,29 @@ public class LayoutsService {
 		return layoutsDTO;
 	}
 
+	private List<LayoutDTO> buildLayoutsDTOOXXO(Conciliacion conciliacion) {
+
+		// Se construyen todos los layouts en base a los movimientos de pagos,
+		// devoluciones, comisiones
+		List<LayoutDTO> layoutsDTO = new ArrayList<LayoutDTO>();
+		Long idConciliacion = conciliacion.getId();
+		CorresponsalEnum idCorresponsal = conciliacion.getProveedor() != null ? conciliacion.getProveedor().getNombre() : CorresponsalEnum.OPENPAY;
+		
+		// PAGOS /////
+		LayoutDTO layoutDTO = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.PAGOS);
+		if (layoutDTO != null) {
+			layoutsDTO.add(layoutDTO);
+		}
+
+		// COMISIONES MOVIMIENTOS SE OBTIENEN DEL ESTADO DE CUENTA
+		layoutDTO = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.COMISIONES_MOV);
+		if (layoutDTO != null) {
+			layoutsDTO.add(layoutDTO);
+		}
+
+		return layoutsDTO;
+	}
+	
 	/**
 	 * Genera los layouts para el movimiento solo si existen movimientos
 	 * 
@@ -1096,6 +1198,15 @@ public class LayoutsService {
 			LayoutLineaDTO lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaCatalog, monto,
 					unidadOperativa);
 			lineasDTO.add(lineaDTO);
+			
+			if(idCorresponsal.equals(CorresponsalEnum.OXXO)) {
+				// TODO: Posible cuenta dummy para contra-cargo en pagos
+				LayoutLineaDTO lineaDummyDTO = new LayoutLineaDTO(lineaDTO);
+				lineaDummyDTO.setCuenta(lineaDummyDTO.getCuenta() + "000");
+				BigDecimal negative = new BigDecimal("-1");
+				lineaDummyDTO.setMonto(lineaDummyDTO.getMonto().multiply(negative));
+				lineasDTO.add(lineaDummyDTO);	
+			}
 		}
 
 		return lineasDTO;
@@ -1480,6 +1591,21 @@ public class LayoutsService {
 	private void limpiarLayoutsGenerados(Long idConciliacion) throws ConciliacionException {
 		try {
 			this.layoutsRepository.deleteByIdConciliacionAndNuevo(idConciliacion, false); // Solo layouts generados
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al regenerar los layouts", CodigoError.NMP_PMIMONTE_0011);
+		}
+	}
+	
+	/**
+	 * Elimina los layouts pertenecientes a una conciliacion especifica
+	 * 
+	 * @param idConciliacion
+	 * @throws ConciliacionException
+	 */
+	private void limpiarLayoutsGeneradosAll(Long idConciliacion) throws ConciliacionException {
+		try {
+			this.layoutsRepository.deleteByIdConciliacion(idConciliacion);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ConciliacionException("Error al regenerar los layouts", CodigoError.NMP_PMIMONTE_0011);

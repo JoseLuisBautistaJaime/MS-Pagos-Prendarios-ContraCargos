@@ -822,7 +822,10 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Se crean los layouts correspondientes
 		try {
-			layoutsService.enviarConciliacion(idConciliacion, usuario);	
+			if(null != conciliacion && null != conciliacion.getProveedor() && null != conciliacion.getProveedor().getNombre() && conciliacion.getProveedor().getNombre().equals(CorresponsalEnum.OXXO))
+				layoutsService.enviarConciliacionOXXO(idConciliacion, usuario);	
+			else
+				layoutsService.enviarConciliacion(idConciliacion, usuario);
 		}
 		catch(ConciliacionException ex) {
 			LOG.error(">>> ERROR: {}", ex);
