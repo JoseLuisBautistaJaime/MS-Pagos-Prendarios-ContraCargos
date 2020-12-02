@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.GlobalDTO;
+import mx.com.nmp.pagos.mimonte.model.ComisionProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
@@ -56,7 +57,8 @@ public abstract class GlobalBuilder {
 
 
 	public static Global updateGlobal(Global global, List<MovimientoMidas> movsMidas,
-			List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta, CodigosEdoCuentaMap codigosEdoCuenta) {
+			List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta,
+			CodigosEdoCuentaMap codigosEdoCuenta, ComisionProveedor comisionProveedor) {
 
 		//(Total de movimientos reportados en el reporte del proveedor transaccional)
 		global.setMovimientos(movsProveedor != null ? movsProveedor.size() : 0);
@@ -65,11 +67,11 @@ public abstract class GlobalBuilder {
 		global.setPartidas(movsMidas != null ? movsMidas.size() : 0);
 
 		global.setImporteMidas(ConciliacionMathUtil.getImporteMidas(movsMidas));
-		global.setImporteProveedor(ConciliacionMathUtil.getImporteProveedor(movsProveedor));
+		global.setImporteProveedor(ConciliacionMathUtil.getImporteProveedor(movsProveedor, comisionProveedor));
 		global.setImporteBanco(ConciliacionMathUtil.getImporteBanco(movsEstadoCuenta, codigosEdoCuenta));
 		global.setImporteDevoluciones(ConciliacionMathUtil.getDevolucionesEstadoCuenta(movsEstadoCuenta, codigosEdoCuenta));
-		global.setDiferenciaProveedorMidas(ConciliacionMathUtil.getDiferenciaProveedorMidas(movsProveedor, movsMidas));
-		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta, codigosEdoCuenta));
+		global.setDiferenciaProveedorMidas(ConciliacionMathUtil.getDiferenciaProveedorMidas(movsProveedor, movsMidas, comisionProveedor));
+		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta, codigosEdoCuenta, comisionProveedor));
 		
 		return global;
 	}

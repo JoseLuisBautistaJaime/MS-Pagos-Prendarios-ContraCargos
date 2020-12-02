@@ -180,8 +180,8 @@ ALTER TABLE `to_movimiento_transito` ADD COLUMN `transaccion` VARCHAR(50) NULL D
 CREATE TABLE IF NOT EXISTS `tc_comision_proveedor` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPENPAY',
-  `comision` DECIMAL(5,2) NOT NULL,
-  `iva` DECIMAL(5,2) NOT NULL,
+  `comision` DECIMAL(5,4) NOT NULL,
+  `iva` DECIMAL(5,4) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `cp_fk_idx` (`id` ASC))
 ENGINE = InnoDB
@@ -561,7 +561,7 @@ INSERT INTO seq_conciliacion(seq_name, seq_value) VALUES('OXXO', 0);
 -- --------------- INSERT DE LAS COMISIONES PROVEEDORES / CORRESPONSALES ------------------------ --
 -- ---------------------------------------------------------------------------------- --
 INSERT INTO `tc_comision_proveedor` (`id`, `corresponsal`, `comision`, `iva`) 
-	VALUES ('1', 'OXXO', '15.52', '2.48');
+	VALUES ('1', 'OXXO', '1.552', '0.248');
 
 
 -- ---------------------------------------------------------------------------------- --

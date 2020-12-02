@@ -1,8 +1,10 @@
 package mx.com.nmp.pagos.mimonte.util;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.model.ComisionProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
@@ -60,18 +62,72 @@ public class ConciliacionMathUtil {
 	/**
 	 * (Suma total de montos del reporte del proveedor transaccional)
 	 * @param movsProveedor
+	 * @param comisionProveedor 
 	 * @return
 	 */
-	public static BigDecimal getImporteProveedor(List<MovimientoProveedor> movsProveedor) {
+	public static BigDecimal getImporteProveedor(List<MovimientoProveedor> movsProveedor, ComisionProveedor comisionProveedor) {
 		BigDecimal importeProveedor = new BigDecimal(0);
 		if (movsProveedor != null) {
 			for (MovimientoProveedor movProveedor : movsProveedor) {
 				if (isValidTransaction(movProveedor)) {
-					importeProveedor = importeProveedor.add(movProveedor.getAmount());
+					importeProveedor = importeProveedor.add(getMontoProveedor(movProveedor.getAmount(), comisionProveedor));
 				}
 			}
 		}
 		return importeProveedor;
+	}
+
+
+	/**
+	 * Calcula el monto proveedor considerando el % comision e iva de la comision (si existe)
+	 * @param amount
+	 * @param comisionProveedor
+	 * @return
+	 */
+	public static BigDecimal getMontoProveedor(BigDecimal amount, ComisionProveedor comisionProveedor) {
+		BigDecimal monto = amount;
+		if (comisionProveedor != null && comisionProveedor.getComision() != null && comisionProveedor.getIva() != null) {
+			BigDecimal comisionMasIva = comisionProveedor.getComision().add(comisionProveedor.getIva()); // Comision + iva
+			BigDecimal porcentajeMonto = new BigDecimal(100).subtract(comisionMasIva); // Porcentaje correspondiente al monto actual
+			BigDecimal comision = monto.multiply(comisionProveedor.getComision()).divide(porcentajeMonto, 4, RoundingMode.HALF_UP); // Porcentaje de comision adicional cobrado
+			BigDecimal ivaComision = monto.multiply(comisionProveedor.getIva()).divide(porcentajeMonto, 4, RoundingMode.HALF_UP); // Porcentaje de comision iva cobrado
+			monto = monto.add(comision).add(ivaComision);
+		}
+		return monto;
+	}
+
+
+	/**
+	 * Calcula el monto proveedor considerando el % comision e iva de la comision (si existe)
+	 * @param amount
+	 * @param comisionProveedor
+	 * @return
+	 */
+	public static BigDecimal getComisionProveedor(BigDecimal monto, ComisionProveedor comisionProveedor) {
+		BigDecimal comision = new BigDecimal(0);
+		if (comisionProveedor != null && comisionProveedor.getComision() != null && comisionProveedor.getIva() != null && monto != null) {
+			BigDecimal comisionMasIva = comisionProveedor.getComision().add(comisionProveedor.getIva()); // Comision + iva
+			BigDecimal porcentajeMonto = new BigDecimal(100).subtract(comisionMasIva); // Porcentaje correspondiente al monto actual
+			comision = monto.multiply(comisionProveedor.getComision()).divide(porcentajeMonto, 4, RoundingMode.HALF_UP); // Porcentaje de comision adicional cobrado
+		}
+		return comision;
+	}
+
+
+	/**
+	 * Calcula el monto proveedor considerando el % comision e iva de la comision (si existe)
+	 * @param amount
+	 * @param comisionProveedor
+	 * @return
+	 */
+	public static BigDecimal getComisionIvaProveedor(BigDecimal monto, ComisionProveedor comisionProveedor) {
+		BigDecimal ivaComision = new BigDecimal(0);
+		if (comisionProveedor != null && comisionProveedor.getComision() != null && comisionProveedor.getIva() != null && monto != null) {
+			BigDecimal comisionMasIva = comisionProveedor.getComision().add(comisionProveedor.getIva()); // Comision + iva
+			BigDecimal porcentajeMonto = new BigDecimal(100).subtract(comisionMasIva); // Porcentaje correspondiente al monto actual
+			ivaComision = monto.multiply(comisionProveedor.getIva()).divide(porcentajeMonto, 4, RoundingMode.HALF_UP); // Porcentaje de comision iva cobrado
+		}
+		return ivaComision;
 	}
 
 
@@ -114,11 +170,12 @@ public class ConciliacionMathUtil {
 	 * “Movimientos en tránsito”.)
 	 * @param movsProveedor
 	 * @param movsMidas
+	 * @param comisionProveedor
 	 * @return
 	 */
-	public static BigDecimal getDiferenciaProveedorMidas(List<MovimientoProveedor> movsProveedor, List<MovimientoMidas> movsMidas) {
+	public static BigDecimal getDiferenciaProveedorMidas(List<MovimientoProveedor> movsProveedor, List<MovimientoMidas> movsMidas, ComisionProveedor comisionProveedor) {
 		BigDecimal montoMidas = getImporteMidas(movsMidas);
-		BigDecimal montoProveedor = getImporteProveedor(movsProveedor);
+		BigDecimal montoProveedor = getImporteProveedor(movsProveedor, comisionProveedor);
 		
 		BigDecimal diff = new BigDecimal(0);
 		if (montoMidas != null && montoProveedor != null) {
@@ -141,11 +198,13 @@ public class ConciliacionMathUtil {
 	 * @param movsProveedor
 	 * @param movsEstadoCuenta
 	 * @param codigosEdoCuenta
+	 * @param comisionProveedor
 	 * @return
 	 */
-	public static BigDecimal getDiferenciaProveedorBanco(List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta, CodigosEdoCuentaMap codigosEdoCuenta) {
+	public static BigDecimal getDiferenciaProveedorBanco(List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta,
+			CodigosEdoCuentaMap codigosEdoCuenta, ComisionProveedor comisionProveedor) {
 		BigDecimal montoBanco = getImporteBanco(movsEstadoCuenta, codigosEdoCuenta);
-		BigDecimal montoProveedor = getImporteProveedor(movsProveedor);
+		BigDecimal montoProveedor = getImporteProveedor(movsProveedor, comisionProveedor);
 		
 		BigDecimal diff = new BigDecimal(0);
 		if (montoBanco != null && montoProveedor != null) {

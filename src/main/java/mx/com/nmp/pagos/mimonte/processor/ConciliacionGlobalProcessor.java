@@ -5,12 +5,15 @@
 package mx.com.nmp.pagos.mimonte.processor;
 
 import java.util.List;
+
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.GlobalBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.ComisionProveedor;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
@@ -42,12 +45,12 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
 
 		// Se actualiza la seccion global para la conciliacion actual
-		actualizarSeccionGlobal(reportesWrapper.getIdConciliacion());
+		actualizarSeccionGlobal(reportesWrapper.getIdConciliacion(), reportesWrapper.getCorresponsal());
 
 		// Se actualiza la seccion global para conciliacion anteriores que sufrieron afectaciones en los movimientos transito
 		if (reportesWrapper.getIdsConciliacionesActualizar() != null && reportesWrapper.getIdsConciliacionesActualizar().size() > 0) {
 			for (Long idConciliacionAnterior : reportesWrapper.getIdsConciliacionesActualizar()) {
-				actualizarSeccionGlobal(idConciliacionAnterior);
+				actualizarSeccionGlobal(idConciliacionAnterior, reportesWrapper.getCorresponsal());
 			}
 		}
 
@@ -56,7 +59,13 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 	}
 
 
-	private void actualizarSeccionGlobal(Long idConciliacion) {
+	/**
+	 * Actualiza la seccion global
+	 * Para el caso de OXXO se considera el % de comision
+	 * @param idConciliacion
+	 * @param corresponsal
+	 */
+	private void actualizarSeccionGlobal(Long idConciliacion, CorresponsalEnum corresponsal) throws ConciliacionException {
 		// Obtener seccion global
 		Global global = this.mergeReporteHandler.getGlobalRepository().findByIdConciliacion(idConciliacion);
 		if (global == null) {
@@ -72,9 +81,12 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 		Reporte reporteProveedor = getReporteProveedor(idConciliacion);
 
 		CodigosEdoCuentaMap codigosEdoCuenta = this.mergeReporteHandler.getEstadoCuentaHelper().getCodigosEdoCuentaMap(entidadConciliacion.getId());
-		
+
+		// Se obtiene la comision e iva por operaciones proveedor para oxxo
+		ComisionProveedor comisionProveedor = getComisionProveedor(corresponsal);
+
 		// Actualizar seccion global
-		global = GlobalBuilder.updateGlobal(global, movsMidas, movsProveedor, movsEstadoCuenta, codigosEdoCuenta);
+		global = GlobalBuilder.updateGlobal(global, movsMidas, movsProveedor, movsEstadoCuenta, codigosEdoCuenta, comisionProveedor);
 
 		// Reporte de proveedor transaccional / Consulta reporte de procesos nocturnos - formato: DD/MM/AA)
 		if (reporteProveedor != null) {
