@@ -663,19 +663,31 @@ VALUES( 58, 'CONCILIACION_MERGE', 8, 12, 'OXXO');
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (11, 'L', '1220001014', '', '13%03d', 'PRENDA', 'SUCS_NB', 'PAGOS', 'SUCURSALES', 'OXXO', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(17, 'L', '1220001014', '', '13%03d', 'PRENDA', 'SUCS_NB', 'PAGOS', 'CC', 'OXXO', now(), null, 'Sistema', null); -- Sucursales - Cuentas Cobrar
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (12, 'L', '1220001014', '15000', '', '', '', 'PAGOS', 'BANCOS', 'OXXO', now(), null, 'Sistema', null); -- Bancos
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(18, 'L', '1220001014', '15000', '', '', '', 'PAGOS', 'CCC', 'OXXO', now(), null, 'Sistema', null); -- Bancos - Cancelacion Cuentas Cobrar
 
 -- Comisiones OXXO (MOV)
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (13, 'L', '6402001005', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_MOV', 'SUCURSALES', 'OXXO', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(19, 'L', '6402001005', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_MOV', 'CC', 'OXXO', now(), null, 'Sistema', null); -- Sucursales - Cuentas Cobrar
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (14, 'L', '6402001005', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', 'OXXO', now(), null, 'Sistema', null); -- Bancos
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(20, 'L', '6402001005', '15000', '', '', '', 'COMISIONES_MOV', 'CCC', 'OXXO', now(), null, 'Sistema', null); -- Bancos - Cancelacion Cuentas Cobrar
 
 -- Comisiones Iva
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (15, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'SUCURSALES', 'OXXO', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(21, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'CC', 'OXXO', now(), null, 'Sistema', null); -- Sucursales - Cuentas Cobrar
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (16, 'L', '1219001003', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OXXO', now(), null, 'Sistema', null); -- Bancos
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(22, 'L', '1219001003', '15000', '', '', '', 'COMISIONES_IVA', 'CCC', 'OXXO', now(), null, 'Sistema', null); -- Bancos - Cancelacion Cuentas Cobrar
 
 
 -- --------------------------------------------------------------------------------------------- --
