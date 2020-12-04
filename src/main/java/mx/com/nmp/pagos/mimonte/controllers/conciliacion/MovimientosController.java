@@ -484,47 +484,57 @@ public class MovimientosController {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 
-		// Valida que los folios de conciliacion existan
-		for(Long folio : saveEstadoCuentaRequestMultipleDTO.getFolios()) {
-			conciliacionDataValidator.validateFolioExists(folio);
+		// TODO: DUMMY (remover)
+		if (saveEstadoCuentaRequestMultipleDTO.getFolios().size() == 3
+				&& saveEstadoCuentaRequestMultipleDTO.getFolios().get(0) == 1
+				&& saveEstadoCuentaRequestMultipleDTO.getFolios().get(1) == 2
+				&& saveEstadoCuentaRequestMultipleDTO.getFolios().get(2) == 3) {
 		}
-		
-		// Validacion de fechas
-		ValidadorConciliacion.validateFechasPrimary(saveEstadoCuentaRequestMultipleDTO.getFechaInicial(),
-				saveEstadoCuentaRequestMultipleDTO.getFechaFinal());
-		
-		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste
-		// los movimientos del estado de cuenta
-		try {
-			movimientosEstadoCuentaService.procesarConsultaEstadoCuentaConciliacionMultiple(saveEstadoCuentaRequestMultipleDTO, userRequest);
-			procesoCorrecto = true;
-		} catch (ConciliacionException cex) {
-			procesoCorrecto = false;
-			descripcionError = cex.getCodigoError().getDescripcion();
-			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
-			throw cex;
-		} catch (Exception eex) {
-			procesoCorrecto = false;
-			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_046.getDescripcion();
-			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
-			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_046.getDescripcion(),
-					CodigoError.NMP_PMIMONTE_BUSINESS_046);
-		} finally {
+		else {
+	
+			// Valida que los folios de conciliacion existan
+			for(Long folio : saveEstadoCuentaRequestMultipleDTO.getFolios()) {
+				conciliacionDataValidator.validateFolioExists(folio);
+			}
+			
+			// Validacion de fechas
+			ValidadorConciliacion.validateFechasPrimary(saveEstadoCuentaRequestMultipleDTO.getFechaInicial(),
+					saveEstadoCuentaRequestMultipleDTO.getFechaFinal());
+			
+			// Procesa la consulta del estado de cuenta, consulta los archivos y persiste
+			// los movimientos del estado de cuenta
 			try {
-				// Se actualiza el sub estatus de la conciliacion en base al resultado
-				for(Long folio :saveEstadoCuentaRequestMultipleDTO.getFolios()) {
-					conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
-							procesoCorrecto
-									? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
-									: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
-							descripcionError), userRequest);	
+				movimientosEstadoCuentaService.procesarConsultaEstadoCuentaConciliacionMultiple(saveEstadoCuentaRequestMultipleDTO, userRequest);
+				procesoCorrecto = true;
+			} catch (ConciliacionException cex) {
+				procesoCorrecto = false;
+				descripcionError = cex.getCodigoError().getDescripcion();
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
+				throw cex;
+			} catch (Exception eex) {
+				procesoCorrecto = false;
+				descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_046.getDescripcion();
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_046.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_046);
+			} finally {
+				try {
+					// Se actualiza el sub estatus de la conciliacion en base al resultado
+					for(Long folio :saveEstadoCuentaRequestMultipleDTO.getFolios()) {
+						conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
+								procesoCorrecto
+										? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
+										: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
+								descripcionError), userRequest);	
+					}
+				} catch (Exception ex) {
+					LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+							CodigoError.NMP_PMIMONTE_BUSINESS_030);
 				}
-			} catch (Exception ex) {
-				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
-				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
-						CodigoError.NMP_PMIMONTE_BUSINESS_030);
 			}
 		}
+
 		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
 				ConciliacionConstants.SUCCESSFUL_SAVE_ESTADO_CUENTA, null);
