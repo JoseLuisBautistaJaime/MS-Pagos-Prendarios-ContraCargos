@@ -486,9 +486,9 @@ public class MovimientosController {
 
 		// TODO: DUMMY (remover)
 		if (saveEstadoCuentaRequestMultipleDTO.getFolios().size() == 3
-				&& saveEstadoCuentaRequestMultipleDTO.getFolios().get(0) == 1
-				&& saveEstadoCuentaRequestMultipleDTO.getFolios().get(1) == 2
-				&& saveEstadoCuentaRequestMultipleDTO.getFolios().get(2) == 3) {
+				&& saveEstadoCuentaRequestMultipleDTO.getFolios().get(0) == 47
+				&& saveEstadoCuentaRequestMultipleDTO.getFolios().get(1) == 51
+				&& saveEstadoCuentaRequestMultipleDTO.getFolios().get(2) == 90) {
 		}
 		else {
 	
