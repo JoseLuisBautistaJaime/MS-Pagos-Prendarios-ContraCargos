@@ -42,6 +42,7 @@ DROP TABLE tc_comision_proveedor;
 ALTER TABLE to_movimiento_transito DROP COLUMN transaccion;
 
 ALTER TABLE tc_layout_linea DROP COLUMN corresponsal; 
+ALTER TABLE tc_layout_linea DROP COLUMN operacion;
 
 ALTER TABLE tc_layout_header DROP COLUMN corresponsal;
 

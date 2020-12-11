@@ -69,6 +69,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoPago;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.OperacionLayoutEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
@@ -1084,7 +1085,7 @@ public class LayoutsService {
 				MovimientoComision movimientoComision = new MovimientoComision();
 				movimientoComision.setMovimientoMidas(new MovimientoMidas());
 				movimientoComision.getMovimientoMidas().setSucursal(opPorSuc.getSucursal());
-				LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipoLayout, GrupoLayoutEnum.SUCURSALES, idCorresponsal);
+				LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipoLayout, GrupoLayoutEnum.SUCURSALES, idCorresponsal, OperacionLayoutEnum.DEPOSITOS);
 				String unidadOperativa = getUnidadOperativa(movimientoComision, lineaCatalog);
 				LayoutLineaDTO lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaCatalog, montoSucursal, unidadOperativa);
 
@@ -1185,7 +1186,7 @@ public class LayoutsService {
 
 		// Agrupar movimientos por tipo y grupo
 		List<IMovTransaccion> movimientosByGrupo = agruparMovimientos(movimientos, tipo, grupo);
-		LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipo, grupo, idCorresponsal);
+		LayoutLineaCatalog lineaCatalog = getLayoutLineaCatalog(tipo, grupo, idCorresponsal, OperacionLayoutEnum.DEPOSITOS);
 		if (lineaCatalog == null) {
 			throw new ConciliacionException(
 					"No existe configuracion de la linea para el layout " + tipo + " y grupo " + grupo);
@@ -1523,21 +1524,18 @@ public class LayoutsService {
 	 * @param tipoLayout
 	 * @param grupo
 	 * @param idCorresponsal
+	 * @param operacion
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	private LayoutLineaCatalog getLayoutLineaCatalog(TipoLayoutEnum tipoLayout, GrupoLayoutEnum grupo, CorresponsalEnum idCorresponsal)
+	private LayoutLineaCatalog getLayoutLineaCatalog(TipoLayoutEnum tipoLayout, GrupoLayoutEnum grupo, CorresponsalEnum idCorresponsal, OperacionLayoutEnum operacion)
 			throws ConciliacionException {
 		LayoutLineaCatalog lineaCatalog = null;
 
 		// Se obtienen los valores por default de la linea de acuerdo al tipo de layout, grupo y corresponsal
 		try {
-			if(idCorresponsal == CorresponsalEnum.OPENPAY) {
-				lineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupoAndCorresponsal(tipoLayout, grupo, CorresponsalEnum.OPENPAY);
-			} else if(idCorresponsal == CorresponsalEnum.OXXO) {
-				lineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupoAndCorresponsal(tipoLayout, grupo, CorresponsalEnum.OXXO);
-			}
-			
+			lineaCatalog = layoutLineaCatalogRepository.findByTipoAndGrupoAndCorresponsalAndOperacion(tipoLayout, grupo, idCorresponsal, operacion);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ConciliacionException("Ocurrio un error consultar la linea del catalogo para el tipo layout "
