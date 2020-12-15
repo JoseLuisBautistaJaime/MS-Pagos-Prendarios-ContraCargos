@@ -602,7 +602,9 @@ public class MovimientosController {
 		if(null != movimientoProcesosNocturnosListResponseDTO) {
 			if(null != movimientoProcesosNocturnosListResponseDTO.getMovimientos() && !movimientoProcesosNocturnosListResponseDTO.getMovimientos().isEmpty()) {
 				for(MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO.getMovimientos()) {
-					movimientoMidasRequestDTO.setTipoContratoAbr(movimientoMidasRequestDTO.getTipoContratoAbr().trim());
+					if (movimientoMidasRequestDTO.getTipoContratoAbr() != null) {
+						movimientoMidasRequestDTO.setTipoContratoAbr(movimientoMidasRequestDTO.getTipoContratoAbr().trim());
+					}
 				}
 			}
 		}

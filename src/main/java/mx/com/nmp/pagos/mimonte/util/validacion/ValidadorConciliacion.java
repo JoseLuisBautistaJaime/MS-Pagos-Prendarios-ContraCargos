@@ -111,10 +111,10 @@ public interface ValidadorConciliacion {
 					assertNotNull(movimientoMidasRequestDTO.getEstatus());
 					assertNotNull(movimientoMidasRequestDTO.getTransaccion());
 					assertNotNull(movimientoMidasRequestDTO.getFecha());
-					assertNotNull(movimientoMidasRequestDTO.getOperacionAbr());
-					assertNotNull(movimientoMidasRequestDTO.getOperacionDesc());
-					assertNotNull(movimientoMidasRequestDTO.getTipoContratoAbr());
-					assertNotNull(movimientoMidasRequestDTO.getTipoContratoDesc());
+					//assertNotNull(movimientoMidasRequestDTO.getOperacionAbr());
+					//assertNotNull(movimientoMidasRequestDTO.getOperacionDesc());
+					//assertNotNull(movimientoMidasRequestDTO.getTipoContratoAbr());
+					//assertNotNull(movimientoMidasRequestDTO.getTipoContratoDesc());
 					assertNotNull(movimientoMidasRequestDTO.getImporteTransaccion());
 					movimientoMidasRequestDTO.setId(null);
 				}
