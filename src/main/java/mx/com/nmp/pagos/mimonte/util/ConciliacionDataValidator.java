@@ -19,6 +19,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * @name ConciliacionDataValidator
@@ -143,6 +144,25 @@ public class ConciliacionDataValidator {
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_112.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_112);
 		}
+	}
+
+
+	/**
+	 * Valida si el estado de cuenta ha sido cargado a la conciliacion
+	 * @param folio
+	 * @return
+	 */
+	public boolean isConciliacionConEdoCuenta(Long folio) {
+		boolean flag = false;
+		try {
+			flag = conciliacionRepository.existsEstadoCuentaCargado(folio, TipoReporteEnum.ESTADO_CUENTA);
+		} catch (ConciliacionException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_112.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_112);
+		}
+		return flag;
 	}
 
 }
