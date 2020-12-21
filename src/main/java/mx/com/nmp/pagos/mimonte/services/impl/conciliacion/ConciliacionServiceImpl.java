@@ -1239,7 +1239,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Notificar cambios o alta de reportes, si existen...
 		Long idEntidad = reportes.get(0).getConciliacion().getEntidad().getId(); // Se obtiene la entidad bancaria asociada
-		CorresponsalEnum corresponsal = CorresponsalEnum.OPENPAY; // TODO: Persistir el corresponsal
+		CorresponsalEnum corresponsal = reportes.get(0).getConciliacion().getProveedor() != null ?
+				reportes.get(0).getConciliacion().getProveedor().getNombre() :
+					CorresponsalEnum.OPENPAY;
 		this.conciliacionHelper.generarConciliacion(idConciliacion, idEntidad, reportes, corresponsal);
 
 		// Registro de actividad

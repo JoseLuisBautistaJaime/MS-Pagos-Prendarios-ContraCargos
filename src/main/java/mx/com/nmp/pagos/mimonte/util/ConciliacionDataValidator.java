@@ -155,7 +155,7 @@ public class ConciliacionDataValidator {
 	public boolean isConciliacionConEdoCuenta(Long folio) {
 		boolean flag = false;
 		try {
-			flag = conciliacionRepository.existsEstadoCuentaCargado(folio, TipoReporteEnum.ESTADO_CUENTA);
+			flag = ( (BigInteger) conciliacionRepository.existsEstadoCuentaCargado(folio, TipoReporteEnum.ESTADO_CUENTA)).compareTo(BigInteger.ONE) == 0;
 		} catch (ConciliacionException ex) {
 			throw ex;
 		} catch (Exception ex) {

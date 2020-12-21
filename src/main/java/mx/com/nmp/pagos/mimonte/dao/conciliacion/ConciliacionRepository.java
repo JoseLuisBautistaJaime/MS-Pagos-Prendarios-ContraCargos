@@ -496,7 +496,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	public Long findFolioById(@Param("idConciliacion") Long idConciliacion);
 
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN COUNT(r.id) > 0 THEN true ELSE false END FROM to_reporte r WHERE r.id_conciliacion = :idConciliacion AND r.tipo = :tipo")
-	public boolean existsEstadoCuentaCargado(@Param("idConciliacion") Long idConciliacion, @Param("tipo") TipoReporteEnum tipo);
+	public Object existsEstadoCuentaCargado(@Param("idConciliacion") Long idConciliacion, @Param("tipo") TipoReporteEnum tipo);
 
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(con.id) FROM to_conciliacion con WHERE con.id IN :foliosList AND con.proveedor <> :corresponsal ) > 0 THEN 0 ELSE 1 END AS flag")
 	public Object validateCorresponsalOxxoAndFolios(@Param("foliosList") final List<Long> foliosList, @Param("corresponsal") final String corresponsal);

@@ -70,7 +70,7 @@ public class ConciliacionMathUtil {
 		if (movsProveedor != null) {
 			for (MovimientoProveedor movProveedor : movsProveedor) {
 				if (isValidTransaction(movProveedor)) {
-					importeProveedor = importeProveedor.add(getMontoProveedor(movProveedor.getAmount(), comisionProveedor));
+					importeProveedor = importeProveedor.add(getMontoOperacionProveedor(movProveedor.getAmount(), comisionProveedor));
 				}
 			}
 		}
@@ -79,12 +79,12 @@ public class ConciliacionMathUtil {
 
 
 	/**
-	 * Calcula el monto proveedor considerando el % comision e iva de la comision (si existe)
+	 * Calcula el monto total de la operacion realizada a partir del monto depositado OXXO y considerando el % comision e iva de la comision (si existe)
 	 * @param amount
 	 * @param comisionProveedor
 	 * @return
 	 */
-	public static BigDecimal getMontoProveedor(BigDecimal amount, ComisionProveedor comisionProveedor) {
+	public static BigDecimal getMontoOperacionProveedor(BigDecimal amount, ComisionProveedor comisionProveedor) {
 		BigDecimal monto = amount;
 		if (comisionProveedor != null && comisionProveedor.getComision() != null && comisionProveedor.getIva() != null) {
 			BigDecimal comisionMasIva = comisionProveedor.getComision().add(comisionProveedor.getIva()); // Comision + iva
@@ -103,7 +103,7 @@ public class ConciliacionMathUtil {
 	 * @param comisionProveedor
 	 * @return
 	 */
-	public static BigDecimal getComisionProveedor(BigDecimal monto, ComisionProveedor comisionProveedor) {
+	public static BigDecimal getComisionCobradaProveedor(BigDecimal monto, ComisionProveedor comisionProveedor) {
 		BigDecimal comision = new BigDecimal(0);
 		if (comisionProveedor != null && comisionProveedor.getComision() != null && comisionProveedor.getIva() != null && monto != null) {
 			BigDecimal comisionMasIva = comisionProveedor.getComision().add(comisionProveedor.getIva()); // Comision + iva
@@ -120,7 +120,7 @@ public class ConciliacionMathUtil {
 	 * @param comisionProveedor
 	 * @return
 	 */
-	public static BigDecimal getComisionIvaProveedor(BigDecimal monto, ComisionProveedor comisionProveedor) {
+	public static BigDecimal getComisionIvaCobradaProveedor(BigDecimal monto, ComisionProveedor comisionProveedor) {
 		BigDecimal ivaComision = new BigDecimal(0);
 		if (comisionProveedor != null && comisionProveedor.getComision() != null && comisionProveedor.getIva() != null && monto != null) {
 			BigDecimal comisionMasIva = comisionProveedor.getComision().add(comisionProveedor.getIva()); // Comision + iva
@@ -128,6 +128,23 @@ public class ConciliacionMathUtil {
 			ivaComision = monto.multiply(comisionProveedor.getIva()).divide(porcentajeMonto, 4, RoundingMode.HALF_UP); // Porcentaje de comision iva cobrado
 		}
 		return ivaComision;
+	}
+
+
+	/**
+	 * Calcula el monto depositado por el proveedor restando la % comision e iva de la comision (si existe)
+	 * @param monto
+	 * @param comisionProveedor
+	 * @return
+	 */
+	public static BigDecimal getMontoDepositadoPorProveedor(BigDecimal montoTotalOperacion, ComisionProveedor comisionProveedor) {
+		BigDecimal montoDepositado = new BigDecimal(0);
+		if (comisionProveedor != null && comisionProveedor.getComision() != null && comisionProveedor.getIva() != null && montoTotalOperacion != null) {
+			BigDecimal comisionMasIva = comisionProveedor.getComision().add(comisionProveedor.getIva()); // Comision + iva
+			BigDecimal porcentajeMonto = new BigDecimal(100).subtract(comisionMasIva); // Porcentaje correspondiente al monto actual
+			montoDepositado = montoTotalOperacion.multiply(porcentajeMonto).divide(new BigDecimal(100), 4, RoundingMode.HALF_UP); // Porcentaje de comision iva cobrado
+		}
+		return montoDepositado;
 	}
 
 
