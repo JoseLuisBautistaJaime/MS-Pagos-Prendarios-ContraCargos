@@ -627,7 +627,7 @@ INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_s
 VALUES (47, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 11, 13, 'OXXO');
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
-VALUES (148, 'CONCILIACION_MERGE', 12, 8, 'OXXO');
+VALUES (48, 'CONCILIACION_MERGE', 12, 8, 'OXXO');
 INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
 VALUES (49, 'GENERACION_LAYOUTS', 12, 14, 'OXXO');
 
