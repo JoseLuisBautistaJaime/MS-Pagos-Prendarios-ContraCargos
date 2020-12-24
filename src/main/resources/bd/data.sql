@@ -261,11 +261,11 @@ INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date,
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
 (4, 'Consulta MIDAS Error', true, now(), 'Sistema', 4);
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
-(5, 'Consulta Open Pay', true, now(), 'Sistema', 5);
+(5, 'Consulta Proveedor', true, now(), 'Sistema', 5);
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
-(6, 'Consulta Open Pay Completada', true, now(), 'Sistema', 6);
+(6, 'Consulta Proveedor Completada', true, now(), 'Sistema', 6);
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
-(7, 'Consulta Open Pay Error', true, now(), 'Sistema', 7);
+(7, 'Consulta Proveedor Error', true, now(), 'Sistema', 7);
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
 (8, 'Conciliacion', true, now(), 'Sistema', 8);
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES

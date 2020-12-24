@@ -711,3 +711,12 @@ INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_
 ('8', 'H', 'NMP01', 'DEV RF Y DS EN LINEA {0}', 'B', 'DEVOLUCIONES', 'OXXO', now(), null, 'Sistema', null);
 INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
 ('9', 'H', 'NMP01', 'BONIFICACIONES {0}', 'B', 'BONIFICACIONES', 'OXXO', now(), null, 'Sistema', null);
+
+
+
+-- --------------------------------------------------------------------------------------------- --
+-- ----------- ACTUALIZACION SUB-ESTATUS-CONCILIACION ------------------------------------------ --
+-- --------------------------------------------------------------------------------------------- --
+UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Proveedor' WHERE id = 5;
+UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Proveedor Completada' WHERE id = 6;
+UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Proveedor Error' WHERE id = 7;

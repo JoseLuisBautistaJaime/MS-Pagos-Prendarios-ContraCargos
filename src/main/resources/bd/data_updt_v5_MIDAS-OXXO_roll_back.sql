@@ -169,6 +169,16 @@ DELETE FROM tk_proveedor WHERE nombre IN ('OPENPAY', 'OXXO');
 DROP TABLE tk_proveedor;
 
 
+
+-- --------------------------------------------------------------------------------------------- --
+-- ----------- ACTUALIZACION SUB-ESTATUS-CONCILIACION ------------------------------------------ --
+-- --------------------------------------------------------------------------------------------- --
+UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Open Pay' WHERE id = 5;
+UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Open Pay Completada' WHERE id = 6;
+UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Open Pay Error' WHERE id = 7;
+
+
+
 -- ----------------------------------------------------------------------------------------------------- --
 -- -------------------------------------- STORE PROCEDURES ---------------------------------------------- --
 -- ----------------------------------------------------------------------------------------------------- --
