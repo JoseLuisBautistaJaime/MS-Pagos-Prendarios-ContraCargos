@@ -51,23 +51,23 @@ public class EstadoCuentaBrokerBus implements EstadoCuentaBroker {
 		List<String> lines = new ArrayList<String>();
 
 		// Consultar archivo y convertirlo a líneas
-		BusRestEstadoCuentaDTO body = new BusRestEstadoCuentaDTO(ruta, archivo);
-		String edoCuentaStr = busEstadoCuentaRestService.consultaEstadoCuenta(body);
-		byte[] base64EstadoCuenta = Base64.decodeBase64(edoCuentaStr);
-		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(new ByteArrayInputStream(base64EstadoCuenta)))) {
-			while (reader.ready()) {
-				String line = reader.readLine();
-				lines.add(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new ConciliacionException("Error al recibir el archivo del estado de cuenta",
-					CodigoError.NMP_PMIMONTE_BUSINESS_063);
-		}
+//		BusRestEstadoCuentaDTO body = new BusRestEstadoCuentaDTO(ruta, archivo);
+//		String edoCuentaStr = busEstadoCuentaRestService.consultaEstadoCuenta(body);
+//		byte[] base64EstadoCuenta = Base64.decodeBase64(edoCuentaStr);
+//		try (BufferedReader reader = new BufferedReader(
+//				new InputStreamReader(new ByteArrayInputStream(base64EstadoCuenta)))) {
+//			while (reader.ready()) {
+//				String line = reader.readLine();
+//				lines.add(line);
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			throw new ConciliacionException("Error al recibir el archivo del estado de cuenta",
+//					CodigoError.NMP_PMIMONTE_BUSINESS_063);
+//		}
 
 		// Dummy
-		/* try {
+		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					new ClassPathResource("edocuenta/7002.txt").getInputStream()));
 			while(reader.ready()) {
@@ -76,7 +76,7 @@ public class EstadoCuentaBrokerBus implements EstadoCuentaBroker {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} */
+		}
 
 		return lines;
 	}
