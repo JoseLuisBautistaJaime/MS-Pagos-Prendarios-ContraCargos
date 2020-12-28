@@ -131,31 +131,35 @@ public abstract class MovimientosBuilder {
 			movimientoProveedorDTO.setCard(new TarjetaMovimientosProveedorDTO());
 			movimientoProveedorDTO.setAmount(movimientoProveedor.getAmount());
 			movimientoProveedorDTO.setAuthorization(movimientoProveedor.getAuthorization());
-			movimientoProveedorDTO.getCard()
-					.setAddress(movimientoProveedor.getTarjetaMovimientosProveedor().getAddress());
-			movimientoProveedorDTO.getCard()
-					.setAllowsCharges(movimientoProveedor.getTarjetaMovimientosProveedor().getAllowsCharges());
-			movimientoProveedorDTO.getCard()
-					.setAllowsPayouts(movimientoProveedor.getTarjetaMovimientosProveedor().getAllowsPayouts());
-			movimientoProveedorDTO.getCard()
-					.setBankCode(movimientoProveedor.getTarjetaMovimientosProveedor().getBankCode());
-			movimientoProveedorDTO.getCard()
-					.setBankName(movimientoProveedor.getTarjetaMovimientosProveedor().getBankName());
-			movimientoProveedorDTO.getCard().setBrand(movimientoProveedor.getTarjetaMovimientosProveedor().getBrand());
-			movimientoProveedorDTO.getCard()
-					.setCreationDate(movimientoProveedor.getTarjetaMovimientosProveedor().getCreationDate());
-			movimientoProveedorDTO.getCard()
-					.setCustomerId(movimientoProveedor.getTarjetaMovimientosProveedor().getCustomerId());
-			movimientoProveedorDTO.getCard()
-					.setExpirationMonth(movimientoProveedor.getTarjetaMovimientosProveedor().getExpirationMonth());
-			movimientoProveedorDTO.getCard()
-					.setExpirationYear(movimientoProveedor.getTarjetaMovimientosProveedor().getExpirationYear());
-			movimientoProveedorDTO.getCard()
-					.setHolderName(movimientoProveedor.getTarjetaMovimientosProveedor().getHolderName());
-			movimientoProveedorDTO.getCard().setId(movimientoProveedor.getTarjetaMovimientosProveedor().getId());
-			movimientoProveedorDTO.getCard()
-					.setCardNumber(movimientoProveedor.getTarjetaMovimientosProveedor().getCardNumber());
-			movimientoProveedorDTO.getCard().setType(movimientoProveedor.getTarjetaMovimientosProveedor().getType());
+
+			if (movimientoProveedor.getTarjetaMovimientosProveedor() != null) {
+				movimientoProveedorDTO.getCard()
+						.setAddress(movimientoProveedor.getTarjetaMovimientosProveedor().getAddress());
+				movimientoProveedorDTO.getCard()
+						.setAllowsCharges(movimientoProveedor.getTarjetaMovimientosProveedor().getAllowsCharges());
+				movimientoProveedorDTO.getCard()
+						.setAllowsPayouts(movimientoProveedor.getTarjetaMovimientosProveedor().getAllowsPayouts());
+				movimientoProveedorDTO.getCard()
+						.setBankCode(movimientoProveedor.getTarjetaMovimientosProveedor().getBankCode());
+				movimientoProveedorDTO.getCard()
+						.setBankName(movimientoProveedor.getTarjetaMovimientosProveedor().getBankName());
+				movimientoProveedorDTO.getCard().setBrand(movimientoProveedor.getTarjetaMovimientosProveedor().getBrand());
+				movimientoProveedorDTO.getCard()
+						.setCreationDate(movimientoProveedor.getTarjetaMovimientosProveedor().getCreationDate());
+				movimientoProveedorDTO.getCard()
+						.setCustomerId(movimientoProveedor.getTarjetaMovimientosProveedor().getCustomerId());
+				movimientoProveedorDTO.getCard()
+						.setExpirationMonth(movimientoProveedor.getTarjetaMovimientosProveedor().getExpirationMonth());
+				movimientoProveedorDTO.getCard()
+						.setExpirationYear(movimientoProveedor.getTarjetaMovimientosProveedor().getExpirationYear());
+				movimientoProveedorDTO.getCard()
+						.setHolderName(movimientoProveedor.getTarjetaMovimientosProveedor().getHolderName());
+				movimientoProveedorDTO.getCard().setId(movimientoProveedor.getTarjetaMovimientosProveedor().getId());
+				movimientoProveedorDTO.getCard()
+						.setCardNumber(movimientoProveedor.getTarjetaMovimientosProveedor().getCardNumber());
+				movimientoProveedorDTO.getCard().setType(movimientoProveedor.getTarjetaMovimientosProveedor().getType());
+			}
+
 			movimientoProveedorDTO.setConciliated(movimientoProveedor.getConciliated());
 			movimientoProveedorDTO.setCreationDate(movimientoProveedor.getCreationDate());
 			movimientoProveedorDTO.setCurrency(movimientoProveedor.getCurrency());
