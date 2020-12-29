@@ -152,14 +152,13 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 	@Transactional
 	public void delete(Long idBonificacion, String deletedBy) throws ConciliacionException {
 
+		Optional<MovimientoBonificacion> bonificacionOpt = this.movimientoBonificacionRepository.findById(idBonificacion);
+		if (bonificacionOpt == null || !bonificacionOpt.isPresent()) {
+			throw new ConciliacionException("No existe la bonificacion con id " + idBonificacion,
+					CodigoError.NMP_PMIMONTE_0008);
+		}
+
 		try {
-			
-			Optional<MovimientoBonificacion> bonificacionOpt = this.movimientoBonificacionRepository.findById(idBonificacion);
-			if (bonificacionOpt == null || !bonificacionOpt.isPresent()) {
-				throw new ConciliacionException("No existe la bonificacion con id " + idBonificacion,
-						CodigoError.NMP_PMIMONTE_0008);
-			}
-			
 			MovimientoBonificacion bonificacion = bonificacionOpt.get();
 
 			this.movimientoBonificacionRepository.delete(bonificacion);

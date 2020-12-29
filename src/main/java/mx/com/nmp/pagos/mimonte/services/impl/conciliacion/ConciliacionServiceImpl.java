@@ -236,6 +236,11 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
 					CodigoError.NMP_PMIMONTE_0008);
 		}
+
+		if (conciliacionRequestDTO.getIdCorresponsal() == null) {
+			throw new ConciliacionException("El corresponsal indicado no es valido",
+					CodigoError.NMP_PMIMONTE_0008);
+		}
 		
 		// Validacion del id de proveedor distinto de 0
 		//if (conciliacionRequestDTO.getIdCorresponsal() == null) {

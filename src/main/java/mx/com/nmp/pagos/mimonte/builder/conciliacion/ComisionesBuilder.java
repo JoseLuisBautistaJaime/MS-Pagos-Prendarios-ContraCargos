@@ -98,7 +98,11 @@ public abstract class ComisionesBuilder {
 			comisionTransaccion.setFechaHasta(comisionesTransaccionesRequestDTO.getFechaHasta());
 			Long id = null != comisionTransaccionVer ? comisionTransaccionVer : 0L;
 			comisionTransaccion.setId(id);
-			comisionTransaccion.setConciliacion(new Conciliacion(idConciliacion));
+
+			Conciliacion conciliacion = new Conciliacion();
+			conciliacion.setId(idConciliacion);
+
+			comisionTransaccion.setConciliacion(conciliacion);
 		}
 		return comisionTransaccion;
 	}

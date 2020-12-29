@@ -142,7 +142,7 @@ public class ConciliacionMathUtil {
 		if (comisionProveedor != null && comisionProveedor.getComision() != null && comisionProveedor.getIva() != null && montoTotalOperacion != null) {
 			BigDecimal comisionMasIva = comisionProveedor.getComision().add(comisionProveedor.getIva()); // Comision + iva
 			BigDecimal porcentajeMonto = new BigDecimal(100).subtract(comisionMasIva); // Porcentaje correspondiente al monto actual
-			montoDepositado = montoTotalOperacion.multiply(porcentajeMonto).divide(new BigDecimal(100), 4, RoundingMode.HALF_UP); // Porcentaje de comision iva cobrado
+			montoDepositado = montoTotalOperacion.multiply(porcentajeMonto).divide(new BigDecimal(100), 4, RoundingMode.FLOOR); // Porcentaje de comision iva cobrado
 		}
 		return montoDepositado;
 	}
