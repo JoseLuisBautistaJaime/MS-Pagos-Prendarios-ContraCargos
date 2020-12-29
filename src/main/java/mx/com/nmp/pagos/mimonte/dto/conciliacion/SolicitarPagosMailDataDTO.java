@@ -78,16 +78,17 @@ public class SolicitarPagosMailDataDTO implements java.io.Serializable {
 		this.fechaTransaccion = fechaTransaccion;
 		this.folioPartida = folioPartida;
 		this.transaccion = transaccion;
-		this.tipoTransaccion = tipoTransaccion;
+
+		this.tipoTransaccion = tipoTransaccion != null ? tipoTransaccion : "N/A";
 		this.montoTransaccion = montoTransaccion;
-		this.tipoMoneda = tipoMoneda;
-		this.tipoCuenta = tipoCuenta;
+		this.tipoMoneda = tipoMoneda != null ? tipoMoneda : "N/A";
+		this.tipoCuenta = tipoCuenta != null ? tipoCuenta : "N/A";
 		this.codigoRespuestaMotorPagosTransaccion = codigoRespuestaMotorPagosTransaccion;
-		this.metodoPago = metodoPago;
-		this.identificadorCuenta = identificadorCuenta;
-		this.titularCuenta = titularCuenta;
-		this.codigoAutorizacion = codigoAutorizacion;
-		this.fuenteTransaccion = fuenteTransaccion;
+		this.metodoPago = metodoPago != null ? metodoPago : "N/A";
+		this.identificadorCuenta = identificadorCuenta != null ? identificadorCuenta : "N/A";
+		this.titularCuenta = titularCuenta != null ? titularCuenta : "N/A";
+		this.codigoAutorizacion = codigoAutorizacion != null ? codigoAutorizacion : "N/A";
+		this.fuenteTransaccion = fuenteTransaccion != null ? codigoAutorizacion : "N/A";
 		// Se llenan con N/A ya que no es posible regresar estos datos dado que no
 		// existen en niguna tabla
 		this.codigoDescuento = "N/A";
