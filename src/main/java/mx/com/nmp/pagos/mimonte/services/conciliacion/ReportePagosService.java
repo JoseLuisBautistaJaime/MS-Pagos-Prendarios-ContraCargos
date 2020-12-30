@@ -5,10 +5,10 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoOperacionEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoProductoEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -103,14 +103,56 @@ public class ReportePagosService {
 			reportePagosEnLineaDTOList = movimientosMidasRepository.getReportePagosEnLineaWithoutFechasNS(
 					reporteRequestDTO.getProducto(), reporteRequestDTO.getOperacion(), reporteRequestDTO.getPartida());
 
+		for (ReportePagosEnLineaDTO reportePagosEnLineaDTO : reportePagosEnLineaDTOList) {
+			sum = sum.add(reportePagosEnLineaDTO.getMonto());
+			if (reportePagosEnLineaDTO.getTipoProducto() == null) {
+				reportePagosEnLineaDTO.setTipoProducto(getTipoProductoByIdTipoProducto(reportePagosEnLineaDTO.getIdTipoContrato()));
+			}
+			if (reportePagosEnLineaDTO.getOperacion() == null) {
+				reportePagosEnLineaDTO.setOperacion(getOperacionByIdOperacion(reportePagosEnLineaDTO.getIdOperacion()));
+			}
+		}
 		reportePagosEnLineaOuterDTO = new ReportePagosEnLineaOuterDTO();
 		reportePagosEnLineaOuterDTO.setMovimientos(reportePagosEnLineaDTOList);
 		reportePagosEnLineaOuterDTO.setTotalMovimientos(reportePagosEnLineaDTOList.size());
-		for (ReportePagosEnLineaDTO reportePagosEnLineaDTO : reportePagosEnLineaDTOList) {
-			sum = sum.add(reportePagosEnLineaDTO.getMonto());
-		}
+
 		reportePagosEnLineaOuterDTO.setMontoTotal(sum);
 		return reportePagosEnLineaOuterDTO;
 	}
+
+	/**
+	 * Metodo para recuperar la descripción de la Operacion apartir de un idOperacion
+	 * @param idOperacion
+	 * @return Operacion
+	 */
+	private String getOperacionByIdOperacion(Integer idOperacion) {
+		String operacion = "";
+
+		Optional<TipoOperacionEnum> tipoOperacionEnum = Arrays.stream(TipoOperacionEnum.values())
+				.filter(t -> t.getIdTipoOperacion().equals(idOperacion)).findFirst();
+
+		if (tipoOperacionEnum.isPresent())
+			return tipoOperacionEnum.get().getTipoOperacion();
+
+		return operacion;
+	}
+
+	/**
+	 * Metodo para recuperar la descripción de la TipoProducto apartir de un idTipoProducto
+	 * @param idTipoProducto
+	 * @return TipoProducto
+	 */
+	private String getTipoProductoByIdTipoProducto(Integer idTipoProducto) {
+		String tipoProducto = "";
+
+		Optional<TipoProductoEnum> tipoProductoEnum = Arrays.stream(TipoProductoEnum.values())
+				.filter(t -> t.getIdTipoProducto().equals(idTipoProducto)).findFirst();
+
+		if (tipoProductoEnum.isPresent())
+			return tipoProductoEnum.get().getTipoProducto();
+
+		return tipoProducto;
+	}
+
 
 }
