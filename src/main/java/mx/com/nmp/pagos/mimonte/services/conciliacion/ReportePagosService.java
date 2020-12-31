@@ -105,10 +105,10 @@ public class ReportePagosService {
 
 		for (ReportePagosEnLineaDTO reportePagosEnLineaDTO : reportePagosEnLineaDTOList) {
 			sum = sum.add(reportePagosEnLineaDTO.getMonto());
-			if (reportePagosEnLineaDTO.getTipoProducto() == null) {
+			if (reportePagosEnLineaDTO.getTipoProducto() == null || reportePagosEnLineaDTO.getTipoProducto().isEmpty()) {
 				reportePagosEnLineaDTO.setTipoProducto(getTipoProductoByIdTipoProducto(reportePagosEnLineaDTO.getIdTipoContrato()));
 			}
-			if (reportePagosEnLineaDTO.getOperacion() == null) {
+			if (reportePagosEnLineaDTO.getOperacion() == null || reportePagosEnLineaDTO.getOperacion().isEmpty()) {
 				reportePagosEnLineaDTO.setOperacion(getOperacionByIdOperacion(reportePagosEnLineaDTO.getIdOperacion()));
 			}
 		}
