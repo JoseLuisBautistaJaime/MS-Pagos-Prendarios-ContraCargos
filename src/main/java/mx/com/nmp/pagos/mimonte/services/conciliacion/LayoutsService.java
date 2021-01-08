@@ -1218,14 +1218,14 @@ public class LayoutsService {
 
 				// Linea Comision
 				LayoutLineaCatalog lineaComisionCatalog = getLayoutLineaCatalog(TipoLayoutEnum.COMISIONES_MOV, grupo, idCorresponsal, OperacionLayoutEnum.DEPOSITOS);
-				BigDecimal comision = ConciliacionMathUtil.getComisionCobradaProveedor(movimientos.size(), comisionProveedor); // TODO: Verificar si total movimientos midas = total movs proveedor
+				BigDecimal comision = ConciliacionMathUtil.getComisionCobradaProveedor(1, comisionProveedor); // TODO: Verificar si total movimientos midas = total movs proveedor
 				comision = comision.negate();
 				lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaComisionCatalog, comision, unidadOperativa);
 				lineasDTO.add(lineaDTO);
 
 				// Linea comision Iva
 				LayoutLineaCatalog lineaComisionIvaCatalog = getLayoutLineaCatalog(TipoLayoutEnum.COMISIONES_IVA, grupo, idCorresponsal, OperacionLayoutEnum.DEPOSITOS);
-				BigDecimal comisionIva = ConciliacionMathUtil.getComisionIvaCobradaProveedor(movimientos.size(), comisionProveedor); // TODO: Verificar si total movimientos midas = total movs proveedor
+				BigDecimal comisionIva = ConciliacionMathUtil.getComisionIvaCobradaProveedor(1, comisionProveedor); // TODO: Verificar si total movimientos midas = total movs proveedor
 				comisionIva = comisionIva.negate();
 				lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaComisionIvaCatalog, comisionIva, unidadOperativa);
 				lineasDTO.add(lineaDTO);
