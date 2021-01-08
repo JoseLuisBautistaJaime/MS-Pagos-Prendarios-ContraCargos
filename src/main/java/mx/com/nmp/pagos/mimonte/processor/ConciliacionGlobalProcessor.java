@@ -73,17 +73,18 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 			global.setConciliacion(new Conciliacion(idConciliacion));
 		}
 
+		// Se obtiene la comision e iva por operaciones proveedor para oxxo
+		ComisionProveedor comisionProveedor = getComisionProveedor(corresponsal);
+
 		// Obtiene los movimientos de los reportes en base a la conciliacion
 		List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(idConciliacion);
 		List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(idConciliacion);
 		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByConciliacion(idConciliacion);
+		
 		Entidad entidadConciliacion = getEntidadByConciliacion(idConciliacion);
 		Reporte reporteProveedor = getReporteProveedor(idConciliacion);
 
 		CodigosEdoCuentaMap codigosEdoCuenta = this.mergeReporteHandler.getEstadoCuentaHelper().getCodigosEdoCuentaMap(entidadConciliacion.getId());
-
-		// Se obtiene la comision e iva por operaciones proveedor para oxxo
-		ComisionProveedor comisionProveedor = getComisionProveedor(corresponsal);
 
 		// Actualizar seccion global
 		global = GlobalBuilder.updateGlobal(global, movsMidas, movsProveedor, movsEstadoCuenta, codigosEdoCuenta, comisionProveedor);

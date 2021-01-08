@@ -656,6 +656,9 @@ VALUES (57, 'ENVIO_CONCILIACION', 18, 17, 'OXXO');
 INSERT INTO tk_maquina_estados_subestatus_conciliacion(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
 VALUES( 58, 'CONCILIACION_MERGE', 8, 12, 'OXXO');
 
+INSERT INTO tk_maquina_estados_subestatus_conciliacion(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES( 59, 'ALTA_MOVIMIENTO_ESTADO_CUENTA', 15, 11, 'OXXO');
+
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- LINEAS DE LAYOUTS OXXO
 -- ------------------------------------------------------------------------------------------------------------------ --

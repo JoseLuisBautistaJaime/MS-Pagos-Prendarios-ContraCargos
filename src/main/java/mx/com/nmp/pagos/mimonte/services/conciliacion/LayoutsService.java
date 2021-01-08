@@ -637,7 +637,7 @@ public class LayoutsService {
 				ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO);
 
 		// Se verifican duplicados o cargados con anterioridad (nuevo = false)
-		//limpiarLayoutsGeneradosAll(conciliacion.getId());
+		limpiarLayoutsGeneradosAll(conciliacion.getId());
 
 		// Se obtienen todos los layouts en base a los movimientos generados durante la
 		// conciliacion
@@ -939,17 +939,17 @@ public class LayoutsService {
 		CorresponsalEnum idCorresponsal = conciliacion.getProveedor() != null ? conciliacion.getProveedor().getNombre() : CorresponsalEnum.OPENPAY;
 
 		// Verifica si se generan los layouts antes o despues del estado de cuenta.
-		boolean conEdoCuenta = this.conciliacionDataValidator.isConciliacionConEdoCuenta(idConciliacion);
+		//boolean conEdoCuenta = this.conciliacionDataValidator.isConciliacionConEdoCuenta(idConciliacion);
 
 
 		// PAGOS /////
-		LayoutDTO layoutDTO = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.PAGOS, conEdoCuenta);
+		LayoutDTO layoutDTO = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.PAGOS, true);
 		if (layoutDTO != null) {
 			layoutsDTO.add(layoutDTO);
 		}
 
 		// COMISIONES MOVIMIENTOS SE OBTIENEN DEL ESTADO DE CUENTA
-		layoutDTO = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.COMISIONES_MOV, conEdoCuenta);
+		layoutDTO = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.COMISIONES_MOV, true);
 		if (layoutDTO != null) {
 			layoutsDTO.add(layoutDTO);
 		}
@@ -1210,28 +1210,27 @@ public class LayoutsService {
 					unidadOperativa);
 			lineasDTO.add(lineaDTO);
 			
-			// Para OXXO, Layout PAGOS y Layout sucursales se agrega las cuentas comision e iva en base al total
+			// Para OXXO, Layout PAGOS y Layout sucursales se agrega las cuentas comision e iva en base al total de operaciones realizadas
 			if (idCorresponsal == CorresponsalEnum.OXXO && tipo == TipoLayoutEnum.PAGOS && grupo == GrupoLayoutEnum.SUCURSALES) {
 
 				// % Comision Proveedor
 				ComisionProveedor comisionProveedor = getComisionProveedor(idCorresponsal);
-				BigDecimal montoDepositado = ConciliacionMathUtil.getMontoDepositadoPorProveedor(monto, comisionProveedor); // Monto depositado
 
 				// Linea Comision
 				LayoutLineaCatalog lineaComisionCatalog = getLayoutLineaCatalog(TipoLayoutEnum.COMISIONES_MOV, grupo, idCorresponsal, OperacionLayoutEnum.DEPOSITOS);
-				BigDecimal comision = ConciliacionMathUtil.getComisionCobradaProveedor(montoDepositado, comisionProveedor);
+				BigDecimal comision = ConciliacionMathUtil.getComisionCobradaProveedor(movimientos.size(), comisionProveedor); // TODO: Verificar si total movimientos midas = total movs proveedor
 				comision = comision.negate();
 				lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaComisionCatalog, comision, unidadOperativa);
 				lineasDTO.add(lineaDTO);
 
 				// Linea comision Iva
 				LayoutLineaCatalog lineaComisionIvaCatalog = getLayoutLineaCatalog(TipoLayoutEnum.COMISIONES_IVA, grupo, idCorresponsal, OperacionLayoutEnum.DEPOSITOS);
-				BigDecimal comisionIva = ConciliacionMathUtil.getComisionIvaCobradaProveedor(montoDepositado, comisionProveedor);
+				BigDecimal comisionIva = ConciliacionMathUtil.getComisionIvaCobradaProveedor(movimientos.size(), comisionProveedor); // TODO: Verificar si total movimientos midas = total movs proveedor
 				comisionIva = comisionIva.negate();
 				lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaComisionIvaCatalog, comisionIva, unidadOperativa);
 				lineasDTO.add(lineaDTO);
 			}
-			
+
 		}
 
 		return lineasDTO;
@@ -1308,7 +1307,7 @@ public class LayoutsService {
 			case COMISIONES_IVA:
 				monto = ((MovimientoComision) movimiento).getMonto();
 				//cantidad total por sucursal positivo
-				//cantidad extraída del estado de cuenta cuando la leyenda sea comisiones. Valores serán colocaos en negativo
+				//cantidad extraída del estado de cuenta cuando la leyenda sea comisiones. Valores serán colocados en negativo
 				if (monto != null) {
 					monto = (grupo == GrupoLayoutEnum.BANCOS ? monto.negate() : monto);
 				}
@@ -1426,10 +1425,6 @@ public class LayoutsService {
 			case COMISIONES_IVA:
 				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionIdAndTipo(idConciliacion, TipoMovimientoComisionEnum.IVA_COMISION));
 				break;
-			//TODO: No identificados aun
-			//case COMISIONES_GENERALES: // TipoMovimientoComisionEnum.GENERALES
-				//movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionIdAndTipo(idConciliacion, TipoMovimientoComisionEnum.GENERAL));
-				//break;
 		}
 		return movimientos;
 	}
