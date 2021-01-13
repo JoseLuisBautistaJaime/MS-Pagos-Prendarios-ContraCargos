@@ -51,7 +51,7 @@ public class EstadoCuentaBrokerBus implements EstadoCuentaBroker {
 		List<String> lines = new ArrayList<String>();
 
 		// Consultar archivo y convertirlo a líneas
-		/*BusRestEstadoCuentaDTO body = new BusRestEstadoCuentaDTO(ruta, archivo);
+		BusRestEstadoCuentaDTO body = new BusRestEstadoCuentaDTO(ruta, archivo);
 		String edoCuentaStr = busEstadoCuentaRestService.consultaEstadoCuenta(body);
 		byte[] base64EstadoCuenta = Base64.decodeBase64(edoCuentaStr);
 		try (BufferedReader reader = new BufferedReader(
@@ -64,9 +64,10 @@ public class EstadoCuentaBrokerBus implements EstadoCuentaBroker {
 			e.printStackTrace();
 			throw new ConciliacionException("Error al recibir el archivo del estado de cuenta",
 					CodigoError.NMP_PMIMONTE_BUSINESS_063);
-		}*/
+		}
 
 		// Dummy
+		/*
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					new ClassPathResource("edocuenta/Escenario1.txt").getInputStream()));
@@ -76,7 +77,7 @@ public class EstadoCuentaBrokerBus implements EstadoCuentaBroker {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 		return lines;
 	}
