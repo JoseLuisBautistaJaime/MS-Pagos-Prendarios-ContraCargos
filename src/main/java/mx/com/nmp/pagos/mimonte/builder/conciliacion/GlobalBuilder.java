@@ -68,7 +68,7 @@ public abstract class GlobalBuilder {
 
 		global.setImporteMidas(ConciliacionMathUtil.getImporteMidas(movsMidas));
 		global.setImporteProveedor(ConciliacionMathUtil.getImporteProveedor(movsProveedor, comisionProveedor));
-		global.setImporteBanco(ConciliacionMathUtil.getImporteBanco(movsEstadoCuenta, codigosEdoCuenta));
+		global.setImporteBanco(ConciliacionMathUtil.getImporteBanco(movsProveedor, movsEstadoCuenta, codigosEdoCuenta, comisionProveedor));
 		global.setImporteDevoluciones(ConciliacionMathUtil.getDevolucionesEstadoCuenta(movsEstadoCuenta, codigosEdoCuenta));
 		global.setDiferenciaProveedorMidas(ConciliacionMathUtil.getDiferenciaProveedorMidas(movsProveedor, movsMidas, comisionProveedor));
 		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta, codigosEdoCuenta, comisionProveedor));

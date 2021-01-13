@@ -478,7 +478,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param folio
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT cec2.id_conciliacion FROM tr_conciliacion_estado_cuenta cec2 WHERE cec2.id_reporte = (SELECT cec.id_reporte FROM tr_conciliacion_estado_cuenta cec WHERE cec.id_conciliacion = :folio )")
+	@Query(nativeQuery = true, value = "SELECT cec2.id_conciliacion FROM tr_conciliacion_estado_cuenta cec2 WHERE cec2.id_reporte = (SELECT MAX(cec.id_reporte) FROM tr_conciliacion_estado_cuenta cec WHERE cec.id_conciliacion = :folio )")
 	public List<Object> getConciliacionesAsociadas(@Param("folio") Long folio);
 	
 	@Query(nativeQuery = true, value="SELECT seq_value FROM seq_conciliacion WHERE seq_name=:name")

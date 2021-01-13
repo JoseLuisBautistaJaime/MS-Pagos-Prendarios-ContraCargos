@@ -478,6 +478,7 @@ public class MovimientosController {
 		// Objetos necesarios
 		Boolean procesoCorrecto = null;
 		String descripcionError = null;
+		CodigoError codigoError = null;
 
 		// Validacion general de objeto y atributos
 		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestMultipleDTO(saveEstadoCuentaRequestMultipleDTO))
@@ -508,6 +509,7 @@ public class MovimientosController {
 				procesoCorrecto = true;
 			} catch (ConciliacionException cex) {
 				procesoCorrecto = false;
+				codigoError = cex.getCodigoError();
 				descripcionError = cex.getCodigoError().getDescripcion();
 				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
 				throw cex;
@@ -520,12 +522,15 @@ public class MovimientosController {
 			} finally {
 				try {
 					// Se actualiza el sub estatus de la conciliacion en base al resultado
-					for(Long folio :saveEstadoCuentaRequestMultipleDTO.getFolios()) {
-						conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
-								procesoCorrecto
-										? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
-										: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
-								descripcionError), userRequest);	
+					// No actualiza subestatus si el error fue por validacion de subestatus
+					if (codigoError != CodigoError.NMP_PMIMONTE_BUSINESS_030) {
+						for(Long folio :saveEstadoCuentaRequestMultipleDTO.getFolios()) {
+							conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
+									procesoCorrecto
+											? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
+											: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
+									descripcionError), userRequest);	
+						}
 					}
 				} catch (Exception ex) {
 					LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
