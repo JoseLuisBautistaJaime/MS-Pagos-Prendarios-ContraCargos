@@ -55,6 +55,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaParserService;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
@@ -595,7 +596,8 @@ public class MovimientosEstadoCuentaService {
 
 			// Obtiene la fecha de la conciliacion
 			Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(idConciliacion, null);
-			Date fechaConciliacion = conciliacion.getCreatedDate();
+			//Date fechaConciliacion = conciliacion.getCreatedDate();
+			Date fechaConciliacion = this.conciliacionHelper.getFechaCargaReporte(idConciliacion, TipoReporteEnum.MIDAS);
 
 			// Se obtienen los movs de estado de cuenta para la conciliacion basadonos en la fecha
 			List<MovimientoEstadoCuenta> movsConciliacion = movsEdoCuenta.stream()
@@ -604,7 +606,7 @@ public class MovimientosEstadoCuentaService {
 
 			if (movsConciliacion != null && movsConciliacion.size() > 0) {
 				// Se crea el reporte para el estado de cuenta y se asocia a la conciliacion
-				Reporte reporteConciliacion = crearReporteConciliacion(conciliacion, userRequest);
+				Reporte reporteConciliacion = crearReporteConciliacion(conciliacion, fechaConciliacion, userRequest);
 	
 				// Si existen movimientos del estado de cuenta para la fecha se persisten
 				crearEdoCuentaConciliacion(reporteConciliacion, movsConciliacion);
@@ -613,7 +615,7 @@ public class MovimientosEstadoCuentaService {
 
 				// Registro de actividad
 				actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion),
-						"Se distribuyo el estado de cuenta para la conciliacion con el folio " + idConciliacion,
+						"Se distribuyo el estado de cuenta para la conciliacion",
 						TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 			}
 		}
@@ -623,15 +625,16 @@ public class MovimientosEstadoCuentaService {
 	/**
 	 * Crea un reporte para el estado de cuenta para la conciliacion 
 	 * @param conciliacion
+	 * @param 
 	 * @param userRequest
 	 * @return
 	 */
-	private Reporte crearReporteConciliacion(Conciliacion conciliacion, String userRequest) throws ConciliacionException {
+	private Reporte crearReporteConciliacion(Conciliacion conciliacion, Date fechaConciliacion, String userRequest) throws ConciliacionException {
 		Reporte reporte = null;
 		try {
 			SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO = new SaveEstadoCuentaRequestDTO();
-			saveEstadoCuentaRequestDTO.setFechaFinal(conciliacion.getCreatedDate());
-			saveEstadoCuentaRequestDTO.setFechaInicial(conciliacion.getCreatedDate());
+			saveEstadoCuentaRequestDTO.setFechaFinal(fechaConciliacion);
+			saveEstadoCuentaRequestDTO.setFechaInicial(fechaConciliacion);
 			saveEstadoCuentaRequestDTO.setFolio(conciliacion.getId());
 			reporte = save(saveEstadoCuentaRequestDTO, userRequest);
 		}

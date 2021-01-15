@@ -6,8 +6,6 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -272,7 +270,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param conciliacionId
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO(mm.sucursal, SUM(mm.monto)) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id WHERE r.conciliacion.id = :conciliacionId GROUP BY mm.sucursal")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO(mm.sucursal, SUM(mm.monto), COUNT(mm.id)) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id WHERE r.conciliacion.id = :conciliacionId GROUP BY mm.sucursal")
 	public List<MovimientoMidasDTO> getMovimientosMidasBySucursal(@Param("conciliacionId") final Long conciliacionId);
 
 	/**

@@ -500,5 +500,8 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 
 	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(con.id) FROM to_conciliacion con WHERE con.id IN :foliosList AND con.proveedor <> :corresponsal ) > 0 THEN 0 ELSE 1 END AS flag")
 	public Object validateCorresponsalOxxoAndFolios(@Param("foliosList") final List<Long> foliosList, @Param("corresponsal") final String corresponsal);
-	
+
+	@Query(nativeQuery = true, value = "SELECT r.fecha_desde FROM to_reporte r WHERE r.id = (SELECT MAX(r1.id) FROM to_reporte r1 WHERE r1.id_conciliacion = :idConciliacion AND r1.tipo = :tipo)")
+	public Date findDateReporte(@Param("idConciliacion") Long idConciliacion, @Param("tipo") String tipo);
+
 }

@@ -1213,19 +1213,21 @@ public class LayoutsService {
 			// Para OXXO, Layout PAGOS y Layout sucursales se agrega las cuentas comision e iva en base al total de operaciones realizadas
 			if (idCorresponsal == CorresponsalEnum.OXXO && tipo == TipoLayoutEnum.PAGOS && grupo == GrupoLayoutEnum.SUCURSALES) {
 
+				long operaciones = ((MovimientoPago) movimiento).getOperaciones();
+				
 				// % Comision Proveedor
 				ComisionProveedor comisionProveedor = getComisionProveedor(idCorresponsal);
 
 				// Linea Comision
 				LayoutLineaCatalog lineaComisionCatalog = getLayoutLineaCatalog(TipoLayoutEnum.COMISIONES_MOV, grupo, idCorresponsal, OperacionLayoutEnum.DEPOSITOS);
-				BigDecimal comision = ConciliacionMathUtil.getComisionCobradaProveedor(1, comisionProveedor); // TODO: Verificar si total movimientos midas = total movs proveedor
+				BigDecimal comision = ConciliacionMathUtil.getComisionCobradaProveedor(operaciones, comisionProveedor); // TODO: Verificar si total movimientos midas = total movs proveedor
 				comision = comision.negate();
 				lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaComisionCatalog, comision, unidadOperativa);
 				lineasDTO.add(lineaDTO);
 
 				// Linea comision Iva
 				LayoutLineaCatalog lineaComisionIvaCatalog = getLayoutLineaCatalog(TipoLayoutEnum.COMISIONES_IVA, grupo, idCorresponsal, OperacionLayoutEnum.DEPOSITOS);
-				BigDecimal comisionIva = ConciliacionMathUtil.getComisionIvaCobradaProveedor(1, comisionProveedor); // TODO: Verificar si total movimientos midas = total movs proveedor
+				BigDecimal comisionIva = ConciliacionMathUtil.getComisionIvaCobradaProveedor(operaciones, comisionProveedor); // TODO: Verificar si total movimientos midas = total movs proveedor
 				comisionIva = comisionIva.negate();
 				lineaDTO = LayoutsBuilder.buildLayoutLineaDTOFromLayoutLineaCatalog(lineaComisionIvaCatalog, comisionIva, unidadOperativa);
 				lineasDTO.add(lineaDTO);
@@ -1456,6 +1458,7 @@ public class LayoutsService {
 					movPago.setMovimientoMidas(movMidas);
 					movPago.setMonto(movDTO.getMontoOperacion());
 					movPago.setNuevo(false);
+					movPago.setOperaciones(movDTO.getOperaciones());
 					movimientosMidas.add(movPago);
 				}
 			}

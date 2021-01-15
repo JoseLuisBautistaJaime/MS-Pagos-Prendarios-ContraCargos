@@ -96,7 +96,7 @@ public class ConciliacionMathUtil {
 	 * @param comisionProveedor
 	 * @return
 	 */
-	public static BigDecimal getComisionCobradaProveedor(int totalOperaciones, ComisionProveedor comisionProveedor) {
+	public static BigDecimal getComisionCobradaProveedor(long totalOperaciones, ComisionProveedor comisionProveedor) {
 		BigDecimal comision = new BigDecimal(0);
 		if (comisionProveedor != null && comisionProveedor.getComision() != null) {
 			comision = new BigDecimal(totalOperaciones).multiply(comisionProveedor.getComision());
@@ -111,7 +111,7 @@ public class ConciliacionMathUtil {
 	 * @param comisionProveedor
 	 * @return
 	 */
-	public static BigDecimal getComisionIvaCobradaProveedor(int totalOperaciones, ComisionProveedor comisionProveedor) {
+	public static BigDecimal getComisionIvaCobradaProveedor(long totalOperaciones, ComisionProveedor comisionProveedor) {
 		BigDecimal ivaComision = new BigDecimal(0);
 		if (comisionProveedor != null && comisionProveedor.getIva() != null) {
 			ivaComision = new BigDecimal(totalOperaciones).multiply(comisionProveedor.getIva());
