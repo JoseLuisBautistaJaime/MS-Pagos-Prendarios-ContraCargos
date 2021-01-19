@@ -213,6 +213,7 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_bonificacion` (
   `plaza` VARCHAR(50),
   `importe_ml` DECIMAL(16,4) NOT NULL,
   `folio_bonificacion` VARCHAR(50),
+  `sucursal` INT(11),
   `id_estatus_bonificacion` INT(11) NOT NULL,
   `id_conciliacion` BIGINT(20) NOT NULL,
   `created_by` VARCHAR(100) NOT NULL,

@@ -24,7 +24,6 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusBonificacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoBonificacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.BonificacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.EstatusBonificacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
@@ -102,6 +101,12 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 		// Validar campos
 		if (dto.getEstatus() == null || dto.getEstatus().getId() == 0) {
 			throw new ConciliacionException("Estatus incorrecto",
+					CodigoError.NMP_PMIMONTE_0001);
+		}
+
+		// Validar campos
+		if (dto.getSucursal() == null || dto.getSucursal() <= 0) {
+			throw new ConciliacionException("Sucursal incorrecta",
 					CodigoError.NMP_PMIMONTE_0001);
 		}
 

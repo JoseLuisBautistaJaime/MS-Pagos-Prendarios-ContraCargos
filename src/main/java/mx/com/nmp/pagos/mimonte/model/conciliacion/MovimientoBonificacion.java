@@ -57,6 +57,9 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 	@Column(name = "plaza")
 	private String plaza;
 
+	@Column(name = "sucursal")
+	private Long sucursal;
+
 	@Column(name = "importe_ml")
 	private BigDecimal importeML;
 
@@ -159,10 +162,18 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 		this.idConciliacion = idConciliacion;
 	}
 
+	public Long getSucursal() {
+		return sucursal;
+	}
+
+	public void setSucursal(Long sucursal) {
+		this.sucursal = sucursal;
+	}
+
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, asignacion, fechaDoc, tienda, plaza, importeML, folioBonificacion,
+		return Objects.hash(id, asignacion, fechaDoc, tienda, plaza, importeML, folioBonificacion, sucursal,
 				estatus, idConciliacion, super.createdBy, super.createdDate, super.lastModifiedBy, super.lastModifiedDate);
 	}
 
@@ -182,7 +193,7 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 	@Override
 	public String toString() {
 		return "MovimientoBonificacion [id=" + id + ", asignacion=" + asignacion + ", numDoc=" + numDoc + ", fechaDoc="
-				+ fechaDoc + ", tienda=" + tienda + ", plaza=" + plaza + ", importeML=" + importeML + ", folioBonificacion=" + folioBonificacion
+				+ fechaDoc + ", tienda=" + tienda + ", plaza=" + plaza + ", importeML=" + importeML + ", sucursal=" + sucursal +  ", folioBonificacion=" + folioBonificacion
 				+ ", estatus=" + estatus + ", idConciliacion=" + idConciliacion + "]";
 	}
 

@@ -63,6 +63,7 @@ public class BonificacionesBuilder {
 			dto.setFolioBonificacion(bonificacion.getFolioBonificacion());
 			dto.setEstatus(EstatusBonificacionesBuilder.buildDTO(bonificacion.getEstatus()));
 			dto.setFolio(bonificacion.getIdConciliacion());
+			dto.setSucursal(bonificacion.getSucursal());
 			dto.setCreatedBy(bonificacion.getCreatedBy());
 			dto.setCreatedDate(bonificacion.getCreatedDate());
 			dto.setLastModifiedBy(bonificacion.getLastModifiedBy());
@@ -87,6 +88,7 @@ public class BonificacionesBuilder {
 			bonificacion.setTienda(dto.getTienda());
 			bonificacion.setPlaza(dto.getPlaza());
 			bonificacion.setImporteML(dto.getImporteML());
+			bonificacion.setSucursal(dto.getSucursal());
 			bonificacion.setFolioBonificacion(dto.getFolioBonificacion());
 			bonificacion.setEstatus(EstatusBonificacionesBuilder.build(dto.getEstatus()));
 			bonificacion.setIdConciliacion(dto.getFolio());

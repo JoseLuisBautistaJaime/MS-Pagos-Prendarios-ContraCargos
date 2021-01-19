@@ -34,6 +34,7 @@ public class BonificacionDTO implements Serializable {
 	private Date lastModifiedDate;
 	private String createdBy;
 	private String lastModifiedBy;
+	private Long sucursal;
 
 
 	public BonificacionDTO() {		
@@ -152,10 +153,18 @@ public class BonificacionDTO implements Serializable {
 		this.lastModifiedBy = lastModifiedBy;
 	}
 
+	public Long getSucursal() {
+		return sucursal;
+	}
+
+	public void setSucursal(Long sucursal) {
+		this.sucursal = sucursal;
+	}
+
 	@Override
 	public String toString() {
 		return "BonificacionDTO [id=" + id + ", asignacion=" + asignacion + ", numDoc=" + numDoc + ", fechaDoc="
-				+ fechaDoc + ", tienda=" + tienda + ", plaza=" + plaza + ", importeML=" + importeML
+				+ fechaDoc + ", tienda=" + tienda + ", plaza=" + plaza + ", importeML=" + importeML + ", sucursal=" + sucursal
 				+ ", folioBonificacion=" + folioBonificacion + ", estatus=" + estatus + ", folio=" + folio
 				+ ", createdDate=" + createdDate + ", lastModifiedDate=" + lastModifiedDate + ", createdBy=" + createdBy
 				+ ", lastModifiedBy=" + lastModifiedBy + "]";
