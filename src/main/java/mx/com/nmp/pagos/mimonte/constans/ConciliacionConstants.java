@@ -376,6 +376,11 @@ public final class ConciliacionConstants {
 	public static final String TIPO_TRANSACCION_OPENPAY_CARGO = "charge";
 	public static final String TIPO_OPERACION_OPENPAY_IN = "in";
 
+	// Estatus bonificaciones
+	public static final Integer ESTATUS_BONIFICACION_PENDIENTE = 1;
+	public static final Integer ESTATUS_BONIFICACION_REVERSA = 2;
+	public static final Integer ESTATUS_BONIFICACION_CONCILIADA = 3;
+
 	/**
 	 * Mensaje que es mostrado cuando se desea actualizar un sub estatus que no
 	 * tiene asociado nungun estatus

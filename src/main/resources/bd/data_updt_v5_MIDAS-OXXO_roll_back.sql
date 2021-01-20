@@ -41,6 +41,7 @@ DROP TABLE tc_comision_proveedor;
 
 ALTER TABLE to_movimiento_transito DROP COLUMN transaccion;
 
+DELETE FROM tc_layout_linea WHERE corresponsal = "OXXO";
 ALTER TABLE tc_layout_linea DROP COLUMN corresponsal; 
 ALTER TABLE tc_layout_linea DROP COLUMN operacion;
 

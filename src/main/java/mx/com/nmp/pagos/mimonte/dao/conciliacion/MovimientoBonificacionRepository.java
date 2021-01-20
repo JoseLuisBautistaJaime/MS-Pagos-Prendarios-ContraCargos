@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -50,5 +51,13 @@ public interface MovimientoBonificacionRepository extends JpaRepository<Movimien
 	 * @return
 	 */
 	public List<MovimientoBonificacion> findByIdConciliacionAndEstatusIdIn(Long folio, List<Integer> ids);
+
+	/**
+	 * 
+	 * @param fechaDoc
+	 * @param ids
+	 * @return
+	 */
+	public List<MovimientoBonificacion> findByFechaDocAndEstatusIdIn(Date fechaDoc, List<Integer> ids);
 
 }
