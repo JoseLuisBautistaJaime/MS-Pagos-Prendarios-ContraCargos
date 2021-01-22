@@ -385,8 +385,9 @@ public class MovimientosEstadoCuentaService {
 		}
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion),
-				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
+		Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(idConciliacion);
+		actividadGenericMethod.registroActividadV2(folioConciliacion,
+				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + folioConciliacion,
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 	}
 
@@ -519,12 +520,6 @@ public class MovimientosEstadoCuentaService {
 			fechaEstadoCuenta = cal.getTime();
 		}
 
-		// Registro de actividad
-		/*actividadGenericMethod.registroActividad(idConciliacion,
-				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
-				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
-		*/
-
 		// Se distribuye el estado de cuenta entre las conciliaciones
 		distribuirEstadoCuenta(reporte, request.getFolios(), userRequest);
 
@@ -611,12 +606,14 @@ public class MovimientosEstadoCuentaService {
 				// Si existen movimientos del estado de cuenta para la fecha se persisten
 				crearEdoCuentaConciliacion(reporteConciliacion, movsConciliacion);
 
-				// TODO: Se ejecuta el merge y se actualiza el subestatus de la conciliacion
-
 				// Registro de actividad
-				actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion),
-						"Se distribuyo el estado de cuenta para la conciliacion",
+				Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(idConciliacion);
+				actividadGenericMethod.registroActividadV2(folioConciliacion,
+						"Se distribuyo el estado de cuenta para la conciliacion con el folio " + folioConciliacion,
 						TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+
+				// TODO: Se ejecuta el merge y se actualiza el subestatus de la conciliacion
+				this.conciliacionService.generarConciliacion(idConciliacion, userRequest);
 			}
 		}
 	}
