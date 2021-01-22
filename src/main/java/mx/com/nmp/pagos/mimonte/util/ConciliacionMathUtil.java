@@ -147,10 +147,12 @@ public class ConciliacionMathUtil {
 	 * (Cantidad de liquidación reflejada en el estado de cuenta, para el proceso de preconciliación este campo obtendrá el moto 0.00 ya que aún no se importa el estado de cuenta.)
 	 * @param movsEstadoCuenta
 	 * @param codigosEstadoCuenta
+	 * @param comisionProveedor
+	 * @param totalOperaciones
 	 * @return
 	 */
-	public static BigDecimal getImporteBanco(List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta,
-			CodigosEdoCuentaMap codigosEdoCuenta, ComisionProveedor comisionProveedor) {
+	public static BigDecimal getImporteBanco(List<MovimientoEstadoCuenta> movsEstadoCuenta,
+			CodigosEdoCuentaMap codigosEdoCuenta, ComisionProveedor comisionProveedor, int totalOperaciones) {
 		BigDecimal montoLiquidacion = new BigDecimal(0);
 		if (movsEstadoCuenta != null) {
 			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
@@ -166,10 +168,10 @@ public class ConciliacionMathUtil {
 		}
 
 		// Se adiciona la comision e iva para complementar el monto total depositado
-		if (comisionProveedor != null && montoLiquidacion.compareTo(new BigDecimal(0)) > 0 && movsProveedor != null) {
+		if (comisionProveedor != null && montoLiquidacion.compareTo(new BigDecimal(0)) > 0 && totalOperaciones > 0) {
 			if (movsEstadoCuenta != null && movsEstadoCuenta.size() > 0) {
-				BigDecimal montoBancoComision = getComisionCobradaProveedor(movsProveedor.size(), comisionProveedor); // Comision por el total de operaciones
-				BigDecimal montoBancoComisionIva = getComisionIvaCobradaProveedor(movsProveedor.size(), comisionProveedor); // Comision Iva por el total de operaciones
+				BigDecimal montoBancoComision = getComisionCobradaProveedor(totalOperaciones, comisionProveedor); // Comision por el total de operaciones
+				BigDecimal montoBancoComisionIva = getComisionIvaCobradaProveedor(totalOperaciones, comisionProveedor); // Comision Iva por el total de operaciones
 				montoLiquidacion = montoLiquidacion.add(montoBancoComision).add(montoBancoComisionIva);
 			}
 		}
@@ -213,13 +215,14 @@ public class ConciliacionMathUtil {
 	 * @param movsEstadoCuenta
 	 * @param codigosEdoCuenta
 	 * @param comisionProveedor
+	 * @param totalOperaciones
 	 * @return
 	 */
 	public static BigDecimal getDiferenciaProveedorBanco(List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta,
-			CodigosEdoCuentaMap codigosEdoCuenta, ComisionProveedor comisionProveedor) {
+			CodigosEdoCuentaMap codigosEdoCuenta, ComisionProveedor comisionProveedor, int totalOperaciones) {
 
 		// Movimientos de estado de cuenta
-		BigDecimal montoBanco = getImporteBanco(movsProveedor, movsEstadoCuenta, codigosEdoCuenta, comisionProveedor);
+		BigDecimal montoBanco = getImporteBanco(movsEstadoCuenta, codigosEdoCuenta, comisionProveedor, totalOperaciones);
 		/*if (movsEstadoCuenta != null && movsEstadoCuenta.size() > 0) {
 			montoBanco = getImporteBanco(movsEstadoCuenta, codigosEdoCuenta);
 			BigDecimal montoBancoComision = getComisionCobradaProveedor(movsProveedor.size(), comisionProveedor); // Comision por el total de operaciones

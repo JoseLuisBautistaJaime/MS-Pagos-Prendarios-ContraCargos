@@ -350,10 +350,11 @@ public class LayoutsService {
 
 		if (null != layoutDTO.getFolio() && null != layoutDTO.getTipoLayout() && null != layoutDTO.getLineas()) {
 			// Registro de actividad
+			Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(layoutDTO.getFolio());
 			String desc = "Se crea el layout del tipo: ".concat(layoutDTO.getTipoLayout().toString())
 					.concat(", con un total de ").concat(String.valueOf(layoutDTO.getLineas().size()))
-					.concat(" lineas, pertenecirente a la conciliacion: ").concat(String.valueOf(layoutDTO.getFolio()));
-			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(layoutDTO.getFolio()), desc, TipoActividadEnum.ACTIVIDAD,
+					.concat(" lineas, perteneciente a la conciliacion: ").concat(String.valueOf(folioConciliacion));
+			actividadGenericMethod.registroActividadV2(folioConciliacion, desc, TipoActividadEnum.ACTIVIDAD,
 					SubTipoActividadEnum.LAYOUTS);
 		}
 	}
@@ -431,9 +432,10 @@ public class LayoutsService {
 					CodigoError.NMP_PMIMONTE_BUSINESS_114);
 		} finally {
 			if (flagAct && null != idConciliacion && null != idLayout) {
+				Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(idConciliacion);
 				String desc = "Se elimino el layout con id: ".concat(String.valueOf(idLayout))
-						.concat(", perteneciente a la conciliacion: ").concat(String.valueOf(idConciliacion));
-				actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion), desc, TipoActividadEnum.ACTIVIDAD,
+						.concat(", perteneciente a la conciliacion: ").concat(String.valueOf(folioConciliacion));
+				actividadGenericMethod.registroActividadV2(folioConciliacion, desc, TipoActividadEnum.ACTIVIDAD,
 						SubTipoActividadEnum.LAYOUTS);
 			}
 		}
@@ -486,10 +488,11 @@ public class LayoutsService {
 			throw new ConciliacionException("Error al eliminar la linea del layout asignada al id " + idLinea,
 					CodigoError.NMP_PMIMONTE_BUSINESS_085);
 		} finally {
+			Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(idConciliacion);
 			if (flagAct && null != idLinea && null != idConciliacion) {
 				String desc = "Se elimino la linea con id: ".concat(String.valueOf(idLinea))
-						.concat(", perteneciente a la conciliacion: ").concat(String.valueOf(idConciliacion));
-				actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion), desc, TipoActividadEnum.ACTIVIDAD,
+						.concat(", perteneciente a la conciliacion: ").concat(String.valueOf(folioConciliacion));
+				actividadGenericMethod.registroActividadV2(folioConciliacion, desc, TipoActividadEnum.ACTIVIDAD,
 						SubTipoActividadEnum.LAYOUTS);
 			}
 		}
@@ -1626,7 +1629,7 @@ public class LayoutsService {
 				}
 			}
 			// Se agrupa por sucursal
-			movimientosBonificaciones = MovimientosBuilder.groupMovimientosBySucursal(movimientosBonificaciones, TipoMovimientoEnum.MIDAS);
+			movimientosBonificaciones = MovimientosBuilder.groupMovimientosBySucursal(movimientosBonificaciones, TipoMovimientoEnum.PAGO);
 		}
 		return movimientosBonificaciones;
 	}

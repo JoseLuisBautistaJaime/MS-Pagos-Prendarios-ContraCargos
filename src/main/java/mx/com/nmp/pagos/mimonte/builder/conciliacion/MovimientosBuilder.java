@@ -667,9 +667,12 @@ public abstract class MovimientosBuilder {
 								break;
 							case MIDAS:
 								MovimientoMidas movMidasNew = new MovimientoMidas();
-								movMidasNew.setMonto(((MovimientoDevolucion)mov).getMonto());
+								movMidasNew.setMonto(((MovimientoMidas)mov).getMonto());
 								movMidasNew.setSucursal(((MovimientoMidas)mov).getSucursal());
 								movBySuc = movMidasNew;
+								break;
+							case PAGO:
+								movBySuc = mov;
 								break;
 						}
 						bySuc.put(suc, movBySuc);
@@ -691,6 +694,15 @@ public abstract class MovimientosBuilder {
 								BigDecimal montoMidasBySuc = movMidasBySuc.getMonto() != null ? movMidasBySuc.getMonto() : new BigDecimal(0);
 								montoMidasBySuc = montoMidasBySuc.add(movMidas.getMonto() != null ? movMidas.getMonto() : new BigDecimal(0));
 								movMidasBySuc.setMonto(montoMidasBySuc);
+								break;
+							case PAGO:
+								// Se agrega el monto al total
+								MovimientoPago movPago = (MovimientoPago) mov;
+								MovimientoPago movPagoBySuc = (MovimientoPago) movBySuc;
+								BigDecimal montoPagoBySuc = movPagoBySuc.getMonto() != null ? movPagoBySuc.getMonto() : new BigDecimal(0);
+								montoPagoBySuc = montoPagoBySuc.add(movPago.getMonto() != null ? movPago.getMonto() : new BigDecimal(0));
+								movPagoBySuc.setMonto(montoPagoBySuc);
+								movPagoBySuc.getMovimientoMidas().setMonto(montoPagoBySuc);
 								break;
 						}
 					}

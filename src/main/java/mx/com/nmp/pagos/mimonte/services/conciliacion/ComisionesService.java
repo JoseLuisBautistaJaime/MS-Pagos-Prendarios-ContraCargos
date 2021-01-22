@@ -311,9 +311,10 @@ public class ComisionesService {
 				comisionTransaccionRealSet, comisionTransaccion, comisionesTransDTO));
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(comisionesTransaccionesRequestDTO.getIdConciliacion()),
+		Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(comisionesTransaccionesRequestDTO.getIdConciliacion());
+		actividadGenericMethod.registroActividadV2(folioConciliacion,
 				"Se genero la consulta de Comisiones/Transacciones para la conciliacion con el folio: "
-						.concat(String.valueOf(comisionesTransaccionesRequestDTO.getIdConciliacion()))
+						.concat(String.valueOf(folioConciliacion))
 						.concat(", con una comision bancaria de: ")
 						.concat(String.valueOf(comisionesTransaccionesRequestDTO.getComision())),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.COMISIONES);
@@ -392,9 +393,10 @@ public class ComisionesService {
 		result.put("flag", flagNew);
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(comisionSaveDTO.getFolio()),
+		Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(comisionSaveDTO.getFolio());
+		actividadGenericMethod.registroActividadV2(folioConciliacion,
 				(flagNew ? "Se agrego una nueva comision para la conciliacion con el folio: "
-						: "Se actualizo una comision de la conciliacion con el folio ").concat(String.valueOf(comisionSaveDTO.getFolio()))
+						: "Se actualizo una comision de la conciliacion con el folio ").concat(String.valueOf(folioConciliacion))
 								.concat(", por el concepto: ").concat(comisionSaveDTO.getDescripcion())
 								.concat(", con un monto de: $ ").concat(String.valueOf(comisionSaveDTO.getMonto())),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.COMISIONES);
@@ -481,10 +483,11 @@ public class ComisionesService {
 		}
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(comisionDeleteDTO.getFolio()),
+		Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(comisionDeleteDTO.getFolio());
+		actividadGenericMethod.registroActividadV2(folioConciliacion,
 				"Se realizo la eliminacion de ".concat(String.valueOf(comisionDeleteDTO.getIdComisiones().size()))
 						.concat(" comision(es) de la conciliacion con el folio: ")
-						.concat(String.valueOf(comisionDeleteDTO.getFolio())),
+						.concat(String.valueOf(folioConciliacion)),
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.COMISIONES);
 	}
 
