@@ -232,6 +232,20 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_bonificacion` (
 ) ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
+CREATE TABLE IF NOT EXISTS `to_movimiento_bonificacion_referencia` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `referencia` VARCHAR(50),
+  `monto` DECIMAL(16,4) NOT NULL,
+  `sucursal` INT(11),
+  `id_movimiento_bonificacion` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `movimiento_bonificacion_fk_idx` (`id_movimiento_bonificacion`),
+  CONSTRAINT `movimiento_bonificacion_fk`
+    FOREIGN KEY (`id_movimiento_bonificacion`)
+    REFERENCES `to_movimiento_bonificacion` (`id`)
+)
+DEFAULT CHARACTER SET = latin1;
+
 -- --------------------------- CAMBIOS NUEVOS EN MAQUINA DE ESTADOS INICIO ----------------- --
 -- ------------------- SE DUPLICAN LOS ACTUALES ESTADOS DE OPENPAY PARA OXXO ------------ --
 -- INSERT INTO tk_maquina_estados_subestatus_conciliacion (nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
@@ -724,3 +738,5 @@ INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_
 UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Proveedor' WHERE id = 5;
 UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Proveedor Completada' WHERE id = 6;
 UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Proveedor Error' WHERE id = 7;
+
+UPDATE `tk_estatus_movimientos_en_transito` SET `nombre` = 'No identificada en Proveedor', `descripcion` = 'No identificada en Proveedor' WHERE (`id` = '4');

@@ -4,12 +4,14 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.BonificacionesBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
+import mx.com.nmp.pagos.mimonte.consumer.rest.BusConsultaPagosRestService;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestConsultaPagosDTO;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestConsultaPagosResponseDTO;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusBonificacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoBonificacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.BonificacionDTO;
@@ -27,6 +32,7 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.EstatusBonificacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoBonificacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
@@ -74,6 +80,12 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 	@Inject
 	private ObjectsInSession objectsInSession;
 
+	@Autowired
+	private BusConsultaPagosRestService busConsultaPagosRestService;
+
+	
+
+	
 	public List<BonificacionDTO> consulta(Long folio) {
 
 		if (folio < 1)
@@ -95,27 +107,46 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 	@Transactional
 	public BonificacionDTO save(BonificacionDTO dto, String usuario) {
 
-		// Valida que el folio de conciliacion exista
-		conciliacionDataValidator.validateFolioExists(dto.getFolio());
-
 		// Validar campos
+		if (dto.getFolio() == null || dto.getFolio() <= 0) {
+			throw new ConciliacionException("Folio conciliacion incorrecto",
+					CodigoError.NMP_PMIMONTE_0001);
+		}
 		if (dto.getEstatus() == null || dto.getEstatus().getId() == 0) {
 			throw new ConciliacionException("Estatus incorrecto",
 					CodigoError.NMP_PMIMONTE_0001);
 		}
-
-		// Validar campos
-		if (dto.getSucursal() == null || dto.getSucursal() <= 0) {
-			throw new ConciliacionException("Sucursal incorrecta",
+		if (StringUtils.isBlank(dto.getFolioBonificacion())) {
+			throw new ConciliacionException("Folio incorrecto",
+					CodigoError.NMP_PMIMONTE_0001);
+		}
+		if (dto.getImporteML() == null || dto.getImporteML().compareTo(new BigDecimal(0)) <= 0) {
+			throw new ConciliacionException("Importe incorrecto",
 					CodigoError.NMP_PMIMONTE_0001);
 		}
 
+		// Valida que el folio de conciliacion exista
+		conciliacionDataValidator.validateFolioExists(dto.getFolio());
+		Long folioConciliacion = conciliacionHelper.getFolioConciliacionById(dto.getFolio());
+
+		// Se valida la referencia
+		BusRestConsultaPagosDTO request = new BusRestConsultaPagosDTO(dto.getFolioBonificacion(), CorresponsalEnum.OXXO.name());
+		BusRestConsultaPagosResponseDTO referencia = busConsultaPagosRestService.consultaPagos(request);
+		LOG.debug("referencia=" + referencia);
+
+		// Se valida ya sea la sucursal o la referencia
+		if ((dto.getSucursal() == null || dto.getSucursal() < 0) && referencia == null) {
+			throw new ConciliacionException("Sucursal o referencia incorrecta",
+					CodigoError.NMP_PMIMONTE_0001);
+		}
+
+		
 		// Extrae los ids y los pone en una lista
-		MovimientoBonificacion bonificacion = BonificacionesBuilder.build(dto);
+		MovimientoBonificacion bonificacion = BonificacionesBuilder.build(dto, usuario, referencia);
 		try {
 
 			// Se obtiene de la BD
-			if (bonificacion.getId() != null && bonificacion.getId() > 0) {
+			if (dto.getId() != null && dto.getId() > 0) {
 				Optional<MovimientoBonificacion> movBonificacionOpt = movimientoBonificacionRepository.findById(bonificacion.getId());
 				if (!movBonificacionOpt.isPresent()) {
 					throw new ConciliacionException("Bonificacion con id " + bonificacion.getId() + " no existe",
@@ -124,6 +155,12 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 				MovimientoBonificacion bonificacionBD = movBonificacionOpt.get();
 				bonificacion.setCreatedBy(bonificacionBD.getCreatedBy());
 				bonificacion.setCreatedDate(bonificacionBD.getCreatedDate());
+				bonificacion.setId(bonificacionBD.getId());
+				
+				if (bonificacionBD.getReferencias() != null) {
+					bonificacionBD.getReferencias().clear();
+					this.movimientoBonificacionRepository.save(bonificacionBD);// Se limpian las referencias
+				} 
 			}
 			
 			// Get status
@@ -143,6 +180,11 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 				bonificacion.setLastModifiedDate(new Date());
 			}
 			bonificacion = this.movimientoBonificacionRepository.save(bonificacion);
+
+			// Registro de actividad
+			actividadGenericMethod.registroActividadV2(folioConciliacion, "Se agrega bonificacion para la conciliacion " + folioConciliacion,
+					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+
 		} catch (ConciliacionException ex) {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
@@ -168,10 +210,10 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 
 			this.movimientoBonificacionRepository.delete(bonificacion);
 			
-			Long folioConciliacion = this.conciliacionHelper.getFolioConciliacionById(bonificacion.getIdConciliacion());
+			Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(bonificacion.getIdConciliacion());
 
 			// Registro de actividad
-			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(bonificacion.getIdConciliacion()), "Se elimino la bonificacion para la conciliacion " + folioConciliacion,
+			actividadGenericMethod.registroActividadV2(folioConciliacion, "Se elimino la bonificacion para la conciliacion " + folioConciliacion,
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
 		} catch (Exception ex) {

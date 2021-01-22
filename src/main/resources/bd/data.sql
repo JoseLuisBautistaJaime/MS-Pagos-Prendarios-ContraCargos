@@ -213,7 +213,7 @@ INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus
 INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
 (3, 'Marcada devolucion', 'Marcada para devolucion', true, now(), null, 'Sistema', null, 'MDEV');
 INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(4, 'No identificada en Open Pay', 'No identificada en Open Pay', true, now(), null, 'Sistema', null, 'NIOP');
+(4, 'No identificada en Proveedor', 'No identificada en Proveedor', true, now(), null, 'Sistema', null, 'NIOP');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --

@@ -7,7 +7,10 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,9 +19,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
 import mx.com.nmp.pagos.mimonte.model.EstatusBonificacion;
 import mx.com.nmp.pagos.mimonte.model.Updatable;
 
@@ -72,6 +78,9 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 
 	@Column(name = "id_conciliacion")
 	private Long idConciliacion;
+
+	@OneToMany(mappedBy = "movimientoBonificacion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private List<MovimientoBonificacionReferencia> referencias;
 
 
 	public MovimientoBonificacion() {
@@ -170,6 +179,19 @@ public class MovimientoBonificacion extends Updatable implements Serializable {
 		this.sucursal = sucursal;
 	}
 
+	public List<MovimientoBonificacionReferencia> getReferencias() {
+		return referencias;
+	}
+
+	public void setReferencias(List<MovimientoBonificacionReferencia> referencias) {
+		this.referencias = referencias;
+	}
+
+	
+	@Transient
+	public void addReferencia(MovimientoBonificacionReferencia referencia) {
+		
+	}
 
 	@Override
 	public int hashCode() {

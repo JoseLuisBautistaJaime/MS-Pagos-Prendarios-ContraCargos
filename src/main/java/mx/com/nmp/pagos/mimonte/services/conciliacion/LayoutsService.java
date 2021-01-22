@@ -68,6 +68,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutHeaderCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLinea;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoBonificacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoBonificacionReferencia;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
@@ -953,6 +954,12 @@ public class LayoutsService {
 			layoutsDTO.add(layoutPagosDTO);
 		}
 
+		// DEVOLUCIONES ////
+		LayoutDTO layoutDTODevoluciones = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.DEVOLUCIONES, true);
+		if (layoutDTODevoluciones != null) {
+			layoutsDTO.add(layoutDTODevoluciones);
+		}
+
 		// COMISIONES MOVIMIENTOS SE OBTIENEN DEL ESTADO DE CUENTA
 		LayoutDTO layoutComisionesDTO = buildLayoutDTO(idConciliacion, idCorresponsal, TipoLayoutEnum.COMISIONES_MOV, true);
 		if (layoutComisionesDTO != null) {
@@ -1228,9 +1235,9 @@ public class LayoutsService {
 					unidadOperativa);
 			lineasDTO.add(lineaDTO);
 			
-			// Para OXXO, Layout PAGOS y BONIFICACIONES, grupo sucursales se agrega las cuentas comision e iva en base al total de operaciones realizadas
+			// Para OXXO, Layout PAGOS grupo sucursales se agrega las cuentas comision e iva en base al total de operaciones realizadas
 			if (idCorresponsal == CorresponsalEnum.OXXO &&
-					(tipo == TipoLayoutEnum.PAGOS || tipo == TipoLayoutEnum.BONIFICACIONES) &&
+					tipo == TipoLayoutEnum.PAGOS &&
 					grupo == GrupoLayoutEnum.SUCURSALES) {
 
 				long operaciones = ((MovimientoPago) movimiento).getOperaciones();
@@ -1461,24 +1468,8 @@ public class LayoutsService {
 				movimientos.addAll(movimientoConciliacionRepository.findMovimientoComisionByConciliacionIdAndTipo(idConciliacion, TipoMovimientoComisionEnum.IVA_COMISION));
 				break;
 			case BONIFICACIONES:
-				List<Integer> idEstatusBonificacion = Arrays.asList(ConciliacionConstants.ESTATUS_BONIFICACION_CONCILIADA);
-				List<MovimientoBonificacion> movsBonificacion = this.movimientoBonificacionRepository.findByIdConciliacionAndEstatusIdIn(idConciliacion, idEstatusBonificacion);
-				if (movsBonificacion != null && movsBonificacion.size() > 0) {
-					for (MovimientoBonificacion movBonificacion : movsBonificacion) {
-						// Se crea un movimiento pago incluyendo los datos del movimiento midas
-						MovimientoPago movPago = new MovimientoPago();
-						// Se crea un movimiento midas incluyendo monto, sucursal y operacion
-						MovimientoMidas movMidas = new MovimientoMidas();
-						movMidas.setMonto(movBonificacion.getImporteML());
-						movMidas.setSucursal(movBonificacion.getSucursal() != null ? movBonificacion.getSucursal().intValue() : null);
-						movMidas.setOperacionAbr("BON");
-						movPago.setMovimientoMidas(movMidas);
-						movPago.setMonto(movBonificacion.getImporteML());
-						movPago.setNuevo(false);
-						movPago.setOperaciones(1); // TODO: Checar numero movs para desglosar comisiones
-						movimientos.add(movPago);
-					}
-				}
+				List<MovimientoPago> movimientosBonificaciones = obtenerMovimientosBonificaciones(idConciliacion);
+				movimientos.addAll(movimientosBonificaciones);
 				break;
 		}
 		return movimientos;
@@ -1602,6 +1593,42 @@ public class LayoutsService {
 		}
 
 		return movimientosEstadoCuenta;
+	}
+
+
+	/**
+	 * Obtiene los movimientos de bonificaciones
+	 * @param idConciliacion
+	 * @return
+	 */
+	private List<MovimientoPago> obtenerMovimientosBonificaciones(Long idConciliacion) {
+		//List<Integer> idEstatusBonificacion = Arrays.asList(ConciliacionConstants.ESTATUS_BONIFICACION_REVERSA);
+		//List<MovimientoBonificacion> movsBonificacion = this.movimientoBonificacionRepository.findByIdConciliacionAndEstatusIdIn(idConciliacion, idEstatusBonificacion);
+		List<MovimientoBonificacion> movsBonificacion = this.movimientoBonificacionRepository.findByIdConciliacion(idConciliacion);
+		List<MovimientoPago> movimientosBonificaciones = new ArrayList<MovimientoPago>();
+		if (movsBonificacion != null && movsBonificacion.size() > 0) {
+			for (MovimientoBonificacion movBonificacion : movsBonificacion) {
+				if (movBonificacion.getReferencias() != null && movBonificacion.getReferencias().size() > 0) {
+					for (MovimientoBonificacionReferencia movBonificacionReferencia : movBonificacion.getReferencias()) {
+						// Se crea un movimiento pago incluyendo los datos del movimiento midas
+						MovimientoPago movPago = new MovimientoPago();
+						// Se crea un movimiento midas incluyendo monto, sucursal y operacion
+						MovimientoMidas movMidas = new MovimientoMidas();
+						movMidas.setMonto(movBonificacionReferencia.getMonto());
+						movMidas.setSucursal(movBonificacionReferencia.getSucursal() != null ? movBonificacionReferencia.getSucursal().intValue() : null);
+						movMidas.setOperacionAbr("BON");
+						movPago.setMovimientoMidas(movMidas);
+						movPago.setMonto(movBonificacionReferencia.getMonto());
+						movPago.setNuevo(false);
+						movPago.setOperaciones(1); // TODO: Checar numero movs para desglosar comisiones
+						movimientosBonificaciones.add(movPago);
+					}
+				}
+			}
+			// Se agrupa por sucursal
+			movimientosBonificaciones = MovimientosBuilder.groupMovimientosBySucursal(movimientosBonificaciones, TipoMovimientoEnum.MIDAS);
+		}
+		return movimientosBonificaciones;
 	}
 
 

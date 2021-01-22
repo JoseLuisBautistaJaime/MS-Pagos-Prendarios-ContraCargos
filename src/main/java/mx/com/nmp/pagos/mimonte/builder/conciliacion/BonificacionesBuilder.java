@@ -5,9 +5,15 @@
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestConsultaPagosResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.BonificacionDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoBonificacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoBonificacionReferencia;
 
 /**
  * @name BonificacionesBuilder
@@ -73,11 +79,13 @@ public class BonificacionesBuilder {
 	}
 
 	/**
-	 * Construye la entidad a apartir del dto
+	 * Construye la entidad a apartir del dto y/o la referencia
 	 * @param dto
+	 * @param usuario 
+	 * @param referencia
 	 * @return
 	 */
-	public static MovimientoBonificacion build(BonificacionDTO dto) {
+	public static MovimientoBonificacion build(BonificacionDTO dto, String usuario, BusRestConsultaPagosResponseDTO referenciaResponseDTO) {
 		MovimientoBonificacion bonificacion = null;
 		if (dto != null) {
 			bonificacion = new MovimientoBonificacion();
@@ -92,12 +100,59 @@ public class BonificacionesBuilder {
 			bonificacion.setFolioBonificacion(dto.getFolioBonificacion());
 			bonificacion.setEstatus(EstatusBonificacionesBuilder.build(dto.getEstatus()));
 			bonificacion.setIdConciliacion(dto.getFolio());
-			bonificacion.setCreatedBy(dto.getCreatedBy());
-			bonificacion.setCreatedDate(dto.getCreatedDate());
-			bonificacion.setLastModifiedBy(dto.getLastModifiedBy());
-			bonificacion.setLastModifiedDate(dto.getLastModifiedDate());
+			if (dto.getId() == null || dto.getId() <= 0) {
+				bonificacion.setCreatedBy(usuario);
+				bonificacion.setCreatedDate(new Date());
+			}
+			else {
+				bonificacion.setLastModifiedBy(usuario);
+				bonificacion.setLastModifiedDate(new Date());
+			}
+
+			// No existe la refencia, se crea la partida asociandola a la sucursal
+			List<MovimientoBonificacionReferencia> referencias = null;
+			if (referenciaResponseDTO == null) {
+				referencias = buildReferencia(bonificacion);
+			}
+			else {
+				referencias = buildReferencia(referenciaResponseDTO, bonificacion);
+			}
+			bonificacion.setReferencias(referencias);
 		}
 		return bonificacion;
+	}
+
+	private static List<MovimientoBonificacionReferencia> buildReferencia(MovimientoBonificacion bonificacion) {
+		List<MovimientoBonificacionReferencia> referencias = new ArrayList<MovimientoBonificacionReferencia>();
+		MovimientoBonificacionReferencia referencia = new MovimientoBonificacionReferencia();
+		referencia.setMovimientoBonificacion(bonificacion);
+		referencia.setMonto(bonificacion.getImporteML());
+		referencia.setReferencia(bonificacion.getFolioBonificacion());
+		referencia.setSucursal(bonificacion.getSucursal());
+		referencias.add(referencia);
+		return referencias;
+	}
+
+
+	private static List<MovimientoBonificacionReferencia> buildReferencia(BusRestConsultaPagosResponseDTO referenciaDTO, MovimientoBonificacion bonificacion) {
+		List<MovimientoBonificacionReferencia> referencias = new ArrayList<MovimientoBonificacionReferencia>();
+		if (referenciaDTO.getPagos() != null && referenciaDTO.getPagos().size() > 0
+				&& referenciaDTO.getPagos().get(0).getPartidas() != null
+				&& referenciaDTO.getPagos().get(0).getPartidas().size() > 0) {
+			for (BusRestConsultaPagosResponseDTO.Partidas partida : referenciaDTO.getPagos().get(0).getPartidas()) {
+				MovimientoBonificacionReferencia referencia = new MovimientoBonificacionReferencia();
+				referencia.setMovimientoBonificacion(bonificacion);
+				referencia.setMonto(partida.getImporteTransaccion());
+				referencia.setReferencia(String.valueOf(partida.getIdPartida()));
+				referencia.setSucursal(Integer.valueOf(partida.getSucursal()).longValue());
+				referencias.add(referencia);
+			}
+		}
+		else {
+			throw new ConciliacionException("Referencia con datos incorrectos",
+					CodigoError.NMP_PMIMONTE_0001);
+		}
+		return referencias;
 	}
 
 }

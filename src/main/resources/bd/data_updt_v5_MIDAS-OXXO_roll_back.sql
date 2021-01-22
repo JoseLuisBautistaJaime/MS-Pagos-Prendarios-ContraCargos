@@ -33,6 +33,7 @@ DELETE FROM tk_maquina_estados_subestatus_conciliacion WHERE ID BETWEEN 30 AND 5
 -- ------------------- SE AGREGA LA NUEVA COLUMNA DE CORRESPONSAL ------------ --
 ALTER TABLE tk_maquina_estados_subestatus_conciliacion DROP COLUMN corresponsal;
 
+DROP TABLE to_movimiento_bonificacion_referencia;
 DROP TABLE to_movimiento_bonificacion;
 
 DROP TABLE tk_estatus_bonificacion;
@@ -178,6 +179,7 @@ UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Open Pay' WHERE i
 UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Open Pay Completada' WHERE id = 6;
 UPDATE tk_sub_estatus_conciliacion SET description = 'Consulta Open Pay Error' WHERE id = 7;
 
+UPDATE `tk_estatus_movimientos_en_transito` SET `nombre` = 'No identificada en Open Pay', `descripcion` = 'No identificada en Open Pay' WHERE (`id` = '4');
 
 
 -- ----------------------------------------------------------------------------------------------------- --

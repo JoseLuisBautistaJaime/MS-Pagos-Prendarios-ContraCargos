@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS `to_reporte` ;
 DROP TABLE IF EXISTS `to_comision_transaccion_real`;
 DROP TABLE IF EXISTS `to_comision_transaccion_proyeccion`;
 DROP TABLE IF EXISTS `to_comision_transaccion`;
+DROP TABLE IF EXISTS `to_movimiento_bonificacion_referencia`;
 DROP TABLE IF EXISTS `to_movimiento_bonificacion` ;
 DROP TABLE IF EXISTS `to_conciliacion` ;
 DROP TABLE IF EXISTS `to_merge_conciliacion`;
@@ -1341,6 +1342,20 @@ CREATE TABLE IF NOT EXISTS `to_movimiento_bonificacion` (
     FOREIGN KEY (`id_conciliacion`)
     REFERENCES `to_conciliacion` (`id`)
 ) ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+CREATE TABLE IF NOT EXISTS `to_movimiento_bonificacion_referencia` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `referencia` VARCHAR(50),
+  `monto` DECIMAL(16,4) NOT NULL,
+  `sucursal` INT(11),
+  `id_movimiento_bonificacion` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `movimiento_bonificacion_fk_idx` (`id_movimiento_bonificacion`),
+  CONSTRAINT `movimiento_bonificacion_fk`
+    FOREIGN KEY (`id_movimiento_bonificacion`)
+    REFERENCES `to_movimiento_bonificacion` (`id`)
+)
 DEFAULT CHARACTER SET = latin1;
 
 

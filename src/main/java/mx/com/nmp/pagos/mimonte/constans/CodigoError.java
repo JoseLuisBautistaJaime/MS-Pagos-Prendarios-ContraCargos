@@ -324,7 +324,10 @@ public enum CodigoError {
 	NMP_PMIMONTE_BUSINESS_CORRESPONSAL_CONCILIACION("No hay relacion entre el corresponsal y una o mas conciliaciones",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_COMISION_PROVEEDOR("No existe la configuracion para el porcentaje de comision cobrada",
-			TipoError.CLIENTE, SeveridadError.MEDIA)
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_SERVICIO_PAGOS("El servicio de consulta de pagos no puede ser consultado",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+
 	;
 
 	/**
