@@ -542,7 +542,7 @@ INSERT INTO tk_proveedor (id, nombre, descripcion)
 -- --------------- INSERT DE LAS COMISIONES PROVEEDORES / CORRESPONSALES ------------------------ --
 -- ---------------------------------------------------------------------------------- --
 INSERT INTO `tc_comision_proveedor` (`id`, `corresponsal`, `comision`, `iva`) 
-	VALUES ('1', 'OXXO', '1.552', '0.248');
+	VALUES ('1', 'OXXO', '15.18', '2.4288');
 
 
 -- ---------------------------------------------------------------------------------- --

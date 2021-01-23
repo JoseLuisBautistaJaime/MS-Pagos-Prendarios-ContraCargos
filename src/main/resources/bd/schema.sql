@@ -1305,8 +1305,8 @@ CREATE TABLE `seq_conciliacion` (
 CREATE TABLE IF NOT EXISTS `tc_comision_proveedor` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPENPAY',
-  `comision` DECIMAL(5,2) NOT NULL,
-  `iva` DECIMAL(5,2) NOT NULL,
+  `comision` DECIMAL(16,4) NOT NULL,
+  `iva` DECIMAL(16,4) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `cp_fk_idx` (`id` ASC))
 ENGINE = InnoDB
