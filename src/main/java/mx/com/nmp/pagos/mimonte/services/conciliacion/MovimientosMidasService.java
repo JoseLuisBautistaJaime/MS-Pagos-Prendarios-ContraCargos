@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -86,6 +89,9 @@ public class MovimientosMidasService {
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
+	
 	// Temporal format para los LOGs de timers
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	
@@ -162,7 +168,7 @@ public class MovimientosMidasService {
 		}
 
 		start = System.currentTimeMillis();
-		LOG.debug("T>>> INICIA ONSTRUCCION DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
+		LOG.debug("T>>> INICIA CONSTRUCCION DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
 		Reporte reporte = buildReporte(conciliacion.getId(), movimientoProcesosNocturnosDTOList.getFechaDesde(),
 				movimientoProcesosNocturnosDTOList.getFechaHasta(), userRequest);
 		finish = System.currentTimeMillis();
@@ -179,7 +185,7 @@ public class MovimientosMidasService {
 
 			// Se persisten los movimientos midas
 			start = System.currentTimeMillis();
-			LOG.debug("T>>> INICIA CONSTRUCCION DE LOISTA DE ENTIDADES MOV. MIDAS: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA CONSTRUCCION DE LISTA DE ENTIDADES MOV. MIDAS: {}", sdf.format(new Date(start)));
 			List<MovimientoMidas> movimientoMidasList = MovimientosBuilder
 					.buildMovimientoMidasListFromMovimientoProcesosNocturnosListResponseDTO(
 							movimientoProcesosNocturnosDTOList, reporte.getId());
@@ -196,8 +202,8 @@ public class MovimientosMidasService {
 
 			// Registro de actividad
 			start = System.currentTimeMillis();
-			LOG.debug("T>>> INICIA REGISTRODE ACTIVIDADES: {}", sdf.format(new Date(start)));
-			actividadGenericMethod.registroActividad(movimientoProcesosNocturnosDTOList.getFolio(),
+			LOG.debug("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
+			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(movimientoProcesosNocturnosDTOList.getFolio()),
 					"Se registraron " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
 							+ " movimientos provenientes de procesos nocturnos,"
 							+ " para la conciliacion con el folio: " + movimientoProcesosNocturnosDTOList.getFolio(),
@@ -230,7 +236,9 @@ public class MovimientosMidasService {
 		Reporte reporte = new Reporte();
 		if (null == folio || null == fechaDesde || null == fechaHasta || null == userRequest)
 			return null;
-		reporte.setConciliacion(new Conciliacion(folio));
+		Conciliacion con = new Conciliacion();
+		con.setId(folio);
+		reporte.setConciliacion(con);
 		reporte.setCreatedBy(userRequest);
 		reporte.setCreatedDate(new Date());
 		reporte.setDisponible(true);

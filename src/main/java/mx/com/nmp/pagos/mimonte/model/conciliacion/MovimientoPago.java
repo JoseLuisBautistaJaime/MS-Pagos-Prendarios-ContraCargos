@@ -40,6 +40,9 @@ public class MovimientoPago extends MovimientoConciliacion implements Comparable
 	@Column(name = "monto")
 	private BigDecimal monto;
 
+	@Transient
+	private long operaciones;
+
 
 	public MovimientoPago() {
 		super();
@@ -82,6 +85,14 @@ public class MovimientoPago extends MovimientoConciliacion implements Comparable
 	@Override
 	public TipoMovimientoEnum getTipoMovimientoBD() {
 		return TipoMovimientoEnum.PAGO;
+	}
+
+	public long getOperaciones() {
+		return operaciones;
+	}
+
+	public void setOperaciones(long operaciones) {
+		this.operaciones = operaciones;
 	}
 
 

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
@@ -84,6 +85,9 @@ public class MovimientosProveedorService {
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
 
+	@Autowired
+	private ObjectsInSession objectsInSession;
+	
 	// Temporal format para los LOGs de timers
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	
@@ -185,7 +189,7 @@ public class MovimientosProveedorService {
 			// Registro de actividad
 			start = System.currentTimeMillis();
 			LOG.debug("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
-			actividadGenericMethod.registroActividad(listRequestDTO.getFolio(),
+			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(listRequestDTO.getFolio()),
 					"Se registraron " + listRequestDTO.getMovimientos().size()
 							+ " movimientos provenientes del proveedor transaccional,"
 							+ " para la conciliacion con el folio: " + listRequestDTO.getFolio(),

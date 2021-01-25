@@ -24,7 +24,6 @@ import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 /**
  * Nombre: ConciliacionProcessor Descripcion: Clase que se encarga de procesar
  * el reporte Estado Cuenta y generar los movimientos correspondientes
- * devoluciones
  *
  * @author JGALVEZ Fecha: 04/06/2019 9:44 PM
  * @version 0.1

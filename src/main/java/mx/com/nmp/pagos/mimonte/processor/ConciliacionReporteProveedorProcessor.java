@@ -19,6 +19,7 @@ import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.ComisionProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoTransito;
@@ -57,8 +58,11 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 				// Se extraen los movimientos con error, se vuelve a validar montos
 				List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(reportesWrapper.getIdConciliacion());
 				List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(reportesWrapper.getIdConciliacion());
-	
-				List<MovimientoTransito> movsTransito = extraerMovimientosTransito(movsMidas, movsProveedor, reportesWrapper.getIdConciliacion());
+				
+				// Se obtiene la comision proveedor por corresponsal
+				ComisionProveedor comisionProveedor = getComisionProveedor(reportesWrapper.getCorresponsal());
+
+				List<MovimientoTransito> movsTransito = extraerMovimientosTransito(movsMidas, movsProveedor, reportesWrapper.getIdConciliacion(), comisionProveedor);
 	
 				if (CollectionUtils.isNotEmpty(movsTransito)) {
 					if (CollectionUtils.isNotEmpty(movsTransito)) {
@@ -87,9 +91,10 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 	 * @param movsMidas
 	 * @param movsProveedor
 	 * @param idConciliacion
+	 * @param comisionProveedor
 	 * @return
 	 */
-	private List<MovimientoTransito> extraerMovimientosTransito(List<MovimientoMidas> movsMidas, List<MovimientoProveedor> movsProveedor, Long idConciliacion) {
+	private List<MovimientoTransito> extraerMovimientosTransito(List<MovimientoMidas> movsMidas, List<MovimientoProveedor> movsProveedor, Long idConciliacion, ComisionProveedor comisionProveedor) {
 
 		Map<String, List<MovimientoMidas>> movsMidasByTransaction = mapMovMidasByTransaction(movsMidas);
 		Map<String, List<MovimientoProveedor>> movsProveedorByTransaction = mapByMovsTransactionByTransaction(movsProveedor);
@@ -103,9 +108,9 @@ public class ConciliacionReporteProveedorProcessor extends ConciliacionProcessor
 				// Se obtienen los movimientos open pay y midas agrupados por transaccion
 				List<MovimientoProveedor> movsProveedorTransaccion = movsProveedorByTransaction.get(movMidas.getKey());
 				List<MovimientoMidas> movsMidasTransaccion = movMidas.getValue();
-				
+
 				// Se obtiene el monto de la transaccion midas y open pay
-				BigDecimal montoProveedor = ConciliacionMathUtil.getImporteProveedor(movsProveedorTransaccion);
+				BigDecimal montoProveedor = ConciliacionMathUtil.getImporteProveedor(movsProveedorTransaccion, comisionProveedor);
 				BigDecimal montoMidas = ConciliacionMathUtil.getImporteMidas(movsMidasTransaccion);
 				
 				// Se valida si es un movimiento invalido en midas o el monto es diferente al de open pay

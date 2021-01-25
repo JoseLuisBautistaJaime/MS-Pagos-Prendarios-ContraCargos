@@ -21,6 +21,8 @@ DROP TABLE IF EXISTS `to_reporte` ;
 DROP TABLE IF EXISTS `to_comision_transaccion_real`;
 DROP TABLE IF EXISTS `to_comision_transaccion_proyeccion`;
 DROP TABLE IF EXISTS `to_comision_transaccion`;
+DROP TABLE IF EXISTS `to_movimiento_bonificacion_referencia`;
+DROP TABLE IF EXISTS `to_movimiento_bonificacion` ;
 DROP TABLE IF EXISTS `to_conciliacion` ;
 DROP TABLE IF EXISTS `to_merge_conciliacion`;
 DROP TABLE IF EXISTS `tr_regla_negocio_variable` ;
@@ -57,8 +59,9 @@ DROP TABLE IF EXISTS `tk_variable` ;
 DROP TABLE IF EXISTS `tk_tipo_contrato` ;
 DROP TABLE IF EXISTS `tk_estatus_pago` ;
 DROP TABLE IF EXISTS `seq_conciliacion` ;
-DROP TABLE IF EXISTS `fk_proveedor` ;
+DROP TABLE IF EXISTS `tk_proveedor` ;
 DROP TABLE IF EXISTS `tc_comision_proveedor` ;
+DROP TABLE IF EXISTS `tk_estatus_bonificacion`;
 
 
 
@@ -612,6 +615,18 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
+-- Estatus Bonificacion
+CREATE TABLE IF NOT EXISTS `tk_estatus_bonificacion` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(100) NOT NULL,
+  `descripcion` VARCHAR(150) NULL DEFAULT NULL,
+  `estatus` BIT(1) NOT NULL DEFAULT b'1',
+  `descripcion_corta` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
 -- -----------------------------------------------------
 -- Table `tk_maquina_estados_subestatus_conciliacion`
 -- -----------------------------------------------------
@@ -733,7 +748,7 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `to_reporte` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `id_conciliacion` BIGINT(20) NOT NULL,
+  `id_conciliacion` BIGINT(20) NULL,
   `tipo` VARCHAR(45) NOT NULL,
   `disponible` TINYINT(4) NOT NULL DEFAULT '0',
   `fecha_desde` DATE NOT NULL,
@@ -1135,7 +1150,7 @@ CREATE TABLE IF NOT EXISTS `tc_layout_header` (
   `campo1` VARCHAR(45) NULL DEFAULT NULL,
   `campo2` VARCHAR(45) NULL DEFAULT NULL,
   `tipo` VARCHAR(50) NULL,
-  `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY',
+  `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPENPAY',
   `created_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
@@ -1158,7 +1173,8 @@ CREATE TABLE IF NOT EXISTS `tc_layout_linea` (
   `proyecto_nmp` VARCHAR(45) NULL DEFAULT NULL,
   `tipo` VARCHAR(45) NULL,
   `grupo` VARCHAR(50) NULL,
-  `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY',
+  `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPENPAY',
+  `operacion` VARCHAR(50) NOT NULL DEFAULT 'DEPOSITOS',
   `created_date` DATETIME NULL DEFAULT NULL,
   `created_by` VARCHAR(100) NULL DEFAULT NULL,
   `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
@@ -1288,13 +1304,61 @@ CREATE TABLE `seq_conciliacion` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tc_comision_proveedor` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPEN_PAY',
-  `comision` DECIMAL(5,2) NOT NULL,
-  `iva` DECIMAL(5,2) NOT NULL,
+  `corresponsal` VARCHAR(50) NOT NULL DEFAULT 'OPENPAY',
+  `comision` DECIMAL(16,4) NOT NULL,
+  `iva` DECIMAL(16,4) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `cp_fk_idx` (`id` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
+
+
+
+-- Movimientos Bonificacion
+
+CREATE TABLE IF NOT EXISTS `to_movimiento_bonificacion` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `asignacion` VARCHAR(50),
+  `num_doc` VARCHAR(50),
+  `fecha_doc` DATE DEFAULT NULL,
+  `tienda` VARCHAR(50),
+  `plaza` VARCHAR(50),
+  `importe_ml` DECIMAL(16,4) NOT NULL,
+  `folio_bonificacion` VARCHAR(50),
+  `sucursal` INT(11),
+  `id_estatus_bonificacion` INT(11) NOT NULL,
+  `id_conciliacion` BIGINT(20) NOT NULL,
+  `created_by` VARCHAR(100) NOT NULL,
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_modified_by` VARCHAR(100) NULL DEFAULT NULL,
+  `last_modified_date` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `estatus_fk_idx` (`id_estatus_bonificacion`),
+  CONSTRAINT `estatus_fk`
+    FOREIGN KEY (`id_estatus_bonificacion`)
+    REFERENCES `tk_estatus_bonificacion` (`id`),
+  INDEX `bonificacion_id_conciliacion_fk_idx` (`id_conciliacion`),
+  CONSTRAINT `bonificacion_id_conciliacion_fk`
+    FOREIGN KEY (`id_conciliacion`)
+    REFERENCES `to_conciliacion` (`id`)
+) ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+CREATE TABLE IF NOT EXISTS `to_movimiento_bonificacion_referencia` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `referencia` VARCHAR(50),
+  `monto` DECIMAL(16,4) NOT NULL,
+  `sucursal` INT(11),
+  `id_movimiento_bonificacion` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `movimiento_bonificacion_fk_idx` (`id_movimiento_bonificacion`),
+  CONSTRAINT `movimiento_bonificacion_fk`
+    FOREIGN KEY (`id_movimiento_bonificacion`)
+    REFERENCES `to_movimiento_bonificacion` (`id`)
+)
+DEFAULT CHARACTER SET = latin1;
+
+
 
 -- ------------------------------------------------------------------------------------------------- --
 -- --------------------------------------- CREACION DE SP's ---------------------------------------- --
@@ -1507,7 +1571,9 @@ CREATE PROCEDURE `save_movimiento_transito`(
     _cuenta VARCHAR(45),
     _titular VARCHAR(255),
     _num_autorizacion VARCHAR(45),
-
+    -- campo nuevo
+     _transaccion VARCHAR(50),
+    
 	-- Campos para to_movimiento_conciliacion
 	_id BIGINT(20),
 	_id_conciliacion BIGINT(20),
@@ -1519,6 +1585,7 @@ CREATE PROCEDURE `save_movimiento_transito`(
     _last_modified_date DATETIME,
     _created_by VARCHAR(100),
     _last_modified_by VARCHAR(100)
+
 )
 MODIFIES SQL DATA
 MAIN: BEGIN
@@ -1558,8 +1625,8 @@ MAIN: BEGIN
 
 		-- Inserta/Actualiza el movimiento transito
 		IF (_id IS NULL OR _id <= 0) THEN
-			INSERT INTO to_movimiento_transito(id, estatus, folio, sucursal, fecha, operacion_desc, monto, tipo_contrato_desc, esquema_tarjeta, cuenta, titular, num_autorizacion)
-			VALUES(_id_movimiento_conciliacion, _estatus, _folio, _sucursal, _fecha, _operacion_desc, _monto, _tipo_contrato_desc, _esquema_tarjeta, _cuenta, _titular, _num_autorizacion);
+			INSERT INTO to_movimiento_transito(id, estatus, folio, sucursal, fecha, operacion_desc, monto, tipo_contrato_desc, esquema_tarjeta, cuenta, titular, num_autorizacion, transaccion)
+			VALUES(_id_movimiento_conciliacion, _estatus, _folio, _sucursal, _fecha, _operacion_desc, _monto, _tipo_contrato_desc, _esquema_tarjeta, _cuenta, _titular, _num_autorizacion, _transaccion);
 		ELSE
 			UPDATE to_movimiento_transito
 			SET
@@ -1574,6 +1641,7 @@ MAIN: BEGIN
 				cuenta = _cuenta,
 				titular = _titular,
 				num_autorizacion = _num_autorizacion
+                , transaccion = _transaccion
 			WHERE
 				id = _id_movimiento_conciliacion;
 		END IF;

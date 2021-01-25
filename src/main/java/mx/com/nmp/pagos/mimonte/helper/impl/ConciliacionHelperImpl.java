@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.helper.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 import mx.com.nmp.pagos.mimonte.observable.ReporteObservable;
 import mx.com.nmp.pagos.mimonte.observer.ReporteObserver;
 
@@ -110,6 +112,33 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 			throw new ConciliacionException("Error al consultar las comisiones transacciones", CodigoError.NMP_PMIMONTE_0011);
 		}
 		return comisionTransaccion;
+	}
+
+
+	@Override
+	public Long getFolioConciliacionById(Long idConciliacion) throws ConciliacionException {
+		Long folio = null;
+		try {
+			folio = this.conciliacionRepository.findFolioById(idConciliacion);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar el folio de la conciliacion", CodigoError.NMP_PMIMONTE_0011);
+		}
+		return folio;
+	}
+
+
+	public Date getFechaCargaReporte(Long idConciliacion, TipoReporteEnum tipoReporte) throws ConciliacionException {
+		Date fecha = null;
+		try {
+			fecha = this.conciliacionRepository.findDateReporte(idConciliacion, tipoReporte.name());
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar la fecha del reporte " + tipoReporte, CodigoError.NMP_PMIMONTE_0011);
+		}
+		return fecha;
 	}
 
 }

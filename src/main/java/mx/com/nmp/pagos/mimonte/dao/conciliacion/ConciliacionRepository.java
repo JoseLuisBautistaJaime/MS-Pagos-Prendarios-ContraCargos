@@ -16,8 +16,10 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionEntidadDetalleDTO;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * @author Quarksoft
@@ -79,7 +81,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :corresponsal IS NULL OR c.proveedor.nombre = :corresponsal) AND c.createdDate BETWEEN :fechaDesde AND :fechaHasta")
 	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechas(@Param("folio") final Long folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus,
-			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta, @Param("corresponsal") final String corresponsal);
+			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta, @Param("corresponsal") final CorresponsalEnum corresponsal);
 
 	/**
 	 * Búsqueda de la conciliacion a partir del folio, id entidad e id estatus de la
@@ -92,7 +94,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 */
 	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :corresponsal IS NULL OR c.proveedor.nombre = :corresponsal)")
 	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatus(@Param("folio") final Long folio,
-			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus, @Param("corresponsal") final String corresponsal);
+			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus, @Param("corresponsal") final CorresponsalEnum corresponsal);
 
 	/**
 	 * Busqueda de la conciliacion a partir del folio, id entidad, id estatus de la
@@ -107,7 +109,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :corresponsal IS NULL OR c.proveedor.nombre = :corresponsal) AND c.createdDate >= :fechaDesde")
 	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechaDesde(@Param("folio") final Long folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus,
-			@Param("fechaDesde") final Date fechaDesde, @Param("corresponsal") final String corresponsal);
+			@Param("fechaDesde") final Date fechaDesde, @Param("corresponsal") final CorresponsalEnum corresponsal);
 
 	/**
 	 * Busqueda de la conciliacion a partir del folio, id entidad, id estatus de la
@@ -122,7 +124,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query("FROM Conciliacion c WHERE ( :folio IS NULL OR c.id = :folio ) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :corresponsal IS NULL OR c.proveedor.nombre = :corresponsal) AND c.createdDate <= :fechaHasta")
 	public List<Conciliacion> findByFolioAndIdEntidadAndIdEstatusAndFechaHasta(@Param("folio") final Long folio,
 			@Param("idEntidad") final Long idEntidad, @Param("idEstatus") final Integer idEstatus,
-			@Param("fechaHasta") final Date fechaHasta, @Param("corresponsal") final String corresponsal);
+			@Param("fechaHasta") final Date fechaHasta, @Param("corresponsal") final CorresponsalEnum corresponsal);
 
 	/**
 	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
@@ -140,11 +142,13 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha BETWEEN :fechaDesde AND :fechaHasta")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " 
+			+ "( :idCorresponsal IS NULL OR c.proveedor.id = :idCorresponsal ) AND "
+			+ " md.fecha BETWEEN :fechaDesde AND :fechaHasta")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursal(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
 			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
-			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta);
+			@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta, @Param("idCorresponsal")final CorresponsalEnum idCorresponsal);
 
 	/**
 	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
@@ -161,11 +165,13 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha >= :fechaDesde")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND "
+			+ "( :idCorresponsal IS NULL OR c.proveedor.nombre = :idCorresponsal ) AND "
+			+ " md.fecha >= :fechaDesde")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaHasta(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
 			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
-			@Param("fechaDesde") final Date fechaDesde);
+			@Param("fechaDesde") final Date fechaDesde, @Param("idCorresponsal") final CorresponsalEnum idCorresponsal);
 
 	/**
 	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
@@ -182,11 +188,13 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND " + " md.fecha <= :fechaHasta")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND "
+			+ "( :idCorresponsal IS NULL OR c.proveedor.nombre = :idCorresponsal ) AND "
+			+ " md.fecha <= :fechaHasta")
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechaDesde(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
 			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal,
-			@Param("fechaHasta") final Date fechaHasta);
+			@Param("fechaHasta") final Date fechaHasta, @Param("idCorresponsal") final CorresponsalEnum idCorresponsal);
 
 	/**
 	 * Regresa una lista de objetos de tipo DevolucionEntidadDetalleDTO en base a
@@ -202,10 +210,12 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			+ " WHERE ( :idEstatus IS NULL OR md.estatus.id = :idEstatus ) AND "
 			+ "( :idEntidad IS NULL OR c.entidad.id = :idEntidad ) AND "
 			+ "( :identificadorCuenta IS NULL OR md.identificadorCuenta LIKE CONCAT('%',:identificadorCuenta,'%') ) AND "
-			+ "( :sucursal IS NULL OR md.sucursal = :sucursal )")
+			+ "( :sucursal IS NULL OR md.sucursal = :sucursal ) AND "
+			+ "( :idCorresponsal IS NULL OR c.proveedor.nombre = :idCorresponsal )"
+			)
 	public List<DevolucionEntidadDetalleDTO> findByIdEstatusOrIdEntidadOrIdentificadorCuentaOrSucursalWOFechas(
 			@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad,
-			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal);
+			@Param("identificadorCuenta") final String identificadorCuenta, @Param("sucursal") final Integer sucursal, @Param("idCorresponsal") final CorresponsalEnum idCorresponsal);
 
 	/**
 	 * Regresa una lista de entities de tipo Conciliacion en base a los ids de
@@ -353,8 +363,21 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param idSubEstatus
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT CASE WHEN :idSubEstatus IN (SELECT id_sub_estatus_posible FROM tk_maquina_estados_subestatus_conciliacion WHERE id_sub_estatus_inicial = (SELECT id_sub_estatus_conciliacion FROM to_conciliacion WHERE id = :folio)) THEN TRUE ELSE FALSE END AS RESULT")
-	public Object checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(@Param("folio") final Long folio,
+//	@Query(nativeQuery = true, value = "SELECT CASE WHEN :idSubEstatus IN (SELECT id_sub_estatus_posible FROM tk_maquina_estados_subestatus_conciliacion WHERE id_sub_estatus_inicial = (SELECT id_sub_estatus_conciliacion FROM to_conciliacion WHERE id = :folio) AND corresponsal = :corresponsal ) THEN TRUE ELSE FALSE END AS RESULT")
+	@Query(nativeQuery = true, value = "SELECT " + 
+			"	CASE " + 
+			"		WHEN :idSubEstatus IN " + 
+			"			(" + 
+			"            SELECT me.id_sub_estatus_posible" + 
+			"			 FROM tk_maquina_estados_subestatus_conciliacion  me" + 
+			"            INNER JOIN to_conciliacion con ON con.proveedor = me.corresponsal" + 
+			"			WHERE me.id_sub_estatus_inicial = " + 
+			"				(SELECT id_sub_estatus_conciliacion " + 
+			"                FROM to_conciliacion " + 
+			"                WHERE id = :folio) " + 
+			"            AND con.id = :folio    " + 
+			"			) THEN TRUE ELSE FALSE END AS RESULT")
+	public Object checkIfSubEstatusIsRightByFolioAndIdSubEstatus(@Param("folio") final Long folio,
 			@Param("idSubEstatus") final Long idSubEstatus);
 
 	/**
@@ -394,8 +417,17 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param idSubEstatus
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT me.id_sub_estatus_inicial FROM tk_maquina_estados_subestatus_conciliacion me WHERE me.id_sub_estatus_posible = :idSubEstatus")
-	public List<Object> getPossibleSubestatusList(@Param("idSubEstatus") final Long idSubEstatus);
+//	@Query(nativeQuery = true, value = "SELECT me.id_sub_estatus_inicial FROM tk_maquina_estados_subestatus_conciliacion me WHERE me.id_sub_estatus_posible = :idSubEstatus")
+	@Query(nativeQuery = true, value = "SELECT me.id_sub_estatus_inicial " + 
+			"FROM tk_maquina_estados_subestatus_conciliacion me " + 
+			"WHERE me.id_sub_estatus_posible = :idSubEstatus " + 
+			"	AND me.corresponsal = " + 
+			"    (" + 
+			"    SELECT conn.proveedor " + 
+			"    FROM to_conciliacion conn " + 
+			"    WHERE conn.id = :folio " + 
+			"    )")
+	public List<Object> getPossibleSubestatusList(@Param("idSubEstatus") final Long idSubEstatus, @Param("folio") final Long folio);
 
 	/**
 	 * Regresa un 1 cuando la conciliacion especificada tiene un id de merge, de lo
@@ -446,7 +478,30 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param folio
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT cec2.id_conciliacion FROM tr_conciliacion_estado_cuenta cec2 WHERE cec2.id_reporte = (SELECT cec.id_reporte FROM tr_conciliacion_estado_cuenta cec WHERE cec.id_conciliacion = :folio )")
+	@Query(nativeQuery = true, value = "SELECT cec2.id_conciliacion FROM tr_conciliacion_estado_cuenta cec2 WHERE cec2.id_reporte = (SELECT MAX(cec.id_reporte) FROM tr_conciliacion_estado_cuenta cec WHERE cec.id_conciliacion = :folio )")
 	public List<Object> getConciliacionesAsociadas(@Param("folio") Long folio);
 	
+	@Query(nativeQuery = true, value="SELECT seq_value FROM seq_conciliacion WHERE seq_name=:name")
+	public Long getSeqValueByName(@Param("name") String name);
+
+	@Modifying
+	@Query(nativeQuery = true, value="UPDATE seq_conciliacion SET seq_value=seq_value+1 WHERE seq_name=:name")
+	public void updateNextSeqValue(@Param("name") String name);
+
+	@Modifying
+	@Query(nativeQuery = true, value="INSERT INTO seq_conciliacion(seq_name, seq_value) VALUES(:name, :value)")
+	public void crearSeqConciliacion(@Param("name") String name, @Param("value") Long value);
+
+	@Query(nativeQuery = true, value = "SELECT c.folio FROM to_conciliacion c WHERE c.id = :idConciliacion")
+	public Long findFolioById(@Param("idConciliacion") Long idConciliacion);
+
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN COUNT(r.id) > 0 THEN true ELSE false END FROM to_reporte r WHERE r.id_conciliacion = :idConciliacion AND r.tipo = :tipo")
+	public Object existsEstadoCuentaCargado(@Param("idConciliacion") Long idConciliacion, @Param("tipo") TipoReporteEnum tipo);
+
+	@Query(nativeQuery = true, value = "SELECT CASE WHEN (SELECT COUNT(con.id) FROM to_conciliacion con WHERE con.id IN :foliosList AND con.proveedor <> :corresponsal ) > 0 THEN 0 ELSE 1 END AS flag")
+	public Object validateCorresponsalOxxoAndFolios(@Param("foliosList") final List<Long> foliosList, @Param("corresponsal") final String corresponsal);
+
+	@Query(nativeQuery = true, value = "SELECT r.fecha_desde FROM to_reporte r WHERE r.id = (SELECT MAX(r1.id) FROM to_reporte r1 WHERE r1.id_conciliacion = :idConciliacion AND r1.tipo = :tipo)")
+	public Date findDateReporte(@Param("idConciliacion") Long idConciliacion, @Param("tipo") String tipo);
+
 }

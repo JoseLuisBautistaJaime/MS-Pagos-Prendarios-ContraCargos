@@ -18,7 +18,7 @@ public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO
 
 	private Long idEntidad;
 	private Long idCuenta;
-	private CorresponsalEnum idCorresponsal;
+	private String idCorresponsal;
 
 	public ConciliacionRequestDTO() {
 		super();
@@ -30,18 +30,18 @@ public class ConciliacionRequestDTO implements Comparable<ConciliacionRequestDTO
 		this.idCuenta = idCuenta;
 	}
 
-	public ConciliacionRequestDTO(Long idEntidad, Long idCuenta, CorresponsalEnum idCorresponsal) {
+	public ConciliacionRequestDTO(Long idEntidad, Long idCuenta, String idCorresponsal) {
 		super();
 		this.idEntidad = idEntidad;
 		this.idCuenta = idCuenta;
 		this.idCorresponsal = idCorresponsal;
 	}
 
-	public CorresponsalEnum getIdCorresponsal() {
+	public String getIdCorresponsal() {
 		return idCorresponsal;
 	}
 
-	public void setIdCorresponsal(CorresponsalEnum idCorresponsal) {
+	public void setIdCorresponsal(String idCorresponsal) {
 		this.idCorresponsal = idCorresponsal;
 	}
 

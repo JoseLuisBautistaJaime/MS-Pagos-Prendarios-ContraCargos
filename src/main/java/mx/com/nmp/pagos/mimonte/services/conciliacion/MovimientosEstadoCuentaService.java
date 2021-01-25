@@ -4,13 +4,14 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import java.util.ArrayList;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ibm.icu.util.Calendar;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
@@ -34,7 +36,6 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.EstadoCuentaWraper;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMovEstadoCuentaRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaFileLayout;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EstadoCuentaImplementacionEnum;
@@ -54,6 +55,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaParserService;
 import mx.com.nmp.pagos.mimonte.services.EstadoCuentaReaderService;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
@@ -149,6 +151,9 @@ public class MovimientosEstadoCuentaService {
 	@Autowired
 	private MovimientoJdbcRepository movimientoJdbcRepository;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
+	
 	/**
 	 * Log de la clase
 	 */
@@ -316,7 +321,7 @@ public class MovimientosEstadoCuentaService {
 		try {
 			possibleSubEstatus = MovimientosBuilder
 					.buildLongListFromObjectList(conciliacionRepository.getPossibleSubestatusList(
-							ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA));
+							ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA, request.getFolio()));
 			conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(request.getFolio(), possibleSubEstatus);
 		} catch (ConciliacionException ex) {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
@@ -380,8 +385,9 @@ public class MovimientosEstadoCuentaService {
 		}
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(idConciliacion,
-				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
+		Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(idConciliacion);
+		actividadGenericMethod.registroActividadV2(folioConciliacion,
+				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + folioConciliacion,
 				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 	}
 
@@ -411,6 +417,14 @@ public class MovimientosEstadoCuentaService {
 					CodigoError.NMP_PMIMONTE_0013);
 		}
 
+		// Valida que los folios pertenezcan al proveedor OXXO
+		boolean oxxoFlag = ( (BigInteger) conciliacionRepository.validateCorresponsalOxxoAndFolios(request.getFolios(), request.getIdCorresponsal()) ).compareTo(BigInteger.ONE) == 0 ? true : false;
+		if(!oxxoFlag) {
+			LOG.error(ConciliacionConstants.Validation.NO_OXXO_AND_CONCILIACION_RELATIONSHIP);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_CORRESPONSAL_CONCILIACION.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		}
+		
 		// Se obtien el estatus de la conciliacion
 		mapSubEstatusConciliacion = new HashMap<>();
 		try {
@@ -426,10 +440,10 @@ public class MovimientosEstadoCuentaService {
 
 		// Valida que tenga un sub.estatus valido
 		try {
-			possibleSubEstatus = MovimientosBuilder
-					.buildLongListFromObjectList(conciliacionRepository.getPossibleSubestatusList(
-							ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA));
 			for(Long folio : request.getFolios()) {
+				possibleSubEstatus = MovimientosBuilder
+						.buildLongListFromObjectList(conciliacionRepository.getPossibleSubestatusList(
+								ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA, folio));
 				conciliacionDataValidator.validateSubEstatusByFolioAndSubEstatus(folio, possibleSubEstatus);
 			}
 			
@@ -441,7 +455,7 @@ public class MovimientosEstadoCuentaService {
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
 					CodigoError.NMP_PMIMONTE_BUSINESS_030);
 		}
-
+		
 		// Actualiza el sub-estatus para realizar el registro del estado de cuenta (invoca un metodo de actualizacion con una nueva transaccion)
 		if (null != estatusConciliacion) {
 			conciliacionService.actualizaSubEstatusConciliacionMultipleNT(request.getFolios(),
@@ -461,11 +475,11 @@ public class MovimientosEstadoCuentaService {
 			mapSubEstatusConciliacion.put(folio, estatusConciliacion);
 		}
 
-		// Guarda un nuevo reporte con id de conciliacion 0
+		// OXXO: Guarda un nuevo reporte con id de conciliacion null
 		SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO = new SaveEstadoCuentaRequestDTO();
 		saveEstadoCuentaRequestDTO.setFechaFinal(request.getFechaFinal());
 		saveEstadoCuentaRequestDTO.setFechaInicial(request.getFechaInicial());
-		saveEstadoCuentaRequestDTO.setFolio(null != request.getFolios() && !request.getFolios().isEmpty() ? request.getFolios().get(0): 0L);
+		saveEstadoCuentaRequestDTO.setFolio(null);
 		Reporte reporte = save(saveEstadoCuentaRequestDTO, userRequest);
 
 		// Se guarda la asociacion entre conciliaciones y el estado cuenta
@@ -505,12 +519,6 @@ public class MovimientosEstadoCuentaService {
 			cal.add(Calendar.DAY_OF_YEAR, 1);
 			fechaEstadoCuenta = cal.getTime();
 		}
-
-		// Registro de actividad
-		/*actividadGenericMethod.registroActividad(idConciliacion,
-				"Se proceso la consulta del estado de cuenta para la conciliacion con el folio " + idConciliacion,
-				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
-		*/
 
 		// Se distribuye el estado de cuenta entre las conciliaciones
 		distribuirEstadoCuenta(reporte, request.getFolios(), userRequest);
@@ -583,7 +591,8 @@ public class MovimientosEstadoCuentaService {
 
 			// Obtiene la fecha de la conciliacion
 			Conciliacion conciliacion = this.conciliacionHelper.getConciliacionByFolio(idConciliacion, null);
-			Date fechaConciliacion = conciliacion.getCreatedDate();
+			//Date fechaConciliacion = conciliacion.getCreatedDate();
+			Date fechaConciliacion = this.conciliacionHelper.getFechaCargaReporte(idConciliacion, TipoReporteEnum.MIDAS);
 
 			// Se obtienen los movs de estado de cuenta para la conciliacion basadonos en la fecha
 			List<MovimientoEstadoCuenta> movsConciliacion = movsEdoCuenta.stream()
@@ -592,17 +601,19 @@ public class MovimientosEstadoCuentaService {
 
 			if (movsConciliacion != null && movsConciliacion.size() > 0) {
 				// Se crea el reporte para el estado de cuenta y se asocia a la conciliacion
-				Reporte reporteConciliacion = crearReporteConciliacion(conciliacion, userRequest);
+				Reporte reporteConciliacion = crearReporteConciliacion(conciliacion, fechaConciliacion, userRequest);
 	
 				// Si existen movimientos del estado de cuenta para la fecha se persisten
 				crearEdoCuentaConciliacion(reporteConciliacion, movsConciliacion);
 
-				// TODO: Se ejecuta el merge y se actualiza el subestatus de la conciliacion
-
 				// Registro de actividad
-				actividadGenericMethod.registroActividad(idConciliacion,
-						"Se distribuyo el estado de cuenta para la conciliacion con el folio " + idConciliacion,
+				Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(idConciliacion);
+				actividadGenericMethod.registroActividadV2(folioConciliacion,
+						"Se distribuyo el estado de cuenta para la conciliacion con el folio " + folioConciliacion,
 						TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
+
+				// TODO: Se ejecuta el merge y se actualiza el subestatus de la conciliacion
+				this.conciliacionService.generarConciliacion(idConciliacion, userRequest);
 			}
 		}
 	}
@@ -611,15 +622,16 @@ public class MovimientosEstadoCuentaService {
 	/**
 	 * Crea un reporte para el estado de cuenta para la conciliacion 
 	 * @param conciliacion
+	 * @param 
 	 * @param userRequest
 	 * @return
 	 */
-	private Reporte crearReporteConciliacion(Conciliacion conciliacion, String userRequest) throws ConciliacionException {
+	private Reporte crearReporteConciliacion(Conciliacion conciliacion, Date fechaConciliacion, String userRequest) throws ConciliacionException {
 		Reporte reporte = null;
 		try {
 			SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO = new SaveEstadoCuentaRequestDTO();
-			saveEstadoCuentaRequestDTO.setFechaFinal(conciliacion.getCreatedDate());
-			saveEstadoCuentaRequestDTO.setFechaInicial(conciliacion.getCreatedDate());
+			saveEstadoCuentaRequestDTO.setFechaFinal(fechaConciliacion);
+			saveEstadoCuentaRequestDTO.setFechaInicial(fechaConciliacion);
 			saveEstadoCuentaRequestDTO.setFolio(conciliacion.getId());
 			reporte = save(saveEstadoCuentaRequestDTO, userRequest);
 		}

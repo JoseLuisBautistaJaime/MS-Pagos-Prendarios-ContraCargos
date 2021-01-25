@@ -81,6 +81,8 @@ mimonte:
       archivo:
         ruta: "'/'ddMMyy"
         nombre: "'CLCO{CUENTA}'yyMMdd'.txt'"
+    consultaPagos:
+      url: https://dev1775oxxo-midasms-pagos-midas.mybluemix.net/nmp/pagos/v1/consultaPago
     dss:
       idcliente: "{idCliente}"
       currentTransactionAmount: "{currentTransactionAmount}"

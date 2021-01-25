@@ -91,6 +91,14 @@ public interface LayoutsRepository extends JpaRepository<Layout, Long> {
 	@Query("DELETE FROM LayoutLinea WHERE layout.id IN (SELECT id FROM Layout WHERE idConciliacion = :idConciliacion) AND nuevo = :nuevo")
 	public void deleteByIdConciliacionAndNuevo(@Param("idConciliacion") Long idConciliacion,
 			@Param("nuevo") boolean nuevo);
+	
+	/**
+	 * Elimina los layouts pertenecientes a una conciliacion
+	 * @param idConciliacion
+	 */
+	@Modifying
+	@Query("DELETE FROM LayoutLinea WHERE layout.id IN (SELECT id FROM Layout WHERE idConciliacion = :idConciliacion)")
+	public void deleteByIdConciliacion(@Param("idConciliacion") Long idConciliacion);
 
 	/**
 	 * Regresa un valor de 1 cuando el id de layout proporcionado si existe, de lo

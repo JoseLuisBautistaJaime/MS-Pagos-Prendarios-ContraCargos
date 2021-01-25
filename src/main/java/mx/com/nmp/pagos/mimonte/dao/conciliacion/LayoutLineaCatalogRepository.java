@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.GrupoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.LayoutLineaCatalog;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.OperacionLayoutEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 
 /**
@@ -25,6 +26,6 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 @Repository
 public interface LayoutLineaCatalogRepository extends JpaRepository<LayoutLineaCatalog, Long> {
 
-	public LayoutLineaCatalog findByTipoAndGrupoAndCorresponsal(TipoLayoutEnum tipoLayout, GrupoLayoutEnum grupo, CorresponsalEnum corresponsal);
+	public LayoutLineaCatalog findByTipoAndGrupoAndCorresponsalAndOperacion(TipoLayoutEnum tipoLayout, GrupoLayoutEnum grupo, CorresponsalEnum corresponsal, OperacionLayoutEnum operacion);
 
 }

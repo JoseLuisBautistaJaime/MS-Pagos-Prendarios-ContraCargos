@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.dao.CodigoEstadoCuentaRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionesProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaCabeceraRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
@@ -87,6 +88,9 @@ public class MergeReporteHandler {
 
 	@Inject
 	private MovimientoJdbcRepository movimientoJdbcRepository;
+
+	@Inject
+	private ComisionesProveedorRepository comisionesProveedorRepository;
 
 
 
@@ -223,6 +227,10 @@ public class MergeReporteHandler {
 
 	public MovimientoJdbcRepository getMovimientoJdbcRepository() {
 		return movimientoJdbcRepository;
+	}
+
+	public ComisionesProveedorRepository getComisionesProveedorRepository() {
+		return comisionesProveedorRepository;
 	}
 
 }

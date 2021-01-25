@@ -20,6 +20,7 @@ public class ConsultaActividadesRequest implements Comparable<ConsultaActividade
 	    private Long folio;
 	    private Date fechaDesde;
 	    private Date fechaHasta;
+	    private String idCorresponsal;
 
 	public ConsultaActividadesRequest() {
 			super();
@@ -56,6 +57,14 @@ public class ConsultaActividadesRequest implements Comparable<ConsultaActividade
 		this.fechaHasta = fechaHasta;
 	}
 	
+	public String getIdCorresponsal() {
+		return idCorresponsal;
+	}
+
+	public void setIdCorresponsal(String idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
+	}
+
 	@Override
 	public String toString() {
 		return "ConsultaActividadesRequest [folio=" + folio + ", fechaDesde=" + fechaDesde + ", fechaHasta="

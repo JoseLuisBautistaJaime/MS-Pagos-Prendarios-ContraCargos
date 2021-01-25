@@ -29,6 +29,9 @@ public class ReportePagosEnLineaDTO {
 	private String operacion;
 	private Integer sucursal;
 	private BigDecimal monto;
+	private Integer idTipoContrato;
+	private Integer idOperacion;
+
 
 	public ReportePagosEnLineaDTO() {
 		super();
@@ -44,6 +47,20 @@ public class ReportePagosEnLineaDTO {
 		this.operacion = operacion;
 		this.sucursal = sucursal;
 		this.monto = monto;
+	}
+
+	public ReportePagosEnLineaDTO(Date fecha, String canal, Long partida, String tipoProducto, String operacion,
+								  Integer sucursal, BigDecimal monto, Integer idTipoContrato, Integer idOperacion ) {
+		super();
+		this.fecha = fecha;
+		this.canal = canal;
+		this.partida = partida;
+		this.tipoProducto = tipoProducto;
+		this.operacion = operacion;
+		this.sucursal = sucursal;
+		this.monto = monto;
+		this.idTipoContrato = idTipoContrato;
+		this.idOperacion = idOperacion;
 	}
 
 	public String getFecha() {
@@ -100,6 +117,22 @@ public class ReportePagosEnLineaDTO {
 
 	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
+	}
+
+	public Integer getIdOperacion() {
+		return idOperacion;
+	}
+
+	public void setIdOperacion(Integer idOperacion) {
+		this.idOperacion = idOperacion;
+	}
+
+	public Integer getIdTipoContrato() {
+		return idTipoContrato;
+	}
+
+	public void setIdTipoContrato(Integer idTipoContrato) {
+		this.idTipoContrato = idTipoContrato;
 	}
 
 	@Override

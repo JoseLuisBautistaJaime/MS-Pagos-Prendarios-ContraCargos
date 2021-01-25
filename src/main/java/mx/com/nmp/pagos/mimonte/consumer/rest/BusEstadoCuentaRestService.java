@@ -17,7 +17,6 @@ import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.services.conciliacion.SolicitarPagosService;
 
 /**
  * @name BusMailRestService
@@ -34,7 +33,7 @@ public class BusEstadoCuentaRestService extends AbstractOAuth2RestService {
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
-	private static final Logger LOG = LoggerFactory.getLogger(SolicitarPagosService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BusEstadoCuentaRestService.class);
 
 	public BusEstadoCuentaRestService() {
 		super();

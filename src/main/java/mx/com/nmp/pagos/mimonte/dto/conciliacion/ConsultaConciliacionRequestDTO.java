@@ -20,7 +20,7 @@ public class ConsultaConciliacionRequestDTO {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private Integer idEstatus;
-	private CorresponsalEnum idCorresponsal;
+	private String idCorresponsal;
 
 	public ConsultaConciliacionRequestDTO() {
 		super();
@@ -76,11 +76,11 @@ public class ConsultaConciliacionRequestDTO {
 		this.idEstatus = idEstatus;
 	}	
 	
-	public CorresponsalEnum getIdCorresponsal() {
+	public String getIdCorresponsal() {
 		return idCorresponsal;
 	}
 
-	public void setIdCorresponsal(CorresponsalEnum idCorresponsal) {
+	public void setIdCorresponsal(String idCorresponsal) {
 		this.idCorresponsal = idCorresponsal;
 	}
 
