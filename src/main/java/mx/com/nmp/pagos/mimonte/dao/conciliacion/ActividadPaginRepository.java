@@ -9,10 +9,12 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Actividad;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 
 /**
  * @name ActividadPaginRepository
@@ -33,7 +35,7 @@ public interface ActividadPaginRepository extends PagingAndSortingRepository<Act
 	 * 
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act ORDER BY act.fecha DESC")
-	public List<ConsultaActividadDTO> nGetTopXActividades(Pageable pageable);
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO(act.folio, act.fecha, act.descripcion) FROM Actividad act INNER JOIN Conciliacion c ON c.id = act.folio WHERE ( :idCorresponsal IS NULL OR c.proveedor.id = :idCorresponsal ) ORDER BY act.fecha DESC")
+	public List<ConsultaActividadDTO> nGetTopXActividades(Pageable pageable, @Param("idCorresponsal") final CorresponsalEnum idCorresponsal);
 
 }

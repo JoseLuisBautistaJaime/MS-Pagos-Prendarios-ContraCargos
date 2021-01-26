@@ -29,6 +29,18 @@ public class LayoutLineaDTO implements Comparable<LayoutLineaDTO> {
 		super();
 	}
 
+	public LayoutLineaDTO(LayoutLineaDTO lineaDTO) {
+		super();
+		this.cuenta = lineaDTO.getCuenta();
+		this.depId = lineaDTO.getDepId();
+		this.id = lineaDTO.getId();
+		this.linea = lineaDTO.getLinea();
+		this.monto = lineaDTO.getMonto();
+		this.negocio = lineaDTO.getNegocio();
+		this.proyectoNMP = lineaDTO.getProyectoNMP();
+		this.unidadOperativa = lineaDTO.getUnidadOperativa();
+	}
+	
 	public LayoutLineaDTO(Long id, String linea, String cuenta, String depId, String unidadOperativa, String negocio,
 			String proyectoNMP, BigDecimal monto) {
 		super();

@@ -70,6 +70,8 @@ mimonte:
       archivo:
         ruta: "'/Extractos/MovimientosHistoricosC43/'ddMMyy"
         nombre: "'MH43{CUENTA}'yyMMdd'0700.txt'"
+    consultaPagos:
+      url: https://dev1775oxxo-midasms-pagos-midas.mybluemix.net/nmp/pagos/v1/consultaPago
     dss:
       idcliente: "{idCliente}"
     restTemplate:

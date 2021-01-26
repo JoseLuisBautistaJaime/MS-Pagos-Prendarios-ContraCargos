@@ -25,4 +25,16 @@ public class DateUtil {
 		return date;
 	}
 
+	public static boolean isSameDay(Date fecha1, Date fecha2) {
+		boolean sameDay = false;
+		try {
+			sameDay = formatDate(fecha1, "dd/MM/yyyy")
+				.equals(formatDate(fecha2, "dd/MM/yyyy"));
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return sameDay;
+	}
+
 }

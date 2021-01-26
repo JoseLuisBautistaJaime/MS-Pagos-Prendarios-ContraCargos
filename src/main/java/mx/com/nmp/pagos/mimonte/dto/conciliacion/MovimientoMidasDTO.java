@@ -34,6 +34,8 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 	private Boolean estatus;
 	private String consumidor;
 	private BigDecimal importeTransaccion;
+	
+	private long operaciones;
 
 	public MovimientoMidasDTO() {
 		super();
@@ -45,9 +47,10 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 		this.operacionAbr = operacionAbr;
 	}
 
-	public MovimientoMidasDTO(Integer sucursal, BigDecimal montoOperacion) {
+	public MovimientoMidasDTO(Integer sucursal, BigDecimal montoOperacion, long operaciones) {
 		this.sucursal = sucursal;
 		this.montoOperacion = montoOperacion;
+		this.operaciones = operaciones;
 	}
 
 
@@ -198,6 +201,14 @@ public class MovimientoMidasDTO implements Comparable<MovimientoMidasDTO> {
 
 	public void setImporteTransaccion(BigDecimal importeTransaccion) {
 		this.importeTransaccion = importeTransaccion;
+	}
+
+	public long getOperaciones() {
+		return operaciones;
+	}
+
+	public void setOperaciones(long operaciones) {
+		this.operaciones = operaciones;
 	}
 
 	@Override

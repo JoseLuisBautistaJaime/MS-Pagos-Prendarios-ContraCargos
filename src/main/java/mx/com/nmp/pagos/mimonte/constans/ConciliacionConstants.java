@@ -109,6 +109,11 @@ public final class ConciliacionConstants {
 		 */
 		public static final String VALIDATION_PARAM_ERROR = "Se genero un error de validacion.";
 
+		/**
+		 * Mensaje que es mostrado cuando se intenta realizar una operacion del corresponsal X y folios de conciliacion que no pertenecen a dicho corresponsal
+		 */
+		public static final String NO_OXXO_AND_CONCILIACION_RELATIONSHIP = "No existe relacion entre uno o mas folios y el corresponsal";
+		
 	}
 
 	/**
@@ -370,6 +375,11 @@ public final class ConciliacionConstants {
 	public static final String ESTATUS_TRANSACCION_OPENPAY_COMPLETED = "completed";
 	public static final String TIPO_TRANSACCION_OPENPAY_CARGO = "charge";
 	public static final String TIPO_OPERACION_OPENPAY_IN = "in";
+
+	// Estatus bonificaciones
+	public static final Integer ESTATUS_BONIFICACION_PENDIENTE = 1;
+	public static final Integer ESTATUS_BONIFICACION_REVERSA = 2;
+	public static final Integer ESTATUS_BONIFICACION_CONCILIADA = 3;
 
 	/**
 	 * Mensaje que es mostrado cuando se desea actualizar un sub estatus que no

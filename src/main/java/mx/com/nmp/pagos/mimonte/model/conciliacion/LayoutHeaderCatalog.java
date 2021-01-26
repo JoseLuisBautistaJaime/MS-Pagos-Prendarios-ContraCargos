@@ -47,7 +47,9 @@ public class LayoutHeaderCatalog extends Updatable implements Serializable {
 	@Column(name = "tipo")
 	private TipoLayoutEnum tipo;
 
-
+	@Enumerated(EnumType.STRING)
+	@Column(name = "corresponsal")
+	private CorresponsalEnum corresponsal;
 
 	public LayoutHeaderCatalog() {
 		super();
@@ -115,6 +117,14 @@ public class LayoutHeaderCatalog extends Updatable implements Serializable {
 
 	public void setTipo(TipoLayoutEnum tipo) {
 		this.tipo = tipo;
+	}
+
+	public CorresponsalEnum getCorresponsal() {
+		return corresponsal;
+	}
+
+	public void setCorresponsal(CorresponsalEnum corresponsal) {
+		this.corresponsal = corresponsal;
 	}
 
 }

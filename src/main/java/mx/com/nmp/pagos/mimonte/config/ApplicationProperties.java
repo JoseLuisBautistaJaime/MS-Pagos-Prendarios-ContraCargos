@@ -163,6 +163,7 @@ public class ApplicationProperties {
 			private Mail mail;
 			private RestTemplate restTemplate;
 			private ConsultaEstadoCuenta consultaEstadoCuenta;
+			private ConsultaPagos consultaPagos;
 
 			public Mail getMail() {
 				return mail;
@@ -361,6 +362,24 @@ public class ApplicationProperties {
 					}
 				}
 
+			}
+
+			public static class ConsultaPagos {
+				private String url;
+				public String getUrl() {
+					return url;
+				}
+				public void setUrl(String url) {
+					this.url = url;
+				}
+			}
+
+			public ConsultaPagos getConsultaPagos() {
+				return consultaPagos;
+			}
+
+			public void setConsultaPagos(ConsultaPagos consultaPagos) {
+				this.consultaPagos = consultaPagos;
 			}
 		}
 

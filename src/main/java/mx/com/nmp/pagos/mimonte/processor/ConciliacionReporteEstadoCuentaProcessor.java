@@ -11,14 +11,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoComisionBuilder;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientoDevolucionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuentaCabecera;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoComision;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoDevolucion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoComisionEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
@@ -27,7 +24,6 @@ import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
 /**
  * Nombre: ConciliacionProcessor Descripcion: Clase que se encarga de procesar
  * el reporte Estado Cuenta y generar los movimientos correspondientes
- * devoluciones
  *
  * @author JGALVEZ Fecha: 04/06/2019 9:44 PM
  * @version 0.1
@@ -50,33 +46,6 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
 
 		if (reportesWrapper.contains(TipoReporteEnum.ESTADO_CUENTA)) {
-			
-			// Devoluciones
-			/*List<MovimientoDevolucion> movsDevoluciones = extraerMovimientoDevolucion(reportesWrapper.getIdConciliacion(), reportesWrapper.getIdEntidad());
-			if (CollectionUtils.isNotEmpty(movsDevoluciones)) {
-
-				List<MovimientoDevolucion> movimientosDevolucionSave = new ArrayList<MovimientoDevolucion>();
-
-				for (MovimientoDevolucion movDevolucion : movsDevoluciones) {
-					movDevolucion.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
-					movDevolucion.setCreatedDate(new Date());
-					movDevolucion.setIdConciliacion(reportesWrapper.getIdConciliacion());					
-					movimientosDevolucionSave.add(movDevolucion);
-				}
-
-				// Se guardan las devoluciones
-				//this.mergeReporteHandler.getMovimientoDevolucionRepository().saveAll(movimientosDevolucionSave);
-				try {
-					this.mergeReporteHandler.getMovimientoJdbcRepository().insertarLista(
-						movimientosDevolucionSave,
-						ConciliacionConstants.StoreProcedureNames.SAVE_MOV_DEVOLUCION_FUNCTION_NAME
-					);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					throw new ConciliacionException(ex.getMessage(), CodigoError.NMP_PMIMONTE_0011);
-				}
-			}*/
-
 
 			// Comisiones
 			List<MovimientoComision> movsComisiones = extraerMovimientoComision(reportesWrapper.getIdConciliacion(), reportesWrapper.getIdEntidad());
@@ -85,20 +54,9 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 				List<MovimientoComision> movimientosComisionSave = new ArrayList<MovimientoComision>();
 
 				for (MovimientoComision movComision : movsComisiones) {
-
-					// Se verifica si ya existe
-					//MovimientoComision movComisionBD = this.mergeReporteHandler.getMovimientoComisionRepository()
-					//		.findByIdMovimientoEstadoCuenta(movComision.getIdMovimientoEstadoCuenta());
-					//if (movComisionBD != null) { // Update last modified
-					//	movComision = movComisionBD;
-					//	movComision.setLastModifiedBy(ConciliacionConstants.USER_SYSTEM);
-					//	movComision.setLastModifiedDate(new Date());
-					//} else { // Crear nueva
-						movComision.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
-						movComision.setCreatedDate(new Date());
-						movComision.setIdConciliacion(reportesWrapper.getIdConciliacion());
-					//}
-					
+					movComision.setCreatedBy(ConciliacionConstants.USER_SYSTEM);
+					movComision.setCreatedDate(new Date());
+					movComision.setIdConciliacion(reportesWrapper.getIdConciliacion());
 					movimientosComisionSave.add(movComision);
 				}
 
@@ -155,53 +113,6 @@ public class ConciliacionReporteEstadoCuentaProcessor extends ConciliacionProces
 		}
 
 		return movsComision;
-	}
-
-
-	/**
-	 * Extrae los movimientos de tipo comision
-	 * 
-	 * @param idConciliacion
-	 * @param idEntidad
-	 * @return
-	 * @throws ConciliacionException
-	 */
-	private List<MovimientoDevolucion> extraerMovimientoDevolucion(Long idConciliacion, Long idEntidad) throws ConciliacionException {
-		
-		List<MovimientoEstadoCuenta> movsEstadoCuenta = this.mergeReporteHandler.getEstadoCuentaHelper()
-				.getMovimientosEstadoCuentaByCategoria(idConciliacion, ConciliacionConstants.CATEGORIA_ESTADO_CUENTA_DEVOLUCIONES, idEntidad);
-		
-		List<MovimientoDevolucion> movsDevolucion = new ArrayList<MovimientoDevolucion>();
-		if (CollectionUtils.isNotEmpty(movsEstadoCuenta)) {
-			for (MovimientoEstadoCuenta movEstadoCuenta : movsEstadoCuenta) {
-				EstadoCuentaCabecera cabecera = getEstadoCuentaCabecera(movEstadoCuenta.getIdEstadoCuenta());
-				MovimientoDevolucion movDevolucion = MovimientoDevolucionBuilder
-						.buildMovimientoFromMovEstadoCuenta(movEstadoCuenta, idConciliacion, null, cabecera);
-				movsDevolucion.add(movDevolucion);
-			}
-		}
-
-		return movsDevolucion;
-	}
-
-
-	/**
-	 * Obtiene la cabecera a partir del estado de cuenta
-	 * @param idEstadoCuenta
-	 * @return
-	 */
-	private EstadoCuentaCabecera getEstadoCuentaCabecera(Long idEstadoCuenta) {
-		EstadoCuentaCabecera cabecera = null;
-		try {
-			cabecera = this.mergeReporteHandler
-				.getEstadoCuentaCabeceraRepository().findCabeceraByEstadoCuenta(idEstadoCuenta);
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException("Error al consultar la cabecera del estado de cuenta", CodigoError.NMP_PMIMONTE_9999);
-		}
-
-		return cabecera;
 	}
 
 }

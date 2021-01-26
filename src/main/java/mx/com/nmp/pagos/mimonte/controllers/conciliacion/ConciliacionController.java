@@ -7,7 +7,9 @@ package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +77,6 @@ import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
  * @creationDate 02/04/2019 16:38 hrs.
  * @version 0.1
  */
-@SuppressWarnings({ "JavaDoc", "SpringAutowiredFieldsWarningInspection", "DefaultAnnotationParam" })
 @RestController
 @RequestMapping(value = "/mimonte")
 @Api(value = "Servicio que permite realizar operciones sobre la conciliación.", description = "REST API para realizar operaciones sobre la conciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {
@@ -649,21 +650,40 @@ public class ConciliacionController {
 	public Response consultaGenerarFolio(@PathVariable(value = "folio", required = true) Long folio,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String requestUser) {
 		Long subEstatusInicial = null;
+		Map<Long, Long> mapSubEstatusIniciales = new HashMap<>();
 		
 		LOG.info(">>>URL: POST /conciliacion/generar/{folio} > REQUEST ENTRANTE: {}", folio);
 		
 		// VALIDACIONES INICIALES: datos no nulos y que el folio exista
 		conciliacionServiceImpl.validacionesIniciales(folio, requestUser);
 
-		// Se obtiene elsubEstatusInicial para saber el punto de retorno en caso de error, dado que este endpoint puede ejecutarse desde dos procesos distintos (Proveedor transaccional Completado y Estado Cuenta Completado)
-		subEstatusInicial = conciliacionService.findSubEstatusByFolio(folio);
-		if(null == subEstatusInicial)
-			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_030);
+		// Se valida si la conciliacion es de OXXO
+		List<Long> conciliacionesAsociadas = conciliacionService.getConciliacionesAsociadas(folio);
 		
+		// Se obtiene elsubEstatusInicial para saber el punto de retorno en caso de error, dado que este endpoint puede ejecutarse desde dos procesos distintos (Proveedor transaccional Completado y Estado Cuenta Completado)
+		if(null != conciliacionesAsociadas && !conciliacionesAsociadas.isEmpty()) {
+			for(Long id : conciliacionesAsociadas) {
+				subEstatusInicial = conciliacionService.findSubEstatusByFolio(id);
+				mapSubEstatusIniciales.put(id, subEstatusInicial);
+				if(null == subEstatusInicial)
+					throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(), CodigoError.NMP_PMIMONTE_BUSINESS_030);			
+			}	
+		}
+		else {
+			subEstatusInicial = conciliacionService.findSubEstatusByFolio(folio);
+		}
 		// Se actualiza el sub-estatus a uno transitorio para indicar que se esta realizando el poceso de merge de la conciliacion
 		try {
-			conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
-					ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION, null), requestUser);
+			if(null != conciliacionesAsociadas && !conciliacionesAsociadas.isEmpty()) {
+				for(Long id : conciliacionesAsociadas) {
+					conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(id,
+							ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION, null), requestUser);	
+				}	
+			}
+			else {
+				conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
+						ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION, null), requestUser);
+			}
 		} catch (ConciliacionException ex) {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
@@ -674,7 +694,12 @@ public class ConciliacionController {
 		}
 
 		// SE GENERA LA CONCILIACION DE MANERA ASICRONA
-		asyncLayer.generarConciliacion(folio, requestUser, subEstatusInicial);
+		if(null != conciliacionesAsociadas && !conciliacionesAsociadas.isEmpty()) {
+			asyncLayer.generarConciliacionList(conciliacionesAsociadas, requestUser, subEstatusInicial);	
+		}
+		else {
+			asyncLayer.generarConciliacion(folio, requestUser, subEstatusInicial);
+		}
 		// FINALIZA GENERACION DE LA CONCILIACION DE MANERA ASINCRONA
 
 		// Regresa la respuesta exitosa

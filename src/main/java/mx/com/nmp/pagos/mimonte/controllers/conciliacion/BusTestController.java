@@ -5,18 +5,11 @@
 package mx.com.nmp.pagos.mimonte.controllers.conciliacion;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.soap.MessageFactory;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -24,21 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import midas.nmp.com.mx.ObtenerMovimientosConciliacionNocturna;
-import midas.nmp.com.mx.ObtenerMovimientosConciliacionNocturnaResponse;
-import mx.com.montedepiedad.servicios.nmp.schema.nmpconciliacionpagoonline.MovimientoConciliacionNocturna;
 import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaMidasProveedorRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TarjetaMovimientosProveedorDTO;
@@ -165,103 +151,7 @@ public class BusTestController {
 			"Midas" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta exitosa") })
 	public Response midas(@RequestBody ConsultaMidasProveedorRequestDTO request, @RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
-		
-		
-		List<MovimientoConciliacionNocturna> movsMidas = null;
-		try {
-			SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance());
-		    messageFactory.afterPropertiesSet();
-	
-		    WebServiceTemplate webServiceTemplate = new WebServiceTemplate(messageFactory);
-
-		    Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-		    marshaller.setContextPath("midas.nmp.com.mx");
-		    marshaller.afterPropertiesSet();
-		    webServiceTemplate.setMarshaller(marshaller);
-
-		    Jaxb2Marshaller unmarshaller = new Jaxb2Marshaller();
-		    unmarshaller.setContextPath("midas.nmp.com.mx");
-		    unmarshaller.afterPropertiesSet();
-		    webServiceTemplate.setUnmarshaller(unmarshaller);
-		    
-		    webServiceTemplate.afterPropertiesSet();
-
-		    ObtenerMovimientosConciliacionNocturna requestMidas = new ObtenerMovimientosConciliacionNocturna();
-		    requestMidas.setFechaInicio(toXMLGregorianCalendar(request.getFechaDesde()));
-		    requestMidas.setFechaFin(toXMLGregorianCalendar(request.getFechaHasta()));
-
-		    ObtenerMovimientosConciliacionNocturnaResponse response = (ObtenerMovimientosConciliacionNocturnaResponse) webServiceTemplate.marshalSendAndReceive(
-	    		"http://localhost:9010/midas-web/services/ConciliacionPagoOnlineService",
-                requestMidas
-            );
-		    
-		    if (response.getMovimientos() != null) {
-		    	movsMidas = response.getMovimientos().getMovimientoConciliacionNocturna();
-		    }
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException("Error al consultar Midas", CodigoError.NMP_PMIMONTE_BUSINESS_069);
-		}
-		
-		
-		List<MovimientoMidasRequestDTO> movimientos = new ArrayList<MovimientoMidasRequestDTO>();
-		if (CollectionUtils.isNotEmpty(movsMidas)) {
-			for (MovimientoConciliacionNocturna movMidas : movsMidas) {
-				MovimientoMidasRequestDTO movMidasDTO = new MovimientoMidasRequestDTO();
-				movMidasDTO.setCapitalActual(movMidas.getCapitalActual().getValue());
-				movMidasDTO.setCodigoError(movMidas.getCodigoError().getValue());
-				movMidasDTO.setComisiones(movMidas.getComisiones().getValue());
-				movMidasDTO.setConsumidor(movMidas.getIdConsumidor().getValue() != null ? movMidas.getIdConsumidor().getValue().toString() : null);
-				movMidasDTO.setEstadoTransaccion(movMidas.getEstadoTransaccion().getValue());
-				movMidasDTO.setEstatus(movMidas.isEstatus());
-				movMidasDTO.setFecha(movMidas.getFecha().getValue().toGregorianCalendar().getTime());
-				movMidasDTO.setFolioPartida(movMidas.getFolioPartida().getValue());
-				movMidasDTO.setIdOperacion(movMidas.getIdOperacion().getValue());
-				movMidasDTO.setIdTarjeta(movMidas.getIdTarjeta().getValue());
-				movMidasDTO.setIdTipoContrato(movMidas.getIdTipoContrato().getValue());
-				movMidasDTO.setImporteTransaccion(movMidas.getImporteTransaccion().getValue());
-				movMidasDTO.setInteres(movMidas.getInteres().getValue());
-				movMidasDTO.setMarcaTarjeta(movMidas.getMarcaTarjeta().getValue());
-				movMidasDTO.setMensajeError(movMidas.getMensajeError().getValue());
-				movMidasDTO.setMonedaPago(movMidas.getMonedaPago().getValue());
-				movMidasDTO.setMontoOperacion(movMidas.getMontoOperacion().getValue());
-				movMidasDTO.setNumAutorizacion(movMidas.getNumAutorizacion().getValue());
-				movMidasDTO.setOperacionAbr(movMidas.getOperacionAbr().getValue());
-				movMidasDTO.setOperacionDesc(movMidas.getOperacionDesc().getValue());
-				movMidasDTO.setSucursal(movMidas.getSucursal().getValue());
-				movMidasDTO.setTarjeta(movMidas.getTarjeta().getValue());
-				movMidasDTO.setTipoContratoAbr(movMidas.getTipoContratoAbr().getValue());
-				movMidasDTO.setTipoContratoDesc(movMidas.getTipoContratoDesc().getValue());
-				movMidasDTO.setTipoTarjeta(movMidas.getTipoTarjeta().getValue());
-				movMidasDTO.setTransaccion(movMidas.getTransaccion().getValue());
-				movimientos.add(movMidasDTO);
-			}
-		}
-
-		MovimientoProcesosNocturnosListResponseDTO movsDTO = new MovimientoProcesosNocturnosListResponseDTO();
-		movsDTO.setFechaDesde(request.getFechaDesde());
-		movsDTO.setFechaHasta(request.getFechaHasta());
-		movsDTO.setFolio(request.getFolio() != null ? request.getFolio() : 0);
-		movsDTO.setMovimientos(movimientos);
-		
-		
-		return this.movimientosController.saveMovimientosNocturnos(movsDTO, userRequest);
-	}
-
-
-	private XMLGregorianCalendar toXMLGregorianCalendar(Date date) throws ConciliacionException {
-		
-		XMLGregorianCalendar xmlGregorian = null;
-		try {
-			GregorianCalendar c = new GregorianCalendar();
-			c.setTime(date);
-			xmlGregorian = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-		}
-		catch (Exception ex) {
-			throw new ConciliacionException("Error al crear request para consulta movimientos nocturnos");
-		}
-		return xmlGregorian;
+		return null;
 	}
 
 }

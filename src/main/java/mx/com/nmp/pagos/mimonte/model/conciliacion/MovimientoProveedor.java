@@ -15,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @name MovimientoProveedor
@@ -39,13 +41,13 @@ public class MovimientoProveedor implements MovimientoReporte {
 	@Column(name = "id_reporte", nullable = false)
 	private Integer reporte;
 
-	@Column(name = "authorization", nullable = false)
+	@Column(name = "authorization", nullable = true)
 	private String authorization;
 
-	@Column(name = "operation_type", nullable = false)
+	@Column(name = "operation_type", nullable = true)
 	private String operationType;
 
-	@Column(name = "method", nullable = false)
+	@Column(name = "method", nullable = true)
 	private String method;
 
 	@Column(name = "transaction_type", nullable = false)
@@ -54,31 +56,33 @@ public class MovimientoProveedor implements MovimientoReporte {
 	@Column(name = "status", nullable = false)
 	private String status;
 
-	@Column(name = "conciliated", nullable = false)
+	@Column(name = "conciliated", nullable = true)
 	private Boolean conciliated;
 
-	@Column(name = "creation_date", nullable = false)
+	@Column(name = "creation_date", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationDate;
 
 	@Column(name = "operation_date", nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date operationDate;
 
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", nullable = true)
 	private String description;
 
-	@Column(name = "error_message", nullable = false)
+	@Column(name = "error_message", nullable = true)
 	private String errorMessage;
 
 	@Column(name = "order_id", nullable = false)
 	private String orderId;
 
-	@Column(name = "customer_id", nullable = false)
+	@Column(name = "customer_id", nullable = true)
 	private String customerId;
 
-	@Column(name = "error_code", nullable = false)
+	@Column(name = "error_code", nullable = true)
 	private String errorCode;
 
-	@Column(name = "currency", nullable = false)
+	@Column(name = "currency", nullable = true)
 	private String currency;
 
 	@Column(name = "amount", nullable = false)

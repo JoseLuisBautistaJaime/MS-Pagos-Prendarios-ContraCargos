@@ -11,11 +11,12 @@ import java.util.Observable;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 
 /**
  * Nombre: ReporteObservable
- * Descripcion: Clase tipo Observable que contiene los datos del Reporte, se encarga de notificar cambios a los Observers
+ * Descripcion: Clase tipo Observable que contiene los datos del Reporte, se encarga de notificar cambios a los Observers para procesamiento de los reportes
  * @author JGALVEZ
  * Fecha: 30/05/2019 9:44 PM
  * @version 0.1
@@ -25,18 +26,21 @@ public class ReporteObservable extends Observable {
 	private List<Reporte> reportes;
 	private Long idConciliacion;
 	private Long idEntidad;
+	private CorresponsalEnum corresponsal;
 
-	public ReporteObservable(List<Reporte> reportes, Long idConciliacion, Long idEntidad) {
+	public ReporteObservable(List<Reporte> reportes, Long idConciliacion, Long idEntidad, CorresponsalEnum corresponsal) {
 		this.reportes = null;
 		this.idConciliacion = idConciliacion;
 		this.idEntidad = idEntidad;
+		this.corresponsal = corresponsal;
 		verifyReportes(reportes);
 	}
 
-	public ReporteObservable(Reporte reporte, Long idConciliacion, Long idEntidad) {
+	public ReporteObservable(Reporte reporte, Long idConciliacion, Long idEntidad, CorresponsalEnum corresponsal) {
 		this.reportes = null;
 		this.idConciliacion = idConciliacion;
 		this.idEntidad = idEntidad;
+		this.corresponsal = corresponsal;
 		verifyReportes(Arrays.asList(reporte));
 	}
 
@@ -64,6 +68,10 @@ public class ReporteObservable extends Observable {
 
 	public Long getIdEntidad() {
 		return idEntidad;
+	}
+
+	public CorresponsalEnum getCorresponsal() {
+		return corresponsal;
 	}
 
 }

@@ -64,7 +64,7 @@ public abstract class AbstractOAuth2RestService {
 	protected ApplicationProperties applicationProperties;
 
 	@Autowired
-	private RetryTemplate retryTemplate;
+	protected RetryTemplate retryTemplate;
 
 	public AbstractOAuth2RestService() {
 		super();

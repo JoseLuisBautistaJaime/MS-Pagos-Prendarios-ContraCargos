@@ -55,6 +55,7 @@ public abstract class MovimientosTransitoBuilder {
 			movTransitoDTO.setCuenta(movimientoTransito.getCuenta());
 			movTransitoDTO.setTitularCuenta(movimientoTransito.getTitular());
 			movTransitoDTO.setNumAutorizacion(movimientoTransito.getNumAutorizacion());
+			movTransitoDTO.setTransaccion(movimientoTransito.getTransaccion());
 		}
 		return movTransitoDTO;
 	}
@@ -126,6 +127,7 @@ public abstract class MovimientosTransitoBuilder {
 		movTransito.setTitular(movProveedor.getTarjetaMovimientosProveedor().getHolderName());
 		movTransito.setNumAutorizacion(movProveedor.getAuthorization());
 		movTransito.setMovimientoMidas(null);
+		movTransito.setTransaccion(movProveedor.getOrderId());
 		movTransito.setNuevo(false);
 		movTransito.setEstatus(new EstatusTransito(ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_OPEN_PAY.intValue()));
 		movTransito.setIdConciliacion(idConciliacion);
@@ -155,6 +157,7 @@ public abstract class MovimientosTransitoBuilder {
 		movTransito.setTitular(movProveedor != null && movProveedor.getTarjetaMovimientosProveedor() != null ? movProveedor.getTarjetaMovimientosProveedor().getHolderName() : null);
 		movTransito.setNumAutorizacion(movMidas.getNumAutorizacion());
 		movTransito.setMovimientoMidas(movMidas);
+		movTransito.setTransaccion(movProveedor != null ? movProveedor.getOrderId() : movMidas.getTransaccion() != null ? movMidas.getTransaccion().toString() : null);
 		movTransito.setNuevo(false);
 		movTransito.setEstatus(new EstatusTransito(movProveedor != null ?
 				ConciliacionConstants.ESTATUS_TRANSITO_NO_IDENTIFICADO_MIDAS.intValue() :
