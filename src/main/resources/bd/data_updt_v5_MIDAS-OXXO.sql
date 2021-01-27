@@ -680,39 +680,39 @@ VALUES( 59, 'ALTA_MOVIMIENTO_ESTADO_CUENTA', 15, 11, 'OXXO');
 
 -- PAGOS - DEPOSITOS
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(11, 'L', '1220001014', '', '13%03d', 'PRENDA', 'SUCS_NB', 'PAGOS', 'SUCURSALES', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Sucursales
+(11, 'L', '1220001014', '', '13%03d', '', '', 'PAGOS', 'SUCURSALES', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(12, 'L', '1011001', '15000', '', '', '', 'PAGOS', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
+(12, 'L', '1011001085', '15000', '', '', '', 'PAGOS', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
 
 -- Comisiones OXXO (MOV) - DEPOSITOS
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (13, 'L', '6402001005', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_MOV', 'SUCURSALES', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(14, 'L', '1011001', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
+(14, 'L', '1011001085', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
 
 -- Comisiones Iva - DEPOSITOS
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
 (15, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'SUCURSALES', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(16, 'L', '1011001', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
+(16, 'L', '1011001085', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
 
 -- PAGOS - BONIFICACIONES
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(17, 'L', '1220001014', '', '13%03d', 'PRENDA', 'SUCS_NB', 'BONIFICACIONES', 'SUCURSALES', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Sucursales
+(17, 'L', '1220001014', '', '13%03d', '', '', 'BONIFICACIONES', 'SUCURSALES', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(18, 'L', '1011001', '15000', '', '', '', 'BONIFICACIONES', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
+(18, 'L', '1011001085', '15000', '', '', '', 'BONIFICACIONES', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
 
 -- Comisiones OXXO (MOV) - BONIFICACIONES
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(19, 'L', '6402001005', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_MOV', 'SUCURSALES', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Sucursales
+(19, 'L', '6402001005', '', '13%03d', '', '', 'COMISIONES_MOV', 'SUCURSALES', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(20, 'L', '1011001', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Bancos
+(20, 'L', '1011001085', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Bancos
 
 -- Comisiones Iva - BONIFICACIONES
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(21, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'SUCURSALES', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Sucursales
+(21, 'L', '1219001003', '', '13%03d', '', '', 'COMISIONES_IVA', 'SUCURSALES', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Sucursales
 INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(22, 'L', '1011001', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Bancos
+(22, 'L', '1011001085', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Bancos
 
 
 
