@@ -56,8 +56,8 @@ public class BusConsultaPagosRestService extends AbstractOAuth2RestService {
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException("No se puede consultar el servicio de consulta de pagos",
-					CodigoError.NMP_PMIMONTE_BUSINESS_SERVICIO_PAGOS);
+			//throw new ConciliacionException("No se puede consultar el servicio de consulta de pagos",
+			//		CodigoError.NMP_PMIMONTE_BUSINESS_SERVICIO_PAGOS);
 		}
 
 		LOG.debug(response != null ? "Consulta correcta" : "Error al consultar servicio de pagos");

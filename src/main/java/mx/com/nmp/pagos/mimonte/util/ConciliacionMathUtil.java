@@ -99,7 +99,7 @@ public class ConciliacionMathUtil {
 	public static BigDecimal getComisionCobradaProveedor(long totalOperaciones, ComisionProveedor comisionProveedor) {
 		BigDecimal comision = new BigDecimal(0);
 		if (comisionProveedor != null && comisionProveedor.getComision() != null) {
-			comision = new BigDecimal(totalOperaciones).multiply(comisionProveedor.getComision());
+			comision = new BigDecimal(totalOperaciones).multiply(comisionProveedor.getComision()).setScale(2, RoundingMode.HALF_UP);
 		}
 		return comision;
 	}
@@ -114,7 +114,7 @@ public class ConciliacionMathUtil {
 	public static BigDecimal getComisionIvaCobradaProveedor(long totalOperaciones, ComisionProveedor comisionProveedor) {
 		BigDecimal ivaComision = new BigDecimal(0);
 		if (comisionProveedor != null && comisionProveedor.getIva() != null) {
-			ivaComision = new BigDecimal(totalOperaciones).multiply(comisionProveedor.getIva());
+			ivaComision = new BigDecimal(totalOperaciones).multiply(comisionProveedor.getIva()).setScale(2, RoundingMode.HALF_UP);
 		}
 		return ivaComision;
 	}
