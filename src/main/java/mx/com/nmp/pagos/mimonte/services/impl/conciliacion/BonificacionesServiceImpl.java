@@ -160,7 +160,7 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 				if (bonificacionBD.getReferencias() != null) {
 					bonificacionBD.getReferencias().clear();
 					this.movimientoBonificacionRepository.save(bonificacionBD);// Se limpian las referencias
-				} 
+				}
 			}
 			
 			// Get status
