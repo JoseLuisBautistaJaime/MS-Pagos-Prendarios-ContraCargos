@@ -66,12 +66,14 @@ public abstract class GlobalBuilder {
 		// (Total de partidas obtenidas del reporte de procesos nocturnos)
 		global.setPartidas(movsMidas != null ? movsMidas.size() : 0);
 
+		int totalOperaciones = movsProveedor.size();
+		
 		global.setImporteMidas(ConciliacionMathUtil.getImporteMidas(movsMidas));
 		global.setImporteProveedor(ConciliacionMathUtil.getImporteProveedor(movsProveedor, comisionProveedor));
-		global.setImporteBanco(ConciliacionMathUtil.getImporteBanco(movsEstadoCuenta, codigosEdoCuenta, comisionProveedor, movsMidas.size()));
+		global.setImporteBanco(ConciliacionMathUtil.getImporteBanco(movsEstadoCuenta, codigosEdoCuenta, comisionProveedor, totalOperaciones));
 		global.setImporteDevoluciones(ConciliacionMathUtil.getDevolucionesEstadoCuenta(movsEstadoCuenta, codigosEdoCuenta));
 		global.setDiferenciaProveedorMidas(ConciliacionMathUtil.getDiferenciaProveedorMidas(movsProveedor, movsMidas, comisionProveedor));
-		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta, codigosEdoCuenta, comisionProveedor, movsMidas.size()));
+		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta, codigosEdoCuenta, comisionProveedor, totalOperaciones));
 		
 		return global;
 	}

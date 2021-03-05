@@ -47,7 +47,7 @@ public class ConciliacionCompletarMovsTransitoProcessor extends ConciliacionProc
 	 */
 	public void process(ReportesWrapper reportesWrapper) throws ConciliacionException {
 
-		if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR)) {
+		/*if (reportesWrapper.contains(TipoReporteEnum.PROVEEDOR)) {
 
 			// Verificar si ya se cargaron al menos 2 reportes (incluyendo el recibido)
 			if (isReportesCargados(reportesWrapper)) {
@@ -69,7 +69,7 @@ public class ConciliacionCompletarMovsTransitoProcessor extends ConciliacionProc
 					reportesWrapper.setIdsConciliacionesActualizar(idsConciliacionesActualizar);
 				}
 			}
-		}
+		}*/
 		processNext(reportesWrapper);
 	}
 
