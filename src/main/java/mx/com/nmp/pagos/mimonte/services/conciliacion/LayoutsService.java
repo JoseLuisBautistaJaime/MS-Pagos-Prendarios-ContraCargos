@@ -679,10 +679,10 @@ public class LayoutsService {
 
 					LOG.debug(">>>> Tipo Layout: [" + layout.getTipo().name() + "], Total Montos: [" + totalMontos.toString() + "]");
 
-					if (totalMontos.compareTo(BigDecimal.ZERO) != 0) {
-						throw new ConciliacionException("Montos de layout de " + layout.getTipo().name() + " incorrectos.",
-								CodigoError.NMP_PMIMONTE_BUSINESS_138);
-					}
+					//if (totalMontos.compareTo(BigDecimal.ZERO) != 0) {
+					//	throw new ConciliacionException("Montos de layout de " + layout.getTipo().name() + " incorrectos.",
+					//			CodigoError.NMP_PMIMONTE_BUSINESS_138);
+					//}
 				}
 			}
 
