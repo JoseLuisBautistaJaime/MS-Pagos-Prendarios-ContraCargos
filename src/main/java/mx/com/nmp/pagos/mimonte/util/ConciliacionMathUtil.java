@@ -131,7 +131,7 @@ public class ConciliacionMathUtil {
 		if (comisionProveedor != null && comisionProveedor.getComision() != null && comisionProveedor.getIva() != null && montoTotalOperacion != null) {
 			BigDecimal comisionMasIva = comisionProveedor.getComision().add(comisionProveedor.getIva()); // Comision + iva
 			BigDecimal porcentajeMonto = new BigDecimal(100).subtract(comisionMasIva); // Porcentaje correspondiente al monto actual
-			montoDepositado = montoTotalOperacion.multiply(porcentajeMonto).divide(new BigDecimal(100), 4, RoundingMode.FLOOR); // Porcentaje de comision iva cobrado
+			montoDepositado = montoTotalOperacion.multiply(porcentajeMonto).divide(new BigDecimal(100), 4, RoundingMode.HALF_UP); // Porcentaje de comision iva cobrado
 		}
 		return montoDepositado;
 	}
@@ -223,12 +223,6 @@ public class ConciliacionMathUtil {
 
 		// Movimientos de estado de cuenta
 		BigDecimal montoBanco = getImporteBanco(movsEstadoCuenta, codigosEdoCuenta, comisionProveedor, totalOperaciones);
-		/*if (movsEstadoCuenta != null && movsEstadoCuenta.size() > 0) {
-			montoBanco = getImporteBanco(movsEstadoCuenta, codigosEdoCuenta);
-			BigDecimal montoBancoComision = getComisionCobradaProveedor(movsProveedor.size(), comisionProveedor); // Comision por el total de operaciones
-			BigDecimal montoBancoComisionIva = getComisionIvaCobradaProveedor(movsProveedor.size(), comisionProveedor); // Comision Iva por el total de operaciones
-			montoBanco = montoBanco.add(montoBancoComision).add(montoBancoComisionIva);
-		}*/
 
 		// Proveedor
 		BigDecimal montoProveedor = getImporteProveedor(movsProveedor, comisionProveedor);

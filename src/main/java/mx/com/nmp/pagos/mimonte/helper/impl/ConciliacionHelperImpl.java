@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionTransaccionRepository;
@@ -139,6 +138,19 @@ public class ConciliacionHelperImpl implements ConciliacionHelper {
 			throw new ConciliacionException("Error al consultar la fecha del reporte " + tipoReporte, CodigoError.NMP_PMIMONTE_0011);
 		}
 		return fecha;
+	}
+
+
+	public void crearConciliacionSemanalConciliacion(Conciliacion conciliacion) throws ConciliacionException {
+		try {
+			//Conciliacion nuevaConciliacion = this.conciliacionBuilder.buildConciliacion(conciliacion);
+			//nuevaConciliacion.set
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			//throw new ConciliacionException("Error al crear la conciliacion semanal " + tipoReporte, CodigoError.NMP_PMIMONTE_0011);
+		}
+		
 	}
 
 }

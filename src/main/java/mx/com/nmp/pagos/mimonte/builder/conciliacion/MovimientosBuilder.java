@@ -748,4 +748,85 @@ public abstract class MovimientosBuilder {
 		return movsEdoCuenta;
 	}
 
+	public static MovimientoMidas buildMovimientoMidasFromMovimientoMidas(MovimientoMidas movMidasBD, Long idReporte) {
+		MovimientoMidas movimientoMidas = new MovimientoMidas();
+		movimientoMidas.setId(null);
+		movimientoMidas.setReporte(idReporte);
+		movimientoMidas.setConsumidor(movMidasBD.getConsumidor());
+		movimientoMidas.setEstadoTransaccion(movMidasBD.getEstadoTransaccion());
+		movimientoMidas.setCapital(movMidasBD.getCapital());
+		movimientoMidas.setComisiones(movMidasBD.getComisiones());
+		movimientoMidas.setEstatus(movMidasBD.getEstatus());
+		movimientoMidas.setFecha(movMidasBD.getFecha());
+		movimientoMidas.setFolio(movMidasBD.getFolio());
+		movimientoMidas.setInteres(movMidasBD.getInteres());
+		movimientoMidas.setMonto(movMidasBD.getMonto());
+		movimientoMidas.setNumAutorizacion(movMidasBD.getNumAutorizacion());
+		movimientoMidas.setOperacionAbr(movMidasBD.getOperacionAbr());
+		movimientoMidas.setOperacionDesc(movMidasBD.getOperacionDesc());
+		movimientoMidas.setSucursal(movMidasBD.getSucursal());
+		movimientoMidas.setTipoContratoAbr(movMidasBD.getTipoContratoAbr());
+		movimientoMidas.setTipoContratoDesc(movMidasBD.getTipoContratoDesc());
+		movimientoMidas.setTransaccion(movMidasBD.getTransaccion());
+		movimientoMidas.setImporteTransaccion(movMidasBD.getImporteTransaccion());
+		movimientoMidas.setIdOperacion(movMidasBD.getIdOperacion());
+		movimientoMidas.setIdTipoContrato(movMidasBD.getIdTipoContrato());
+		movimientoMidas.setCodigoError(movMidasBD.getCodigoError());
+		movimientoMidas.setMensajeError(movMidasBD.getMensajeError());
+		movimientoMidas.setIdTarjeta(movMidasBD.getIdTarjeta());
+		movimientoMidas.setMarcaTarjeta(movMidasBD.getMarcaTarjeta());
+		movimientoMidas.setTipoTarjeta(movMidasBD.getTipoTarjeta());
+		movimientoMidas.setTarjeta(movMidasBD.getTarjeta());
+		movimientoMidas.setMonedaPago(movMidasBD.getMonedaPago());
+		return movimientoMidas;
+	}
+
+	public static MovimientoProveedor buildMovimientoProveedorFromMovimientoProveedor(MovimientoProveedor movProveedorBD, final int idReporte) {
+		MovimientoProveedor movimientoProveedor = new MovimientoProveedor();
+		movimientoProveedor.setId(null);
+		movimientoProveedor.setReporte(idReporte);
+		movimientoProveedor.setAmount(movProveedorBD.getAmount());
+		movimientoProveedor.setAuthorization(movProveedorBD.getAuthorization());
+		movimientoProveedor.setConciliated(movProveedorBD.getConciliated());
+		movimientoProveedor.setCreationDate(movProveedorBD.getCreationDate());
+		movimientoProveedor.setCurrency(movProveedorBD.getCurrency());
+		movimientoProveedor.setCustomerId(movProveedorBD.getCustomerId());
+		movimientoProveedor.setDescription(movProveedorBD.getDescription());
+		movimientoProveedor.setErrorCode(movProveedorBD.getErrorCode());
+		movimientoProveedor.setErrorMessage(movProveedorBD.getErrorMessage());
+		movimientoProveedor.setIdMovimiento(movProveedorBD.getIdMovimiento());
+		movimientoProveedor.setMethod(movProveedorBD.getMethod());
+		movimientoProveedor.setOperationDate(movProveedorBD.getOperationDate());
+		movimientoProveedor.setOperationType(movProveedorBD.getOperationType());
+		movimientoProveedor.setOrderId(movProveedorBD.getOrderId());
+		movimientoProveedor.setStatus(movProveedorBD.getStatus());
+		movimientoProveedor.setTransactionType(movProveedorBD.getTransactionType());
+		if (movProveedorBD.getMetodoPagoMovimientosProveedor() != null) {
+			MetodoPagoMovimientosProveedor metodoPagoMovimientosProveedor = new MetodoPagoMovimientosProveedor();
+			metodoPagoMovimientosProveedor.setType(movProveedorBD.getMetodoPagoMovimientosProveedor().getType());
+			metodoPagoMovimientosProveedor.setUrl(movProveedorBD.getMetodoPagoMovimientosProveedor().getUrl());
+			movimientoProveedor.setMetodoPagoMovimientosProveedor(metodoPagoMovimientosProveedor);
+		}
+		if (movProveedorBD.getTarjetaMovimientosProveedor() != null) {
+			TarjetaMovimientosProveedor tarjetaMovimientosProveedor = new TarjetaMovimientosProveedor();
+			tarjetaMovimientosProveedor.setAddress(movProveedorBD.getTarjetaMovimientosProveedor().getAddress());
+			tarjetaMovimientosProveedor.setAllowsCharges(movProveedorBD.getTarjetaMovimientosProveedor().getAllowsCharges());
+			tarjetaMovimientosProveedor.setAllowsPayouts(movProveedorBD.getTarjetaMovimientosProveedor().getAllowsPayouts());
+			tarjetaMovimientosProveedor.setBankCode(movProveedorBD.getTarjetaMovimientosProveedor().getBankCode());
+			tarjetaMovimientosProveedor.setBankName(movProveedorBD.getTarjetaMovimientosProveedor().getBankName());
+			tarjetaMovimientosProveedor.setBrand(movProveedorBD.getTarjetaMovimientosProveedor().getBrand());
+			tarjetaMovimientosProveedor.setCardNumber(movProveedorBD.getTarjetaMovimientosProveedor().getCardNumber());
+			tarjetaMovimientosProveedor.setCreationDate(movProveedorBD.getTarjetaMovimientosProveedor().getCreationDate());
+			tarjetaMovimientosProveedor.setCustomerId(movProveedorBD.getTarjetaMovimientosProveedor().getCustomerId());
+			tarjetaMovimientosProveedor.setExpirationMonth(movProveedorBD.getTarjetaMovimientosProveedor().getExpirationMonth());
+			tarjetaMovimientosProveedor.setExpirationYear(movProveedorBD.getTarjetaMovimientosProveedor().getExpirationYear());
+			tarjetaMovimientosProveedor.setHolderName(movProveedorBD.getTarjetaMovimientosProveedor().getHolderName());
+			tarjetaMovimientosProveedor.setId(movProveedorBD.getTarjetaMovimientosProveedor().getId());
+			tarjetaMovimientosProveedor.setType(movProveedorBD.getTarjetaMovimientosProveedor().getType());
+			movimientoProveedor.setTarjetaMovimientosProveedor(tarjetaMovimientosProveedor);
+		}
+
+		return movimientoProveedor;
+	}
+
 }

@@ -1251,7 +1251,7 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		// Registro de actividad
 		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(idConciliacion),
-				"Se genera la conciliacion con el folio " + idConciliacion, TipoActividadEnum.ACTIVIDAD,
+				"Se genera la conciliacion con el folio " + objectsInSession.getFolioByIdConciliacion(idConciliacion), TipoActividadEnum.ACTIVIDAD,
 				SubTipoActividadEnum.GENERACION_CONCILIACION);
 		
 		LOG.info("P>>> FINALIZA PROCESO TARDADO");
