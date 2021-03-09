@@ -547,8 +547,7 @@ public class MovimientosController {
 							procesoCorrecto
 									? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
 									: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
-							descripcionError), userRequest);
-					*/	
+							descripcionError), userRequest);*/	
 				}
 			} catch (Exception ex) {
 				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);

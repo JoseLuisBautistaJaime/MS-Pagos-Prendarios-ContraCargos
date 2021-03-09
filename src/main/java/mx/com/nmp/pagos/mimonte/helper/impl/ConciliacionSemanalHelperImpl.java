@@ -20,12 +20,15 @@ import mx.com.nmp.pagos.mimonte.builder.conciliacion.BonificacionesBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoBonificacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
@@ -33,10 +36,12 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionSemanalHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoBonificacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.SubEstatusConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 
@@ -59,6 +64,9 @@ public class ConciliacionSemanalHelperImpl implements ConciliacionSemanalHelper 
 
 	@Autowired
 	private ConciliacionService conciliacionService;
+
+	@Autowired
+	private ConciliacionRepository conciliacionRepository;
 
 	@Autowired
 	private CuentaRepository cuentaRepository;
@@ -102,8 +110,13 @@ public class ConciliacionSemanalHelperImpl implements ConciliacionSemanalHelper 
 		copiarMovimientosBonificacion(conciliacionNuevaDTO.getFolio(), conciliacionesIds, createdBy);
 
 		// Se actualiza el subestatus de la conciliacion para dejarla en el estado correcto antes de la carga del estado de cuenta
-		// TODO:
-
+		Conciliacion conciliacion = this.conciliacionRepository.findByFolio(conciliacionNuevaDTO.getFolio());
+		conciliacion.setSubEstatus(new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA));
+		conciliacionRepository.save(conciliacion);
+		/*conciliacionRepository.save.actualizaSubEstatusConciliacion(conciliacionNuevaDTO.getFolio(),
+				new SubEstatusConciliacion(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA), createdBy, new Date(),
+				new EstatusConciliacion(ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO),"");
+	*/
 		return conciliacionNuevaDTO;
 	}
 

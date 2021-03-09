@@ -171,11 +171,11 @@ public class BonificacionesBuilder {
 		movBonificacion.setPlaza(movBonificacionBD.getPlaza());
 		movBonificacion.setSucursal(movBonificacionBD.getSucursal());
 		movBonificacion.setTienda(movBonificacionBD.getTienda());
-		movBonificacion.setReferencias(buildReferencias(movBonificacionBD.getReferencias()));
+		movBonificacion.setReferencias(buildReferencias(movBonificacion, movBonificacionBD.getReferencias()));
 		return movBonificacion;
 	}
 
-	private static List<MovimientoBonificacionReferencia> buildReferencias(List<MovimientoBonificacionReferencia> movsReferenciasBD) {
+	private static List<MovimientoBonificacionReferencia> buildReferencias(MovimientoBonificacion movBonificacion, List<MovimientoBonificacionReferencia> movsReferenciasBD) {
 		List<MovimientoBonificacionReferencia> movsReferencias = new ArrayList<MovimientoBonificacionReferencia>();
 		if (movsReferenciasBD != null && movsReferenciasBD.size() > 0) {
 			for (MovimientoBonificacionReferencia movReferenciaBD : movsReferenciasBD) {
@@ -184,6 +184,7 @@ public class BonificacionesBuilder {
 				movReferencia.setMovimientoBonificacion(movReferenciaBD.getMovimientoBonificacion());
 				movReferencia.setReferencia(movReferenciaBD.getReferencia());
 				movReferencia.setSucursal(movReferenciaBD.getSucursal());
+				movReferencia.setMovimientoBonificacion(movBonificacion);
 				movsReferencias.add(movReferencia);
 			}
 		}
