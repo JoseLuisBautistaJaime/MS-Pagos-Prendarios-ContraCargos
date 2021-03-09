@@ -155,4 +155,39 @@ public class BonificacionesBuilder {
 		return referencias;
 	}
 
+	public static MovimientoBonificacion buildBonificaciones(MovimientoBonificacion movBonificacionBD, Long idConciliacion) {
+		MovimientoBonificacion movBonificacion = new MovimientoBonificacion();
+		movBonificacion.setAsignacion(movBonificacionBD.getAsignacion());
+		movBonificacion.setCreatedBy(movBonificacionBD.getCreatedBy());
+		movBonificacion.setCreatedDate(movBonificacionBD.getCreatedDate());
+		movBonificacion.setEstatus(movBonificacionBD.getEstatus());
+		movBonificacion.setFolioBonificacion(movBonificacionBD.getFolioBonificacion());
+		movBonificacion.setIdConciliacion(idConciliacion);
+		movBonificacion.setImporteML(movBonificacionBD.getImporteML());
+		movBonificacion.setLastModifiedBy(movBonificacionBD.getLastModifiedBy());
+		movBonificacion.setLastModifiedDate(movBonificacionBD.getLastModifiedDate());
+		movBonificacion.setNumDoc(movBonificacionBD.getNumDoc());
+		movBonificacion.setFechaDoc(movBonificacionBD.getFechaDoc());
+		movBonificacion.setPlaza(movBonificacionBD.getPlaza());
+		movBonificacion.setSucursal(movBonificacionBD.getSucursal());
+		movBonificacion.setTienda(movBonificacionBD.getTienda());
+		movBonificacion.setReferencias(buildReferencias(movBonificacionBD.getReferencias()));
+		return movBonificacion;
+	}
+
+	private static List<MovimientoBonificacionReferencia> buildReferencias(List<MovimientoBonificacionReferencia> movsReferenciasBD) {
+		List<MovimientoBonificacionReferencia> movsReferencias = new ArrayList<MovimientoBonificacionReferencia>();
+		if (movsReferenciasBD != null && movsReferenciasBD.size() > 0) {
+			for (MovimientoBonificacionReferencia movReferenciaBD : movsReferenciasBD) {
+				MovimientoBonificacionReferencia movReferencia = new MovimientoBonificacionReferencia();
+				movReferencia.setMonto(movReferenciaBD.getMonto());
+				movReferencia.setMovimientoBonificacion(movReferenciaBD.getMovimientoBonificacion());
+				movReferencia.setReferencia(movReferenciaBD.getReferencia());
+				movReferencia.setSucursal(movReferenciaBD.getSucursal());
+				movsReferencias.add(movReferencia);
+			}
+		}
+		return movsReferencias;
+	}
+
 }

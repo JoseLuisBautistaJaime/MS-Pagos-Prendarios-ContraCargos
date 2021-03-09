@@ -16,11 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.BonificacionesBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoBonificacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
@@ -32,6 +33,7 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionSemanalHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoBonificacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
@@ -71,6 +73,9 @@ public class ConciliacionSemanalHelperImpl implements ConciliacionSemanalHelper 
 	private MovimientoProveedorRepository movimientoProveedorRepository;
 
 	@Autowired
+	private MovimientoBonificacionRepository movimientoBonificacionRepository;
+
+	@Autowired
 	private MovimientoJdbcRepository movimientoJdbcRepository;
 
 
@@ -92,6 +97,9 @@ public class ConciliacionSemanalHelperImpl implements ConciliacionSemanalHelper 
 
 		// Se copian los movimientos del proveedor
 		copiarMovimientosProveedor(conciliacionNuevaDTO.getFolio(), conciliacionesIds, fechaConciliacion, createdBy);
+
+		// Copiar Bonificaciones
+		copiarMovimientosBonificacion(conciliacionNuevaDTO.getFolio(), conciliacionesIds, createdBy);
 
 		// Se actualiza el subestatus de la conciliacion para dejarla en el estado correcto antes de la carga del estado de cuenta
 		// TODO:
@@ -307,5 +315,53 @@ public class ConciliacionSemanalHelperImpl implements ConciliacionSemanalHelper 
 		return movsProveedor;
 	}
 
+
+	/**
+	 * Se copian los movimientos de bonificaciones de las conciliaciones
+	 * @param folio
+	 * @param conciliacionesIds
+	 * @param createdBy
+	 */
+	private void copiarMovimientosBonificacion(Long idConciliacion, List<Long> conciliacionesIds, String createdBy) throws ConciliacionException {
+		List<MovimientoBonificacion> movsBonificaciones = buildBonificaciones(idConciliacion, conciliacionesIds);
+		if (movsBonificaciones != null && movsBonificaciones.size() > 0) {
+			try {
+				this.movimientoBonificacionRepository.saveAll(movsBonificaciones);
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+				throw new ConciliacionException("Error guardar copiar los movimientos de bonificacion", CodigoError.NMP_PMIMONTE_0011);
+			}
+		}
+	}
+
+
+
+	/**
+	 * Se construyen las bonificaciones
+	 * @param idConciliacion
+	 * @param conciliacionesIds
+	 */
+	private List<MovimientoBonificacion> buildBonificaciones(Long idConciliacion, List<Long> conciliacionesIds) throws ConciliacionException {
+		List<MovimientoBonificacion> movsBonificaciones = new ArrayList<MovimientoBonificacion>();
+		try {
+			LOG.debug("T>>> Se construyen movimientos bonificaciones: {} para la conciliacion {}", sdf.format(new Date()), idConciliacion);
+			if (conciliacionesIds != null && conciliacionesIds.size() > 0) {
+				for (Long idConciliacionOriginal : conciliacionesIds) {
+					List<MovimientoBonificacion> movsBonificacionesBD = movimientoBonificacionRepository.findByIdConciliacion(idConciliacionOriginal);
+					if (movsBonificacionesBD != null && movsBonificacionesBD.size() > 0) {
+						for (MovimientoBonificacion movBonificacionBD : movsBonificacionesBD) {
+							movsBonificaciones.add(BonificacionesBuilder.buildBonificaciones(movBonificacionBD, idConciliacion));
+						}
+					}
+				}
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al construir los movimientos bonificaciones", CodigoError.NMP_PMIMONTE_0011);
+		}
+		return movsBonificaciones;
+	}
 
 }

@@ -543,11 +543,12 @@ public class MovimientosController {
 										: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
 								descripcionError), userRequest);	
 					}
-					conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(nuevaConciliacion.getFolio(),
+					/*conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(nuevaConciliacion.getFolio(),
 							procesoCorrecto
 									? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
 									: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
-							descripcionError), userRequest);	
+							descripcionError), userRequest);
+					*/	
 				}
 			} catch (Exception ex) {
 				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
