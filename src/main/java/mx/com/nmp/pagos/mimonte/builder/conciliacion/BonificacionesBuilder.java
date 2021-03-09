@@ -167,6 +167,7 @@ public class BonificacionesBuilder {
 		movBonificacion.setLastModifiedBy(movBonificacionBD.getLastModifiedBy());
 		movBonificacion.setLastModifiedDate(movBonificacionBD.getLastModifiedDate());
 		movBonificacion.setNumDoc(movBonificacionBD.getNumDoc());
+		movBonificacion.setFechaDoc(movBonificacionBD.getFechaDoc());
 		movBonificacion.setPlaza(movBonificacionBD.getPlaza());
 		movBonificacion.setSucursal(movBonificacionBD.getSucursal());
 		movBonificacion.setTienda(movBonificacionBD.getTienda());
