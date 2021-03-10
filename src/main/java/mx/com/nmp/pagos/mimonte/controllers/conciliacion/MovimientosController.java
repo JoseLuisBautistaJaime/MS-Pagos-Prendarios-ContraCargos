@@ -519,11 +519,14 @@ public class MovimientosController {
 				// No actualiza subestatus si el error fue por validacion de subestatus
 				if (codigoError != CodigoError.NMP_PMIMONTE_BUSINESS_030) {
 					for(Long folio :request.getFolios()) {
-						conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
+						conciliacionServiceImpl.actualizaSubEstatusStatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
 								procesoCorrecto
-										? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
+										? ConciliacionConstants.SUBESTATUS_CONCILIACION_FINALIZADA
 										: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
-								descripcionError), userRequest);	
+								procesoCorrecto
+										? ConciliacionConstants.ESTATUS_CONCILIACION_FINALIZADA
+										: ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
+								descripcionError), userRequest);
 					}
 					/*conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(nuevaConciliacion.getFolio(),
 							procesoCorrecto

@@ -970,6 +970,56 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	}
 
 	/**
+	 * Actualiza el sub estatus de una conciliacion por folio
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void actualizaSubEstatusStatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO, String usuario) {
+		
+		long start = 0;
+		long finish = 0;
+		long globalStart = 0;
+		long globalFinish = 0;
+		
+		globalStart = System.currentTimeMillis();
+		LOG.debug("T>>> INICIA ACTUALIZACION DE SUB ESTATUS GENERAL: {}", sdf.format(new Date(globalStart)));
+
+		// Se actualiza el sub estatus de la conciliacion al que se recibio como
+		// parametro, adicionalmente se actualizan los campos createdBy y createdDate
+		start = System.currentTimeMillis();
+		LOG.debug("T>>> INICIA ACTUALIZACION DE SUB ESTATUS EN BASE DE DATOS: {}", sdf.format(new Date(start)));
+		conciliacionRepository.actualizaSubEstatusConciliacion(actualizarSubEstatusRequestDTO.getFolio(),
+				new SubEstatusConciliacion(actualizarSubEstatusRequestDTO.getIdSubEstatus()), usuario, new Date(),
+				new EstatusConciliacion(actualizarSubEstatusRequestDTO.getIdEstatus()),
+				actualizarSubEstatusRequestDTO.getDescripcion());
+		finish = System.currentTimeMillis();
+		LOG.debug("T>>> FINALIZA ACTUALIZACION DE SUB ESTATUS EN BASE DE DATOS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+
+		// Se obtienen los datos del subestatus para el registro de actividades
+		start = System.currentTimeMillis();
+		LOG.debug("T>>> INICIA OBTENCION DE SUB ESTATUS PARA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
+		Optional<SubEstatusConciliacion> subEstatus = subEstatusConciliacionRepository
+				.findById(actualizarSubEstatusRequestDTO.getIdSubEstatus());
+		finish = System.currentTimeMillis();
+		LOG.debug("T>>> FINALIZA OBTENCION DE SUB ESTATUS PARA REGISTRO DE ACTIVIDADES: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+
+		// Registro de actividad
+		start = System.currentTimeMillis();
+		LOG.debug("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
+		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(actualizarSubEstatusRequestDTO.getFolio()),
+				"Se actualizo el sub-estado de la conciliacion con el folio "
+						+ actualizarSubEstatusRequestDTO.getFolio() + " a: "
+						+ (subEstatus.isPresent() && null != subEstatus.get().getDescription()
+								? subEstatus.get().getDescription()
+								: actualizarSubEstatusRequestDTO.getIdSubEstatus()),
+				TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.ACTUALIZACION_ESTATUS_CONCILIACION);
+		finish = System.currentTimeMillis();
+		LOG.debug("T>>> FINALIZA REGISTRO DE ACTIVIDADES: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		
+		globalFinish = System.currentTimeMillis();
+		LOG.debug("T>>> FINALIZA ACTUALIZACION DE SUB ESTATUS GENERAL: {}, EN: {}", sdf.format(new Date(globalFinish)), (globalFinish-globalStart) );
+	}
+
+	/**
 	 * Regresa un objeto con el resumen de totoal de conciliaciones en proceso, el
 	 * total de devoluciones liquidadas y el total de conciliaciones, puede recibir
 	 * fechas inicial y final como parametros
@@ -1192,6 +1242,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 
 		try {
 			conciliacionRepository.save(conciliacion);
+			
+			// Si la conciliacion es oxxo se verifica si la conciliacion semanal.
+			if (conciliacion.getProveedor() != null && conciliacion.getProveedor().getNombre() != null && conciliacion.getProveedor().getNombre().equals(CorresponsalEnum.OXXO)) {
+				conciliacionRepository.actualizarPSConciliacionesRelacionadas(conciliacion.getId(), conciliacion.getIdAsientoContable(), conciliacion.getIdPolizaTesoreria(), conciliacion.getLastModifiedBy(), conciliacion.getLastModifiedDate());
+			}
+
 		} catch (Exception ex) {
 			LOG.error("Error al actualizar la conciliacion.", ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_031.getDescripcion(),
