@@ -99,6 +99,8 @@ public interface ConciliacionService {
 	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			String usuario);
 
+	public void actualizaSubEstatusStatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO, String usuario);
+
 	/**
 	 * Realiza a actualizacion de el subestatus de una conciliacion por folio
 	 * 
