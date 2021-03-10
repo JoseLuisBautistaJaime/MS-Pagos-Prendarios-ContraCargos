@@ -19,6 +19,7 @@ public class ActualizarSubEstatusRequestDTO {
 
 	private Long folio;
 	private Long idSubEstatus;
+	private Integer idEstatus;
 	private String descripcion;
 
 	public ActualizarSubEstatusRequestDTO() {
@@ -29,6 +30,14 @@ public class ActualizarSubEstatusRequestDTO {
 		super();
 		this.folio = folio;
 		this.idSubEstatus = idSubEstatus;
+		this.descripcion = descripcion;
+	}
+
+	public ActualizarSubEstatusRequestDTO(Long folio, Long idSubEstatus, Integer idEstatus, String descripcion) {
+		super();
+		this.folio = folio;
+		this.idSubEstatus = idSubEstatus;
+		this.idEstatus = idEstatus;
 		this.descripcion = descripcion;
 	}
 
@@ -54,6 +63,14 @@ public class ActualizarSubEstatusRequestDTO {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public Integer getIdEstatus() {
+		return idEstatus;
+	}
+
+	public void setIdEstatus(Integer idEstatus) {
+		this.idEstatus = idEstatus;
 	}
 
 	@Override
