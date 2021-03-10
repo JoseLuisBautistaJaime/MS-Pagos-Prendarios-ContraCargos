@@ -81,4 +81,12 @@ public interface MovimientoEstadoCuentaRepository extends PagingAndSortingReposi
 	@Query("SELECT MAX(mm.fechaOperacion) FROM MovimientoEstadoCuenta mm INNER JOIN EstadoCuenta ec ON mm.idEstadoCuenta = ec.id INNER JOIN Reporte r ON r.id = ec.idReporte INNER JOIN r.conciliacion con WHERE con.id = :idConciliacion")
 	public Date findFechaOperacionByConciliacion(@Param("idConciliacion") final Long idConciliacion);
 
+	/**
+	 * Obtiene los movimientos de estado de cuenta asignados a una conciliacion
+	 * @param idConciliacion
+	 * @return
+	 */
+	@Query("SELECT MAX(r.fechaHasta) FROM Reporte r WHERE r.conciliacion.id = :idConciliacion AND r.tipo = 'ESTADO_CUENTA' ")
+	public Date findFechaEstadoCuentaByConciliacion(@Param("idConciliacion") final Long idConciliacion);
+
 }
