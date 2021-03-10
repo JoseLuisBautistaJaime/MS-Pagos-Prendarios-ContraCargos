@@ -508,7 +508,8 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	@Query(nativeQuery = true, value="UPDATE to_conciliacion SET id_poliza_tesoreria = :idPolizaTesoreria, id_asiento_contable = :idAsientoContable, last_modified_by = :lastModifiedBy, last_modified_date = :lastModifiedDate WHERE id IN (" + 
 			"SELECT ce.id_conciliacion FROM tr_conciliacion_estado_cuenta ce WHERE ce.id_reporte = (SELECT MAX(r1.id) FROM to_reporte r1 WHERE r1.id_conciliacion = :idConciliacion AND r1.tipo = 'ESTADO_CUENTA')" + 
 	")")
-	public void actualizarPSConciliacionesRelacionadas(@Param("idConciliacion") Long idConciliacion,
+	public void actualizarPSConciliacionesRelacionadas(
+			@Param("idConciliacion") Long idConciliacion,
 			@Param("idAsientoContable") String idAsientoContable,
 			@Param("idPolizaTesoreria") String idPolizaTesoreria,
 			@Param("lastModifiedBy") String lastModifiedBy,
