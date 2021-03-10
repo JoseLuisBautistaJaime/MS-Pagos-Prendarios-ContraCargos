@@ -21,6 +21,7 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper;
 import mx.com.nmp.pagos.mimonte.model.CodigoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
 import mx.com.nmp.pagos.mimonte.util.CodigosEdoCuentaMap;
@@ -279,8 +280,14 @@ public class EstadoCuentaHelperImpl implements EstadoCuentaHelper {
 	/* (non-Javadoc)
 	 * @see mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper#getFechaOperacionEstadoCuenta(java.lang.Long, mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum)
 	 */
-	public Date getFechaOperacionEstadoCuenta(Long idConciliacion, TipoLayoutEnum tipoLayout) throws ConciliacionException {
-		Date date = movimientoEstadoCuentaRepository.findFechaOperacionByConciliacion(idConciliacion);
+	public Date getFechaOperacionEstadoCuenta(Long idConciliacion, CorresponsalEnum corresponsal, TipoLayoutEnum tipoLayout) throws ConciliacionException {
+		Date date = null;
+		if (corresponsal == null || corresponsal == CorresponsalEnum.OPENPAY) {
+			date = movimientoEstadoCuentaRepository.findFechaOperacionByConciliacion(idConciliacion);
+		}
+		else {
+			date = movimientoEstadoCuentaRepository.findFechaEstadoCuentaByConciliacion(idConciliacion);
+		}
 		return date;
 	}
 

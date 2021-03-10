@@ -803,7 +803,7 @@ public class LayoutsService {
 							headerCatalog = getCabeceraCatalog(layoutDTO.getTipoLayout(), CorresponsalEnum.OXXO);
 						}
 						
-						Date fechaOperacion = this.estadoCuentaHelper.getFechaOperacionEstadoCuenta(idConciliacion, layoutDTO.getTipoLayout());
+						Date fechaOperacion = this.estadoCuentaHelper.getFechaOperacionEstadoCuenta(idConciliacion, corresponsal, layoutDTO.getTipoLayout());
 						headerDTO = LayoutsBuilder.buildLayoutCabeceraDTOFromLayoutHeaderCatalog(headerCatalog, fechaOperacion);
 					}
 					layoutHeaderBD = LayoutsBuilder.buildLayoutHeaderFromLayoutCabeceraDTO(headerDTO, layoutDB,
@@ -1058,7 +1058,7 @@ public class LayoutsService {
 		if (CollectionUtils.isNotEmpty(lineasDTO)) {
 
 			// Obtiene el total de operaciones por sucursal
-			List<OperacionesPorSucursalDTO> totalOpPorSuc = obtenerTotalOperacionesPorSucursal(idConciliacion, TipoLayoutEnum.COMISIONES_MOV);
+			List<OperacionesPorSucursalDTO> totalOpPorSuc = obtenerTotalOperacionesPorSucursal(idConciliacion, idCorresponsal, TipoLayoutEnum.COMISIONES_MOV);
 
 			if (totalOpPorSuc != null && totalOpPorSuc.size() > 0) {
 				LOG.debug("Existen " + totalOpPorSuc.size() + " sucursales con operaciones para el rango de fechas");
@@ -1140,7 +1140,7 @@ public class LayoutsService {
 	 * @param tipoLayout
 	 * @return
 	 */
-	private List<OperacionesPorSucursalDTO> obtenerTotalOperacionesPorSucursal(long idConciliacion, TipoLayoutEnum tipoLayout) {
+	private List<OperacionesPorSucursalDTO> obtenerTotalOperacionesPorSucursal(long idConciliacion, CorresponsalEnum corresponsal, TipoLayoutEnum tipoLayout) {
 		// Se obtienen el rango de fechas de la proyeccion para obtener el total de movimientos realizados
 		LOG.debug("obtenerTotalOperacionesPorSucursal {}", idConciliacion);
 
@@ -1154,7 +1154,7 @@ public class LayoutsService {
 			fechaHasta = comisionTransaccion.getFechaHasta();
 		}
 		else {
-			Date fechaOperacion = this.estadoCuentaHelper.getFechaOperacionEstadoCuenta(idConciliacion, tipoLayout);
+			Date fechaOperacion = this.estadoCuentaHelper.getFechaOperacionEstadoCuenta(idConciliacion, corresponsal, tipoLayout);
 			fechaDesde = fechaOperacion;
 			fechaHasta = fechaOperacion;
 		}
@@ -1201,7 +1201,7 @@ public class LayoutsService {
 		}
 		
 		// Se construye la cabecera
-		Date fechaOperacion = this.estadoCuentaHelper.getFechaOperacionEstadoCuenta(idConciliacion, tipoLayout);
+		Date fechaOperacion = this.estadoCuentaHelper.getFechaOperacionEstadoCuenta(idConciliacion, idCorresponsal, tipoLayout);
 		LayoutCabeceraDTO cabecera = LayoutsBuilder.buildLayoutCabeceraDTOFromLayoutHeaderCatalog(layoutHeaderCatalog, fechaOperacion);
 		return cabecera;
 	}
