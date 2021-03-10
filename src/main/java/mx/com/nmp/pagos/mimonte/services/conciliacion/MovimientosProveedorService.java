@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequ
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -168,7 +170,7 @@ public class MovimientosProveedorService {
 			reporte = reporteRepository.save(reporte);
 			finish = System.currentTimeMillis();
 			LOG.debug("T>>> FINALIZA PERSISTENCIA DE ENTIDAD REPORTE: {}, EN: {}",sdf.format(new Date(finish)), (finish-start) );
-			
+
 			start = System.currentTimeMillis();
 			LOG.debug("T>>> INICIA CONSTRUCCION DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(start)));
 			List<MovimientoProveedor> movimientoProveedorList = MovimientosBuilder
