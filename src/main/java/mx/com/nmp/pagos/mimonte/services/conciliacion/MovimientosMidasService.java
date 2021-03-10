@@ -5,8 +5,12 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -30,11 +34,15 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -183,6 +191,13 @@ public class MovimientosMidasService {
 			finish = System.currentTimeMillis();
 			LOG.debug("T>>> TERMINA PERSISTENCIA DE REPORTE: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
+			
+			// Filtrar partidas solo OXXO
+			if (conciliacion.getProveedor() != null && conciliacion.getProveedor().getNombre() == CorresponsalEnum.OXXO) {
+				movimientoProcesosNocturnosDTOList = filtrarPartidas(movimientoProcesosNocturnosDTOList);
+			}
+
+			
 			// Se persisten los movimientos midas
 			start = System.currentTimeMillis();
 			LOG.debug("T>>> INICIA CONSTRUCCION DE LISTA DE ENTIDADES MOV. MIDAS: {}", sdf.format(new Date(start)));
@@ -219,6 +234,26 @@ public class MovimientosMidasService {
 
 		bigFinish = System.currentTimeMillis();
 		LOG.debug("T>>> FINALIZA PERSISTENCIA GENERAL DE MOVIMIENTOS MIDAS: {}, EN: {}",sdf.format(new Date(bigFinish)) ,(bigFinish-bigStart) );
+	}
+
+	private MovimientoProcesosNocturnosListResponseDTO filtrarPartidas(MovimientoProcesosNocturnosListResponseDTO listRequestDTO) {
+		if (listRequestDTO.getMovimientos() != null && listRequestDTO.getMovimientos().size() > 0) {
+			
+			Map<Long, MovimientoMidasRequestDTO> movsMap = new LinkedHashMap<Long, MovimientoMidasRequestDTO>();
+			for (MovimientoMidasRequestDTO mov : listRequestDTO.getMovimientos()) {
+				Long folio = mov.getFolioPartida();
+				if (!movsMap.containsKey(folio)) {
+					movsMap.put(folio, mov);
+				}
+				else { // Reemplaza el movimiento con el ultimo
+					if (mov.getFecha().compareTo(movsMap.get(folio).getFecha()) > 0) {
+						movsMap.put(folio, mov);
+					}
+				}
+			}
+			listRequestDTO.setMovimientos(new ArrayList<MovimientoMidasRequestDTO>(movsMap.values()));
+		}
+		return listRequestDTO;
 	}
 
 	/**
