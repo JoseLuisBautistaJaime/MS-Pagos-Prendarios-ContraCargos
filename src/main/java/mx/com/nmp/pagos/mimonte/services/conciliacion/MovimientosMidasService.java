@@ -251,10 +251,43 @@ public class MovimientosMidasService {
 					}
 				}
 			}
-			listRequestDTO.setMovimientos(new ArrayList<MovimientoMidasRequestDTO>(movsMap.values()));
+			List<MovimientoMidasRequestDTO> filtrados = new ArrayList<MovimientoMidasRequestDTO>();
+			for (MovimientoMidasRequestDTO mov : movsMap.values()) {
+				if (isMovAplicado(mov)) {
+					filtrados.add(mov);
+				}
+			}
+			listRequestDTO.setMovimientos(filtrados);
 		}
 		return listRequestDTO;
 	}
+
+
+	/**
+	 * Valida si el movimiento fue aplicado
+	 * @param mov
+	 * @return
+	 */
+	private boolean isMovAplicado(MovimientoMidasRequestDTO mov) {
+		boolean aplicado = false;
+		/* Eliminar movimientos unicos que no son aceptados
+	    1 - Pago Recibido
+	    2 - Pago Enviado
+	    3 - Pago aplicado
+	    4 - Pago rechazado
+	    5 - Pago por procesar
+	    6 - Pago por reversar
+	    7 - Pago reversado por corresponsal
+	    8 - Pago reversado no aplicado en core
+	    9 - Pago pendiente de reversar
+	    10 - Pago conciliado */
+		Long idMovTrans = mov.getEstadoTransaccion() != null ? Long.valueOf(mov.getEstadoTransaccion()) : 0L;
+		if (idMovTrans != null && (idMovTrans == 3 || idMovTrans == 10)) {
+			aplicado = true;
+		}
+		return aplicado;
+	}
+
 
 	/**
 	 * Construye un objeto de tipo reporte para ser persistido durante el registro
