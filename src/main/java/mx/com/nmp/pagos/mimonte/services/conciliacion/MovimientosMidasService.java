@@ -6,6 +6,8 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -14,6 +16,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -238,22 +241,9 @@ public class MovimientosMidasService {
 
 	private MovimientoProcesosNocturnosListResponseDTO filtrarPartidas(MovimientoProcesosNocturnosListResponseDTO listRequestDTO) {
 		if (listRequestDTO.getMovimientos() != null && listRequestDTO.getMovimientos().size() > 0) {
-			
-			Map<Long, MovimientoMidasRequestDTO> movsMap = new LinkedHashMap<Long, MovimientoMidasRequestDTO>();
-			for (MovimientoMidasRequestDTO mov : listRequestDTO.getMovimientos()) {
-				Long folio = mov.getFolioPartida();
-				if (!movsMap.containsKey(folio)) {
-					movsMap.put(folio, mov);
-				}
-				else { // Reemplaza el movimiento con el ultimo
-					if (mov.getFecha().compareTo(movsMap.get(folio).getFecha()) > 0) {
-						movsMap.put(folio, mov);
-					}
-				}
-			}
 			List<MovimientoMidasRequestDTO> filtrados = new ArrayList<MovimientoMidasRequestDTO>();
-			for (MovimientoMidasRequestDTO mov : movsMap.values()) {
-				if (isMovAplicado(mov)) {
+			for (MovimientoMidasRequestDTO mov : listRequestDTO.getMovimientos()) {
+				if (mov.getEstatus() != null && mov.getEstatus()) {
 					filtrados.add(mov);
 				}
 			}
