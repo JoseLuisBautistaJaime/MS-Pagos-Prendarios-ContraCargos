@@ -577,7 +577,7 @@ INSERT INTO seq_conciliacion(seq_name, seq_value) VALUES('OXXO', 0);
 -- --------------- INSERT DE LAS COMISIONES PROVEEDORES / CORRESPONSALES ------------------------ --
 -- ---------------------------------------------------------------------------------- --
 INSERT INTO `tc_comision_proveedor` (`id`, `corresponsal`, `comision`, `iva`) 
-	VALUES ('1', 'OXXO', '15.18', '2.4288');
+	VALUES ('1', 'OXXO', '15.18', '2.43');
 
 
 -- ---------------------------------------------------------------------------------- --
