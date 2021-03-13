@@ -58,7 +58,7 @@ public abstract class GlobalBuilder {
 
 
 	public static Global updateGlobal(Global global, List<MovimientoMidas> movsMidas,
-			List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta,
+			List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta, BigDecimal importeBonificaciones,
 			CodigosEdoCuentaMap codigosEdoCuenta, ComisionProveedor comisionProveedor) {
 
 		//(Total de movimientos reportados en el reporte del proveedor transaccional)
@@ -74,8 +74,8 @@ public abstract class GlobalBuilder {
 		global.setImporteBanco(ConciliacionMathUtil.getImporteBanco(movsEstadoCuenta, codigosEdoCuenta, comisionProveedor, totalOperaciones));
 		global.setImporteDevoluciones(ConciliacionMathUtil.getDevolucionesEstadoCuenta(movsEstadoCuenta, codigosEdoCuenta));
 		global.setDiferenciaProveedorMidas(ConciliacionMathUtil.getDiferenciaProveedorMidas(movsProveedor, movsMidas, comisionProveedor));
-		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta, codigosEdoCuenta, comisionProveedor, totalOperaciones));
-		
+		global.setImporteBonificaciones(importeBonificaciones);
+		global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(movsProveedor, movsEstadoCuenta, importeBonificaciones, codigosEdoCuenta, comisionProveedor, totalOperaciones));
 		return global;
 	}
 
@@ -90,6 +90,7 @@ public abstract class GlobalBuilder {
 		global.setImporteDevoluciones(new BigDecimal(0));
 		global.setImporteMidas(new BigDecimal(0));
 		global.setImporteProveedor(new BigDecimal(0));
+		global.setImporteBonificaciones(new BigDecimal(0));
 		global.setMonto(new BigDecimal(0));
 		global.setMovimientos(0);
 		global.setPartidas(0);

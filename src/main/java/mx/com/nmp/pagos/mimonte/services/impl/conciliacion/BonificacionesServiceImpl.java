@@ -26,6 +26,7 @@ import mx.com.nmp.pagos.mimonte.consumer.rest.BusConsultaPagosRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestConsultaPagosDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestConsultaPagosResponseDTO;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusBonificacionRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.GlobalRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoBonificacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.BonificacionDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -33,11 +34,13 @@ import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.EstatusBonificacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Global;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoBonificacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoActividadEnum;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.BonificacionesService;
 import mx.com.nmp.pagos.mimonte.util.ConciliacionDataValidator;
+import mx.com.nmp.pagos.mimonte.util.ConciliacionMathUtil;
 
 /**
  * @name BonificacionesServiceImpl
@@ -82,6 +85,9 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 
 	@Autowired
 	private BusConsultaPagosRestService busConsultaPagosRestService;
+
+	@Autowired
+	private GlobalRepository globalRepository;
 
 	
 
@@ -181,6 +187,9 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 			}
 			bonificacion = this.movimientoBonificacionRepository.save(bonificacion);
 
+			// Se actualiza la seccion global
+			actualizarSeccionGlobal(dto.getFolio());
+
 			// Registro de actividad
 			actividadGenericMethod.registroActividadV2(folioConciliacion, "Se agrega bonificacion para la conciliacion " + folioConciliacion,
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
@@ -207,8 +216,11 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 
 		try {
 			MovimientoBonificacion bonificacion = bonificacionOpt.get();
+			Long idConciliacion = bonificacion.getIdConciliacion();
 
 			this.movimientoBonificacionRepository.delete(bonificacion);
+			
+			actualizarSeccionGlobal(idConciliacion);
 			
 			Long folioConciliacion = objectsInSession.getFolioByIdConciliacion(bonificacion.getIdConciliacion());
 
@@ -217,6 +229,28 @@ public class BonificacionesServiceImpl implements BonificacionesService {
 					TipoActividadEnum.ACTIVIDAD, SubTipoActividadEnum.MOVIMIENTOS);
 
 		} catch (Exception ex) {
+			ex.printStackTrace();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0011.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_0011);
+		}
+	}
+
+
+	private void actualizarSeccionGlobal(Long idConciliacion) {
+		try {
+			Global global = this.globalRepository.findByIdConciliacion(idConciliacion);
+			if (global != null) {
+				BigDecimal importeBonificaciones = movimientoBonificacionRepository
+						.getImporteBonificaciones(idConciliacion);
+				BigDecimal importeProveedor = global.getImporteProveedor();
+				BigDecimal importeBanco = global.getImporteBanco();
+				global.setImporteBonificaciones(importeBonificaciones);
+				global.setDiferenciaProveedorBanco(ConciliacionMathUtil.getDiferenciaProveedorBanco(importeProveedor, importeBanco, importeBonificaciones));
+				this.globalRepository.save(global);
+			}
+		}
+		catch (Exception ex) {
 			ex.printStackTrace();
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0011.getDescripcion(),

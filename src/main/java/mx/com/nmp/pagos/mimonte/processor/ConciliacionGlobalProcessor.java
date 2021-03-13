@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.processor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.GlobalBuilder;
@@ -80,15 +81,18 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 		List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(idConciliacion);
 		List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(idConciliacion);
 		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByConciliacion(idConciliacion);
-		//List<MovimientoBonificacion> movsBonificacion
-		
+		BigDecimal importeBonificaciones = null;
+		if (corresponsal != null && corresponsal == CorresponsalEnum.OXXO) {
+			importeBonificaciones = getImporteBonificaciones(idConciliacion);
+		}
+
 		Entidad entidadConciliacion = getEntidadByConciliacion(idConciliacion);
 		Reporte reporteProveedor = getReporteProveedor(idConciliacion);
 
 		CodigosEdoCuentaMap codigosEdoCuenta = this.mergeReporteHandler.getEstadoCuentaHelper().getCodigosEdoCuentaMap(entidadConciliacion.getId());
 
 		// Actualizar seccion global
-		global = GlobalBuilder.updateGlobal(global, movsMidas, movsProveedor, movsEstadoCuenta, codigosEdoCuenta, comisionProveedor);
+		global = GlobalBuilder.updateGlobal(global, movsMidas, movsProveedor, movsEstadoCuenta, importeBonificaciones, codigosEdoCuenta, comisionProveedor);
 
 		// Reporte de proveedor transaccional / Consulta reporte de procesos nocturnos - formato: DD/MM/AA)
 		if (reporteProveedor != null) {

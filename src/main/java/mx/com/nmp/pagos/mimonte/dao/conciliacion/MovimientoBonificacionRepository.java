@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -59,5 +60,8 @@ public interface MovimientoBonificacionRepository extends JpaRepository<Movimien
 	 * @return
 	 */
 	public List<MovimientoBonificacion> findByFechaDocAndEstatusIdIn(Date fechaDoc, List<Integer> ids);
+
+	@Query("SELECT SUM(md.importeML) FROM MovimientoBonificacion md WHERE md.idConciliacion = :folio")
+	public BigDecimal getImporteBonificaciones(@Param("folio") Long folio);
 
 }
