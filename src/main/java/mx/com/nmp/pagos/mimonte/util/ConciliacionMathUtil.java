@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.model.ComisionProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoBonificacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
@@ -213,16 +214,21 @@ public class ConciliacionMathUtil {
 	 * si el resultado es 0.00, quiere decir que los montos de las transacciones y de la liquidación del estado de cuenta son exitosas.)
 	 * @param movsProveedor
 	 * @param movsEstadoCuenta
+	 * @param importeBonificaciones
 	 * @param codigosEdoCuenta
 	 * @param comisionProveedor
 	 * @param totalOperaciones
 	 * @return
 	 */
 	public static BigDecimal getDiferenciaProveedorBanco(List<MovimientoProveedor> movsProveedor, List<MovimientoEstadoCuenta> movsEstadoCuenta,
-			CodigosEdoCuentaMap codigosEdoCuenta, ComisionProveedor comisionProveedor, int totalOperaciones) {
+			BigDecimal importeBonificaciones, CodigosEdoCuentaMap codigosEdoCuenta, ComisionProveedor comisionProveedor, int totalOperaciones) {
 
 		// Movimientos de estado de cuenta
 		BigDecimal montoBanco = getImporteBanco(movsEstadoCuenta, codigosEdoCuenta, comisionProveedor, totalOperaciones);
+
+		if (importeBonificaciones != null) {
+			montoBanco = montoBanco != null ? montoBanco.add(importeBonificaciones) : importeBonificaciones;
+		}
 
 		// Proveedor
 		BigDecimal montoProveedor = getImporteProveedor(movsProveedor, comisionProveedor);
@@ -238,6 +244,37 @@ public class ConciliacionMathUtil {
 			diff = montoProveedor;
 		}
 
+		return diff;
+	}
+
+
+	public static BigDecimal getImporteBonificaciones(List<MovimientoBonificacion> movsBonificaciones) {
+		BigDecimal importeBonificaciones = new BigDecimal(0);
+		if (movsBonificaciones != null && movsBonificaciones.size() > 0) {
+			for (MovimientoBonificacion mov : movsBonificaciones) {
+				importeBonificaciones = importeBonificaciones.add(mov.getImporteML());
+			}
+		}
+		return importeBonificaciones;
+	}
+
+
+	public static BigDecimal getDiferenciaProveedorBanco(BigDecimal montoProveedor, BigDecimal montoBanco, BigDecimal importeBonificaciones) {
+		if (importeBonificaciones == null) {
+			importeBonificaciones = new BigDecimal(0);
+		}
+		montoBanco = montoBanco != null ? montoBanco.add(importeBonificaciones) : importeBonificaciones;
+
+		BigDecimal diff = new BigDecimal(0);
+		if (montoBanco != null && montoProveedor != null) {
+			diff = montoProveedor.subtract(montoBanco);
+		}
+		else if (montoBanco != null) {
+			diff = montoBanco;
+		}
+		else if (montoProveedor != null){
+			diff = montoProveedor;
+		}
 		return diff;
 	}
 

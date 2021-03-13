@@ -56,6 +56,9 @@ public class Global implements Serializable{
 	@Column(name = "importe_devoluciones")
 	private BigDecimal importeDevoluciones;
 	
+	@Column(name = "importe_bonificaciones")
+	private BigDecimal importeBonificaciones;
+	
 	@Column(name = "devoluciones")
 	private Integer devoluciones;
 	
@@ -197,6 +200,14 @@ public class Global implements Serializable{
 		this.conciliacion = conciliacion;
 	}
 
+	public BigDecimal getImporteBonificaciones() {
+		return importeBonificaciones;
+	}
+
+	public void setImporteBonificaciones(BigDecimal importeBonificaciones) {
+		this.importeBonificaciones = importeBonificaciones;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -211,6 +222,7 @@ public class Global implements Serializable{
 		result = prime * result + ((importeDevoluciones == null) ? 0 : importeDevoluciones.hashCode());
 		result = prime * result + ((importeMidas == null) ? 0 : importeMidas.hashCode());
 		result = prime * result + ((importeProveedor == null) ? 0 : importeProveedor.hashCode());
+		result = prime * result + ((importeBonificaciones == null) ? 0 : importeBonificaciones.hashCode());
 		result = prime * result + ((monto == null) ? 0 : monto.hashCode());
 		result = prime * result + ((movimientos == null) ? 0 : movimientos.hashCode());
 		result = prime * result + ((partidas == null) ? 0 : partidas.hashCode());
@@ -238,6 +250,4 @@ public class Global implements Serializable{
 				+ ", diferenciaProveedorBanco=" + diferenciaProveedorBanco + ", conciliacion=" + (conciliacion != null ? conciliacion.getId() : 0) + "]";
 	}
 
-	
-	
 }

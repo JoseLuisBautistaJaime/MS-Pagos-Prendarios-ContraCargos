@@ -25,6 +25,7 @@ public class GlobalDTO implements Comparable<GlobalDTO> {
 	private BigDecimal importeProveedor;
 	private BigDecimal importeBanco;
 	private BigDecimal importeDevoluciones;
+	private BigDecimal importeBonificaciones;
 	private BigDecimal diferenciasProveedorVsMidas;
 	private BigDecimal diferenciasProveedorVsBanco;
 
@@ -126,6 +127,14 @@ public class GlobalDTO implements Comparable<GlobalDTO> {
 
 	public void setDiferenciasProveedorVsBanco(BigDecimal diferenciasProveedorVsBanco) {
 		this.diferenciasProveedorVsBanco = diferenciasProveedorVsBanco;
+	}
+
+	public BigDecimal getImporteBonificaciones() {
+		return importeBonificaciones;
+	}
+
+	public void setImporteBonificaciones(BigDecimal importeBonificaciones) {
+		this.importeBonificaciones = importeBonificaciones;
 	}
 
 	@Override
