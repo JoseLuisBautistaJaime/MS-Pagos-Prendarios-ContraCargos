@@ -51,7 +51,7 @@ public abstract class GlobalBuilder {
 			globalDTO.setImporteDevoluciones(global.getImporteDevoluciones());
 			globalDTO.setDiferenciasProveedorVsMidas(global.getDiferenciaProveedorMidas());
 			globalDTO.setDiferenciasProveedorVsBanco(global.getDiferenciaProveedorBanco());
-			globalDTO.setImporteBonificaciones(global.getImporteBonificaciones());
+			globalDTO.setImporteBonificaciones(global.getImporteBonificaciones() != null ? global.getImporteBonificaciones() : new BigDecimal(0));
 		}
 		return globalDTO;
 	}
