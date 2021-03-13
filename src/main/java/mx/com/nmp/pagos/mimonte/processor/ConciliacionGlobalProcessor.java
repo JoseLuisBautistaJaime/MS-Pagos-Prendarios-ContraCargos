@@ -80,6 +80,7 @@ public class ConciliacionGlobalProcessor extends ConciliacionProcessorChain {
 		List<MovimientoMidas> movsMidas = getMovimientosMidasByConciliacion(idConciliacion);
 		List<MovimientoProveedor> movsProveedor = getMovimientosProveedorByConciliacion(idConciliacion);
 		List<MovimientoEstadoCuenta> movsEstadoCuenta = getMovimientosEstadoCuentaByConciliacion(idConciliacion);
+		//List<MovimientoBonificacion> movsBonificacion
 		
 		Entidad entidadConciliacion = getEntidadByConciliacion(idConciliacion);
 		Reporte reporteProveedor = getReporteProveedor(idConciliacion);

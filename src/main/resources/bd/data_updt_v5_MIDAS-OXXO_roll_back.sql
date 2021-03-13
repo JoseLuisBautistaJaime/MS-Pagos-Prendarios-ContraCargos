@@ -165,6 +165,10 @@ ALTER TABLE to_conciliacion DROP INDEX proveedor_con_fk_idx;
 
 ALTER TABLE to_conciliacion DROP COLUMN proveedor;
 
+-- Se agrega campo importe bonificaciones
+ALTER TABLE `to_global` DROP COLUMN `importe_bonificaciones`;
+
+
 -- DELETE NECESARIO EN ESTE ARCHIVO POR INTEGRIDAD REFERENCIAL EN FUTUROS INDICES
 DELETE FROM tk_proveedor WHERE nombre IN ('OPENPAY', 'OXXO');
 

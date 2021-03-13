@@ -164,6 +164,8 @@ public class BonificacionesController {
 		try {
 			bonificacionesService.delete(idBonificacion, userRequest);
 
+			
+			
 		} catch (ConciliacionException ex) {
 			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
 			throw ex;
