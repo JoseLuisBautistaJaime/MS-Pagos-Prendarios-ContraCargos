@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.processor;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -105,6 +106,20 @@ public abstract class ConciliacionProcessorChain {
 					CodigoError.NMP_PMIMONTE_BUSINESS_070);
 		}
 		return movimientosEstadoCuenta;
+	}
+
+
+	protected BigDecimal getImporteBonificaciones(Long idConciliacion) {
+		BigDecimal importesBonificaciones = null;
+		try {
+			importesBonificaciones = this.mergeReporteHandler.getMovimientoBonificacionRepository().getImporteBonificaciones(idConciliacion);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar el monto de bonificaciones",
+					CodigoError.NMP_PMIMONTE_BUSINESS_070);
+		}
+		return importesBonificaciones;
 	}
 
 	protected List<MovimientoMidas> getMovimientosMidas(Integer idReporte) throws ConciliacionException {

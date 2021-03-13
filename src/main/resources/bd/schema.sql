@@ -731,6 +731,7 @@ CREATE TABLE IF NOT EXISTS `to_global` (
   `importe_proveedor` DECIMAL(16,4) NULL DEFAULT NULL,
   `importe_banco` DECIMAL(16,4) NULL DEFAULT NULL,
   `importe_devoluciones` DECIMAL(16,4) NULL DEFAULT NULL,
+  `importe_bonificaciones` DECIMAL(16,4) NULL DEFAULT NULL,
   `devoluciones` INT(11) NULL DEFAULT NULL,
   `diferencia_proveedor_midas` DECIMAL(16,4) NULL DEFAULT NULL,
   `diferencia_proveedor_banco` DECIMAL(16,4) NULL DEFAULT NULL,

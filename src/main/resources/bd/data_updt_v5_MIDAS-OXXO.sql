@@ -36,6 +36,8 @@ ALTER TABLE `to_conciliacion` ADD INDEX `to_conciliacion_folio_idx` (`folio`);
 -- Se asigna el campo folio usando el id de la conciliacion para los registros existentes de openpay
 UPDATE to_conciliacion SET folio = id WHERE proveedor = "OPENPAY";
 ALTER TABLE `to_conciliacion` ADD UNIQUE `to_conciliacion_folio_proveedor_unq` (`folio`, proveedor);
+-- Se agrega campo importe bonificaciones
+ALTER TABLE `to_global` ADD `importe_bonificaciones` DECIMAL(16,4) NULL DEFAULT NULL;
 
 
 -- -------------------------------------------------------------- --
