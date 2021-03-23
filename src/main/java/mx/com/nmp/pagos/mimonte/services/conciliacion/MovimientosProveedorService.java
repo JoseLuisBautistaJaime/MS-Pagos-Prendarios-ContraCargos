@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.ReporteBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
@@ -32,6 +34,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequ
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoProveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -84,6 +87,9 @@ public class MovimientosProveedorService {
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
 
+	@Autowired
+	private ObjectsInSession objectsInSession;
+	
 	// Temporal format para los LOGs de timers
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	
@@ -164,7 +170,7 @@ public class MovimientosProveedorService {
 			reporte = reporteRepository.save(reporte);
 			finish = System.currentTimeMillis();
 			LOG.debug("T>>> FINALIZA PERSISTENCIA DE ENTIDAD REPORTE: {}, EN: {}",sdf.format(new Date(finish)), (finish-start) );
-			
+
 			start = System.currentTimeMillis();
 			LOG.debug("T>>> INICIA CONSTRUCCION DE MOVIMIENTOS PROVEEDOR: {}", sdf.format(new Date(start)));
 			List<MovimientoProveedor> movimientoProveedorList = MovimientosBuilder
@@ -185,7 +191,7 @@ public class MovimientosProveedorService {
 			// Registro de actividad
 			start = System.currentTimeMillis();
 			LOG.debug("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
-			actividadGenericMethod.registroActividad(listRequestDTO.getFolio(),
+			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(listRequestDTO.getFolio()),
 					"Se registraron " + listRequestDTO.getMovimientos().size()
 							+ " movimientos provenientes del proveedor transaccional,"
 							+ " para la conciliacion con el folio: " + listRequestDTO.getFolio(),

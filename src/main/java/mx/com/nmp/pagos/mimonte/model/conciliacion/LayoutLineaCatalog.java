@@ -52,6 +52,14 @@ public class LayoutLineaCatalog extends Updatable implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "grupo")
 	private GrupoLayoutEnum grupo;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "corresponsal")
+	private CorresponsalEnum corresponsal;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "operacion")
+	private OperacionLayoutEnum operacion;
 
 
 	public LayoutLineaCatalog() {
@@ -129,10 +137,26 @@ public class LayoutLineaCatalog extends Updatable implements Serializable {
 	public void setGrupo(GrupoLayoutEnum grupo) {
 		this.grupo = grupo;
 	}
+	
+	public CorresponsalEnum getCorresponsal() {
+		return corresponsal;
+	}
+
+	public void setCorresponsal(CorresponsalEnum corresponsal) {
+		this.corresponsal = corresponsal;
+	}
+
+	public OperacionLayoutEnum getOperacion() {
+		return operacion;
+	}
+
+	public void setOperacion(OperacionLayoutEnum operacion) {
+		this.operacion = operacion;
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, cuenta, depId, linea, negocio, proyectoNmp, unidadOperativa, tipo, grupo);
+		return Objects.hash(id, cuenta, depId, linea, negocio, proyectoNmp, unidadOperativa, tipo, grupo, operacion);
 	}
 
 	@Override

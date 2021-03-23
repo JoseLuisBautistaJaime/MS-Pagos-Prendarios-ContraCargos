@@ -22,6 +22,7 @@ public class DevolucionRequestDTO implements Comparable<DevolucionRequestDTO>{
 	private Date fechaHasta;
 	private Integer sucursal;
 	private String identificadorCuenta;
+	private String idCorresponsal;
 
 	
 	public DevolucionRequestDTO() {
@@ -98,6 +99,15 @@ public class DevolucionRequestDTO implements Comparable<DevolucionRequestDTO>{
 
 	public void setIdentificadorCuenta(String identificadorCuenta) {
 		this.identificadorCuenta = identificadorCuenta;
+	}
+
+	public String getIdCorresponsal() {
+		return idCorresponsal;
+	}
+
+
+	public void setIdCorresponsal(String idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
 	}
 
 

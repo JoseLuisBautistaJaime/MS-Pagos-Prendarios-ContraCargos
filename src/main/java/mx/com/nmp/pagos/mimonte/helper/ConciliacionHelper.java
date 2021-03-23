@@ -4,12 +4,15 @@
  */
 package mx.com.nmp.pagos.mimonte.helper;
 
+import java.util.Date;
 import java.util.List;
 
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ComisionTransaccion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoReporteEnum;
 
 /**
  * @name ConciliacionHelper
@@ -35,9 +38,10 @@ public interface ConciliacionHelper {
 	 * @param folio
 	 * @param idEntidad
 	 * @param reportes
+	 * @param corresponsal
 	 * @throws ConciliacionException
 	 */
-	public void generarConciliacion(Long folio, Long idEntidad, List<Reporte> reportes) throws ConciliacionException;
+	public void generarConciliacion(Long folio, Long idEntidad, List<Reporte> reportes, CorresponsalEnum corresponsal) throws ConciliacionException;
 
 	/**
 	 * Se encarga de obtener la proyeccion asignada a la conciliacion
@@ -46,5 +50,21 @@ public interface ConciliacionHelper {
 	 * @throws ConciliacionException
 	 */
 	public ComisionTransaccion getComisionTransaccion(Long folio) throws ConciliacionException;
+
+	/**
+	 * Obtiene el folio de la conciliacion por id
+	 * @param idConciliacion
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public Long getFolioConciliacionById(Long idConciliacion) throws ConciliacionException;
+
+	/**
+	 * Fecha de carga reporte midas para la conciliacion
+	 * @param idConciliacion
+	 * @param tipoReporte
+	 * @throws ConciliacionException
+	 */
+	public Date getFechaCargaReporte(Long idConciliacion, TipoReporteEnum tipoReporte) throws ConciliacionException;
 
 }

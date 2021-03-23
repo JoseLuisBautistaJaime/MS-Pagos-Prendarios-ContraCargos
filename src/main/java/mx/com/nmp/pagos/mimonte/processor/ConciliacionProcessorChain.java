@@ -4,11 +4,18 @@
  */
 package mx.com.nmp.pagos.mimonte.processor;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.ComisionProveedor;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoEstadoCuenta;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
@@ -24,6 +31,12 @@ import mx.com.nmp.pagos.mimonte.observer.MergeReporteHandler;
  * @version 0.1
  */
 public abstract class ConciliacionProcessorChain {
+
+	/**
+	 * Instancia que registra los eventos en la bitacora
+	 */
+	protected final Logger LOG = LoggerFactory.getLogger(ConciliacionProcessorChain.class);
+
 
 	protected MergeReporteHandler mergeReporteHandler;
 	protected ConciliacionProcessorChain next;
@@ -95,6 +108,20 @@ public abstract class ConciliacionProcessorChain {
 		return movimientosEstadoCuenta;
 	}
 
+
+	protected BigDecimal getImporteBonificaciones(Long idConciliacion) {
+		BigDecimal importesBonificaciones = null;
+		try {
+			importesBonificaciones = this.mergeReporteHandler.getMovimientoBonificacionRepository().getImporteBonificaciones(idConciliacion);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException("Error al consultar el monto de bonificaciones",
+					CodigoError.NMP_PMIMONTE_BUSINESS_070);
+		}
+		return importesBonificaciones;
+	}
+
 	protected List<MovimientoMidas> getMovimientosMidas(Integer idReporte) throws ConciliacionException {
 		List<MovimientoMidas> movimientosMidas = null;
 		try {
@@ -151,6 +178,33 @@ public abstract class ConciliacionProcessorChain {
 			throw new ConciliacionException("Error al consultar estado cuenta", CodigoError.NMP_PMIMONTE_BUSINESS_071);
 		}
 		return estadoCuenta;
+	}
+
+
+	/**
+	 * Obtiene el % comision cobrado por operaciones de tipo proveedor para el corresponsal
+	 * @param corresponsal
+	 * @return
+	 * @throws Exception
+	 */
+	protected ComisionProveedor getComisionProveedor(CorresponsalEnum corresponsal) throws ConciliacionException {
+		ComisionProveedor comisionProveedor = null;
+		try {
+			if (corresponsal == CorresponsalEnum.OXXO) {
+				List<ComisionProveedor> list = this.mergeReporteHandler.getComisionesProveedorRepository().findByCorresponsal(corresponsal);
+				if (list == null || list.size() == 0) {
+					throw new ConciliacionException("Error al consultar la comision proveedor " + corresponsal,
+						CodigoError.NMP_PMIMONTE_BUSINESS_COMISION_PROVEEDOR);
+				}
+				comisionProveedor = list.get(0);
+			}
+		}
+		catch (Exception ex) {
+			LOG.error("Error al consultar la comision proveedor", ex);
+			throw new ConciliacionException("Error al consultar la comision proveedor " + corresponsal,
+				CodigoError.NMP_PMIMONTE_BUSINESS_COMISION_PROVEEDOR);
+		}
+		return comisionProveedor;
 	}
 
 }

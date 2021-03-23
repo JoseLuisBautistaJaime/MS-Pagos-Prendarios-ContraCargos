@@ -6,6 +6,8 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.Date;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @name ConciliacionResponseSaveDTO
  * @description Clase que encapsula la información de una respuesta al guardar
@@ -24,6 +26,7 @@ public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 	private static final long serialVersionUID = 4775215154348440515L;
 
 	private Long folio;
+	private Long folioConciliacion;
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
@@ -38,6 +41,7 @@ public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 	private DevolucionConDTO devoluciones;
 	private MovTransitoDTO movimientosTransito;
 	private ComisionesDTO comisiones;
+	private CorresponsalEnum idCorresponsal;
 
 	public ConciliacionResponseSaveDTO() {
 		super();
@@ -192,6 +196,14 @@ public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 	public void setComisiones(ComisionesDTO comisiones) {
 		this.comisiones = comisiones;
 	}
+	
+	public CorresponsalEnum getIdCorresponsal() {
+		return idCorresponsal;
+	}
+
+	public void setIdCorresponsal(CorresponsalEnum idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
+	}
 
 	@Override
 	public String toString() {
@@ -201,12 +213,20 @@ public class ConciliacionResponseSaveDTO extends AbstractConciliacionDTO
 				+ ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
 				+ reporteProveedorTransaccional + ", reporteEstadoCuenta=" + reporteEstadoCuenta + ", global=" + global
 				+ ", devoluciones=" + devoluciones + ", movimientosTransito=" + movimientosTransito + ", comisiones="
-				+ comisiones + "]";
+				+ comisiones + ", idCorresponsal=" + idCorresponsal + "]";
 	}
 
 	@Override
 	public int compareTo(ConciliacionResponseSaveDTO o) {
 		return 0;
+	}
+
+	public Long getFolioConciliacion() {
+		return folioConciliacion;
+	}
+
+	public void setFolioConciliacion(Long folioConciliacion) {
+		this.folioConciliacion = folioConciliacion;
 	}
 
 }

@@ -6,6 +6,8 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.Date;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @author Quarksoft
  * @version 1.0
@@ -14,6 +16,7 @@ import java.util.Date;
 public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionDTO> {
 
 	private Long folio;
+	private Long folioConciliacion;
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
@@ -26,17 +29,19 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 	private EntidadDTO entidad;
 	private CuentaDTO cuenta;
 	private Integer numeroMovimientos;
+	private CorresponsalEnum idCorresponsal;
 
 	public ConsultaConciliacionDTO() {
 		super();
 	}
 	
-	public ConsultaConciliacionDTO(Long folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
+	public ConsultaConciliacionDTO(Long folio, Long folioConciliacion, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
 			String subEstatusDescripcion, String idPolizaTesoreria, String idAsientoContable, Date createdDate,
 			String createdBy, Date lastModifiedDate, String lastModifiedBy, EntidadDTO entidad, CuentaDTO cuenta,
-			Integer numeroMovimientos) {
+			Integer numeroMovimientos, CorresponsalEnum idCorresponsal) {
 		super();
 		this.folio = folio;
+		this.folioConciliacion = folioConciliacion;
 		this.estatus = estatus;
 		this.subEstatus = subEstatus;
 		this.subEstatusDescripcion = subEstatusDescripcion;
@@ -49,6 +54,7 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 		this.entidad = entidad;
 		this.cuenta = cuenta;
 		this.numeroMovimientos = numeroMovimientos;
+		this.idCorresponsal = idCorresponsal;
 	}
 
 	public Long getFolio() {
@@ -167,6 +173,22 @@ public class ConsultaConciliacionDTO implements Comparable<ConsultaConciliacionD
 	@Override
 	public int compareTo(ConsultaConciliacionDTO o) {
 		return 0;
+	}
+
+	public Long getFolioConciliacion() {
+		return folioConciliacion;
+	}
+
+	public void setFolioConciliacion(Long folioConciliacion) {
+		this.folioConciliacion = folioConciliacion;
+	}
+
+	public CorresponsalEnum getIdCorresponsal() {
+		return idCorresponsal;
+	}
+
+	public void setIdCorresponsal(CorresponsalEnum idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
 	}
 
 }

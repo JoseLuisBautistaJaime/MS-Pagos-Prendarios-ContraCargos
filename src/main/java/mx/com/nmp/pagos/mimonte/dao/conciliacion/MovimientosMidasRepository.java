@@ -6,8 +6,6 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -102,7 +100,11 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param partida
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) AND (mm.sucursal IN (:sucursales)) AND mm.fecha BETWEEN :fechaDesde AND :fechaHasta")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, " +
+			"mm.folio, mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto, mm.idTipoContrato, mm.idOperacion) " +
+			"FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) " +
+			"AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) " +
+			"AND (mm.sucursal IN (:sucursales)) AND mm.fecha BETWEEN :fechaDesde AND :fechaHasta")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithFechas(@Param("fechaDesde") Date fechaDesde,
 			@Param("fechaHasta") Date fechaHasta, @Param("producto") final Integer producto,
 			@Param("operacion") final Integer operacion, @Param("sucursales") List<Integer> sucursales,
@@ -119,7 +121,13 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param partida
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) AND (mm.sucursal IN (:sucursales)) AND mm.fecha >= :fechaDesde")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, " +
+			"mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto, mm.idTipoContrato, mm.idOperacion) " +
+			"FROM MovimientoMidas mm " +
+			"WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) " +
+			"AND (:partida IS NULL OR mm.folio= :partida) " +
+			"AND (:operacion IS NULL OR mm.idOperacion = :operacion) " +
+			"AND (mm.sucursal IN (:sucursales)) AND mm.fecha >= :fechaDesde")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithFechaDesde(@Param("fechaDesde") Date fechaDesde,
 			@Param("producto") final Integer producto, @Param("operacion") final Integer operacion,
 			@Param("sucursales") List<Integer> sucursales, @Param("partida") final Long partida);
@@ -135,7 +143,11 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param partida
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) AND (mm.sucursal IN (:sucursales)) AND mm.fecha <= :fechaHasta")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, " +
+			"mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto, mm.idTipoContrato, mm.idOperacion) " +
+			"FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) " +
+			"AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) " +
+			"AND (mm.sucursal IN (:sucursales)) AND mm.fecha <= :fechaHasta")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithFechaHasta(@Param("fechaHasta") Date fechaHasta,
 			@Param("producto") final Integer producto, @Param("operacion") final Integer operacion,
 			@Param("sucursales") List<Integer> sucursales, @Param("partida") final Long partida);
@@ -150,7 +162,11 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param partida
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) AND (mm.sucursal IN (:sucursales))")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, " +
+			"mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto, mm.idTipoContrato, mm.idOperacion) " +
+			"FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) " +
+			"AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) " +
+			"AND (mm.sucursal IN (:sucursales))")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithoutFechas(@Param("producto") final Integer producto,
 			@Param("operacion") final Integer operacion, @Param("sucursales") List<Integer> sucursales,
 			@Param("partida") final Long partida);
@@ -166,7 +182,11 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param partida
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) AND mm.fecha BETWEEN :fechaDesde AND :fechaHasta")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, " +
+			"mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto, mm.idTipoContrato, mm.idOperacion) " +
+			"FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) " +
+			"AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) " +
+			"AND mm.fecha BETWEEN :fechaDesde AND :fechaHasta")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithFechasNS(@Param("fechaDesde") Date fechaDesde,
 			@Param("fechaHasta") Date fechaHasta, @Param("producto") final Integer producto,
 			@Param("operacion") final Integer operacion, @Param("partida") final Long partida);
@@ -182,7 +202,11 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param partida
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) AND mm.fecha >= :fechaDesde")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, " +
+			"mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto, mm.idTipoContrato, mm.idOperacion) " +
+			"FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) " +
+			"AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) " +
+			"AND mm.fecha >= :fechaDesde")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithFechaDesdeNS(@Param("fechaDesde") Date fechaDesde,
 			@Param("producto") final Integer producto, @Param("operacion") final Integer operacion,
 			@Param("partida") final Long partida);
@@ -198,7 +222,11 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param partida
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) AND mm.fecha <= :fechaHasta")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, " +
+			"mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto, mm.idTipoContrato, mm.idOperacion) " +
+			"FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) " +
+			"AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion) " +
+			"AND mm.fecha <= :fechaHasta")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithFechaHastaNS(@Param("fechaHasta") Date fechaHasta,
 			@Param("producto") final Integer producto, @Param("operacion") final Integer operacion,
 			@Param("partida") final Long partida);
@@ -213,7 +241,10 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param partida
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto) FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion)")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportePagosEnLineaDTO(mm.fecha, mm.consumidor, mm.folio, " +
+			"mm.tipoContratoDesc, mm.operacionDesc, mm.sucursal, mm.monto, mm.idTipoContrato, mm.idOperacion) " +
+			"FROM MovimientoMidas mm WHERE (:producto IS NULL OR mm.idTipoContrato = :producto) " +
+			"AND (:partida IS NULL OR mm.folio= :partida) AND (:operacion IS NULL OR mm.idOperacion = :operacion)")
 	public List<ReportePagosEnLineaDTO> getReportePagosEnLineaWithoutFechasNS(@Param("producto") final Integer producto,
 			@Param("operacion") final Integer operacion, @Param("partida") final Long partida);
 
@@ -224,7 +255,12 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param idsComisiones
 	 * @return
 	 */
-	@Query("SELECT DISTINCT new mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO(mp.operationDate, mt.folio, mp.orderId, mt.operacionDesc, mt.monto, mp.currency, mp.tarjetaMovimientosProveedor.type, mp.status, mp.tarjetaMovimientosProveedor.brand, mp.tarjetaMovimientosProveedor.cardNumber, mp.tarjetaMovimientosProveedor.holderName, mp.authorization, mt.movimientoMidas.consumidor) FROM MovimientoTransito mt INNER JOIN MovimientoProveedor mp ON mt.movimientoMidas.transaccion = mp.orderId WHERE mt.idConciliacion = :folio AND mt.id IN :idsComisiones")
+	@Query("SELECT DISTINCT new mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosMailDataDTO(mp.operationDate, mt.folio, mp.orderId, mt.operacionDesc, mt.monto, mp.currency, mp.tarjetaMovimientosProveedor.type, mp.status, mp.tarjetaMovimientosProveedor.brand, mp.tarjetaMovimientosProveedor.cardNumber, mp.tarjetaMovimientosProveedor.holderName, mp.authorization, mt.movimientoMidas.consumidor) " +
+			"FROM MovimientoTransito mt " +
+			"INNER JOIN MovimientoProveedor mp ON mt.movimientoMidas.transaccion = mp.orderId " +
+			"INNER JOIN Reporte re ON re.conciliacion.id = mt.idConciliacion " +
+			"WHERE mt.idConciliacion = :folio AND mt.id IN :idsComisiones " +
+			"AND re.id = mp.reporte")
 	public List<SolicitarPagosMailDataDTO> getDataByFolioAndIdMovimientos(@Param("folio") final Long folio,
 			@Param("idsComisiones") final List<Integer> idsComisiones);
 
@@ -234,7 +270,7 @@ public interface MovimientosMidasRepository extends PagingAndSortingRepository<M
 	 * @param conciliacionId
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO(mm.sucursal, SUM(mm.monto)) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id WHERE r.conciliacion.id = :conciliacionId GROUP BY mm.sucursal")
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO(mm.sucursal, SUM(mm.monto), COUNT(DISTINCT mm.transaccion)) FROM MovimientoMidas mm INNER JOIN Reporte r ON mm.reporte = r.id WHERE r.conciliacion.id = :conciliacionId GROUP BY mm.sucursal")
 	public List<MovimientoMidasDTO> getMovimientosMidasBySucursal(@Param("conciliacionId") final Long conciliacionId);
 
 	/**

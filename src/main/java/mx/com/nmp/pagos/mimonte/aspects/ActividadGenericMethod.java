@@ -32,7 +32,7 @@ public class ActividadGenericMethod {
 	 * @param subTipo
 	 */
 	@ApplicationEvents
-	public void registroActividad(Object obj, String descripcion, TipoActividadEnum tipo,
+	public void registroActividadV2(Object obj, String descripcion, TipoActividadEnum tipo,
 			SubTipoActividadEnum subTipo) {
 		/**
 		 * No hay cuerpo para este metodo los argumentos son tomados por el interceptor

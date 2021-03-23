@@ -11,10 +11,12 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import mx.com.nmp.pagos.mimonte.dao.CodigoEstadoCuentaRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.ComisionesProveedorRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaCabeceraRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstadoCuentaRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.GlobalRepository;
+import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoBonificacionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoComisionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoEstadoCuentaRepository;
@@ -25,8 +27,10 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ReportesWrapper;
 import mx.com.nmp.pagos.mimonte.helper.EstadoCuentaHelper;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.processor.ConciliacionGlobalProcessor;
+import mx.com.nmp.pagos.mimonte.processor.ConciliacionCompletarMovsTransitoProcessor;
 import mx.com.nmp.pagos.mimonte.processor.ConciliacionProcessorChain;
 import mx.com.nmp.pagos.mimonte.processor.ConciliacionReporteEstadoCuentaProcessor;
 import mx.com.nmp.pagos.mimonte.processor.ConciliacionReporteMidasProcessor;
@@ -84,7 +88,13 @@ public class MergeReporteHandler {
 	private EstadoCuentaHelper estadoCuentaHelper;
 
 	@Inject
+	private MovimientoBonificacionRepository movimientoBonificacionRepository;
+
+	@Inject
 	private MovimientoJdbcRepository movimientoJdbcRepository;
+
+	@Inject
+	private ComisionesProveedorRepository comisionesProveedorRepository;
 
 
 
@@ -95,9 +105,9 @@ public class MergeReporteHandler {
 	 * @param idConciliacion
 	 * @param idEntidad
 	 */
-	public void handle(List<Reporte> reportes, Long idConciliacion, Long idEntidad) {
+	public void handle(List<Reporte> reportes, Long idConciliacion, Long idEntidad, CorresponsalEnum corresponsal) {
 
-		ReportesWrapper wrapper = new ReportesWrapper(idConciliacion, idEntidad);
+		ReportesWrapper wrapper = new ReportesWrapper(idConciliacion, idEntidad, corresponsal);
 
 		for (Reporte reporte : reportes) {
 			switch (reporte.getTipo()) {
@@ -132,16 +142,36 @@ public class MergeReporteHandler {
 	 * @return
 	 */
 	private ConciliacionProcessorChain configurarProcesadores(ReportesWrapper wrapper) {
+		
+		// Se crean los procesadores
 		ConciliacionReporteMidasProcessor reporteMidasProcessor = new ConciliacionReporteMidasProcessor(this);
 		ConciliacionReporteProveedorProcessor reporteProveedorProcessor = new ConciliacionReporteProveedorProcessor(this);
 		ConciliacionReporteEstadoCuentaProcessor reporteEstadoCuentaProcessor = new ConciliacionReporteEstadoCuentaProcessor(this);
 		ConciliacionGlobalProcessor globalProcessor = new ConciliacionGlobalProcessor(this);
 		ConciliacionUpdateReporteProcessor updateProcessor = new ConciliacionUpdateReporteProcessor(this);
+
+		// Se crea la cadena de procesamiento
+		switch (wrapper.getCorresponsal()) {
+			case OXXO:
+				// Para el caso de OXXO se verifica adicionalmente si alguno de los movimientos en transito corresponden a una conciliacion anterior
+				ConciliacionCompletarMovsTransitoProcessor movsTransitoProcessor = new ConciliacionCompletarMovsTransitoProcessor(this);
+
+				reporteMidasProcessor.setNextProcessor(reporteProveedorProcessor);
+				reporteProveedorProcessor.setNextProcessor(movsTransitoProcessor);
+				movsTransitoProcessor.setNextProcessor(reporteEstadoCuentaProcessor);
+				reporteEstadoCuentaProcessor.setNextProcessor(globalProcessor);
+				globalProcessor.setNextProcessor(updateProcessor);
+				
+				break;
+			default: // Default es OpenPay
+				reporteMidasProcessor.setNextProcessor(reporteProveedorProcessor);
+				reporteProveedorProcessor.setNextProcessor(reporteEstadoCuentaProcessor);
+				reporteEstadoCuentaProcessor.setNextProcessor(globalProcessor);
+				globalProcessor.setNextProcessor(updateProcessor);
+				break;
+		}
 		
-		reporteMidasProcessor.setNextProcessor(reporteProveedorProcessor);
-		reporteProveedorProcessor.setNextProcessor(reporteEstadoCuentaProcessor);
-		reporteEstadoCuentaProcessor.setNextProcessor(globalProcessor);
-		globalProcessor.setNextProcessor(updateProcessor);
+		// Se regresa el primer procesador dentro de la cadena
 		return reporteMidasProcessor;
 	}
 
@@ -201,6 +231,14 @@ public class MergeReporteHandler {
 
 	public MovimientoJdbcRepository getMovimientoJdbcRepository() {
 		return movimientoJdbcRepository;
+	}
+
+	public ComisionesProveedorRepository getComisionesProveedorRepository() {
+		return comisionesProveedorRepository;
+	}
+
+	public MovimientoBonificacionRepository getMovimientoBonificacionRepository() {
+		return movimientoBonificacionRepository;
 	}
 
 }

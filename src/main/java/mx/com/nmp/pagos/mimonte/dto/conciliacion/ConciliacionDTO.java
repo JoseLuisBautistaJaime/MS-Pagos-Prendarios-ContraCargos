@@ -6,6 +6,8 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.Date;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @author Quarksoft
  * @version 1.0
@@ -18,7 +20,8 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	 */
 	private static final long serialVersionUID = 1838609195762330516L;
 
-	private Long folio;
+	private Long folioConciliacion; // Folio especifico por corresponsal to_conciliacion.folio
+	private Long folio; // Identificador unico de la conciliacion to_conciliacion.id
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
@@ -34,7 +37,7 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 	private MovTransitoDTO movimientosTransito;
 	private ComisionesDTO comisiones;
 	private ComisionesTransProyeccionDTO comisionesTransacciones;
-
+	private CorresponsalEnum idCorresponsal;
 
 	public ConciliacionDTO() {
 		super();
@@ -44,12 +47,12 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 	}
 
-	public ConciliacionDTO(Long folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
+	public ConciliacionDTO(Long id, Long folio, EstatusConciliacionDTO estatus, SubEstatusConciliacionDTO subEstatus,
 			String subEstatusDescripcion, Long idPolizaTesoreria, Long idAsientoContable, EntidadDTO entidad,
 			CuentaDTO cuenta, ReporteProcesosNocturnosDTO reporteProcesosNocturnos,
 			ReporteProveedorTransaccionalDTO reporteProveedorTransaccional, ReporteEstadoCuentaDTO reporteEstadoCuenta,
 			GlobalDTO global, DevolucionConDTO devoluciones, MovTransitoDTO movimientosTransito,
-			ComisionesDTO comisiones) {
+			ComisionesDTO comisiones, CorresponsalEnum idCorresponsal) {
 		super();
 		this.folio = folio;
 		this.estatus = estatus;
@@ -66,8 +69,9 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 		this.devoluciones = devoluciones;
 		this.movimientosTransito = movimientosTransito;
 		this.comisiones = comisiones;
+		this.idCorresponsal = idCorresponsal;
 	}
-
+	
 	public Long getFolio() {
 		return folio;
 	}
@@ -188,28 +192,44 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 		this.comisiones = comisiones;
 	}
 
-	@Override
-	public String toString() {
-		return "ConciliacionDTO [folio=" + folio + ", estatus=" + estatus + ", subEstatus=" + subEstatus
-				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idPolizaTesoreria=" + idPolizaTesoreria
-				+ ", idAsientoContable=" + idAsientoContable + ", entidad=" + entidad + ", cuenta=" + cuenta
-				+ ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
-				+ reporteProveedorTransaccional + ", reporteEstadoCuenta=" + reporteEstadoCuenta + ", global=" + global
-				+ ", devoluciones=" + devoluciones + ", movimientosTransito=" + movimientosTransito + ", comisiones="
-				+ comisiones + "]";
-	}
-
-	@Override
-	public int compareTo(ConciliacionDTO o) {
-		return 0;
-	}
-
 	public ComisionesTransProyeccionDTO getComisionesTransacciones() {
 		return comisionesTransacciones;
 	}
 
 	public void setComisionesTransacciones(ComisionesTransProyeccionDTO comisionesTransacciones) {
 		this.comisionesTransacciones = comisionesTransacciones;
+	}
+
+	public CorresponsalEnum getIdCorresponsal() {
+		return idCorresponsal;
+	}
+
+	public void setIdCorresponsal(CorresponsalEnum idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
+	}
+
+	public Long getFolioConciliacion() {
+		return folioConciliacion;
+	}
+
+	public void setFolioConciliacion(Long folioConciliacion) {
+		this.folioConciliacion = folioConciliacion;
+	}
+
+	@Override
+	public String toString() {
+		return "ConciliacionDTO [folio=" + folio + ", folioConciliacion=" + folioConciliacion + ", estatus=" + estatus + ", subEstatus=" + subEstatus
+				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idPolizaTesoreria=" + idPolizaTesoreria
+				+ ", idAsientoContable=" + idAsientoContable + ", entidad=" + entidad + ", cuenta=" + cuenta
+				+ ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
+				+ reporteProveedorTransaccional + ", reporteEstadoCuenta=" + reporteEstadoCuenta + ", global=" + global
+				+ ", devoluciones=" + devoluciones + ", movimientosTransito=" + movimientosTransito + ", comisiones="
+				+ comisiones + ", idCorresponsal=" + idCorresponsal + "]";
+	}
+
+	@Override
+	public int compareTo(ConciliacionDTO o) {
+		return 0;
 	}
 
 }

@@ -99,8 +99,10 @@ public interface ConciliacionService {
 	public void actualizaSubEstatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO,
 			String usuario);
 
+	public void actualizaSubEstatusStatusConciliacion(ActualizarSubEstatusRequestDTO actualizarSubEstatusRequestDTO, String usuario);
+
 	/**
-	 * Realiza a actualizacion de el subesttaus de una conciliaicon por folio
+	 * Realiza a actualizacion de el subestatus de una conciliacion por folio
 	 * 
 	 * @param folio
 	 * @param subEstatus
@@ -110,6 +112,18 @@ public interface ConciliacionService {
 	 * @param descripcion
 	 */
 	public void actualizaSubEstatusConciliacionNT(Long folio, SubEstatusConciliacion subEstatus, final String usuario,
+			Date fecha, EstatusConciliacion estatusConciliacion, String descripcion);
+	
+	/**
+	 * Realiza a actualizacion de el subestatus de n conciliaciones por folio
+	 * @param folios
+	 * @param subEstatus
+	 * @param usuario
+	 * @param fecha
+	 * @param estatusConciliacion
+	 * @param descripcion
+	 */
+	public void actualizaSubEstatusConciliacionMultipleNT(List<Long> folios, SubEstatusConciliacion subEstatus, final String usuario,
 			Date fecha, EstatusConciliacion estatusConciliacion, String descripcion);
 
 	/**
@@ -169,5 +183,12 @@ public interface ConciliacionService {
 	 * @return
 	 */
 	public Long findSubEstatusByFolio(Long folio);
+	
+	/**
+	 * Obtiene la lista de ids de conciliacion asociadas a un folio de conciliacion (lista de longitud 1 para open pay y longitud n para oxxo)
+	 * @param folio
+	 * @return
+	 */
+	public List<Long> getConciliacionesAsociadas(Long folio);
 	
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 
 /**
  * @name MiniMaquinaEstadosConciliacion
@@ -44,11 +45,11 @@ public class MiniMaquinaEstadosConciliacion {
 	 * @param idSubestatus
 	 * @return
 	 */
-	public Boolean checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(final Long folio, final Long idSubestatus) {
+	public Boolean checkIfSubEstatusIsRightByFolioAndIdSubEstatus(final Long folio, final Long idSubestatus) {
 		Boolean resp = null;
 		Object obj = null;
 		if (null != folio && null != idSubestatus) {
-			obj = conciliacionRepository.checkIfSubEstatusIsRightByFolioAnfIdSubEstatus(folio, idSubestatus);
+			obj = conciliacionRepository.checkIfSubEstatusIsRightByFolioAndIdSubEstatus(folio, idSubestatus);
 			if (null != obj)
 				resp = ((BigInteger) obj).compareTo(BigInteger.ONE) == 0;
 		}

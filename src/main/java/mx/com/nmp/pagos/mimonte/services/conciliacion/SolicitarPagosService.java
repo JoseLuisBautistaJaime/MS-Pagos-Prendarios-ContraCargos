@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -113,6 +116,9 @@ public class SolicitarPagosService {
 	@Autowired
 	private ConciliacionDataValidator conciliacionDataValidator;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
+	
 	/**
 	 * Objeto para consumo de servicio Rest para envio de e-mail
 	 */
@@ -199,7 +205,7 @@ public class SolicitarPagosService {
 		}
 
 		// Registro de actividad
-		actividadGenericMethod.registroActividad(requestDTO.getFolio(),
+		actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(requestDTO.getFolio()),
 				"Se realizo la solicitud de pago de ".concat(String.valueOf(requestDTO.getIdMovimientos().size()))
 						.concat(" movimiento(s) de la conciliacion con el folio: "
 								.concat(String.valueOf(requestDTO.getFolio())).concat(", por un total de: $ ")

@@ -31,6 +31,8 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.TotalResumenDTO;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Proveedor;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 
 /**
@@ -49,6 +51,22 @@ public abstract class ConciliacionBuilder {
 	}
 
 	/**
+	 * Construye una lista de datos tipo Long a partir de una lista de datos tipo Object
+	 * @param objectList
+	 * @return
+	 */
+	public static List<Long> buildLongListFromObjectList(List<Object> objectList){
+		List<Long> longList = null;
+		if(null != objectList && !objectList.isEmpty()) {
+			longList = new ArrayList<>();
+			for(Object obj : objectList) {
+				longList.add(Long.valueOf(obj.toString()));
+			}
+		}
+		return longList;
+	}
+	
+	/**
 	 * Construye un objeto de tipo ConciliacionResponseSaveDTO a partir de un objeto
 	 * de tipo ConciliacionDTO.
 	 * 
@@ -62,6 +80,7 @@ public abstract class ConciliacionBuilder {
 		if (conciliacionDTO != null) {
 			conciliacionResponseSaveDTO = new ConciliacionResponseSaveDTO();
 			conciliacionResponseSaveDTO.setFolio(conciliacionDTO.getFolio());
+			conciliacionResponseSaveDTO.setFolioConciliacion(conciliacionDTO.getFolioConciliacion());
 			conciliacionResponseSaveDTO.setCreatedDate(conciliacionDTO.getCreatedDate());
 			conciliacionResponseSaveDTO.setLastModifiedDate(null);
 			conciliacionResponseSaveDTO.setCreatedBy(conciliacionDTO.getCreatedBy());
@@ -80,6 +99,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setDevoluciones(null);
 			conciliacionResponseSaveDTO.setMovimientosTransito(null);
 			conciliacionResponseSaveDTO.setComisiones(null);
+			conciliacionResponseSaveDTO.setIdCorresponsal(null != conciliacionDTO.getIdCorresponsal() ? conciliacionDTO.getIdCorresponsal(): CorresponsalEnum.OPENPAY);
 		}
 		return conciliacionResponseSaveDTO;
 	}
@@ -113,6 +133,11 @@ public abstract class ConciliacionBuilder {
 			conciliacionResponseSaveDTO.setDevoluciones(null);
 			conciliacionResponseSaveDTO.setMovimientosTransito(null);
 			conciliacionResponseSaveDTO.setComisiones(null);
+			// Se setea el corresponsal, si es nulo se setea por default el corresponsal OPEN_PAY
+			if(null != conciliacionRequestDTO.getIdCorresponsal())
+				conciliacionResponseSaveDTO.setIdCorresponsal(null != conciliacionRequestDTO.getIdCorresponsal() ? CorresponsalEnum.getByNombre(conciliacionRequestDTO.getIdCorresponsal().toUpperCase()) : CorresponsalEnum.OPENPAY );
+			else
+				conciliacionResponseSaveDTO.setIdCorresponsal(CorresponsalEnum.OPENPAY);
 		}
 		return conciliacionResponseSaveDTO;
 	}
@@ -168,6 +193,7 @@ public abstract class ConciliacionBuilder {
 		if (conciliacion != null) {
 			conciliacionDTO = new ConciliacionDTO();
 			conciliacionDTO.setFolio(conciliacion.getId());
+			conciliacionDTO.setFolioConciliacion(conciliacion.getFolio());
 			conciliacionDTO.setCreatedDate(conciliacion.getCreatedDate());
 			conciliacionDTO.setLastModifiedDate(conciliacion.getLastModifiedDate());
 			conciliacionDTO.setCreatedBy(conciliacion.getCreatedBy());
@@ -188,6 +214,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTO.setDevoluciones(null);
 			conciliacionDTO.setMovimientosTransito(null);
 			conciliacionDTO.setComisiones(null);
+			conciliacionDTO.setIdCorresponsal(null != conciliacion.getProveedor() ? conciliacion.getProveedor().getNombre(): CorresponsalEnum.OPENPAY);
 		}
 		return conciliacionDTO;
 	}
@@ -220,6 +247,7 @@ public abstract class ConciliacionBuilder {
 			conciliacion.setSubEstatusDescripcion(null);
 			conciliacion.setIdAsientoContable(null);
 			conciliacion.setIdPolizaTesoreria(null);
+			conciliacion.setProveedor(new Proveedor(conciliacionResponseSaveDTO.getIdCorresponsal()));
 		}
 		return conciliacion;
 	}
@@ -236,6 +264,7 @@ public abstract class ConciliacionBuilder {
 		if (conciliacion != null) {
 			consultaConciliacionDTO = new ConsultaConciliacionDTO();
 			consultaConciliacionDTO.setFolio(conciliacion.getId());
+			consultaConciliacionDTO.setFolioConciliacion(conciliacion.getFolio());
 			consultaConciliacionDTO.setCuenta(CuentaBuilder.buildCuentaDTOFromCuenta(conciliacion.getCuenta()));
 			consultaConciliacionDTO.setEntidad(EntidadBuilder.buildEntidadDTOFromEntidad(conciliacion.getEntidad()));
 			consultaConciliacionDTO.setEstatus(EstatusConciliacionBuilder
@@ -248,6 +277,7 @@ public abstract class ConciliacionBuilder {
 			consultaConciliacionDTO.setLastModifiedDate(conciliacion.getCompletedDate());
 			consultaConciliacionDTO.setIdAsientoContable(conciliacion.getIdAsientoContable());
 			consultaConciliacionDTO.setIdPolizaTesoreria(conciliacion.getIdPolizaTesoreria());
+			consultaConciliacionDTO.setIdCorresponsal(conciliacion.getProveedor() != null ? conciliacion.getProveedor().getNombre() : CorresponsalEnum.OPENPAY);
 		}
 		return consultaConciliacionDTO;
 	}
@@ -287,6 +317,7 @@ public abstract class ConciliacionBuilder {
 		if (conciliacion != null) {
 			conciliacionDTOList = new ConciliacionDTOList();
 			conciliacionDTOList.setFolio(conciliacion.getId());
+			conciliacionDTOList.setFolioConciliacion(conciliacion.getFolio());
 			conciliacionDTOList.setEstatus(EstatusConciliacionBuilder
 					.buildEstatusConciliacionDTOFromEstatusConciliacion(conciliacion.getEstatus()));
 			conciliacionDTOList.setSubEstatus(SubEstatusConciliacionBuilder
@@ -310,6 +341,7 @@ public abstract class ConciliacionBuilder {
 			conciliacionDTOList.setLastModifiedBy(conciliacion.getLastModifiedBy());
 			conciliacionDTOList.setIdAsientoContable(conciliacion.getIdAsientoContable());
 			conciliacionDTOList.setIdTesoreria(conciliacion.getIdPolizaTesoreria());
+			conciliacionDTOList.setIdCorresponsal(conciliacion.getProveedor() != null ? conciliacion.getProveedor().getNombre() : CorresponsalEnum.OPENPAY);
 		}
 		return conciliacionDTOList;
 	}

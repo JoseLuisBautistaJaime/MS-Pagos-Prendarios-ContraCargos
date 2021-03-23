@@ -5,9 +5,10 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import javax.inject.Inject;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,20 +19,22 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.nmp.pagos.mimonte.aspects.ActividadGenericMethod;
+import mx.com.nmp.pagos.mimonte.aspects.ObjectsInSession;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.MovimientosBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.constans.TipoError;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientosMidasRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.jdbc.MovimientoJdbcRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.MovimientosException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.MovimientoMidas;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Reporte;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.SubTipoActividadEnum;
@@ -86,6 +89,9 @@ public class MovimientosMidasService {
 	@Autowired
 	private ActividadGenericMethod actividadGenericMethod;
 
+	@Inject
+	private ObjectsInSession objectsInSession;
+	
 	// Temporal format para los LOGs de timers
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	
@@ -162,7 +168,7 @@ public class MovimientosMidasService {
 		}
 
 		start = System.currentTimeMillis();
-		LOG.debug("T>>> INICIA ONSTRUCCION DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
+		LOG.debug("T>>> INICIA CONSTRUCCION DE ENTIDAD REPORTE: {}", sdf.format(new Date(start)));
 		Reporte reporte = buildReporte(conciliacion.getId(), movimientoProcesosNocturnosDTOList.getFechaDesde(),
 				movimientoProcesosNocturnosDTOList.getFechaHasta(), userRequest);
 		finish = System.currentTimeMillis();
@@ -177,9 +183,16 @@ public class MovimientosMidasService {
 			finish = System.currentTimeMillis();
 			LOG.debug("T>>> TERMINA PERSISTENCIA DE REPORTE: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 
+			
+			// Filtrar partidas solo OXXO
+			if (conciliacion.getProveedor() != null && conciliacion.getProveedor().getNombre() == CorresponsalEnum.OXXO) {
+				movimientoProcesosNocturnosDTOList = filtrarPartidas(movimientoProcesosNocturnosDTOList);
+			}
+
+			
 			// Se persisten los movimientos midas
 			start = System.currentTimeMillis();
-			LOG.debug("T>>> INICIA CONSTRUCCION DE LOISTA DE ENTIDADES MOV. MIDAS: {}", sdf.format(new Date(start)));
+			LOG.debug("T>>> INICIA CONSTRUCCION DE LISTA DE ENTIDADES MOV. MIDAS: {}", sdf.format(new Date(start)));
 			List<MovimientoMidas> movimientoMidasList = MovimientosBuilder
 					.buildMovimientoMidasListFromMovimientoProcesosNocturnosListResponseDTO(
 							movimientoProcesosNocturnosDTOList, reporte.getId());
@@ -196,8 +209,8 @@ public class MovimientosMidasService {
 
 			// Registro de actividad
 			start = System.currentTimeMillis();
-			LOG.debug("T>>> INICIA REGISTRODE ACTIVIDADES: {}", sdf.format(new Date(start)));
-			actividadGenericMethod.registroActividad(movimientoProcesosNocturnosDTOList.getFolio(),
+			LOG.debug("T>>> INICIA REGISTRO DE ACTIVIDADES: {}", sdf.format(new Date(start)));
+			actividadGenericMethod.registroActividadV2(objectsInSession.getFolioByIdConciliacion(movimientoProcesosNocturnosDTOList.getFolio()),
 					"Se registraron " + movimientoProcesosNocturnosDTOList.getMovimientos().size()
 							+ " movimientos provenientes de procesos nocturnos,"
 							+ " para la conciliacion con el folio: " + movimientoProcesosNocturnosDTOList.getFolio(),
@@ -215,6 +228,46 @@ public class MovimientosMidasService {
 		LOG.debug("T>>> FINALIZA PERSISTENCIA GENERAL DE MOVIMIENTOS MIDAS: {}, EN: {}",sdf.format(new Date(bigFinish)) ,(bigFinish-bigStart) );
 	}
 
+	private MovimientoProcesosNocturnosListResponseDTO filtrarPartidas(MovimientoProcesosNocturnosListResponseDTO listRequestDTO) {
+		if (listRequestDTO.getMovimientos() != null && listRequestDTO.getMovimientos().size() > 0) {
+			List<MovimientoMidasRequestDTO> filtrados = new ArrayList<MovimientoMidasRequestDTO>();
+			for (MovimientoMidasRequestDTO mov : listRequestDTO.getMovimientos()) {
+				if (mov.getEstatus() != null && mov.getEstatus()) {
+					filtrados.add(mov);
+				}
+			}
+			listRequestDTO.setMovimientos(filtrados);
+		}
+		return listRequestDTO;
+	}
+
+
+	/**
+	 * Valida si el movimiento fue aplicado
+	 * @param mov
+	 * @return
+	 */
+	private boolean isMovAplicado(MovimientoMidasRequestDTO mov) {
+		boolean aplicado = false;
+		/* Eliminar movimientos unicos que no son aceptados
+	    1 - Pago Recibido
+	    2 - Pago Enviado
+	    3 - Pago aplicado
+	    4 - Pago rechazado
+	    5 - Pago por procesar
+	    6 - Pago por reversar
+	    7 - Pago reversado por corresponsal
+	    8 - Pago reversado no aplicado en core
+	    9 - Pago pendiente de reversar
+	    10 - Pago conciliado */
+		Long idMovTrans = mov.getEstadoTransaccion() != null ? Long.valueOf(mov.getEstadoTransaccion()) : 0L;
+		if (idMovTrans != null && (idMovTrans == 3 || idMovTrans == 10)) {
+			aplicado = true;
+		}
+		return aplicado;
+	}
+
+
 	/**
 	 * Construye un objeto de tipo reporte para ser persistido durante el registro
 	 * de movimientos de proveedor transaccional
@@ -230,7 +283,9 @@ public class MovimientosMidasService {
 		Reporte reporte = new Reporte();
 		if (null == folio || null == fechaDesde || null == fechaHasta || null == userRequest)
 			return null;
-		reporte.setConciliacion(new Conciliacion(folio));
+		Conciliacion con = new Conciliacion();
+		con.setId(folio);
+		reporte.setConciliacion(con);
 		reporte.setCreatedBy(userRequest);
 		reporte.setCreatedDate(new Date());
 		reporte.setDisponible(true);

@@ -35,6 +35,7 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
@@ -42,6 +43,8 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestMultipleDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaResponseMultipleDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.MovimientosEstadoCuentaService;
@@ -145,6 +148,7 @@ public class MovimientosController {
 	public Response saveMovimientosNocturnos(@RequestBody MovimientoProcesosNocturnosListResponseDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
+		
 		LOG.info(">>>URL: POST /movimientos/nocturnos > REQUEST ENTRANTE: {}", movimientos.toString());
 		
 		long start = 0;
@@ -193,6 +197,15 @@ public class MovimientosController {
 		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
+		// TODO: Dummy code
+/*		
+		if(movimientos.getFolio().equals(1L))
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+				null);
+		else
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+	*/		
 	}
 
 	/**
@@ -278,6 +291,7 @@ public class MovimientosController {
 	public Response saveMovimientosProvedor(@RequestBody MovimientoTransaccionalListRequestDTO movimientos,
 			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {
 		
+		
 		LOG.info(">>>URL: POST /movimientos/proveedor > REQUEST ENTRANTE: {}", movimientos.toString());
 		
 		long start = 0;
@@ -327,6 +341,15 @@ public class MovimientosController {
 		// Regresa la respuesta exitosa
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
 				null);
+		// TODO: Dummy code
+		/*
+		if(movimientos.getFolio().equals(1L))
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), CatalogConstants.CONT_MSG_SUCCESS_SAVE,
+				null);
+		else
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_030);
+			*/
 	}
 
 	/**
@@ -459,6 +482,89 @@ public class MovimientosController {
 				ConciliacionConstants.SUCCESSFUL_SAVE_ESTADO_CUENTA, null);
 	}
 
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/movimientos/estadocuenta/multiple", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Recibe la solicitud para la consulta del archivo y el alta de los movimientos del estado de cuenta con multiples folios de conciliacion.", tags = {
+			"Movimientos" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Alta movimientos exitosa."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response saveMovimientoEsadoCuentaMultiple(@RequestBody SaveEstadoCuentaRequestMultipleDTO request,
+			@RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String userRequest) {		
+		LOG.info(">>>URL: POST /movimientos/estadocuenta/multiple > REQUEST ENTRANTE: {}", request.toString());
+		// Objetos necesarios
+		Boolean procesoCorrecto = null;
+		String descripcionError = null;
+		CodigoError codigoError = null;
+
+		// Validacion general de objeto y atributos
+		if (!ValidadorConciliacion.validateSaveEstadoCuentaRequestMultipleDTO(request))
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+
+		// Valida que los folios de conciliacion existan
+		for(Long folio : request.getFolios()) {
+			conciliacionDataValidator.validateFolioExists(folio);
+		}
+		
+		// Validacion de fechas
+		ValidadorConciliacion.validateFechasPrimary(request.getFechaInicial(), request.getFechaFinal());
+		
+		// Procesa la consulta del estado de cuenta, consulta los archivos y persiste
+		// los movimientos del estado de cuenta
+		ConciliacionDTO nuevaConciliacion = null;
+		try {
+			nuevaConciliacion = movimientosEstadoCuentaService.procesarConsultaEstadoCuentaConciliacionMultiple(request, userRequest);
+			procesoCorrecto = true;
+		} catch (ConciliacionException cex) {
+			procesoCorrecto = false;
+			codigoError = cex.getCodigoError();
+			descripcionError = cex.getCodigoError().getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, cex);
+			throw cex;
+		} catch (Exception eex) {
+			procesoCorrecto = false;
+			descripcionError = CodigoError.NMP_PMIMONTE_BUSINESS_046.getDescripcion();
+			LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, eex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_046.getDescripcion(),
+					CodigoError.NMP_PMIMONTE_BUSINESS_046);
+		} finally {
+			try {
+				// Se actualiza el sub estatus de la conciliacion en base al resultado
+				// No actualiza subestatus si el error fue por validacion de subestatus
+				if (codigoError != CodigoError.NMP_PMIMONTE_BUSINESS_030) {
+					for(Long folio :request.getFolios()) {
+						conciliacionServiceImpl.actualizaSubEstatusStatusConciliacion(new ActualizarSubEstatusRequestDTO(folio,
+								procesoCorrecto
+										? ConciliacionConstants.SUBESTATUS_CONCILIACION_FINALIZADA
+										: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
+								procesoCorrecto
+										? ConciliacionConstants.ESTATUS_CONCILIACION_FINALIZADA
+										: ConciliacionConstants.ESTATUS_CONCILIACION_EN_PROCESO,
+								descripcionError), userRequest);
+					}
+					/*conciliacionServiceImpl.actualizaSubEstatusConciliacion(new ActualizarSubEstatusRequestDTO(nuevaConciliacion.getFolio(),
+							procesoCorrecto
+									? ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA
+									: ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR,
+							descripcionError), userRequest);*/	
+				}
+			} catch (Exception ex) {
+				LOG.error(ConciliacionConstants.GENERIC_EXCEPTION_INITIAL_MESSAGE, ex);
+				throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_030.getDescripcion(),
+						CodigoError.NMP_PMIMONTE_BUSINESS_030);
+			}
+		}
+
+		// Regresa la respuesta exitosa
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(),
+				"Conciliacion semanal creada correctamente con el folio " + nuevaConciliacion.getFolioConciliacion(),
+					new SaveEstadoCuentaResponseMultipleDTO(request.getFolios(), nuevaConciliacion.getFolio()));
+	}
+	
 	/**
 	 * Consulta movimientos estado de cuneta por filtros de objeto
 	 * CommonConciliacionRequestDTO
@@ -521,7 +627,9 @@ public class MovimientosController {
 		if(null != movimientoProcesosNocturnosListResponseDTO) {
 			if(null != movimientoProcesosNocturnosListResponseDTO.getMovimientos() && !movimientoProcesosNocturnosListResponseDTO.getMovimientos().isEmpty()) {
 				for(MovimientoMidasRequestDTO movimientoMidasRequestDTO : movimientoProcesosNocturnosListResponseDTO.getMovimientos()) {
-					movimientoMidasRequestDTO.setTipoContratoAbr(movimientoMidasRequestDTO.getTipoContratoAbr().trim());
+					if (movimientoMidasRequestDTO.getTipoContratoAbr() != null) {
+						movimientoMidasRequestDTO.setTipoContratoAbr(movimientoMidasRequestDTO.getTipoContratoAbr().trim());
+					}
 				}
 			}
 		}

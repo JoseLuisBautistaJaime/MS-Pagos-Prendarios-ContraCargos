@@ -147,11 +147,6 @@ public class PagoServiceImpl implements PagoService {
 		
 		ClienteDTO cl = clienteService.getClienteById(pagoRequestDTO.getIdCliente());
 		
-		// TODO: Un vez validada esta funcionalidad eliminar este bloque comentado
-//		if (null == cl) {
-//			cl = clienteService.saveCliente(new ClienteDTO(pagoRequestDTO.getIdCliente(), null, new Date()));
-//		}
-		
 		// Se realizan validacion propias del negocio
 		LOG.debug("Se inician validaciones respecto a objeto pagoRequestDTO.getTarjeta()");
 		if (flagOkCardData && (null != flag && flag == 0)) {

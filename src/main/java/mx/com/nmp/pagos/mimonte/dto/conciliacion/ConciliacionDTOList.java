@@ -7,6 +7,8 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 import java.util.Date;
 import java.util.List;
 
+import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+
 /**
  * @name ConciliacionDTOList
  * @description Clase que encapsula el request de ConciliacionDTOList para la
@@ -24,6 +26,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 	private static final long serialVersionUID = 1087675429120495856L;
 	
 	private Long folio;
+	private Long folioConciliacion;
 	private EstatusConciliacionDTO estatus;
 	private SubEstatusConciliacionDTO subEstatus;
 	private String subEstatusDescripcion;
@@ -39,6 +42,7 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 	private List<MovTransitoDTO> movimientosTransito;
 	private List<ComisionesDTO> comisiones;
 	private ComisionesTransDTO comisionesTransacciones;
+	private CorresponsalEnum idCorresponsal;
 
 
 	public ConciliacionDTOList() {
@@ -201,15 +205,31 @@ public class ConciliacionDTOList extends AbstractConciliacionDTO implements Comp
 		this.comisionesTransacciones = comisionesTransacciones;
 	}
 
+	public Long getFolioConciliacion() {
+		return folioConciliacion;
+	}
+
+	public void setFolioConciliacion(Long folioConciliacion) {
+		this.folioConciliacion = folioConciliacion;
+	}
+
+	public CorresponsalEnum getIdCorresponsal() {
+		return idCorresponsal;
+	}
+
+	public void setIdCorresponsal(CorresponsalEnum idCorresponsal) {
+		this.idCorresponsal = idCorresponsal;
+	}
+
 	@Override
 	public String toString() {
-		return "ConciliacionDTOList [folio=" + folio + ", estatus=" + estatus + ", subEstatus=" + subEstatus
+		return "ConciliacionDTOList [folio=" + folio + ", folioConciliacion=" + folioConciliacion + ", estatus=" + estatus + ", subEstatus=" + subEstatus
 				+ ", subEstatusDescripcion=" + subEstatusDescripcion + ", idTesoreria=" + idTesoreria
 				+ ", idAsientoContable=" + idAsientoContable + ", entidad=" + entidad + ", cuenta=" + cuenta
 				+ ", reporteProcesosNocturnos=" + reporteProcesosNocturnos + ", reporteProveedorTransaccional="
 				+ reporteProveedorTransaccional + ", reporteEstadoCuenta=" + reporteEstadoCuenta + ", global=" + global
 				+ ", devoluciones=" + devoluciones + ", movimientosTransito=" + movimientosTransito + ", comisiones="
-				+ comisiones + ", comisionesTransacciones=" + comisionesTransacciones + "]";
+				+ comisiones + ", comisionesTransacciones=" + comisionesTransacciones + ", idCorresponsal=" + idCorresponsal + "]";
 	}
 
 	@Override

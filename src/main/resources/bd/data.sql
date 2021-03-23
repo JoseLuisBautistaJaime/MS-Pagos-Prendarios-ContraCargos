@@ -213,7 +213,7 @@ INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus
 INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
 (3, 'Marcada devolucion', 'Marcada para devolucion', true, now(), null, 'Sistema', null, 'MDEV');
 INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus, created_date, last_modified_date, created_by, last_modified_by, descripcion_corta) VALUES
-(4, 'No identificada en Open Pay', 'No identificada en Open Pay', true, now(), null, 'Sistema', null, 'NIOP');
+(4, 'No identificada en Proveedor', 'No identificada en Proveedor', true, now(), null, 'Sistema', null, 'NIOP');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -227,6 +227,8 @@ INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
 (148, 'DSO', 'Cobro Desempeño en Linea');
 INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
 (191, 'DEX', 'Cobro Desempeño Extemporaneo');
+INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
+(198, 'RFE', 'Cobro Refrendo Extemporaneo');
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -259,11 +261,11 @@ INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date,
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
 (4, 'Consulta MIDAS Error', true, now(), 'Sistema', 4);
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
-(5, 'Consulta Open Pay', true, now(), 'Sistema', 5);
+(5, 'Consulta Proveedor', true, now(), 'Sistema', 5);
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
-(6, 'Consulta Open Pay Completada', true, now(), 'Sistema', 6);
+(6, 'Consulta Proveedor Completada', true, now(), 'Sistema', 6);
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
-(7, 'Consulta Open Pay Error', true, now(), 'Sistema', 7);
+(7, 'Consulta Proveedor Error', true, now(), 'Sistema', 7);
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
 (8, 'Conciliacion', true, now(), 'Sistema', 8);
 INSERT INTO tk_sub_estatus_conciliacion (id, description, estatus, created_date, created_by, order_number) VALUES
@@ -317,14 +319,14 @@ INSERT INTO tr_estatus_conciliacion_sub_estatus_conciliacion (id_estatus, id_sub
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tc_layout_header
 -- ------------------------------------------------------------------------------------------------------------------ --
-INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-('1', 'H', 'NMP01', 'COB RF Y DS EN L {0}', 'B', 'PAGOS', now(), null, 'Sistema', null);
-INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-('2', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_MOV', now(), null, 'Sistema', null);
-INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-('3', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_GENERALES', now(), null, 'Sistema', null);
-INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-('4', 'H', 'NMP01', 'DEV RF Y DS EN LINEA {0}', 'B', 'DEVOLUCIONES', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('1', 'H', 'NMP01', 'COB RF Y DS EN L {0}', 'B', 'PAGOS', 'OPENPAY', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('2', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_MOV', 'OPENPAY', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('3', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_GENERALES', 'OPENPAY', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('4', 'H', 'NMP01', 'DEV RF Y DS EN LINEA {0}', 'B', 'DEVOLUCIONES', 'OPENPAY', now(), null, 'Sistema', null);
 
 
 -- ------------------------------------------------------------------------------------------------------------------ --
@@ -332,36 +334,36 @@ INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_
 -- ------------------------------------------------------------------------------------------------------------------ --
 
 -- Pagos
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(1, 'L', '1220001013', '', '13%03d', '', '', 'PAGOS', 'SUCURSALES', now(), null, 'Sistema', null); -- Movimientos/Sucursales
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(2, 'L', '1011001078', '15000', '', '', '', 'PAGOS', 'BANCOS', now(), null, 'Sistema', null); -- Banco
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(1, 'L', '1220001013', '', '13%03d', '', '', 'PAGOS', 'SUCURSALES', 'OPENPAY', now(), null, 'Sistema', null); -- Movimientos/Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(2, 'L', '1011001078', '15000', '', '', '', 'PAGOS', 'BANCOS', 'OPENPAY', now(), null, 'Sistema', null); -- Banco
 -- (2, 'L', '1011001063', '15000', '', '', '', 'PAGOS', 'BANCOS', now(), null, 'Sistema', null); -- Banco
 
 -- Comisiones
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(3, 'L', '6402001001', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_MOV', 'SUCURSALES', now(), null, 'Sistema', null); -- Sucursales
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(4, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_GENERALES', 'BANCOS', now(), null, 'Sistema', null); -- Bancos
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(3, 'L', '6402001001', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_MOV', 'SUCURSALES', 'OPENPAY', now(), null, 'Sistema', null); -- Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(4, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_GENERALES', 'BANCOS', 'OPENPAY', now(), null, 'Sistema', null); -- Bancos
 
 -- Devoluciones
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(5, 'L', '1220001013', '', '13%03d', '', '', 'DEVOLUCIONES', 'SUCURSALES', now(), null, 'Sistema', null); -- Sucursales
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(6, 'L', '1011001078', '15000', '', '', '', 'DEVOLUCIONES', 'BANCOS', now(), null, 'Sistema', null); -- Bancos
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(5, 'L', '1220001013', '', '13%03d', '', '', 'DEVOLUCIONES', 'SUCURSALES', 'OPENPAY', now(), null, 'Sistema', null); -- Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(6, 'L', '1011001078', '15000', '', '', '', 'DEVOLUCIONES', 'BANCOS', 'OPENPAY', now(), null, 'Sistema', null); -- Bancos
 -- (6, 'L', '1011001063', '15000', '', '', '', 'DEVOLUCIONES', 'BANCOS', now(), null, 'Sistema', null); -- Bancos
 
 -- Comisiones
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(7, 'L', '6402001001', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_GENERALES', 'SUCURSALES', now(), null, 'Sistema', null); -- Sucursales
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(8, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', now(), null, 'Sistema', null); -- Bancos
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(7, 'L', '6402001001', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_GENERALES', 'SUCURSALES', 'OPENPAY', now(), null, 'Sistema', null); -- Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(8, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', 'OPENPAY', now(), null, 'Sistema', null); -- Bancos
 
 -- Comisiones Iva
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(9, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'SUCURSALES', now(), null, 'Sistema', null); -- Sucursales
-INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, created_date, last_modified_date, created_by, last_modified_by) VALUES
-(10, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', now(), null, 'Sistema', null); -- Bancos
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(9, 'L', '1219001003', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_IVA', 'SUCURSALES', 'OPENPAY', now(), null, 'Sistema', null); -- Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(10, 'L', '1011001063', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OPENPAY', now(), null, 'Sistema', null); -- Bancos
 
 -- ------------------------------------------------------------------------------------------------------------------ --
 -- INSERTS INICIALES EN TABLA - tk_maquina_estados_subestatus_conciliacion
@@ -442,3 +444,172 @@ VALUES (28, 'ENVIO_CONCILIACION', 18, 17);
 
 INSERT INTO tk_maquina_estados_subestatus_conciliacion(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible)
 VALUES( 29, 'CONCILIACION_MERGE', 8, 12);
+
+
+-- ---------------------------------------------------------------------------------- --
+-- ---------- INSERT DE ESTADOS EN MAQUINA DE ESTADOS PARA CORRESPONSAL OXXO -------- --
+-- ---------------------------------------------------------------------------------- --
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (30, 'ALTA_MOVIMIENTOS_PROCESOS_NOCTURNOS', 1, 2, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (31, 'ALTA_MOVIMIENTOS_PROCESOS_NOCTURNOS', 2, 3, 'OXXO');
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (32, 'ALTA_MOVIMIENTOS_PROCESOS_NOCTURNOS', 2, 4, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (33, 'ALTA_MOVIMIENTOS_PROVEEDOR_TRANSACCIONAL', 3, 5, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (34, 'ALTA_MOVIMIENTOS_PROCESOS_NOCTURNOS', 4, 2, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (35, 'ALTA_MOVIMIENTOS_PROVEEDOR_TRANSACCIONAL', 5, 6, 'OXXO');
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (36, 'ALTA_MOVIMIENTOS_PROVEEDOR_TRANSACCIONAL', 5, 7, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (37, 'CONCILIACION_MERGE', 6, 8, 'OXXO');
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (38, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 6, 11, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (39, 'ALTA_MOVIMIENTOS_PROVEEDOR_TRANSACCIONAL', 7, 5, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (40, 'CONCILIACION_MERGE', 8, 9, 'OXXO');
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (41, 'CONCILIACION_MERGE', 8, 10, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (42, 'CONCILIACION_MERGE', 9, 8, 'OXXO');
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (43, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 9, 11, 'OXXO');
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (44, 'GENERACION_LAYOUTS', 9, 14, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (45, 'CONCILIACION_MERGE', 10, 8, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (46, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 11, 12, 'OXXO');
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (47, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 11, 13, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (48, 'CONCILIACION_MERGE', 12, 8, 'OXXO');
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (49, 'GENERACION_LAYOUTS', 12, 14, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (50, 'ALTA_MOVIMIENTOS_ESTADO_CUENTA', 13, 11, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (51, 'GENERACION_LAYOUTS', 14, 15, 'OXXO');
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (52, 'GENERACION_LAYOUTS', 14, 16, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (53, 'ENVIO_CONCILIACION', 15, 17, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (54, 'GENERACION_LAYOUTS', 16, 14, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (55, 'ENVIO_CONCILIACION', 17, 18, 'OXXO');
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (56, 'ENVIO_CONCILIACION', 17, 19, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion (id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES (57, 'ENVIO_CONCILIACION', 18, 17, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES( 58, 'CONCILIACION_MERGE', 8, 12, 'OXXO');
+
+INSERT INTO tk_maquina_estados_subestatus_conciliacion(id, nombre_proceso, id_sub_estatus_inicial, id_sub_estatus_posible, corresponsal)
+VALUES( 59, 'ALTA_MOVIMIENTO_ESTADO_CUENTA', 15, 11, 'OXXO');
+
+-- ---------------------------------------------------------------------------------- --
+-- --------------- INSERT DE LOS PROVEEDORES / CORRESPONSALES ------------------------ --
+-- ---------------------------------------------------------------------------------- --
+INSERT INTO tk_proveedor (id, nombre, descripcion) 
+	VALUES
+		(1,'OPENPAY', 'Proveedor transaccional')
+        , (2, 'OXXO', 'Proveedor oxxo');
+        
+
+-- ---------------------------------------------------------------------------------- --
+-- --------------- INSERT DE LAS COMISIONES PROVEEDORES / CORRESPONSALES ------------------------ --
+-- ---------------------------------------------------------------------------------- --
+INSERT INTO `tc_comision_proveedor` (`id`, `corresponsal`, `comision`, `iva`) 
+	VALUES ('1', 'OXXO', '15.18', '2.43');
+
+
+-- ---------------------------------------------------------------------------------- --
+-- --------------- INSERT DE LAS COMISIONES PROVEEDORES / CORRESPONSALES ------------------------ --
+-- ---------------------------------------------------------------------------------- --
+INSERT INTO `tk_estatus_bonificacion` (`id`, `nombre`, `descripcion`, `descripcion_corta`) 
+	VALUES (1, 'Pendiente', 'Pendiente', 'PE');
+INSERT INTO `tk_estatus_bonificacion` (`id`, `nombre`, `descripcion`, `descripcion_corta`) 
+	VALUES (2, 'Reversa', 'Reversa', 'RV');
+INSERT INTO `tk_estatus_bonificacion` (`id`, `nombre`, `descripcion`, `descripcion_corta`) 
+	VALUES (3, 'Conciliada', 'Conciliada', 'CON');
+
+	
+-- ------------------------------------------------------------------------------------------------------------------ --
+-- LINEAS DE LAYOUTS OXXO
+-- ------------------------------------------------------------------------------------------------------------------ --
+
+-- PAGOS - DEPOSITOS
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(11, 'L', '1220001014', '', '13%03d', '', '', 'PAGOS', 'SUCURSALES', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(12, 'L', '1011001085', '15000', '', '', '', 'PAGOS', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
+
+-- Comisiones OXXO (MOV) - DEPOSITOS
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(13, 'L', '6402001005', '', '13%03d', 'PRENDA', 'SUCS_NB', 'COMISIONES_MOV', 'SUCURSALES', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(14, 'L', '1011001085', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
+
+-- Comisiones Iva - DEPOSITOS
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(15, 'L', '1219001003', '', '13%03d', '', '', 'COMISIONES_IVA', 'SUCURSALES', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(16, 'L', '1011001085', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
+
+-- PAGOS - BONIFICACIONES
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(17, 'L', '1220001014', '', '13%03d', '', '', 'BONIFICACIONES', 'SUCURSALES', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(18, 'L', '1011001085', '15000', '', '', '', 'BONIFICACIONES', 'BANCOS', 'OXXO', 'DEPOSITOS', now(), null, 'Sistema', null); -- Bancos
+
+-- Comisiones OXXO (MOV) - BONIFICACIONES
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(19, 'L', '6402001005', '', '13%03d', '', '', 'COMISIONES_MOV', 'SUCURSALES', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(20, 'L', '1011001085', '15000', '', '', '', 'COMISIONES_MOV', 'BANCOS', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Bancos
+
+-- Comisiones Iva - BONIFICACIONES
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(21, 'L', '1219001003', '', '13%03d', '', '', 'COMISIONES_IVA', 'SUCURSALES', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Sucursales
+INSERT INTO tc_layout_linea (id, linea, cuenta, dep_id, unidad_operativa, negocio, proyecto_nmp, tipo, grupo, corresponsal, operacion, created_date, last_modified_date, created_by, last_modified_by) VALUES
+(22, 'L', '1011001085', '15000', '', '', '', 'COMISIONES_IVA', 'BANCOS', 'OXXO', 'BONIFICACIONES', now(), null, 'Sistema', null); -- Bancos
+
+
+
+-- --------------------------------------------------------------------------------------------- --
+-- ----------- INSERCIONES DE CATALOGO DE HEADERS DE LAYOUTS PARA CORRESPONSAL OXXO ------------- --
+-- --------------------------------------------------------------------------------------------- --
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('5', 'H', 'NMP01', 'COB RF Y DS EN L {0}', 'B', 'PAGOS', 'OXXO', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('6', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_MOV', 'OXXO', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('7', 'H', 'NMP01', 'COMISIÓN {0}', 'B', 'COMISIONES_GENERALES', 'OXXO', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('8', 'H', 'NMP01', 'DEV RF Y DS EN LINEA {0}', 'B', 'DEVOLUCIONES', 'OXXO', now(), null, 'Sistema', null);
+INSERT INTO tc_layout_header (id, cabecera, unidad_negocio, descripcion, codigo_origen, tipo, corresponsal, created_date, last_modified_date, created_by, last_modified_by) VALUES
+('9', 'H', 'NMP01', 'BONIFICACIONES {0}', 'B', 'BONIFICACIONES', 'OXXO', now(), null, 'Sistema', null);
+
+

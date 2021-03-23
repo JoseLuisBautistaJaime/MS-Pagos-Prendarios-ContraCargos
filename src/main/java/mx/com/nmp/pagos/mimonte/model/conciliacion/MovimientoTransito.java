@@ -64,6 +64,9 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 	
 	@Column(name = "num_autorizacion")
 	private String numAutorizacion;
+	
+	@Column(name = "transaccion")
+	private String transaccion;
 
 
 	public MovimientoTransito() {
@@ -200,6 +203,7 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 		result = prime * result + ((tipoContratoDesc == null) ? 0 : tipoContratoDesc.hashCode());
 		result = prime * result + ((titular == null) ? 0 : titular.hashCode());
 		result = prime * result + ((numAutorizacion == null) ? 0 : numAutorizacion.hashCode());
+		result = prime * result + ((transaccion == null) ? 0 : transaccion.hashCode());
 		return result;
 	}
 
@@ -220,7 +224,15 @@ public class MovimientoTransito extends MovimientoConciliacion implements Serial
 		return "MovimientoTransito [estatus=" + estatus + ", folio=" + folio + ", sucursal=" + sucursal
 				+ ", fecha=" + fecha + ", operacionDesc=" + operacionDesc + ", monto=" + monto + ", tipoContratoDesc="
 				+ tipoContratoDesc + ", esquemaTarjeta=" + esquemaTarjeta + ", cuenta=" + cuenta + ", titular="
-				+ titular + ", numAutorizacion " + numAutorizacion + "]";
+				+ titular + ", numAutorizacion " + numAutorizacion + ", transaccion " + transaccion + "]";
+	}
+
+	public String getTransaccion() {
+		return transaccion;
+	}
+
+	public void setTransaccion(String transaccion) {
+		this.transaccion = transaccion;
 	}
 
 }

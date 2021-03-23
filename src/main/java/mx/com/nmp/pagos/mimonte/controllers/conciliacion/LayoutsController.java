@@ -35,6 +35,7 @@ import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutCabeceraDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.LayoutRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenLayoutDTO;
 import mx.com.nmp.pagos.mimonte.exception.CatalogoException;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoLayoutEnum;
@@ -296,6 +297,41 @@ public class LayoutsController {
 		
 		// Regresa la respuesta
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Linea eliminada con éxito.", null);
+	}
+
+	/**
+	 * Resumen de layouts: Cargos / Abonos  
+	 * 
+	 * @param folio
+	 * @param idLayout
+	 * @param userRequest
+	 * @return
+	 */
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/layouts/resumen/{folio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Permite consultar el resumen de totales para los layouts.", tags = {
+			"Layouts" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa."),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
+			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response resumenLayout(@PathVariable(name = "folio", required = true) Long folio) {
+
+		LOG.info(">>>URL: GET /layouts/resumen/{folio} > REQUEST ENTRANTE: {}", folio);
+
+		// Valida el id de linea
+		if (folio == null || folio == 0) {
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR,
+					CodigoError.NMP_PMIMONTE_0008);
+		}
+
+		// Se obtiene el resumen
+		ResumenLayoutDTO resumen = layoutsService.obtenerResumen(folio);
+
+		// Regresa la respuesta
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), "Consulta exitosa.", resumen);
 	}
 
 }
