@@ -267,7 +267,12 @@
 	      <name>central maven repo https</name>
 	      <url>https://repo1.maven.org/maven2</url>
 	   </repository>
+	   <repository>
+			<id>local-maven-repo</id>
+			<url>file:///${project.basedir}/repo</url>
+	   </repository>
 	</repositories>
+	
 	<pluginRepositories>
 	    <pluginRepository>
 	        <id>central</id>
