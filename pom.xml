@@ -145,10 +145,14 @@
             <version>6.5.1</version>
 			<exclusions>
 				<exclusion>
-				<groupId>com.lowagie</groupId>
-				<artifactId>itext</artifactId>
-			</exclusion>
-    </exclusions>
+					<groupId>com.lowagie</groupId>
+					<artifactId>itext</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.olap4j</groupId>
+					<artifactId>olap4j</artifactId>
+				</exclusion>
+			</exclusions>
         </dependency>
 		<dependency>
 			<groupId>com.lowagie</groupId>
