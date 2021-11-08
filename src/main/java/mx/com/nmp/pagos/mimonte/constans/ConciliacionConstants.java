@@ -486,6 +486,18 @@ public final class ConciliacionConstants {
 	public static final String ESTATUS_CONCILIACION_DOESNT_EXISTS = "El estatus de conciliacion especificado no existe";
 
 	/**
+	 * Mensaje que es mostrado cuando se desea consultar un estatus de ejecución del proceso de cociliación
+	 * que no existe
+	 */
+	public static final String ESTATUS_EJECUCION_CONCILIACION_DOESNT_EXISTS = "El estatus de ejecucion del proceso de conciliacion que se especifico no existe";
+
+	/**
+	 * Mensaje que es mostrado cuando se desea consultar un estatus de ejecución del proceso de precociliación
+	 * que no existe
+	 */
+	public static final String ESTATUS_EJECUCION_PRECONCILIACION_DOESNT_EXISTS = "El estatus de ejecucion del proceso de preconciliacion que se especifico no existe";
+
+	/**
 	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion
 	 * pendientes
 	 */

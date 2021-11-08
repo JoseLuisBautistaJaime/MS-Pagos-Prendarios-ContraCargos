@@ -198,6 +198,12 @@ public final class CatalogConstants {
 	public static final String NO_ENTIDAD_FOUND = "No existe la entidad especificada";
 
 	/**
+	 * Mensaje que es mostrado cuando se busca una cuenta con un id que
+	 * no existe
+	 */
+	public static final String NO_CUENTA_FOUND = "No existe la cuenta especificada";
+
+	/**
 	 * Mensaje que es mostrado cuando se desea modificar una categoria con un id que
 	 * no existe
 	 */

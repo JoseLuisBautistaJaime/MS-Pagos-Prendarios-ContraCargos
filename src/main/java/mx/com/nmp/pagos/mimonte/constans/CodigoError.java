@@ -319,6 +319,10 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_138("Los montos del layout no cuadran a cero.",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_139("El estatus de ejecucion del proceso de conciliacion que se especifico no existe",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_140("El estatus de ejecucion del proceso de preconciliacion que se especifico no existe",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_PROCESAR_CONCILIACION("Error al procesar la conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_CORRESPONSAL_CONCILIACION("No hay relacion entre el corresponsal y una o mas conciliaciones",
@@ -327,6 +331,7 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_SERVICIO_PAGOS("El servicio de consulta de pagos no puede ser consultado",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
+
 
 	;
 
