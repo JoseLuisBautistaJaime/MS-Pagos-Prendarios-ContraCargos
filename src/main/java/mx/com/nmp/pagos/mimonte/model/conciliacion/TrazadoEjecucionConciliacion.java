@@ -41,11 +41,11 @@ public class TrazadoEjecucionConciliacion implements Serializable  {
 	@Column(name = "estatus_descripcion")
 	private String estatusDescripcion;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha_inicio", nullable = false)
 	private Date fechaInicio;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha_fin", nullable = false)
 	private Date fechaFin;
 
@@ -64,7 +64,56 @@ public class TrazadoEjecucionConciliacion implements Serializable  {
         this.fechaFin = fechaFin;
     }
 
-    @Override
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public EstatusEjecucionConciliacion getEstatus() {
+		return estatus;
+	}
+
+	public void setEstatus(EstatusEjecucionConciliacion estatus) {
+		this.estatus = estatus;
+	}
+
+	public EjecucionConciliacion getEjecucionConciliacion() {
+		return ejecucionConciliacion;
+	}
+
+	public void setEjecucionConciliacion(EjecucionConciliacion ejecucionConciliacion) {
+		this.ejecucionConciliacion = ejecucionConciliacion;
+	}
+
+	public String getEstatusDescripcion() {
+		return estatusDescripcion;
+	}
+
+	public void setEstatusDescripcion(String estatusDescripcion) {
+		this.estatusDescripcion = estatusDescripcion;
+	}
+
+	public Date getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public void setFechaInicio(Date fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	public Date getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaFin(Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();

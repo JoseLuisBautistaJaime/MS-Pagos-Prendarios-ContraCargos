@@ -471,7 +471,7 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se genera un error consultando el id del
 	 * estatus de movimientos transito marcado como dev
 	 */
-	public static final String GETTING_DEV_ESTATUS_HAS_GONE_WRONG = "Se registro un error durante la comparacion dele status de la validacion";
+	public static final String GETTING_DEV_ESTATUS_HAS_GONE_WRONG = "Se registro un error durante la comparacion del estatus de la validacion";
 
 	/**
 	 * Mensaje que es mostrado cuando se intenta actualizar un movimiento transito a
@@ -496,6 +496,24 @@ public final class ConciliacionConstants {
 	 * que no existe
 	 */
 	public static final String ESTATUS_EJECUCION_PRECONCILIACION_DOESNT_EXISTS = "El estatus de ejecucion del proceso de preconciliacion que se especifico no existe";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la validacion del
+	 * id de la ejecución del proceso de conciliación
+	 */
+	public static final String ERROR_WHILE_ID_EJECUCION_CONCILIACION_VALIDATION = "Se genero un error durante la validacion del id de ejecucion del proceso de conciliacion";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la consulta de la
+	 * ejecución del proceso de conciliación
+	 */
+	public static final String ERROR_ON_GET_EJECUCION_CONCILIACION = "Se genero un error al consultar la ejecucion del proceso de conciliacion";
+
+	/**
+	 * Mensaje que es mostrado cuando se desea consultar un estatus de ejecución del proceso de precociliación
+	 * que no existe
+	 */
+	public static final String EJECUCION_CONCILIACION_DOESNT_EXISTS = "La ejecucion del proceso de preconciliacion que se especifico no existe";
 
 	/**
 	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion

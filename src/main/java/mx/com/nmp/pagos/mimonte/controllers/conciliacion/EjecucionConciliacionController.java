@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * @name EjecucionConciliacionController
- * @description Clase que expone el servicio REST para las operaciones
+ * @description Clase que expone el servicio REST para las consultas de información
  *              relacionadas con la ejecución del proceso de conciliación.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
@@ -39,7 +39,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/mimonte")
-@Api(value = "Servicio que permite realizar operaciones sobre la ejecución de los procesos de conciliación.", description = "REST API para realizar operaciones sobre la ejecución de los procesos de conciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {"EjecucionConciliacion" })
+@Api(value = "Servicio que permite realizar consultas de información referente a las ejecuciones de los procesos de conciliación.", description = "REST API para realizar consultas de informacion  sobre la ejecución de los procesos de conciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {"EjecucionConciliacion" })
 public class EjecucionConciliacionController {
 
 	/**
@@ -48,8 +48,6 @@ public class EjecucionConciliacionController {
 	@Autowired
 	private BeanFactory beanFactory;
 
-	@Autowired
-	private EjecucionConciliacionServiceImpl ejecucionConciliacionServiceImpl;
 
 	@Autowired
 	private EjecucionConciliacionService ejecucionConciliacionService;
@@ -80,24 +78,47 @@ public class EjecucionConciliacionController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/ejecucionconciliacion/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Realiza la consulta de las ejecuciones del proceso de conciliación registradas en el sistema.", tags = {"EjecucionConciliacion" })
+	@ApiOperation(httpMethod = "POST", value = "Realiza la consulta de las ejecuciones del proceso de conciliación registradas en el sistema.", tags = {"EjecucionConciliación" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consulta(@RequestBody ConsultaEjecucionConciliacionRequestDTO consultaEjecucionConciliacionRequestDTO) {
 		
 		LOG.info(">>>URL: POST /ejecucionconciliacion/consulta > REQUEST ENTRANTE: {}", consultaEjecucionConciliacionRequestDTO);
 		
 		ValidadorConciliacion.validateFechasPrimary(consultaEjecucionConciliacionRequestDTO.getFechaEjecucionDesde(), consultaEjecucionConciliacionRequestDTO.getFechaEjecucionHasta());
-		List<ConsultaEjecucionConciliacionDTO> consulta = ejecucionConciliacionServiceImpl.consulta(consultaEjecucionConciliacionRequestDTO);
+		List<ConsultaEjecucionConciliacionDTO> consulta = ejecucionConciliacionService.consultarByPropiedades(consultaEjecucionConciliacionRequestDTO);
 
 		if (null == consulta) {
 			consulta = new ArrayList<>();
 		} 
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH, consulta);
+	}
+
+	/**
+	* Realiza la consulta de la ejecución de la conciliación a partir del id de la ejecución.
+	*
+	* @param idEjecucion El identificador de la ejecución de la conciliación.
+	* @return La información de la ejecución de la conciliación indicada.
+	*/
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = "/ejecucionconciliacion/consulta/{idEjecucion}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Realiza la consulta de la ejecución de la conciliación a partir del id de la ejecución.", tags = {"EjecucionConciliación" })
+	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
+			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
+			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
+	public Response consultaByIdEjecucion(@PathVariable(value = "idEjecucion", required = true) Long idEjecucion) {
+
+		LOG.info(">>>URL: GET /ejecucionconciliacion/consulta/{idEjecucion} > REQUEST ENTRANTE: {}", idEjecucion);
+
+		LOG.info(">> consultaByIdEjecucion({})", idEjecucion);
+		ConsultaEjecucionConciliacionDTO consultaEjecucion = ejecucionConciliacionService.consultarByIdEjecucion(idEjecucion);
+
+		LOG.info(">>>URL: GET /ejecucionconciliacion/consulta/{idEjecucion} > RESPONSE: {}", consultaEjecucion);
+
+		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH, consultaEjecucion);
 	}
 
 }

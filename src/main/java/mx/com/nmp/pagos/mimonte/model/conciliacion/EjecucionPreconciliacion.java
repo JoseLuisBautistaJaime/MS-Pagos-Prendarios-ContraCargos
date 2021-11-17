@@ -39,15 +39,15 @@ public class EjecucionPreconciliacion extends Updatable implements Serializable 
 	@Column(name = "estatus_descripcion")
 	private String estatusDescripcion;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha_ejecucion", nullable = false)
 	private Date fechaEjecucion;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha_periodo_inicio", nullable = false)
 	private Date fechaPeriodoInicio;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha_periodo_fin", nullable = false)
 	private Date fechaPeriodoFin;
 

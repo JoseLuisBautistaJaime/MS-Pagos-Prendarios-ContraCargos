@@ -6,8 +6,6 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +24,23 @@ public interface EjecucionConciliacionService {
 	 * @param consultaEjecucionConciliacionRequestDTO
 	 * @return
 	 */
-	public List<ConsultaEjecucionConciliacionDTO> consulta(ConsultaEjecucionConciliacionRequestDTO consultaEjecucionConciliacionRequestDTO);
+	public List<ConsultaEjecucionConciliacionDTO> consultarByPropiedades(ConsultaEjecucionConciliacionRequestDTO consultaEjecucionConciliacionRequestDTO);
+
+	/**
+	 * Método que regresa un objeto de tipo ConsultaEjecucionConciliacionDTO con la
+	 * información de la ejecución del proceso de conciliación a partir de su id.
+	 *
+	 * @param idEjecucionConciliacion
+	 * @return
+	 */
+	public ConsultaEjecucionConciliacionDTO consultarByIdEjecucion(Long idEjecucionConciliacion);
 
 
-}
+	/**
+	 * Metodo que actualiza el estatus de ejecución del proceso de conciliación
+	 */
+	public void actualizaEstatusEjecucionConciliacion(ActualizarEstatusEjecucionRequestDTO actualizarEstatusRequestDTO, String usuario);
+
+
+
+	}

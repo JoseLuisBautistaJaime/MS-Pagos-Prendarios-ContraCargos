@@ -6,25 +6,21 @@ package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
 import com.ibm.icu.util.Calendar;
 import mx.com.nmp.pagos.mimonte.builder.conciliacion.*;
-import mx.com.nmp.pagos.mimonte.constans.CatalogConstants;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dao.CuentaRepository;
-import mx.com.nmp.pagos.mimonte.dao.EntidadRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.model.Cuenta;
-import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -48,19 +44,10 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 
 
 	@Autowired
-	private CuentaRepository cuentaRepository;
-
-	@Autowired
-	private EntidadRepository entidadRepository;
-
-	@Autowired
-	private EstatusEjecucionConciliacionRepository estatusEjecucionConciliacionRepository;
-
-	@Autowired
-	private ConciliacionRepository conciliacionRepository;
-
-	@Autowired
 	private EjecucionConciliacionRepository ejecucionConciliacionRepository;
+
+	@Autowired
+	private TrazadoEjecucionConciliacionRepository trazadoEjecucionConciliacionRepository;
 
 
 	// Temporal format para los LOGs de timers
@@ -72,15 +59,10 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 	 * ConsultaEjecucionConciliacionDTO.
 	 */
 	@Override
-	public List<ConsultaEjecucionConciliacionDTO> consulta(ConsultaEjecucionConciliacionRequestDTO consultaEjecucionConciliacionRequestDTO) {
+	public List<ConsultaEjecucionConciliacionDTO> consultarByPropiedades(ConsultaEjecucionConciliacionRequestDTO consultaEjecucionConciliacionRequestDTO) {
 
 		// Declaracion de objetos necesarios
 		List<ConsultaEjecucionConciliacionDTO> result = null;
-		List<Long> conciliacionIdList;
-		List<Object[]> objectResult = null;
-		Optional<Entidad> entidad = null;
-		Optional<Conciliacion> conciliacion = null;
-		Optional<EstatusEjecucionConciliacion> estatusEjecucionConciliacion = null;
 
 		// Se hace UPPERCASE de nombre corresponsal
 		consultaEjecucionConciliacionRequestDTO.setCorresponsal(null != consultaEjecucionConciliacionRequestDTO.getCorresponsal() ? consultaEjecucionConciliacionRequestDTO.getCorresponsal().toUpperCase() : null);
@@ -115,43 +97,98 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 			 consultaEjecucionConciliacionRequestDTO.setFechaEjecucionHasta(fin.getTime());
 		}
 
-		// Valida que la entidad especificada exista
-		if (null !=  consultaEjecucionConciliacionRequestDTO && null !=  consultaEjecucionConciliacionRequestDTO.getIdEntidad()) {
-			entidad = entidadRepository.findById( consultaEjecucionConciliacionRequestDTO.getIdEntidad());
-			if (!entidad.isPresent())
-				throw new ConciliacionException(CatalogConstants.NO_ENTIDAD_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_022);
-		}
-
-		// Valida que la cuenta especificada exista
-		if (null !=  consultaEjecucionConciliacionRequestDTO && null !=  consultaEjecucionConciliacionRequestDTO.getIdCuenta()) {
-			// Búsqueda y validacion del idCuenta.
-			Optional<Cuenta> cuenta = cuentaRepository.findById(consultaEjecucionConciliacionRequestDTO.getIdCuenta());
-			if (!cuenta.isPresent()) {
-				throw new ConciliacionException(CatalogConstants.NO_CUENTA_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_021);
-			}
-		}
-
-		// Valida que la conciliación especificada exista
-		if (null !=  consultaEjecucionConciliacionRequestDTO && null !=  consultaEjecucionConciliacionRequestDTO.getIdConciliacion()) {
-			conciliacion = conciliacionRepository.findById(consultaEjecucionConciliacionRequestDTO.getIdConciliacion());
-			if (!conciliacion.isPresent())
-				throw new ConciliacionException(ConciliacionConstants.CONCILIACION_ID_NOT_FOUND, CodigoError.NMP_PMIMONTE_BUSINESS_018);
-		}
-
-		// Valida que el id del estatus de ejecución del proceso de conciliacion  exista
-		if (null !=  consultaEjecucionConciliacionRequestDTO && null !=  consultaEjecucionConciliacionRequestDTO.getIdEstatus()) {
-			estatusEjecucionConciliacion = estatusEjecucionConciliacionRepository.findById( consultaEjecucionConciliacionRequestDTO.getIdEstatus());
-			if (!estatusEjecucionConciliacion.isPresent())
-				throw new ConciliacionException(ConciliacionConstants.ESTATUS_EJECUCION_CONCILIACION_DOESNT_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_139);
-		}
-
-		result = EjecucionConciliacionBuilder.buildConsultaEjecucionConciliacionDTOListFromEjecucionConciliacionList(
-				ejecucionConciliacionRepository.findByPropiedades(
+		result = ejecucionConciliacionRepository.findByPropiedades(
 							 consultaEjecucionConciliacionRequestDTO.getIdEstatus(),  consultaEjecucionConciliacionRequestDTO.getIdEntidad(), consultaEjecucionConciliacionRequestDTO.getIdCuenta(), consultaEjecucionConciliacionRequestDTO.getIdConciliacion(),
 							 consultaEjecucionConciliacionRequestDTO.getFechaPeriodoInicio(), consultaEjecucionConciliacionRequestDTO.getFechaPeriodoFin(),consultaEjecucionConciliacionRequestDTO.getFechaEjecucionDesde(), consultaEjecucionConciliacionRequestDTO.getFechaEjecucionHasta(),
-						      null !=  consultaEjecucionConciliacionRequestDTO.getCorresponsal() ? CorresponsalEnum.getByNombre( consultaEjecucionConciliacionRequestDTO.getCorresponsal()) : null ));
+						      null !=  consultaEjecucionConciliacionRequestDTO.getCorresponsal() ? CorresponsalEnum.getByNombre( consultaEjecucionConciliacionRequestDTO.getCorresponsal()) : null );
 
 
 		return result;
 	}
+
+	/**
+	 * Metodo que realiza una busqueda a partir del id de la ejecución del proceso de conciliación
+	 * devolviendo como resultado un objeto de tipo ConsultaEjecucionConciliacionDTO con el resultado de la busqueda.
+	 */
+	@Override
+	public ConsultaEjecucionConciliacionDTO consultarByIdEjecucion(Long idEjecucionConciliacion) throws ConciliacionException {
+
+		// Declaracion de objetos necesarios
+		ConsultaEjecucionConciliacionDTO result = null;
+
+
+		LOG.info(">> consultarById");
+
+		if (idEjecucionConciliacion == null) {
+			LOG.debug("El id recibido es nulo");
+			throw new ConciliacionException(ConciliacionConstants.ERROR_WHILE_ID_EJECUCION_CONCILIACION_VALIDATION, CodigoError.NMP_PMIMONTE_BUSINESS_141);
+		}
+
+		try {
+			result = ejecucionConciliacionRepository.findByIdEjecucion(idEjecucionConciliacion);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_GET_EJECUCION_CONCILIACION, CodigoError.NMP_PMIMONTE_BUSINESS_143);
+		}
+
+		if (result == null) {
+			throw new ConciliacionException(ConciliacionConstants.EJECUCION_CONCILIACION_DOESNT_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_142);
+		} else {
+			result.setListaTrazado(trazadoEjecucionConciliacionRepository.findTrazadoEstatusEjecucionConciliacion(idEjecucionConciliacion));
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * Actualiza el estatus de ejecución del proceso de conciliación
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void actualizaEstatusEjecucionConciliacion(ActualizarEstatusEjecucionRequestDTO actualizarEstatusRequestDTO, String usuario)  {
+
+		long start = 0;
+		long finish = 0;
+		long globalStart = 0;
+		long globalFinish = 0;
+
+		globalStart = System.currentTimeMillis();
+		LOG.debug("T>>> INICIA ACTUALIZACION DEl ESTATUS: {}", sdf.format(new Date(globalStart)));
+
+		// Se actualiza el estatus de la ejecución del proceso de conciliación que se recibio como
+		// parametro, adicionalmente se actualizan los campos createdBy y createdDate
+		try {
+			start = System.currentTimeMillis();
+			LOG.debug("T>>> INICIA ACTUALIZACION DEl ESTATUS EN BASE DE DATOS: {}", sdf.format(new Date(start)));
+			ejecucionConciliacionRepository.actualizaEstatusEjecucionConciliacion(actualizarEstatusRequestDTO.getIdEjecucionConciliacion(), new EstatusEjecucionConciliacion(actualizarEstatusRequestDTO.getIdEstatusEjecucion()), usuario, new Date(),actualizarEstatusRequestDTO.getDescripcionEstatus());
+			finish = System.currentTimeMillis();
+			LOG.debug("T>>> FINALIZA ACTUALIZACION DEl ESTATUS EN BASE DE DATOS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		} catch (Exception ex) {
+			LOG.error("Error al actualizar el estatus de la ejecución del proceso de conciliación.", ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_144.getDescripcion(),	CodigoError.NMP_PMIMONTE_BUSINESS_144);
+		}
+
+		// Registro de trazado de estatus
+		try {
+			start = System.currentTimeMillis();
+			LOG.debug("T>>> INICIA REGISTRO DEl TRAZADO DE ESTATUS: {}", sdf.format(new Date(start)));
+			TrazadoEjecucionConciliacion trazado = new TrazadoEjecucionConciliacion();
+			trazado.setEjecucionConciliacion(new EjecucionConciliacion(actualizarEstatusRequestDTO.getIdEjecucionConciliacion()));
+			trazado.setEstatus(new EstatusEjecucionConciliacion(actualizarEstatusRequestDTO.getIdEstatusEjecucion()));
+			trazado.setEstatusDescripcion(actualizarEstatusRequestDTO.getDescripcionEstatus());
+			trazado.setFechaInicio(actualizarEstatusRequestDTO.getFechaInicio());
+			trazado.setFechaFin(actualizarEstatusRequestDTO.getFechaFin());
+			trazadoEjecucionConciliacionRepository.save(trazado);
+			finish = System.currentTimeMillis();
+			LOG.debug("T>>> FINALIZA REGISTRO DEl TRAZADO DE ESTATUS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+		} catch (Exception ex) {
+			LOG.error("Error al registrar el trazado de estatus de la ejecución del proceso de conciliación.", ex);
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_145.getDescripcion(),	CodigoError.NMP_PMIMONTE_BUSINESS_145);
+		}
+
+		globalFinish = System.currentTimeMillis();
+		LOG.debug("T>>> FINALIZA ACTUALIZACION DEl ESTATUS GENERAL: {}, EN: {}", sdf.format(new Date(globalFinish)), (globalFinish-globalStart) );
+	}
+
+
 }

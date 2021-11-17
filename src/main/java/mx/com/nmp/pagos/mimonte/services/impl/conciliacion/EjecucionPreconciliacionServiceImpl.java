@@ -5,11 +5,9 @@
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
 import com.ibm.icu.util.Calendar;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.EjecucionPreconciliacionBuilder;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EjecucionPreconciliacionRepository;
-import mx.com.nmp.pagos.mimonte.dao.conciliacion.EstatusEjecucionPreconciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionPreconciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionPreconciliacionRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -42,10 +40,7 @@ public class EjecucionPreconciliacionServiceImpl implements EjecucionPreconcilia
 	 * Instancia para impresion de LOG's
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(EjecucionPreconciliacionServiceImpl.class);
-	
 
-	@Autowired
-	private EstatusEjecucionPreconciliacionRepository estatusEjecucionPreconciliacionRepository;
 
 	@Autowired
 	private EjecucionPreconciliacionRepository ejecucionPreconciliacionRepository;
@@ -60,11 +55,10 @@ public class EjecucionPreconciliacionServiceImpl implements EjecucionPreconcilia
 	 * ConsultaEjecucionPreconciliacionDTO.
 	 */
 	@Override
-	public List<ConsultaEjecucionPreconciliacionDTO> consulta(ConsultaEjecucionPreconciliacionRequestDTO consultaEjecucionPreconciliacionRequestDTO) {
+	public List<ConsultaEjecucionPreconciliacionDTO> consultarByPropiedades(ConsultaEjecucionPreconciliacionRequestDTO consultaEjecucionPreconciliacionRequestDTO) {
 
 		// Declaracion de objetos necesarios
 		List<ConsultaEjecucionPreconciliacionDTO> result = null;
-		Optional<EstatusEjecucionPreconciliacion> estatusEjecucionPreconciliacion = null;
 
 		// Se hace UPPERCASE de nombre corresponsal
 		consultaEjecucionPreconciliacionRequestDTO.setCorresponsal(null != consultaEjecucionPreconciliacionRequestDTO.getCorresponsal() ? consultaEjecucionPreconciliacionRequestDTO.getCorresponsal().toUpperCase() : null);
@@ -99,18 +93,12 @@ public class EjecucionPreconciliacionServiceImpl implements EjecucionPreconcilia
 			 consultaEjecucionPreconciliacionRequestDTO.setFechaEjecucionHasta(fin.getTime());
 		}
 
-		// Valida que el id del estatus de ejecución del proceso de conciliacion  exista
-		if (null !=  consultaEjecucionPreconciliacionRequestDTO && null !=  consultaEjecucionPreconciliacionRequestDTO.getIdEstatus()) {
-			estatusEjecucionPreconciliacion = estatusEjecucionPreconciliacionRepository.findById( consultaEjecucionPreconciliacionRequestDTO.getIdEstatus());
-			if (!estatusEjecucionPreconciliacion.isPresent())
-				throw new ConciliacionException(ConciliacionConstants.ESTATUS_EJECUCION_PRECONCILIACION_DOESNT_EXISTS, CodigoError.NMP_PMIMONTE_BUSINESS_140);
-		}
 
-		result = EjecucionPreconciliacionBuilder.buildConsultaEjecucionPreconciliacionDTOListFromEjecucionPreconciliacionList(
+		result =
 				ejecucionPreconciliacionRepository.findByPropiedades(
 						consultaEjecucionPreconciliacionRequestDTO.getIdEstatus(),  consultaEjecucionPreconciliacionRequestDTO.getEstatusDescripcion(), consultaEjecucionPreconciliacionRequestDTO.getFechaPeriodoInicio(), consultaEjecucionPreconciliacionRequestDTO.getFechaPeriodoFin(),
 						consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionDesde(), consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionHasta(),
-						null !=  consultaEjecucionPreconciliacionRequestDTO.getCorresponsal() ? CorresponsalEnum.getByNombre( consultaEjecucionPreconciliacionRequestDTO.getCorresponsal()) : null ));
+						null !=  consultaEjecucionPreconciliacionRequestDTO.getCorresponsal() ? CorresponsalEnum.getByNombre( consultaEjecucionPreconciliacionRequestDTO.getCorresponsal()) : null );
 
 
 		return result;

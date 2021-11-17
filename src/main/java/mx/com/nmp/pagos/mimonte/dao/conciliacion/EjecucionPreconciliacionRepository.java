@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionPreconciliacionDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -32,8 +33,16 @@ public interface EjecucionPreconciliacionRepository extends PagingAndSortingRepo
 	 * @param proveedor
 	 * @return
 	 */
-	@Query("FROM EjecucionPreconciliacion c WHERE  ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :estatusDescripcion IS NULL OR c.estatusDescripcion = :estatusDescripcion ) AND ( :fechaPeriodoInicio IS NULL OR c.fechaPeriodoInicio= :fechaPeriodoInicio) AND ( :fechaPeriodoFin IS NULL OR c.fechaPeriodoFin = :fechaPeriodoFin ) AND ( ( :fechaEjecucionDesde  IS NULL AND :fechaEjecucionHasta IS NULL ) OR ( :fechaEjecucionHasta IS NULL AND c.fechaEjecucion >= :fechaEjecucionDesde) OR ( :fechaEjecucionDesde IS NULL AND c.fechaEjecucion <= :fechaEjecucionHasta ) OR (c.fechaEjecucion BETWEEN :fechaEjecucionDesde AND :fechaEjecucionHasta) ) AND ( :proveedor IS NULL OR c.proveedor.nombre = :proveedor)")
-	public List<EjecucionPreconciliacion> findByPropiedades( @Param("idEstatus") final Integer idEstatus, @Param("estatusDescripcion") final String estatusDescripcion, @Param("fechaPeriodoInicio") final Date fechaPeriodoInicio, @Param("fechaPeriodoFin") final Date fechaPeriodoFin, @Param("fechaEjecucionDesde") final Date fechaEjecucionDesde, @Param("fechaEjecucionHasta") final Date fechaEjecucionHasta, @Param("proveedor") final CorresponsalEnum proveedor);
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionPreconciliacionDTO(c.id, e.id, e.descripcionCorta, e.descripcion, e.orderNumber, c.fechaEjecucion, c.fechaPeriodoInicio, c.fechaPeriodoFin, c.createdBy, c.createdDate, c.lastModifiedDate, c.lastModifiedBy, p.nombre ) FROM EjecucionPreconciliacion c " +
+			"INNER JOIN EstatusEjecucionPreconciliacion e ON e.id = c.estatus.id " +
+			"INNER JOIN Proveedor p ON p.id = c.proveedor.id " +
+			"WHERE  ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) " +
+			"AND ( :estatusDescripcion IS NULL OR c.estatusDescripcion = :estatusDescripcion ) " +
+			"AND ( :fechaPeriodoInicio IS NULL OR c.fechaPeriodoInicio= :fechaPeriodoInicio) " +
+			"AND ( :fechaPeriodoFin IS NULL OR c.fechaPeriodoFin = :fechaPeriodoFin ) " +
+			"AND ( ( :fechaEjecucionDesde  IS NULL AND :fechaEjecucionHasta IS NULL ) OR ( :fechaEjecucionHasta IS NULL AND c.fechaEjecucion >= :fechaEjecucionDesde) OR ( :fechaEjecucionDesde IS NULL AND c.fechaEjecucion <= :fechaEjecucionHasta ) OR (c.fechaEjecucion BETWEEN :fechaEjecucionDesde AND :fechaEjecucionHasta) ) " +
+			"AND ( :proveedor IS NULL OR c.proveedor.nombre = :proveedor)")
+	public List<ConsultaEjecucionPreconciliacionDTO> findByPropiedades(@Param("idEstatus") final Integer idEstatus, @Param("estatusDescripcion") final String estatusDescripcion, @Param("fechaPeriodoInicio") final Date fechaPeriodoInicio, @Param("fechaPeriodoFin") final Date fechaPeriodoFin, @Param("fechaEjecucionDesde") final Date fechaEjecucionDesde, @Param("fechaEjecucionHasta") final Date fechaEjecucionHasta, @Param("proveedor") final CorresponsalEnum proveedor);
 
 
 	/**

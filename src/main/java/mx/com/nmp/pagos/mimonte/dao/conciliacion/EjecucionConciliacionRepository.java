@@ -1,6 +1,7 @@
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusEjecucionConciliacion;
@@ -35,8 +36,19 @@ public interface EjecucionConciliacionRepository extends PagingAndSortingReposit
 	 * @param proveedor
 	 * @return
 	 */
-	@Query("FROM EjecucionConciliacion c WHERE  ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) AND ( :idEntidad IS NULL OR c.entidad.id = :idEntidad) AND( :idCuenta IS NULL OR c.cuenta.id = :idCuenta) AND ( :idConciliacion IS NULL OR c.conciliacion.id = :idConciliacion)  AND ( :fechaPeriodoInicio IS NULL OR c.fechaPeriodoInicio= :fechaPeriodoInicio) AND ( :fechaPeriodoFin IS NULL OR c.fechaPeriodoFin = :fechaPeriodoFin ) AND ( ( :fechaEjecucionDesde  IS NULL AND :fechaEjecucionHasta IS NULL ) OR ( :fechaEjecucionHasta IS NULL AND c.fechaEjecucion >= :fechaEjecucionDesde) OR ( :fechaEjecucionDesde IS NULL AND c.fechaEjecucion <= :fechaEjecucionHasta ) OR (c.fechaEjecucion BETWEEN :fechaEjecucionDesde AND :fechaEjecucionHasta) ) AND ( :proveedor IS NULL OR c.proveedor.nombre = :proveedor)")
-	public List<EjecucionConciliacion> findByPropiedades(@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad, @Param("idCuenta") final Long idCuenta, @Param("idConciliacion") final Long idConciliacion, @Param("fechaPeriodoInicio") final Date fechaPeriodoInicio, @Param("fechaPeriodoFin") final Date fechaPeriodoFin, @Param("fechaEjecucionDesde") final Date fechaEjecucionDesde, @Param("fechaEjecucionHasta") final Date fechaEjecucionHasta, @Param("proveedor") final CorresponsalEnum proveedor);
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionConciliacionDTO(ec.id, e.id, e.descripcionCorta, e.descripcion, e.orderNumber, c.folio,  c.id, ec.fechaEjecucion, ec.fechaPeriodoInicio, ec.fechaPeriodoFin, ec.createdBy, ec.createdDate, ec.lastModifiedDate, ec.lastModifiedBy, p.nombre ) FROM EjecucionConciliacion ec " +
+			"INNER JOIN Conciliacion c ON c.id = ec.conciliacion.id  " +
+			"INNER JOIN EstatusEjecucionConciliacion e ON e.id = ec.estatus.id " +
+			"INNER JOIN Proveedor p ON p.id = ec.proveedor.id " +
+			"WHERE  ( :idEstatus IS NULL OR ec.estatus.id = :idEstatus) " +
+			"AND ( :idEntidad IS NULL OR ec.conciliacion.entidad.id = :idEntidad) " +
+			"AND( :idCuenta IS NULL OR ec.conciliacion.cuenta.id = :idCuenta) " +
+			"AND ( :idConciliacion IS NULL OR ec.conciliacion.id = :idConciliacion)  " +
+			"AND ( :fechaPeriodoInicio IS NULL OR ec.fechaPeriodoInicio= :fechaPeriodoInicio) " +
+			"AND ( :fechaPeriodoFin IS NULL OR ec.fechaPeriodoFin = :fechaPeriodoFin ) " +
+			"AND ( ( :fechaEjecucionDesde  IS NULL AND :fechaEjecucionHasta IS NULL ) OR ( :fechaEjecucionHasta IS NULL AND ec.fechaEjecucion >= :fechaEjecucionDesde) OR ( :fechaEjecucionDesde IS NULL AND ec.fechaEjecucion <= :fechaEjecucionHasta ) OR (ec.fechaEjecucion BETWEEN :fechaEjecucionDesde AND :fechaEjecucionHasta) ) " +
+			"AND ( :proveedor IS NULL OR ec.proveedor.nombre = :proveedor)")
+	public List<ConsultaEjecucionConciliacionDTO> findByPropiedades(@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad, @Param("idCuenta") final Long idCuenta, @Param("idConciliacion") final Long idConciliacion, @Param("fechaPeriodoInicio") final Date fechaPeriodoInicio, @Param("fechaPeriodoFin") final Date fechaPeriodoFin, @Param("fechaEjecucionDesde") final Date fechaEjecucionDesde, @Param("fechaEjecucionHasta") final Date fechaEjecucionHasta, @Param("proveedor") final CorresponsalEnum proveedor);
 
 
 	/**
@@ -61,5 +73,38 @@ public interface EjecucionConciliacionRepository extends PagingAndSortingReposit
 	@Query("SELECT pre.estatus FROM EjecucionConciliacion pre WHERE pre.id = :idEjecucionConciliacion")
 	public EstatusEjecucionConciliacion findEstatusById(@Param("idEjecucionConciliacion") final Long idEjecucionConciliacion);
 
+
+	/**
+	 * Busqueda de las ejecuciones de conciliación a partir de la idEntidad, idConciliacion, idEstatus, fechaPeriodoInicio, fechaPeriodoFin, fechaEjecucion y proveedor.
+	 *
+	 * @param idEntidad
+	 * @param idConciliacion
+	 * @param idEstatus
+	 * @param fechaPeriodoInicio
+	 * @param fechaPeriodoFin
+	 * @param fechaEjecucion
+	 * @param proveedor
+	 * @return
+	 */
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionConciliacionDTO(ec.id, e.id, e.descripcionCorta, e.descripcion, e.orderNumber, c.folio,  c.id, ec.fechaEjecucion, ec.fechaPeriodoInicio, ec.fechaPeriodoFin, ec.createdBy, ec.createdDate, ec.lastModifiedDate, ec.lastModifiedBy, p.nombre ) FROM EjecucionConciliacion ec " +
+			"INNER JOIN Conciliacion c ON c.id = ec.conciliacion.id  " +
+			"INNER JOIN EstatusEjecucionConciliacion e ON e.id = ec.estatus.id " +
+			"INNER JOIN Proveedor p ON p.id = ec.proveedor.id " +
+			"WHERE  ( :idEstatus IS NULL OR ec.estatus.id = :idEstatus) AND ( :idEntidad IS NULL OR ec.conciliacion.entidad.id = :idEntidad)  AND ( :idConciliacion IS NULL OR ec.conciliacion.id = :idConciliacion)  AND ( :fechaPeriodoInicio IS NULL OR ec.fechaPeriodoInicio= :fechaPeriodoInicio) AND ( :fechaPeriodoFin IS NULL OR ec.fechaPeriodoFin = :fechaPeriodoFin ) AND ( :fechaEjecucion IS NULL AND ec.fechaEjecucion = :fechaEjecucion)  AND ( :proveedor IS NULL OR ec.proveedor.nombre = :proveedor)")
+	public List<ConsultaEjecucionConciliacionDTO> findByEntidadAndFolioAndEstatusAndPeriodoAndEjecucionAndCorresponsal( @Param("idEntidad") final Long idEntidad, @Param("idConciliacion") final Long idConciliacion, @Param("idEstatus") final Integer idEstatus, @Param("fechaPeriodoInicio") final Date fechaPeriodoInicio, @Param("fechaPeriodoFin") final Date fechaPeriodoFin, @Param("fechaEjecucion") final Date fechaEjecucion, @Param("proveedor") final CorresponsalEnum proveedor);
+
+
+	/**
+	 * Busqueda de la ejecución del proceso de conciliación a partir de su identificador.
+	 *
+	 * @param idEjecucionConciliacion
+	 * @return
+	 */
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionConciliacionDTO(ec.id, e.id, e.descripcionCorta, e.descripcion, e.orderNumber, c.folio,  c.id, ec.fechaEjecucion, ec.fechaPeriodoInicio, ec.fechaPeriodoFin, ec.createdBy, ec.createdDate, ec.lastModifiedDate, ec.lastModifiedBy, p.nombre ) FROM EjecucionConciliacion ec " +
+			"INNER JOIN Conciliacion c ON c.id = ec.conciliacion.id  " +
+			"INNER JOIN EstatusEjecucionConciliacion e ON e.id = ec.estatus.id " +
+			"INNER JOIN Proveedor p ON p.id = ec.proveedor.id " +
+			"WHERE   ec.id = :idEjecucionConciliacion")
+	public ConsultaEjecucionConciliacionDTO findByIdEjecucion(Long idEjecucionConciliacion);
 
 }

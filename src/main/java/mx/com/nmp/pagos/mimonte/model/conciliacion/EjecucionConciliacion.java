@@ -40,25 +40,18 @@ public class EjecucionConciliacion extends Updatable implements Serializable  {
 	private EstatusEjecucionConciliacion estatus;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "id_entidad")
-	private Entidad entidad;
-
-	@ManyToOne(cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "id_cuenta")
-	private Cuenta cuenta;
-
-	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "id_conciliacion")
 	private Conciliacion conciliacion;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha_ejecucion")
 	private Date fechaEjecucion;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha_periodo_inicio", nullable = false)
 	private Date fechaPeriodoInicio;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha_periodo_fin", nullable = false)
 	private Date fechaPeriodoFin;
 
@@ -71,13 +64,16 @@ public class EjecucionConciliacion extends Updatable implements Serializable  {
 		super();
 	}
 
-	public EjecucionConciliacion(Long id, EstatusEjecucionConciliacion estatus, Entidad entidad, Cuenta cuenta, Conciliacion conciliacion,
+	public EjecucionConciliacion(Long id) {
+		super();
+		this.id= id;
+	}
+
+	public EjecucionConciliacion(Long id, EstatusEjecucionConciliacion estatus, Conciliacion conciliacion,
                                  Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, Proveedor proveedor) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
-		this.entidad = entidad;
-		this.cuenta = cuenta;
 		this.conciliacion = conciliacion;
 		this.fechaEjecucion = fechaEjecucion;
 		this.fechaPeriodoInicio = fechaPeriodoInicio;
@@ -99,22 +95,6 @@ public class EjecucionConciliacion extends Updatable implements Serializable  {
 
 	public void setEstatus(EstatusEjecucionConciliacion estatus) {
 		this.estatus = estatus;
-	}
-
-	public Entidad getEntidad() {
-		return entidad;
-	}
-
-	public void setEntidad(Entidad entidad) {
-		this.entidad = entidad;
-	}
-
-	public Cuenta getCuenta() {
-		return cuenta;
-	}
-
-	public void setCuenta(Cuenta cuenta) {
-		this.cuenta = cuenta;
 	}
 
 	public Conciliacion getConciliacion() {
@@ -165,8 +145,6 @@ public class EjecucionConciliacion extends Updatable implements Serializable  {
 		result = prime * result + ((fechaEjecucion == null) ? 0 : fechaEjecucion.hashCode());
 		result = prime * result + ((fechaPeriodoInicio == null) ? 0 : fechaPeriodoInicio.hashCode());
 		result = prime * result + ((fechaPeriodoFin == null) ? 0 : fechaPeriodoFin.hashCode());
-		result = prime * result + ((cuenta == null) ? 0 : cuenta.hashCode());
-		result = prime * result + ((entidad == null) ? 0 : entidad.hashCode());
 		result = prime * result + ((conciliacion == null) ? 0 : conciliacion.hashCode());
 		result = prime * result + ((estatus == null) ? 0 : estatus.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -188,7 +166,7 @@ public class EjecucionConciliacion extends Updatable implements Serializable  {
 
 	@Override
 	public String toString() {
-		return "Conciliacion [id=" + id + ", conciliacion=" + conciliacion + ", estatus=" + estatus + ", entidad=" + entidad + ", cuenta=" + cuenta
+		return "Conciliacion [id=" + id + ", conciliacion=" + conciliacion + ", estatus=" + estatus
 				+ ", fechaEjecucion=" + fechaEjecucion + ", fechaPeriodoInicio=" + fechaPeriodoInicio
 				+ ", fechaPeriodoFin=" + fechaPeriodoFin + ", proveedor=" + proveedor + "]";
 	}

@@ -26,7 +26,7 @@ public interface EjecucionPreconciliacionService {
 	 * @param consultaEjecucionPreconciliacionRequestDTO
 	 * @return
 	 */
-	public List<ConsultaEjecucionPreconciliacionDTO> consulta(ConsultaEjecucionPreconciliacionRequestDTO consultaEjecucionPreconciliacionRequestDTO);
+	public List<ConsultaEjecucionPreconciliacionDTO> consultarByPropiedades(ConsultaEjecucionPreconciliacionRequestDTO consultaEjecucionPreconciliacionRequestDTO);
 
 
 }

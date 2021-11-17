@@ -46,6 +46,23 @@ public class ConsultaEjecucionPreconciliacionDTO implements Comparable<ConsultaE
 		this.corresponsal = corresponsal;
 	}
 
+	public ConsultaEjecucionPreconciliacionDTO(Long id, Integer idEstatus, String descripcionCortaEstatus, String descripcionEstatus, Integer orderNumberEstatus,
+											   Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
+		super();
+		this.id = id;
+		this.estatus = new EstatusEjecucionPreconciliacionDTO(idEstatus, descripcionCortaEstatus, descripcionEstatus, orderNumberEstatus);
+		this.estatusDescripcion = descripcionEstatus;
+		this.fechaEjecucion = fechaEjecucion;
+		this.fechaPeriodoInicio = fechaPeriodoInicio;
+		this.fechaPeriodoFin = fechaPeriodoFin;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.lastModifiedDate = lastModifiedDate;
+		this.lastModifiedBy = lastModifiedBy;
+		this.corresponsal = corresponsal;
+	}
+
+
 	public Long getId() {
 		return id;
 	}

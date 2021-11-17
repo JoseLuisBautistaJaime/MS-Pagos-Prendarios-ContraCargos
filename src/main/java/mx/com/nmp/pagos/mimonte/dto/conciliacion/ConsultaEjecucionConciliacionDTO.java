@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Quarksoft
@@ -18,9 +19,7 @@ public class ConsultaEjecucionConciliacionDTO implements Comparable<ConsultaEjec
 	private Long id;
 	private EstatusEjecucionConciliacionDTO estatus;
 	private String estatusDescripcion;
-	private EntidadDTO entidad;
-	private CuentaDTO cuenta;
-	private ConciliacionDTO conciliacion;
+	private ConciliacionEjecucionDTO conciliacion;
 	private Date fechaEjecucion;
 	private Date fechaPeriodoInicio;
 	private Date fechaPeriodoFin;
@@ -29,19 +28,35 @@ public class ConsultaEjecucionConciliacionDTO implements Comparable<ConsultaEjec
 	private Date lastModifiedDate;
 	private String lastModifiedBy;
 	private CorresponsalEnum corresponsal;
+	List<TrazadoEjecucionConciliacionDTO> listaTrazado;
 
 	public ConsultaEjecucionConciliacionDTO() {
 		super();
 	}
 
-	public ConsultaEjecucionConciliacionDTO(Long id, EstatusEjecucionConciliacionDTO estatus, String estatusDescripcion, EntidadDTO entidad, CuentaDTO cuenta, ConciliacionDTO conciliacion, Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
+	public ConsultaEjecucionConciliacionDTO(Long id, EstatusEjecucionConciliacionDTO estatus, String estatusDescripcion, ConciliacionEjecucionDTO conciliacion, Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
 		this.estatusDescripcion = estatusDescripcion;
-		this.entidad = entidad;
-		this.cuenta = cuenta;
 		this.conciliacion = conciliacion;
+		this.fechaEjecucion = fechaEjecucion;
+		this.fechaPeriodoInicio = fechaPeriodoInicio;
+		this.fechaPeriodoFin = fechaPeriodoFin;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.lastModifiedDate = lastModifiedDate;
+		this.lastModifiedBy = lastModifiedBy;
+		this.corresponsal = corresponsal;
+	}
+
+	public ConsultaEjecucionConciliacionDTO(Long id, Integer idEstatus, String descripcionCortaEstatus, String descripcionEstatus, Integer orderNumberEstatus,
+											Long folioConciliacion, Long idConciliacion, Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
+		super();
+		this.id = id;
+		this.estatus = new EstatusEjecucionConciliacionDTO(idEstatus, descripcionCortaEstatus, descripcionEstatus, orderNumberEstatus);
+		this.estatusDescripcion = descripcionEstatus;
+		this.conciliacion = new ConciliacionEjecucionDTO(folioConciliacion, idConciliacion);
 		this.fechaEjecucion = fechaEjecucion;
 		this.fechaPeriodoInicio = fechaPeriodoInicio;
 		this.fechaPeriodoFin = fechaPeriodoFin;
@@ -76,27 +91,11 @@ public class ConsultaEjecucionConciliacionDTO implements Comparable<ConsultaEjec
 		this.estatusDescripcion = estatusDescripcion;
 	}
 
-	public EntidadDTO getEntidad() {
-		return entidad;
-	}
-
-	public void setEntidad(EntidadDTO entidad) {
-		this.entidad = entidad;
-	}
-
-	public CuentaDTO getCuenta() {
-		return cuenta;
-	}
-
-	public void setCuenta(CuentaDTO cuenta) {
-		this.cuenta = cuenta;
-	}
-
-	public ConciliacionDTO getConciliacion() {
+	public ConciliacionEjecucionDTO getConciliacion() {
 		return conciliacion;
 	}
 
-	public void setConciliacion(ConciliacionDTO conciliacion) {
+	public void setConciliacion(ConciliacionEjecucionDTO conciliacion) {
 		this.conciliacion = conciliacion;
 	}
 
@@ -164,12 +163,20 @@ public class ConsultaEjecucionConciliacionDTO implements Comparable<ConsultaEjec
 		this.createdDate = createdDate;
 	}
 
+	public List<TrazadoEjecucionConciliacionDTO> getListaTrazado() {
+		return listaTrazado;
+	}
+
+	public void setListaTrazado(List<TrazadoEjecucionConciliacionDTO> listaTrazado) {
+		this.listaTrazado = listaTrazado;
+	}
+
 	@Override
 	public String toString() {
 		return "ConsultaEjecucionConciliacionDTO [id=" + id + ", estatus=" + estatus +", estatusDescripcion=" + estatusDescripcion + ", conciliacion=" + conciliacion
 				+ ", fechaEjecucion=" + fechaEjecucion + ", fechaPeriodoInicio=" + fechaPeriodoInicio + ", fechaPeriodoFin=" + fechaPeriodoFin
 				+ ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", lastModifiedDate=" + lastModifiedDate + ", lastModifiedBy=" + lastModifiedBy
-				+ ", entidad=" + entidad + ", cuenta=" + cuenta+ ", corresponsal=" + corresponsal + "]";
+				+ ", corresponsal=" + corresponsal + "]";
 	}
 
 	@Override

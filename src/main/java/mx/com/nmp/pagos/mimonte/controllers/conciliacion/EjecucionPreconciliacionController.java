@@ -28,8 +28,8 @@ import java.util.*;
 
 /**
  * @name EjecucionPreconciliacionController
- * @description Clase que expone el servicio REST para las operaciones
- *              relacionadas con la ejecución del proceso de preconciliación.
+ * @description Clase que expone el servicio REST para las consultas de información
+ *  *              relacionadas con la ejecución del proceso de preconciliación.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
  * @creationDate 04/11/2021 11:48 hrs.
@@ -37,7 +37,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping(value = "/mimonte")
-@Api(value = "Servicio que permite realizar operaciones sobre la ejecución de los procesos de preconciliación.", description = "REST API para realizar operaciones sobre la ejecución de los procesos de preconciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {"EjecucionPreconciliacion" })
+@Api(value = "Servicio que permite realizar consultas de información referente a las ejecuciones de los procesos de preconciliación.", description = "REST API para realizar consultas de información  sobre la ejecución de los procesos de preconciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {"EjecucionPreconciliación" })
 public class EjecucionPreconciliacionController {
 
 	/**
@@ -46,8 +46,6 @@ public class EjecucionPreconciliacionController {
 	@Autowired
 	private BeanFactory beanFactory;
 
-	@Autowired
-	private EjecucionPreconciliacionServiceImpl ejecucionPreconciliacionServiceImpl;
 
 	@Autowired
 	private EjecucionPreconciliacionService ejecucionPreconciliacionService;
@@ -81,15 +79,13 @@ public class EjecucionPreconciliacionController {
 	@ApiOperation(httpMethod = "POST", value = "Realiza la consulta de las ejecuciones del proceso de preconciliación registradas en el sistema.", tags = {"EjecucionPreconciliacion" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
-			@ApiResponse(code = 403, response = Response.class, message = "No cuenta con permisos para acceder a el recurso"),
-			@ApiResponse(code = 404, response = Response.class, message = "El recurso que desea no fue encontrado"),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consulta(@RequestBody ConsultaEjecucionPreconciliacionRequestDTO consultaEjecucionPreconciliacionRequestDTO) {
 
 		LOG.info(">>>URL: POST /ejecucionpreconciliacion/consulta > REQUEST ENTRANTE: {}", consultaEjecucionPreconciliacionRequestDTO);
 
 		ValidadorConciliacion.validateFechasPrimary(consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionDesde(), consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionHasta());
-		List<ConsultaEjecucionPreconciliacionDTO> consulta = ejecucionPreconciliacionServiceImpl.consulta(consultaEjecucionPreconciliacionRequestDTO);
+		List<ConsultaEjecucionPreconciliacionDTO> consulta = ejecucionPreconciliacionService.consultarByPropiedades(consultaEjecucionPreconciliacionRequestDTO);
 
 		if (null == consulta) {
 			consulta = new ArrayList<>();

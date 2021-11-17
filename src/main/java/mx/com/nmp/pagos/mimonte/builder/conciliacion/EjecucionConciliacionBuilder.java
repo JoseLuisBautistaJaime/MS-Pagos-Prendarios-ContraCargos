@@ -54,9 +54,7 @@ public abstract class EjecucionConciliacionBuilder {
 		if (ejecucionConciliacion != null) {
 			consultaEjecucionConciliacionDTO = new ConsultaEjecucionConciliacionDTO();
 			consultaEjecucionConciliacionDTO.setId(ejecucionConciliacion.getId());
-			consultaEjecucionConciliacionDTO.setConciliacion(ConciliacionBuilder.buildConciliacionDTOFromConciliacion(ejecucionConciliacion.getConciliacion()));
-			consultaEjecucionConciliacionDTO.setCuenta(CuentaBuilder.buildCuentaDTOFromCuenta(ejecucionConciliacion.getCuenta()));
-			consultaEjecucionConciliacionDTO.setEntidad(EntidadBuilder.buildEntidadDTOFromEntidad(ejecucionConciliacion.getEntidad()));
+			consultaEjecucionConciliacionDTO.setConciliacion(new ConciliacionEjecucionDTO(ejecucionConciliacion.getConciliacion().getFolio(),ejecucionConciliacion.getConciliacion().getId()));
 			consultaEjecucionConciliacionDTO.setEstatus(EstatusEjecucionConciliacionBuilder.buildEstatusEjecucionConciliacionDTOFromEstatusEjecucionConciliacion(ejecucionConciliacion.getEstatus()));
 			consultaEjecucionConciliacionDTO.setFechaEjecucion(ejecucionConciliacion.getFechaEjecucion());
 			consultaEjecucionConciliacionDTO.setFechaPeriodoInicio(ejecucionConciliacion.getFechaPeriodoInicio());
