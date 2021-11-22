@@ -4,8 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionPreconciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionPreconciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EjecucionPreconciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroEjecucionPreconciliacionDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,14 +19,14 @@ import java.util.List;
 public interface EjecucionPreconciliacionService {
 
 	/**
-	 * Método que regresa una lista de tipo ConsultaEjecucionPreconciliacionDTO con la
+	 * Método que regresa una lista de tipo EjecucionPreconciliacionDTO con la
 	 * información de la ejecución del proceso de conciliación a partir de un objeto de tipo
-	 * ConsultaEjecucionConciliacionRequestDTO.
+	 * FiltroEjecucionPreconciliacionDTO.
 	 *
-	 * @param consultaEjecucionPreconciliacionRequestDTO
+	 * @param filtroEjecucionPreconciliacionDTO
 	 * @return
 	 */
-	public List<ConsultaEjecucionPreconciliacionDTO> consultarByPropiedades(ConsultaEjecucionPreconciliacionRequestDTO consultaEjecucionPreconciliacionRequestDTO);
+	public List<EjecucionPreconciliacionDTO> consultarByPropiedades(FiltroEjecucionPreconciliacionDTO filtroEjecucionPreconciliacionDTO);
 
 
 }

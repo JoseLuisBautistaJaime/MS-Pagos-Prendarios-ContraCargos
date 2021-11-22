@@ -7,17 +7,19 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Quarksoft
  * @version 1.0
- * @created 05-Nov-2021 09:13:55 AM
+ * @created 03-Nov-2021 11:33:55 AM
  */
-public class ConsultaEjecucionPreconciliacionDTO implements Comparable<ConsultaEjecucionPreconciliacionDTO> {
+public class EjecucionConciliacionDTO implements Comparable<EjecucionConciliacionDTO> {
 
 	private Long id;
-	private EstatusEjecucionPreconciliacionDTO estatus;
+	private EstatusEjecucionConciliacionDTO estatus;
 	private String estatusDescripcion;
+	private ConciliacionEjecucionDTO conciliacion;
 	private Date fechaEjecucion;
 	private Date fechaPeriodoInicio;
 	private Date fechaPeriodoFin;
@@ -26,16 +28,18 @@ public class ConsultaEjecucionPreconciliacionDTO implements Comparable<ConsultaE
 	private Date lastModifiedDate;
 	private String lastModifiedBy;
 	private CorresponsalEnum corresponsal;
+	List<TrazadoEjecucionConciliacionDTO> listaTrazado;
 
-	public ConsultaEjecucionPreconciliacionDTO() {
+	public EjecucionConciliacionDTO() {
 		super();
 	}
 
-	public ConsultaEjecucionPreconciliacionDTO(Long id, EstatusEjecucionPreconciliacionDTO estatus, String estatusDescripcion, Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
+	public EjecucionConciliacionDTO(Long id, EstatusEjecucionConciliacionDTO estatus, String estatusDescripcion, ConciliacionEjecucionDTO conciliacion, Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
 		super();
 		this.id = id;
 		this.estatus = estatus;
 		this.estatusDescripcion = estatusDescripcion;
+		this.conciliacion = conciliacion;
 		this.fechaEjecucion = fechaEjecucion;
 		this.fechaPeriodoInicio = fechaPeriodoInicio;
 		this.fechaPeriodoFin = fechaPeriodoFin;
@@ -46,12 +50,13 @@ public class ConsultaEjecucionPreconciliacionDTO implements Comparable<ConsultaE
 		this.corresponsal = corresponsal;
 	}
 
-	public ConsultaEjecucionPreconciliacionDTO(Long id, Integer idEstatus, String descripcionCortaEstatus, String descripcionEstatus, Integer orderNumberEstatus,
-											   Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
+	public EjecucionConciliacionDTO(Long id, Integer idEstatus, String descripcionCortaEstatus, String descripcionEstatus, Integer orderNumberEstatus,
+											Long folioConciliacion, Long idConciliacion, Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
 		super();
 		this.id = id;
-		this.estatus = new EstatusEjecucionPreconciliacionDTO(idEstatus, descripcionCortaEstatus, descripcionEstatus, orderNumberEstatus);
+		this.estatus = new EstatusEjecucionConciliacionDTO(idEstatus, descripcionCortaEstatus, descripcionEstatus, orderNumberEstatus);
 		this.estatusDescripcion = descripcionEstatus;
+		this.conciliacion = new ConciliacionEjecucionDTO(folioConciliacion, idConciliacion);
 		this.fechaEjecucion = fechaEjecucion;
 		this.fechaPeriodoInicio = fechaPeriodoInicio;
 		this.fechaPeriodoFin = fechaPeriodoFin;
@@ -61,7 +66,6 @@ public class ConsultaEjecucionPreconciliacionDTO implements Comparable<ConsultaE
 		this.lastModifiedBy = lastModifiedBy;
 		this.corresponsal = corresponsal;
 	}
-
 
 	public Long getId() {
 		return id;
@@ -71,11 +75,11 @@ public class ConsultaEjecucionPreconciliacionDTO implements Comparable<ConsultaE
 		this.id = id;
 	}
 
-	public EstatusEjecucionPreconciliacionDTO getEstatus() {
+	public EstatusEjecucionConciliacionDTO getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(EstatusEjecucionPreconciliacionDTO estatus) {
+	public void setEstatus(EstatusEjecucionConciliacionDTO estatus) {
 		this.estatus = estatus;
 	}
 
@@ -85,6 +89,14 @@ public class ConsultaEjecucionPreconciliacionDTO implements Comparable<ConsultaE
 
 	public void setEstatusDescripcion(String estatusDescripcion) {
 		this.estatusDescripcion = estatusDescripcion;
+	}
+
+	public ConciliacionEjecucionDTO getConciliacion() {
+		return conciliacion;
+	}
+
+	public void setConciliacion(ConciliacionEjecucionDTO conciliacion) {
+		this.conciliacion = conciliacion;
 	}
 
 	public Date getFechaEjecucion() {
@@ -151,15 +163,24 @@ public class ConsultaEjecucionPreconciliacionDTO implements Comparable<ConsultaE
 		this.createdDate = createdDate;
 	}
 
-	@Override
-	public String toString() {
-		return "ConsultaEjecucionPreconciliacionDTO [id=" + id + ", estatus=" + estatus +", estatusDescripcion=" + estatusDescripcion + ", fechaEjecucion=" + fechaEjecucion
-				+ ", fechaPeriodoInicio=" + fechaPeriodoInicio + ", fechaPeriodoFin=" + fechaPeriodoFin + ", createdDate=" + createdDate + ", createdBy=" + createdBy
-				+ ", lastModifiedDate=" + lastModifiedDate + ", lastModifiedBy=" + lastModifiedBy + ", corresponsal=" + corresponsal + "]";
+	public List<TrazadoEjecucionConciliacionDTO> getListaTrazado() {
+		return listaTrazado;
+	}
+
+	public void setListaTrazado(List<TrazadoEjecucionConciliacionDTO> listaTrazado) {
+		this.listaTrazado = listaTrazado;
 	}
 
 	@Override
-	public int compareTo(ConsultaEjecucionPreconciliacionDTO o) {
+	public String toString() {
+		return "EjecucionConciliacionDTO [id=" + id + ", estatus=" + estatus +", estatusDescripcion=" + estatusDescripcion + ", conciliacion=" + conciliacion
+				+ ", fechaEjecucion=" + fechaEjecucion + ", fechaPeriodoInicio=" + fechaPeriodoInicio + ", fechaPeriodoFin=" + fechaPeriodoFin
+				+ ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", lastModifiedDate=" + lastModifiedDate + ", lastModifiedBy=" + lastModifiedBy
+				+ ", corresponsal=" + corresponsal + "]";
+	}
+
+	@Override
+	public int compareTo(EjecucionConciliacionDTO o) {
 		return 0;
 	}
 

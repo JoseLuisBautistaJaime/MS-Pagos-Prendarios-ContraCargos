@@ -11,7 +11,7 @@ import java.util.Date;
  * @version 1.0
  * @created 03-Nov-2021 11:33:55 AM
  */
-public class ConsultaEjecucionPreconciliacionRequestDTO {
+public class FiltroEjecucionPreconciliacionDTO {
 
 	private Integer idEstatus;
 	private String estatusDescripcion;
@@ -21,11 +21,11 @@ public class ConsultaEjecucionPreconciliacionRequestDTO {
 	private Date fechaEjecucionHasta;
 	private String corresponsal;
 
-	public ConsultaEjecucionPreconciliacionRequestDTO() {
+	public FiltroEjecucionPreconciliacionDTO() {
 		super();
 	}
 
-	public ConsultaEjecucionPreconciliacionRequestDTO(Integer idEstatus, String estatusDescripcion, Date fechaPeriodoInicio, Date fechaPeriodoFin, Date fechaEjecucionDesde, Date fechaEjecucionHasta, String corresponsal) {
+	public FiltroEjecucionPreconciliacionDTO(Integer idEstatus, String estatusDescripcion, Date fechaPeriodoInicio, Date fechaPeriodoFin, Date fechaEjecucionDesde, Date fechaEjecucionHasta, String corresponsal) {
 		super();
 		this.idEstatus = idEstatus;
 		this.estatusDescripcion= estatusDescripcion;
@@ -94,7 +94,7 @@ public class ConsultaEjecucionPreconciliacionRequestDTO {
 
 	@Override
 	public String toString() {
-		return "ConsultaEjecucionPreconciliacionRequestDTO [idEstatus=" + idEstatus + ", estatusDescripcion=" + estatusDescripcion
+		return "FiltroEjecucionPreconciliacionDTO [idEstatus=" + idEstatus + ", estatusDescripcion=" + estatusDescripcion
 				+ ", fechaPeriodoInicio=" + fechaPeriodoInicio + ", fechaPeriodoFin=" + fechaPeriodoFin
 				+ ", fechaEjecucionDesde=" + fechaEjecucionDesde + ", fechaEjecucionHasta=" + fechaEjecucionHasta + ", corresponsal=" + corresponsal + "]";
 	}

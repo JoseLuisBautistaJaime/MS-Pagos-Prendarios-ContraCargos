@@ -9,11 +9,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.async.AsyncLayer;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionConciliacionRequestDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EjecucionConciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroEjecucionConciliacionDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionConciliacionService;
-import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.EjecucionConciliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/mimonte")
-@Api(value = "Servicio que permite realizar consultas de información referente a las ejecuciones de los procesos de conciliación.", description = "REST API para realizar consultas de informacion  sobre la ejecución de los procesos de conciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {"EjecucionConciliacion" })
+@Api(value = "Servicio que permite realizar consultas de información referente a las ejecuciones de los procesos de conciliación.", description = "REST API para realizar consultas de informacion  sobre la ejecución de los procesos de conciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {"EjecucionConciliación" })
 public class EjecucionConciliacionController {
 
 	/**
@@ -72,7 +73,7 @@ public class EjecucionConciliacionController {
 	/**
 	 * Realiza la consulta de las ejecuciones del proceso de conciliación registradas en el sistema.
 	 * 
-	 * @param consultaEjecucionConciliacionRequestDTO Request con los criterios de búsqueda de las ejecuciones del proceso de conciliación.
+	 * @param filtroEjecucionConciliacionDTO Request con los criterios de búsqueda de las ejecuciones del proceso de conciliación.
 	 * @return El listado de ejecuciones del proceso de conciliacion que coincidieron con los criterios.
 	 */
 	@ResponseBody
@@ -82,12 +83,17 @@ public class EjecucionConciliacionController {
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consulta(@RequestBody ConsultaEjecucionConciliacionRequestDTO consultaEjecucionConciliacionRequestDTO) {
+	public Response consultar(@RequestBody FiltroEjecucionConciliacionDTO filtroEjecucionConciliacionDTO) {
 		
-		LOG.info(">>>URL: POST /ejecucionconciliacion/consulta > REQUEST ENTRANTE: {}", consultaEjecucionConciliacionRequestDTO);
-		
-		ValidadorConciliacion.validateFechasPrimary(consultaEjecucionConciliacionRequestDTO.getFechaEjecucionDesde(), consultaEjecucionConciliacionRequestDTO.getFechaEjecucionHasta());
-		List<ConsultaEjecucionConciliacionDTO> consulta = ejecucionConciliacionService.consultarByPropiedades(consultaEjecucionConciliacionRequestDTO);
+		LOG.info(">>>URL: POST /ejecucionconciliacion/consulta > REQUEST ENTRANTE: {}", filtroEjecucionConciliacionDTO);
+
+		// Validaciones generales del request
+		if (!ValidadorConciliacion.validateFiltroEjecucionConciliacionDTO(filtroEjecucionConciliacionDTO)) {
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR, CodigoError.NMP_PMIMONTE_0006);
+		}
+
+		ValidadorConciliacion.validateFechasPrimary(filtroEjecucionConciliacionDTO.getFechaEjecucionDesde(), filtroEjecucionConciliacionDTO.getFechaEjecucionHasta());
+		List<EjecucionConciliacionDTO> consulta = ejecucionConciliacionService.consultarByPropiedades(filtroEjecucionConciliacionDTO);
 
 		if (null == consulta) {
 			consulta = new ArrayList<>();
@@ -109,12 +115,12 @@ public class EjecucionConciliacionController {
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consultaByIdEjecucion(@PathVariable(value = "idEjecucion", required = true) Long idEjecucion) {
+	public Response consultarByIdEjecucion(@PathVariable(value = "idEjecucion", required = true) Long idEjecucion) {
 
 		LOG.info(">>>URL: GET /ejecucionconciliacion/consulta/{idEjecucion} > REQUEST ENTRANTE: {}", idEjecucion);
 
 		LOG.info(">> consultaByIdEjecucion({})", idEjecucion);
-		ConsultaEjecucionConciliacionDTO consultaEjecucion = ejecucionConciliacionService.consultarByIdEjecucion(idEjecucion);
+		EjecucionConciliacionDTO consultaEjecucion = ejecucionConciliacionService.consultarByIdEjecucion(idEjecucion);
 
 		LOG.info(">>>URL: GET /ejecucionconciliacion/consulta/{idEjecucion} > RESPONSE: {}", consultaEjecucion);
 

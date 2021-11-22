@@ -17,29 +17,29 @@ import java.util.List;
 public interface EjecucionConciliacionService {
 
 	/**
-	 * Método que regresa una lista de tipo ConsultaEjecucionConciliacionDTO con la
+	 * Método que regresa una lista de tipo EjecucionConciliacionDTO con la
 	 * información de la ejecución del proceso de conciliación a partir de un objeto de tipo
-	 * ConsultaEjecucionConciliacionRequestDTO.
+	 * FiltroEjecucionConciliacionDTO.
 	 *
-	 * @param consultaEjecucionConciliacionRequestDTO
+	 * @param filtroEjecucionConciliacionDTO
 	 * @return
 	 */
-	public List<ConsultaEjecucionConciliacionDTO> consultarByPropiedades(ConsultaEjecucionConciliacionRequestDTO consultaEjecucionConciliacionRequestDTO);
+	public List<EjecucionConciliacionDTO> consultarByPropiedades(FiltroEjecucionConciliacionDTO filtroEjecucionConciliacionDTO);
 
 	/**
-	 * Método que regresa un objeto de tipo ConsultaEjecucionConciliacionDTO con la
+	 * Método que regresa un objeto de tipo EjecucionConciliacionDTO con la
 	 * información de la ejecución del proceso de conciliación a partir de su id.
 	 *
 	 * @param idEjecucionConciliacion
 	 * @return
 	 */
-	public ConsultaEjecucionConciliacionDTO consultarByIdEjecucion(Long idEjecucionConciliacion);
+	public EjecucionConciliacionDTO consultarByIdEjecucion(Long idEjecucionConciliacion);
 
 
 	/**
-	 * Metodo que actualiza el estatus de ejecución del proceso de conciliación
+	 * Metodo que guarda los datos de una ejecución del proceso de conciliación
 	 */
-	public void actualizaEstatusEjecucionConciliacion(ActualizarEstatusEjecucionRequestDTO actualizarEstatusRequestDTO, String usuario);
+	public void guardarEjecucionConciliacion(TrazadoEjecucionConciliacionDTO trazadoDTO, String usuario);
 
 
 

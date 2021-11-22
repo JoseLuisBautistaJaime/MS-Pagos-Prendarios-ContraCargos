@@ -4,7 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionConciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EjecucionConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TrazadoEjecucionConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
@@ -58,7 +58,7 @@ public abstract class TrazadoEjecucionConciliacionBuilder {
 		if (trazadoEjecucionConciliacion != null) {
 			trazadoEjecucionConciliacionDTO = new TrazadoEjecucionConciliacionDTO();
 			trazadoEjecucionConciliacionDTO.setId(trazadoEjecucionConciliacion.getId());
-			trazadoEjecucionConciliacionDTO.setEjecucionConciliacion(EjecucionConciliacionBuilder.buildConsultaEjecucionConciliacionDTOFromEjecucionConciliacion(trazadoEjecucionConciliacion.getEjecucionConciliacion()));
+			trazadoEjecucionConciliacionDTO.setEjecucionConciliacion(EjecucionConciliacionBuilder.buildEjecucionConciliacionDTOFromEjecucionConciliacion(trazadoEjecucionConciliacion.getEjecucionConciliacion()));
 			trazadoEjecucionConciliacionDTO.setEstatusEjecucion(EstatusEjecucionConciliacionBuilder.buildEstatusEjecucionConciliacionDTOFromEstatusEjecucionConciliacion(trazadoEjecucionConciliacion.getEstatus()));
 			trazadoEjecucionConciliacionDTO.setEstatusDescripcion(trazadoEjecucionConciliacion.getEstatusDescripcion());
 			trazadoEjecucionConciliacionDTO.setFechaFin(trazadoEjecucionConciliacion.getFechaFin());

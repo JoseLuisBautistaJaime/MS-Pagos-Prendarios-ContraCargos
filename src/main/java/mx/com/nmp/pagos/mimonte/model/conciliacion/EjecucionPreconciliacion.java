@@ -33,7 +33,7 @@ public class EjecucionPreconciliacion extends Updatable implements Serializable 
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "id_estatus_preconciliacion")
+	@JoinColumn(name = "id_estatus_ejecucion")
 	private EstatusEjecucionPreconciliacion estatus;
 
 	@Column(name = "estatus_descripcion")

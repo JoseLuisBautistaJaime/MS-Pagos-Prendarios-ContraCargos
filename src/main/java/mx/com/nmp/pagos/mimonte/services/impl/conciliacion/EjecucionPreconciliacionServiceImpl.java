@@ -5,14 +5,10 @@
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
 import com.ibm.icu.util.Calendar;
-import mx.com.nmp.pagos.mimonte.constans.CodigoError;
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EjecucionPreconciliacionRepository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionPreconciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionPreconciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EjecucionPreconciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroEjecucionPreconciliacionDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusEjecucionPreconciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionPreconciliacionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -51,36 +46,36 @@ public class EjecucionPreconciliacionServiceImpl implements EjecucionPreconcilia
 
 	/**
 	 * Metodo que realiza una busqueda a partir de un objeto de tipo
-	 * ConsultaEjecucionPreconciliacionRequestDTO devolviendo como resultado una lista de tipo
-	 * ConsultaEjecucionPreconciliacionDTO.
+	 * FiltroEjecucionPreconciliacionDTO devolviendo como resultado una lista de tipo
+	 * EjecucionPreconciliacionDTO.
 	 */
 	@Override
-	public List<ConsultaEjecucionPreconciliacionDTO> consultarByPropiedades(ConsultaEjecucionPreconciliacionRequestDTO consultaEjecucionPreconciliacionRequestDTO) {
+	public List<EjecucionPreconciliacionDTO> consultarByPropiedades(FiltroEjecucionPreconciliacionDTO filtroEjecucionPreconciliacionDTO) {
 
 		// Declaracion de objetos necesarios
-		List<ConsultaEjecucionPreconciliacionDTO> result = null;
+		List<EjecucionPreconciliacionDTO> result = null;
 
 		// Se hace UPPERCASE de nombre corresponsal
-		consultaEjecucionPreconciliacionRequestDTO.setCorresponsal(null != consultaEjecucionPreconciliacionRequestDTO.getCorresponsal() ? consultaEjecucionPreconciliacionRequestDTO.getCorresponsal().toUpperCase() : null);
+		filtroEjecucionPreconciliacionDTO.setCorresponsal(null != filtroEjecucionPreconciliacionDTO.getCorresponsal() ? filtroEjecucionPreconciliacionDTO.getCorresponsal().toUpperCase() : null);
 
 		// Ajuste de fechas para filtros
-		if (null ==  consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionDesde() && null !=  consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionHasta()) {
+		if (null ==  filtroEjecucionPreconciliacionDTO.getFechaEjecucionDesde() && null !=  filtroEjecucionPreconciliacionDTO.getFechaEjecucionHasta()) {
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.YEAR, 1975);
 			cal.set(Calendar.MONTH, 1);
 			cal.set(Calendar.DAY_OF_MONTH, 1);
-			 consultaEjecucionPreconciliacionRequestDTO.setFechaEjecucionDesde(cal.getTime());
+			 filtroEjecucionPreconciliacionDTO.setFechaEjecucionDesde(cal.getTime());
 		}
-		if (null !=  consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionDesde() && null ==  consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionHasta()) {
+		if (null !=  filtroEjecucionPreconciliacionDTO.getFechaEjecucionDesde() && null ==  filtroEjecucionPreconciliacionDTO.getFechaEjecucionHasta()) {
 			Calendar cal = Calendar.getInstance();
-			 consultaEjecucionPreconciliacionRequestDTO.setFechaEjecucionHasta(cal.getTime());
+			 filtroEjecucionPreconciliacionDTO.setFechaEjecucionHasta(cal.getTime());
 		}
-		if (null !=  consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionDesde()
-				&& null !=  consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionHasta()) {
+		if (null !=  filtroEjecucionPreconciliacionDTO.getFechaEjecucionDesde()
+				&& null !=  filtroEjecucionPreconciliacionDTO.getFechaEjecucionHasta()) {
 			Calendar ini = Calendar.getInstance();
 			Calendar fin = Calendar.getInstance();
-			ini.setTime( consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionDesde());
-			fin.setTime( consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionHasta());
+			ini.setTime( filtroEjecucionPreconciliacionDTO.getFechaEjecucionDesde());
+			fin.setTime( filtroEjecucionPreconciliacionDTO.getFechaEjecucionHasta());
 			ini.set(Calendar.HOUR_OF_DAY, 0);
 			ini.set(Calendar.MINUTE, 0);
 			ini.set(Calendar.SECOND, 0);
@@ -89,16 +84,16 @@ public class EjecucionPreconciliacionServiceImpl implements EjecucionPreconcilia
 			fin.set(Calendar.MINUTE, 59);
 			fin.set(Calendar.SECOND, 59);
 			fin.set(Calendar.MILLISECOND, 59);
-			 consultaEjecucionPreconciliacionRequestDTO.setFechaEjecucionDesde(ini.getTime());
-			 consultaEjecucionPreconciliacionRequestDTO.setFechaEjecucionHasta(fin.getTime());
+			 filtroEjecucionPreconciliacionDTO.setFechaEjecucionDesde(ini.getTime());
+			 filtroEjecucionPreconciliacionDTO.setFechaEjecucionHasta(fin.getTime());
 		}
 
 
 		result =
 				ejecucionPreconciliacionRepository.findByPropiedades(
-						consultaEjecucionPreconciliacionRequestDTO.getIdEstatus(),  consultaEjecucionPreconciliacionRequestDTO.getEstatusDescripcion(), consultaEjecucionPreconciliacionRequestDTO.getFechaPeriodoInicio(), consultaEjecucionPreconciliacionRequestDTO.getFechaPeriodoFin(),
-						consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionDesde(), consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionHasta(),
-						null !=  consultaEjecucionPreconciliacionRequestDTO.getCorresponsal() ? CorresponsalEnum.getByNombre( consultaEjecucionPreconciliacionRequestDTO.getCorresponsal()) : null );
+						filtroEjecucionPreconciliacionDTO.getIdEstatus(),  filtroEjecucionPreconciliacionDTO.getEstatusDescripcion(), filtroEjecucionPreconciliacionDTO.getFechaPeriodoInicio(), filtroEjecucionPreconciliacionDTO.getFechaPeriodoFin(),
+						filtroEjecucionPreconciliacionDTO.getFechaEjecucionDesde(), filtroEjecucionPreconciliacionDTO.getFechaEjecucionHasta(),
+						null !=  filtroEjecucionPreconciliacionDTO.getCorresponsal() ? CorresponsalEnum.getByNombre( filtroEjecucionPreconciliacionDTO.getCorresponsal()) : null );
 
 
 		return result;

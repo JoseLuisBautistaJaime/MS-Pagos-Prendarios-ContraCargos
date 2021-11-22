@@ -11,35 +11,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import org.apache.commons.collections.CollectionUtils;
 
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.ComisionSaveDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionDeleteDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesTransaccionesRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionEstatusRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.CommonConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionUpdtDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.DevolucionesIdsMovimientosDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.FolioRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.LiquidacionMovimientosRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoMidasRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProcesosNocturnosListResponseDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoProveedorDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientoTransaccionalListRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.SaveEstadoCuentaRequestMultipleDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TipoMovimientoActualizacionTransito;
 
@@ -615,6 +592,53 @@ public interface ValidadorConciliacion {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Valida que un objeto de tipo FiltroEjecucionConciliacionDTO contenga todos los atributos
+	 * requeridos y estos sean valores validos
+	 *
+	 * @param filtroDTO
+	 * @return
+	 */
+	public static boolean validateFiltroEjecucionConciliacionDTO(FiltroEjecucionConciliacionDTO filtroDTO) {
+		try {
+			assertNotNull(filtroDTO);
+		} catch (java.lang.AssertionError | Exception ex) {
+			return false;
+		}
+		return (null != filtroDTO.getCorresponsal())
+				|| (null != filtroDTO.getFechaEjecucionDesde())
+				|| (null != filtroDTO.getFechaEjecucionHasta())
+				|| (null != filtroDTO.getFechaPeriodoFin())
+				|| (null != filtroDTO.getFechaPeriodoInicio())
+				|| (null != filtroDTO.getIdConciliacion())
+				|| (null != filtroDTO.getIdCuenta())
+				|| (null != filtroDTO.getIdEntidad())
+				|| (null != filtroDTO.getIdEstatus());
+	}
+
+
+	/**
+	 * Valida que un objeto de tipo FiltroEjecucionPreconciliacionDTO contenga todos los atributos
+	 * requeridos y estos sean valores validos
+	 *
+	 * @param filtroDTO
+	 * @return
+	 */
+	public static boolean validateFiltroEjecucionPreconciliacionDTO(FiltroEjecucionPreconciliacionDTO filtroDTO) {
+		try {
+			assertNotNull(filtroDTO);
+		} catch (java.lang.AssertionError | Exception ex) {
+			return false;
+		}
+		return (null != filtroDTO.getCorresponsal())
+				|| (null != filtroDTO.getFechaEjecucionDesde())
+				|| (null != filtroDTO.getFechaEjecucionHasta())
+				|| (null != filtroDTO.getFechaPeriodoFin())
+				|| (null != filtroDTO.getFechaPeriodoInicio())
+				|| (null != filtroDTO.getEstatusDescripcion())
+				|| (null != filtroDTO.getIdEstatus());
 	}
 	
 }

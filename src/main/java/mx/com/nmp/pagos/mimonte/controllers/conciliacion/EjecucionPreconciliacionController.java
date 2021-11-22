@@ -9,10 +9,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import mx.com.nmp.pagos.mimonte.async.AsyncLayer;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionPreconciliacionService;
-import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.EjecucionPreconciliacionServiceImpl;
 import mx.com.nmp.pagos.mimonte.util.Response;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorConciliacion;
 import org.slf4j.Logger;
@@ -70,22 +71,26 @@ public class EjecucionPreconciliacionController {
 	/**
 	 * Realiza la consulta de las ejecuciones del proceso de preconciliación registradas en el sistema.
 	 *
-	 * @param consultaEjecucionPreconciliacionRequestDTO Request con los criterios de búsqueda de las ejecuciones del proceso de preconciliación.
+	 * @param filtroEjecucionPreconciliacionDTO Request con los criterios de búsqueda de las ejecuciones del proceso de preconciliación.
 	 * @return El listado de ejecuciones del proceso de preconciliacion que coincidieron con los criterios.
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/ejecucionpreconciliacion/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Realiza la consulta de las ejecuciones del proceso de preconciliación registradas en el sistema.", tags = {"EjecucionPreconciliacion" })
+	@ApiOperation(httpMethod = "POST", value = "Realiza la consulta de las ejecuciones del proceso de preconciliación registradas en el sistema.", tags = {"EjecucionPreconciliación" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
-	public Response consulta(@RequestBody ConsultaEjecucionPreconciliacionRequestDTO consultaEjecucionPreconciliacionRequestDTO) {
+	public Response consultar(@RequestBody FiltroEjecucionPreconciliacionDTO filtroEjecucionPreconciliacionDTO) {
 
-		LOG.info(">>>URL: POST /ejecucionpreconciliacion/consulta > REQUEST ENTRANTE: {}", consultaEjecucionPreconciliacionRequestDTO);
+		LOG.info(">>>URL: POST /ejecucionpreconciliacion/consulta > REQUEST ENTRANTE: {}", filtroEjecucionPreconciliacionDTO);
 
-		ValidadorConciliacion.validateFechasPrimary(consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionDesde(), consultaEjecucionPreconciliacionRequestDTO.getFechaEjecucionHasta());
-		List<ConsultaEjecucionPreconciliacionDTO> consulta = ejecucionPreconciliacionService.consultarByPropiedades(consultaEjecucionPreconciliacionRequestDTO);
+		// Validaciones generales del request
+		if (!ValidadorConciliacion.validateFiltroEjecucionPreconciliacionDTO(filtroEjecucionPreconciliacionDTO)) {
+			throw new ConciliacionException(ConciliacionConstants.Validation.VALIDATION_PARAM_ERROR, CodigoError.NMP_PMIMONTE_0006);
+		}
+		ValidadorConciliacion.validateFechasPrimary(filtroEjecucionPreconciliacionDTO.getFechaEjecucionDesde(), filtroEjecucionPreconciliacionDTO.getFechaEjecucionHasta());
+		List<EjecucionPreconciliacionDTO> consulta = ejecucionPreconciliacionService.consultarByPropiedades(filtroEjecucionPreconciliacionDTO);
 
 		if (null == consulta) {
 			consulta = new ArrayList<>();

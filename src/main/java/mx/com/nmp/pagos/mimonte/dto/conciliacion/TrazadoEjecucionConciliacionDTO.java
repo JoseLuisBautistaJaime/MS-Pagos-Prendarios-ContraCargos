@@ -17,7 +17,7 @@ public class TrazadoEjecucionConciliacionDTO implements Comparable<TrazadoEjecuc
 
 	private Long id;
 	private EstatusEjecucionConciliacionDTO estatusEjecucion;
-	private ConsultaEjecucionConciliacionDTO ejecucionConciliacion;
+	private EjecucionConciliacionDTO ejecucionConciliacion;
 	private String estatusDescripcion;
 	private Date fechaInicio;
 	private Date fechaFin;
@@ -26,7 +26,7 @@ public class TrazadoEjecucionConciliacionDTO implements Comparable<TrazadoEjecuc
 		super();
 	}
 
-	public TrazadoEjecucionConciliacionDTO(Long id, EstatusEjecucionConciliacionDTO estatusEjecucion, ConsultaEjecucionConciliacionDTO ejecucionConciliacion, String estatusDescripcion, Date fechaInicio, Date fechaFin) {
+	public TrazadoEjecucionConciliacionDTO(Long id, EstatusEjecucionConciliacionDTO estatusEjecucion, EjecucionConciliacionDTO ejecucionConciliacion, String estatusDescripcion, Date fechaInicio, Date fechaFin) {
 		super();
 		this.id = id;
 		this.estatusEjecucion = estatusEjecucion;
@@ -61,11 +61,11 @@ public class TrazadoEjecucionConciliacionDTO implements Comparable<TrazadoEjecuc
 		this.estatusEjecucion = estatusEjecucion;
 	}
 
-	public ConsultaEjecucionConciliacionDTO getEjecucionConciliacion() {
+	public EjecucionConciliacionDTO getEjecucionConciliacion() {
 		return ejecucionConciliacion;
 	}
 
-	public void setEjecucionConciliacion(ConsultaEjecucionConciliacionDTO ejecucionConciliacion) {
+	public void setEjecucionConciliacion(EjecucionConciliacionDTO ejecucionConciliacion) {
 		this.ejecucionConciliacion = ejecucionConciliacion;
 	}
 

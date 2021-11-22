@@ -55,36 +55,36 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 
 	/**
 	 * Metodo que realiza una busqueda a partir de un objeto de tipo
-	 * ConsultaEjecucionConciliacionRequestDTO devolviendo como resultado una lista de tipo
-	 * ConsultaEjecucionConciliacionDTO.
+	 * FiltroEjecucionConciliacionDTO devolviendo como resultado una lista de tipo
+	 * EjecucionConciliacionDTO.
 	 */
 	@Override
-	public List<ConsultaEjecucionConciliacionDTO> consultarByPropiedades(ConsultaEjecucionConciliacionRequestDTO consultaEjecucionConciliacionRequestDTO) {
+	public List<EjecucionConciliacionDTO> consultarByPropiedades(FiltroEjecucionConciliacionDTO filtroEjecucionConciliacionDTO) {
 
 		// Declaracion de objetos necesarios
-		List<ConsultaEjecucionConciliacionDTO> result = null;
+		List<EjecucionConciliacionDTO> result = null;
 
 		// Se hace UPPERCASE de nombre corresponsal
-		consultaEjecucionConciliacionRequestDTO.setCorresponsal(null != consultaEjecucionConciliacionRequestDTO.getCorresponsal() ? consultaEjecucionConciliacionRequestDTO.getCorresponsal().toUpperCase() : null);
+		filtroEjecucionConciliacionDTO.setCorresponsal(null != filtroEjecucionConciliacionDTO.getCorresponsal() ? filtroEjecucionConciliacionDTO.getCorresponsal().toUpperCase() : null);
 
 		// Ajuste de fechas para filtros
-		if (null ==  consultaEjecucionConciliacionRequestDTO.getFechaEjecucionDesde() && null !=  consultaEjecucionConciliacionRequestDTO.getFechaEjecucionHasta()) {
+		if (null ==  filtroEjecucionConciliacionDTO.getFechaEjecucionDesde() && null !=  filtroEjecucionConciliacionDTO.getFechaEjecucionHasta()) {
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.YEAR, 1975);
 			cal.set(Calendar.MONTH, 1);
 			cal.set(Calendar.DAY_OF_MONTH, 1);
-			 consultaEjecucionConciliacionRequestDTO.setFechaEjecucionDesde(cal.getTime());
+			filtroEjecucionConciliacionDTO.setFechaEjecucionDesde(cal.getTime());
 		}
-		if (null !=  consultaEjecucionConciliacionRequestDTO.getFechaEjecucionDesde() && null ==  consultaEjecucionConciliacionRequestDTO.getFechaEjecucionHasta()) {
+		if (null !=  filtroEjecucionConciliacionDTO.getFechaEjecucionDesde() && null ==  filtroEjecucionConciliacionDTO.getFechaEjecucionHasta()) {
 			Calendar cal = Calendar.getInstance();
-			 consultaEjecucionConciliacionRequestDTO.setFechaEjecucionHasta(cal.getTime());
+			filtroEjecucionConciliacionDTO.setFechaEjecucionHasta(cal.getTime());
 		}
-		if (null !=  consultaEjecucionConciliacionRequestDTO.getFechaEjecucionDesde()
-				&& null !=  consultaEjecucionConciliacionRequestDTO.getFechaEjecucionHasta()) {
+		if (null !=  filtroEjecucionConciliacionDTO.getFechaEjecucionDesde()
+				&& null !=  filtroEjecucionConciliacionDTO.getFechaEjecucionHasta()) {
 			Calendar ini = Calendar.getInstance();
 			Calendar fin = Calendar.getInstance();
-			ini.setTime( consultaEjecucionConciliacionRequestDTO.getFechaEjecucionDesde());
-			fin.setTime( consultaEjecucionConciliacionRequestDTO.getFechaEjecucionHasta());
+			ini.setTime( filtroEjecucionConciliacionDTO.getFechaEjecucionDesde());
+			fin.setTime( filtroEjecucionConciliacionDTO.getFechaEjecucionHasta());
 			ini.set(Calendar.HOUR_OF_DAY, 0);
 			ini.set(Calendar.MINUTE, 0);
 			ini.set(Calendar.SECOND, 0);
@@ -93,14 +93,14 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 			fin.set(Calendar.MINUTE, 59);
 			fin.set(Calendar.SECOND, 59);
 			fin.set(Calendar.MILLISECOND, 59);
-			 consultaEjecucionConciliacionRequestDTO.setFechaEjecucionDesde(ini.getTime());
-			 consultaEjecucionConciliacionRequestDTO.setFechaEjecucionHasta(fin.getTime());
+			filtroEjecucionConciliacionDTO.setFechaEjecucionDesde(ini.getTime());
+			filtroEjecucionConciliacionDTO.setFechaEjecucionHasta(fin.getTime());
 		}
 
 		result = ejecucionConciliacionRepository.findByPropiedades(
-							 consultaEjecucionConciliacionRequestDTO.getIdEstatus(),  consultaEjecucionConciliacionRequestDTO.getIdEntidad(), consultaEjecucionConciliacionRequestDTO.getIdCuenta(), consultaEjecucionConciliacionRequestDTO.getIdConciliacion(),
-							 consultaEjecucionConciliacionRequestDTO.getFechaPeriodoInicio(), consultaEjecucionConciliacionRequestDTO.getFechaPeriodoFin(),consultaEjecucionConciliacionRequestDTO.getFechaEjecucionDesde(), consultaEjecucionConciliacionRequestDTO.getFechaEjecucionHasta(),
-						      null !=  consultaEjecucionConciliacionRequestDTO.getCorresponsal() ? CorresponsalEnum.getByNombre( consultaEjecucionConciliacionRequestDTO.getCorresponsal()) : null );
+				filtroEjecucionConciliacionDTO.getIdEstatus(),  filtroEjecucionConciliacionDTO.getIdEntidad(), filtroEjecucionConciliacionDTO.getIdCuenta(), filtroEjecucionConciliacionDTO.getIdConciliacion(),
+				filtroEjecucionConciliacionDTO.getFechaPeriodoInicio(), filtroEjecucionConciliacionDTO.getFechaPeriodoFin(),filtroEjecucionConciliacionDTO.getFechaEjecucionDesde(), filtroEjecucionConciliacionDTO.getFechaEjecucionHasta(),
+						      null !=  filtroEjecucionConciliacionDTO.getCorresponsal() ? CorresponsalEnum.getByNombre( filtroEjecucionConciliacionDTO.getCorresponsal()) : null );
 
 
 		return result;
@@ -108,13 +108,13 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 
 	/**
 	 * Metodo que realiza una busqueda a partir del id de la ejecución del proceso de conciliación
-	 * devolviendo como resultado un objeto de tipo ConsultaEjecucionConciliacionDTO con el resultado de la busqueda.
+	 * devolviendo como resultado un objeto de tipo EjecucionConciliacionDTO con el resultado de la busqueda.
 	 */
 	@Override
-	public ConsultaEjecucionConciliacionDTO consultarByIdEjecucion(Long idEjecucionConciliacion) throws ConciliacionException {
+	public EjecucionConciliacionDTO consultarByIdEjecucion(Long idEjecucionConciliacion) throws ConciliacionException {
 
 		// Declaracion de objetos necesarios
-		ConsultaEjecucionConciliacionDTO result = null;
+		EjecucionConciliacionDTO result = null;
 
 
 		LOG.info(">> consultarById");
@@ -142,27 +142,37 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 	}
 
 	/**
-	 * Actualiza el estatus de ejecución del proceso de conciliación
+	 * Metodo que guarda los datos de una ejecución del proceso de conciliación
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void actualizaEstatusEjecucionConciliacion(ActualizarEstatusEjecucionRequestDTO actualizarEstatusRequestDTO, String usuario)  {
+	public void guardarEjecucionConciliacion(TrazadoEjecucionConciliacionDTO trazadoDTO, String usuario){
 
 		long start = 0;
 		long finish = 0;
 		long globalStart = 0;
 		long globalFinish = 0;
-
+		
 		globalStart = System.currentTimeMillis();
 		LOG.debug("T>>> INICIA ACTUALIZACION DEl ESTATUS: {}", sdf.format(new Date(globalStart)));
 
 		// Se actualiza el estatus de la ejecución del proceso de conciliación que se recibio como
 		// parametro, adicionalmente se actualizan los campos createdBy y createdDate
 		try {
-			start = System.currentTimeMillis();
-			LOG.debug("T>>> INICIA ACTUALIZACION DEl ESTATUS EN BASE DE DATOS: {}", sdf.format(new Date(start)));
-			ejecucionConciliacionRepository.actualizaEstatusEjecucionConciliacion(actualizarEstatusRequestDTO.getIdEjecucionConciliacion(), new EstatusEjecucionConciliacion(actualizarEstatusRequestDTO.getIdEstatusEjecucion()), usuario, new Date(),actualizarEstatusRequestDTO.getDescripcionEstatus());
-			finish = System.currentTimeMillis();
-			LOG.debug("T>>> FINALIZA ACTUALIZACION DEl ESTATUS EN BASE DE DATOS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
+			if( trazadoDTO.getEjecucionConciliacion().getId() != null && trazadoDTO.getEjecucionConciliacion().getId() > 0L  ){
+				start = System.currentTimeMillis();
+				LOG.debug("T>>> INICIA ACTUALIZACION DEl ESTATUS EN BASE DE DATOS: {}", sdf.format(new Date(start)));
+				ejecucionConciliacionRepository.actualizaEstatusEjecucionConciliacion(trazadoDTO.getEjecucionConciliacion().getId(), EstatusEjecucionConciliacionBuilder.buildEstatusEjecucionConciliacionFromEstatusEjecucionConciliacionDTO(trazadoDTO.getEstatusEjecucion()), usuario, new Date(), trazadoDTO.getEstatusDescripcion());
+				finish = System.currentTimeMillis();
+				LOG.debug("T>>> FINALIZA ACTUALIZACION DEl ESTATUS EN BASE DE DATOS: {}, EN: {}", sdf.format(new Date(finish)), (finish - start));
+			} else {
+				start = System.currentTimeMillis();
+				LOG.debug("T>>> INICIA CREACION DE LA EJECUCION: {}", sdf.format(new Date(start)));
+				EjecucionConciliacion ejecucionCreada = ejecucionConciliacionRepository.save(EjecucionConciliacionBuilder.buildEjecucionConciliacionFromEjecucionConciliacionDTO(trazadoDTO.getEjecucionConciliacion()));
+				trazadoDTO.getEjecucionConciliacion().setId(ejecucionCreada.getId());
+				finish = System.currentTimeMillis();
+				LOG.debug("T>>> FINALIZA CREACION DE LA EJECUCION: {}, EN: {}", sdf.format(new Date(finish)), (finish - start));
+
+			}
 		} catch (Exception ex) {
 			LOG.error("Error al actualizar el estatus de la ejecución del proceso de conciliación.", ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_144.getDescripcion(),	CodigoError.NMP_PMIMONTE_BUSINESS_144);
@@ -173,11 +183,11 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 			start = System.currentTimeMillis();
 			LOG.debug("T>>> INICIA REGISTRO DEl TRAZADO DE ESTATUS: {}", sdf.format(new Date(start)));
 			TrazadoEjecucionConciliacion trazado = new TrazadoEjecucionConciliacion();
-			trazado.setEjecucionConciliacion(new EjecucionConciliacion(actualizarEstatusRequestDTO.getIdEjecucionConciliacion()));
-			trazado.setEstatus(new EstatusEjecucionConciliacion(actualizarEstatusRequestDTO.getIdEstatusEjecucion()));
-			trazado.setEstatusDescripcion(actualizarEstatusRequestDTO.getDescripcionEstatus());
-			trazado.setFechaInicio(actualizarEstatusRequestDTO.getFechaInicio());
-			trazado.setFechaFin(actualizarEstatusRequestDTO.getFechaFin());
+			trazado.setEjecucionConciliacion(EjecucionConciliacionBuilder.buildEjecucionConciliacionFromEjecucionConciliacionDTO(trazadoDTO.getEjecucionConciliacion()));
+			trazado.setEstatus(EstatusEjecucionConciliacionBuilder.buildEstatusEjecucionConciliacionFromEstatusEjecucionConciliacionDTO(trazadoDTO.getEstatusEjecucion()));
+			trazado.setEstatusDescripcion(trazadoDTO.getEstatusDescripcion());
+			trazado.setFechaInicio(trazadoDTO.getFechaInicio());
+			trazado.setFechaFin(trazadoDTO.getFechaFin());
 			trazadoEjecucionConciliacionRepository.save(trazado);
 			finish = System.currentTimeMillis();
 			LOG.debug("T>>> FINALIZA REGISTRO DEl TRAZADO DE ESTATUS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );

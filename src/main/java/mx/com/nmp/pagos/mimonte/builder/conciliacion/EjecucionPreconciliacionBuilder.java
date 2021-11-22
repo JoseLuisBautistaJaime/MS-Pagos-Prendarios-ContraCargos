@@ -4,7 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaEjecucionPreconciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EjecucionPreconciliacionDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionPreconciliacion;
 
@@ -27,34 +27,34 @@ public abstract class EjecucionPreconciliacionBuilder {
 	}
 
 	/**
-	 * Construye un objeto de tipo List<ConsultaEjecucionPreconciliacionDTO> a partir un entitie
+	 * Construye un objeto de tipo List<EjecucionPreconciliacionDTO> a partir un entitie
 	 * de tipo List<EjecucionConciliacion>.
 	 *
 	 * @param ejecucionPreconciliacionList
 	 * @return
 	 */
-	public static List<ConsultaEjecucionPreconciliacionDTO> buildConsultaEjecucionPreconciliacionDTOListFromEjecucionPreconciliacionList(List<EjecucionPreconciliacion> ejecucionPreconciliacionList) {
-		List<ConsultaEjecucionPreconciliacionDTO> ConsultaEjecucionConciliacionDTOList = null;
+	public static List<EjecucionPreconciliacionDTO> buildEjecucionPreconciliacionDTOListFromEjecucionPreconciliacionList(List<EjecucionPreconciliacion> ejecucionPreconciliacionList) {
+		List<EjecucionPreconciliacionDTO> ConsultaEjecucionConciliacionDTOList = null;
 		if (ejecucionPreconciliacionList != null && !ejecucionPreconciliacionList.isEmpty()) {
 			ConsultaEjecucionConciliacionDTOList = new ArrayList<>();
 			for (EjecucionPreconciliacion elemento : ejecucionPreconciliacionList) {
-				ConsultaEjecucionConciliacionDTOList.add(buildConsultaEjecucionPreconciliacionDTOFromEjecucionPreconciliacion(elemento));
+				ConsultaEjecucionConciliacionDTOList.add(buildEjecucionPreconciliacionDTOFromEjecucionPreconciliacion(elemento));
 			}
 		}
 		return ConsultaEjecucionConciliacionDTOList;
 	}
 
 	/**
-	 * Construye un objeto de tipo ConsultaEjecucionPreconciliacionDTO a partir de una entidad
+	 * Construye un objeto de tipo EjecucionPreconciliacionDTO a partir de una entidad
 	 * EjecucionPreconciliacion
 	 *
 	 * @param ejecucionPreconciliacion
 	 * @return consultaEjecucionPreconciliacionDTO
 	 */
-	public static ConsultaEjecucionPreconciliacionDTO buildConsultaEjecucionPreconciliacionDTOFromEjecucionPreconciliacion(EjecucionPreconciliacion ejecucionPreconciliacion) {
-		ConsultaEjecucionPreconciliacionDTO consultaEjecucionPreconciliacionDTO = null;
+	public static EjecucionPreconciliacionDTO buildEjecucionPreconciliacionDTOFromEjecucionPreconciliacion(EjecucionPreconciliacion ejecucionPreconciliacion) {
+		EjecucionPreconciliacionDTO consultaEjecucionPreconciliacionDTO = null;
 		if (ejecucionPreconciliacion != null) {
-			consultaEjecucionPreconciliacionDTO = new ConsultaEjecucionPreconciliacionDTO();
+			consultaEjecucionPreconciliacionDTO = new EjecucionPreconciliacionDTO();
 			consultaEjecucionPreconciliacionDTO.setId(ejecucionPreconciliacion.getId());
 			consultaEjecucionPreconciliacionDTO.setEstatusDescripcion(ejecucionPreconciliacion.getEstatusDescripcion());
 			consultaEjecucionPreconciliacionDTO.setEstatus(EstatusEjecucionPreconciliacionBuilder.buildEstatusEjecucionConciliacionDTOFromEstatusEjecucionConciliacion(ejecucionPreconciliacion.getEstatus()));

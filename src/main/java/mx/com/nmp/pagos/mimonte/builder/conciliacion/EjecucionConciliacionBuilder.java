@@ -25,34 +25,34 @@ public abstract class EjecucionConciliacionBuilder {
 	}
 
 	/**
-	 * Construye un objeto de tipo List<ConsultaEjecucionConciliacionDTO> a partir un entitie
+	 * Construye un objeto de tipo List<EjecucionConciliacionDTO> a partir un entitie
 	 * de tipo List<EjecucionConciliacion>.
 	 *
 	 * @param ejecucionConciliacionList
 	 * @return
 	 */
-	public static List<ConsultaEjecucionConciliacionDTO> buildConsultaEjecucionConciliacionDTOListFromEjecucionConciliacionList(List<EjecucionConciliacion> ejecucionConciliacionList) {
-		List<ConsultaEjecucionConciliacionDTO> ConsultaEjecucionConciliacionDTOList = null;
+	public static List<EjecucionConciliacionDTO> buildEjecucionConciliacionDTOListFromEjecucionConciliacionList(List<EjecucionConciliacion> ejecucionConciliacionList) {
+		List<EjecucionConciliacionDTO> EjecucionConciliacionDTOList = null;
 		if (ejecucionConciliacionList != null && !ejecucionConciliacionList.isEmpty()) {
-			ConsultaEjecucionConciliacionDTOList = new ArrayList<>();
+			EjecucionConciliacionDTOList = new ArrayList<>();
 			for (EjecucionConciliacion elemento : ejecucionConciliacionList) {
-				ConsultaEjecucionConciliacionDTOList.add(buildConsultaEjecucionConciliacionDTOFromEjecucionConciliacion(elemento));
+				EjecucionConciliacionDTOList.add(buildEjecucionConciliacionDTOFromEjecucionConciliacion(elemento));
 			}
 		}
-		return ConsultaEjecucionConciliacionDTOList;
+		return EjecucionConciliacionDTOList;
 	}
 
 	/**
-	 * Construye un objeto de tipo ConsultaEjecucionConciliacionDTO a partir de una entidad
+	 * Construye un objeto de tipo EjecucionConciliacionDTO a partir de una entidad
 	 * EjecucionConciliacion
 	 *
 	 * @param ejecucionConciliacion
 	 * @return consultaEjecucionConciliacionDTO
 	 */
-	public static ConsultaEjecucionConciliacionDTO buildConsultaEjecucionConciliacionDTOFromEjecucionConciliacion(EjecucionConciliacion ejecucionConciliacion) {
-		ConsultaEjecucionConciliacionDTO consultaEjecucionConciliacionDTO = null;
+	public static EjecucionConciliacionDTO buildEjecucionConciliacionDTOFromEjecucionConciliacion(EjecucionConciliacion ejecucionConciliacion) {
+		EjecucionConciliacionDTO consultaEjecucionConciliacionDTO = null;
 		if (ejecucionConciliacion != null) {
-			consultaEjecucionConciliacionDTO = new ConsultaEjecucionConciliacionDTO();
+			consultaEjecucionConciliacionDTO = new EjecucionConciliacionDTO();
 			consultaEjecucionConciliacionDTO.setId(ejecucionConciliacion.getId());
 			consultaEjecucionConciliacionDTO.setConciliacion(new ConciliacionEjecucionDTO(ejecucionConciliacion.getConciliacion().getFolio(),ejecucionConciliacion.getConciliacion().getId()));
 			consultaEjecucionConciliacionDTO.setEstatus(EstatusEjecucionConciliacionBuilder.buildEstatusEjecucionConciliacionDTOFromEstatusEjecucionConciliacion(ejecucionConciliacion.getEstatus()));
@@ -67,5 +67,34 @@ public abstract class EjecucionConciliacionBuilder {
 		}
 		return consultaEjecucionConciliacionDTO;
 	}
+
+    /**
+     * Construye un objeto de tipo EjecucionConciliacion a partir de una entidad
+     *  EjecucionConciliacionDTO
+     *
+     * @param ejecucionConciliacionDTO
+     * @return ejecucionConciliacion
+     */
+    public static EjecucionConciliacion buildEjecucionConciliacionFromEjecucionConciliacionDTO(EjecucionConciliacionDTO ejecucionConciliacionDTO) {
+        EjecucionConciliacion ejecucionConciliacion = null;
+        if (ejecucionConciliacionDTO != null) {
+            ejecucionConciliacion = new EjecucionConciliacion();
+            Conciliacion conciliacion = new Conciliacion();
+            conciliacion.setId(ejecucionConciliacionDTO.getConciliacion().getFolio());
+            conciliacion.setFolio(ejecucionConciliacionDTO.getConciliacion().getFolioConciliacion());
+            ejecucionConciliacion.setId(ejecucionConciliacionDTO.getId());
+            ejecucionConciliacion.setConciliacion(conciliacion);
+            ejecucionConciliacion.setEstatus(EstatusEjecucionConciliacionBuilder.buildEstatusEjecucionConciliacionFromEstatusEjecucionConciliacionDTO(ejecucionConciliacionDTO.getEstatus()));
+            ejecucionConciliacion.setFechaEjecucion(ejecucionConciliacionDTO.getFechaEjecucion());
+            ejecucionConciliacion.setFechaPeriodoInicio(ejecucionConciliacionDTO.getFechaPeriodoInicio());
+            ejecucionConciliacion.setFechaPeriodoFin(ejecucionConciliacionDTO.getFechaPeriodoFin());
+            ejecucionConciliacion.setCreatedBy(ejecucionConciliacionDTO.getCreatedBy());
+            ejecucionConciliacion.setCreatedDate(ejecucionConciliacionDTO.getCreatedDate());
+            ejecucionConciliacion.setLastModifiedBy(ejecucionConciliacionDTO.getLastModifiedBy());
+            ejecucionConciliacion.setLastModifiedDate(ejecucionConciliacionDTO.getLastModifiedDate());
+            ejecucionConciliacion.setProveedor( ejecucionConciliacionDTO.getCorresponsal() != null ? new Proveedor(ejecucionConciliacionDTO.getCorresponsal()): new Proveedor(CorresponsalEnum.OPENPAY));
+        }
+        return ejecucionConciliacion;
+    }
 	
 }
