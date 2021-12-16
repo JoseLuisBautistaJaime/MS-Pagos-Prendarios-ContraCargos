@@ -30,7 +30,7 @@ import java.util.*;
 /**
  * @name EjecucionPreconciliacionController
  * @description Clase que expone el servicio REST para las consultas de información
- *  *              relacionadas con la ejecución del proceso de preconciliación.
+ *  *              relacionadas con la ejecución del proceso de pre-conciliación.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
  * @creationDate 04/11/2021 11:48 hrs.
@@ -38,7 +38,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping(value = "/mimonte")
-@Api(value = "Servicio que permite realizar consultas de información referente a las ejecuciones de los procesos de preconciliación.", description = "REST API para realizar consultas de información  sobre la ejecución de los procesos de preconciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {"EjecucionPreconciliación" })
+@Api(value = "Servicio que permite realizar consultas de información referente a las ejecuciones de los procesos de pre-conciliación.", description = "REST API para realizar consultas de información  sobre la ejecución de los procesos de pre-conciliación", produces = MediaType.APPLICATION_JSON_VALUE, protocols = "http", tags = {"EjecucionPreconciliación" })
 public class EjecucionPreconciliacionController {
 
 	/**
@@ -69,15 +69,15 @@ public class EjecucionPreconciliacionController {
 
 
 	/**
-	 * Realiza la consulta de las ejecuciones del proceso de preconciliación registradas en el sistema.
+	 * Realiza la consulta de las ejecuciones del proceso de pre-conciliación registradas en el sistema.
 	 *
-	 * @param filtroEjecucionPreconciliacionDTO Request con los criterios de búsqueda de las ejecuciones del proceso de preconciliación.
-	 * @return El listado de ejecuciones del proceso de preconciliacion que coincidieron con los criterios.
+	 * @param filtroEjecucionPreconciliacionDTO Request con los criterios de búsqueda de las ejecuciones del proceso de pre-conciliación.
+	 * @return El listado de ejecuciones del proceso de pre-conciliación que coincidieron con los criterios.
 	 */
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/ejecucionpreconciliacion/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Realiza la consulta de las ejecuciones del proceso de preconciliación registradas en el sistema.", tags = {"EjecucionPreconciliación" })
+	@ApiOperation(httpMethod = "POST", value = "Realiza la consulta de las ejecuciones del proceso de pre-conciliación registradas en el sistema.", tags = {"EjecucionPreconciliación" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })

@@ -10,7 +10,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusEjecucionPreconciliaci
 /**
  * Nombre: EstatusEjecucionPreconciliacionBuilder Descripcion: Clase de capa de builder que
  * se encarga de convertir diferentes tipos de objetos y entidades relacionadas
- * con el Estatus de ejecución del proceso de preconciliación.
+ * con el Estatus de ejecución del proceso de pre-conciliación.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
  * @creationDate 05/11/2021 11:18 hrs.

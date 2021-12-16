@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 /**
  * @name EstatusEjecucionPreconciliacionRepository
  * @description Interface de capa DAO que sirve para realizar operaciones de
- *              base de datos relacionadas con el estatus de la ejecución de la preconciliación
+ *              base de datos relacionadas con el estatus de la ejecución de la pre-conciliación
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
  * @creationDate 29/10/2021 16:56 hrs.
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 public interface EstatusEjecucionPreconciliacionRepository extends JpaRepository<EstatusEjecucionPreconciliacion, Integer>{
 
 	/**
-	 * Búsqueda del estatus de la ejecución de la preconciliación a partir de la descripción.
+	 * Búsqueda del estatus de la ejecución de la pre-conciliación a partir de la descripción.
 	 * @param descripcion
 	 * @return
 	 */

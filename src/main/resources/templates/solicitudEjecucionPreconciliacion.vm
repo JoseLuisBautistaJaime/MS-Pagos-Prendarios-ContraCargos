@@ -1,0 +1,46 @@
+<!DOCTYPE>
+<HTML>
+  <HEAD>
+    <STYLE>
+    span {
+      font-size: 15px;
+      color: #0C5D89;
+      font-family: georgia, serif;
+    }
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+    }
+    tr td{
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    </STYLE>
+  </HEAD>
+  <BODY>
+    <span>Buenas tardes.</span>
+    <br>
+    <br>
+    <span>Solicito de su apreciable ayuda para ejecutar el proceso de pre-conciliación de forma manual a través del portal de MiMonte Conciliación, utilizando como parámetros los datos enlistados en la tabla, ya que no fue posible ejecutar el proceso de pre-conciliación de forma automática.</span>
+    <br>
+    <br>
+    <span>En espera de sus comentarios y apreciable ayuda. Gracias.</span>
+    <br>
+    <br>
+    <table>
+      <thead>
+        <tr style="background-color: #dddddd;">
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr>
+            <td>$elemento.fechaPeriodoInicio</td>
+            <td>$elemento.fechaPeriodoFin</td>
+          </tr>
+      </tbody>
+    </table>
+  </BODY>
+</HTML>

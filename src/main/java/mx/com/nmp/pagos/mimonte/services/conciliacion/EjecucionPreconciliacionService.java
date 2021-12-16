@@ -6,6 +6,8 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EjecucionPreconciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroEjecucionPreconciliacionDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionPreconciliacion;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,16 @@ public interface EjecucionPreconciliacionService {
 	 * @return
 	 */
 	public List<EjecucionPreconciliacionDTO> consultarByPropiedades(FiltroEjecucionPreconciliacionDTO filtroEjecucionPreconciliacionDTO);
+
+
+	/**
+	 * Se encarga de guardar/actualizar una nueva EjecucionPreconciliacion
+	 * @param ejecucionPreconciliacion
+	 * @param registerBy
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public EjecucionPreconciliacion save(EjecucionPreconciliacion ejecucionPreconciliacion, String registerBy) throws ConciliacionException;
 
 
 }

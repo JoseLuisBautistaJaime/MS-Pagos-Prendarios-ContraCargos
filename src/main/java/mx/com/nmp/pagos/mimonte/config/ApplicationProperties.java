@@ -164,6 +164,7 @@ public class ApplicationProperties {
 			private RestTemplate restTemplate;
 			private ConsultaEstadoCuenta consultaEstadoCuenta;
 			private ConsultaPagos consultaPagos;
+			private ProcesoPreconciliacion procesoPreconciliacion;
 
 			public Mail getMail() {
 				return mail;
@@ -189,10 +190,19 @@ public class ApplicationProperties {
 				this.consultaEstadoCuenta = consultaEstadoCuenta;
 			}
 
+			public ProcesoPreconciliacion getProcesoPreconciliacion() {
+				return procesoPreconciliacion;
+			}
+
+			public void setProcesoPreconciliacion(ProcesoPreconciliacion procesoPreconciliacion) {
+				this.procesoPreconciliacion = procesoPreconciliacion;
+			}
+
 			public static class Mail {
 
 				private String from;
 				private SolicitudDevolucion solicitudDevolucion;
+				private SolicitudEjecucionPreconciliacion solicitudEjecucionPreconciliacion;
 
 				public String getFrom() {
 					return from;
@@ -210,7 +220,38 @@ public class ApplicationProperties {
 					this.solicitudDevolucion = solicitudDevolucion;
 				}
 
+				public SolicitudEjecucionPreconciliacion getSolicitudEjecucionPreconciliacion() {
+					return solicitudEjecucionPreconciliacion;
+				}
+
+				public void setSolicitudEjecucionPreconciliacion(SolicitudEjecucionPreconciliacion solicitudEjecucionPreconciliacion) {
+					this.solicitudEjecucionPreconciliacion = solicitudEjecucionPreconciliacion;
+				}
+
 				public static class SolicitudDevolucion {
+
+					private String title;
+					private String velocityTemplate;
+
+					public String getTitle() {
+						return title;
+					}
+
+					public void setTitle(String title) {
+						this.title = title;
+					}
+
+					public String getVelocityTemplate() {
+						return velocityTemplate;
+					}
+
+					public void setVelocityTemplate(String velocityTemplate) {
+						this.velocityTemplate = velocityTemplate;
+					}
+
+				}
+
+				public static class SolicitudEjecucionPreconciliacion {
 
 					private String title;
 					private String velocityTemplate;
@@ -359,6 +400,88 @@ public class ApplicationProperties {
 					}
 					public void setNombre(String nombre) {
 						this.nombre = nombre;
+					}
+				}
+
+			}
+
+			public static class ProcesoPreconciliacion {
+				private String url;
+				private ProcesoPreconciliacionAuth auth;
+				private ProcesoPreconciliacionHeader header;
+
+				public String getUrl() {
+					return url;
+				}
+
+				public void setUrl(String url) {
+					this.url = url;
+				}
+
+				public ProcesoPreconciliacionAuth getAuth() {
+					return auth;
+				}
+
+				public void setAuth(ProcesoPreconciliacionAuth auth) {
+					this.auth = auth;
+				}
+
+				public ProcesoPreconciliacionHeader getHeader() {
+					return header;
+				}
+
+				public void setHeader(ProcesoPreconciliacionHeader header) {
+					this.header = header;
+				}
+
+				public static class ProcesoPreconciliacionHeader {
+					private String usuario;
+					private String idConsumidor;
+					private String idDestino;
+
+					public String getUsuario() {
+						return usuario;
+					}
+
+					public void setUsuario(String usuario) {
+						this.usuario = usuario;
+					}
+
+					public String getIdConsumidor() {
+						return idConsumidor;
+					}
+
+					public void setIdConsumidor(String idConsumidor) {
+						this.idConsumidor = idConsumidor;
+					}
+
+					public String getIdDestino() {
+						return idDestino;
+					}
+
+					public void setIdDestino(String idDestino) {
+						this.idDestino = idDestino;
+					}
+				}
+
+				public static class ProcesoPreconciliacionAuth {
+					private String usuario;
+					private String password;
+
+					public String getUsuario() {
+						return usuario;
+					}
+
+					public void setUsuario(String usuario) {
+						this.usuario = usuario;
+					}
+
+					public String getPassword() {
+						return password;
+					}
+
+					public void setPassword(String password) {
+						this.password = password;
 					}
 				}
 

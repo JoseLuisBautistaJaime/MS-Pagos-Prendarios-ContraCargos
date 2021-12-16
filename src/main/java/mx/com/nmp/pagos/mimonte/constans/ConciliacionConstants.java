@@ -371,6 +371,7 @@ public final class ConciliacionConstants {
 	// Tipo de contacts
 	public static final Long TIPO_CONTACTO_MIDAS = 1l;
 	public static final Long TIPO_CONTACTO_ENTIDAD = 2l;
+	public static final Long TIPO_CONTACTO_PRECONCILIACION= 3l;
 
 	public static final String ESTATUS_TRANSACCION_OPENPAY_COMPLETED = "completed";
 	public static final String TIPO_TRANSACCION_OPENPAY_CARGO = "charge";
@@ -495,7 +496,7 @@ public final class ConciliacionConstants {
 	 * Mensaje que es mostrado cuando se desea consultar un estatus de ejecución del proceso de precociliación
 	 * que no existe
 	 */
-	public static final String ESTATUS_EJECUCION_PRECONCILIACION_DOESNT_EXISTS = "El estatus de ejecucion del proceso de preconciliacion que se especifico no existe";
+	public static final String ESTATUS_EJECUCION_PRECONCILIACION_DOESNT_EXISTS = "El estatus de ejecucion del proceso de pre-conciliacion que se especifico no existe";
 
 	/**
 	 * Mensaje que es mostrado cuando se genera un error durante la validacion del
@@ -510,10 +511,15 @@ public final class ConciliacionConstants {
 	public static final String ERROR_ON_GET_EJECUCION_CONCILIACION = "Se genero un error al consultar la ejecucion del proceso de conciliacion";
 
 	/**
-	 * Mensaje que es mostrado cuando se desea consultar un estatus de ejecución del proceso de precociliación
+	 * Mensaje que es mostrado cuando se desea consultar un estatus de ejecución del proceso de conciliación
 	 * que no existe
 	 */
-	public static final String EJECUCION_CONCILIACION_DOESNT_EXISTS = "La ejecucion del proceso de preconciliacion que se especifico no existe";
+	public static final String EJECUCION_CONCILIACION_DOESNT_EXISTS = "La ejecucion del proceso de conciliacion que se especifico no existe";
+
+	/**
+	 * Mensaje que aparece cuando la ejecución del proceso de pre-conciliación no puede ser lanzada.
+	 */
+	public static final String EJECUCION_PRECONCILIACION_CANNOT_BE_CONSULT = "La ejecucion del proceso de pre-conciliacion no puede ser invocada.";
 
 	/**
 	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion

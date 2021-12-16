@@ -7,7 +7,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 /**
  * @name EstatusEjecucionPreconciliacionDTO
  * @description Clase que encapsula la información del estatus de la
- *              ejecución del proceso de preconciliación.
+ *              ejecución del proceso de pre-conciliación.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
  * @creationDate 05/11/2021 09:22 hrs.

@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Registro de la ejecución de la preconciliación.
+ * Registro de la ejecución de la pre-conciliación.
  * 
  * @author Quarksoft
  * @version 1.0

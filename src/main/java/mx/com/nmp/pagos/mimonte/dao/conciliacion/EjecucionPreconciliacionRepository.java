@@ -46,7 +46,7 @@ public interface EjecucionPreconciliacionRepository extends PagingAndSortingRepo
 
 
 	/**
-	 * Se actualiza el estatus de la ejecución de preconciliación por el id de la misma.
+	 * Se actualiza el estatus de la ejecución de pre-conciliación por el id de la misma.
 	 *
 	 * @param idEjecucionPreconciliacion
 	 * @param estatusEjecucionPreconciliacion
@@ -60,7 +60,7 @@ public interface EjecucionPreconciliacionRepository extends PagingAndSortingRepo
                                                 @Param("estatusEjecucionPreconciliacion") EstatusEjecucionPreconciliacion estatusEjecucionPreconciliacion, @Param("usuario") final String usuario, @Param("fecha") Date fecha, @Param("descripcion") final String descripcion);
 
 	 /**
-	  * Regresa el estatus de una ejecución de preconciliación por el id de la misma
+	  * Regresa el estatus de una ejecución de pre-conciliación por el id de la misma
 	  * @param idEjecucionPreconciliacion
 	  * @return
 	 */

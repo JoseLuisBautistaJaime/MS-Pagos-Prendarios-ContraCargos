@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS `tk_proceso` ;
 DROP TABLE IF EXISTS `to_calendario_ejecucion_proceso` ;
 
 -- -------------------------------------------------------------- --
--- ------------ TABLA ESTATUS EJECUCIÓN PRECONCILIACIÓN --------- --
+-- ------------ TABLA ESTATUS EJECUCIÓN PRE-CONCILIACIÓN --------- --
 -- -------------------------------------------------------------- --
 
  CREATE TABLE `tk_estatus_ejecucion_preconciliacion` (
@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS `to_calendario_ejecucion_proceso` ;
 
 
 -- -------------------------------------------------------------- --
--- ------------ TABLA EJECUCIÓN PRECONCILIACIÓN --------- --
+-- ------------ TABLA EJECUCIÓN PRE-CONCILIACIÓN --------- --
 -- -------------------------------------------------------------- --
 
 CREATE TABLE `to_ejecucion_preconciliacion` (

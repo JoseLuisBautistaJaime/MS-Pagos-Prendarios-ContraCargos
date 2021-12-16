@@ -5,23 +5,27 @@
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
 import com.ibm.icu.util.Calendar;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.EjecucionPreconciliacionRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.EjecucionPreconciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroEjecucionPreconciliacionDTO;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionPreconciliacionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
 /**
  * @name EjecucionPreconciliacionServiceImpl
- * @description Clase de capa de servicio para la ejecución  del proceso de preconciliación que sirve para
+ * @description Clase de capa de servicio para la ejecución  del proceso de pre-conciliación que sirve para
  *              realizar operaciones de lógica de negocios
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
@@ -97,5 +101,27 @@ public class EjecucionPreconciliacionServiceImpl implements EjecucionPreconcilia
 
 
 		return result;
+	}
+
+
+	/**
+	 * Se encarga de guardar/actualizar una nueva EjecucionPreconciliacion
+	 * @param ejecucionPreconciliacion
+	 * @param registerBy
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	@Override
+	@Transactional
+	public EjecucionPreconciliacion save(EjecucionPreconciliacion ejecucionPreconciliacion, String registerBy) throws ConciliacionException {
+		EjecucionPreconciliacion resultado = null;
+		try {
+			ejecucionPreconciliacion.setCreatedDate(new Date());
+			ejecucionPreconciliacion.setCreatedBy(registerBy);
+			resultado = this.ejecucionPreconciliacionRepository.save(ejecucionPreconciliacion);
+		} catch (Exception ex) {
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0011.getDescripcion(), CodigoError.NMP_PMIMONTE_0011);
+		}
+		return resultado;
 	}
 }

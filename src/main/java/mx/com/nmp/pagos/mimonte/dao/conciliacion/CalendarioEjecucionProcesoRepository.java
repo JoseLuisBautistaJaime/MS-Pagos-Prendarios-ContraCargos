@@ -39,7 +39,7 @@ public interface CalendarioEjecucionProcesoRepository extends PagingAndSortingRe
 			"AND ( :reintentos IS NULL OR c.reintentos= :reintentos) " +
 			"AND ( :isActivo IS NULL OR c.activo = :isActivo ) " +
 			"AND ( :proveedor IS NULL OR c.proveedor.nombre = :proveedor)")
-	public List<CalendarioEjecucionProcesoDTO> findByPropiedades(@Param("idCalendario") final Long idCalendario, @Param("idProceso") final Long idProceso, @Param("isActivo") final Boolean isActivo, @Param("reintentos") final Integer reintentos, @Param("proveedor") final CorresponsalEnum proveedor);
+	public List<CalendarioEjecucionProcesoDTO> findByPropiedades(@Param("idCalendario") final Long idCalendario, @Param("idProceso") final Integer idProceso, @Param("isActivo") final Boolean isActivo, @Param("reintentos") final Integer reintentos, @Param("proveedor") final CorresponsalEnum proveedor);
 
 
 
