@@ -339,6 +339,8 @@ public enum CodigoError {
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_148("El proceso de pre-conciliacion no puede ser ejecutado",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
+	NMP_PMIMONTE_BUSINESS_149("Ya existe un dia inhabil registrado para la fecha especificada",
+			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_PROCESAR_CONCILIACION("Error al procesar la conciliacion",
 			TipoError.CLIENTE, SeveridadError.MEDIA),
 	NMP_PMIMONTE_BUSINESS_CORRESPONSAL_CONCILIACION("No hay relacion entre el corresponsal y una o mas conciliaciones",

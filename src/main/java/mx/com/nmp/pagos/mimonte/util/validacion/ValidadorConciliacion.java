@@ -640,5 +640,43 @@ public interface ValidadorConciliacion {
 				|| (null != filtroDTO.getEstatusDescripcion())
 				|| (null != filtroDTO.getIdEstatus());
 	}
-	
+
+
+	/**
+	 * Valida que un objeto de tipo FiltroDiaInhabilDTO contenga todos los atributos
+	 * requeridos y estos sean valores validos
+	 *
+	 * @param filtroDTO
+	 * @return
+	 */
+	public static boolean validateFiltroDiaInhabilDTO(FiltroDiaInhabilDTO filtroDTO) {
+		try {
+			assertNotNull(filtroDTO);
+		} catch (java.lang.AssertionError | Exception ex) {
+			return false;
+		}
+		return (null != filtroDTO.getDescripcion())	|| (null != filtroDTO.getFecha());
+	}
+
+
+	/**
+	 * Valida que un objeto de tipo DiaInhabilDTO contenga todos los atributos
+	 * requeridos y estos sean valores validos
+	 *
+	 * @param diaInhabilDTO
+	 * @return
+	 */
+
+	public static boolean  validateSaveDiaInhabil(DiaInhabilDTO diaInhabilDTO) {
+		try {
+			assertNotNull(diaInhabilDTO);
+			assertNotNull(diaInhabilDTO.getDescripcionCorta());
+			assertNotNull(diaInhabilDTO.getDescripcion());
+			assertNotNull(diaInhabilDTO.getFecha());
+		} catch (java.lang.AssertionError | Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 }

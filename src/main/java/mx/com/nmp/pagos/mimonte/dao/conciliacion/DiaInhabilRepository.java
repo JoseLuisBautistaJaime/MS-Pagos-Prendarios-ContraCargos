@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DiaInhabilDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CatalogoDiaInhabil;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @name DiaInhabilRepository
@@ -31,5 +33,20 @@ public interface DiaInhabilRepository extends JpaRepository<CatalogoDiaInhabil, 
 	 */
 	@Query("FROM CatalogoDiaInhabil cd WHERE cd.fecha = :fecha")
 	public CatalogoDiaInhabil findByFecha(@Param("fecha") final Date fecha);
+
+
+	/**
+	 * Busqueda de los días inhábiles a partir de sus propiedades.
+	 *
+	 * @param fecha
+	 * @param descripcion
+	 * @return
+	 */
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.DiaInhabilDTO(c.id, c.descripcionCorta, c.descripcion, c.fecha) FROM CatalogoDiaInhabil c " +
+			"WHERE  ( :fecha IS NULL OR c.fecha = :fecha) " +
+			"AND ( :descripcion IS NULL OR c.descripcionCorta = :descripcion ) " +
+			"AND ( :descripcion IS NULL OR c.descripcion= :descripcion) " )
+	public List<DiaInhabilDTO> findByPropiedades(  @Param("fecha") final Date fecha, @Param("descripcion") final String descripcion);
+
 
 }

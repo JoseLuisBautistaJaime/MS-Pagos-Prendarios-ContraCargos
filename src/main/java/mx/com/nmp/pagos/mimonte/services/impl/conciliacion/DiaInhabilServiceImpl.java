@@ -4,13 +4,20 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
+import mx.com.nmp.pagos.mimonte.builder.conciliacion.DiaInhabilBuilder;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.DiaInhabilRepository;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DiaInhabilDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroDiaInhabilDTO;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CatalogoDiaInhabil;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.DiaInhabilService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -50,6 +57,47 @@ public class DiaInhabilServiceImpl implements DiaInhabilService {
 		result = diaInhabilRepository.findByFecha( fecha );
 
 		return result;
+
+	}
+
+	/**
+	 * Metodo que realiza una busqueda a partir de un objeto de tipo
+	 * FiltroDiaInhabilDTO devolviendo como resultado una lista de tipo
+	 * DiaInhabilDTO.
+	 */
+	@Override
+	public List<DiaInhabilDTO> consultarByPropiedades(FiltroDiaInhabilDTO filtroDiaInhabilDTO) {
+
+		// Declaracion de objetos necesarios
+		List<DiaInhabilDTO> result = null;
+
+		result = diaInhabilRepository.findByPropiedades( filtroDiaInhabilDTO.getFecha(), filtroDiaInhabilDTO.getDescripcion());
+
+		return result;
+	}
+
+	/**
+	 * Metodo que da de alta un día inhábil regresando el elemento guardado  a partir de un
+	 * objeto de tipo DiaInhabilDTO
+	 */
+	@Override
+	@Transactional
+	public DiaInhabilDTO saveDiaInhabil(DiaInhabilDTO diaInhabilDTO) {
+		// Se valida que el día inhábil no se duplique
+		CatalogoDiaInhabil diaInhabilBD = diaInhabilRepository.findByFecha(diaInhabilDTO.getFecha());
+		if (diaInhabilBD != null) {
+			throw new ConciliacionException(ConciliacionConstants.DIA_INHABIL_CANNOT_BE_DUPLICATE, CodigoError.NMP_PMIMONTE_BUSINESS_149);
+		}
+
+		LOG.debug("Creando día inhábil...");
+
+		// Se construye la conciliacion y se guarda
+		CatalogoDiaInhabil diaInhabil = DiaInhabilBuilder.buildCatalogoDiaInhabilFromDiaInhabilDTO(diaInhabilDTO);
+
+		diaInhabil = diaInhabilRepository.save(diaInhabil);
+
+		return DiaInhabilBuilder.buildDiaInhabilDTOFromCatalogoDiaInhabil(diaInhabil);
+
 
 	}
 

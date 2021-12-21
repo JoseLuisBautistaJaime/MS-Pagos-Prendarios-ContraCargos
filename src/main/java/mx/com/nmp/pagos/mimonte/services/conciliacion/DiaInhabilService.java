@@ -5,9 +5,13 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.DiaInhabilDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.EjecucionPreconciliacionDTO;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroDiaInhabilDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CatalogoDiaInhabil;
 import org.springframework.stereotype.Service;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Quarksoft
@@ -26,4 +30,21 @@ public interface DiaInhabilService {
 	 */
 	public CatalogoDiaInhabil buscarByFecha(Date fecha);
 
+	/**
+	 * Método que regresa una lista de tipo DiaInhabilDTO con la
+	 * información de los días inhábiles a partir de un objeto de tipo
+	 * FiltroDiaInhabilDTO.
+	 *
+	 * @param filtroDiaInhabilDTO
+	 * @return
+	 */
+	public List<DiaInhabilDTO> consultarByPropiedades(FiltroDiaInhabilDTO filtroDiaInhabilDTO);
+
+	/**
+	 * Metodo que guarda un día inhábil.
+	 *
+	 * @param diaInhabilDTO
+	 * @return
+	 */
+	public DiaInhabilDTO saveDiaInhabil(DiaInhabilDTO diaInhabilDTO);
 }

@@ -521,6 +521,12 @@ public final class ConciliacionConstants {
 	 */
 	public static final String EJECUCION_PRECONCILIACION_CANNOT_BE_CONSULT = "La ejecucion del proceso de pre-conciliacion no puede ser invocada.";
 
+
+	/**
+	 * Mensaje que aparece cuando se intenta duplicar un día inhábil.
+	 */
+	public static final String DIA_INHABIL_CANNOT_BE_DUPLICATE= "Ya existe un día inhábil registrado para esta fecha";
+
 	/**
 	 * Mensaje que es mostrado cuando no se encuentran movimientos devolucion
 	 * pendientes

@@ -51,6 +51,7 @@ public abstract class EstatusEjecucionPreconciliacionBuilder {
 	public static EstatusEjecucionPreconciliacion buildEstatusEjecucionConciliacionFromEstatusEjecucionConciliacionDTO( EstatusEjecucionPreconciliacionDTO estatusEjecucionPreconciliacionDTO) {
 		EstatusEjecucionPreconciliacion estatusEjecucionPreconciliacion = null;
 		if (estatusEjecucionPreconciliacionDTO != null) {
+			estatusEjecucionPreconciliacion = new EstatusEjecucionPreconciliacion();
 			estatusEjecucionPreconciliacion.setId(estatusEjecucionPreconciliacionDTO.getId());
 			estatusEjecucionPreconciliacion.setDescripcionCorta(estatusEjecucionPreconciliacionDTO.getDescripcionCorta());
 			estatusEjecucionPreconciliacion.setDescripcion(estatusEjecucionPreconciliacionDTO.getDescripcion());
