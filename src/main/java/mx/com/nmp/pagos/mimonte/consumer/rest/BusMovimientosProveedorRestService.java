@@ -4,12 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.consumer.rest;
 
-import mx.com.nmp.pagos.mimonte.constans.CodigoError;
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestPreconciliacionDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMovimientosProveedorDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -19,59 +16,59 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @name BusProcesoPreconciliacionRestService
- * @description Clase para consumir servicios rest relacionados con la ejecución
- *              del proceso de pre-conciliación expuesto por BUS.
+ * @name BusMovimientosProveedorRestService
+ * @description Clase para consumir servicios rest relacionados con el
+ *               proceso de carga de los movimientos del proveedor expuesto por BUS.
  * 
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
  * @version 1.0
- * @createdDate 06/12/2021 09:46 hrs.
+ * @createdDate 07/01/2022 13:46 hrs.
  */
-@Component("busProcesoPreconciliacionRestService")
-public class BusProcesoPreconciliacionRestService extends AbstractOAuth2RestService {
+@Component("busMovimientosProveedorRestService")
+public class BusMovimientosProveedorRestService extends AbstractOAuth2RestService {
 
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
-	private static final Logger LOG = LoggerFactory.getLogger(BusProcesoPreconciliacionRestService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BusMovimientosProveedorRestService.class);
 
-	public BusProcesoPreconciliacionRestService() {
+	public BusMovimientosProveedorRestService() {
 		super();
 	}
 
 	/**
-	 * Lanza la ejecución del proceso de pre-conciliación.
+	 * Lanza el proceso de carga de los movimientos del proveedor.
 	 * 
 	 * @param body
 	 */
-	public Map<String, Object> ejecutarProcesoPreconciliacion(BusRestPreconciliacionDTO body) {
+	public Map<String, Object> cargarMovimientosProveedor(BusRestMovimientosProveedorDTO body) {
 
 		Map<String, Object> response = null;
-		BusRestAuthDTO auth;
-		String bearerToken;
 		String url;
+		String bearerToken;
+		BusRestAuthDTO auth;
 		BusRestHeaderDTO header;
 
 		try {
 
 			// Se obtiene el token
 			auth = new BusRestAuthDTO(
-					applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getAuth().getUsuario(),
-					applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getAuth().getPassword());
+					applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getAuth().getUsuario(),
+					applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getAuth().getPassword());
 			bearerToken = postForGetToken(auth, mc.urlGetToken);
 
 			// Se obtiene la url del servicio
-			url = applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getUrl();
+			url = applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getUrlMovimientosProveedor();
 
 			// Se crea el Header de la petición
 			header = new BusRestHeaderDTO(bearerToken);
 
-			// Se lanza la ejecución del proceso de pre-conciliación
+			// Se lanza el proceso
 			response = postForObject(auth, body, header, url);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException(ConciliacionConstants.EJECUCION_PRECONCILIACION_CANNOT_BE_CONSULT,	CodigoError.NMP_PMIMONTE_BUSINESS_148);
+			throw ex;
 		}
 
 		return response;
@@ -92,9 +89,9 @@ public class BusProcesoPreconciliacionRestService extends AbstractOAuth2RestServ
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("Authorization", "Basic " + base64Creds);
 		headers.add("Content-Type", "application/json");
-		headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getHeader().getIdConsumidor());
-		headers.add(mc.idDestinoKey, applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getHeader().getIdDestino());
-		headers.add(mc.usuarioKey,	applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getHeader().getUsuario());
+		headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdConsumidor());
+		headers.add(mc.idDestinoKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdDestino());
+		headers.add(mc.usuarioKey,	applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getUsuario());
 		headers.add("oauth.bearer", header.getBearerToken());
 		return headers;
 	}

@@ -58,12 +58,11 @@ public interface EjecucionConciliacionRepository extends PagingAndSortingReposit
 	 * @param estatusEjecucionConciliacion
 	 * @param usuario
 	 * @param fecha
-	 * @param descripcion
 	 */
 	@Modifying
-	@Query(nativeQuery = true, value = "UPDATE to_ejecucion_conciliacion SET id_estatus_ejecucion = :estatusEjecucionConciliacion, estatus_descripcion = :descripcion, last_modified_by = :usuario, last_modified_date = :fecha WHERE id = :idEjecucionConciliacion")
+	@Query(nativeQuery = true, value = "UPDATE to_ejecucion_conciliacion SET id_estatus_ejecucion = :estatusEjecucionConciliacion, last_modified_by = :usuario, last_modified_date = :fecha WHERE id = :idEjecucionConciliacion")
 	public void actualizaEstatusEjecucionConciliacion(@Param("idEjecucionConciliacion") final Long idEjecucionConciliacion,
-                                                         @Param("estatusEjecucionConciliacion") EstatusEjecucionConciliacion estatusEjecucionConciliacion, @Param("usuario") final String usuario, @Param("fecha") Date fecha, @Param("descripcion") final String descripcion);
+                                                         @Param("estatusEjecucionConciliacion") EstatusEjecucionConciliacion estatusEjecucionConciliacion, @Param("usuario") final String usuario, @Param("fecha") Date fecha);
 
 	 /**
 	  * Regresa el estatus de una ejecución de conciliación por el id de la misma

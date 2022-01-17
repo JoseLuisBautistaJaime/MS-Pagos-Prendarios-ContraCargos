@@ -16,14 +16,16 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 public class ProcesoPreconciliacionResponseDTO {
 
 	private String codigo;
+	private String descripcion;
 	private String mensaje;
 	private Boolean ejecucionCorrecta;
 
 	public ProcesoPreconciliacionResponseDTO() {
 	}
 
-	public ProcesoPreconciliacionResponseDTO(String codigo, String mensaje, Boolean ejecucionCorrecta) {
+	public ProcesoPreconciliacionResponseDTO(String codigo, String descripcion, String mensaje, Boolean ejecucionCorrecta) {
 		this.codigo = codigo;
+		this.descripcion = descripcion;
 		this.mensaje = mensaje;
 		this.ejecucionCorrecta = ejecucionCorrecta;
 	}
@@ -34,6 +36,14 @@ public class ProcesoPreconciliacionResponseDTO {
 
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	public String getMensaje() {
@@ -54,7 +64,7 @@ public class ProcesoPreconciliacionResponseDTO {
 
 	@Override
 	public String toString() {
-		return "ProcesoPreconciliacionResponseDTO [codigo=" + codigo + ", mensaje=" + mensaje + ", ejecucionCorrecta=" + ejecucionCorrecta + "]";
+		return "ProcesoPreconciliacionResponseDTO [codigo=" + codigo + ", descripcion=" + descripcion+ ", mensaje=" + mensaje + ", ejecucionCorrecta=" + ejecucionCorrecta + "]";
 	}
 
 }

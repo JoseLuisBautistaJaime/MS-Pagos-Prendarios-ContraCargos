@@ -5,7 +5,12 @@
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.TrazadoEjecucionConciliacion;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -37,10 +42,18 @@ public interface EjecucionConciliacionService {
 
 
 	/**
-	 * Metodo que guarda los datos de una ejecución del proceso de conciliación
+	 * Metodo que guarda los datos de una ejecución del proceso de conciliación.
 	 */
-	public void guardarEjecucionConciliacion(TrazadoEjecucionConciliacionDTO trazadoDTO, String usuario);
+	public void guardarEjecucionConciliacion(TrazadoEjecucionConciliacion trazadoEjecucionConciliacion, String usuario);
 
+	/**
+	 * Se encarga de guardar/actualizar una nueva EjecucionConciliacion
+	 * @param ejecucionConciliacion
+	 * @param registerBy
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public EjecucionConciliacion save(EjecucionConciliacion ejecucionConciliacion, String registerBy) throws ConciliacionException ;
 
 
 	}

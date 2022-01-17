@@ -5,16 +5,13 @@
 package mx.com.nmp.pagos.mimonte.scheduling;
 
 import com.ibm.icu.util.Calendar;
+import mx.com.nmp.pagos.mimonte.conector.PreconciliacionBroker;
 import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.constans.MailServiceConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
-import mx.com.nmp.pagos.mimonte.consumer.rest.BusProcesoPreconciliacionRestService;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAdjuntoDTO;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestPreconciliacionDTO;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestRangoFechasDTO;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.*;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -37,13 +34,14 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 /**
  * @name PreconciliacionScheduler
- * @description Componente para la calendarización del proceso de pre-conciliación que sirve para automatizar la ejecución  del proceso.
+ * @description Componente para la calendarización de la ejecución automática del proceso de pre-conciliación.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
  * @creationDate 29/11/2021 10:48 hrs.
@@ -53,6 +51,9 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableScheduling
 public class PreconciliacionScheduler implements SchedulingConfigurer {
+
+	@Inject
+	private PreconciliacionBroker preconciliacionBrokerBus;
 
 	/**
 	 * Velocity HTML layouts Engine
@@ -81,9 +82,6 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 
 	@Autowired
 	private EjecucionPreconciliacionService ejecucionPreconciliacionService;
-
-	@Autowired
-	private BusProcesoPreconciliacionRestService busProcesoPreconciliacionRestService;
 
 	/**
 	 * Repository de contactos
@@ -137,9 +135,9 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 
 	public void ejecutarProcesoPreconciliacion(CalendarioEjecucionProcesoDTO calendarizacion, EjecucionPreconciliacion ejecucionPreconciliacion) {
 		for (int i = 0; i <= calendarizacion.getReintentos(); i++) {
-			BusRestPreconciliacionDTO request = new BusRestPreconciliacionDTO(new BusRestRangoFechasDTO(ejecucionPreconciliacion.getFechaPeriodoInicio(), ejecucionPreconciliacion.getFechaPeriodoFin()));
-			//ProcesoPreconciliacionResponseDTO response = busProcesoPreconciliacionRestService.ejecutarProcesoPreconciliacion(request);
-            ProcesoPreconciliacionResponseDTO response = new ProcesoPreconciliacionResponseDTO("Test", "Test", false);
+			ProcesoPreconciliacionResponseDTO response = preconciliacionBrokerBus.ejecutarPreconciliacion(ejecucionPreconciliacion.getFechaPeriodoInicio(), ejecucionPreconciliacion.getFechaPeriodoFin(), ejecucionPreconciliacion.getProveedor().getNombre().getNombre());
+            //ProcesoPreconciliacionResponseDTO response = new ProcesoPreconciliacionResponseDTO("Test", "Test", false);
+
 			if (response.getEjecucionCorrecta()) {
 				ejecucionPreconciliacion.getEstatus().setId(EstatusEjecucionPreconciliacionEnum.DESCARGACORRECTA.getIdEstadoEjecucion());
 				ejecucionPreconciliacion.setEstatusDescripcion(EstatusEjecucionPreconciliacionEnum.DESCARGACORRECTA.getEstadoEjecucion());
@@ -167,7 +165,7 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 		// Se obtienen los contactos del proceso de pre-conciliación
 		List<Contactos> contactos = contactoRespository.findByIdTipoContacto(ConciliacionConstants.TIPO_CONTACTO_PRECONCILIACION);
 		if (null == contactos || contactos.isEmpty()) {
-			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL, CodigoError.NMP_PMIMONTE_BUSINESS_043);
+			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL, CodigoError.NMP_PMIMONTE_BUSINESS_150);
 		}
 
 		// Construye e-mail
@@ -189,6 +187,8 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 
 	public BusRestMailDTO construyeEMailProcesoPreconciliacion(List<Contactos> contactos, EjecucionPreconciliacion ejecucionPreconciliacion) {
 
+		BusRestPreconciliacionDTO request = new BusRestPreconciliacionDTO(new BusRestRangoFechasDTO(ejecucionPreconciliacion.getFechaPeriodoInicio(), ejecucionPreconciliacion.getFechaPeriodoFin()), new BusRestCorresponsalDTO(ejecucionPreconciliacion.getProveedor().getNombre().getNombre()));
+
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
 		String titulo = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionPreconciliacion().getTitle();
@@ -198,7 +198,7 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 
 		// Se constrye el cuerpo de correo HTML
 		Map<String, Object> model = new HashMap<>();
-		model.put("elemento", ejecucionPreconciliacion);
+		model.put("elemento", request);
 		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, "UTF-8", model);
 
 		// Se construye el DTO
@@ -249,7 +249,7 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 		filtro.setFechaPeriodoInicio(ejecucionPreconciliacion.getFechaPeriodoInicio());
 		filtro.setFechaPeriodoFin(ejecucionPreconciliacion.getFechaPeriodoFin());
 		filtro.setCorresponsal(ejecucionPreconciliacion.getProveedor().getNombre().getNombre());
-		filtro.setIdEstatus(2);
+		filtro.setIdEstatus(EstatusEjecucionPreconciliacionEnum.DESCARGACORRECTA.getIdEstadoEjecucion());
 		List<EjecucionPreconciliacionDTO> listaResultados = ejecucionPreconciliacionService.consultarByPropiedades(filtro);
 		if(null != listaResultados && !listaResultados.isEmpty()){
 			return false;
@@ -267,7 +267,7 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 		CalendarioEjecucionProcesoDTO calendarioEjecucionProceso = new CalendarioEjecucionProcesoDTO();
 		FiltroCalendarioEjecucionProcesoDTO filtro = new FiltroCalendarioEjecucionProcesoDTO();
 		filtro.setActivo(true);
-		filtro.setIdProceso(1);
+		filtro.setIdProceso(ProcesoEnum.PRE_CONCILIACION.getIdProceso());
 		filtro.setCorresponsal(CorresponsalEnum.OPENPAY.getNombre());
 		List<CalendarioEjecucionProcesoDTO> listaResultados = calendarioEjecucionProcesoService.consultarByPropiedades(filtro);
 		if(null != listaResultados && !listaResultados.isEmpty()){

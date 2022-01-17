@@ -165,6 +165,7 @@ public class ApplicationProperties {
 			private ConsultaEstadoCuenta consultaEstadoCuenta;
 			private ConsultaPagos consultaPagos;
 			private ProcesoPreconciliacion procesoPreconciliacion;
+			private ProcesoConciliacion procesoConciliacion;
 
 			public Mail getMail() {
 				return mail;
@@ -198,11 +199,20 @@ public class ApplicationProperties {
 				this.procesoPreconciliacion = procesoPreconciliacion;
 			}
 
+			public ProcesoConciliacion getProcesoConciliacion() {
+				return procesoConciliacion;
+			}
+
+			public void setProcesoConciliacion(ProcesoConciliacion procesoConciliacion) {
+				this.procesoConciliacion = procesoConciliacion;
+			}
+
 			public static class Mail {
 
 				private String from;
 				private SolicitudDevolucion solicitudDevolucion;
 				private SolicitudEjecucionPreconciliacion solicitudEjecucionPreconciliacion;
+				private SolicitudEjecucionConciliacion solicitudEjecucionConciliacion;
 
 				public String getFrom() {
 					return from;
@@ -226,6 +236,14 @@ public class ApplicationProperties {
 
 				public void setSolicitudEjecucionPreconciliacion(SolicitudEjecucionPreconciliacion solicitudEjecucionPreconciliacion) {
 					this.solicitudEjecucionPreconciliacion = solicitudEjecucionPreconciliacion;
+				}
+
+				public SolicitudEjecucionConciliacion getSolicitudEjecucionConciliacion() {
+					return solicitudEjecucionConciliacion;
+				}
+
+				public void setSolicitudEjecucionConciliacion(SolicitudEjecucionConciliacion solicitudEjecucionConciliacion) {
+					this.solicitudEjecucionConciliacion = solicitudEjecucionConciliacion;
 				}
 
 				public static class SolicitudDevolucion {
@@ -252,6 +270,29 @@ public class ApplicationProperties {
 				}
 
 				public static class SolicitudEjecucionPreconciliacion {
+
+					private String title;
+					private String velocityTemplate;
+
+					public String getTitle() {
+						return title;
+					}
+
+					public void setTitle(String title) {
+						this.title = title;
+					}
+
+					public String getVelocityTemplate() {
+						return velocityTemplate;
+					}
+
+					public void setVelocityTemplate(String velocityTemplate) {
+						this.velocityTemplate = velocityTemplate;
+					}
+
+				}
+
+				public static class SolicitudEjecucionConciliacion {
 
 					private String title;
 					private String velocityTemplate;
@@ -482,6 +523,127 @@ public class ApplicationProperties {
 
 					public void setPassword(String password) {
 						this.password = password;
+					}
+				}
+
+			}
+
+			public static class ProcesoConciliacion {
+				private String urlMovimientosNocturnos;
+				private String urlMovimientosProveedor;
+				private ProcesoConciliacionAuth auth;
+				private ProcesoConciliacionHeader header;
+				private ProcesoConciliacionCorresponsal corresponsal;
+
+				public String getUrlMovimientosNocturnos() {
+					return urlMovimientosNocturnos;
+				}
+
+				public void setUrlMovimientosNocturnos(String urlMovimientosNocturnos) {
+					this.urlMovimientosNocturnos = urlMovimientosNocturnos;
+				}
+
+				public String getUrlMovimientosProveedor() {
+					return urlMovimientosProveedor;
+				}
+
+				public void setUrlMovimientosProveedor(String urlMovimientosProveedor) {
+					this.urlMovimientosProveedor = urlMovimientosProveedor;
+				}
+
+				public ProcesoConciliacionAuth getAuth() {
+					return auth;
+				}
+
+				public void setAuth(ProcesoConciliacionAuth auth) {
+					this.auth = auth;
+				}
+
+				public ProcesoConciliacionHeader getHeader() {
+					return header;
+				}
+
+				public void setHeader(ProcesoConciliacionHeader header) {
+					this.header = header;
+				}
+
+				public ProcesoConciliacionCorresponsal getCorresponsal() {
+					return corresponsal;
+				}
+
+				public void setCorresponsal(ProcesoConciliacionCorresponsal corresponsal) {
+					this.corresponsal = corresponsal;
+				}
+
+				public static class ProcesoConciliacionHeader {
+					private String usuario;
+					private String idConsumidor;
+					private String idDestino;
+
+					public String getUsuario() {
+						return usuario;
+					}
+
+					public void setUsuario(String usuario) {
+						this.usuario = usuario;
+					}
+
+					public String getIdConsumidor() {
+						return idConsumidor;
+					}
+
+					public void setIdConsumidor(String idConsumidor) {
+						this.idConsumidor = idConsumidor;
+					}
+
+					public String getIdDestino() {
+						return idDestino;
+					}
+
+					public void setIdDestino(String idDestino) {
+						this.idDestino = idDestino;
+					}
+				}
+
+				public static class ProcesoConciliacionAuth {
+					private String usuario;
+					private String password;
+
+					public String getUsuario() {
+						return usuario;
+					}
+
+					public void setUsuario(String usuario) {
+						this.usuario = usuario;
+					}
+
+					public String getPassword() {
+						return password;
+					}
+
+					public void setPassword(String password) {
+						this.password = password;
+					}
+				}
+
+				public static class ProcesoConciliacionCorresponsal {
+					private String entidad;
+					private String cuenta;
+
+					public String getEntidad() {
+						return entidad;
+					}
+
+					public void setEntidad(String entidad) {
+						this.entidad = entidad;
+					}
+
+					public String getCuenta() {
+						return cuenta;
+					}
+
+					public void setCuenta(String cuenta) {
+						this.cuenta = cuenta;
 					}
 				}
 

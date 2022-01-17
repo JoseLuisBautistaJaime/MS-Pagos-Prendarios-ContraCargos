@@ -4,7 +4,9 @@
  */
 package mx.com.nmp.pagos.mimonte.consumer.rest.dto;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  * @name BusRestRangoFechasDTO
@@ -16,29 +18,35 @@ import java.util.Date;
  */
 public class BusRestRangoFechasDTO {
 
-	private Date fechaInicio;
-	private Date fechaFin;
+	private static final SimpleDateFormat sf;
+
+	private String fechaInicio;
+	private String fechaFin;
+
+	static {
+		sf = new SimpleDateFormat("yyyy-MM-dd");
+	}
 
 	public BusRestRangoFechasDTO() {}
 
 	public BusRestRangoFechasDTO(Date fechaInicio, Date fechaFin) {
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
+		this.fechaInicio = null != fechaInicio ? sf.format(fechaInicio) : null;
+		this.fechaFin = null != fechaFin ? sf.format(fechaFin) : null;
 	}
 
-	public Date getFechaInicio() {
+	public String getFechaInicio() {
 		return fechaInicio;
 	}
 
-	public void setFechaInicio(Date fechaInicio) {
+	public void setFechaInicio(String fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public Date getFechaFin() {
+	public String getFechaFin() {
 		return fechaFin;
 	}
 
-	public void setFechaFin(Date fechaFin) {
+	public void setFechaFin(String fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 

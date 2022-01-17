@@ -145,7 +145,7 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 	 * Metodo que guarda los datos de una ejecución del proceso de conciliación
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void guardarEjecucionConciliacion(TrazadoEjecucionConciliacionDTO trazadoDTO, String usuario){
+	public void guardarEjecucionConciliacion(TrazadoEjecucionConciliacion trazadoEjecucionConciliacion, String usuario){
 
 		long start = 0;
 		long finish = 0;
@@ -158,17 +158,17 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 		// Se actualiza el estatus de la ejecución del proceso de conciliación que se recibio como
 		// parametro, adicionalmente se actualizan los campos createdBy y createdDate
 		try {
-			if( trazadoDTO.getEjecucionConciliacion().getId() != null && trazadoDTO.getEjecucionConciliacion().getId() > 0L  ){
+			if( trazadoEjecucionConciliacion.getEjecucionConciliacion().getId() != null && trazadoEjecucionConciliacion.getEjecucionConciliacion().getId() > 0L  ){
 				start = System.currentTimeMillis();
 				LOG.debug("T>>> INICIA ACTUALIZACION DEl ESTATUS EN BASE DE DATOS: {}", sdf.format(new Date(start)));
-				ejecucionConciliacionRepository.actualizaEstatusEjecucionConciliacion(trazadoDTO.getEjecucionConciliacion().getId(), EstatusEjecucionConciliacionBuilder.buildEstatusEjecucionConciliacionFromEstatusEjecucionConciliacionDTO(trazadoDTO.getEstatusEjecucion()), usuario, new Date(), trazadoDTO.getEstatusDescripcion());
+				ejecucionConciliacionRepository.actualizaEstatusEjecucionConciliacion(trazadoEjecucionConciliacion.getEjecucionConciliacion().getId(), trazadoEjecucionConciliacion.getEjecucionConciliacion().getEstatus(), usuario, new Date());
 				finish = System.currentTimeMillis();
 				LOG.debug("T>>> FINALIZA ACTUALIZACION DEl ESTATUS EN BASE DE DATOS: {}, EN: {}", sdf.format(new Date(finish)), (finish - start));
 			} else {
 				start = System.currentTimeMillis();
 				LOG.debug("T>>> INICIA CREACION DE LA EJECUCION: {}", sdf.format(new Date(start)));
-				EjecucionConciliacion ejecucionCreada = ejecucionConciliacionRepository.save(EjecucionConciliacionBuilder.buildEjecucionConciliacionFromEjecucionConciliacionDTO(trazadoDTO.getEjecucionConciliacion()));
-				trazadoDTO.getEjecucionConciliacion().setId(ejecucionCreada.getId());
+				EjecucionConciliacion ejecucionCreada = ejecucionConciliacionRepository.save(trazadoEjecucionConciliacion.getEjecucionConciliacion());
+				trazadoEjecucionConciliacion.getEjecucionConciliacion().setId(ejecucionCreada.getId());
 				finish = System.currentTimeMillis();
 				LOG.debug("T>>> FINALIZA CREACION DE LA EJECUCION: {}, EN: {}", sdf.format(new Date(finish)), (finish - start));
 
@@ -182,13 +182,7 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 		try {
 			start = System.currentTimeMillis();
 			LOG.debug("T>>> INICIA REGISTRO DEl TRAZADO DE ESTATUS: {}", sdf.format(new Date(start)));
-			TrazadoEjecucionConciliacion trazado = new TrazadoEjecucionConciliacion();
-			trazado.setEjecucionConciliacion(EjecucionConciliacionBuilder.buildEjecucionConciliacionFromEjecucionConciliacionDTO(trazadoDTO.getEjecucionConciliacion()));
-			trazado.setEstatus(EstatusEjecucionConciliacionBuilder.buildEstatusEjecucionConciliacionFromEstatusEjecucionConciliacionDTO(trazadoDTO.getEstatusEjecucion()));
-			trazado.setEstatusDescripcion(trazadoDTO.getEstatusDescripcion());
-			trazado.setFechaInicio(trazadoDTO.getFechaInicio());
-			trazado.setFechaFin(trazadoDTO.getFechaFin());
-			trazadoEjecucionConciliacionRepository.save(trazado);
+			trazadoEjecucionConciliacionRepository.save(trazadoEjecucionConciliacion);
 			finish = System.currentTimeMillis();
 			LOG.debug("T>>> FINALIZA REGISTRO DEl TRAZADO DE ESTATUS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 		} catch (Exception ex) {
@@ -197,8 +191,29 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 		}
 
 		globalFinish = System.currentTimeMillis();
-		LOG.debug("T>>> FINALIZA ACTUALIZACION DEl ESTATUS GENERAL: {}, EN: {}", sdf.format(new Date(globalFinish)), (globalFinish-globalStart) );
+		LOG.debug("T>>> FINALIZA ACTUALIZACION DEl ESTATUS : {}, EN: {}", sdf.format(new Date(globalFinish)), (globalFinish-globalStart) );
 	}
 
+
+	/**
+	 * Se encarga de guardar/actualizar una nueva EjecucionConciliacion
+	 * @param ejecucionConciliacion
+	 * @param registerBy
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	@Override
+	@Transactional
+	public EjecucionConciliacion save(EjecucionConciliacion ejecucionConciliacion, String registerBy) throws ConciliacionException {
+		EjecucionConciliacion resultado = null;
+		try {
+			ejecucionConciliacion.setCreatedDate(new Date());
+			ejecucionConciliacion.setCreatedBy(registerBy);
+			resultado = this.ejecucionConciliacionRepository.save(ejecucionConciliacion);
+		} catch (Exception ex) {
+			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_0011.getDescripcion(), CodigoError.NMP_PMIMONTE_0011);
+		}
+		return resultado;
+	}
 
 }

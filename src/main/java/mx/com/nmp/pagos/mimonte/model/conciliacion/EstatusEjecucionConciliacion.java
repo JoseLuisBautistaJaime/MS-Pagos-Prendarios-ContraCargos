@@ -31,6 +31,11 @@ public class EstatusEjecucionConciliacion extends AbstractCatalogo {
         super(id, descripcionCorta, descripcion);
     }
 
+    public EstatusEjecucionConciliacion(Integer id, String descripcion) {
+        super(id);
+        this.descripcion = descripcion;
+    }
+
     public EstatusEjecucionConciliacion(Integer id) {
         super(id);
     }

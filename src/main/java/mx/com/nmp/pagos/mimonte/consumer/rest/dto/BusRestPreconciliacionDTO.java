@@ -16,14 +16,16 @@ package mx.com.nmp.pagos.mimonte.consumer.rest.dto;
 public class BusRestPreconciliacionDTO implements BusRestBodyDTO {
 
 	private BusRestRangoFechasDTO rangoFecha;
+	private BusRestCorresponsalDTO corresponsal;
 
 	public BusRestPreconciliacionDTO() {
 		super();
 	}
 
-	public BusRestPreconciliacionDTO( BusRestRangoFechasDTO rangoFecha) {
+	public BusRestPreconciliacionDTO( BusRestRangoFechasDTO rangoFecha,BusRestCorresponsalDTO corresponsal) {
 		super();
 		this.rangoFecha = rangoFecha;
+		this.corresponsal = corresponsal;
 	}
 
 	public BusRestRangoFechasDTO getRangoFecha() {
@@ -34,9 +36,17 @@ public class BusRestPreconciliacionDTO implements BusRestBodyDTO {
 		this.rangoFecha = rangoFecha;
 	}
 
+	public BusRestCorresponsalDTO getCorresponsal() {
+		return corresponsal;
+	}
+
+	public void setCorresponsal(BusRestCorresponsalDTO corresponsal) {
+		this.corresponsal = corresponsal;
+	}
+
 	@Override
 	public String toString() {
-		return "BusRestPreconciliacionDTO [rangoFecha=" + rangoFecha + "]";
+		return "BusRestPreconciliacionDTO [rangoFecha=" + rangoFecha + ", corresponsal=" + corresponsal  +"]";
 	}
 
 }

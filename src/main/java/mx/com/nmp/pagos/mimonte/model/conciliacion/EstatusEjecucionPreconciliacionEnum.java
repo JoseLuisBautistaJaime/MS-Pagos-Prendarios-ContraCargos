@@ -6,7 +6,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  * @description Enum que contiene los estados de ejecución del proceso de pre-conciliación
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
  * @version 1.0
- * @creationDate 16/12/2020 09:03 hrs.
+ * @creationDate 16/12/2021 09:03 hrs.
  */
 public enum EstatusEjecucionPreconciliacionEnum {
     SOLICITUD (1, "SOLICITUD"),
