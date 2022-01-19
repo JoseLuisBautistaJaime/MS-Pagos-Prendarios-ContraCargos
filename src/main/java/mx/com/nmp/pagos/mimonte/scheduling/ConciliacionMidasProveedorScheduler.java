@@ -199,13 +199,9 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 			}
 
 			if(flgEjecucionCorrecta) {
-				Conciliacion resultadoEjecucion= null;
-				for (int i = 0; i <= 10; i++) {
-					resultadoEjecucion = this.escucharSubEstatusConciliacion(conciliacionDTO.getFolio());
-					if(resultadoEjecucion != null && ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PN.contains(resultadoEjecucion.getSubEstatus().getId())){
-						break;
-					}
-				}
+
+				Conciliacion resultadoEjecucion= this.escucharSubEstatusConciliacion(conciliacionDTO.getFolio(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PN);
+
 				if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA){
 					flgEjecucionCorrecta= true;
 					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Consulta de los movimientos nocturnos completada.";
@@ -236,13 +232,9 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 				}
 
 				if(flgEjecucionCorrecta) {
-					Conciliacion  resultadoEjecucion= null;
-					for (int i = 0; i <= 10; i++) {
-						resultadoEjecucion = this.escucharSubEstatusConciliacion(conciliacionDTO.getFolio());
-						if(resultadoEjecucion != null && ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT.contains(resultadoEjecucion.getSubEstatus().getId())){
-							break;
-						}
-					}
+
+					Conciliacion resultadoEjecucion= this.escucharSubEstatusConciliacion(conciliacionDTO.getFolio(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT);
+
 					if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA){
 						flgEjecucionCorrecta= true;
 						descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Consulta de los movimientos del proveedor completada.";
@@ -272,13 +264,9 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
                     }
 
 					if(flgEjecucionCorrecta) {
-						Conciliacion resultadoEjecucion= null;
-						for (int i = 0; i <= 10; i++) {
-							resultadoEjecucion = this.escucharSubEstatusConciliacion(conciliacionDTO.getFolio());
-							if(resultadoEjecucion != null && ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION.contains(resultadoEjecucion.getSubEstatus().getId())){
-								break;
-							}
-						}
+
+						Conciliacion resultadoEjecucion= this.escucharSubEstatusConciliacion(conciliacionDTO.getFolio(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION);
+
 						if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA){
 							flgEjecucionCorrecta= true;
 							descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Conciliación de los movimientos nocturnos y del proveedor completada.";
@@ -302,13 +290,28 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 
 	}
 
-	private Conciliacion escucharSubEstatusConciliacion(Long idConciliacion) {
-		try {
-			Thread.sleep(20000);
-		} catch (InterruptedException e) {
-			return null;
+	private Conciliacion escucharSubEstatusConciliacion(Long idConciliacion, List<Long> listaEstados) {
+		Conciliacion resultado = null;
+		for (int i = 0; i <= 10; i++) {
+			try {
+				Thread.sleep(20000);
+			} catch (InterruptedException e) {
+				continue;
+			}
+			try {
+				resultado =this.conciliacionService.getById(idConciliacion);
+			} catch (Exception ex) {
+				continue;
+			}
+
+			if(resultado != null && listaEstados.contains(resultado.getSubEstatus().getId())){
+				return resultado;
+			} else{
+				resultado = null;
+			}
 		}
-		return this.conciliacionService.getById(idConciliacion);
+
+		return resultado;
 	}
 
 	public void generarTrazadoEjecucionFase(EjecucionConciliacion ejecucionConciliacion, Date inicioFase, Date finFase, String descripcionEstatusFase) {
