@@ -6,7 +6,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 /**
  * @name MovimientosProveedorResponseDTO
- * @description Clase de tipo DTO que mapea el response de el servicio para la
+ * @description Clase de tipo DTO que mapea el response del servicio para la
  *             carga de los movimientos del proveedor
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net

@@ -22,7 +22,7 @@
     <span>Buenas tardes.</span>
     <br>
     <br>
-    <span>Solicito de su apreciable ayuda para ejecutar el proceso de conciliación para cargar los movimientos nocturnos de MIDAS  y los movimientos del proveedor transaccional de forma manual a través del portal de MiMonte Conciliación, utilizando como parámetros los datos enlistados en la tabla, ya que no fue posible ejecutar el proceso de forma automática.</span>
+    <span>Solicito de su apreciable ayuda para ejecutar el proceso de conciliación de los movimientos nocturnos de MIDAS  y los movimientos del proveedor transaccional de forma manual a través del portal de MiMonte Conciliación, utilizando como parámetros los datos enlistados en la tabla, ya que no fue posible ejecutar el proceso de forma automática.</span>
     <br>
     <br>
     <span>En espera de sus comentarios y apreciable ayuda. Gracias.</span>
@@ -34,7 +34,6 @@
           <th>Entidad</th>
           <th>Cuenta</th>
           <th>Corresponsal</th>
-          <th>Fecha Ejecución</th>
           <th>Fecha Inicio</th>
           <th>Fecha Fin</th>
         </tr>
@@ -44,7 +43,6 @@
             <td>$elemento.conciliacion.entidad.id</td>
             <td>$elemento.conciliacion.cuenta.id</td>
             <td>$elemento.proveedor.nombre</td>
-            <td>$elemento.fechaEjecucion</td>
             <td>$elemento.fechaPeriodoInicio</td>
             <td>$elemento.fechaPeriodoFin</td>
           </tr>

@@ -19,6 +19,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 //import mx.com.nmp.pagos.mimonte.util.StringUtil;
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,22 +60,6 @@ import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoDevolucionRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.MovimientoTransitoRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ReporteRepository;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.SubEstatusConciliacionRepository;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ComisionesRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionResponseDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.SolicitarPagosRequestDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.helper.ConciliacionHelper;
@@ -1428,6 +1413,21 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public List<Long> getConciliacionesAsociadas(Long folio) {
 		return ConciliacionBuilder.buildLongListFromObjectList(conciliacionRepository.getConciliacionesAsociadas(folio));
+	}
+
+
+	/**
+	 * Consulta los procesos de conciliación que no se encuentren con el estado de cuenta conciliado.
+	 */
+	@Override
+	public Conciliacion getConciliacionSinEstadoCuenta(ConsultaConciliacionEtapa2DTO filtro) {
+		Conciliacion conciliacionSEC = null;
+		List<Long>  listaConciliaciones;
+		listaConciliaciones = conciliacionRepository.findConciliacionSinEstadoCuenta(filtro.getFechaDesde(), filtro.getFechaHasta(), filtro.getListaSubEstatus(), filtro.getCorresponsal());
+		if(!listaConciliaciones.isEmpty()){
+			conciliacionSEC =  conciliacionRepository.findByFolio(listaConciliaciones.get(0));
+		}
+		return conciliacionSEC;
 	}
 	
 }

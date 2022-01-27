@@ -506,6 +506,13 @@ public final class ConciliacionConstants {
 	public static final String ERROR_WHILE_ID_EJECUCION_CONCILIACION_VALIDATION = "Se genero un error durante la validacion del id de ejecucion del proceso de conciliacion";
 
 	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la validacion del
+	 * id de la conciliación
+	 */
+	public static final String ERROR_WHILE_IDENTIFICADOR_CONCILIACION_VALIDATION = "Se genero un error durante la validacion del id de la conciliacion";
+
+
+	/**
 	 * Mensaje que es mostrado cuando se genera un error durante la consulta de la
 	 * ejecución del proceso de conciliación
 	 */
@@ -575,6 +582,12 @@ public final class ConciliacionConstants {
 	public final static List<Long> CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION = asList(
 			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA,
 			SUBESTATUS_CONCILIACION_CONCILIACION_ERROR);
+	public final static List<Long> CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_EC = asList(
+			SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA,
+			SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_ERROR);
+	public final static List<Long> CON_SUB_ESTATUS_CONCILIACION_SIN_ESTADO_CUENTA = asList(
+			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA,
+			SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA);
 
 	/**
 	 * Mensaje generico inicial para mostrar excepciones en log

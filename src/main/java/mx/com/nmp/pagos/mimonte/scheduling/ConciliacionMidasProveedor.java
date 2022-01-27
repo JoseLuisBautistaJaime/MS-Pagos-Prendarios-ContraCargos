@@ -5,17 +5,16 @@
 package mx.com.nmp.pagos.mimonte.scheduling;
 
 import com.ibm.icu.util.Calendar;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.ConciliacionBuilder;
+import mx.com.nmp.pagos.mimonte.conector.GestionConciliacionBroker;
+import mx.com.nmp.pagos.mimonte.conector.MergeConciliacionBroker;
 import mx.com.nmp.pagos.mimonte.conector.MovimientosNocturnosBroker;
 import mx.com.nmp.pagos.mimonte.conector.MovimientosProveedorBroker;
 import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.constans.MailServiceConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAdjuntoDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
-import mx.com.nmp.pagos.mimonte.controllers.conciliacion.ConciliacionController;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
@@ -27,47 +26,58 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.CalendarioEjecucionProcesoService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionConciliacionService;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.Trigger;
-import org.springframework.scheduling.TriggerContext;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
-import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
-import mx.com.nmp.pagos.mimonte.util.Response;
 
 
 /**
- * @name ConciliacionMidasProveedorScheduler
- * @description Componente para la calendarización de la ejecución automática del proceso de conciliación Etapa 1 (Carga de Movs. MIDAS / Proveedor).
+ * Nombre: ConciliacionMidasProveedor Descripcion: Clase que proporciona los métodos para
+ * consultar y cargar los movimientos nocturnos de MIDAS y los movimientos del proveedor.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
- * @creationDate 21/12/2021 10:48 hrs.
+ * @creationDate 21/01/2022 15:18 hrs.
  * @version 0.1
  */
+@Component
+public class ConciliacionMidasProveedor{
 
-@Configuration
-@EnableScheduling
-public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer {
-
+	/**
+	 * Conector encargado de conciliar los movimientos nocturnos de MIDAS.
+	 */
 	@Inject
 	private MovimientosNocturnosBroker movimientosNocturnosBrokerBus;
 
+	/**
+	 * Conector encargado de crear el proceso de conciliación.
+	 */
+	@Inject
+	private GestionConciliacionBroker gestionConciliacionBroker;
+
+
+	/**
+	 * Conector encargado de conciliar los movimientos del proveedor.
+	 */
 	@Inject
 	private MovimientosProveedorBroker movimientosProveedorBrokerBus;
 
-    @Inject
-    private ConciliacionController conciliacionController;
+	/**
+	 * Conector encargado de conciliar los movimientos cargados.
+	 */
+	@Inject
+	private MergeConciliacionBroker mergeConciliacionBroker;
+
+	/**
+	 * Los métodos comunes en la ejecución del proceso de conciliación
+	 */
+	@Autowired
+	private ConciliacionCommon conciliacionCommon;
 
 
 	/**
@@ -83,18 +93,14 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 	private ApplicationProperties applicationProperties;
 
 	/**
-	 * Clase de constantes que mapean propiedades relacionadas con el envio de
-	 * e-mail por medio del servicio expuesto por BUS
+	 * Servicios para gestionar la información del proceso de conciliación
 	 */
-	@Autowired
-	private MailServiceConstants mc;
-
-	@Autowired
-	private CalendarioEjecucionProcesoService calendarioEjecucionProcesoService;
-
 	@Autowired
 	private ConciliacionService conciliacionService;
 
+	/**
+	 * Servicios para gestionar la información de la ejecución del proceso de conciliación
+	 */
 	@Autowired
 	private EjecucionConciliacionService ejecucionConciliacionService;
 
@@ -113,65 +119,22 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 
 
 	/**
-	 Ejecuta tareas de programadas.
+	 * Método que ejecuta el proceso de conciliación etapa 1 - carga de movimientos nocturnos de MIDAS / carga de movimientos del proveedor.
+	 * @param ejecucionConciliacion
+	 *
 	 */
-	@Override
-	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-
-		Runnable runnableTask = () ->  lanzarConciliacionEtapa1();
-
-		Trigger trigger = new Trigger() {
-			@Override
-			public Date nextExecutionTime(TriggerContext triggerContext) {
-				String cronExpressions = obtenerCalendarizacionConciliacionEtapa1().getConfiguracionAutomatizacion();
-				if (StringUtils.isEmpty(cronExpressions)) {
-					return null;
-				}
-				CronTrigger crontrigger = new CronTrigger(cronExpressions);
-				return crontrigger.nextExecutionTime(triggerContext);
-			}
-		};
-
-		taskRegistrar.addTriggerTask(runnableTask , trigger);
-
-	}
-
-	public void lanzarConciliacionEtapa1() {
-        CalendarioEjecucionProcesoDTO calendarizacion = this.obtenerCalendarizacionConciliacionEtapa1();
-        EjecucionConciliacion ejecucionConciliacion  = this.crearEjecucionConciliacion(calendarizacion);
-        if(this.validarDuplicidadEjecucion(ejecucionConciliacion)) {
-			ejecucionConciliacion.setConciliacion(this.crearConciliacion(ejecucionConciliacion));
-			if(this.validarDuplicidadProceso(ejecucionConciliacion)) {
-				this.ejecutarProcesoConciliacionE1(ejecucionConciliacion);
-			}
-		}
-
-	}
-
-	public Conciliacion crearConciliacion(EjecucionConciliacion ejecucionConciliacion) {
-		String idEntidad = applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getCorresponsal().getEntidad();
-		String idCuenta = applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getCorresponsal().getCuenta();
-		Conciliacion conciliacion = new Conciliacion();
-		conciliacion.setCreatedDate(ejecucionConciliacion.getFechaEjecucion());
-		conciliacion.setEntidad(new Entidad(null != idEntidad ? Long.valueOf(idEntidad) : 0));
-		conciliacion.setCuenta(new Cuenta(null != idCuenta ? Long.valueOf(idCuenta) : 0));
-		conciliacion.setProveedor(ejecucionConciliacion.getProveedor());
-		return conciliacion;
-	}
-
 	public void ejecutarProcesoConciliacionE1( EjecucionConciliacion ejecucionConciliacion){
 		String descripcionEstatusFase="";
 		Date inicioFase = new Date();
 		Date finFase = null;
-		ConciliacionDTO conciliacionDTO = null;
+		Conciliacion conciliacionCreada = null;
 		Boolean flgEjecucionCorrecta = true;
 
 		try {
 			inicioFase= new Date();
-			ConciliacionResponseSaveDTO conciliacionResponseSaveDTO = ConciliacionBuilder.buildConciliacionResponseSaveDTOFromConciliacionRequestDTO( new ConciliacionRequestDTO( ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getCuenta().getId(), ejecucionConciliacion.getProveedor().getNombre().getNombre()), ejecucionConciliacion.getFechaEjecucion(), null, "Sistema");
-			conciliacionDTO = conciliacionService.saveConciliacion(conciliacionResponseSaveDTO, "Sistema");
+			GestionConciliacionResponseDTO response = gestionConciliacionBroker.crearConciliacion(ejecucionConciliacion.getConciliacion().getCuenta().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
+			conciliacionCreada = this.conciliacionService.getById(Long.valueOf(response.getFolio()));
 			finFase = new Date();
-			ejecucionConciliacion.getConciliacion().setId(conciliacionDTO.getFolio());
 			descripcionEstatusFase = "Cociliacón creada";
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -180,14 +143,15 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 			flgEjecucionCorrecta = false;
 		}
 
-		ejecucionConciliacion= ejecucionConciliacionService.save(ejecucionConciliacion, "Sistema");
-		this.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
+		ejecucionConciliacion.setConciliacion(conciliacionCreada);
+		ejecucionConciliacion= ejecucionConciliacionService.save(ejecucionConciliacion, "sistema");
+		conciliacionCommon.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
 
-		if(flgEjecucionCorrecta  && conciliacionDTO != null){
+		if(flgEjecucionCorrecta  && conciliacionCreada != null){
 
 			try {
 				inicioFase= new Date();
-				MovimientosNocturnosResponseDTO response = movimientosNocturnosBrokerBus.cargarMovimientosNocturnos(conciliacionDTO.getFolio(),ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(),conciliacionDTO.getIdCorresponsal().getNombre(), conciliacionDTO.getSubEstatus().getId() );
+				MovimientosNocturnosResponseDTO response = movimientosNocturnosBrokerBus.cargarMovimientosNocturnos(conciliacionCreada.getId(),ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(),conciliacionCreada.getProveedor().getNombre().getNombre(), conciliacionCreada.getSubEstatus().getId() );
 				finFase = new Date();
 				flgEjecucionCorrecta = response.getCargaCorrecta();
 				descripcionEstatusFase = response.getMessage();
@@ -200,7 +164,7 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 
 			if(flgEjecucionCorrecta) {
 
-				Conciliacion resultadoEjecucion= this.escucharSubEstatusConciliacion(conciliacionDTO.getFolio(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PN);
+				Conciliacion resultadoEjecucion= conciliacionCommon.escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PN);
 
 				if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA){
 					flgEjecucionCorrecta= true;
@@ -213,12 +177,12 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 			}
 
 			ejecucionConciliacion.setEstatus(new EstatusEjecucionConciliacion(EstatusEjecucionConciliacionEnum.CARGA_MOVIMIENTOS_MIDAS.getIdEstadoEjecucion(), EstatusEjecucionConciliacionEnum.CARGA_MOVIMIENTOS_MIDAS.getEstadoEjecucion()));
-			this.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
+			conciliacionCommon.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
 
 			if(flgEjecucionCorrecta){
 
 				try {
-					Conciliacion conciliacionActual = this.conciliacionService.getById(conciliacionDTO.getFolio());
+					Conciliacion conciliacionActual = this.conciliacionService.getById(conciliacionCreada.getId());
 					inicioFase= new Date();
 					MovimientosProveedorResponseDTO response = movimientosProveedorBrokerBus.cargarMovimientosProveedor(conciliacionActual.getFolio(),ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(),conciliacionActual.getProveedor().getNombre().getNombre(), conciliacionActual.getSubEstatus().getId(), "Bancomer" );
 					finFase = new Date();
@@ -233,7 +197,7 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 
 				if(flgEjecucionCorrecta) {
 
-					Conciliacion resultadoEjecucion= this.escucharSubEstatusConciliacion(conciliacionDTO.getFolio(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT);
+					Conciliacion resultadoEjecucion= conciliacionCommon.escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT);
 
 					if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA){
 						flgEjecucionCorrecta= true;
@@ -246,16 +210,16 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 				}
 
 				ejecucionConciliacion.setEstatus(new EstatusEjecucionConciliacion(EstatusEjecucionConciliacionEnum.CARGA_MOVIMIENTOS_PROVEEDOR.getIdEstadoEjecucion(), EstatusEjecucionConciliacionEnum.CARGA_MOVIMIENTOS_PROVEEDOR.getEstadoEjecucion()));
-				this.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
+				conciliacionCommon.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
 
 				if(flgEjecucionCorrecta){
 
                     try {
-                        inicioFase= new Date();
-                        Response response = conciliacionController.consultaGenerarFolio(conciliacionDTO.getFolio(),"Sistema");
+						inicioFase= new Date();
+						MergeConciliacionResponseDTO response = mergeConciliacionBroker.generarMergeConciliacion(conciliacionCreada.getId());
 						finFase = new Date();
-                        flgEjecucionCorrecta = HttpStatus.OK.toString().equals(response.getCode());
-                        descripcionEstatusFase = response.getMessage();
+						flgEjecucionCorrecta = response.getCargaCorrecta();
+						descripcionEstatusFase = response.getMessage();
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         finFase = new Date();
@@ -265,7 +229,7 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 
 					if(flgEjecucionCorrecta) {
 
-						Conciliacion resultadoEjecucion= this.escucharSubEstatusConciliacion(conciliacionDTO.getFolio(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION);
+						Conciliacion resultadoEjecucion= conciliacionCommon.escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION);
 
 						if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA){
 							flgEjecucionCorrecta= true;
@@ -278,7 +242,7 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 					}
 
 					ejecucionConciliacion.setEstatus(new EstatusEjecucionConciliacion(EstatusEjecucionConciliacionEnum.CONCILIACION_MIDAS_PROVEEDOR.getIdEstadoEjecucion(), EstatusEjecucionConciliacionEnum.CONCILIACION_MIDAS_PROVEEDOR.getEstadoEjecucion()));
-					this.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
+					conciliacionCommon.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
 
 				}
             }
@@ -290,41 +254,11 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 
 	}
 
-	private Conciliacion escucharSubEstatusConciliacion(Long idConciliacion, List<Long> listaEstados) {
-		Conciliacion resultado = null;
-		for (int i = 0; i <= 10; i++) {
-			try {
-				Thread.sleep(20000);
-			} catch (InterruptedException e) {
-				continue;
-			}
-			try {
-				resultado =this.conciliacionService.getById(idConciliacion);
-			} catch (Exception ex) {
-				continue;
-			}
-
-			if(resultado != null && listaEstados.contains(resultado.getSubEstatus().getId())){
-				return resultado;
-			} else{
-				resultado = null;
-			}
-		}
-
-		return resultado;
-	}
-
-	public void generarTrazadoEjecucionFase(EjecucionConciliacion ejecucionConciliacion, Date inicioFase, Date finFase, String descripcionEstatusFase) {
-		TrazadoEjecucionConciliacion trazadoEjecucion = new TrazadoEjecucionConciliacion();
-		trazadoEjecucion.setEjecucionConciliacion(ejecucionConciliacion);
-		trazadoEjecucion.setFechaInicio(inicioFase);
-		trazadoEjecucion.setFechaFin(finFase);
-		trazadoEjecucion.setEstatus(ejecucionConciliacion.getEstatus());
-		trazadoEjecucion.setEstatusDescripcion(descripcionEstatusFase);
-		ejecucionConciliacionService.guardarEjecucionConciliacion(trazadoEjecucion,"Sistema");
-
-	}
-
+	/**
+	 * Método que envia las notificación vía correo electrónico  cuando el proceso automatizado falla u obtiene un resultado erroneo.
+	 * @param ejecucionConciliacion
+	 *
+	 */
 	public  void enviarNotificacionEjecucionErronea(EjecucionConciliacion ejecucionConciliacion) {
 		BusRestMailDTO generalBusMailDTO = null;
 
@@ -351,14 +285,21 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 
 	}
 
+	/**
+	 * Método que construye el cuerpo del correo electrónico con el que se notificara cuando el proceso automatizado falla u obtiene un resultado erróneo.
+	 * @param contactos
+	 * @param ejecucionConciliacion
+	 * @return
+	 *
+	 */
 	public BusRestMailDTO construyeEMailProcesoConciliacion(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
-		String titulo = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacion().getTitle();
+		String titulo = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa1().getTitle();
 		String remitente = applicationProperties.getMimonte().getVariables().getMail().getFrom();
 		String destinatarios = contactos.stream().map(Contactos::getEmail).collect(Collectors.joining(","));
-		String template = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacion().getVelocityTemplate();
+		String template = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa1().getVelocityTemplate();
 
 		// Se constrye el cuerpo de correo HTML
 		Map<String, Object> model = new HashMap<>();
@@ -376,17 +317,28 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 		return mailDTO;
 	}
 
-	private EjecucionConciliacion crearEjecucionConciliacion(CalendarioEjecucionProcesoDTO calendarizacion) {
+	/**
+	 * Método encargado de construir la ejecución del proceso de conciliación.
+	 * @param calendarizacion
+	 * @return
+	 *
+	 */
+	public EjecucionConciliacion crearEjecucionConciliacion(CalendarioEjecucionProcesoDTO calendarizacion) {
 
 		Date fechaActual = new Date();
-		Calendar calendarEjecucion = Calendar.getInstance();
-		calendarEjecucion.setTime(fechaActual);
-		calendarEjecucion.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCobertura());
+		Calendar calendarEjecucionInicial = Calendar.getInstance();
+		Calendar calendarEjecucionFin = Calendar.getInstance();
 		Calendar ini = Calendar.getInstance();
 		Calendar fin = Calendar.getInstance();
 
-		ini.setTime( calendarEjecucion.getTime());
-		fin.setTime( calendarEjecucion.getTime());
+		calendarEjecucionInicial.setTime(fechaActual);
+		calendarEjecucionFin.setTime(fechaActual);
+
+		calendarEjecucionInicial.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMin());
+		calendarEjecucionInicial.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMax());
+
+		ini.setTime( calendarEjecucionInicial.getTime());
+		fin.setTime( calendarEjecucionFin.getTime());
 		ini.set(Calendar.HOUR_OF_DAY, 0);
 		ini.set(Calendar.MINUTE, 0);
 		ini.set(Calendar.SECOND, 0);
@@ -407,6 +359,29 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 
 	}
 
+	/**
+	 * Método encargado de construir el proceso de conciliación.
+	 * @param ejecucionConciliacion
+	 * @return
+	 *
+	 */
+	public Conciliacion crearConciliacion(EjecucionConciliacion ejecucionConciliacion) {
+		String idEntidad = applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getCorresponsal().getEntidad();
+		String idCuenta = applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getCorresponsal().getCuenta();
+		Conciliacion conciliacion = new Conciliacion();
+		conciliacion.setCreatedDate(ejecucionConciliacion.getFechaEjecucion());
+		conciliacion.setEntidad(new Entidad(null != idEntidad ? Long.valueOf(idEntidad) : 0));
+		conciliacion.setCuenta(new Cuenta(null != idCuenta ? Long.valueOf(idCuenta) : 0));
+		conciliacion.setProveedor(ejecucionConciliacion.getProveedor());
+		return conciliacion;
+	}
+
+	/**
+	 * Método que valida que la ejecución del proceso de conciliación no se duplique.
+	 * @param ejecucionConciliacion
+	 * @return
+	 *
+	 */
 	public boolean validarDuplicidadEjecucion(EjecucionConciliacion ejecucionConciliacion) {
 		FiltroEjecucionConciliacionDTO filtro = new FiltroEjecucionConciliacionDTO();
 		filtro.setFechaPeriodoInicio(ejecucionConciliacion.getFechaPeriodoInicio());
@@ -419,6 +394,12 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 		return true;
 	}
 
+	/**
+	 * Método que valida que el proceso de conciliación no se duplique.
+	 * @param ejecucionConciliacion
+	 * @return
+	 *
+	 */
 	public boolean validarDuplicidadProceso(EjecucionConciliacion ejecucionConciliacion) {
 		ConsultaConciliacionRequestDTO filtro = new ConsultaConciliacionRequestDTO();
 		filtro.setFechaDesde(ejecucionConciliacion.getConciliacion().getCreatedDate());
@@ -430,20 +411,6 @@ public class ConciliacionMidasProveedorScheduler implements SchedulingConfigurer
 			return false;
 		}
 		return true;
-	}
-
-
-	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa1() {
-		CalendarioEjecucionProcesoDTO calendarioEjecucionProceso = new CalendarioEjecucionProcesoDTO();
-		FiltroCalendarioEjecucionProcesoDTO filtro = new FiltroCalendarioEjecucionProcesoDTO();
-		filtro.setActivo(true);
-		filtro.setIdProceso(ProcesoEnum.CONCILIACION_ETAPA_1.getIdProceso());
-		filtro.setCorresponsal(CorresponsalEnum.OPENPAY.getNombre());
-		List<CalendarioEjecucionProcesoDTO> listaResultados = calendarioEjecucionProcesoService.consultarByPropiedades(filtro);
-		if(null != listaResultados && !listaResultados.isEmpty()){
-			calendarioEjecucionProceso =  listaResultados.get(0);
-		}
-		return calendarioEjecucionProceso;
 	}
 
 }

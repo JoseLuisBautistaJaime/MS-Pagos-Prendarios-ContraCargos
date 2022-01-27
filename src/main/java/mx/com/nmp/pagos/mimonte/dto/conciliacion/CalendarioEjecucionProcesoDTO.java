@@ -20,7 +20,8 @@ public class CalendarioEjecucionProcesoDTO implements Comparable<CalendarioEjecu
 	private String configuracionAutomatizacion;
 	private Boolean activo;
 	private Integer reintentos;
-	private Integer rangoDiasCobertura;
+	private Integer rangoDiasCoberturaMin;
+	private Integer rangoDiasCoberturaMax;
 	private String createdBy;
 	private Date createdDate;
 	private Date lastModifiedDate;
@@ -31,13 +32,14 @@ public class CalendarioEjecucionProcesoDTO implements Comparable<CalendarioEjecu
 		super();
 	}
 
-	public CalendarioEjecucionProcesoDTO(Long id, ProcesoDTO proceso, String configuracionAutomatizacion, Integer reintentos, Integer rangoDiasCobertura, Boolean activo, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
+	public CalendarioEjecucionProcesoDTO(Long id, ProcesoDTO proceso, String configuracionAutomatizacion, Integer reintentos, Integer rangoDiasCoberturaMin, Integer rangoDiasCoberturaMax, Boolean activo, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
 		this.id = id;
 		this.proceso = proceso;
 		this.configuracionAutomatizacion = configuracionAutomatizacion;
 		this.activo = activo;
 		this.reintentos = reintentos;
-		this.rangoDiasCobertura = rangoDiasCobertura;
+		this.rangoDiasCoberturaMin = rangoDiasCoberturaMin;
+		this.rangoDiasCoberturaMax = rangoDiasCoberturaMax;
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
 		this.lastModifiedDate = lastModifiedDate;
@@ -46,13 +48,14 @@ public class CalendarioEjecucionProcesoDTO implements Comparable<CalendarioEjecu
 	}
 
 	public CalendarioEjecucionProcesoDTO(Long id, Integer idProceso, String descripcionCortaProceso, String descripcionProceso, String configuracionAutomatizacion,
-										 Integer reintentos, Integer rangoDiasCobertura, Boolean activo, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
+										 Integer reintentos, Integer rangoDiasCoberturaMin, Integer rangoDiasCoberturaMax, Boolean activo, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
 		super();
 		this.id = id;
 		this.proceso = new ProcesoDTO(idProceso, descripcionCortaProceso, descripcionProceso);
 		this.configuracionAutomatizacion = configuracionAutomatizacion;
 		this.reintentos = reintentos;
-		this.rangoDiasCobertura = rangoDiasCobertura;
+		this.rangoDiasCoberturaMin = rangoDiasCoberturaMin;
+		this.rangoDiasCoberturaMax = rangoDiasCoberturaMax;
 		this.activo = activo;
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
@@ -93,12 +96,20 @@ public class CalendarioEjecucionProcesoDTO implements Comparable<CalendarioEjecu
 		this.activo = activo;
 	}
 
-	public Integer getRangoDiasCobertura() {
-		return rangoDiasCobertura;
+	public Integer getRangoDiasCoberturaMin() {
+		return rangoDiasCoberturaMin;
 	}
 
-	public void setRangoDiasCobertura(Integer rangoDiasCobertura) {
-		this.rangoDiasCobertura = rangoDiasCobertura;
+	public void setRangoDiasCoberturaMin(Integer rangoDiasCoberturaMin) {
+		this.rangoDiasCoberturaMin = rangoDiasCoberturaMin;
+	}
+
+	public Integer getRangoDiasCoberturaMax() {
+		return rangoDiasCoberturaMax;
+	}
+
+	public void setRangoDiasCoberturaMax(Integer rangoDiasCoberturaMax) {
+		this.rangoDiasCoberturaMax = rangoDiasCoberturaMax;
 	}
 
 	public Integer getReintentos() {
@@ -151,7 +162,7 @@ public class CalendarioEjecucionProcesoDTO implements Comparable<CalendarioEjecu
 
 	@Override
 	public String toString() {
-		return "CalendarioEjecucionProcesoDTO [id=" + id + ", proceso=" + proceso +", configuracionAutomatizacion=" + configuracionAutomatizacion + ", reintentos=" + reintentos + ", rangoDiasCobertura=" + rangoDiasCobertura
+		return "CalendarioEjecucionProcesoDTO [id=" + id + ", proceso=" + proceso +", configuracionAutomatizacion=" + configuracionAutomatizacion + ", reintentos=" + reintentos + ", rangoDiasCoberturaMin=" + rangoDiasCoberturaMin + ", rangoDiasCoberturaMax=" + rangoDiasCoberturaMax
 				+ ", activo=" + activo + ", createdDate=" + createdDate + ", createdBy=" + createdBy
 				+ ", lastModifiedDate=" + lastModifiedDate + ", lastModifiedBy=" + lastModifiedBy + ", corresponsal=" + corresponsal + "]";
 	}

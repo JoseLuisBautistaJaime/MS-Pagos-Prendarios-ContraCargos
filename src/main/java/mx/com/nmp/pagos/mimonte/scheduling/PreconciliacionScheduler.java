@@ -52,6 +52,9 @@ import java.util.stream.Collectors;
 @EnableScheduling
 public class PreconciliacionScheduler implements SchedulingConfigurer {
 
+	/**
+	 * Conector encargado de ejecutar el proceso de pre-conciliación.
+	 */
 	@Inject
 	private PreconciliacionBroker preconciliacionBrokerBus;
 
@@ -68,18 +71,20 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 	private ApplicationProperties applicationProperties;
 
 	/**
-	 * Clase de constantes que mapean propiedades relacionadas con el envio de
-	 * e-mail por medio del servicio expuesto por BUS
+	 * Servicios para gestionar la  calendarización de los procesos automatizados
 	 */
-	@Autowired
-	private MailServiceConstants mc;
-
 	@Autowired
 	private CalendarioEjecucionProcesoService calendarioEjecucionProcesoService;
 
+	/**
+	 * Servicios para gestionar el catalogo de días inhábiles.
+	 */
 	@Autowired
 	private DiaInhabilService diaInhabilService;
 
+	/**
+	 * Servicios para gestionar la información de la ejecución del proceso de pre-conciliación
+	 */
 	@Autowired
 	private EjecucionPreconciliacionService ejecucionPreconciliacionService;
 
@@ -121,6 +126,10 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 
 	}
 
+	/**
+	 * Método encargado de lanzar la ejecución del proceso de pre-conciliación.
+	 *
+	 */
 	public void lanzarPreconciliacionAutomatizada() {
 
         CalendarioEjecucionProcesoDTO calendarizacion = this.obtenerCalendarizacionPreconciliacion();
@@ -133,10 +142,15 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 
 	}
 
+	/**
+	 * Método que ejecuta el proceso de pre-conciliación.
+	 * @param calendarizacion
+	 * @param ejecucionPreconciliacion
+	 *
+	 */
 	public void ejecutarProcesoPreconciliacion(CalendarioEjecucionProcesoDTO calendarizacion, EjecucionPreconciliacion ejecucionPreconciliacion) {
 		for (int i = 0; i <= calendarizacion.getReintentos(); i++) {
 			ProcesoPreconciliacionResponseDTO response = preconciliacionBrokerBus.ejecutarPreconciliacion(ejecucionPreconciliacion.getFechaPeriodoInicio(), ejecucionPreconciliacion.getFechaPeriodoFin(), ejecucionPreconciliacion.getProveedor().getNombre().getNombre());
-            //ProcesoPreconciliacionResponseDTO response = new ProcesoPreconciliacionResponseDTO("Test", "Test", false);
 
 			if (response.getEjecucionCorrecta()) {
 				ejecucionPreconciliacion.getEstatus().setId(EstatusEjecucionPreconciliacionEnum.DESCARGACORRECTA.getIdEstadoEjecucion());
@@ -155,10 +169,15 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 			this.enviarNotificacionEjecucionErronea(ejecucionPreconciliacion);
 		}
 
-		EjecucionPreconciliacion ejecucionPreconciliacionSave= ejecucionPreconciliacionService.save(ejecucionPreconciliacion, "Sistema");
+		EjecucionPreconciliacion ejecucionPreconciliacionSave= ejecucionPreconciliacionService.save(ejecucionPreconciliacion, "sistema");
 
 	}
 
+	/**
+	 * Método que envia las notificación vía correo electrónico  cuando el proceso automatizado falla u obtiene un resultado erróneo.
+	 * @param ejecucionPreconciliacion
+	 *
+	 */
 	public  void enviarNotificacionEjecucionErronea(EjecucionPreconciliacion ejecucionPreconciliacion) {
 		BusRestMailDTO generalBusMailDTO = null;
 
@@ -185,6 +204,12 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 
 	}
 
+	/**
+	 * Método que construye el cuerpo del correo electrónico con el que se notificara cuando el proceso automatizado falla u obtiene un resultado erróneo.
+	 * @param contactos
+	 * @param ejecucionPreconciliacion
+	 *
+	 */
 	public BusRestMailDTO construyeEMailProcesoPreconciliacion(List<Contactos> contactos, EjecucionPreconciliacion ejecucionPreconciliacion) {
 
 		BusRestPreconciliacionDTO request = new BusRestPreconciliacionDTO(new BusRestRangoFechasDTO(ejecucionPreconciliacion.getFechaPeriodoInicio(), ejecucionPreconciliacion.getFechaPeriodoFin()), new BusRestCorresponsalDTO(ejecucionPreconciliacion.getProveedor().getNombre().getNombre()));
@@ -212,17 +237,28 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 		return mailDTO;
 	}
 
+	/**
+	 * Método encargado de construir la ejecución del proceso de pre-conciliación.
+	 * @param calendarizacion
+	 * @return
+	 *
+	 */
 	private EjecucionPreconciliacion crearEjecucionPreconciliacion(CalendarioEjecucionProcesoDTO calendarizacion) {
 
 		Date fechaActual = new Date();
-		Calendar calendarEjecucion = Calendar.getInstance();
-		calendarEjecucion.setTime(fechaActual);
-		calendarEjecucion.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCobertura());
+		Calendar calendarEjecucionInicial = Calendar.getInstance();
+		Calendar calendarEjecucionFin = Calendar.getInstance();
 		Calendar ini = Calendar.getInstance();
 		Calendar fin = Calendar.getInstance();
 
-		ini.setTime( calendarEjecucion.getTime());
-		fin.setTime( calendarEjecucion.getTime());
+		calendarEjecucionInicial.setTime(fechaActual);
+		calendarEjecucionFin.setTime(fechaActual);
+
+		calendarEjecucionInicial.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMin());
+		calendarEjecucionInicial.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMax());
+
+		ini.setTime( calendarEjecucionInicial.getTime());
+		fin.setTime( calendarEjecucionFin.getTime());
 		ini.set(Calendar.HOUR_OF_DAY, 0);
 		ini.set(Calendar.MINUTE, 0);
 		ini.set(Calendar.SECOND, 0);
@@ -244,6 +280,12 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 
 	}
 
+	/**
+	 * Método que valida que la ejecución del proceso de pre-conciliación no se duplique.
+	 * @param ejecucionPreconciliacion
+	 * @return
+	 *
+	 */
 	public boolean validarDuplicidadProceso(EjecucionPreconciliacion ejecucionPreconciliacion) {
 		FiltroEjecucionPreconciliacionDTO filtro = new FiltroEjecucionPreconciliacionDTO();
 		filtro.setFechaPeriodoInicio(ejecucionPreconciliacion.getFechaPeriodoInicio());
@@ -257,12 +299,23 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 		return true;
 	}
 
+	/**
+	 * Método que valida que la fecha de ejecución no corresponda a un día inhábil.
+	 * @param fecha
+	 * @return
+	 *
+	 */
 	public boolean validarFechaInhabil(Date fecha ) {
 		CatalogoDiaInhabil diaInhabil = diaInhabilService.buscarByFecha(fecha);
 		boolean validacion = (diaInhabil != null);
 		return !validacion;
 	}
 
+	/**
+	 * Método encargado de consultar la configuracion de la calendarizacion del proceso de pre-conciliación.
+	 * @return
+	 *
+	 */
 	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionPreconciliacion() {
 		CalendarioEjecucionProcesoDTO calendarioEjecucionProceso = new CalendarioEjecucionProcesoDTO();
 		FiltroCalendarioEjecucionProcesoDTO filtro = new FiltroCalendarioEjecucionProcesoDTO();

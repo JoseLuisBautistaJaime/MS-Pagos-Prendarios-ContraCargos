@@ -46,7 +46,7 @@ public class BusMailRestService extends AbstractOAuth2RestService {
 	 * ser enviados nulos o con con valores por deault el unico que debe ir completo
 	 * (o al menos con la informacion real) es el objeto generalBusMailDTO
 	 * 
-	 * @param generalBusMailDTO
+	 * @param body
 	 */
 	@SuppressWarnings("unchecked")
 	public void enviaEmail(BusRestMailDTO body) {

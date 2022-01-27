@@ -5,15 +5,15 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 /**
- * @name MovimientosNocturnosResponseDTO
+ * @name MovimientosEstadoCuentaResponseDTO
  * @description Clase de tipo DTO que mapea el response del servicio para la
- *             carga de los movimientos nocturnos de MIDAS
+ *             carga de los movimientos del estado de cuenta
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
  * @version 1.0
- * @createdDate 07/01/2022 13:46 hrs.
+ * @createdDate 20/01/2022 09:46 hrs.
  */
-public class MovimientosNocturnosResponseDTO {
+public class MovimientosEstadoCuentaResponseDTO {
 
 
 	private String codigo;
@@ -21,14 +21,14 @@ public class MovimientosNocturnosResponseDTO {
 	private String message;
 	private Boolean cargaCorrecta;
 
-	public MovimientosNocturnosResponseDTO(String codigo, String descripcion, String message, Boolean cargaCorrecta) {
+	public MovimientosEstadoCuentaResponseDTO(String codigo, String descripcion, String message, Boolean cargaCorrecta) {
 		this.codigo = codigo;
 		this.descripcion = descripcion;
 		this.message = message;
 		this.cargaCorrecta = cargaCorrecta;
 	}
 
-	public MovimientosNocturnosResponseDTO() {
+	public MovimientosEstadoCuentaResponseDTO() {
 	}
 
 	public String getCodigo() {
@@ -65,7 +65,7 @@ public class MovimientosNocturnosResponseDTO {
 
 	@Override
 	public String toString() {
-		return "MovimientosNocturnosResponseDTO [codigo=" + codigo + ", descripcion=" + descripcion + ", message=" + message + ", cargaCorrecta=" + cargaCorrecta + "]";
+		return "MovimientosEstadoCuentaResponseDTO [codigo=" + codigo + ", descripcion=" + descripcion + ", message=" + message + ", cargaCorrecta=" + cargaCorrecta + "]";
 	}
 
 }

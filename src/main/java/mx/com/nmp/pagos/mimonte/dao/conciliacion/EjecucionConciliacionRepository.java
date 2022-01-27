@@ -106,4 +106,14 @@ public interface EjecucionConciliacionRepository extends PagingAndSortingReposit
 			"WHERE   ec.id = :idEjecucionConciliacion")
 	public EjecucionConciliacionDTO findByIdEjecucion(Long idEjecucionConciliacion);
 
+
+	/**
+	 * Busqueda de la ejecución del proceso de conciliación a partir del identificador de la conciliación.
+	 *
+	 * @param idConciliacion
+	 * @return
+	 */
+	@Query("SELECT ec FROM EjecucionConciliacion ec WHERE   ec.conciliacion.id = :idConciliacion")
+	public EjecucionConciliacion findByIdConciliacion (Long idConciliacion);
+
 }

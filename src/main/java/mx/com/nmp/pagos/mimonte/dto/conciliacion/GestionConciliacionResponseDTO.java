@@ -5,30 +5,31 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 /**
- * @name MovimientosNocturnosResponseDTO
+ * @name MovimientosEstadoCuentaResponseDTO
  * @description Clase de tipo DTO que mapea el response del servicio para la
- *             carga de los movimientos nocturnos de MIDAS
+ *             creación del proceso de conciliación.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
  * @version 1.0
- * @createdDate 07/01/2022 13:46 hrs.
+ * @createdDate 24/01/2022 09:46 hrs.
  */
-public class MovimientosNocturnosResponseDTO {
+public class GestionConciliacionResponseDTO {
 
 
 	private String codigo;
-	private String descripcion;
-	private String message;
+	private String mensaje;
+	private String folio;
 	private Boolean cargaCorrecta;
 
-	public MovimientosNocturnosResponseDTO(String codigo, String descripcion, String message, Boolean cargaCorrecta) {
+
+	public GestionConciliacionResponseDTO(String codigo, String mensaje, String folio, Boolean cargaCorrecta) {
 		this.codigo = codigo;
-		this.descripcion = descripcion;
-		this.message = message;
+		this.mensaje = mensaje;
+		this.folio = folio;
 		this.cargaCorrecta = cargaCorrecta;
 	}
 
-	public MovimientosNocturnosResponseDTO() {
+	public GestionConciliacionResponseDTO() {
 	}
 
 	public String getCodigo() {
@@ -39,20 +40,20 @@ public class MovimientosNocturnosResponseDTO {
 		this.codigo = codigo;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+	public String getMensaje() {
+		return mensaje;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getFolio() {
+		return folio;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setFolio(String folio) {
+		this.folio = folio;
 	}
 
 	public Boolean getCargaCorrecta() {
@@ -65,7 +66,7 @@ public class MovimientosNocturnosResponseDTO {
 
 	@Override
 	public String toString() {
-		return "MovimientosNocturnosResponseDTO [codigo=" + codigo + ", descripcion=" + descripcion + ", message=" + message + ", cargaCorrecta=" + cargaCorrecta + "]";
+		return "GestionConciliacionResponseDTO [codigo=" + codigo + ", mensaje=" + mensaje + ", folio=" + folio + ", cargaCorrecta=" + cargaCorrecta + "]";
 	}
 
 }

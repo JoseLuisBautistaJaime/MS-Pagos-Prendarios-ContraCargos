@@ -216,4 +216,30 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 		return resultado;
 	}
 
+
+	/**
+	 * Metodo que realiza una busqueda a partir del id de la conciliación a la que esta asociada la ejecución del proceso
+	 * devolviendo como resultado un objeto de tipo EjecucionConciliacion con el resultado de la busqueda.
+	 */
+	@Override
+	public EjecucionConciliacion consultarByIdConciliacion(Long idConciliacion) throws ConciliacionException {
+
+		// Declaracion de objetos necesarios
+		EjecucionConciliacion result = null;
+
+		if (idConciliacion == null) {
+			throw new ConciliacionException(ConciliacionConstants.ERROR_WHILE_IDENTIFICADOR_CONCILIACION_VALIDATION, CodigoError.NMP_PMIMONTE_BUSINESS_018);
+		}
+
+		try {
+			result = ejecucionConciliacionRepository.findByIdConciliacion(idConciliacion);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_GET_EJECUCION_CONCILIACION, CodigoError.NMP_PMIMONTE_BUSINESS_143);
+		}
+
+		return result;
+
+	}
+
 }

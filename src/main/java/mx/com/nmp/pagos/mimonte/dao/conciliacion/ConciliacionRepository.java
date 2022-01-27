@@ -515,4 +515,19 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			@Param("lastModifiedBy") String lastModifiedBy,
 			@Param("lastModifiedDate") Date lastModifiedDate);
 
+
+	/**
+	 * Búsqueda de la conciliacíon a partir de sus reportes asociados y su subestatus.
+	 * @param fechaDesde
+	 * @param fechaHasta
+	 * @param subEstatusList
+	 * @param corresponsal
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = "SELECT c.id FROM to_conciliacion c WHERE c.id_sub_estatus_conciliacion IN :subEstatusList AND c.proveedor = :corresponsal  " +
+			"AND (SELECT COUNT(r.id) FROM to_reporte r WHERE r.id_conciliacion = c.id AND r.tipo = 'MIDAS' AND r.fecha_desde = :fechaDesde AND r.fecha_hasta = :fechaHasta) = 1 " +
+			"AND (SELECT COUNT(r.id) FROM to_reporte r WHERE r.id_conciliacion = c.id AND r.tipo = 'PROVEEDOR' AND r.fecha_desde = :fechaDesde AND r.fecha_hasta = :fechaHasta) = 1 " +
+			"AND (SELECT COUNT(r.id) FROM to_reporte r WHERE r.id_conciliacion = c.id AND r.tipo = 'ESTADO_CUENTA' ) = 0" )
+	public List<Long>  findConciliacionSinEstadoCuenta(@Param("fechaDesde") Date fechaDesde, @Param("fechaHasta") Date fechaHasta,@Param("subEstatusList") final List<Long> subEstatusList, @Param("corresponsal") final String corresponsal);
+
 }

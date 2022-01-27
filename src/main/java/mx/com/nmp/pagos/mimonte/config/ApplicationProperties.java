@@ -212,7 +212,8 @@ public class ApplicationProperties {
 				private String from;
 				private SolicitudDevolucion solicitudDevolucion;
 				private SolicitudEjecucionPreconciliacion solicitudEjecucionPreconciliacion;
-				private SolicitudEjecucionConciliacion solicitudEjecucionConciliacion;
+				private SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa1;
+				private SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa2;
 
 				public String getFrom() {
 					return from;
@@ -238,12 +239,20 @@ public class ApplicationProperties {
 					this.solicitudEjecucionPreconciliacion = solicitudEjecucionPreconciliacion;
 				}
 
-				public SolicitudEjecucionConciliacion getSolicitudEjecucionConciliacion() {
-					return solicitudEjecucionConciliacion;
+				public SolicitudEjecucionConciliacion getSolicitudEjecucionConciliacionEtapa1() {
+					return solicitudEjecucionConciliacionEtapa1;
 				}
 
-				public void setSolicitudEjecucionConciliacion(SolicitudEjecucionConciliacion solicitudEjecucionConciliacion) {
-					this.solicitudEjecucionConciliacion = solicitudEjecucionConciliacion;
+				public void setSolicitudEjecucionConciliacionEtapa1(SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa1) {
+					this.solicitudEjecucionConciliacionEtapa1 = solicitudEjecucionConciliacionEtapa1;
+				}
+
+				public SolicitudEjecucionConciliacion getSolicitudEjecucionConciliacionEtapa2() {
+					return solicitudEjecucionConciliacionEtapa2;
+				}
+
+				public void setSolicitudEjecucionConciliacionEtapa2(SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa2) {
+					this.solicitudEjecucionConciliacionEtapa2 = solicitudEjecucionConciliacionEtapa2;
 				}
 
 				public static class SolicitudDevolucion {
@@ -529,8 +538,11 @@ public class ApplicationProperties {
 			}
 
 			public static class ProcesoConciliacion {
+				private String urlGestionConciliacion;
 				private String urlMovimientosNocturnos;
 				private String urlMovimientosProveedor;
+				private String urlMovimientosEstadoCuenta;
+				private String urlMergeConciliacion;
 				private ProcesoConciliacionAuth auth;
 				private ProcesoConciliacionHeader header;
 				private ProcesoConciliacionCorresponsal corresponsal;
@@ -549,6 +561,31 @@ public class ApplicationProperties {
 
 				public void setUrlMovimientosProveedor(String urlMovimientosProveedor) {
 					this.urlMovimientosProveedor = urlMovimientosProveedor;
+				}
+
+				public String getUrlMovimientosEstadoCuenta() {
+					return urlMovimientosEstadoCuenta;
+				}
+
+				public void setUrlMovimientosEstadoCuenta(String urlMovimientosEstadoCuenta) {
+					this.urlMovimientosEstadoCuenta = urlMovimientosEstadoCuenta;
+				}
+
+				public String getUrlMergeConciliacion() {
+					return urlMergeConciliacion;
+				}
+
+				public void setUrlMergeConciliacion(String urlMergeConciliacion) {
+					this.urlMergeConciliacion = urlMergeConciliacion;
+				}
+
+
+				public String getUrlGestionConciliacion() {
+					return urlGestionConciliacion;
+				}
+
+				public void setUrlGestionConciliacion(String urlGestionConciliacion) {
+					this.urlGestionConciliacion = urlGestionConciliacion;
 				}
 
 				public ProcesoConciliacionAuth getAuth() {
@@ -579,6 +616,7 @@ public class ApplicationProperties {
 					private String usuario;
 					private String idConsumidor;
 					private String idDestino;
+					private String requestUser;
 
 					public String getUsuario() {
 						return usuario;
@@ -602,6 +640,14 @@ public class ApplicationProperties {
 
 					public void setIdDestino(String idDestino) {
 						this.idDestino = idDestino;
+					}
+
+					public String getRequestUser() {
+						return requestUser;
+					}
+
+					public void setRequestUser(String requestUser) {
+						this.requestUser = requestUser;
 					}
 				}
 

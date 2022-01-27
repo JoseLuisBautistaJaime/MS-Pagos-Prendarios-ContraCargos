@@ -55,5 +55,13 @@ public interface EjecucionConciliacionService {
 	 */
 	public EjecucionConciliacion save(EjecucionConciliacion ejecucionConciliacion, String registerBy) throws ConciliacionException ;
 
+	/**
+	 *  Método que regresa un objeto de tipo EjecucionConciliacion con la
+	 *  información de la ejecución del proceso de conciliación a partir del id de la conciliacion.
+	 * @return
+	 * @throws ConciliacionException
+	 */
+	public EjecucionConciliacion consultarByIdConciliacion(Long idConciliacion) throws ConciliacionException;
+
 
 	}

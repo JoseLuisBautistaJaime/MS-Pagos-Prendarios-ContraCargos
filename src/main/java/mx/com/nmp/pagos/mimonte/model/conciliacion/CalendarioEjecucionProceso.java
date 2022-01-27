@@ -43,8 +43,11 @@ public class CalendarioEjecucionProceso extends Updatable implements Serializabl
 	@Column(name = "reintentos", nullable = false)
 	private Integer reintentos;
 
-	@Column(name = "rango_dias_cobertura", nullable = false)
-	private Integer rangoDiasCobertura;
+	@Column(name = "rango_dias_cobertura_min", nullable = false)
+	private Integer rangoDiasCoberturaMin;
+
+	@Column(name = "rango_dias_cobertura_max", nullable = false)
+	private Integer rangoDiasCoberturaMax;
 
 	@ManyToOne
 	@JoinColumn(name = "proveedor")
@@ -63,13 +66,14 @@ public class CalendarioEjecucionProceso extends Updatable implements Serializabl
 		this.id = id;
 	}
 
-	public CalendarioEjecucionProceso(Long id, CatalogoProceso proceso, String configuracion, Integer reintentos, Integer rangoDiasCobertura, Proveedor proveedor, @NotNull Boolean activo) {
+	public CalendarioEjecucionProceso(Long id, CatalogoProceso proceso, String configuracion, Integer reintentos, Integer rangoDiasCoberturaMin,Integer rangoDiasCoberturaMax, Proveedor proveedor, @NotNull Boolean activo) {
 		super();
 		this.id = id;
 		this.proceso = proceso;
 		this.configuracion = configuracion;
 		this.reintentos = reintentos;
-		this.rangoDiasCobertura=rangoDiasCobertura;
+		this.rangoDiasCoberturaMin=rangoDiasCoberturaMin;
+		this.rangoDiasCoberturaMax=rangoDiasCoberturaMax;
 		this.proveedor = proveedor;
 		this.activo = activo;
 	}
@@ -114,12 +118,20 @@ public class CalendarioEjecucionProceso extends Updatable implements Serializabl
 		this.proveedor = proveedor;
 	}
 
-	public Integer getRangoDiasCobertura() {
-		return rangoDiasCobertura;
+	public Integer getRangoDiasCoberturaMin() {
+		return rangoDiasCoberturaMin;
 	}
 
-	public void setRangoDiasCobertura(Integer rangoDiasCobertura) {
-		this.rangoDiasCobertura = rangoDiasCobertura;
+	public void setRangoDiasCoberturaMin(Integer rangoDiasCoberturaMin) {
+		this.rangoDiasCoberturaMin = rangoDiasCoberturaMin;
+	}
+
+	public Integer getRangoDiasCoberturaMax() {
+		return rangoDiasCoberturaMax;
+	}
+
+	public void setRangoDiasCoberturaMax(Integer rangoDiasCoberturaMax) {
+		this.rangoDiasCoberturaMax = rangoDiasCoberturaMax;
 	}
 
 	public Boolean getActivo() {
@@ -139,7 +151,8 @@ public class CalendarioEjecucionProceso extends Updatable implements Serializabl
 		result = prime * result + ((configuracion == null) ? 0 : configuracion.hashCode());
 		result = prime * result + ((proveedor == null) ? 0 : proveedor.hashCode());
 		result = prime * result + ((reintentos == null) ? 0 : reintentos.hashCode());
-		result = prime * result + ((rangoDiasCobertura == null) ? 0 : rangoDiasCobertura.hashCode());
+		result = prime * result + ((rangoDiasCoberturaMin == null) ? 0 : rangoDiasCoberturaMin.hashCode());
+		result = prime * result + ((rangoDiasCoberturaMax == null) ? 0 : rangoDiasCoberturaMax.hashCode());
 		result = prime * result + ((activo == null) ? 0 : activo.hashCode());
 		return result;
 	}
@@ -159,7 +172,7 @@ public class CalendarioEjecucionProceso extends Updatable implements Serializabl
 	@Override
 	public String toString() {
 		return "CalendarioEjecucionProceso [id=" + id + ", proceso=" + proceso + ", configuracion=" + configuracion + ", reintentos=" + reintentos
-				+ ", rangoDiasCobertura=" + rangoDiasCobertura + ", activo=" + activo + ", proveedor=" + proveedor + "]";
+				+ ", rangoDiasCoberturaMin=" + rangoDiasCoberturaMin + ", rangoDiasCoberturaMax=" + rangoDiasCoberturaMax + ", activo=" + activo + ", proveedor=" + proveedor + "]";
 	}
 
 }

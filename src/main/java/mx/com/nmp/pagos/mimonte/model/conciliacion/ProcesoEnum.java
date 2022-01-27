@@ -10,9 +10,11 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
  */
 public enum ProcesoEnum {
     PRE_CONCILIACION (1, "PRE-CONCILIACIÓN"),
-    CONCILIACION_ETAPA_1 (2, "CONCILIACIÓN ETAPA 1"),
-    CONCILIACION_ETAPA_2 (3, "CONCILIACIÓN ETAPA 2"),
-    CONCILIACION_ETAPA_3 (4, "CONCILIACIÓN ETAPA 3"),;
+    CONCILIACION_ETAPA_1_DN (2, "CONCILIACIÓN ETAPA 1 (DÍA NORMAL)"),
+    CONCILIACION_ETAPA_1_FS (3, "CONCILIACIÓN ETAPA 1 (FIN DE SEMANA)"),
+    CONCILIACION_ETAPA_2_DN (4, "CONCILIACIÓN ETAPA 2 (DÍA NORMAL)"),
+    CONCILIACION_ETAPA_2_FS (5, "CONCILIACIÓN ETAPA 2 (FIN DE SEMANA)"),
+    CONCILIACION_ETAPA_3 (6, "CONCILIACIÓN ETAPA 3"),;
 
     private Integer idProceso;
     private String proceso;
@@ -36,4 +38,6 @@ public enum ProcesoEnum {
 
     public void setProceso(String proceso) {
         this.proceso = proceso;
-    }}
+    }
+
+}

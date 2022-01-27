@@ -31,7 +31,7 @@ public interface CalendarioEjecucionProcesoRepository extends PagingAndSortingRe
 	 * @param proveedor
 	 * @return
 	 */
-	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.CalendarioEjecucionProcesoDTO(c.id, e.id, e.descripcionCorta, e.descripcion, c.configuracion, c.reintentos, c.rangoDiasCobertura, c.activo, c.createdBy, c.createdDate, c.lastModifiedDate, c.lastModifiedBy, p.nombre ) FROM CalendarioEjecucionProceso c " +
+	@Query("SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.CalendarioEjecucionProcesoDTO(c.id, e.id, e.descripcionCorta, e.descripcion, c.configuracion, c.reintentos, c.rangoDiasCoberturaMin, c.rangoDiasCoberturaMax, c.activo, c.createdBy, c.createdDate, c.lastModifiedDate, c.lastModifiedBy, p.nombre ) FROM CalendarioEjecucionProceso c " +
 			"INNER JOIN CatalogoProceso e ON e.id = c.proceso.id " +
 			"INNER JOIN Proveedor p ON p.id = c.proveedor.id " +
 			"WHERE  ( :idCalendario IS NULL OR c.id = :idCalendario) " +

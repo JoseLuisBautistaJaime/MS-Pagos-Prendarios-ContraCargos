@@ -7,21 +7,9 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 import java.util.Date;
 import java.util.List;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import org.springframework.stereotype.Service;
 
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizaionConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarIdPSRequest;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ActualizarSubEstatusRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTOList;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionResponseSaveDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaActividadesRequest;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConsultaConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovTransitoDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionRequestDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ResumenConciliacionResponseDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusConciliacion;
@@ -190,5 +178,11 @@ public interface ConciliacionService {
 	 * @return
 	 */
 	public List<Long> getConciliacionesAsociadas(Long folio);
-	
+
+
+	/**
+	 * Consulta los procesos de conciliación que no se encuentren con el estado de cuenta conciliado.
+	 */
+	public Conciliacion getConciliacionSinEstadoCuenta(ConsultaConciliacionEtapa2DTO filtro);
+
 }

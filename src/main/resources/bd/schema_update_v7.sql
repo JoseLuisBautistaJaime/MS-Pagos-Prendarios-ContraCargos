@@ -154,7 +154,8 @@ CREATE TABLE `to_calendario_ejecucion_proceso` (
   `proveedor` varchar(150) NOT NULL,
   `configuracion` varchar(250) DEFAULT NULL,
   `reintentos` int NOT NULL DEFAULT '0',
-  `rango_dias_cobertura` int NOT NULL DEFAULT '0',
+  `rango_dias_cobertura_min` int NOT NULL DEFAULT '0',
+  `rango_dias_cobertura_max` int NOT NULL DEFAULT '0',
   `activo` tinyint(1) NOT NULL,
   `created_date` datetime NOT NULL,
   `created_by` varchar(100) DEFAULT NULL,
@@ -166,3 +167,4 @@ CREATE TABLE `to_calendario_ejecucion_proceso` (
   CONSTRAINT `calendario_ejecucion_proceso_fk` FOREIGN KEY (`id_proceso`) REFERENCES `tk_proceso` (`id`),
   CONSTRAINT `calendario_ejecucion_proveedor_fk` FOREIGN KEY (`proveedor`) REFERENCES `tk_proveedor` (`nombre`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
+
