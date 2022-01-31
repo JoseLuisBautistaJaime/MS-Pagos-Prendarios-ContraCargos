@@ -58,6 +58,15 @@ mimonte:
       solicitudDevolucion:
         title: "Solicitud de Devoluciones"
         velocityTemplate: "/templates/solicitudDevoluciones.vm"
+      solicitudEjecucionPreconciliacion:
+        title: "Solicitud de Lanzamiento del Proceso de Pre-conciliación"
+        velocityTemplate: "/templates/solicitudEjecucionPreconciliacion.vm"
+      solicitudEjecucionConciliacionEtapa1:
+        title: "Solicitud de Lanzamiento del Proceso de Conciliación Etapa 1"
+        velocityTemplate: "/templates/solicitudEjecucionConciliacionE1.vm"
+      solicitudEjecucionConciliacionEtapa2:
+        title: "Solicitud de Lanzamiento del Proceso de Conciliación Etapa 2"
+        velocityTemplate: "/templates/solicitudEjecucionConciliacionE2.vm"
       from: mail@nmp.com
       auth:
         user: mimonte
@@ -95,3 +104,29 @@ mimonte:
     cantidad-maxima-tarjetas: 3
     cantidad-maxima-partidas: 10
     iva: 0.16
+    procesoPreconciliacion:
+      url: https://iamdr.montepiedad.com.mx:4444/NMP/GestionFinanzas/Conciliacion/v1/Nocturna
+      auth:
+        usuario: mimonte
+        password: iXjqY2ccS783PTF0
+      header:
+        usuario: usuario
+        idConsumidor: 42
+        idDestino: 100
+    procesoConciliacion:
+      urlGestionConciliacion: https://iamdr.montepiedad.com.mx:4444/NMP/GestionFinanzas/Conciliacion/v1
+      urlMovimientosNocturnos: https://iamdr.montepiedad.com.mx:4444/NMP/GestionFinanzas/Conciliacion/Movimientos/v1/Nocturno
+      urlMovimientosProveedor: https://iamdr.montepiedad.com.mx:4444/NMP/GestionFinanzas/Conciliacion/Movimientos/v1/Proveedor
+      urlMovimientosEstadoCuenta: https://dev1775-mimonte-fase2.mybluemix.net/mimonte/movimientos/estadocuenta
+      urlMergeConciliacion: https://iamdr.montepiedad.com.mx:4444/NMP/GestionFinanzas/Conciliacion/v1/Iniciar
+      auth:
+        usuario: mimonte
+        password: iXjqY2ccS783PTF0
+      header:
+        usuario: usuario
+        idConsumidor: 42
+        idDestino: 100
+        requestUser: sistema
+      corresponsal:
+        entidad: 11
+        cuenta: 1

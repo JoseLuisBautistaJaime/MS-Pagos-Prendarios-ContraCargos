@@ -20,7 +20,7 @@ import java.util.*;
 
 
 /**
- * @name ConciliacionMidasProveedorScheduler
+ * @name ConciliacionMidasProveedorDNScheduler
  * @description Componente para la calendarización de la ejecución automática del proceso de conciliación etapa 1 (carga de movimientos nocturnos de MIDAS / carga de movimientos del proveedor)(configuración días naturales).
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net

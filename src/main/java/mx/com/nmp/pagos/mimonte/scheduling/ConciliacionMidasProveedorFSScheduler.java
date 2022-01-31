@@ -22,7 +22,7 @@ import java.util.Date;
 
 
 /**
- * @name ConciliacionMidasProveedorScheduler
+ * @name ConciliacionMidasProveedorFSScheduler
  * @description Componente para la calendarización de la ejecución automática del proceso de conciliación etapa 1 (carga de movimientos nocturnos de MIDAS / carga de movimientos del proveedor)(configuración fines de semana).
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
@@ -91,7 +91,7 @@ public class ConciliacionMidasProveedorFSScheduler implements SchedulingConfigur
 	 * @return
 	 */
 	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa1FS() {
-		return conciliacionCommon.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_1_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+		return conciliacionCommon.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_1_FS.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
 	}
 
 }
