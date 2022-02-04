@@ -9,7 +9,6 @@ import mx.com.nmp.pagos.mimonte.conector.PreconciliacionBroker;
 import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.constans.MailServiceConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.*;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;

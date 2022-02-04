@@ -35,12 +35,6 @@ import java.util.Date;
 public class ConciliacionMidasProveedorFSScheduler implements SchedulingConfigurer {
 
 	/**
-	 * Los métodos comunes en la ejecución del proceso de conciliación
-	 */
-	@Autowired
-	private ConciliacionCommon conciliacionCommon;
-
-	/**
 	 * Los métodos para consultar y cargar los movimientos del estado de cuenta.
 	 */
 	@Autowired
@@ -91,7 +85,7 @@ public class ConciliacionMidasProveedorFSScheduler implements SchedulingConfigur
 	 * @return
 	 */
 	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa1FS() {
-		return conciliacionCommon.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_1_FS.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+		return conciliacionMidasProveedor.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_1_FS.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
 	}
 
 }

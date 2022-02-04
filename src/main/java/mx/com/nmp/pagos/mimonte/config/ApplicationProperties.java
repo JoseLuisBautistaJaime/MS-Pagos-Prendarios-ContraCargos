@@ -214,6 +214,8 @@ public class ApplicationProperties {
 				private SolicitudEjecucionPreconciliacion solicitudEjecucionPreconciliacion;
 				private SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa1;
 				private SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa2;
+				private SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa3Layout;
+				private SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa3Error;
 
 				public String getFrom() {
 					return from;
@@ -253,6 +255,22 @@ public class ApplicationProperties {
 
 				public void setSolicitudEjecucionConciliacionEtapa2(SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa2) {
 					this.solicitudEjecucionConciliacionEtapa2 = solicitudEjecucionConciliacionEtapa2;
+				}
+
+				public SolicitudEjecucionConciliacion getSolicitudEjecucionConciliacionEtapa3Layout() {
+					return solicitudEjecucionConciliacionEtapa3Layout;
+				}
+
+				public void setSolicitudEjecucionConciliacionEtapa3Layout(SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa3Layout) {
+					this.solicitudEjecucionConciliacionEtapa3Layout = solicitudEjecucionConciliacionEtapa3Layout;
+				}
+
+				public SolicitudEjecucionConciliacion getSolicitudEjecucionConciliacionEtapa3Error() {
+					return solicitudEjecucionConciliacionEtapa3Error;
+				}
+
+				public void setSolicitudEjecucionConciliacionEtapa3Error(SolicitudEjecucionConciliacion solicitudEjecucionConciliacionEtapa3Error) {
+					this.solicitudEjecucionConciliacionEtapa3Error = solicitudEjecucionConciliacionEtapa3Error;
 				}
 
 				public static class SolicitudDevolucion {

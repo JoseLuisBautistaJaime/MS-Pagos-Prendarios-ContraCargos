@@ -19,34 +19,34 @@
     </STYLE>
   </HEAD>
   <BODY>
-    <span>Buenas tardes.</span>
+    <span>Buenos días.</span>
     <br>
     <br>
     <span>Solicito de su apreciable ayuda para ejecutar el proceso de conciliación de los movimientos nocturnos de MIDAS  y los movimientos del proveedor transaccional de forma manual a través del portal de MiMonte Conciliación, utilizando como parámetros los datos enlistados en la tabla, ya que no fue posible ejecutar el proceso de forma automática.</span>
     <br>
     <br>
-    <span>En espera de sus comentarios y apreciable ayuda. Gracias.</span>
-    <br>
-    <br>
     <table>
       <thead>
         <tr style="background-color: #dddddd;">
+          <th>Corresponsal</th>
           <th>Entidad</th>
           <th>Cuenta</th>
-          <th>Corresponsal</th>
           <th>Fecha Inicio</th>
           <th>Fecha Fin</th>
         </tr>
       </thead>
       <tbody>
           <tr>
-            <td>$elemento.conciliacion.entidad.id</td>
-            <td>$elemento.conciliacion.cuenta.id</td>
-            <td>$elemento.proveedor.nombre</td>
-            <td>$elemento.fechaPeriodoInicio</td>
-            <td>$elemento.fechaPeriodoFin</td>
+            <td>$elemento.correponsal</td>
+            <td>$elemento.idEntidad - $elemento.entidad</td>
+            <td>$elemento.idCuenta - $elemento.cuenta</td>
+            <td>$elemento.fechaInicio</td>
+            <td>$elemento.fechaFin</td>
           </tr>
       </tbody>
     </table>
+    <br>
+    <span>En espera de sus comentarios y apreciable ayuda. Gracias.</span>
+    <br>
   </BODY>
 </HTML>

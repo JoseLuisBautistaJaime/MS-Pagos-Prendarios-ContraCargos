@@ -1429,5 +1429,28 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		}
 		return conciliacionSEC;
 	}
+
+
+	/**
+	 * Consulta los procesos de conciliación que se encuentren listos para la generación y envío de layout.
+	 */
+	@Override
+	public List<Conciliacion> getConciliacionSinLayout(ConsultaConciliacionEtapa3DTO filtro) {
+		List<Conciliacion>  listaConciliaciones = new ArrayList<>();
+		List<Long>  listaIdConciliaciones = conciliacionRepository.findConciliacionSinLayouts(filtro.getListaSubEstatus(), filtro.getCorresponsal());
+		if(!listaIdConciliaciones.isEmpty()){
+			listaConciliaciones =  conciliacionRepository.findByFolios(listaIdConciliaciones);
+		}
+		return listaConciliaciones;
+	}
+
+	/**
+	 * Cálcula los montos totales de los layout asociados  a un proceso de conciliación.
+	 */
+	@Override
+	public List<MontoLayoutConciliacionDTO> calcularMontosLayoutsConciliacion(Long idConciliacion) {
+		List<MontoLayoutConciliacionDTO>   listaCalculos =  conciliacionRepository.calcularMontosLayoutsConciliacion(idConciliacion);
+		return listaCalculos;
+	}
 	
 }

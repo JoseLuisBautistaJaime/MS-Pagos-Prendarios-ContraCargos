@@ -9,13 +9,10 @@ import mx.com.nmp.pagos.mimonte.conector.GestionConciliacionBroker;
 import mx.com.nmp.pagos.mimonte.conector.MergeConciliacionBroker;
 import mx.com.nmp.pagos.mimonte.conector.MovimientosNocturnosBroker;
 import mx.com.nmp.pagos.mimonte.conector.MovimientosProveedorBroker;
-import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
-import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAdjuntoDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
-import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
@@ -23,12 +20,6 @@ import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
-import mx.com.nmp.pagos.mimonte.services.conciliacion.CalendarioEjecucionProcesoService;
-import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
-import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionConciliacionService;
-import org.apache.velocity.app.VelocityEngine;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -46,7 +37,7 @@ import java.util.stream.Collectors;
  * @version 0.1
  */
 @Component
-public class ConciliacionMidasProveedor{
+public class ConciliacionMidasProveedor extends ConciliacionCommon {
 
 	/**
 	 * Conector encargado de conciliar los movimientos nocturnos de MIDAS.
@@ -72,50 +63,6 @@ public class ConciliacionMidasProveedor{
 	 */
 	@Inject
 	private MergeConciliacionBroker mergeConciliacionBroker;
-
-	/**
-	 * Los métodos comunes en la ejecución del proceso de conciliación
-	 */
-	@Autowired
-	private ConciliacionCommon conciliacionCommon;
-
-
-	/**
-	 * Velocity HTML layouts Engine
-	 */
-	@Autowired
-	private VelocityEngine velocityEngine;
-
-	/**
-	 * Contiene las propiedades del sistema
-	 */
-	@Autowired
-	private ApplicationProperties applicationProperties;
-
-	/**
-	 * Servicios para gestionar la información del proceso de conciliación
-	 */
-	@Autowired
-	private ConciliacionService conciliacionService;
-
-	/**
-	 * Servicios para gestionar la información de la ejecución del proceso de conciliación
-	 */
-	@Autowired
-	private EjecucionConciliacionService ejecucionConciliacionService;
-
-	/**
-	 * Repository de contactos
-	 */
-	@Autowired
-	private ContactoRespository contactoRespository;
-
-	/**
-	 * Objeto para consumo de servicio Rest para envio de e-mail
-	 */
-	@Autowired
-	@Qualifier("busMailRestService")
-	private BusMailRestService busMailRestService;
 
 
 	/**
@@ -145,7 +92,7 @@ public class ConciliacionMidasProveedor{
 
 		ejecucionConciliacion.setConciliacion(conciliacionCreada);
 		ejecucionConciliacion= ejecucionConciliacionService.save(ejecucionConciliacion, "sistema");
-		conciliacionCommon.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
+		generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
 
 		if(flgEjecucionCorrecta  && conciliacionCreada != null){
 
@@ -164,7 +111,7 @@ public class ConciliacionMidasProveedor{
 
 			if(flgEjecucionCorrecta) {
 
-				Conciliacion resultadoEjecucion= conciliacionCommon.escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PN);
+				Conciliacion resultadoEjecucion= escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PN);
 
 				if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA){
 					flgEjecucionCorrecta= true;
@@ -177,7 +124,7 @@ public class ConciliacionMidasProveedor{
 			}
 
 			ejecucionConciliacion.setEstatus(new EstatusEjecucionConciliacion(EstatusEjecucionConciliacionEnum.CARGA_MOVIMIENTOS_MIDAS.getIdEstadoEjecucion(), EstatusEjecucionConciliacionEnum.CARGA_MOVIMIENTOS_MIDAS.getEstadoEjecucion()));
-			conciliacionCommon.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
+			generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
 
 			if(flgEjecucionCorrecta){
 
@@ -197,7 +144,7 @@ public class ConciliacionMidasProveedor{
 
 				if(flgEjecucionCorrecta) {
 
-					Conciliacion resultadoEjecucion= conciliacionCommon.escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT);
+					Conciliacion resultadoEjecucion= escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT);
 
 					if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA){
 						flgEjecucionCorrecta= true;
@@ -210,7 +157,7 @@ public class ConciliacionMidasProveedor{
 				}
 
 				ejecucionConciliacion.setEstatus(new EstatusEjecucionConciliacion(EstatusEjecucionConciliacionEnum.CARGA_MOVIMIENTOS_PROVEEDOR.getIdEstadoEjecucion(), EstatusEjecucionConciliacionEnum.CARGA_MOVIMIENTOS_PROVEEDOR.getEstadoEjecucion()));
-				conciliacionCommon.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
+				generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
 
 				if(flgEjecucionCorrecta){
 
@@ -229,7 +176,7 @@ public class ConciliacionMidasProveedor{
 
 					if(flgEjecucionCorrecta) {
 
-						Conciliacion resultadoEjecucion= conciliacionCommon.escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION);
+						Conciliacion resultadoEjecucion= escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION);
 
 						if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA){
 							flgEjecucionCorrecta= true;
@@ -242,7 +189,7 @@ public class ConciliacionMidasProveedor{
 					}
 
 					ejecucionConciliacion.setEstatus(new EstatusEjecucionConciliacion(EstatusEjecucionConciliacionEnum.CONCILIACION_MIDAS_PROVEEDOR.getIdEstadoEjecucion(), EstatusEjecucionConciliacionEnum.CONCILIACION_MIDAS_PROVEEDOR.getEstadoEjecucion()));
-					conciliacionCommon.generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
+					generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
 
 				}
             }
@@ -259,6 +206,7 @@ public class ConciliacionMidasProveedor{
 	 * @param ejecucionConciliacion
 	 *
 	 */
+	@Override
 	public  void enviarNotificacionEjecucionErronea(EjecucionConciliacion ejecucionConciliacion) {
 		BusRestMailDTO generalBusMailDTO = null;
 
@@ -292,7 +240,10 @@ public class ConciliacionMidasProveedor{
 	 * @return
 	 *
 	 */
+	@Override
 	public BusRestMailDTO construyeEMailProcesoConciliacion(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
+
+		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
@@ -303,7 +254,7 @@ public class ConciliacionMidasProveedor{
 
 		// Se constrye el cuerpo de correo HTML
 		Map<String, Object> model = new HashMap<>();
-		model.put("elemento", ejecucionConciliacion);
+		model.put("elemento", datos);
 		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, "UTF-8", model);
 
 		// Se construye el DTO

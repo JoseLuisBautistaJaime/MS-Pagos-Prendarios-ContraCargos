@@ -34,12 +34,6 @@ public class ConciliacionEstadoCuentaDNScheduler implements SchedulingConfigurer
 
 
 	/**
-	 * Los métodos comunes en la ejecución del proceso de conciliación.
-	 */
-	@Autowired
-	private ConciliacionCommon conciliacionCommon;
-
-	/**
 	 * Los métodos para consultar y cargar los movimientos del estado de cuenta.
 	 */
 	@Autowired
@@ -78,7 +72,7 @@ public class ConciliacionEstadoCuentaDNScheduler implements SchedulingConfigurer
         CalendarioEjecucionProcesoDTO calendarizacion = this.obtenerCalendarizacionConciliacionEtapa2DN();
 		Conciliacion conciliacionSEC  = conciliacionEstadoCuenta.buscarConciliacionSinEstadoCuenta(calendarizacion);
         if(conciliacionSEC != null && conciliacionSEC.getId() != 0) {
-			EjecucionConciliacion ejecucionConciliacion = conciliacionCommon.buscarEjecucionConciliacion(conciliacionSEC);
+			EjecucionConciliacion ejecucionConciliacion = conciliacionEstadoCuenta.buscarEjecucionConciliacion(conciliacionSEC);
 			if(ejecucionConciliacion != null && ejecucionConciliacion.getId() != 0 ) {
 				conciliacionEstadoCuenta.ejecutarProcesoConciliacionE2(ejecucionConciliacion);
 			}
@@ -92,7 +86,7 @@ public class ConciliacionEstadoCuentaDNScheduler implements SchedulingConfigurer
 	 * @return
 	 */
 	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa2DN() {
-		return conciliacionCommon.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_2_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+		return conciliacionEstadoCuenta.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_2_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
 	}
 
 }

@@ -4,17 +4,23 @@
  */
 package mx.com.nmp.pagos.mimonte.scheduling;
 
+import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
+import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
+import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CalendarioEjecucionProcesoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroCalendarioEjecucionProcesoDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TrazadoEjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.CalendarioEjecucionProcesoService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionConciliacionService;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Date;
 import java.util.List;
@@ -27,8 +33,8 @@ import java.util.List;
  * @creationDate 19/01/2022 15:18 hrs.
  * @version 0.1
  */
-@Component
-public class ConciliacionCommon {
+
+public abstract class ConciliacionCommon {
 
 	/**
 	 * Servicios para gestionar la  calendarización de los procesos automatizados
@@ -47,6 +53,31 @@ public class ConciliacionCommon {
 	 */
 	@Autowired
 	public ConciliacionService conciliacionService;
+
+	/**
+	 * Velocity HTML layouts Engine
+	 */
+	@Autowired
+	public VelocityEngine velocityEngine;
+
+	/**
+	 * Contiene las propiedades del sistema
+	 */
+	@Autowired
+	public ApplicationProperties applicationProperties;
+
+	/**
+	 * Repository de contactos
+	 */
+	@Autowired
+	public ContactoRespository contactoRespository;
+
+	/**
+	 * Objeto para consumo de servicio Rest para envio de e-mail
+	 */
+	@Autowired
+	@Qualifier("busMailRestService")
+	public BusMailRestService busMailRestService;
 
 
 	public ConciliacionCommon() {
@@ -134,5 +165,21 @@ public class ConciliacionCommon {
 		trazadoEjecucion.setEstatusDescripcion(descripcionEstatusFase);
 		ejecucionConciliacionService.guardarEjecucionConciliacion(trazadoEjecucion,"sistema");
 	}
+
+	/**
+	 * Método que construye el cuerpo del correo electrónico con el que se notificara cuando el proceso automatizado falla u obtiene un resultado erróneo.
+	 * @param contactos
+	 * @param ejecucionConciliacion
+	 *
+	 */
+	public abstract BusRestMailDTO construyeEMailProcesoConciliacion(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion);
+
+
+	/**
+	 * Método que envia las notificación vía correo electrónico  cuando el proceso automatizado falla u obtiene un resultado erróneo.
+	 * @param ejecucionConciliacion
+	 *
+	 */
+	public abstract void enviarNotificacionEjecucionErronea(EjecucionConciliacion ejecucionConciliacion);
 
 }

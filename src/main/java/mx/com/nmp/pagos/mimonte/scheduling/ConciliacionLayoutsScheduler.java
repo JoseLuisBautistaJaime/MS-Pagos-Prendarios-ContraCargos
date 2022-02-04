@@ -20,27 +20,28 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
- * @name ConciliacionEstadoCuentaScheduler
- * @description Componente para la calendarización de la ejecución automática del proceso de conciliación Etapa 2 (Carga de Movimientos Estado de Cuenta)(configuración fines de semana).
+ * @name ConciliacionLayoutsScheduler
+ * @description Componente para la calendarización de la ejecución automática del proceso de conciliación Etapa 3 (Envío de Layouts).
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
- * @creationDate 22/01/2022 10:48 hrs.
+ * @creationDate 31/01/2022 10:48 hrs.
  * @version 0.1
  */
 
 @Configuration
 @EnableScheduling
-public class ConciliacionEstadoCuentaFSScheduler implements SchedulingConfigurer {
+public class ConciliacionLayoutsScheduler implements SchedulingConfigurer {
 
 
 	/**
-	 * Los métodos para consultar y cargar los movimientos del estado de cuenta.
+	 * Los métodos para generar y enviar los layouts de pagos, comisiones y devoluciones.
 	 */
 	@Autowired
-	private ConciliacionEstadoCuenta conciliacionEstadoCuenta;
+	private ConciliacionLayouts conciliacionLayouts;
 
 
 	/**
@@ -49,12 +50,12 @@ public class ConciliacionEstadoCuentaFSScheduler implements SchedulingConfigurer
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
 
-		Runnable runnableTask = () ->  lanzarConciliacionEtapa2FS();
+		Runnable runnableTask = () ->  lanzarConciliacionEtapa3DN();
 
 		Trigger trigger = new Trigger() {
 			@Override
 			public Date nextExecutionTime(TriggerContext triggerContext) {
-				String cronExpressions = obtenerCalendarizacionConciliacionEtapa2FS().getConfiguracionAutomatizacion();
+				String cronExpressions = obtenerCalendarizacionConciliacionEtapa3DN().getConfiguracionAutomatizacion();
 				if (StringUtils.isEmpty(cronExpressions)) {
 					return null;
 				}
@@ -68,28 +69,28 @@ public class ConciliacionEstadoCuentaFSScheduler implements SchedulingConfigurer
 	}
 
 	/**
-	 * Método encargado de lanzar la ejecución del proceso de conciliación etapa 2.
+	 * Método encargado de lanzar la ejecución del proceso de conciliación etapa 3.
 	 *
 	 */
-	public void lanzarConciliacionEtapa2FS() {
-        CalendarioEjecucionProcesoDTO calendarizacion = this.obtenerCalendarizacionConciliacionEtapa2FS();
-		Conciliacion conciliacionSEC  = conciliacionEstadoCuenta.buscarConciliacionSinEstadoCuenta(calendarizacion);
-        if(conciliacionSEC != null && conciliacionSEC.getId() != 0) {
-			EjecucionConciliacion ejecucionConciliacion = conciliacionEstadoCuenta.buscarEjecucionConciliacion(conciliacionSEC);
+	public void lanzarConciliacionEtapa3DN() {
+        CalendarioEjecucionProcesoDTO calendarizacion = this.obtenerCalendarizacionConciliacionEtapa3DN();
+		List<Conciliacion> listaConciliaciones  = conciliacionLayouts.buscarConciliacionSinLayouts(calendarizacion);
+		for (Conciliacion conciliacionLayout : listaConciliaciones) {
+			EjecucionConciliacion ejecucionConciliacion = conciliacionLayouts.buscarEjecucionConciliacion(conciliacionLayout);
 			if(ejecucionConciliacion != null && ejecucionConciliacion.getId() != 0 ) {
-				conciliacionEstadoCuenta.ejecutarProcesoConciliacionE2(ejecucionConciliacion);
+				conciliacionLayouts.ejecutarProcesoConciliacionE3(ejecucionConciliacion);
 			}
 		}
 
 	}
 
 	/**
-	 * Método encargado de consultar la configuracion de la calendarizacion del proceso de conciliación etapa 2.
+	 * Método encargado de consultar la configuracion de la calendarizacion del proceso de conciliación etapa 3.
 	 *
 	 * @return
 	 */
-	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa2FS() {
-		return conciliacionEstadoCuenta.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_2_FS.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa3DN() {
+		return conciliacionLayouts.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_3_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
 	}
 
 }
