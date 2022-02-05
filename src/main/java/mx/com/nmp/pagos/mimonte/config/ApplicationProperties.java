@@ -561,6 +561,7 @@ public class ApplicationProperties {
 				private String urlMovimientosProveedor;
 				private String urlMovimientosEstadoCuenta;
 				private String urlMergeConciliacion;
+				private String urlGeneracionLayout;
 				private ProcesoConciliacionAuth auth;
 				private ProcesoConciliacionHeader header;
 				private ProcesoConciliacionCorresponsal corresponsal;
@@ -597,6 +598,13 @@ public class ApplicationProperties {
 					this.urlMergeConciliacion = urlMergeConciliacion;
 				}
 
+				public String getUrlGeneracionLayout() {
+					return urlGeneracionLayout;
+				}
+
+				public void setUrlGeneracionLayout(String urlGeneracionLayout) {
+					this.urlGeneracionLayout = urlGeneracionLayout;
+				}
 
 				public String getUrlGestionConciliacion() {
 					return urlGestionConciliacion;
