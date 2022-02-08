@@ -51,7 +51,7 @@ public class ConciliacionEstadoCuentaDNScheduler implements SchedulingConfigurer
 		Trigger trigger = new Trigger() {
 			@Override
 			public Date nextExecutionTime(TriggerContext triggerContext) {
-				String cronExpressions = obtenerCalendarizacionConciliacionEtapa2DN().getConfiguracionAutomatizacion();
+				String cronExpressions = "";//obtenerCalendarizacionConciliacionEtapa2DN().getConfiguracionAutomatizacion();
 				if (StringUtils.isEmpty(cronExpressions)) {
 					return null;
 				}
@@ -86,7 +86,12 @@ public class ConciliacionEstadoCuentaDNScheduler implements SchedulingConfigurer
 	 * @return
 	 */
 	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa2DN() {
-		return conciliacionEstadoCuenta.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_2_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+		CalendarioEjecucionProcesoDTO calendarioEjecucionProceso = new CalendarioEjecucionProcesoDTO();
+		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones= conciliacionEstadoCuenta.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_2_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+		if(!listaConfiguraciones.isEmpty()){
+			calendarioEjecucionProceso = listaConfiguraciones.get(0);
+		}
+		return calendarioEjecucionProceso;
 	}
 
 }

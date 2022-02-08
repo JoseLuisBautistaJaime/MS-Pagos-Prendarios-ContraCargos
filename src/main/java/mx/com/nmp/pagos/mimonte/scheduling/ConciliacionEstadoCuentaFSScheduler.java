@@ -20,6 +20,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -54,7 +55,7 @@ public class ConciliacionEstadoCuentaFSScheduler implements SchedulingConfigurer
 		Trigger trigger = new Trigger() {
 			@Override
 			public Date nextExecutionTime(TriggerContext triggerContext) {
-				String cronExpressions = obtenerCalendarizacionConciliacionEtapa2FS().getConfiguracionAutomatizacion();
+				String cronExpressions = "";//obtenerCalendarizacionConciliacionEtapa2FS().getConfiguracionAutomatizacion();
 				if (StringUtils.isEmpty(cronExpressions)) {
 					return null;
 				}
@@ -89,7 +90,12 @@ public class ConciliacionEstadoCuentaFSScheduler implements SchedulingConfigurer
 	 * @return
 	 */
 	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa2FS() {
-		return conciliacionEstadoCuenta.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_2_FS.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+		CalendarioEjecucionProcesoDTO calendarioEjecucionProceso = new CalendarioEjecucionProcesoDTO();
+		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones= conciliacionEstadoCuenta.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_2_FS.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+		if(!listaConfiguraciones.isEmpty()){
+			calendarioEjecucionProceso = listaConfiguraciones.get(0);
+		}
+		return calendarioEjecucionProceso;
 	}
 
 }

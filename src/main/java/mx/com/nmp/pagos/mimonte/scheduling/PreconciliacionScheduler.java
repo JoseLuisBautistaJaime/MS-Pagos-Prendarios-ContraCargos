@@ -112,7 +112,7 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 		Trigger trigger = new Trigger() {
 			@Override
 			public Date nextExecutionTime(TriggerContext triggerContext) {
-				String cronExpressions = obtenerCalendarizacionPreconciliacion().getConfiguracionAutomatizacion();
+				String cronExpressions = "";//obtenerCalendarizacionPreconciliacion().getConfiguracionAutomatizacion();
 				if (StringUtils.isEmpty(cronExpressions)) {
 					return null;
 				}

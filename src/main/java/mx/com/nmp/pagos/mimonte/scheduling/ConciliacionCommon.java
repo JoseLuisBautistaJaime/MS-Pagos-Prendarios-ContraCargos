@@ -91,17 +91,13 @@ public abstract class ConciliacionCommon {
 	 * @param corresponsal
 	 * @return
 	 */
-	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacion(Integer idProceso, String corresponsal) {
-		CalendarioEjecucionProcesoDTO calendarioEjecucionProceso = new CalendarioEjecucionProcesoDTO();
+	public List<CalendarioEjecucionProcesoDTO> obtenerCalendarizacionConciliacion(Integer idProceso, String corresponsal) {
 		FiltroCalendarioEjecucionProcesoDTO filtro = new FiltroCalendarioEjecucionProcesoDTO();
 		filtro.setActivo(true);
 		filtro.setIdProceso(idProceso);
 		filtro.setCorresponsal(corresponsal);
 		List<CalendarioEjecucionProcesoDTO> listaResultados = calendarioEjecucionProcesoService.consultarByPropiedades(filtro);
-		if(null != listaResultados && !listaResultados.isEmpty()){
-			calendarioEjecucionProceso =  listaResultados.get(0);
-		}
-		return calendarioEjecucionProceso;
+		return listaResultados;
 	}
 
 	/**

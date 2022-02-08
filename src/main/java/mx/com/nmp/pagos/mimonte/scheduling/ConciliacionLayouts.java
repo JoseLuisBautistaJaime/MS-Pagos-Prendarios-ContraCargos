@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.scheduling;
 
+import mx.com.nmp.pagos.mimonte.conector.GeneracionLayoutBroker;
 import mx.com.nmp.pagos.mimonte.conector.MovimientosEstadoCuentaBroker;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,7 +41,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 	 * Conector encargado de conciliar los movimientos del estado de cuenta.
 	 */
 	@Inject
-	private  MovimientosEstadoCuentaBroker movimientosEstadoCuentaBroker;
+	private GeneracionLayoutBroker generacionLayoutBroker;
 
 
 	private ConciliacionLayouts() {
@@ -72,9 +74,9 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 
 		try {
 			inicioFase= new Date();
-			MovimientosEstadoCuentaResponseDTO response = movimientosEstadoCuentaBroker.cargarMovimientosEstadoCuenta(ejecucionConciliacion.getConciliacion().getId(),new Date(), new Date() );
+			GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),1 );
 			finFase = new Date();
-			flgEjecucionCorrecta = response.getCargaCorrecta();
+			flgEjecucionCorrecta = response.getRespuestaCorrecta();
 			descripcionEstatusFase = response.getMessage();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -107,9 +109,9 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 		if(flgEjecucionCorrecta){
 			try {
 				inicioFase= new Date();
-				MovimientosEstadoCuentaResponseDTO response = movimientosEstadoCuentaBroker.cargarMovimientosEstadoCuenta(ejecucionConciliacion.getConciliacion().getId(),new Date(), new Date() );
+				GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),3 );
 				finFase = new Date();
-				flgEjecucionCorrecta = response.getCargaCorrecta();
+				flgEjecucionCorrecta = response.getRespuestaCorrecta();
 				descripcionEstatusFase = response.getMessage();
 			} catch (Exception ex) {
 				ex.printStackTrace();

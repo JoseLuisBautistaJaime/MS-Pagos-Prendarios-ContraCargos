@@ -55,7 +55,7 @@ public class ConciliacionLayoutsScheduler implements SchedulingConfigurer {
 		Trigger trigger = new Trigger() {
 			@Override
 			public Date nextExecutionTime(TriggerContext triggerContext) {
-				String cronExpressions = obtenerCalendarizacionConciliacionEtapa3DN().getConfiguracionAutomatizacion();
+				String cronExpressions = "";//obtenerCalendarizacionConciliacionEtapa3DN().getConfiguracionAutomatizacion();
 				if (StringUtils.isEmpty(cronExpressions)) {
 					return null;
 				}
@@ -90,7 +90,12 @@ public class ConciliacionLayoutsScheduler implements SchedulingConfigurer {
 	 * @return
 	 */
 	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa3DN() {
-		return conciliacionLayouts.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_3_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+		CalendarioEjecucionProcesoDTO calendarioEjecucionProceso = new CalendarioEjecucionProcesoDTO();
+		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones= conciliacionLayouts.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_3_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+		if(!listaConfiguraciones.isEmpty()){
+			calendarioEjecucionProceso = listaConfiguraciones.get(0);
+		}
+		return calendarioEjecucionProceso;
 	}
 
 }

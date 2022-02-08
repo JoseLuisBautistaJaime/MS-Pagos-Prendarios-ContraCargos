@@ -12,18 +12,18 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import java.util.Date;
 
 /**
- * Referencia al servicio que carga los movimientos de estado de cuenta.
+ *  Referencia al servicio que genera y envia los Layout.
  *
  * @author omarrb
  */
 public interface GeneracionLayoutBroker {
 
     /**
-     * Ejecuta el proceso de carga de los movimientos del estado de cuenta.
+     * Ejecuta el proceso de generación y envió de layout.
      * @param folio
      * @param estadoEnvio
      */
-    public GeneracionLayoutResponseDTO cargarGenerarLayout(Long folio, String estadoEnvio) throws ConciliacionException;
+    public GeneracionLayoutResponseDTO generarLayouts(Long folio, Integer estadoEnvio) throws ConciliacionException;
 
 
 }

@@ -1,28 +1,27 @@
 package mx.com.nmp.pagos.mimonte.consumer.rest.dto;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class BusRestGeneracionLayoutDTO {
+/**
+ * @name BusRestGeneracionLayoutDTO
+ * @description Clase que encapsula la información de la peticion del servicio que expone BUS
+ *  *              para generar y enviar los Layouts
+ *
+ * @author Omar Rodriguez orodriguez@quarksoft.net
+ * @version 1.0
+ * @createdDate 03/02/2022 19:23 hrs.
+ */
+public class BusRestGeneracionLayoutDTO implements BusRestBodyDTO {
 
-    private static final SimpleDateFormat sf;
 
     private Long folio;
-    private String estadoEnvio;
+    private Integer estadoEnvio;
 
-    static {
-        sf = new SimpleDateFormat("yyyy-MM-dd");
-    }
 
-    public BusRestGeneracionLayoutDTO(Long folio, String estadoEnvio) {
+    public BusRestGeneracionLayoutDTO(Long folio, Integer estadoEnvio) {
         super();
         this.folio = folio;
         this.estadoEnvio = estadoEnvio;
 
-    }
-
-    public static SimpleDateFormat getSf() {
-        return sf;
     }
 
     public Long getFolio() {
@@ -33,11 +32,11 @@ public class BusRestGeneracionLayoutDTO {
         this.folio = folio;
     }
 
-    public String getEstadoEnvio() {
+    public Integer getEstadoEnvio() {
         return estadoEnvio;
     }
 
-    public void setEstadoEnvio(String estadoEnvio) {
+    public void setEstadoEnvio(Integer estadoEnvio) {
         this.estadoEnvio = estadoEnvio;
     }
 

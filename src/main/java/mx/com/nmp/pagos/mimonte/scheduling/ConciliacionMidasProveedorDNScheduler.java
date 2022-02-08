@@ -50,7 +50,7 @@ public class ConciliacionMidasProveedorDNScheduler implements SchedulingConfigur
 		Trigger trigger = new Trigger() {
 			@Override
 			public Date nextExecutionTime(TriggerContext triggerContext) {
-				String cronExpressions = obtenerCalendarizacionConciliacionEtapa1DN().getConfiguracionAutomatizacion();
+				String cronExpressions = "";//obtenerCalendarizacionConciliacionEtapa1DN().getConfiguracionAutomatizacion();
 				if (StringUtils.isEmpty(cronExpressions)) {
 					return null;
 				}
@@ -84,7 +84,12 @@ public class ConciliacionMidasProveedorDNScheduler implements SchedulingConfigur
 	 * @return
 	 */
 	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa1DN() {
-		return conciliacionMidasProveedor.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_1_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+        CalendarioEjecucionProcesoDTO calendarioEjecucionProceso = new CalendarioEjecucionProcesoDTO();
+        List<CalendarioEjecucionProcesoDTO> listaConfiguraciones= conciliacionMidasProveedor.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_1_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+		if(!listaConfiguraciones.isEmpty()){
+            calendarioEjecucionProceso = listaConfiguraciones.get(0);
+        }
+		return calendarioEjecucionProceso;
 	}
 
 }

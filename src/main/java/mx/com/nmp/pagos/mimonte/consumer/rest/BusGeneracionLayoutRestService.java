@@ -4,11 +4,12 @@
  */
 package mx.com.nmp.pagos.mimonte.consumer.rest;
 
-import mx.com.nmp.pagos.mimonte.conector.MovimientosEstadoCuentaBroker;
-import mx.com.nmp.pagos.mimonte.consumer.rest.AbstractOAuth2RestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
+import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestGeneracionLayoutDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
-
+import org.springframework.stereotype.Component;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import java.util.Map;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Map;
  * @createdDate 03/02/2022 19:23 hrs.
  */
 
-@Component("BusGeneracionLayouRestService")
+@Component("BusGeneracionLayoutRestService")
 public class BusGeneracionLayoutRestService extends AbstractOAuth2RestService {
 
     public BusGeneracionLayoutRestService() {
@@ -28,11 +29,11 @@ public class BusGeneracionLayoutRestService extends AbstractOAuth2RestService {
     }
 
     /**
-     * .@description
+     * Lanza la  generación y el envió de layout.
      *
      * @param body
      */
-    public Map<String, Object> cargarGeneracionLayout(BusGeneracionLayoutRestService body) {
+    public Map<String, Object> generarLayouts(BusRestGeneracionLayoutDTO body) {
 
         Map<String, Object> response = null;
         String url;
@@ -49,7 +50,7 @@ public class BusGeneracionLayoutRestService extends AbstractOAuth2RestService {
             bearerToken = postForGetToken(auth, mc.urlGetToken);
 
             // Se obtiene la url del servicio
-            url = applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getUrlGenerarLayout();
+            url = applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getUrlGeneracionLayout();
 
             // Se crea el Header de la petición
             header = new BusRestHeaderDTO(bearerToken);
@@ -64,18 +65,27 @@ public class BusGeneracionLayoutRestService extends AbstractOAuth2RestService {
 
         return response;
 
-        @Override
-        protected HttpHeaders createHeadersPostTo (BusRestAuthDTO auth, BusRestHeaderDTO header){
-            String base64Creds = buildBase64Hash(auth);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.add("Authorization", "Basic " + base64Creds);
-            headers.add("Content-Type", "application/json");
-            headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdConsumidor());
-            headers.add(mc.idDestinoKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdDestino());
-            headers.add(mc.usuarioKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getUsuario());
-            headers.add("oauth.bearer", header.getBearerToken());
-            return headers;
-        }
-
     }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see mx.com.nmp.pagos.mimonte.consumer.rest.AbstractOAuth2RestService#
+     * createHeadersPostTo(mx.com.nmp.pagos.mimonte.consumer.rest.dto.
+     * BusRestAuthDTO, mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO)
+     */
+    @Override
+    protected HttpHeaders createHeadersPostTo (BusRestAuthDTO auth, BusRestHeaderDTO header){
+        String base64Creds = buildBase64Hash(auth);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Basic " + base64Creds);
+        headers.add("Content-Type", "application/json");
+        headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdConsumidor());
+        headers.add(mc.idDestinoKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdDestino());
+        headers.add(mc.usuarioKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getUsuario());
+        headers.add("oauth.bearer", header.getBearerToken());
+        return headers;
+    }
+
+}
