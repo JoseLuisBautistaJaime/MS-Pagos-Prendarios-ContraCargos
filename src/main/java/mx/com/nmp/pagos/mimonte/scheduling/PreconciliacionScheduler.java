@@ -22,19 +22,22 @@ import mx.com.nmp.pagos.mimonte.services.conciliacion.DiaInhabilService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionPreconciliacionService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.Trigger;
-import org.springframework.scheduling.TriggerContext;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 
@@ -47,9 +50,13 @@ import java.util.stream.Collectors;
  * @version 0.1
  */
 
-@Configuration
-@EnableScheduling
-public class PreconciliacionScheduler implements SchedulingConfigurer {
+@Component
+public class PreconciliacionScheduler {
+
+	/**
+	 * Logger para el registro de actividad en la bitacora
+	 */
+	private final Logger LOG = LoggerFactory.getLogger(PreconciliacionScheduler.class);
 
 	/**
 	 * Conector encargado de ejecutar el proceso de pre-conciliación.
@@ -100,28 +107,29 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 	@Qualifier("busMailRestService")
 	private BusMailRestService busMailRestService;
 
+	/**
+	 * Programa la ejecución de las  tareas automatizadas.
+	 */
+	@EventListener(ApplicationReadyEvent.class)
+	public void runAfterStartup() {
+		createSchedulers();
+	}
 
 	/**
-	 Ejecuta tareas de programadas.
+	 * Ejecuta tareas de programadas.
 	 */
-	@Override
-	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+	private void createSchedulers(){
 
-		Runnable runnableTask = () ->  lanzarPreconciliacionAutomatizada();
+		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones = obtenerCalendarizacionPreconciliacion();
 
-		Trigger trigger = new Trigger() {
-			@Override
-			public Date nextExecutionTime(TriggerContext triggerContext) {
-				String cronExpressions = "";//obtenerCalendarizacionPreconciliacion().getConfiguracionAutomatizacion();
-				if (StringUtils.isEmpty(cronExpressions)) {
-					return null;
-				}
-				CronTrigger crontrigger = new CronTrigger(cronExpressions);
-				return crontrigger.nextExecutionTime(triggerContext);
+		for (CalendarioEjecucionProcesoDTO configuracion : listaConfiguraciones) {
+			String cronExpressions = configuracion.getConfiguracionAutomatizacion();
+			if (!StringUtils.isEmpty(cronExpressions)) {
+				ScheduledExecutorService localExecutorService= Executors.newSingleThreadScheduledExecutor();
+				TaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutorService);
+				scheduler.schedule( () -> lanzarPreconciliacionAutomatizada(configuracion), new CronTrigger(cronExpressions));
 			}
-		};
-
-		taskRegistrar.addTriggerTask(runnableTask , trigger);
+		}
 
 	}
 
@@ -129,16 +137,13 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 	 * Método encargado de lanzar la ejecución del proceso de pre-conciliación.
 	 *
 	 */
-	public void lanzarPreconciliacionAutomatizada() {
-
-        CalendarioEjecucionProcesoDTO calendarizacion = this.obtenerCalendarizacionPreconciliacion();
+	public void lanzarPreconciliacionAutomatizada(CalendarioEjecucionProcesoDTO calendarizacion) {
         EjecucionPreconciliacion ejecucionPreconciliacion  = this.crearEjecucionPreconciliacion(calendarizacion);
         if(this.validarFechaInhabil(ejecucionPreconciliacion.getFechaPeriodoInicio())) {
 			if(this.validarDuplicidadProceso(ejecucionPreconciliacion)) {
 				this.ejecutarProcesoPreconciliacion(calendarizacion, ejecucionPreconciliacion);
 			}
 		}
-
 	}
 
 	/**
@@ -311,21 +316,17 @@ public class PreconciliacionScheduler implements SchedulingConfigurer {
 	}
 
 	/**
-	 * Método encargado de consultar la configuracion de la calendarizacion del proceso de pre-conciliación.
+	 * Método encargado de consultar las configuraciones de la calendarizacion del proceso de pre-conciliación.
 	 * @return
 	 *
 	 */
-	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionPreconciliacion() {
-		CalendarioEjecucionProcesoDTO calendarioEjecucionProceso = new CalendarioEjecucionProcesoDTO();
+	public List<CalendarioEjecucionProcesoDTO> obtenerCalendarizacionPreconciliacion() {
 		FiltroCalendarioEjecucionProcesoDTO filtro = new FiltroCalendarioEjecucionProcesoDTO();
 		filtro.setActivo(true);
 		filtro.setIdProceso(ProcesoEnum.PRE_CONCILIACION.getIdProceso());
 		filtro.setCorresponsal(CorresponsalEnum.OPENPAY.getNombre());
 		List<CalendarioEjecucionProcesoDTO> listaResultados = calendarioEjecucionProcesoService.consultarByPropiedades(filtro);
-		if(null != listaResultados && !listaResultados.isEmpty()){
-			calendarioEjecucionProceso =  listaResultados.get(0);
-		}
-		return calendarioEjecucionProceso;
+		return listaResultados;
 	}
 
 }

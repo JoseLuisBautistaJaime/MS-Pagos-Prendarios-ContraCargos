@@ -10,17 +10,20 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ProcesoEnum;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.Trigger;
-import org.springframework.scheduling.TriggerContext;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 
 /**
@@ -32,10 +35,13 @@ import java.util.List;
  * @version 0.1
  */
 
-@Configuration
-@EnableScheduling
-public class ConciliacionLayoutsScheduler implements SchedulingConfigurer {
+@Component
+public class ConciliacionLayoutsScheduler {
 
+	/**
+	 * Logger para el registro de actividad en la bitacora
+	 */
+	private final Logger LOG = LoggerFactory.getLogger(ConciliacionLayoutsScheduler.class);
 
 	/**
 	 * Los métodos para generar y enviar los layouts de pagos, comisiones y devoluciones.
@@ -43,28 +49,29 @@ public class ConciliacionLayoutsScheduler implements SchedulingConfigurer {
 	@Autowired
 	private ConciliacionLayouts conciliacionLayouts;
 
+	/**
+	 * Programa la ejecución de las  tareas automatizadas.
+	 */
+	@EventListener(ApplicationReadyEvent.class)
+	public void runAfterStartup() {
+		createSchedulers();
+	}
 
 	/**
-	 Ejecuta tareas de programadas.
+	 * Ejecuta tareas de programadas.
 	 */
-	@Override
-	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+	private void createSchedulers(){
 
-		Runnable runnableTask = () ->  lanzarConciliacionEtapa3DN();
+		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones = obtenerCalendarizacionConciliacionEtapa3();
 
-		Trigger trigger = new Trigger() {
-			@Override
-			public Date nextExecutionTime(TriggerContext triggerContext) {
-				String cronExpressions = "";//obtenerCalendarizacionConciliacionEtapa3DN().getConfiguracionAutomatizacion();
-				if (StringUtils.isEmpty(cronExpressions)) {
-					return null;
-				}
-				CronTrigger crontrigger = new CronTrigger(cronExpressions);
-				return crontrigger.nextExecutionTime(triggerContext);
+		for (CalendarioEjecucionProcesoDTO configuracion : listaConfiguraciones) {
+			String cronExpressions = configuracion.getConfiguracionAutomatizacion();
+			if (!StringUtils.isEmpty(cronExpressions)) {
+				ScheduledExecutorService localExecutorService= Executors.newSingleThreadScheduledExecutor();
+				TaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutorService);
+				scheduler.schedule( () -> lanzarConciliacionEtapa3(configuracion), new CronTrigger(cronExpressions));
 			}
-		};
-
-		taskRegistrar.addTriggerTask(runnableTask , trigger);
+		}
 
 	}
 
@@ -72,8 +79,7 @@ public class ConciliacionLayoutsScheduler implements SchedulingConfigurer {
 	 * Método encargado de lanzar la ejecución del proceso de conciliación etapa 3.
 	 *
 	 */
-	public void lanzarConciliacionEtapa3DN() {
-        CalendarioEjecucionProcesoDTO calendarizacion = this.obtenerCalendarizacionConciliacionEtapa3DN();
+	public void lanzarConciliacionEtapa3(CalendarioEjecucionProcesoDTO calendarizacion) {
 		List<Conciliacion> listaConciliaciones  = conciliacionLayouts.buscarConciliacionSinLayouts(calendarizacion);
 		for (Conciliacion conciliacionLayout : listaConciliaciones) {
 			EjecucionConciliacion ejecucionConciliacion = conciliacionLayouts.buscarEjecucionConciliacion(conciliacionLayout);
@@ -89,13 +95,8 @@ public class ConciliacionLayoutsScheduler implements SchedulingConfigurer {
 	 *
 	 * @return
 	 */
-	public CalendarioEjecucionProcesoDTO obtenerCalendarizacionConciliacionEtapa3DN() {
-		CalendarioEjecucionProcesoDTO calendarioEjecucionProceso = new CalendarioEjecucionProcesoDTO();
-		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones= conciliacionLayouts.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_3_DN.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
-		if(!listaConfiguraciones.isEmpty()){
-			calendarioEjecucionProceso = listaConfiguraciones.get(0);
-		}
-		return calendarioEjecucionProceso;
+	public List<CalendarioEjecucionProcesoDTO> obtenerCalendarizacionConciliacionEtapa3() {
+		return  conciliacionLayouts.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_3.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
 	}
 
 }

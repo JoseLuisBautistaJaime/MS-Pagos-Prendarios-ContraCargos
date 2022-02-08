@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.scheduling;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CalendarioEjecucionProcesoDTO;
+import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ProcesoEnum;
@@ -18,33 +19,34 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 
 /**
- * @name ConciliacionMidasProveedorScheduler
- * @description Componente para la calendarización de la ejecución automática del proceso de conciliación etapa 1 (carga de movimientos nocturnos de MIDAS / carga de movimientos del proveedor).
+ * @name ConciliacionEstadoCuentaScheduler
+ @description Componente para la calendarización de la ejecución automática del proceso de conciliación Etapa 2 (Carga de Movimientos Estado de Cuenta)
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
- * @creationDate 04/02/2021 10:48 hrs.
+ * @creationDate 08/02/2021 10:48 hrs.
  * @version 0.1
  */
 
 @Component
-public class ConciliacionMidasProveedorScheduler {
+public class ConciliacionEstadoCuentaScheduler {
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
-	private final Logger LOG = LoggerFactory.getLogger(ConciliacionMidasProveedorScheduler.class);
+	private final Logger LOG = LoggerFactory.getLogger(ConciliacionEstadoCuentaScheduler.class);
 
 	/**
 	 * Los métodos para consultar y cargar los movimientos del estado de cuenta.
 	 */
 	@Autowired
-	private ConciliacionMidasProveedor conciliacionMidasProveedor;
+	private ConciliacionEstadoCuenta conciliacionEstadoCuenta;
 
 	/**
 	 * Programa la ejecución de las  tareas automatizadas.
@@ -60,41 +62,39 @@ public class ConciliacionMidasProveedorScheduler {
 	 */
 	private void createSchedulers(){
 
-		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones = obtenerCalendarizacionConciliacionEtapa1();
+		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones = obtenerCalendarizacionConciliacionEtapa2();
 
 		for (CalendarioEjecucionProcesoDTO configuracion : listaConfiguraciones) {
 			String cronExpressions = configuracion.getConfiguracionAutomatizacion();
 			if (!StringUtils.isEmpty(cronExpressions)) {
 				ScheduledExecutorService localExecutorService= Executors.newSingleThreadScheduledExecutor();
 				TaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutorService);
-				scheduler.schedule( () -> lanzarConciliacionEtapa1(configuracion), new CronTrigger(cronExpressions));
+				scheduler.schedule( () -> lanzarConciliacionEtapa2(configuracion), new CronTrigger(cronExpressions));
 			}
 		}
-
 	}
 
-
 	/**
-	 * Método encargado de lanzar la ejecución del proceso de conciliación etapa 1.
+	 * Método encargado de lanzar la ejecución del proceso de conciliación etapa 2.
 	 *
 	 */
-	public void lanzarConciliacionEtapa1(CalendarioEjecucionProcesoDTO calendarizacion) {
-        EjecucionConciliacion ejecucionConciliacion  = conciliacionMidasProveedor.crearEjecucionConciliacion(calendarizacion);
-        if(conciliacionMidasProveedor.validarDuplicidadEjecucion(ejecucionConciliacion)) {
-			ejecucionConciliacion.setConciliacion(conciliacionMidasProveedor.crearConciliacion(ejecucionConciliacion));
-			if(conciliacionMidasProveedor.validarDuplicidadProceso(ejecucionConciliacion)) {
-				conciliacionMidasProveedor.ejecutarProcesoConciliacionE1(ejecucionConciliacion);
+	public void lanzarConciliacionEtapa2(CalendarioEjecucionProcesoDTO calendarizacion) {
+		Conciliacion conciliacionSEC  = conciliacionEstadoCuenta.buscarConciliacionSinEstadoCuenta(calendarizacion);
+		if(conciliacionSEC != null && conciliacionSEC.getId() != 0) {
+			EjecucionConciliacion ejecucionConciliacion = conciliacionEstadoCuenta.buscarEjecucionConciliacion(conciliacionSEC);
+			if(ejecucionConciliacion != null && ejecucionConciliacion.getId() != 0 ) {
+				conciliacionEstadoCuenta.ejecutarProcesoConciliacionE2(ejecucionConciliacion);
 			}
 		}
-
 	}
 
 	/**
-	 * Método encargado de consultar la configuracion de la calendarizacion del proceso de conciliación etapa 1.
+	 * Método encargado de consultar la configuracion de la calendarizacion del proceso de conciliación etapa 2.
 	 * @return
 	 */
-	public List<CalendarioEjecucionProcesoDTO> obtenerCalendarizacionConciliacionEtapa1() {
-		return conciliacionMidasProveedor.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_1.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
+	public List<CalendarioEjecucionProcesoDTO>  obtenerCalendarizacionConciliacionEtapa2() {
+		return conciliacionEstadoCuenta.obtenerCalendarizacionConciliacion(ProcesoEnum.CONCILIACION_ETAPA_2.getIdProceso(), CorresponsalEnum.OPENPAY.getNombre());
 	}
+
 
 }
