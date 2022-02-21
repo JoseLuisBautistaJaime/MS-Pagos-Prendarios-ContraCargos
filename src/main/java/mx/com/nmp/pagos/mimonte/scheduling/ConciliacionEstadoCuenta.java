@@ -60,7 +60,7 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 	 */
 	public Conciliacion buscarConciliacionSinEstadoCuenta(CalendarioEjecucionProcesoDTO calendarizacion) {
 
-		Date fechaActual = new Date();
+		Date fechaActual = obtenerFechaActual();
 		com.ibm.icu.util.Calendar calendarEjecucionInicial = com.ibm.icu.util.Calendar.getInstance();
 		com.ibm.icu.util.Calendar calendarEjecucionFin = com.ibm.icu.util.Calendar.getInstance();
 		com.ibm.icu.util.Calendar ini = com.ibm.icu.util.Calendar.getInstance();
@@ -82,11 +82,7 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 		fin.set(com.ibm.icu.util.Calendar.SECOND, 59);
 		fin.set(Calendar.MILLISECOND, 59);
 
-		ConsultaConciliacionEtapa2DTO filtro = new ConsultaConciliacionEtapa2DTO();
-		filtro.setFechaDesde(ini.getTime());
-		filtro.setFechaHasta(fin.getTime());
-		filtro.setListaSubEstatus(ConciliacionConstants.CON_SUB_ESTATUS_CONCILIACION_SIN_ESTADO_CUENTA);
-		filtro.setCorresponsal(calendarizacion.getCorresponsal().getNombre());
+		ConsultaConciliacionEtapa2DTO filtro = new ConsultaConciliacionEtapa2DTO( ini.getTime(), fin.getTime(), ConciliacionConstants.CON_SUB_ESTATUS_CONCILIACION_SIN_ESTADO_CUENTA, calendarizacion.getCorresponsal().getNombre() );
 
 		return conciliacionService.getConciliacionSinEstadoCuenta(filtro);
 
@@ -99,19 +95,19 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 	 */
 	public void ejecutarProcesoConciliacionE2( EjecucionConciliacion ejecucionConciliacion){
 		String descripcionEstatusFase="";
-		Date inicioFase = new Date();
+		Date inicioFase = obtenerFechaActual();
 		Date finFase = null;
 		Boolean flgEjecucionCorrecta = true;
 
 		try {
-			inicioFase= new Date();
-			MovimientosEstadoCuentaResponseDTO response = movimientosEstadoCuentaBroker.cargarMovimientosEstadoCuenta(ejecucionConciliacion.getConciliacion().getId(),new Date(), new Date() );
-			finFase = new Date();
+			inicioFase=obtenerFechaActual();
+			MovimientosEstadoCuentaResponseDTO response = movimientosEstadoCuentaBroker.cargarMovimientosEstadoCuenta(ejecucionConciliacion.getConciliacion().getId(),obtenerFechaActual(), obtenerFechaActual() );
+			finFase = obtenerFechaActual();
 			flgEjecucionCorrecta = response.getCargaCorrecta();
 			descripcionEstatusFase = response.getMessage();
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			finFase = new Date();
+			finFase = obtenerFechaActual();
 			descripcionEstatusFase = ex.getMessage();
 			flgEjecucionCorrecta = false;
 		}
@@ -135,14 +131,14 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 
 		if(flgEjecucionCorrecta){
 			try {
-				inicioFase= new Date();
+				inicioFase= obtenerFechaActual();
 				MergeConciliacionResponseDTO response = mergeConciliacionBroker.generarMergeConciliacion(ejecucionConciliacion.getConciliacion().getId());
-				finFase = new Date();
+				finFase = obtenerFechaActual();
 				flgEjecucionCorrecta = response.getCargaCorrecta();
 				descripcionEstatusFase = response.getMessage();
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				finFase = new Date();
+				finFase = obtenerFechaActual();
 				descripcionEstatusFase = ex.getMessage();
 				flgEjecucionCorrecta = false;
 			}
@@ -213,9 +209,7 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 	@Override
 	public  BusRestMailDTO construyeEMailProcesoConciliacion(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
 
-		BusRestMovimientosEstadoCuentaDTO request = new BusRestMovimientosEstadoCuentaDTO(ejecucionConciliacion.getConciliacion().getId(), new Date(), new Date());
-
-		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getId(), new Date(), new Date());
+		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre(), obtenerFechaActual(), obtenerFechaActual());
 
 
 		// Se obtienen destinatarios

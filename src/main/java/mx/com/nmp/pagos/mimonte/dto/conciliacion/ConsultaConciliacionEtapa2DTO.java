@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -14,10 +15,16 @@ import java.util.List;
  */
 public class ConsultaConciliacionEtapa2DTO {
 
-	private Date fechaDesde;
-	private Date fechaHasta;
+	private static final SimpleDateFormat sf;
+
+	private String fechaDesde;
+	private String fechaHasta;
 	private String corresponsal;
 	private List<Long> listaSubEstatus;
+
+	static {
+		sf = new SimpleDateFormat("yyyy-MM-dd");
+	}
 
 	public ConsultaConciliacionEtapa2DTO() {
 		super();
@@ -25,26 +32,25 @@ public class ConsultaConciliacionEtapa2DTO {
 
 	public ConsultaConciliacionEtapa2DTO(Date fechaDesde, Date fechaHasta, List<Long> listaSubEstatus ,String corresponsal) {
 		super();
-		this.fechaDesde = fechaDesde;
-		this.fechaHasta = fechaHasta;
+		this.fechaDesde = null != fechaDesde ? sf.format(fechaDesde) : null;
+		this.fechaHasta = null != fechaHasta ? sf.format(fechaHasta) : null;
 		this.listaSubEstatus = listaSubEstatus;
 		this.corresponsal = corresponsal;
 	}
 
-
-	public Date getFechaDesde() {
+	public String getFechaDesde() {
 		return fechaDesde;
 	}
 
-	public void setFechaDesde(Date fechaDesde) {
+	public void setFechaDesde(String fechaDesde) {
 		this.fechaDesde = fechaDesde;
 	}
 
-	public Date getFechaHasta() {
+	public String getFechaHasta() {
 		return fechaHasta;
 	}
 
-	public void setFechaHasta(Date fechaHasta) {
+	public void setFechaHasta(String fechaHasta) {
 		this.fechaHasta = fechaHasta;
 	}
 

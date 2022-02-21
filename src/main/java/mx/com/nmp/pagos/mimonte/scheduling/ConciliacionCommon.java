@@ -18,7 +18,10 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.TrazadoEjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.CalendarioEjecucionProcesoService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionConciliacionService;
+import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 import org.apache.velocity.app.VelocityEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -35,6 +38,11 @@ import java.util.List;
  */
 
 public abstract class ConciliacionCommon {
+
+	/**
+	 * Logger para el registro de actividad en la bitacora
+	 */
+	public final Logger LOG = LoggerFactory.getLogger(ConciliacionCommon.class);
 
 	/**
 	 * Servicios para gestionar la  calendarización de los procesos automatizados
@@ -124,9 +132,9 @@ public abstract class ConciliacionCommon {
 	 */
 	public Conciliacion escucharSubEstatusConciliacion(Long idConciliacion, List<Long> listaEstados) {
 		Conciliacion resultado = null;
-		for (int i = 0; i <= 10; i++) {
+		for (int i = 0; i <= 3; i++) {
 			try {
-				Thread.sleep(20000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				continue;
 			}
@@ -137,8 +145,6 @@ public abstract class ConciliacionCommon {
 			}
 			if(resultado != null && listaEstados.contains(resultado.getSubEstatus().getId())){
 				return resultado;
-			} else{
-				resultado = null;
 			}
 		}
 		return resultado;
@@ -177,5 +183,15 @@ public abstract class ConciliacionCommon {
 	 *
 	 */
 	public abstract void enviarNotificacionEjecucionErronea(EjecucionConciliacion ejecucionConciliacion);
+
+	/**
+	 * Método que obtiene la fecha actual de acuerdo a la configuracion de zona horaria que se configure.
+	 *
+	 */
+	public Date obtenerFechaActual() {
+		String zonaHoraria = applicationProperties.getMimonte().getVariables().getZonaHoraria();
+		Date fechaActual = FechasUtil.obtenerFechaZonaHorario(zonaHoraria);
+		return fechaActual;
+	}
 
 }

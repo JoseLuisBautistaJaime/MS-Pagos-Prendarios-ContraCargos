@@ -186,7 +186,7 @@ public interface ConciliacionService {
 	public Conciliacion getConciliacionSinEstadoCuenta(ConsultaConciliacionEtapa2DTO filtro);
 
 	/**
-	 * Consulta los procesos de conciliación que no se encuentren listos para la generación y envío de layout.
+	 * Consulta los procesos de conciliación que se encuentren listos para la generación y envío de layout.
 	 */
 	public List<Conciliacion> getConciliacionSinLayout(ConsultaConciliacionEtapa3DTO filtro);
 
@@ -194,5 +194,11 @@ public interface ConciliacionService {
 	 * Cálcula los montos totales de los layout asociados  a un proceso de conciliación.
 	 */
 	public List<MontoLayoutConciliacionDTO> calcularMontosLayoutsConciliacion(Long idConciliacion);
+
+
+	/**
+	 * Regresa el proceso de conciliación por medio de el folio de dicha conciliacion
+	 */
+	public Conciliacion findProcesoByFolio(Long folio);
 
 }

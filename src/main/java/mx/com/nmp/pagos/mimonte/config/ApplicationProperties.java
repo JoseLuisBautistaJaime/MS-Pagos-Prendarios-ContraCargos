@@ -159,13 +159,21 @@ public class ApplicationProperties {
 		}
 
 		public static class Variables {
-
+			private String zonaHoraria;
 			private Mail mail;
 			private RestTemplate restTemplate;
 			private ConsultaEstadoCuenta consultaEstadoCuenta;
 			private ConsultaPagos consultaPagos;
 			private ProcesoPreconciliacion procesoPreconciliacion;
 			private ProcesoConciliacion procesoConciliacion;
+
+			public String getZonaHoraria() {
+				return zonaHoraria;
+			}
+
+			public void setZonaHoraria(String zonaHoraria) {
+				this.zonaHoraria = zonaHoraria;
+			}
 
 			public Mail getMail() {
 				return mail;

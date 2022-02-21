@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,9 @@ import java.util.List;
  */
 public class ConsultaConciliacionEtapa3DTO {
 
+
+	private Date fechaDesde;
+	private Date fechaHasta;
 	private String corresponsal;
 	private List<Long> listaSubEstatus;
 
@@ -21,10 +25,11 @@ public class ConsultaConciliacionEtapa3DTO {
 		super();
 	}
 
-	public ConsultaConciliacionEtapa3DTO(List<Long> listaSubEstatus , String corresponsal) {
-		super();
-		this.listaSubEstatus = listaSubEstatus;
+	public ConsultaConciliacionEtapa3DTO(Date fechaDesde, Date fechaHasta, List<Long> listaSubEstatus,  String corresponsal) {
+		this.fechaDesde = fechaDesde;
+		this.fechaHasta = fechaHasta;
 		this.corresponsal = corresponsal;
+		this.listaSubEstatus = listaSubEstatus;
 	}
 
 	public String getCorresponsal() {
@@ -43,9 +48,25 @@ public class ConsultaConciliacionEtapa3DTO {
 		this.listaSubEstatus = listaSubEstatus;
 	}
 
-	@Override
+    public Date getFechaDesde() {
+        return fechaDesde;
+    }
+
+    public void setFechaDesde(Date fechaDesde) {
+        this.fechaDesde = fechaDesde;
+    }
+
+    public Date getFechaHasta() {
+        return fechaHasta;
+    }
+
+    public void setFechaHasta(Date fechaHasta) {
+        this.fechaHasta = fechaHasta;
+    }
+
+    @Override
 	public String toString() {
-		return "ConsultaConciliacionEtapa2DTO [ listaSubEstatus=" + listaSubEstatus + ", corresponsal=" + corresponsal + "]";
+		return "ConsultaConciliacionEtapa3DTO [ fechaDesde="+ fechaDesde + ", fechaHasta=" + fechaHasta + " listaSubEstatus=" + listaSubEstatus + ", corresponsal=" + corresponsal + "]";
 	}
 
 }

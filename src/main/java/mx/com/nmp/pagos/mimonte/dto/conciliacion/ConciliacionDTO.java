@@ -43,6 +43,11 @@ public class ConciliacionDTO extends AbstractConciliacionDTO implements Comparab
 		super();
 	}
 
+	public ConciliacionDTO(Long folio) {
+		super();
+		this.folio = folio;
+	}
+
 	public ConciliacionDTO(Date createdDate, Date lastModifiedDate, String createdBy, String lastModifiedBy) {
 		super(createdDate, lastModifiedDate, createdBy, lastModifiedBy);
 	}

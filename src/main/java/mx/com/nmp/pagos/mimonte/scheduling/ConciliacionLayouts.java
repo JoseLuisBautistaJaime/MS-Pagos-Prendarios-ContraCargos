@@ -4,8 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.scheduling;
 
+import com.ibm.icu.util.Calendar;
 import mx.com.nmp.pagos.mimonte.conector.GeneracionLayoutBroker;
-import mx.com.nmp.pagos.mimonte.conector.MovimientosEstadoCuentaBroker;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAdjuntoDTO;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,9 +54,30 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 	 * @return
 	 */
 	public List<Conciliacion> buscarConciliacionSinLayouts(CalendarioEjecucionProcesoDTO calendarizacion) {
-		ConsultaConciliacionEtapa3DTO filtro = new ConsultaConciliacionEtapa3DTO();
-		filtro.setListaSubEstatus(ConciliacionConstants.CON_SUB_ESTATUS_CONCILIACION_SIN_LAYOUT);
-		filtro.setCorresponsal(calendarizacion.getCorresponsal().getNombre());
+
+		Date fechaActual = obtenerFechaActual();
+		com.ibm.icu.util.Calendar calendarEjecucionInicial = com.ibm.icu.util.Calendar.getInstance();
+		com.ibm.icu.util.Calendar calendarEjecucionFin = com.ibm.icu.util.Calendar.getInstance();
+		com.ibm.icu.util.Calendar ini = com.ibm.icu.util.Calendar.getInstance();
+		com.ibm.icu.util.Calendar fin = com.ibm.icu.util.Calendar.getInstance();
+
+		calendarEjecucionInicial.setTime(fechaActual);
+		calendarEjecucionFin.setTime(fechaActual);
+		calendarEjecucionInicial.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMin());
+		calendarEjecucionFin.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMax());
+
+		ini.setTime( calendarEjecucionInicial.getTime());
+		fin.setTime( calendarEjecucionFin.getTime());
+		ini.set(com.ibm.icu.util.Calendar.HOUR_OF_DAY, 0);
+		ini.set(com.ibm.icu.util.Calendar.MINUTE, 0);
+		ini.set(com.ibm.icu.util.Calendar.SECOND, 0);
+		ini.set(com.ibm.icu.util.Calendar.MILLISECOND, 0);
+		fin.set(com.ibm.icu.util.Calendar.HOUR_OF_DAY, 23);
+		fin.set(com.ibm.icu.util.Calendar.MINUTE, 59);
+		fin.set(com.ibm.icu.util.Calendar.SECOND, 59);
+		fin.set(Calendar.MILLISECOND, 59);
+
+		ConsultaConciliacionEtapa3DTO filtro = new ConsultaConciliacionEtapa3DTO( ini.getTime(), fin.getTime(), ConciliacionConstants.CON_SUB_ESTATUS_CONCILIACION_SIN_LAYOUT, calendarizacion.getCorresponsal().getNombre());
 		return conciliacionService.getConciliacionSinLayout(filtro);
 	}
 
@@ -68,19 +88,19 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 	 */
 	public void ejecutarProcesoConciliacionE3( EjecucionConciliacion ejecucionConciliacion){
 		String descripcionEstatusFase="";
-		Date inicioFase = new Date();
+		Date inicioFase = obtenerFechaActual();
 		Date finFase = null;
 		Boolean flgEjecucionCorrecta = true;
 
 		try {
-			inicioFase= new Date();
+			inicioFase= obtenerFechaActual();
 			GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),1 );
-			finFase = new Date();
+			finFase = obtenerFechaActual();
 			flgEjecucionCorrecta = response.getRespuestaCorrecta();
 			descripcionEstatusFase = response.getMessage();
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			finFase = new Date();
+			finFase = obtenerFechaActual();
 			descripcionEstatusFase = ex.getMessage();
 			flgEjecucionCorrecta = false;
 		}
@@ -94,7 +114,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 				descripcionEstatusFase = "Error al generar los layout del proceso de conciliación";
 			} else {
 				Long montoValidacion = montosLayoutsConciliacion.stream().mapToLong(o -> o.getAcumulado()).sum();
-				if(montoValidacion > 0){
+				if(montoValidacion !=  0){
 					flgEjecucionCorrecta= false;
 					descripcionEstatusFase ="Las cuentas de los layouts generados para el proceso de conciliación no se encuentran en 0, el proceso debe ser ejecutado de forma manual para solventar las diferencias detectadas";
 					enviarNotificacionLayoutsIncorrectos(ejecucionConciliacion);
@@ -108,14 +128,14 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 
 		if(flgEjecucionCorrecta){
 			try {
-				inicioFase= new Date();
+				inicioFase= obtenerFechaActual();
 				GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),3 );
-				finFase = new Date();
+				finFase = obtenerFechaActual();
 				flgEjecucionCorrecta = response.getRespuestaCorrecta();
 				descripcionEstatusFase = response.getMessage();
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				finFase = new Date();
+				finFase = obtenerFechaActual();
 				descripcionEstatusFase = ex.getMessage();
 				flgEjecucionCorrecta = false;
 			}
@@ -172,7 +192,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 	@Override
 	public  BusRestMailDTO construyeEMailProcesoConciliacion(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
 
-		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getId(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
+		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
@@ -237,7 +257,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 	 */
 	public  BusRestMailDTO construyeEMailLayoutsIncorrectos(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
 
-		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getId(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
+		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje

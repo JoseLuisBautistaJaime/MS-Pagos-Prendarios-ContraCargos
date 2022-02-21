@@ -84,7 +84,11 @@ public class ConciliacionMidasProveedorScheduler {
 			ejecucionConciliacion.setConciliacion(conciliacionMidasProveedor.crearConciliacion(ejecucionConciliacion));
 			if(conciliacionMidasProveedor.validarDuplicidadProceso(ejecucionConciliacion)) {
 				conciliacionMidasProveedor.ejecutarProcesoConciliacionE1(ejecucionConciliacion);
+			} else{
+				LOG.info("Proceso de conciliación duplicado");
 			}
+		}else{
+			LOG.info("Ejecución del proceso duplicado");
 		}
 
 	}

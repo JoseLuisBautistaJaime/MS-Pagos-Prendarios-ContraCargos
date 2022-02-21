@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -1422,10 +1423,12 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public Conciliacion getConciliacionSinEstadoCuenta(ConsultaConciliacionEtapa2DTO filtro) {
 		Conciliacion conciliacionSEC = null;
-		List<Long>  listaConciliaciones;
-		listaConciliaciones = conciliacionRepository.findConciliacionSinEstadoCuenta(filtro.getFechaDesde(), filtro.getFechaHasta(), filtro.getListaSubEstatus(), filtro.getCorresponsal());
-		if(!listaConciliaciones.isEmpty()){
-			conciliacionSEC =  conciliacionRepository.findByFolio(listaConciliaciones.get(0));
+		List<BigInteger>  listaIdConciliaciones;
+		List<Conciliacion>  listaConciliaciones ;
+		listaIdConciliaciones = conciliacionRepository.findConciliacionSinEstadoCuenta(filtro.getFechaDesde(), filtro.getFechaHasta(), filtro.getListaSubEstatus(), filtro.getCorresponsal());
+		if(!listaIdConciliaciones.isEmpty()){
+			listaConciliaciones =  conciliacionRepository.findByFolios(listaIdConciliaciones.stream().map(BigInteger::longValue).collect(Collectors.toList()));
+			conciliacionSEC =  listaConciliaciones.get(0);
 		}
 		return conciliacionSEC;
 	}
@@ -1437,9 +1440,9 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	@Override
 	public List<Conciliacion> getConciliacionSinLayout(ConsultaConciliacionEtapa3DTO filtro) {
 		List<Conciliacion>  listaConciliaciones = new ArrayList<>();
-		List<Long>  listaIdConciliaciones = conciliacionRepository.findConciliacionSinLayouts(filtro.getListaSubEstatus(), filtro.getCorresponsal());
+		List<BigInteger>  listaIdConciliaciones = conciliacionRepository.findConciliacionSinLayouts(filtro.getFechaDesde(), filtro.getFechaHasta(),filtro.getListaSubEstatus(), filtro.getCorresponsal());
 		if(!listaIdConciliaciones.isEmpty()){
-			listaConciliaciones =  conciliacionRepository.findByFolios(listaIdConciliaciones);
+			listaConciliaciones =  conciliacionRepository.findByFolios(listaIdConciliaciones.stream().map(BigInteger::longValue).collect(Collectors.toList()));
 		}
 		return listaConciliaciones;
 	}
@@ -1452,5 +1455,15 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 		List<MontoLayoutConciliacionDTO>   listaCalculos =  conciliacionRepository.calcularMontosLayoutsConciliacion(idConciliacion);
 		return listaCalculos;
 	}
-	
+
+
+	/**
+	 * Regresa el proceso de conciliación por medio de el folio de dicha conciliacion
+	 */
+	@Override
+	public Conciliacion findProcesoByFolio(Long folio) {
+		return conciliacionRepository.findProcesoByFolio(folio);
+	}
+
+
 }

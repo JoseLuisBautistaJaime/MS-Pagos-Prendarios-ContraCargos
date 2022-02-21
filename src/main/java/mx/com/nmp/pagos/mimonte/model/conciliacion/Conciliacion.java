@@ -107,6 +107,23 @@ public class Conciliacion extends Updatable implements Serializable  {
 		this.subEstatus = subEstatus;
 	}
 
+	public Conciliacion(Long id, Long folio, EstatusConciliacion estatus, Long idEntidad, Long idCuenta,
+						String subEstatusDescripcion, String idPolizaTesoreria, String idAsientoContable, Date completedDate,
+						Global global, SubEstatusConciliacion subEstatus) {
+		super();
+		this.id = id;
+		this.folio = folio;
+		this.estatus = estatus;
+		this.entidad = new Entidad(idEntidad);
+		this.cuenta = new Cuenta(idCuenta);
+		this.subEstatusDescripcion = subEstatusDescripcion;
+		this.idPolizaTesoreria = idPolizaTesoreria;
+		this.idAsientoContable = idAsientoContable;
+		this.completedDate = completedDate;
+		this.global = global;
+		this.subEstatus = subEstatus;
+	}
+
 	public Conciliacion(Long folio) {
 		this.folio = folio;
 	}

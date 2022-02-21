@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.util;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -134,5 +136,21 @@ public interface FechasUtil {
 			date.set(Calendar.SECOND, 59);
 			date.set(Calendar.MILLISECOND, 59);
 		}
+	}
+
+	/**
+	 * Método que obtiene la fecha actual de una determinada Zona Horaria.
+	 *
+	 */
+	public  static Date obtenerFechaZonaHorario(String nombreZonaHoraria) {
+		if(nombreZonaHoraria == null || nombreZonaHoraria.isEmpty() ){
+			nombreZonaHoraria="America/Mexico_City";
+		}
+		ZoneId zonaHorario = ZoneId.of(nombreZonaHoraria);
+		ZonedDateTime fechaZonaHorario = ZonedDateTime.now(zonaHorario);
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(fechaZonaHorario.getYear(), fechaZonaHorario.getMonthValue()-1, fechaZonaHorario.getDayOfMonth(), fechaZonaHorario.getHour(), fechaZonaHorario.getMinute(),fechaZonaHorario.getSecond());
+		Date fecha = calendar.getTime();
+		return fecha;
 	}
 }

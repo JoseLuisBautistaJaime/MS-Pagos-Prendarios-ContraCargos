@@ -29,15 +29,25 @@
       <thead>
         <tr style="background-color: #dddddd;">
           <th>Folio</th>
-          <th>Fecha Inicial</th>
-          <th>Fecha Final</th>
+          <th>Corresponsal</th>
+          <th>Entidad</th>
+          <th>Cuenta</th>
+          <th>Fecha Inicio Movimientos</th>
+          <th>Fecha Fin Movimientos</th>
+          <th>Fecha Inicial Estado de Cuenta</th>
+          <th>Fecha Final Estado de Cuenta</th>
         </tr>
       </thead>
       <tbody>
           <tr>
             <td>$elemento.folio</td>
+            <td>$elemento.correponsal</td>
+            <td>$elemento.idEntidad - $elemento.entidad</td>
+            <td>$elemento.idCuenta - $elemento.cuenta</td>
             <td>$elemento.fechaInicio</td>
             <td>$elemento.fechaFin</td>
+            <td>$elemento.fechaInicial</td>
+            <td>$elemento.fechaFinal</td>
           </tr>
       </tbody>
     </table>

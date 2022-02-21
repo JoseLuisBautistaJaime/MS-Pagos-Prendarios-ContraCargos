@@ -31,8 +31,8 @@
           <th>Corresponsal</th>
           <th>Entidad</th>
           <th>Cuenta</th>
-          <th>Fecha Inicio</th>
-          <th>Fecha Fin</th>
+          <th>Fecha Inicio Movimientos</th>
+          <th>Fecha Fin Movimientos</th>
         </tr>
       </thead>
       <tbody>

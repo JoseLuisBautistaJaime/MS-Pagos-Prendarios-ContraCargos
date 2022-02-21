@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.inject.Inject;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -72,20 +74,20 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 	 */
 	public void ejecutarProcesoConciliacionE1( EjecucionConciliacion ejecucionConciliacion){
 		String descripcionEstatusFase="";
-		Date inicioFase = new Date();
+		Date inicioFase = obtenerFechaActual();
 		Date finFase = null;
 		Conciliacion conciliacionCreada = null;
 		Boolean flgEjecucionCorrecta = true;
 
 		try {
-			inicioFase= new Date();
+			inicioFase= obtenerFechaActual();
 			GestionConciliacionResponseDTO response = gestionConciliacionBroker.crearConciliacion(ejecucionConciliacion.getConciliacion().getCuenta().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
-			conciliacionCreada = this.conciliacionService.getById(Long.valueOf(response.getFolio()));
-			finFase = new Date();
+			conciliacionCreada = obtenerConciliacionCargaMovimientos(Long.valueOf(response.getFolio()), ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS );
+			finFase = obtenerFechaActual();
 			descripcionEstatusFase = "Cociliacón creada";
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			finFase = new Date();
+			finFase = obtenerFechaActual();
 			descripcionEstatusFase = ex.getMessage();
 			flgEjecucionCorrecta = false;
 		}
@@ -97,14 +99,14 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 		if(flgEjecucionCorrecta  && conciliacionCreada != null){
 
 			try {
-				inicioFase= new Date();
-				MovimientosNocturnosResponseDTO response = movimientosNocturnosBrokerBus.cargarMovimientosNocturnos(conciliacionCreada.getId(),ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(),conciliacionCreada.getProveedor().getNombre().getNombre(), conciliacionCreada.getSubEstatus().getId() );
-				finFase = new Date();
+				inicioFase= obtenerFechaActual();
+				MovimientosNocturnosResponseDTO response = movimientosNocturnosBrokerBus.cargarMovimientosNocturnos(conciliacionCreada.getId(),ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(),conciliacionCreada.getProveedor().getNombre().getNombre(), 1L);
+				finFase = obtenerFechaActual();
 				flgEjecucionCorrecta = response.getCargaCorrecta();
 				descripcionEstatusFase = response.getMessage();
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				finFase = new Date();
+				finFase = obtenerFechaActual();
 				descripcionEstatusFase = ex.getMessage();
 				flgEjecucionCorrecta = false;
 			}
@@ -130,14 +132,14 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 
 				try {
 					Conciliacion conciliacionActual = this.conciliacionService.getById(conciliacionCreada.getId());
-					inicioFase= new Date();
-					MovimientosProveedorResponseDTO response = movimientosProveedorBrokerBus.cargarMovimientosProveedor(conciliacionActual.getFolio(),ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(),conciliacionActual.getProveedor().getNombre().getNombre(), conciliacionActual.getSubEstatus().getId(), "Bancomer" );
-					finFase = new Date();
+					inicioFase= obtenerFechaActual();
+					MovimientosProveedorResponseDTO response = movimientosProveedorBrokerBus.cargarMovimientosProveedor(conciliacionActual.getId(),ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(),conciliacionActual.getProveedor().getNombre().getNombre(), conciliacionActual.getSubEstatus().getId(), "Bancomer" );
+					finFase = obtenerFechaActual();
 					flgEjecucionCorrecta = response.getCargaCorrecta();
 					descripcionEstatusFase = response.getMessage();
 				} catch (Exception ex) {
 					ex.printStackTrace();
-					finFase = new Date();
+					finFase = obtenerFechaActual();
 					descripcionEstatusFase = ex.getMessage();
 					flgEjecucionCorrecta = true;
 				}
@@ -162,14 +164,14 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 				if(flgEjecucionCorrecta){
 
                     try {
-						inicioFase= new Date();
+						inicioFase= obtenerFechaActual();
 						MergeConciliacionResponseDTO response = mergeConciliacionBroker.generarMergeConciliacion(conciliacionCreada.getId());
-						finFase = new Date();
+						finFase = obtenerFechaActual();
 						flgEjecucionCorrecta = response.getCargaCorrecta();
 						descripcionEstatusFase = response.getMessage();
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        finFase = new Date();
+                        finFase = obtenerFechaActual();
                         descripcionEstatusFase = ex.getMessage();
                         flgEjecucionCorrecta = false;
                     }
@@ -199,6 +201,16 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 			this.enviarNotificacionEjecucionErronea(ejecucionConciliacion);
 		}
 
+	}
+
+	public Conciliacion obtenerConciliacionCargaMovimientos(Long folio, Long subEstatusEsperado) {
+		Conciliacion proceso = conciliacionService.getById(folio);
+		if(proceso.getSubEstatus().getId() < subEstatusEsperado){
+			ActualizarSubEstatusRequestDTO subEstatus = new ActualizarSubEstatusRequestDTO(proceso.getId(), subEstatusEsperado, proceso.getEstatus().getId(), "");
+			conciliacionService.actualizaSubEstatusConciliacion(subEstatus,"sistema");
+			proceso = conciliacionService.getById(folio);
+		}
+		return proceso;
 	}
 
 	/**
@@ -276,7 +288,7 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 	 */
 	public EjecucionConciliacion crearEjecucionConciliacion(CalendarioEjecucionProcesoDTO calendarizacion) {
 
-		Date fechaActual = new Date();
+		Date fechaActual = obtenerFechaActual();
 		Calendar calendarEjecucionInicial = Calendar.getInstance();
 		Calendar calendarEjecucionFin = Calendar.getInstance();
 		Calendar ini = Calendar.getInstance();
@@ -286,12 +298,12 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 		calendarEjecucionFin.setTime(fechaActual);
 
 		calendarEjecucionInicial.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMin());
-		calendarEjecucionInicial.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMax());
+		calendarEjecucionFin.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMax());
 
 		ini.setTime( calendarEjecucionInicial.getTime());
 		fin.setTime( calendarEjecucionFin.getTime());
 		ini.set(Calendar.HOUR_OF_DAY, 0);
-		ini.set(Calendar.MINUTE, 0);
+		ini.set(Calendar.MINUTE, 1);
 		ini.set(Calendar.SECOND, 0);
 		ini.set(Calendar.MILLISECOND, 0);
 		fin.set(Calendar.HOUR_OF_DAY, 23);
@@ -300,7 +312,7 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 		fin.set(Calendar.MILLISECOND, 59);
 
 		EjecucionConciliacion ejecucion =  new EjecucionConciliacion();
-		ejecucion.setFechaEjecucion(new Date());
+		ejecucion.setFechaEjecucion(obtenerFechaActual());
 		ejecucion.setFechaPeriodoInicio(ini.getTime());
 		ejecucion.setFechaPeriodoFin(fin.getTime());
 		ejecucion.setProveedor(new Proveedor(calendarizacion.getCorresponsal()));
@@ -359,7 +371,7 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 		filtro.setIdEntidad(ejecucionConciliacion.getConciliacion().getEntidad().getId());
 		List<ConsultaConciliacionDTO> listaResultados = conciliacionService.consulta(filtro);
 		if(null != listaResultados && !listaResultados.isEmpty()){
-			return false;
+			return true;
 		}
 		return true;
 	}

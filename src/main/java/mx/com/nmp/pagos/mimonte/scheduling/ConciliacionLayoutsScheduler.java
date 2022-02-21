@@ -81,11 +81,17 @@ public class ConciliacionLayoutsScheduler {
 	 */
 	public void lanzarConciliacionEtapa3(CalendarioEjecucionProcesoDTO calendarizacion) {
 		List<Conciliacion> listaConciliaciones  = conciliacionLayouts.buscarConciliacionSinLayouts(calendarizacion);
-		for (Conciliacion conciliacionLayout : listaConciliaciones) {
-			EjecucionConciliacion ejecucionConciliacion = conciliacionLayouts.buscarEjecucionConciliacion(conciliacionLayout);
-			if(ejecucionConciliacion != null && ejecucionConciliacion.getId() != 0 ) {
-				conciliacionLayouts.ejecutarProcesoConciliacionE3(ejecucionConciliacion);
+		if(!listaConciliaciones.isEmpty()) {
+			for (Conciliacion conciliacionLayout : listaConciliaciones) {
+				EjecucionConciliacion ejecucionConciliacion = conciliacionLayouts.buscarEjecucionConciliacion(conciliacionLayout);
+				if (ejecucionConciliacion != null && ejecucionConciliacion.getId() != 0) {
+					conciliacionLayouts.ejecutarProcesoConciliacionE3(ejecucionConciliacion);
+				}else{
+					LOG.info("No se encontraron los datos de ejecución del proceso");
+				}
 			}
+		} else{
+			LOG.info("No se encontraron procesos sin sus layouts generados y enviados");
 		}
 
 	}

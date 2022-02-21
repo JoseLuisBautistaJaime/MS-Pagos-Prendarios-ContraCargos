@@ -20,6 +20,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.CalendarioEjecucionProcesoService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.DiaInhabilService;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionPreconciliacionService;
+import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
@@ -142,7 +143,11 @@ public class PreconciliacionScheduler {
         if(this.validarFechaInhabil(ejecucionPreconciliacion.getFechaPeriodoInicio())) {
 			if(this.validarDuplicidadProceso(ejecucionPreconciliacion)) {
 				this.ejecutarProcesoPreconciliacion(calendarizacion, ejecucionPreconciliacion);
+			} else{
+				LOG.info("Ejecución del proceso duplicado");
 			}
+		} else {
+			LOG.info("Ejecución del proceso en día inhábil");
 		}
 	}
 
@@ -249,7 +254,7 @@ public class PreconciliacionScheduler {
 	 */
 	private EjecucionPreconciliacion crearEjecucionPreconciliacion(CalendarioEjecucionProcesoDTO calendarizacion) {
 
-		Date fechaActual = new Date();
+		Date fechaActual = obtenerFechaActual();
 		Calendar calendarEjecucionInicial = Calendar.getInstance();
 		Calendar calendarEjecucionFin = Calendar.getInstance();
 		Calendar ini = Calendar.getInstance();
@@ -259,12 +264,12 @@ public class PreconciliacionScheduler {
 		calendarEjecucionFin.setTime(fechaActual);
 
 		calendarEjecucionInicial.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMin());
-		calendarEjecucionInicial.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMax());
+		calendarEjecucionFin.add(Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMax());
 
 		ini.setTime( calendarEjecucionInicial.getTime());
 		fin.setTime( calendarEjecucionFin.getTime());
 		ini.set(Calendar.HOUR_OF_DAY, 0);
-		ini.set(Calendar.MINUTE, 0);
+		ini.set(Calendar.MINUTE, 1);
 		ini.set(Calendar.SECOND, 0);
 		ini.set(Calendar.MILLISECOND, 0);
 		fin.set(Calendar.HOUR_OF_DAY, 23);
@@ -273,7 +278,7 @@ public class PreconciliacionScheduler {
 		fin.set(Calendar.MILLISECOND, 59);
 
 		EjecucionPreconciliacion ejecucion =  new EjecucionPreconciliacion();
-		ejecucion.setFechaEjecucion(new Date());
+		ejecucion.setFechaEjecucion(obtenerFechaActual());
 		ejecucion.setFechaPeriodoInicio(ini.getTime());
 		ejecucion.setFechaPeriodoFin(fin.getTime());
 		ejecucion.setProveedor(new Proveedor(calendarizacion.getCorresponsal()));
@@ -327,6 +332,16 @@ public class PreconciliacionScheduler {
 		filtro.setCorresponsal(CorresponsalEnum.OPENPAY.getNombre());
 		List<CalendarioEjecucionProcesoDTO> listaResultados = calendarioEjecucionProcesoService.consultarByPropiedades(filtro);
 		return listaResultados;
+	}
+
+	/**
+	 * Método que obtiene la fecha actual de acuerdo a la configuracion de zona horaria que se configure.
+	 *
+	 */
+	public Date obtenerFechaActual() {
+		String zonaHoraria = applicationProperties.getMimonte().getVariables().getZonaHoraria();
+		Date fechaActual = FechasUtil.obtenerFechaZonaHorario(zonaHoraria);
+		return fechaActual;
 	}
 
 }

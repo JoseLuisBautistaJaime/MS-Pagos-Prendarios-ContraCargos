@@ -84,7 +84,11 @@ public class ConciliacionEstadoCuentaScheduler {
 			EjecucionConciliacion ejecucionConciliacion = conciliacionEstadoCuenta.buscarEjecucionConciliacion(conciliacionSEC);
 			if(ejecucionConciliacion != null && ejecucionConciliacion.getId() != 0 ) {
 				conciliacionEstadoCuenta.ejecutarProcesoConciliacionE2(ejecucionConciliacion);
+			}else{
+				LOG.info("No se encontraron los datos de ejecución del proceso");
 			}
+		}else{
+			LOG.info("No se encontraron procesos sin el estado de cuenta conciliado");
 		}
 	}
 

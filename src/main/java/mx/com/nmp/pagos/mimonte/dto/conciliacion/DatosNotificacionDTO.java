@@ -29,6 +29,8 @@ public class DatosNotificacionDTO {
 	private Long idCuenta;
 	private String entidad;
 	private String cuenta;
+	private String fechaInicial;
+	private String fechaFinal;
 
 	static {
 		sf = new SimpleDateFormat("yyyy-MM-dd");
@@ -49,6 +51,18 @@ public class DatosNotificacionDTO {
 		this.fechaInicio = null != fechaInicio ? sf.format(fechaInicio) : null;
 		this.fechaFin = null != fechaFin ? sf.format(fechaFin) : null;
 		this.correponsal = correponsal;
+	}
+
+	public DatosNotificacionDTO(Long idEntidad, String entidad, Long idCuenta, String cuenta, Date fechaInicio, Date fechaFin, String correponsal, Date fechaInicial, Date fechaFinal) {
+		this.idEntidad = idEntidad;
+		this.entidad = entidad;
+		this.idCuenta = idCuenta;
+		this.cuenta = cuenta;
+		this.fechaInicio = null != fechaInicio ? sf.format(fechaInicio) : null;
+		this.fechaFin = null != fechaFin ? sf.format(fechaFin) : null;
+		this.correponsal = correponsal;
+		this.fechaInicial = null != fechaInicial ? sf.format(fechaInicial) : null;
+		this.fechaFinal = null != fechaFinal ? sf.format(fechaFinal) : null;
 	}
 
 	public DatosNotificacionDTO(Long idEntidad, String entidad, Long idCuenta, String cuenta, Date fechaInicio, Date fechaFin, String correponsal) {
@@ -125,10 +139,27 @@ public class DatosNotificacionDTO {
 		this.cuenta = cuenta;
 	}
 
+	public String getFechaInicial() {
+		return fechaInicial;
+	}
+
+	public void setFechaInicial(String fechaInicial) {
+		this.fechaInicial = fechaInicial;
+	}
+
+	public String getFechaFinal() {
+		return fechaFinal;
+	}
+
+	public void setFechaFinal(String fechaFinal) {
+		this.fechaFinal = fechaFinal;
+	}
+
 	@Override
 	public String toString() {
 		return "DatosNotificacionDTO [folio=" + folio + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin
-				+ ", correponsal=" + correponsal + ", idEntidad=" + idEntidad + ", entidad=" + entidad + ", idCuenta=" + idCuenta + ", cuenta=" + cuenta +"]";
+				+ ", correponsal=" + correponsal + ", idEntidad=" + idEntidad + ", entidad=" + entidad + ", idCuenta=" + idCuenta
+				+ ", cuenta=" + cuenta + ", fechaInicial=" + fechaInicial + ", fechaFinal=" + fechaFinal+"]";
 	}
 
 }

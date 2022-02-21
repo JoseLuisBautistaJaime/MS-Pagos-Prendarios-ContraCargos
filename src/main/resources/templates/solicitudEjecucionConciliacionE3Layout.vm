@@ -31,17 +31,21 @@
     <thead>
     <tr style="background-color: #dddddd;">
       <th>Folio</th>
-      <th>Fecha Inicio</th>
-      <th>Fecha Fin</th>
       <th>Corresponsal</th>
+      <th>Entidad</th>
+      <th>Cuenta</th>
+      <th>Fecha Inicio Movimientos</th>
+      <th>Fecha Fin Movimientos</th>
     </tr>
     </thead>
     <tbody>
     <tr>
       <td>$elemento.folio</td>
+      <td>$elemento.correponsal</td>
+      <td>$elemento.idEntidad - $elemento.entidad</td>
+      <td>$elemento.idCuenta - $elemento.cuenta</td>
       <td>$elemento.fechaInicio</td>
       <td>$elemento.fechaFin</td>
-      <td>$elemento.correponsal</td>
     </tr>
     </tbody>
   </table>

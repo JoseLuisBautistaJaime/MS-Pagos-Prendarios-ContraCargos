@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MontoLayoutConciliacionDTO;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -529,7 +530,7 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 			"AND (SELECT COUNT(r.id) FROM to_reporte r WHERE r.id_conciliacion = c.id AND r.tipo = 'MIDAS' AND r.fecha_desde = :fechaDesde AND r.fecha_hasta = :fechaHasta) = 1 " +
 			"AND (SELECT COUNT(r.id) FROM to_reporte r WHERE r.id_conciliacion = c.id AND r.tipo = 'PROVEEDOR' AND r.fecha_desde = :fechaDesde AND r.fecha_hasta = :fechaHasta) = 1 " +
 			"AND (SELECT COUNT(r.id) FROM to_reporte r WHERE r.id_conciliacion = c.id AND r.tipo = 'ESTADO_CUENTA' ) = 0" )
-	public List<Long>  findConciliacionSinEstadoCuenta(@Param("fechaDesde") Date fechaDesde, @Param("fechaHasta") Date fechaHasta,@Param("subEstatusList") final List<Long> subEstatusList, @Param("corresponsal") final String corresponsal);
+	public List<BigInteger>  findConciliacionSinEstadoCuenta(@Param("fechaDesde") String fechaDesde, @Param("fechaHasta") String fechaHasta,@Param("subEstatusList") final List<Long> subEstatusList, @Param("corresponsal") final String corresponsal);
 
 
 	/**
@@ -538,21 +539,30 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param corresponsal
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT c.id FROM to_conciliacion c WHERE c.id_sub_estatus_conciliacion IN :subEstatusList AND c.proveedor = :corresponsal  " +
+	@Query(nativeQuery = true, value = "SELECT c.id FROM to_conciliacion c WHERE c.id_sub_estatus_conciliacion IN :subEstatusList " +
+			"AND c.proveedor = :corresponsal  AND c.created_date BETWEEN :fechaDesde AND :fechaHasta " +
 			"AND (SELECT COUNT(r.id) FROM to_reporte r WHERE r.id_conciliacion = c.id AND r.tipo = 'MIDAS') = 1 " +
 			"AND (SELECT COUNT(r.id) FROM to_reporte r WHERE r.id_conciliacion = c.id AND r.tipo = 'PROVEEDOR') = 1 " +
 			"AND (SELECT COUNT(r.id) FROM to_reporte r WHERE r.id_conciliacion = c.id AND r.tipo = 'ESTADO_CUENTA') = 1 " +
 			"AND (SELECT COUNT(l.id) FROM to_layout l WHERE l.id_conciliacion = c.id ) = 0" )
-	public List<Long>  findConciliacionSinLayouts(@Param("subEstatusList") final List<Long> subEstatusList, @Param("corresponsal") final String corresponsal);
+	public List<BigInteger>  findConciliacionSinLayouts(@Param("fechaDesde") final Date fechaDesde, @Param("fechaHasta") final Date fechaHasta, @Param("subEstatusList") final List<Long> subEstatusList, @Param("corresponsal") final String corresponsal);
 
 
 	/**
-	 * Búsqueda de la conciliacion a partir de una lista de folios
+	 * Búsqueda de las conciliaciones a partir de una lista de folios
 	 * @param listaFolios
 	 * @return
 	 */
-	@Query("FROM Conciliacion c WHERE c.id IN :listaFolios")
+	@Query( "SELECT new Conciliacion(c.id, c.folio, c.estatus, c.entidad.id, c.cuenta.id, c.subEstatusDescripcion, c.idPolizaTesoreria, c.idAsientoContable, c.completedDate, c.global, c.subEstatus) FROM Conciliacion c WHERE c.id IN :listaFolios" )
 	public List<Conciliacion> findByFolios(@Param("listaFolios") final List<Long> listaFolios);
+
+	/**
+	 * Búsqueda del proceso de conciliacion a partir de su folio
+	 * @param folio
+	 * @return
+	 */
+	@Query( "SELECT new Conciliacion(c.id, c.folio, c.estatus, c.entidad.id, c.cuenta.id, c.subEstatusDescripcion, c.idPolizaTesoreria, c.idAsientoContable, c.completedDate, c.global, c.subEstatus) FROM Conciliacion c WHERE c.id = :folio" )
+	public Conciliacion findProcesoByFolio(@Param("folio") final Long folio);
 
 
 	/**
