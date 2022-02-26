@@ -18,6 +18,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusEjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusEjecucionConciliacionEnum;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -71,7 +72,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 		ini.set(com.ibm.icu.util.Calendar.HOUR_OF_DAY, 0);
 		ini.set(com.ibm.icu.util.Calendar.MINUTE, 0);
 		ini.set(com.ibm.icu.util.Calendar.SECOND, 0);
-		ini.set(com.ibm.icu.util.Calendar.MILLISECOND, 0);
+		ini.set(com.ibm.icu.util.Calendar.MILLISECOND, 1);
 		fin.set(com.ibm.icu.util.Calendar.HOUR_OF_DAY, 23);
 		fin.set(com.ibm.icu.util.Calendar.MINUTE, 59);
 		fin.set(com.ibm.icu.util.Calendar.SECOND, 59);
@@ -91,13 +92,17 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 		Date inicioFase = obtenerFechaActual();
 		Date finFase = null;
 		Boolean flgEjecucionCorrecta = true;
+		Boolean flgLayoutCorrectos = true;
 
 		try {
 			inicioFase= obtenerFechaActual();
-			GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),1 );
+			GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),2 );
 			finFase = obtenerFechaActual();
 			flgEjecucionCorrecta = response.getRespuestaCorrecta();
 			descripcionEstatusFase = response.getMessage();
+			if(Integer.valueOf(response.getCodigo()) == HttpStatus.BAD_REQUEST.value()){
+				flgLayoutCorrectos = false;
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			finFase = obtenerFechaActual();
@@ -105,19 +110,18 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 			flgEjecucionCorrecta = false;
 		}
 
-		if(flgEjecucionCorrecta) {
+		if(flgEjecucionCorrecta && flgLayoutCorrectos) {
 
 			List<MontoLayoutConciliacionDTO> montosLayoutsConciliacion= conciliacionService.calcularMontosLayoutsConciliacion(ejecucionConciliacion.getConciliacion().getId());
 
 			if(montosLayoutsConciliacion.isEmpty()){
-				flgEjecucionCorrecta= false;
+				flgLayoutCorrectos = false;
 				descripcionEstatusFase = "Error al generar los layout del proceso de conciliación";
 			} else {
 				Long montoValidacion = montosLayoutsConciliacion.stream().mapToLong(o -> o.getAcumulado()).sum();
 				if(montoValidacion !=  0){
-					flgEjecucionCorrecta= false;
+					flgLayoutCorrectos = false;
 					descripcionEstatusFase ="Las cuentas de los layouts generados para el proceso de conciliación no se encuentran en 0, el proceso debe ser ejecutado de forma manual para solventar las diferencias detectadas";
-					enviarNotificacionLayoutsIncorrectos(ejecucionConciliacion);
 				}
 			}
 
@@ -126,7 +130,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 		ejecucionConciliacion.setEstatus(new EstatusEjecucionConciliacion(EstatusEjecucionConciliacionEnum.GENERAR_LAYOUTS.getIdEstadoEjecucion(), EstatusEjecucionConciliacionEnum.GENERAR_LAYOUTS.getEstadoEjecucion()));
 		generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
 
-		if(flgEjecucionCorrecta){
+		if(flgEjecucionCorrecta  && flgLayoutCorrectos){
 			try {
 				inicioFase= obtenerFechaActual();
 				GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),3 );
@@ -145,8 +149,10 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 
 		}
 
-		if(!flgEjecucionCorrecta){
+		if(!flgEjecucionCorrecta && flgLayoutCorrectos){
 			enviarNotificacionEjecucionErronea(ejecucionConciliacion);
+		} else if (!flgLayoutCorrectos){
+			enviarNotificacionLayoutsIncorrectos(ejecucionConciliacion);
 		}
 
 	}
@@ -192,7 +198,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 	@Override
 	public  BusRestMailDTO construyeEMailProcesoConciliacion(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
 
-		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
+		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
@@ -257,7 +263,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 	 */
 	public  BusRestMailDTO construyeEMailLayoutsIncorrectos(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
 
-		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
+		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje

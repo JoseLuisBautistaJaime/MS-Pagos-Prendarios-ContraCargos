@@ -70,6 +70,12 @@ public class Entidad extends AbstractCatalogoAdm implements Comparable<Entidad>,
 		this.id = id;
 	}
 
+	public Entidad(Long id, String nombre ) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+	}
+
 	public Entidad(String nombre, Set<Contactos> contactos) {
 		super();
 		this.nombre = nombre;

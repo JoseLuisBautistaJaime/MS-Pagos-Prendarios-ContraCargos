@@ -22,7 +22,10 @@
     <span>Buenos días.</span>
     <br>
     <br>
-    <span>Solicito de su apreciable ayuda para ejecutar el proceso de conciliación de los movimientos del estado de cuenta de forma manual a través del portal de MiMonte Conciliación, utilizando como parámetros los datos enlistados en la tabla, ya que no fue posible ejecutar el proceso de forma automática.</span>
+    <span>Solicito de su apreciable ayuda para ejecutar el proceso de conciliación de los movimientos del estado de cuenta de forma manual a través del portal de MiMonte Conciliación, ya que no fue posible ejecutar el proceso de forma automática.</span>
+    <br>
+    <br>
+    <span>Los datos del proceso de conciliación en cuestión se enlistan en la siguiente tabla:</span>
     <br>
     <br>
     <table>
@@ -51,6 +54,7 @@
           </tr>
       </tbody>
     </table>
+    <br>
     <br>
     <span>En espera de sus comentarios y apreciable ayuda. Gracias.</span>
     <br>

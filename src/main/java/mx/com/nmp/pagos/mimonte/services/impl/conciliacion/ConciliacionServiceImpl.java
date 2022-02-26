@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1452,7 +1453,11 @@ public class ConciliacionServiceImpl implements ConciliacionService {
 	 */
 	@Override
 	public List<MontoLayoutConciliacionDTO> calcularMontosLayoutsConciliacion(Long idConciliacion) {
-		List<MontoLayoutConciliacionDTO>   listaCalculos =  conciliacionRepository.calcularMontosLayoutsConciliacion(idConciliacion);
+		List<MontoLayoutConciliacionDTO>   listaCalculos = new ArrayList<>();
+		List<Map<String, Object>> listaConsulta	=  conciliacionRepository.calcularMontosLayoutsConciliacion(idConciliacion);
+		for(Map<String, Object> elemento : listaConsulta ){
+			listaCalculos.add( new MontoLayoutConciliacionDTO(((BigInteger)elemento.get("id_conciliacion")).longValue(), ((BigDecimal)elemento.get("acumulado")).longValue(), elemento.get("tipo").toString()));
+		}
 		return listaCalculos;
 	}
 

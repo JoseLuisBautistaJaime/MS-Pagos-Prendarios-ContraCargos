@@ -10,6 +10,8 @@ import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
 import org.springframework.stereotype.Component;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.HttpClientErrorException;
+
 import java.util.Map;
 
 /**
@@ -56,9 +58,9 @@ public class BusGeneracionLayoutRestService extends AbstractOAuth2RestService {
             header = new BusRestHeaderDTO(bearerToken);
 
             // Se lanza el proceso
-            response = postForObject(auth, body, header, url);
+            response = postForObjectHttpClient(auth, body, header, url);
 
-        } catch (Exception ex) {
+        } catch (HttpClientErrorException ex) {
             ex.printStackTrace();
             throw ex;
         }

@@ -44,8 +44,8 @@ public interface EjecucionConciliacionRepository extends PagingAndSortingReposit
 			"AND ( :idEntidad IS NULL OR ec.conciliacion.entidad.id = :idEntidad) " +
 			"AND( :idCuenta IS NULL OR ec.conciliacion.cuenta.id = :idCuenta) " +
 			"AND ( :idConciliacion IS NULL OR ec.conciliacion.id = :idConciliacion)  " +
-			"AND ( :fechaPeriodoInicio IS NULL OR ec.fechaPeriodoInicio= :fechaPeriodoInicio) " +
-			"AND ( :fechaPeriodoFin IS NULL OR ec.fechaPeriodoFin = :fechaPeriodoFin ) " +
+			"AND ( :fechaPeriodoInicio IS NULL OR ec.fechaPeriodoInicio  BETWEEN :fechaPeriodoInicio AND :fechaPeriodoInicio) " +
+			"AND ( :fechaPeriodoFin IS NULL OR ec.fechaPeriodoFin BETWEEN :fechaPeriodoFin AND :fechaPeriodoFin) " +
 			"AND ( ( :fechaEjecucionDesde  IS NULL AND :fechaEjecucionHasta IS NULL ) OR ( :fechaEjecucionHasta IS NULL AND ec.fechaEjecucion >= :fechaEjecucionDesde) OR ( :fechaEjecucionDesde IS NULL AND ec.fechaEjecucion <= :fechaEjecucionHasta ) OR (ec.fechaEjecucion BETWEEN :fechaEjecucionDesde AND :fechaEjecucionHasta) ) " +
 			"AND ( :proveedor IS NULL OR ec.proveedor.nombre = :proveedor)")
 	public List<EjecucionConciliacionDTO> findByPropiedades(@Param("idEstatus") final Integer idEstatus, @Param("idEntidad") final Long idEntidad, @Param("idCuenta") final Long idCuenta, @Param("idConciliacion") final Long idConciliacion, @Param("fechaPeriodoInicio") final Date fechaPeriodoInicio, @Param("fechaPeriodoFin") final Date fechaPeriodoFin, @Param("fechaEjecucionDesde") final Date fechaEjecucionDesde, @Param("fechaEjecucionHasta") final Date fechaEjecucionHasta, @Param("proveedor") final CorresponsalEnum proveedor);

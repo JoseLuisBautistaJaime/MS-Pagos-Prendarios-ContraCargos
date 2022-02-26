@@ -38,8 +38,8 @@ public interface EjecucionPreconciliacionRepository extends PagingAndSortingRepo
 			"INNER JOIN Proveedor p ON p.id = c.proveedor.id " +
 			"WHERE  ( :idEstatus IS NULL OR c.estatus.id = :idEstatus) " +
 			"AND ( :estatusDescripcion IS NULL OR c.estatusDescripcion = :estatusDescripcion ) " +
-			"AND ( :fechaPeriodoInicio IS NULL OR c.fechaPeriodoInicio= :fechaPeriodoInicio) " +
-			"AND ( :fechaPeriodoFin IS NULL OR c.fechaPeriodoFin = :fechaPeriodoFin ) " +
+			"AND ( :fechaPeriodoInicio IS NULL OR c.fechaPeriodoInicio BETWEEN :fechaPeriodoInicio AND :fechaPeriodoInicio ) " +
+			"AND ( :fechaPeriodoFin IS NULL OR c.fechaPeriodoFin  BETWEEN :fechaPeriodoFin AND :fechaPeriodoFin ) " +
 			"AND ( ( :fechaEjecucionDesde  IS NULL AND :fechaEjecucionHasta IS NULL ) OR ( :fechaEjecucionHasta IS NULL AND c.fechaEjecucion >= :fechaEjecucionDesde) OR ( :fechaEjecucionDesde IS NULL AND c.fechaEjecucion <= :fechaEjecucionHasta ) OR (c.fechaEjecucion BETWEEN :fechaEjecucionDesde AND :fechaEjecucionHasta) ) " +
 			"AND ( :proveedor IS NULL OR c.proveedor.nombre = :proveedor)")
 	public List<EjecucionPreconciliacionDTO> findByPropiedades(@Param("idEstatus") final Integer idEstatus, @Param("estatusDescripcion") final String estatusDescripcion, @Param("fechaPeriodoInicio") final Date fechaPeriodoInicio, @Param("fechaPeriodoFin") final Date fechaPeriodoFin, @Param("fechaEjecucionDesde") final Date fechaEjecucionDesde, @Param("fechaEjecucionHasta") final Date fechaEjecucionHasta, @Param("proveedor") final CorresponsalEnum proveedor);

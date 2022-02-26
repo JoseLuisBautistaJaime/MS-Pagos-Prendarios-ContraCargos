@@ -570,10 +570,8 @@ public interface ConciliacionRepository extends PagingAndSortingRepository<Conci
 	 * @param idConciliacion
 	 * @return
 	 */
-	@Query(nativeQuery = true, value = "SELECT new mx.com.nmp.pagos.mimonte.dto.conciliacion.MontoLayoutConciliacionDTO(l.id, SUM(ll.monto),l.tipo ) FROM to_layout_linea ll" +
-			"INNER JOIN to_layout  l ON l.id = ll.id_layout" +
-			"WHERE l.id_conciliacion = :idConciliacion GROUP BY l.tipo,l.id " )
-	public List<MontoLayoutConciliacionDTO>  calcularMontosLayoutsConciliacion(@Param("idConciliacion") final Long idConciliacion);
+	@Query(nativeQuery = true, value = "SELECT l.id_conciliacion, SUM(ll.monto) AS acumulado, l.tipo  FROM to_layout_linea ll  INNER JOIN to_layout  l ON l.id = ll.id_layout  WHERE l.id_conciliacion = :idConciliacion GROUP BY l.tipo,l.id_conciliacion ")
+	public List<Map<String, Object>> calcularMontosLayoutsConciliacion(@Param("idConciliacion") final Long idConciliacion);
 
 
 }

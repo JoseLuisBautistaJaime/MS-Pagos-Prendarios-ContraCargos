@@ -24,8 +24,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.inject.Inject;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -82,7 +80,7 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 		try {
 			inicioFase= obtenerFechaActual();
 			GestionConciliacionResponseDTO response = gestionConciliacionBroker.crearConciliacion(ejecucionConciliacion.getConciliacion().getCuenta().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
-			conciliacionCreada = obtenerConciliacionCargaMovimientos(Long.valueOf(response.getFolio()), ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS );
+			conciliacionCreada = obtenerConciliacionCargaMovimientos(Long.valueOf(response.getFolio()), ConciliacionConstants.SUBESTATUS_CONCILIACION_CREADA );
 			finFase = obtenerFechaActual();
 			descripcionEstatusFase = "Cociliacón creada";
 		} catch (Exception ex) {
@@ -92,9 +90,11 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 			flgEjecucionCorrecta = false;
 		}
 
-		ejecucionConciliacion.setConciliacion(conciliacionCreada);
-		ejecucionConciliacion= ejecucionConciliacionService.save(ejecucionConciliacion, "sistema");
-		generarTrazadoEjecucionFase(ejecucionConciliacion,inicioFase,finFase,descripcionEstatusFase);
+		if(conciliacionCreada != null) {
+			ejecucionConciliacion.setConciliacion(conciliacionCreada);
+			ejecucionConciliacion = ejecucionConciliacionService.save(ejecucionConciliacion, "sistema");
+			generarTrazadoEjecucionFase(ejecucionConciliacion, inicioFase, finFase, descripcionEstatusFase);
+		}
 
 		if(flgEjecucionCorrecta  && conciliacionCreada != null){
 
@@ -255,7 +255,7 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 	@Override
 	public BusRestMailDTO construyeEMailProcesoConciliacion(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
 
-		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
+		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
@@ -303,9 +303,9 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 		ini.setTime( calendarEjecucionInicial.getTime());
 		fin.setTime( calendarEjecucionFin.getTime());
 		ini.set(Calendar.HOUR_OF_DAY, 0);
-		ini.set(Calendar.MINUTE, 1);
+		ini.set(Calendar.MINUTE, 0);
 		ini.set(Calendar.SECOND, 0);
-		ini.set(Calendar.MILLISECOND, 0);
+		ini.set(Calendar.MILLISECOND, 1);
 		fin.set(Calendar.HOUR_OF_DAY, 23);
 		fin.set(Calendar.MINUTE, 59);
 		fin.set(Calendar.SECOND, 59);
@@ -333,8 +333,8 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 		String idCuenta = applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getCorresponsal().getCuenta();
 		Conciliacion conciliacion = new Conciliacion();
 		conciliacion.setCreatedDate(ejecucionConciliacion.getFechaEjecucion());
-		conciliacion.setEntidad(new Entidad(null != idEntidad ? Long.valueOf(idEntidad) : 0));
-		conciliacion.setCuenta(new Cuenta(null != idCuenta ? Long.valueOf(idCuenta) : 0));
+		conciliacion.setEntidad(new Entidad(null != idEntidad ? Long.valueOf(idEntidad) : 0,""));
+		conciliacion.setCuenta(new Cuenta(null != idCuenta ? Long.valueOf(idCuenta) : 0, ""));
 		conciliacion.setProveedor(ejecucionConciliacion.getProveedor());
 		return conciliacion;
 	}
@@ -347,8 +347,15 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 	 */
 	public boolean validarDuplicidadEjecucion(EjecucionConciliacion ejecucionConciliacion) {
 		FiltroEjecucionConciliacionDTO filtro = new FiltroEjecucionConciliacionDTO();
-		filtro.setFechaPeriodoInicio(ejecucionConciliacion.getFechaPeriodoInicio());
-		filtro.setFechaPeriodoFin(ejecucionConciliacion.getFechaPeriodoFin());
+		Calendar ini = Calendar.getInstance();
+		Calendar fin = Calendar.getInstance();
+		ini.setTime( ejecucionConciliacion.getFechaPeriodoInicio() );
+		fin.setTime( ejecucionConciliacion.getFechaPeriodoFin() );
+		ini.set(Calendar.MILLISECOND, 0);
+		fin.set(Calendar.MILLISECOND, 0);
+		filtro.setFechaPeriodoInicio(ini.getTime());
+		filtro.setFechaPeriodoFin(fin.getTime());
+		filtro.setIdEstatus(EstatusEjecucionConciliacionEnum.CONCILIACION_MIDAS_PROVEEDOR.getIdEstadoEjecucion());
 		filtro.setCorresponsal(ejecucionConciliacion.getProveedor().getNombre().getNombre());
 		List<EjecucionConciliacionDTO> listaResultados = ejecucionConciliacionService.consultarByPropiedades(filtro);
 		if(null != listaResultados && !listaResultados.isEmpty()){

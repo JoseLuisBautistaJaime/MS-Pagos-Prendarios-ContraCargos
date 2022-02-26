@@ -53,7 +53,8 @@ public class DatosNotificacionDTO {
 		this.correponsal = correponsal;
 	}
 
-	public DatosNotificacionDTO(Long idEntidad, String entidad, Long idCuenta, String cuenta, Date fechaInicio, Date fechaFin, String correponsal, Date fechaInicial, Date fechaFinal) {
+	public DatosNotificacionDTO(Long folio, Long idEntidad, String entidad, Long idCuenta, String cuenta, Date fechaInicio, Date fechaFin, String correponsal, Date fechaInicial, Date fechaFinal) {
+		this.folio = folio;
 		this.idEntidad = idEntidad;
 		this.entidad = entidad;
 		this.idCuenta = idCuenta;
@@ -66,6 +67,17 @@ public class DatosNotificacionDTO {
 	}
 
 	public DatosNotificacionDTO(Long idEntidad, String entidad, Long idCuenta, String cuenta, Date fechaInicio, Date fechaFin, String correponsal) {
+		this.idEntidad = idEntidad;
+		this.entidad = entidad;
+		this.idCuenta = idCuenta;
+		this.cuenta = cuenta;
+		this.fechaInicio = null != fechaInicio ? sf.format(fechaInicio) : null;
+		this.fechaFin = null != fechaFin ? sf.format(fechaFin) : null;
+		this.correponsal = correponsal;
+	}
+
+	public DatosNotificacionDTO(Long folio, Long idEntidad, String entidad, Long idCuenta, String cuenta, Date fechaInicio, Date fechaFin, String correponsal) {
+		this.folio = folio;
 		this.idEntidad = idEntidad;
 		this.entidad = entidad;
 		this.idCuenta = idCuenta;

@@ -269,9 +269,9 @@ public class PreconciliacionScheduler {
 		ini.setTime( calendarEjecucionInicial.getTime());
 		fin.setTime( calendarEjecucionFin.getTime());
 		ini.set(Calendar.HOUR_OF_DAY, 0);
-		ini.set(Calendar.MINUTE, 1);
+		ini.set(Calendar.MINUTE, 0);
 		ini.set(Calendar.SECOND, 0);
-		ini.set(Calendar.MILLISECOND, 0);
+		ini.set(Calendar.MILLISECOND, 1);
 		fin.set(Calendar.HOUR_OF_DAY, 23);
 		fin.set(Calendar.MINUTE, 59);
 		fin.set(Calendar.SECOND, 59);
@@ -297,8 +297,14 @@ public class PreconciliacionScheduler {
 	 */
 	public boolean validarDuplicidadProceso(EjecucionPreconciliacion ejecucionPreconciliacion) {
 		FiltroEjecucionPreconciliacionDTO filtro = new FiltroEjecucionPreconciliacionDTO();
-		filtro.setFechaPeriodoInicio(ejecucionPreconciliacion.getFechaPeriodoInicio());
-		filtro.setFechaPeriodoFin(ejecucionPreconciliacion.getFechaPeriodoFin());
+		Calendar ini = Calendar.getInstance();
+		Calendar fin = Calendar.getInstance();
+		ini.setTime( ejecucionPreconciliacion.getFechaPeriodoInicio() );
+		fin.setTime( ejecucionPreconciliacion.getFechaPeriodoFin() );
+		ini.set(Calendar.MILLISECOND, 0);
+		fin.set(Calendar.MILLISECOND, 0);
+		filtro.setFechaPeriodoInicio(ini.getTime());
+		filtro.setFechaPeriodoFin(fin.getTime());
 		filtro.setCorresponsal(ejecucionPreconciliacion.getProveedor().getNombre().getNombre());
 		filtro.setIdEstatus(EstatusEjecucionPreconciliacionEnum.DESCARGACORRECTA.getIdEstadoEjecucion());
 		List<EjecucionPreconciliacionDTO> listaResultados = ejecucionPreconciliacionService.consultarByPropiedades(filtro);

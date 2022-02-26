@@ -46,7 +46,7 @@ public class EjecucionPreconciliacionServiceImpl implements EjecucionPreconcilia
 
 
 	// Temporal format para los LOGs de timers
-	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SS");
 
 	/**
 	 * Metodo que realiza una busqueda a partir de un objeto de tipo
@@ -91,7 +91,6 @@ public class EjecucionPreconciliacionServiceImpl implements EjecucionPreconcilia
 			 filtroEjecucionPreconciliacionDTO.setFechaEjecucionDesde(ini.getTime());
 			 filtroEjecucionPreconciliacionDTO.setFechaEjecucionHasta(fin.getTime());
 		}
-
 
 		result =
 				ejecucionPreconciliacionRepository.findByPropiedades(

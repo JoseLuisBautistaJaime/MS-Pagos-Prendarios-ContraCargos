@@ -11,7 +11,6 @@ import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAdjuntoDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMovimientosEstadoCuentaDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
@@ -76,7 +75,7 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 		ini.set(com.ibm.icu.util.Calendar.HOUR_OF_DAY, 0);
 		ini.set(com.ibm.icu.util.Calendar.MINUTE, 0);
 		ini.set(com.ibm.icu.util.Calendar.SECOND, 0);
-		ini.set(com.ibm.icu.util.Calendar.MILLISECOND, 0);
+		ini.set(com.ibm.icu.util.Calendar.MILLISECOND, 1);
 		fin.set(com.ibm.icu.util.Calendar.HOUR_OF_DAY, 23);
 		fin.set(com.ibm.icu.util.Calendar.MINUTE, 59);
 		fin.set(com.ibm.icu.util.Calendar.SECOND, 59);
@@ -149,11 +148,11 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 
 				if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA){
 					flgEjecucionCorrecta= true;
-					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Conciliación de los movimientos nocturnos y del proveedor completada.";
+					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Conciliación de los movimientos nocturnos, del proveedor y del estado de cuenta completada.";
 					ejecucionConciliacion.setConciliacion(resultadoEjecucion);
 				} else{
 					flgEjecucionCorrecta= false;
-					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Falló la conciliación de los movimientos nocturnos y del proveedor.";
+					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Falló la conciliación de los movimientos nocturnos, del proveedor y del estado de cuenta.";
 				}
 			}
 
@@ -209,8 +208,7 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 	@Override
 	public  BusRestMailDTO construyeEMailProcesoConciliacion(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
 
-		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre(), obtenerFechaActual(), obtenerFechaActual());
-
+		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getId(),ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre(), obtenerFechaActual(), obtenerFechaActual());
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje

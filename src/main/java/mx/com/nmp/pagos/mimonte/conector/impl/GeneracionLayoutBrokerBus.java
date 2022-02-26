@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
 import java.util.Map;
 
 /**
@@ -41,10 +43,12 @@ public class GeneracionLayoutBrokerBus implements GeneracionLayoutBroker {
         Map<String, Object> response = null;
         try {
             response = busGeneracionLayoutRestService.generarLayouts(request);
-        } catch (Exception ex) {
+        } catch (HttpClientErrorException ex) {
             //throw ex;
             resultado.setRespuestaCorrecta(false);
-            resultado.setMessage(ex.getMessage());
+            resultado.setCodigo(String.valueOf(ex.getStatusCode().value()));
+            resultado.setMessage(ex.getMessage()+" : \n "+ex.getResponseBodyAsString());
+            resultado.setDescripcion(ex.getResponseBodyAsString());
             return resultado;
         }
 

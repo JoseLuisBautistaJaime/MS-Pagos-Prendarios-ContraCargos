@@ -23,6 +23,7 @@ import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
@@ -247,6 +248,44 @@ public abstract class AbstractOAuth2RestService {
 		byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
 		String base64Creds = new String(base64CredsBytes);
 		return base64Creds;
+	}
+
+
+
+	/**
+	 * Consume servicio de endpoint
+	 *
+	 * @param auth
+	 * @param body
+	 * @param header
+	 * @param url
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends BusRestBodyDTO> Map<String, Object> postForObjectHttpClient(final BusRestAuthDTO auth, final T body,
+																		final BusRestHeaderDTO header, String url) {
+
+		HttpHeaders headers = createHeadersPostTo(auth, header);
+		HttpEntity<T> request = new HttpEntity<T>(body, headers);
+
+		Object resp = retryTemplate.execute(new RetryCallback<Object, ConciliacionException>() {
+			public Object doWithRetry(RetryContext context) throws ConciliacionException {
+				Object resp = null;
+				LOG.info("postForObject: {}, intento: #{}", url, context.getRetryCount());
+				try {
+					RestTemplate restTemplate = new RestTemplate();
+					resp = restTemplate.postForObject(url, request, Object.class);
+				} catch (HttpClientErrorException ex) {
+					ex.printStackTrace();
+					throw ex;
+				}
+				return resp;
+			}
+		});
+
+		Map<String, Object> obj = (LinkedHashMap<String, Object>) resp;
+
+		return obj;
 	}
 
 }

@@ -22,10 +22,11 @@
   <span>Buenas tardes.</span>
   <br>
   <br>
-  <span>Solicito de su apreciable ayuda para validar y enviar los layouts del proceso de conciliación de forma manual a través del portal de MiMonte Conciliación, ya que se encontraron diferencias en los montos acumulados de los layout generados por el proceso automatizado.</span>
+  <span>Solicito de su apreciable ayuda para generar, validar y enviar los layouts del proceso de conciliación de forma manual a través del portal de MiMonte Conciliación, ya que se encontraron diferencias en los montos acumulados de los diferentes tipos de layouts.</span>
   <br>
   <br>
   <span>Los datos del proceso de conciliación en cuestión se enlistan en la siguiente tabla:</span>
+  <br>
   <br>
   <table>
     <thead>
@@ -49,6 +50,7 @@
     </tr>
     </tbody>
   </table>
+  <br>
   <br>
   <span>En espera de sus comentarios y apreciable ayuda. Gracias.</span>
   <br>

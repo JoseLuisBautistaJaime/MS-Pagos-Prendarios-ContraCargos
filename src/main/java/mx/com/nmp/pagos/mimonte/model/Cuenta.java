@@ -65,6 +65,12 @@ public class Cuenta extends AbstractCatalogoAdm implements Comparable<Cuenta>, j
 		this.id = id;
 	}
 
+	public Cuenta(Long id, String numeroCuenta) {
+		super();
+		this.id = id;
+		this.numeroCuenta = numeroCuenta;
+	}
+
 	public Cuenta(String numeroCuenta, Set<Afiliacion> afiliaciones) {
 		super();
 		this.numeroCuenta = numeroCuenta;
