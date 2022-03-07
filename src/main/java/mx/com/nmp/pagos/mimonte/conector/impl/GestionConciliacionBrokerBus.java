@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -48,12 +49,12 @@ public class GestionConciliacionBrokerBus implements GestionConciliacionBroker {
 		Map<String, Object> response = null;
 		try {
 			response = busGestionConciliacionRestService.crearProcesoConciliacion(request);
-		}
-		catch (Exception ex) {
+		} catch (HttpClientErrorException ex) {
 			//throw ex;
-			resultado.setCargaCorrecta(false);
-			resultado.setMensaje(ex.getMessage());
 			resultado.setFolio("0");
+			resultado.setCargaCorrecta(false);
+			resultado.setCodigo(String.valueOf(ex.getStatusCode().value()));
+			resultado.setMensaje(ex.getMessage()+" : \n "+ex.getResponseBodyAsString());
 			return resultado;
 		}
 

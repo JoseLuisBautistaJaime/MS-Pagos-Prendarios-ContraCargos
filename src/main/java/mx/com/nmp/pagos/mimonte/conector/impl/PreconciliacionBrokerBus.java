@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -56,12 +57,12 @@ public class PreconciliacionBrokerBus implements PreconciliacionBroker {
 		try {
 			response = busProcesoPreconciliacionRestService.ejecutarProcesoPreconciliacion(request);
 		}
-		catch (ConciliacionException ex) {
+		catch (HttpClientErrorException ex) {
 			//throw ex;
 			resultado.setEjecucionCorrecta(false);
-			resultado.setCodigo(ex.getCodigoError().getCodigo());
-			resultado.setDescripcion(ex.getCodigoError().getDescripcion());
-			resultado.setMensaje(ex.getMessage());
+			resultado.setCodigo(String.valueOf(ex.getStatusCode().value()));
+			resultado.setMensaje(ex.getMessage()+" : \n "+ex.getResponseBodyAsString());
+			resultado.setDescripcion(ex.getResponseBodyAsString());
 			return resultado;
 		}
 

@@ -164,7 +164,7 @@ public abstract class ConciliacionCommon {
 		trazadoEjecucion.setFechaInicio(inicioFase);
 		trazadoEjecucion.setFechaFin(finFase);
 		trazadoEjecucion.setEstatus(ejecucionConciliacion.getEstatus());
-		trazadoEjecucion.setEstatusDescripcion(descripcionEstatusFase);
+		trazadoEjecucion.setEstatusDescripcion(descripcionEstatusFase.length() > 499 ? descripcionEstatusFase.substring(0,499) : descripcionEstatusFase );
 		ejecucionConciliacionService.guardarEjecucionConciliacion(trazadoEjecucion,"sistema");
 	}
 

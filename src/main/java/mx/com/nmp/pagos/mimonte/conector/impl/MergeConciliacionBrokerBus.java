@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
 import java.util.Map;
 
 /**
@@ -47,10 +49,11 @@ public class MergeConciliacionBrokerBus implements MergeConciliacionBroker {
 		try {
 			response = busMergeConciliacionRestService.generarMergeConciliacion(request);
 		}
-		catch (Exception ex) {
+		catch (HttpClientErrorException ex) {
 			//throw ex;
 			resultado.setCargaCorrecta(false);
-			resultado.setMessage(ex.getMessage());
+			resultado.setCodigo(String.valueOf(ex.getStatusCode().value()));
+			resultado.setMessage(ex.getMessage()+" : \n "+ex.getResponseBodyAsString());
 			return resultado;
 		}
 

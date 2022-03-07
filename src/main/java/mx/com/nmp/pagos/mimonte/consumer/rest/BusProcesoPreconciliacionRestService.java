@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
 
@@ -67,11 +68,11 @@ public class BusProcesoPreconciliacionRestService extends AbstractOAuth2RestServ
 			header = new BusRestHeaderDTO(bearerToken);
 
 			// Se lanza la ejecución del proceso de pre-conciliación
-			response = postForObject(auth, body, header, url);
+			response = postForObjectHttpClient(auth, body, header, url);
 
-		} catch (Exception ex) {
+		} catch (HttpClientErrorException ex) {
 			ex.printStackTrace();
-			throw new ConciliacionException(ConciliacionConstants.EJECUCION_PRECONCILIACION_CANNOT_BE_CONSULT,	CodigoError.NMP_PMIMONTE_BUSINESS_148);
+			throw ex;
 		}
 
 		return response;

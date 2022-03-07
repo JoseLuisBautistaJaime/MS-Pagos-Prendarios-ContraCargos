@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,27 +55,28 @@ public class MovimientosEstadoCuentaBrokerBus implements MovimientosEstadoCuenta
 		try {
 			response = busMovimientosEstadoCuentaRestService.cargarMovimientosEstadoCuenta(request);
 		}
-		catch (Exception ex) {
+		catch (HttpClientErrorException ex) {
 			//throw ex;
 			resultado.setCargaCorrecta(false);
-			resultado.setMessage(ex.getMessage());
+			resultado.setCodigo(String.valueOf(ex.getStatusCode().value()));
+			resultado.setMessage(ex.getMessage()+" : \n "+ex.getResponseBodyAsString());
 			return resultado;
 		}
 
-		boolean statusResponse = (null != response && null != response.get("codigo") &&  null == response.get("codigoError"));
+		boolean statusResponse = (null != response && null != response.get("code") &&  null == response.get("codigoError"));
 
-		LOGGER.debug(statusResponse? "Carga correcta" : "Error al cargar los movimientos del proveedor");
+		LOGGER.debug(statusResponse? "Carga correcta" : "Error al cargar los movimientos del estado de cuenta");
 
-		if (!statusResponse) {
-			resultado.setCargaCorrecta(false);
-			resultado.setCodigo(response.get("codigoError").toString());
-			resultado.setDescripcion(response.get("tipoError").toString());
-			resultado.setMessage(response.get("descripcionError").toString());
-		} else {
+		if (statusResponse) {
 			resultado.setCargaCorrecta(true);
-			resultado.setCodigo(response.get("codigo").toString());
-			resultado.setDescripcion(response.get("descripcion").toString());
-			resultado.setMessage(response.get("descripcion").toString());
+			resultado.setCodigo(response.get("code").toString());
+			resultado.setDescripcion(response.get("message").toString());
+			resultado.setMessage(response.get("message").toString());
+		} else {
+			resultado.setCargaCorrecta(false);
+			resultado.setCodigo(response.get("code").toString());
+			resultado.setDescripcion(response.get("message").toString());
+			resultado.setMessage("Error al cargar los movimientos del estado de cuenta");
 		}
 
 		return resultado;

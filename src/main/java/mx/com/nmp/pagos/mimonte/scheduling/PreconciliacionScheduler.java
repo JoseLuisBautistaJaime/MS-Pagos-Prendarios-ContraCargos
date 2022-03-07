@@ -168,7 +168,7 @@ public class PreconciliacionScheduler {
 			}else{
 				if(i == calendarizacion.getReintentos()) {
 					ejecucionPreconciliacion.getEstatus().setId(EstatusEjecucionPreconciliacionEnum.DESCARGAINCORRECTA.getIdEstadoEjecucion());
-					ejecucionPreconciliacion.setEstatusDescripcion(response.getMensaje());
+					ejecucionPreconciliacion.setEstatusDescripcion(response.getMensaje().length() > 499 ? response.getMensaje().substring(0,499) : response.getMensaje() );
 				}
 				continue;
 			}
