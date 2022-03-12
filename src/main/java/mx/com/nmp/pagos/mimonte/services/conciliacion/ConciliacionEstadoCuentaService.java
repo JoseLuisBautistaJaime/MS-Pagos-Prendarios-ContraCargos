@@ -2,7 +2,7 @@
  * Proyecto:        NMP - HABILITAR COBRANZA 24/7 -  CONCILIACION AUTOMATICA.
  * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
  */
-package mx.com.nmp.pagos.mimonte.scheduling;
+package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import com.ibm.icu.util.Calendar;
 import mx.com.nmp.pagos.mimonte.conector.MergeConciliacionBroker;
@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Nombre: ConciliacionEstadoCuenta Descripcion: Clase que proporciona los métodos para
+ * Nombre: ConciliacionEstadoCuentaService Descripcion: Clase que proporciona los métodos para
  * consultar y cargar los movimientos del estado de cuenta.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * @version 0.1
  */
 @Component
-public class ConciliacionEstadoCuenta extends ConciliacionCommon {
+public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 
 	/**
 	 * Conector encargado de conciliar los movimientos del estado de cuenta.
@@ -47,7 +47,7 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 	private  MergeConciliacionBroker mergeConciliacionBroker;
 
 
-	private ConciliacionEstadoCuenta() {
+	private ConciliacionEstadoCuentaService() {
 		super();
 	}
 
@@ -117,11 +117,11 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 
 			if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA){
 				flgEjecucionCorrecta= true;
-				descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Consulta de los movimientos del estado de cuenta completada.";
+				descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.SUCCESSFUL_CARGA_MOVS_ESTADO_CUENTA;
 				ejecucionConciliacion.setConciliacion(resultadoEjecucion);
 			} else{
 				flgEjecucionCorrecta= false;
-				descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Falló la consulta de los movimientos del estado de cuenta.";
+				descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.ERROR_CARGA_MOVS_ESTADO_CUENTA;
 			}
 		}
 
@@ -144,15 +144,15 @@ public class ConciliacionEstadoCuenta extends ConciliacionCommon {
 
 			if(flgEjecucionCorrecta) {
 
-				Conciliacion resultadoEjecucion= escucharSubEstatusConciliacion(ejecucionConciliacion.getConciliacion().getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION);
+				Conciliacion resultadoEjecucion= escucharSubEstatusConciliacion(ejecucionConciliacion.getConciliacion().getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION_E2);
 
-				if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA){
+				if(resultadoEjecucion != null  && ( resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA || resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA) ){
 					flgEjecucionCorrecta= true;
-					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Conciliación de los movimientos nocturnos, del proveedor y del estado de cuenta completada.";
+					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.SUCCESSFUL_MERGE_MIDAS_PROVEEDOR_ESTADODECUENTA ;
 					ejecucionConciliacion.setConciliacion(resultadoEjecucion);
 				} else{
 					flgEjecucionCorrecta= false;
-					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Falló la conciliación de los movimientos nocturnos, del proveedor y del estado de cuenta.";
+					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.ERROR_MERGE_MIDAS_PROVEEDOR_ESTADODECUENTA;
 				}
 			}
 

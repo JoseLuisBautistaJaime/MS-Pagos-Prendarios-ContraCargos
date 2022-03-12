@@ -2,7 +2,7 @@
  * Proyecto:        NMP - HABILITAR COBRANZA 24/7 -  CONCILIACION AUTOMATICA.
  * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
  */
-package mx.com.nmp.pagos.mimonte.scheduling;
+package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import com.ibm.icu.util.Calendar;
 import mx.com.nmp.pagos.mimonte.conector.GeneracionLayoutBroker;
@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Nombre: ConciliacionLayouts Descripcion: Clase que proporciona los métodos para
+ * Nombre: ConciliacionLayoutsService Descripcion: Clase que proporciona los métodos para
  * generar y enviar los layouts de pagos, comisiones y devoluciones.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * @version 0.1
  */
 @Component
-public class ConciliacionLayouts extends ConciliacionCommon {
+public class ConciliacionLayoutsService extends ConciliacionCommonService {
 
 	/**
 	 * Conector encargado de conciliar los movimientos del estado de cuenta.
@@ -44,7 +44,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 	private GeneracionLayoutBroker generacionLayoutBroker;
 
 
-	private ConciliacionLayouts() {
+	private ConciliacionLayoutsService() {
 		super();
 	}
 
@@ -96,7 +96,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 
 		try {
 			inicioFase= obtenerFechaActual();
-			GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),2 );
+			GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),ConciliacionConstants.GENERAR_LAYOUT );
 			finFase = obtenerFechaActual();
 			flgEjecucionCorrecta = response.getRespuestaCorrecta();
 			descripcionEstatusFase = response.getMessage();
@@ -116,12 +116,12 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 
 			if(montosLayoutsConciliacion.isEmpty()){
 				flgLayoutCorrectos = false;
-				descripcionEstatusFase = "Error al generar los layout del proceso de conciliación";
+				descripcionEstatusFase = ConciliacionConstants.ERROR_GENERACION_LAYOUT ;
 			} else {
 				Long montoValidacion = montosLayoutsConciliacion.stream().mapToLong(o -> o.getAcumulado()).sum();
 				if(montoValidacion !=  0){
 					flgLayoutCorrectos = false;
-					descripcionEstatusFase ="Las cuentas de los layouts generados para el proceso de conciliación no se encuentran en 0, el proceso debe ser ejecutado de forma manual para solventar las diferencias detectadas";
+					descripcionEstatusFase = ConciliacionConstants.ERROR_VALIDAR_MONTOS_LAYOUT;
 				}
 			}
 
@@ -133,7 +133,7 @@ public class ConciliacionLayouts extends ConciliacionCommon {
 		if(flgEjecucionCorrecta  && flgLayoutCorrectos){
 			try {
 				inicioFase= obtenerFechaActual();
-				GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),3 );
+				GeneracionLayoutResponseDTO response = generacionLayoutBroker.generarLayouts(ejecucionConciliacion.getConciliacion().getId(),ConciliacionConstants.ENVIAR_LAYOUT);
 				finFase = obtenerFechaActual();
 				flgEjecucionCorrecta = response.getRespuestaCorrecta();
 				descripcionEstatusFase = response.getMessage();

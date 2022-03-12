@@ -82,7 +82,7 @@ public class ConciliacionEstadoCuenta {
 
 	@Override
 	public String toString() {
-		return "ConciliacionEstadoCuenta [idConciliacion=" + idConciliacion + ", idReporte=" + idReporte + "]";
+		return "ConciliacionEstadoCuentaService [idConciliacion=" + idConciliacion + ", idReporte=" + idReporte + "]";
 	}
 
 }

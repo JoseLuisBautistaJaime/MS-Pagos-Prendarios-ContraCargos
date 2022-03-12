@@ -2,7 +2,7 @@
  * Proyecto:        NMP - HABILITAR COBRANZA 24/7 -  CONCILIACION AUTOMATICA.
  * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
  */
-package mx.com.nmp.pagos.mimonte.scheduling;
+package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import com.ibm.icu.util.Calendar;
 import mx.com.nmp.pagos.mimonte.conector.GestionConciliacionBroker;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * Nombre: ConciliacionMidasProveedor Descripcion: Clase que proporciona los métodos para
+ * Nombre: ConciliacionMidasProveedorService Descripcion: Clase que proporciona los métodos para
  * consultar y cargar los movimientos nocturnos de MIDAS y los movimientos del proveedor.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * @version 0.1
  */
 @Component
-public class ConciliacionMidasProveedor extends ConciliacionCommon {
+public class ConciliacionMidasProveedorService extends ConciliacionCommonService {
 
 	/**
 	 * Conector encargado de conciliar los movimientos nocturnos de MIDAS.
@@ -82,7 +82,7 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 			GestionConciliacionResponseDTO response = gestionConciliacionBroker.crearConciliacion(ejecucionConciliacion.getConciliacion().getCuenta().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
 			conciliacionCreada = obtenerConciliacionCargaMovimientos(Long.valueOf(response.getFolio()), ConciliacionConstants.SUBESTATUS_CONCILIACION_CREADA );
 			finFase = obtenerFechaActual();
-			descripcionEstatusFase = "Cociliacón creada";
+			descripcionEstatusFase = ConciliacionConstants.SUCCESSFUL_CREACION_CONCILIACION;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			finFase = obtenerFechaActual();
@@ -117,11 +117,12 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 
 				if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA){
 					flgEjecucionCorrecta= true;
-					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Consulta de los movimientos nocturnos completada.";
-					ejecucionConciliacion.setConciliacion(resultadoEjecucion);
+					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.SUCCESSFUL_CARGA_MOVS_MIDAS;
+					conciliacionCreada = resultadoEjecucion;
+					ejecucionConciliacion.setConciliacion(conciliacionCreada);
 				} else{
 					flgEjecucionCorrecta= false;
-					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Falló la consulta de los movimientos nocturnos.";
+					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.ERROR_CARGA_MOVS_MIDAS;
 				}
 			}
 
@@ -133,7 +134,7 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 				try {
 					Conciliacion conciliacionActual = this.conciliacionService.getById(conciliacionCreada.getId());
 					inicioFase= obtenerFechaActual();
-					MovimientosProveedorResponseDTO response = movimientosProveedorBrokerBus.cargarMovimientosProveedor(conciliacionActual.getId(),ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(),conciliacionActual.getProveedor().getNombre().getNombre(), conciliacionActual.getSubEstatus().getId(), "Bancomer" );
+					MovimientosProveedorResponseDTO response = movimientosProveedorBrokerBus.cargarMovimientosProveedor(conciliacionActual.getId(),ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(),conciliacionActual.getProveedor().getNombre().getNombre(), conciliacionActual.getSubEstatus().getId(), ConciliacionConstants.PROVEEDOR_BANCARIO_CARGA_MOVIMIENTOS );
 					finFase = obtenerFechaActual();
 					flgEjecucionCorrecta = response.getCargaCorrecta();
 					descripcionEstatusFase = response.getMessage();
@@ -146,15 +147,16 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 
 				if(flgEjecucionCorrecta) {
 
-					Conciliacion resultadoEjecucion= escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT);
+					Conciliacion resultadoEjecucion= escucharSubEstatusConciliacion(conciliacionCreada.getId(), ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT);
 
-					if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA){
+					if(resultadoEjecucion != null  &&  ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT_VALIDACION.contains(resultadoEjecucion.getSubEstatus().getId()) ){
 						flgEjecucionCorrecta= true;
-						descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Consulta de los movimientos del proveedor completada.";
-						ejecucionConciliacion.setConciliacion(resultadoEjecucion);
+						descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.SUCCESSFUL_CARGA_MOVS_PROVEEDOR;
+						conciliacionCreada = resultadoEjecucion;
+						ejecucionConciliacion.setConciliacion(conciliacionCreada);
 					} else{
 						flgEjecucionCorrecta= false;
-						descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Falló la consulta de los movimientos del proveedor.";
+						descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.ERROR_CARGA_MOVS_PROVEEDOR;
 					}
 				}
 
@@ -163,31 +165,37 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 
 				if(flgEjecucionCorrecta){
 
-                    try {
-						inicioFase= obtenerFechaActual();
-						MergeConciliacionResponseDTO response = mergeConciliacionBroker.generarMergeConciliacion(conciliacionCreada.getId());
-						finFase = obtenerFechaActual();
-						flgEjecucionCorrecta = response.getCargaCorrecta();
-						descripcionEstatusFase = response.getMessage();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        finFase = obtenerFechaActual();
-                        descripcionEstatusFase = ex.getMessage();
-                        flgEjecucionCorrecta = false;
-                    }
+					if(conciliacionCreada.getSubEstatus().getId() != ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA) {
 
-					if(flgEjecucionCorrecta) {
-
-						Conciliacion resultadoEjecucion= escucharSubEstatusConciliacion(conciliacionCreada.getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION);
-
-						if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA){
-							flgEjecucionCorrecta= true;
-							descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Conciliación de los movimientos nocturnos y del proveedor completada.";
-							ejecucionConciliacion.setConciliacion(resultadoEjecucion);
-						} else{
-							flgEjecucionCorrecta= false;
-							descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : "Falló la conciliación de los movimientos nocturnos y del proveedor.";
+						try {
+							inicioFase = obtenerFechaActual();
+							MergeConciliacionResponseDTO response = mergeConciliacionBroker.generarMergeConciliacion(conciliacionCreada.getId());
+							finFase = obtenerFechaActual();
+							flgEjecucionCorrecta = response.getCargaCorrecta();
+							descripcionEstatusFase = response.getMessage();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+							finFase = obtenerFechaActual();
+							descripcionEstatusFase = ex.getMessage();
+							flgEjecucionCorrecta = false;
 						}
+
+						if (flgEjecucionCorrecta) {
+
+							Conciliacion resultadoEjecucion = escucharSubEstatusConciliacion(conciliacionCreada.getId(), ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION);
+
+							if (resultadoEjecucion != null && resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA) {
+								flgEjecucionCorrecta = true;
+								descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.SUCCESSFUL_MERGE_MIDAS_PROVEEDOR;
+								conciliacionCreada = resultadoEjecucion;
+								ejecucionConciliacion.setConciliacion(conciliacionCreada);
+							} else {
+								flgEjecucionCorrecta = false;
+								descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.ERROR_MERGE_MIDAS_PROVEEDOR;
+							}
+						}
+					} else {
+						descripcionEstatusFase =  ConciliacionConstants.SUCCESSFUL_MERGE_MIDAS_PROVEEDOR;
 					}
 
 					ejecucionConciliacion.setEstatus(new EstatusEjecucionConciliacion(EstatusEjecucionConciliacionEnum.CONCILIACION_MIDAS_PROVEEDOR.getIdEstadoEjecucion(), EstatusEjecucionConciliacionEnum.CONCILIACION_MIDAS_PROVEEDOR.getEstadoEjecucion()));
@@ -378,7 +386,7 @@ public class ConciliacionMidasProveedor extends ConciliacionCommon {
 		filtro.setIdEntidad(ejecucionConciliacion.getConciliacion().getEntidad().getId());
 		List<ConsultaConciliacionDTO> listaResultados = conciliacionService.consulta(filtro);
 		if(null != listaResultados && !listaResultados.isEmpty()){
-			return true;
+			return false;
 		}
 		return true;
 	}

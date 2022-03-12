@@ -9,6 +9,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ProcesoEnum;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionEstadoCuentaService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class ConciliacionEstadoCuentaScheduler {
 	 * Los métodos para consultar y cargar los movimientos del estado de cuenta.
 	 */
 	@Autowired
-	private ConciliacionEstadoCuenta conciliacionEstadoCuenta;
+	private ConciliacionEstadoCuentaService conciliacionEstadoCuenta;
 
 	/**
 	 * Programa la ejecución de las  tareas automatizadas.

@@ -374,6 +374,11 @@ public final class ConciliacionConstants {
 	public static final Long TIPO_CONTACTO_PRECONCILIACION= 3l;
 	public static final Long TIPO_CONTACTO_CONCILIACION= 4l;
 
+	// Estatus de envio de layouts
+	public static final Integer GENERAR_ENVIAR_LAYOUT= 1;
+	public static final Integer GENERAR_LAYOUT = 2;
+	public static final Integer ENVIAR_LAYOUT= 3;
+
 	public static final String ESTATUS_TRANSACCION_OPENPAY_COMPLETED = "completed";
 	public static final String TIPO_TRANSACCION_OPENPAY_CARGO = "charge";
 	public static final String TIPO_OPERACION_OPENPAY_IN = "in";
@@ -559,6 +564,77 @@ public final class ConciliacionConstants {
 	public static final String DEV_MOVS_DONT_EXIST = "Uno o mas movimientos devolucion no existen";
 
 	/**
+	 * Mensaje que es mostrado cuando la creación del proceso de conciliación es exitosa.
+	 */
+	public static final String SUCCESSFUL_CREACION_CONCILIACION = "Cociliación creada.";
+
+	/**
+	 * Mensaje que es mostrado cuando la carga de movimientos nocturnos de MIDAS es exitosa.
+	 */
+	public static final String SUCCESSFUL_CARGA_MOVS_MIDAS = "Consulta de los movimientos nocturnos completada.";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la carga de movimientos nocturnos de MIDAS.
+	 */
+	public static final String ERROR_CARGA_MOVS_MIDAS = "Falló la consulta de los movimientos nocturnos.";
+
+	/**
+	 * Mensaje que es mostrado cuando la carga de movimientos del proveedor transaccional es exitosa.
+	 */
+	public static final String SUCCESSFUL_CARGA_MOVS_PROVEEDOR = "Consulta de los movimientos del proveedor completada.";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la carga de movimientos del proveedor transaccional.
+	 */
+	public static final String ERROR_CARGA_MOVS_PROVEEDOR = "Falló la consulta de los movimientos del proveedor.";
+
+	/**
+	 * Mensaje que es mostrado cuando el merge de los movimientos nocturnos de MIDAS y los movimientos del proveedor transaccional es exitoso.
+	 */
+	public static final String SUCCESSFUL_MERGE_MIDAS_PROVEEDOR = "Conciliación de los movimientos nocturnos y del proveedor completada.";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante el merge de los movimientos nocturnos de MIDAS y los movimientos del proveedor transaccional.
+	 */
+	public static final String ERROR_MERGE_MIDAS_PROVEEDOR  = "Falló la conciliación de los movimientos nocturnos y del proveedor.";
+
+	/**
+	 * Mensaje que es mostrado cuando el merge de los movimientos nocturnos de MIDAS, los movimientos del proveedor transaccional y los movimientos del estado de cuenta es exitoso.
+	 */
+	public static final String SUCCESSFUL_MERGE_MIDAS_PROVEEDOR_ESTADODECUENTA = "Conciliación de los movimientos nocturnos, del proveedor y del estado de cuenta completada.";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante el merge de los movimientos nocturnos de MIDAS, los movimientos del proveedor transaccional y los movimientos del estado de cuenta.
+	 */
+	public static final String ERROR_MERGE_MIDAS_PROVEEDOR_ESTADODECUENTA  = "Falló la conciliación de los movimientos nocturnos, del proveedor y del estado de cuenta.";
+
+	/**
+	 * Mensaje que es mostrado cuando la carga de movimientos del estado de cuenta.
+	 */
+	public static final String SUCCESSFUL_CARGA_MOVS_ESTADO_CUENTA = "Consulta de los movimientos del estado de cuenta completada.";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la carga de movimientos del estado de cuenta.
+	 */
+	public static final String ERROR_CARGA_MOVS_ESTADO_CUENTA = "Falló la consulta de los movimientos del estado de cuenta.";
+
+	/**
+	 * Mensaje que es mostrado cuando se genera un error durante la generación de los layouts.
+	 */
+	public static final String ERROR_GENERACION_LAYOUT = "Error al generar los layoutS del proceso de conciliación";
+
+	/**
+	 * Mensaje que es mostrado cuando se encuentran diferencias entre los montos acumulados de los distintos tipos de layouts generados.
+	 */
+	public static final String ERROR_VALIDAR_MONTOS_LAYOUT = "Las cuentas de los layouts generados para el proceso de conciliación no se encuentran en 0, el proceso debe ser ejecutado de forma manual para solventar las diferencias detectadas";
+
+	/**
+	 * Proveedor bancario que se envia en la solicitud de carga de moviminetos del proveedor transaccional.
+	 */
+	public static final String PROVEEDOR_BANCARIO_CARGA_MOVIMIENTOS = 	"Bancomer";
+
+
+	/**
 	 * Validación de sub-estatus para acciones sobre la conciliación.
 	 */
 	public final static List<Long> CON_SUB_ESTATUS_ACTUALIZACION_PS = asList(SUBESTATUS_CONCILIACION_ENVIADA);
@@ -577,8 +653,14 @@ public final class ConciliacionConstants {
 			SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_COMPLETADA,
 			SUBESTATUS_CONCILIACION_CONSULTA_MIDAS_ERROR);
 	public final static List<Long> CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT = asList(
+			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA,
+			SUBESTATUS_CONCILIACION_CONCILIACION_ERROR,
 			SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA,
 			SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_ERROR);
+	public final static List<Long> CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_PT_VALIDACION = asList(
+			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA,
+			SUBESTATUS_CONCILIACION_CONCILIACION_ERROR,
+			SUBESTATUS_CONCILIACION_CONSULTA_OPEN_PAY_COMPLETADA);
 	public final static List<Long> CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION = asList(
 			SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA,
 			SUBESTATUS_CONCILIACION_CONCILIACION_ERROR);

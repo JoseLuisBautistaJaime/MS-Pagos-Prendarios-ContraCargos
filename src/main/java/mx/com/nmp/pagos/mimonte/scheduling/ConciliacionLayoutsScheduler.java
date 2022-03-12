@@ -5,11 +5,11 @@
 package mx.com.nmp.pagos.mimonte.scheduling;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CalendarioEjecucionProcesoDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MontoLayoutConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.ProcesoEnum;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionLayoutsService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class ConciliacionLayoutsScheduler {
 	 * Los métodos para generar y enviar los layouts de pagos, comisiones y devoluciones.
 	 */
 	@Autowired
-	private ConciliacionLayouts conciliacionLayouts;
+	private ConciliacionLayoutsService conciliacionLayouts;
 
 	/**
 	 * Programa la ejecución de las  tareas automatizadas.

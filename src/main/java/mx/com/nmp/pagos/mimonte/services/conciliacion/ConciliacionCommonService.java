@@ -2,7 +2,7 @@
  * Proyecto:        NMP - HABILITAR COBRANZA 24/7 -  CONCILIACION AUTOMATICA.
  * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
  */
-package mx.com.nmp.pagos.mimonte.scheduling;
+package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
@@ -15,9 +15,6 @@ import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TrazadoEjecucionConciliacion;
-import mx.com.nmp.pagos.mimonte.services.conciliacion.CalendarioEjecucionProcesoService;
-import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
-import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionConciliacionService;
 import mx.com.nmp.pagos.mimonte.util.FechasUtil;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
@@ -29,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Nombre: ConciliacionCommon Descripción: Clase que proporciona los métodos comunes en
+ * Nombre: ConciliacionCommonService Descripción: Clase que proporciona los métodos comunes en
  * la ejecución del proceso de conciliación.
  *
  * @author Juan Manuel Reveles jmreveles@quarksoft.net
@@ -37,12 +34,12 @@ import java.util.List;
  * @version 0.1
  */
 
-public abstract class ConciliacionCommon {
+public abstract class ConciliacionCommonService {
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
-	public final Logger LOG = LoggerFactory.getLogger(ConciliacionCommon.class);
+	public final Logger LOG = LoggerFactory.getLogger(ConciliacionCommonService.class);
 
 	/**
 	 * Servicios para gestionar la  calendarización de los procesos automatizados
@@ -88,7 +85,7 @@ public abstract class ConciliacionCommon {
 	public BusMailRestService busMailRestService;
 
 
-	public ConciliacionCommon() {
+	public ConciliacionCommonService() {
 		super();
 	}
 
