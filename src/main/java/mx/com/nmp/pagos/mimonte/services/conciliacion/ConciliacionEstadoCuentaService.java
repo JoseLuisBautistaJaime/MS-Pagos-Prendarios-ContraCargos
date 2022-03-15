@@ -11,11 +11,14 @@ import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAdjuntoDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
+import mx.com.nmp.pagos.mimonte.controllers.conciliacion.MovimientosController;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
+import mx.com.nmp.pagos.mimonte.util.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -46,6 +49,11 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 	@Inject
 	private  MergeConciliacionBroker mergeConciliacionBroker;
 
+	/**
+	 * Manager encargado de cargar los movimientos del estado de cuenta.
+	 */
+	@Autowired
+	private MovimientosController movimientosController;
 
 	private ConciliacionEstadoCuentaService() {
 		super();
@@ -100,7 +108,8 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 
 		try {
 			inicioFase=obtenerFechaActual();
-			MovimientosEstadoCuentaResponseDTO response = movimientosEstadoCuentaBroker.cargarMovimientosEstadoCuenta(ejecucionConciliacion.getConciliacion().getId(),obtenerFechaActual(), obtenerFechaActual() );
+			MovimientosEstadoCuentaResponseDTO response = this.cargarMovimientosEstadoCuenta(ejecucionConciliacion.getConciliacion().getId(),obtenerFechaActual(), obtenerFechaActual() );
+			//MovimientosEstadoCuentaResponseDTO response = movimientosEstadoCuentaBroker.cargarMovimientosEstadoCuenta(ejecucionConciliacion.getConciliacion().getId(),obtenerFechaActual(), obtenerFechaActual() );
 			finFase = obtenerFechaActual();
 			flgEjecucionCorrecta = response.getCargaCorrecta();
 			descripcionEstatusFase = response.getMessage();
@@ -231,6 +240,32 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 		mailDTO.setPara(destinatarios);
 
 		return mailDTO;
+	}
+
+
+	/**
+	 * Ejecuta el proceso de carga de los movimientos del estado de cuenta.
+	 * @param folio
+	 * @param fechaInicial
+	 * @param fechaFinal
+	 * @return
+	 */
+	public MovimientosEstadoCuentaResponseDTO cargarMovimientosEstadoCuenta(Long folio, Date fechaInicial, Date fechaFinal) {
+		MovimientosEstadoCuentaResponseDTO resultado = new MovimientosEstadoCuentaResponseDTO();
+		try {
+			SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO = new SaveEstadoCuentaRequestDTO();
+			saveEstadoCuentaRequestDTO.setFolio(folio);
+			saveEstadoCuentaRequestDTO.setFechaInicial(fechaInicial);
+			saveEstadoCuentaRequestDTO.setFechaFinal(fechaFinal);
+			Response response = movimientosController.saveMovimientoEsadoCuenta(saveEstadoCuentaRequestDTO, "sistema");
+			resultado.setCargaCorrecta(true);
+			resultado.setCodigo(response.getCode());
+			resultado.setDescripcion(response.getMessage());
+			resultado.setMessage(response.getMessage());
+		} catch (ConciliacionException ex) {
+			throw ex;
+		}
+		return resultado;
 	}
 	
 }

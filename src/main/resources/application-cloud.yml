@@ -30,6 +30,7 @@ logback:
 #Pagos
 mimonte:
   variables:
+    zonaHoraria: ${TZ}
     mail:
       solicitud-pagos:
         title: "Solicitud de Pagos"
@@ -81,3 +82,30 @@ mimonte:
     cantidad-maxima-tarjetas: 3
     cantidad-maxima-partidas: 10
     iva: 0.16
+    procesoPreconciliacion:
+      url: ${PRECONCILIACION_URL}
+      auth:
+        usuario: ${PRECONCILIACION_AUT_USER}
+        password: ${PRECONCILIACION_AUT_PASS}
+      header:
+        usuario: ${PRECONCILIACION_HEAD_USER}
+        idConsumidor: ${PRECONCILIACION_HEAD_CONSUMIDOR}
+        idDestino: ${PRECONCILIACION_HEAD_DESTINO}
+    procesoConciliacion:
+      urlGestionConciliacion: ${CONCILIACION_GESTION_URL}
+      urlMovimientosNocturnos: ${CONCILIACION_MOVS_NOCTURNOS_URL}
+      urlMovimientosProveedor: ${CONCILIACION_MOVS_PROVEEDOR_URL}
+      urlMovimientosEstadoCuenta: ${CONCILIACION_MOVS_ESTADODECUENTA_URL}
+      urlMergeConciliacion: ${CONCILIACION_MERGE_URL}
+      urlGeneracionLayout: ${CONCILIACION_LAYOUT_URL}
+      auth:
+        usuario: ${CONCILIACION_AUT_USER}
+        password: ${CONCILIACION_AUT_PASS}
+      header:
+        usuario: ${CONCILIACION_HEAD_USER}
+        idConsumidor: ${CONCILIACION_HEAD_CONSUMIDOR}
+        idDestino: ${CONCILIACION_HEAD_DESTINO}
+        requestUser: ${CONCILIACION_HEAD_REQUESTUSER}
+      corresponsal:
+        entidad: ${CONCILIACION_CORRESPONSAL_ENTIDAD}
+        cuenta: ${CONCILIACION_CORRESPONSAL_CUENTA}

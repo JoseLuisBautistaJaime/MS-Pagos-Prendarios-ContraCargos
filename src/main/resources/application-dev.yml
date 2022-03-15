@@ -35,17 +35,17 @@ spring:
       enabled: true
 
   datasource:
-#     url: jdbc:mysql://sl-us-south-1-portal.50.dblayer.com:19239/compose?useUnicode=true&characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
-#     username: admin
-#     password: TAAEHZZUXVCVXVVY
+     url: jdbc:mysql://sl-us-south-1-portal.50.dblayer.com:19239/compose?useUnicode=true&characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
+     username: admin
+     password: TAAEHZZUXVCVXVVY
 
 #    url: jdbc:mysql://127.0.0.1:3306/1775-pagosdb?useUnicode=true&characterEncoding=utf8&useSSL=false
 #    username: root
 #    password: pipo
 
-    url: jdbc:mysql://us-mm-dca-547-i.cleardb.net:3306/dev1775-conciliacion-db?useSSL=false&requireSSL=false&serverTimezone=America/Mexico_City&user=devlipsummm&password=devM1m0nt30619
-    username: devlipsummm
-    password: devM1m0nt30619
+#    url: jdbc:mysql://us-mm-dca-547-i.cleardb.net:3306/dev1775-conciliacion-db?useSSL=false&requireSSL=false&serverTimezone=America/Mexico_City&user=devlipsummm&password=devM1m0nt30619
+#    username: devlipsummm
+#    password: devM1m0nt30619
 
     testWhileIdle: true
     validationQuery: SELECT 1

@@ -54,6 +54,21 @@ mimonte:
       solicitudDevolucion:
         title: "Solicitud de Devoluciones"
         velocityTemplate: "/templates/solicitudDevoluciones.vm"
+      solicitudEjecucionPreconciliacion:
+        title: "Solicitud de Lanzamiento del Proceso de Pre-conciliación"
+        velocityTemplate: "/templates/solicitudEjecucionPreconciliacion.vm"
+      solicitudEjecucionConciliacionEtapa1:
+        title: "Solicitud de Lanzamiento del Proceso de Conciliación Etapa 1"
+        velocityTemplate: "/templates/solicitudEjecucionConciliacionE1.vm"
+      solicitudEjecucionConciliacionEtapa2:
+        title: "Solicitud de Lanzamiento del Proceso de Conciliación Etapa 2"
+        velocityTemplate: "/templates/solicitudEjecucionConciliacionE2.vm"
+      solicitudEjecucionConciliacionEtapa3Layout:
+        title: "Solicitud de Lanzamiento del Proceso de Conciliación Etapa 3"
+        velocityTemplate: "/templates/solicitudEjecucionConciliacionE3Layout.vm"
+      solicitudEjecucionConciliacionEtapa3Error:
+        title: "Solicitud de Lanzamiento del Proceso de Conciliación Etapa 3"
+        velocityTemplate: "/templates/solicitudEjecucionConciliacionE3Error.vm"
       from: mail@nmp.com
       auth:
         user: mimonte
