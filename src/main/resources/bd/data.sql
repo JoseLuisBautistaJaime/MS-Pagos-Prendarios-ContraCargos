@@ -220,6 +220,8 @@ INSERT INTO tk_estatus_movimientos_en_transito (id, nombre, descripcion, estatus
 -- INSERTS INICIALES EN TABLA - tk_operacion
 -- ------------------------------------------------------------------------------------------------------------------ --
 INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
+(3, 'VB', 'Venta con Billete');
+INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
 (8, 'RF', 'Cobro Refrendo');
 INSERT INTO tk_operacion (id, abreviatura, descripcion) VALUES
 (116, 'APL', 'Abono - Pagos Libres');
