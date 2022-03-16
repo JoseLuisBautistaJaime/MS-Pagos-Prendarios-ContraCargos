@@ -2,6 +2,8 @@
 -- -------------------------- HABILITAR COBRANZA 24/7 - CONCILIACIÓN AUTOMÁTICA ------------------ --
 -- ----------------------------------------------------------------------------------------------- --
 
+DROP TABLE IF EXISTS `tk_dia_inhabil` ;
+
 DROP TABLE IF EXISTS `to_ejecucion_preconciliacion` ;
 
 DROP TABLE IF EXISTS `tk_estatus_ejecucion_preconciliacion` ;
@@ -12,17 +14,16 @@ DROP TABLE IF EXISTS `to_ejecucion_conciliacion` ;
 
 DROP TABLE IF EXISTS `tk_estatus_ejecucion_conciliacion` ;
 
-DROP TABLE IF EXISTS `tk_dia_inhabil` ;
+DROP TABLE IF EXISTS `to_calendario_ejecucion_proceso` ;
 
 DROP TABLE IF EXISTS `tk_proceso` ;
 
-DROP TABLE IF EXISTS `to_calendario_ejecucion_proceso` ;
 
 -- -------------------------------------------------------------- --
 -- ------------ TABLA ESTATUS EJECUCIÓN PRE-CONCILIACIÓN --------- --
 -- -------------------------------------------------------------- --
 
- CREATE TABLE `tk_estatus_ejecucion_preconciliacion` (
+CREATE TABLE IF NOT EXISTS `tk_estatus_ejecucion_preconciliacion` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `descripcion_corta` varchar(100) DEFAULT NULL,
   `descripcion` varchar(150) DEFAULT NULL,
@@ -36,7 +37,7 @@ DROP TABLE IF EXISTS `to_calendario_ejecucion_proceso` ;
 -- ------------ TABLA EJECUCIÓN PRE-CONCILIACIÓN --------- --
 -- -------------------------------------------------------------- --
 
-CREATE TABLE `to_ejecucion_preconciliacion` (
+CREATE TABLE IF NOT EXISTS`to_ejecucion_preconciliacion` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `proveedor` varchar(150) NOT NULL,
   `id_estatus_ejecucion` bigint NOT NULL,
@@ -60,7 +61,7 @@ CREATE TABLE `to_ejecucion_preconciliacion` (
 -- ------------ TABLA ESTATUS EJECUCIÓN CONCILIACIÓN ------------ --
 -- -------------------------------------------------------------- --
 
- CREATE TABLE `tk_estatus_ejecucion_conciliacion` (
+CREATE TABLE IF NOT EXISTS `tk_estatus_ejecucion_conciliacion` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `descripcion_corta` varchar(100) DEFAULT NULL,
   `descripcion` varchar(150) DEFAULT NULL,
@@ -73,7 +74,7 @@ CREATE TABLE `to_ejecucion_preconciliacion` (
 -- ------------ TABLA EJECUCIÓN CONCILIACIÓN -------------------- --
 -- -------------------------------------------------------------- --
 
-CREATE TABLE `to_ejecucion_conciliacion` (
+CREATE TABLE IF NOT EXISTS `to_ejecucion_conciliacion` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `id_conciliacion` bigint NOT NULL,
   `proveedor` varchar(150) NOT NULL,
@@ -94,12 +95,13 @@ CREATE TABLE `to_ejecucion_conciliacion` (
   CONSTRAINT `ejecucion_conc_proveedor_fk` FOREIGN KEY (`proveedor`) REFERENCES `tk_proveedor` (`nombre`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
+
 -- -------------------------------------------------------------- --
 -- ------------ TABLA TRAZADO EJECUCIÓN CONCILIACIÓN --------- --
 -- -------------------------------------------------------------- --
 
 
-CREATE TABLE `to_trazado_ejecucion_conciliacion` (
+CREATE TABLE IF NOT EXISTS `to_trazado_ejecucion_conciliacion` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `id_estatus_ejecucion` bigint NOT NULL,
   `id_ejecucion_conciliacion` bigint NOT NULL,
@@ -114,15 +116,12 @@ CREATE TABLE `to_trazado_ejecucion_conciliacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
------------------------------------------------------------------------------------------------------------------------------------------------
------------------------------------------------------------------------------------------------------------------------------------------------
------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------- --
 -- ------------ TABLA CATÁLOGO PROCESOS --------- --
 -- -------------------------------------------------------------- --
 
- CREATE TABLE `tk_proceso` (
+CREATE TABLE IF NOT EXISTS `tk_proceso` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `descripcion_corta` varchar(100) DEFAULT NULL,
   `descripcion` varchar(150) DEFAULT NULL,
@@ -134,7 +133,7 @@ CREATE TABLE `to_trazado_ejecucion_conciliacion` (
 -- ------------ TABLA CATÁLOGO DÍA INHÁBIL --------- --
 -- -------------------------------------------------------------- --
 
- CREATE TABLE `tk_dia_inhabil` (
+CREATE TABLE IF NOT EXISTS `tk_dia_inhabil` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `descripcion_corta` varchar(100) DEFAULT NULL,
   `descripcion` varchar(150) DEFAULT NULL,
@@ -148,7 +147,7 @@ CREATE TABLE `to_trazado_ejecucion_conciliacion` (
 -- ------------ TABLA CALENDARIO EJECUCIÓN PROCESO  --------- --
 -- -------------------------------------------------------------- --
 
-CREATE TABLE `to_calendario_ejecucion_proceso` (
+CREATE TABLE IF NOT EXISTS `to_calendario_ejecucion_proceso` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `id_proceso` bigint NOT NULL,
   `proveedor` varchar(150) NOT NULL,
