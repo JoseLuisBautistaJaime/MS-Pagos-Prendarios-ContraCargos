@@ -28,6 +28,13 @@ public interface CalendarioEjecucionProcesoService {
 	 */
 	public List<CalendarioEjecucionProcesoDTO> consultarByPropiedades(FiltroCalendarioEjecucionProcesoDTO filtroDTO);
 
-
+	/**
+	 * Metodo que guarda una configuración de ejecución.
+	 *
+	 * @param calendarioEjecucionProcesoDTO
+	 * @param isNuevo
+	 * @return
+	 */
+	public CalendarioEjecucionProcesoDTO saveCalendarioEjecucionProceso(CalendarioEjecucionProcesoDTO calendarioEjecucionProcesoDTO, Boolean isNuevo);
 
 }

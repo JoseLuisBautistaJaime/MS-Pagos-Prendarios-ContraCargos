@@ -4,12 +4,11 @@ package mx.com.nmp.pagos.mimonte.dao.conciliacion;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CalendarioEjecucionProcesoDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CalendarioEjecucionProceso;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ import java.util.List;
  * @created 19-Nov-2021 6:33:59 PM
  */
 @Repository("calendarioEjecucionProcesoRepository")
-public interface CalendarioEjecucionProcesoRepository extends PagingAndSortingRepository<CalendarioEjecucionProceso, Long> {
+public interface CalendarioEjecucionProcesoRepository extends JpaRepository<CalendarioEjecucionProceso, Long> {
 
 
 	/**

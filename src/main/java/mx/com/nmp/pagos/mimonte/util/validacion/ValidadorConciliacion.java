@@ -679,4 +679,45 @@ public interface ValidadorConciliacion {
 		}
 		return true;
 	}
+
+	/**
+	 * Valida que un objeto de tipo FiltroEjecucionPreconciliacionDTO contenga todos los atributos
+	 * requeridos y estos sean valores validos
+	 *
+	 * @param filtroDTO
+	 * @return
+	 */
+	public static boolean validateFiltroCalendarioEjecucionProcesoDTO(FiltroCalendarioEjecucionProcesoDTO filtroDTO) {
+		try {
+			assertNotNull(filtroDTO);
+		} catch (java.lang.AssertionError | Exception ex) {
+			return false;
+		}
+		return (null != filtroDTO.getCorresponsal())
+				|| (null != filtroDTO.getReintentos())
+				|| (null != filtroDTO.getIdCalendario())
+				|| (null != filtroDTO.getIdProceso())
+				|| (null != filtroDTO.getActivo());
+	}
+
+	/**
+	 * Valida que un objeto de tipo CalendarioEjecucionProcesoDTO contenga todos los atributos
+	 * requeridos y estos sean valores validos
+	 *
+	 * @param elementoDTO
+	 * @return
+	 */
+
+	public static boolean  validateSaveCalendarioEjecucionProceso(CalendarioEjecucionProcesoDTO elementoDTO) {
+		try {
+			assertNotNull(elementoDTO);
+			assertNotNull(elementoDTO.getConfiguracionAutomatizacion());
+			assertNotNull(elementoDTO.getCorresponsal());
+			assertNotNull(elementoDTO.getProceso());
+		} catch (java.lang.AssertionError | Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 }

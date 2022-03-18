@@ -31,10 +31,10 @@ INSERT INTO tk_estatus_ejecucion_conciliacion (id, descripcion_corta, descripcio
 -- ------------------------- INSERCIONES DE CATÁLOGO DE PROCESOS ------------------------------- --
 -- --------------------------------------------------------------------------------------------- --
 
-INSERT INTO tk_proceso (id, descripcion_corta, descripcion) VALUES (1, 'Preconciliación', 'Proceso automatizado de preconciliación');
-INSERT INTO tk_proceso (id, descripcion_corta, descripcion) VALUES (2, 'Conciliación Etapa 1  (Carga de Movimientos MIDAS / Proveedor)', 'Proceso automatizado de conciliación etapa 1');
-INSERT INTO tk_proceso (id, descripcion_corta, descripcion) VALUES (3, 'Conciliación Etapa 2  (Carga de Movimientos Estado de Cuenta)', 'Proceso automatizado de conciliación etapa 2');
-INSERT INTO tk_proceso (id, descripcion_corta, descripcion) VALUES (4, 'Conciliación Etapa 3  (Envío de Layouts)', 'Proceso automatizado de conciliación etapa 3');
+INSERT INTO tk_proceso (id, descripcion_corta, descripcion) VALUES (1, 'Preconciliacion', 'Proceso automatizado de preconciliacion');
+INSERT INTO tk_proceso (id, descripcion_corta, descripcion) VALUES (2, 'Conciliacion Etapa 1  (Carga de Movimientos MIDAS / Proveedor)', 'Proceso automatizado de conciliacion etapa 1');
+INSERT INTO tk_proceso (id, descripcion_corta, descripcion) VALUES (3, 'Conciliacion Etapa 2  (Carga de Movimientos Estado de Cuenta)', 'Proceso automatizado de conciliacion etapa 2');
+INSERT INTO tk_proceso (id, descripcion_corta, descripcion) VALUES (4, 'Conciliacion Etapa 3  (Envio de Layouts)', 'Proceso automatizado de conciliacion etapa 3');
 
 
 -- --------------------------------------------------------------------------------------------- --
