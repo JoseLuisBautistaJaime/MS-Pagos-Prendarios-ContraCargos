@@ -12,8 +12,6 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroEjecucionPreconciliacionD
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.EjecucionPreconciliacionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,11 +32,6 @@ import java.util.List;
  */
 @Service("ejecucionPreconciliacionServiceImpl")
 public class EjecucionPreconciliacionServiceImpl implements EjecucionPreconciliacionService {
-
-	/**
-	 * Instancia para impresion de LOG's
-	 */
-	private static final Logger LOG = LoggerFactory.getLogger(EjecucionPreconciliacionServiceImpl.class);
 
 
 	@Autowired
@@ -112,7 +105,7 @@ public class EjecucionPreconciliacionServiceImpl implements EjecucionPreconcilia
 	 */
 	@Override
 	@Transactional
-	public EjecucionPreconciliacion save(EjecucionPreconciliacion ejecucionPreconciliacion, String registerBy) throws ConciliacionException {
+	public EjecucionPreconciliacion save(EjecucionPreconciliacion ejecucionPreconciliacion, String registerBy){
 		EjecucionPreconciliacion resultado = null;
 		try {
 			ejecucionPreconciliacion.setCreatedDate(new Date());

@@ -34,14 +34,14 @@ public abstract class EjecucionPreconciliacionBuilder {
 	 * @return
 	 */
 	public static List<EjecucionPreconciliacionDTO> buildEjecucionPreconciliacionDTOListFromEjecucionPreconciliacionList(List<EjecucionPreconciliacion> ejecucionPreconciliacionList) {
-		List<EjecucionPreconciliacionDTO> ConsultaEjecucionConciliacionDTOList = null;
+		List<EjecucionPreconciliacionDTO> consultaEjecucionConciliacionDTOList = null;
 		if (ejecucionPreconciliacionList != null && !ejecucionPreconciliacionList.isEmpty()) {
-			ConsultaEjecucionConciliacionDTOList = new ArrayList<>();
+			consultaEjecucionConciliacionDTOList = new ArrayList<>();
 			for (EjecucionPreconciliacion elemento : ejecucionPreconciliacionList) {
-				ConsultaEjecucionConciliacionDTOList.add(buildEjecucionPreconciliacionDTOFromEjecucionPreconciliacion(elemento));
+				consultaEjecucionConciliacionDTOList.add(buildEjecucionPreconciliacionDTOFromEjecucionPreconciliacion(elemento));
 			}
 		}
-		return ConsultaEjecucionConciliacionDTOList;
+		return consultaEjecucionConciliacionDTOList;
 	}
 
 	/**

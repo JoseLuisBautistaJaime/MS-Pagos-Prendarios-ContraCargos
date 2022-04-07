@@ -5,7 +5,6 @@
 package mx.com.nmp.pagos.mimonte.conector;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosEstadoCuentaResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 
 import java.util.Date;
 
@@ -23,6 +22,6 @@ public interface MovimientosEstadoCuentaBroker {
      * @param fechaFinal
      * @return
      */
-	public MovimientosEstadoCuentaResponseDTO cargarMovimientosEstadoCuenta(Long folio, Date fechaInicial, Date fechaFinal) throws ConciliacionException;
+	public MovimientosEstadoCuentaResponseDTO cargarMovimientosEstadoCuenta(Long folio, Date fechaInicial, Date fechaFinal);
 
 }

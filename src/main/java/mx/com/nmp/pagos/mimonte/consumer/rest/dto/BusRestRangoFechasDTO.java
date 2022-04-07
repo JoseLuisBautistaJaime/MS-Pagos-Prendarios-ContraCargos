@@ -6,7 +6,6 @@ package mx.com.nmp.pagos.mimonte.consumer.rest.dto;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.text.SimpleDateFormat;
 
 /**
  * @name BusRestRangoFechasDTO
@@ -18,14 +17,10 @@ import java.text.SimpleDateFormat;
  */
 public class BusRestRangoFechasDTO {
 
-	private static final SimpleDateFormat sf;
+	private SimpleDateFormat sf= new SimpleDateFormat("yyyy-MM-dd");
 
 	private String fechaInicio;
 	private String fechaFin;
-
-	static {
-		sf = new SimpleDateFormat("yyyy-MM-dd");
-	}
 
 	public BusRestRangoFechasDTO() {}
 

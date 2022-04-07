@@ -1,9 +1,14 @@
-
+/*
+ * Proyecto:        NMP - HABILITAR COBRANZA 24/7 -  CONCILIACION AUTOMATICA.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.sevice;
 
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.DiaInhabilRepository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
+import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.DiaInhabilService;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.DiaInhabilServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,17 +21,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-
+/**
+ * @name DiaInhabilServiceTest
+ * @description Clase de pruebas automatizadas para el proyecto Conciliacion
+ *              correspondiente a el servicio DiaInhabilService
+ *
+ * @author Juan Manuel Reveles jmreveles@quarksoft.net
+ * @creationDate 28/03/2022 12:55 hrs.
+ * @version 0.1
+ *
+ */
 @RunWith(SpringRunner.class)
 public class DiaInhabilServiceTest {
 
 	@InjectMocks
-	private DiaInhabilServiceImpl diaInhabilService;
+	private DiaInhabilService diaInhabilService = new DiaInhabilServiceImpl();
 
 	@Mock
 	private DiaInhabilRepository diaInhabilRepository;
@@ -59,14 +72,14 @@ public class DiaInhabilServiceTest {
 	}
 
 	@Test
-	public void buscarByFecha(){
+	public void t1_buscarByFecha(){
 		when(diaInhabilRepository.findByFecha(any())).thenReturn(diaInhabil);
 		CatalogoDiaInhabil respuesta = diaInhabilService.buscarByFecha( diaInhabil.getFecha() );
 		assertNotNull(respuesta);
 	}
 
 	@Test
-	public void consultarByPropiedades() {
+	public void t2_consultarByPropiedades() {
 		List<DiaInhabilDTO> lista = new ArrayList<DiaInhabilDTO>(){{add(diaInhabilDTO);}};
 		when(diaInhabilRepository.findByPropiedades(any(),anyString())).thenReturn(lista);
 		List<DiaInhabilDTO> listaResultados = diaInhabilService.consultarByPropiedades(filtroDiaInhabilDTO);
@@ -75,8 +88,16 @@ public class DiaInhabilServiceTest {
 	}
 
 	@Test
-	public void saveDiaInhabil() {
+	public void t3_saveDiaInhabil() {
 		when(diaInhabilRepository.save(any())).thenReturn(diaInhabil);
+		when(diaInhabilRepository.findByFecha(any())).thenReturn(diaInhabil);
+		assertThrows(ConciliacionException.class, () -> diaInhabilService.saveDiaInhabil(diaInhabilDTO));
+	}
+
+	@Test
+	public void t4_saveDiaInhabil() {
+		when(diaInhabilRepository.save(any())).thenReturn(diaInhabil);
+		when(diaInhabilRepository.findByFecha(any())).thenReturn(null);
 		DiaInhabilDTO respuesta = diaInhabilService.saveDiaInhabil(diaInhabilDTO);
 		assertNotNull(respuesta);
 	}

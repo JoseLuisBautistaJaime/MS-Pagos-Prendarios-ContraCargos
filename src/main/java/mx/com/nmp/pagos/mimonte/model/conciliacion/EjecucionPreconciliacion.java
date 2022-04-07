@@ -59,7 +59,7 @@ public class EjecucionPreconciliacion extends Updatable implements Serializable 
 		super();
 	}
 
-	public EjecucionPreconciliacion(Long id, Long folio, EstatusEjecucionPreconciliacion estatus, String estatusDescripcion, Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, Proveedor proveedor) {
+	public EjecucionPreconciliacion(Long id, EstatusEjecucionPreconciliacion estatus, String estatusDescripcion, Date fechaEjecucion, Date fechaPeriodoInicio, Date fechaPeriodoFin, Proveedor proveedor) {
 		super();
 		this.id = id;
 		this.estatus = estatus;

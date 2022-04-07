@@ -26,7 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,16 +58,12 @@ public class CalendarioEjecucionProcesoController {
 	 */
 	@Autowired
 	AsyncLayer asyncLayer;
-	
-	/**
-	 * Temporal format para los LOGs de timers
-	 */
-	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
 
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
-	private final Logger LOG = LoggerFactory.getLogger(CalendarioEjecucionProcesoController.class);
+	private final Logger logger = LoggerFactory.getLogger(CalendarioEjecucionProcesoController.class);
 
 
 	/**
@@ -80,13 +75,13 @@ public class CalendarioEjecucionProcesoController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/calendarioejecucion/consulta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Realiza la consulta de las ejecuciones del proceso de conciliación registradas en el sistema.", tags = {"CalendarioEjecucionProceso" })
+	@ApiOperation(httpMethod = "POST", value = "Realiza la consulta de las configuraciones de ejecucion de los proceso automatizados", tags = {"CalendarioEjecucionProceso" })
 	@ApiResponses({ @ApiResponse(code = 200, response = Response.class, message = "Consulta exitosa"),
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultar(@RequestBody FiltroCalendarioEjecucionProcesoDTO filtroCalendarioEjecucionDTO) {
-		
-		LOG.info(">>>URL: POST /calendarioejecucion/consulta > REQUEST ENTRANTE: {}", filtroCalendarioEjecucionDTO);
+
+		logger.info(">>>URL: POST /calendarioejecucion/consulta > REQUEST ENTRANTE: {}", filtroCalendarioEjecucionDTO);
 
 		// Validaciones generales del request
 		if (!ValidadorConciliacion.validateFiltroCalendarioEjecucionProcesoDTO(filtroCalendarioEjecucionDTO)) {
@@ -121,7 +116,7 @@ public class CalendarioEjecucionProcesoController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response crearConfiguracion(@RequestBody CalendarioEjecucionProcesoRequestDTO calendarioEjecucionRequestDTO, @RequestHeader(CatalogConstants.REQUEST_USER_HEADER) String createdBy) {
 
-		LOG.info(">>>URL: POST /calendarioejecucion > REQUEST ENTRANTE: {}", calendarioEjecucionRequestDTO.toString());
+		logger.info(">>>URL: POST /calendarioejecucion > REQUEST ENTRANTE: {}", calendarioEjecucionRequestDTO);
 
 		CalendarioEjecucionProcesoDTO calendarioEjecucionProcesoDTO = CalendarioEjecucionProcesoBuilder.buildCalendarioEjecucionProcesoDTOFromCalendarioEjecucionProcesoRequestDTO(calendarioEjecucionRequestDTO);
 

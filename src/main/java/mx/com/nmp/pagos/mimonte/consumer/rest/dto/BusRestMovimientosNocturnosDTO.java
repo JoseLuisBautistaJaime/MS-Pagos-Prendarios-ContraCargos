@@ -18,17 +18,13 @@ import java.util.Date;
  */
 public class BusRestMovimientosNocturnosDTO implements BusRestBodyDTO {
 
-	private static final SimpleDateFormat sf;
+	private SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 
 	private Long folio;
 	private String fechaInicio;
 	private String fechaFin;
 	private BusRestCorresponsalDTO corresponsal;
 	private Long estadoProceso;
-
-	static {
-		sf = new SimpleDateFormat("yyyy-MM-dd");
-	}
 
 	public BusRestMovimientosNocturnosDTO() {
 		super();

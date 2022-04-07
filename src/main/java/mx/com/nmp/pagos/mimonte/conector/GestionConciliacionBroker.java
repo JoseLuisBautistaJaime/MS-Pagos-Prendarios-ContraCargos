@@ -5,7 +5,6 @@
 package mx.com.nmp.pagos.mimonte.conector;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.GestionConciliacionResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 
 /**
  * Referencia al servicio que gestiona la creación del proceso de conciliación.
@@ -21,6 +20,6 @@ public interface GestionConciliacionBroker {
      * @param idCorresponsal
      * @return
      */
-	public GestionConciliacionResponseDTO crearConciliacion(Long idCuenta, Long idEntidad,String idCorresponsal) throws ConciliacionException;
+	public GestionConciliacionResponseDTO crearConciliacion(Long idCuenta, Long idEntidad,String idCorresponsal) ;
 
 }

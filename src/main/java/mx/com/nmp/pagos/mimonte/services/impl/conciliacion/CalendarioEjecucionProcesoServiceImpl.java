@@ -15,8 +15,6 @@ import mx.com.nmp.pagos.mimonte.scheduling.ConciliacionMidasProveedorScheduler;
 import mx.com.nmp.pagos.mimonte.scheduling.PreconciliacionScheduler;
 import mx.com.nmp.pagos.mimonte.services.conciliacion.CalendarioEjecucionProcesoService;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
@@ -40,11 +38,6 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 @Service("calendarioEjecucionProcesoServiceImpl")
 public class CalendarioEjecucionProcesoServiceImpl implements CalendarioEjecucionProcesoService {
-
-	/**
-	 * Instancia para impresion de LOG's
-	 */
-	private static final Logger LOG = LoggerFactory.getLogger(CalendarioEjecucionProcesoServiceImpl.class);
 
 
 	@Autowired
@@ -101,7 +94,7 @@ public class CalendarioEjecucionProcesoServiceImpl implements CalendarioEjecucio
 			resultado = CalendarioEjecucionProcesoBuilder.buildCalendarioEjecucionProcesoDTOFromCalendarioEjecucionProceso(calendarioEjecucionProcesoRepository.save(elementoNuevo));
 		}else {
 			Optional<CalendarioEjecucionProceso> elementoGuardado = calendarioEjecucionProcesoRepository.findById(elementoNuevo.getId());
-			CalendarioEjecucionProceso elementoEditado = elementoGuardado.get();
+			CalendarioEjecucionProceso elementoEditado =  elementoGuardado.orElse(null);
 			if(elementoEditado != null && elementoEditado.getId() != null && elementoEditado.getId() > 0 ) {
 				elementoEditado.setProceso(elementoNuevo.getProceso());
 				elementoEditado.setConfiguracion(elementoNuevo.getConfiguracion());
@@ -123,13 +116,13 @@ public class CalendarioEjecucionProcesoServiceImpl implements CalendarioEjecucio
 			if (!StringUtils.isEmpty(cronExpressions)) {
 				ScheduledExecutorService localExecutorService= Executors.newSingleThreadScheduledExecutor();
 				TaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutorService);
-				if (resultado.getProceso().getId() == ProcesoEnum.PRE_CONCILIACION.getIdProceso()) {
+				if (resultado.getProceso().getId().equals(ProcesoEnum.PRE_CONCILIACION.getIdProceso())) {
 					scheduler.schedule( () -> preconciliacionScheduler.lanzarPreconciliacionAutomatizada(resultado), new CronTrigger(cronExpressions));
-				} else if(resultado.getProceso().getId() == ProcesoEnum.CONCILIACION_ETAPA_1.getIdProceso()){
+				} else if(resultado.getProceso().getId().equals(ProcesoEnum.CONCILIACION_ETAPA_1.getIdProceso())){
 					scheduler.schedule( () -> conciliacionMidasProveedorScheduler.lanzarConciliacionEtapa1(resultado), new CronTrigger(cronExpressions));
-				} else if(resultado.getProceso().getId() == ProcesoEnum.CONCILIACION_ETAPA_2.getIdProceso()){
+				} else if(resultado.getProceso().getId().equals(ProcesoEnum.CONCILIACION_ETAPA_2.getIdProceso())){
 					scheduler.schedule( () -> conciliacionEstadoCuentaScheduler.lanzarConciliacionEtapa2(resultado), new CronTrigger(cronExpressions));
-				}else if(resultado.getProceso().getId() == ProcesoEnum.CONCILIACION_ETAPA_3.getIdProceso()){
+				}else if(resultado.getProceso().getId().equals( ProcesoEnum.CONCILIACION_ETAPA_3.getIdProceso())){
 					scheduler.schedule( () -> conciliacionLayoutsScheduler.lanzarConciliacionEtapa3(resultado), new CronTrigger(cronExpressions));
 				}
 			}

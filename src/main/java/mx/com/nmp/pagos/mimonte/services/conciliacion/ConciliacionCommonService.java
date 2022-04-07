@@ -4,13 +4,17 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
+import com.ibm.icu.util.Calendar;
 import mx.com.nmp.pagos.mimonte.config.ApplicationProperties;
+import mx.com.nmp.pagos.mimonte.constans.CodigoError;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMailRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
 import mx.com.nmp.pagos.mimonte.dao.ContactoRespository;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.CalendarioEjecucionProcesoDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroCalendarioEjecucionProcesoDTO;
 import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
+import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.Conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
@@ -37,9 +41,15 @@ import java.util.List;
 public abstract class ConciliacionCommonService {
 
 	/**
-	 * Logger para el registro de actividad en la bitacora
+	 * Instancia para impresion de LOG's
 	 */
-	public final Logger LOG = LoggerFactory.getLogger(ConciliacionCommonService.class);
+	public static final Logger logger = LoggerFactory.getLogger(ConciliacionCommonService.class);
+
+	/**
+	 * Mensaje al generarse un error
+	 */
+	public static final String MSG_ERROR = "Error: ";
+
 
 	/**
 	 * Servicios para gestionar la  calendarización de los procesos automatizados
@@ -101,8 +111,7 @@ public abstract class ConciliacionCommonService {
 		filtro.setActivo(true);
 		filtro.setIdProceso(idProceso);
 		filtro.setCorresponsal(corresponsal);
-		List<CalendarioEjecucionProcesoDTO> listaResultados = calendarioEjecucionProcesoService.consultarByPropiedades(filtro);
-		return listaResultados;
+		return calendarioEjecucionProcesoService.consultarByPropiedades(filtro);
 	}
 
 	/**
@@ -133,7 +142,7 @@ public abstract class ConciliacionCommonService {
 			try {
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
-				continue;
+				Thread.currentThread().interrupt();
 			}
 			try {
 				resultado =conciliacionService.getById(idConciliacion);
@@ -173,22 +182,71 @@ public abstract class ConciliacionCommonService {
 	 */
 	public abstract BusRestMailDTO construyeEMailProcesoConciliacion(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion);
 
-
 	/**
-	 * Método que envia las notificación vía correo electrónico  cuando el proceso automatizado falla u obtiene un resultado erróneo.
+	 * Método que envia las notificación vía correo electrónico  cuando el proceso automatizado falla u obtiene un resultado erroneo.
 	 * @param ejecucionConciliacion
 	 *
 	 */
-	public abstract void enviarNotificacionEjecucionErronea(EjecucionConciliacion ejecucionConciliacion);
+	public  void enviarNotificacionEjecucionErronea(EjecucionConciliacion ejecucionConciliacion) {
+		BusRestMailDTO generalBusMailDTO = null;
+
+		// Se obtienen los contactos del proceso de conciliación
+		List<Contactos> contactos = contactoRespository.findByIdTipoContacto(ConciliacionConstants.TIPO_CONTACTO_CONCILIACION);
+		if (null == contactos || contactos.isEmpty()) {
+			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL, CodigoError.NMP_PMIMONTE_BUSINESS_151);
+		}
+
+		// Construye e-mail
+		try {
+			generalBusMailDTO = construyeEMailProcesoConciliacion( contactos, ejecucionConciliacion);
+		} catch (Exception ex) {
+			logger.error(MSG_ERROR, ex);
+			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL,	CodigoError.NMP_PMIMONTE_BUSINESS_152);
+		}
+		try {
+			// Envia e-mail
+			busMailRestService.enviaEmail(generalBusMailDTO);
+		} catch (Exception ex) {
+			logger.error(MSG_ERROR, ex);
+			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL, CodigoError.NMP_PMIMONTE_BUSINESS_153);
+		}
+
+	}
 
 	/**
 	 * Método que obtiene la fecha actual de acuerdo a la configuracion de zona horaria que se configure.
 	 *
 	 */
 	public Date obtenerFechaActual() {
-		String zonaHoraria = applicationProperties.getMimonte().getVariables().getZonaHoraria();
-		Date fechaActual = FechasUtil.obtenerFechaZonaHorario(zonaHoraria);
-		return fechaActual;
+		String zonaHoraria = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getZonaHoraria():null;
+		return FechasUtil.obtenerFechaZonaHorario(zonaHoraria);
+	}
+
+	public Date calcularFechaInicial(Date fechaActual, Integer rangoDiasResta) {
+		Calendar calendarEjecucionInicial = Calendar.getInstance();
+		calendarEjecucionInicial.setTime(fechaActual);
+		calendarEjecucionInicial.add(Calendar.DAY_OF_YEAR, 0 - rangoDiasResta);
+		Calendar ini = Calendar.getInstance();
+		ini.setTime( calendarEjecucionInicial.getTime());
+		ini.set(Calendar.HOUR_OF_DAY, 0);
+		ini.set(Calendar.MINUTE, 0);
+		ini.set(Calendar.SECOND, 0);
+		ini.set(Calendar.MILLISECOND, 1);
+		return ini.getTime();
+	}
+
+	protected Date calcularFechaFinal(Date fechaActual, Integer rangoDiasResta) {
+		Calendar calendarEjecucionFin = Calendar.getInstance();
+		Calendar fin = Calendar.getInstance();
+		calendarEjecucionFin.setTime(fechaActual);
+		calendarEjecucionFin.add(Calendar.DAY_OF_YEAR, 0 - rangoDiasResta);
+		fin.setTime( calendarEjecucionFin.getTime());
+		fin.set(Calendar.MINUTE, 59);
+		fin.set(Calendar.SECOND, 59);
+		fin.set(Calendar.MILLISECOND, 59);
+		fin.set(Calendar.HOUR_OF_DAY, 23);
+		return fin.getTime();
+
 	}
 
 }

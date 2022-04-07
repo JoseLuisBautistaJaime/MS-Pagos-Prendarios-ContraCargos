@@ -4,7 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 

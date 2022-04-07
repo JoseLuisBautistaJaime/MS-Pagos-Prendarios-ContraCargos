@@ -674,7 +674,6 @@ public interface ValidadorConciliacion {
 			assertNotNull(diaInhabilDTO.getDescripcion());
 			assertNotNull(diaInhabilDTO.getFecha());
 		} catch (java.lang.AssertionError | Exception ex) {
-			ex.printStackTrace();
 			return false;
 		}
 		return true;
@@ -715,7 +714,6 @@ public interface ValidadorConciliacion {
 			assertNotNull(elementoDTO.getCorresponsal());
 			assertNotNull(elementoDTO.getProceso());
 		} catch (java.lang.AssertionError | Exception ex) {
-			ex.printStackTrace();
 			return false;
 		}
 		return true;

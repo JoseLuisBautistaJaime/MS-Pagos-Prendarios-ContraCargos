@@ -4,10 +4,7 @@
  */
 package mx.com.nmp.pagos.mimonte.builder.conciliacion;
 
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EjecucionConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.TrazadoEjecucionConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
-import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TrazadoEjecucionConciliacion;
 
 import java.util.ArrayList;
@@ -36,14 +33,14 @@ public abstract class TrazadoEjecucionConciliacionBuilder {
 	 * @return
 	 */
 	public static List<TrazadoEjecucionConciliacionDTO> buildTrazadoEjecucionConciliacionDTOListFromTrazadoEjecucionConciliacionList(List<TrazadoEjecucionConciliacion> trazadoEjecucionConciliacionList) {
-		List<TrazadoEjecucionConciliacionDTO> TrazadoEjecucionConciliacionDTOList = null;
+		List<TrazadoEjecucionConciliacionDTO> trazadoEjecucionConciliacionDTOList = null;
 		if (trazadoEjecucionConciliacionList != null && !trazadoEjecucionConciliacionList.isEmpty()) {
-			TrazadoEjecucionConciliacionDTOList = new ArrayList<>();
+			trazadoEjecucionConciliacionDTOList = new ArrayList<>();
 			for (TrazadoEjecucionConciliacion elemento : trazadoEjecucionConciliacionList) {
-				TrazadoEjecucionConciliacionDTOList.add(buildTrazadoEjecucionConciliacionDTOFromTrazadoEjecucionConciliacion(elemento));
+				trazadoEjecucionConciliacionDTOList.add(buildTrazadoEjecucionConciliacionDTOFromTrazadoEjecucionConciliacion(elemento));
 			}
 		}
-		return TrazadoEjecucionConciliacionDTOList;
+		return trazadoEjecucionConciliacionDTOList;
 	}
 
 	/**

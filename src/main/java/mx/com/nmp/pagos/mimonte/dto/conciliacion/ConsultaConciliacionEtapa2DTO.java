@@ -15,16 +15,13 @@ import java.util.List;
  */
 public class ConsultaConciliacionEtapa2DTO {
 
-	private static final SimpleDateFormat sf;
+	private SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 
 	private String fechaDesde;
 	private String fechaHasta;
 	private String corresponsal;
 	private List<Long> listaSubEstatus;
 
-	static {
-		sf = new SimpleDateFormat("yyyy-MM-dd");
-	}
 
 	public ConsultaConciliacionEtapa2DTO() {
 		super();

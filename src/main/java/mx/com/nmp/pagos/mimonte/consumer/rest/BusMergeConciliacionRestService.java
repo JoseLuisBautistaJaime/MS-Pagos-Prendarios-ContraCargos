@@ -10,7 +10,6 @@ import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMergeConciliacionDTO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
 
@@ -38,33 +37,26 @@ public class BusMergeConciliacionRestService extends AbstractOAuth2RestService {
 	 */
 	public Map<String, Object> generarMergeConciliacion(BusRestMergeConciliacionDTO body) {
 
-		Map<String, Object> response = null;
 		String url;
 		String bearerToken;
 		BusRestAuthDTO auth;
 		BusRestHeaderDTO header;
+		Map<String, Object> response = null;
 
-		try {
+        // Se obtiene el token
+		auth = new BusRestAuthDTO(
+				applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getAuth().getUsuario() : "",
+				applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getAuth().getPassword() : "");
+		bearerToken = postForGetToken(auth, mc != null ? mc.urlGetToken : "");
 
-			// Se obtiene el token
-			auth = new BusRestAuthDTO(
-					applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getAuth().getUsuario(),
-					applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getAuth().getPassword());
-			bearerToken = postForGetToken(auth, mc.urlGetToken);
+		// Se obtiene la url del servicio
+		url = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getUrlMergeConciliacion() : "";
 
-			// Se obtiene la url del servicio
-			url = applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getUrlMergeConciliacion();
+		// Se crea el Header de la petición
+		header = new BusRestHeaderDTO(bearerToken);
 
-			// Se crea el Header de la petición
-			header = new BusRestHeaderDTO(bearerToken);
-
-			// Se lanza el proceso
-			response = postForObjectHttpClient(auth, body, header, url);
-
-		} catch (HttpClientErrorException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// Se lanza el proceso
+		response = postForObjectHttpClient(auth, body, header, url);
 
 		return response;
 	}
@@ -81,14 +73,15 @@ public class BusMergeConciliacionRestService extends AbstractOAuth2RestService {
 	protected HttpHeaders createHeadersPostTo(BusRestAuthDTO auth, BusRestHeaderDTO header) {
 		String base64Creds = buildBase64Hash(auth);
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add(mc != null ? mc.idConsumidorKey : "", applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdConsumidor() : "");
+		headers.add("oauth.bearer", header.getBearerToken());
+		headers.add("requestUser", applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getRequestUser() : "");
 		headers.add("Authorization", "Basic " + base64Creds);
 		headers.add("Content-Type", "application/json");
-		headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdConsumidor());
-		headers.add(mc.idDestinoKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdDestino());
-		headers.add(mc.usuarioKey,	applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getUsuario());
-		headers.add("oauth.bearer", header.getBearerToken());
-		headers.add("requestUser", applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getRequestUser());
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add(mc != null ? mc.idDestinoKey : "", applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdDestino() : "");
+		headers.add(mc != null ? mc.usuarioKey : "",	applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getUsuario() : "");
+
 		return headers;
 	}
 

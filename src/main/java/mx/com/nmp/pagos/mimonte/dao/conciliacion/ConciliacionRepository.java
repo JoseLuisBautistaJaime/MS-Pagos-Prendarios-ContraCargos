@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.ConciliacionDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.MontoLayoutConciliacionDTO;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;

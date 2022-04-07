@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author Quarksoft
@@ -32,20 +33,6 @@ public class CalendarioEjecucionProcesoDTO implements Comparable<CalendarioEjecu
 		super();
 	}
 
-	public CalendarioEjecucionProcesoDTO(Long id, ProcesoDTO proceso, String configuracionAutomatizacion, Integer reintentos, Integer rangoDiasCoberturaMin, Integer rangoDiasCoberturaMax, Boolean activo, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
-		this.id = id;
-		this.proceso = proceso;
-		this.configuracionAutomatizacion = configuracionAutomatizacion;
-		this.activo = activo;
-		this.reintentos = reintentos;
-		this.rangoDiasCoberturaMin = rangoDiasCoberturaMin;
-		this.rangoDiasCoberturaMax = rangoDiasCoberturaMax;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.lastModifiedDate = lastModifiedDate;
-		this.lastModifiedBy = lastModifiedBy;
-		this.corresponsal = corresponsal;
-	}
 
 	public CalendarioEjecucionProcesoDTO(Long id, Integer idProceso, String descripcionCortaProceso, String descripcionProceso, String configuracionAutomatizacion,
 										 Integer reintentos, Integer rangoDiasCoberturaMin, Integer rangoDiasCoberturaMax, Boolean activo, String createdBy, Date createdDate, Date lastModifiedDate, String lastModifiedBy, CorresponsalEnum corresponsal) {
@@ -170,6 +157,23 @@ public class CalendarioEjecucionProcesoDTO implements Comparable<CalendarioEjecu
 	@Override
 	public int compareTo(CalendarioEjecucionProcesoDTO o) {
 		return 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, proceso, configuracionAutomatizacion, activo, reintentos, rangoDiasCoberturaMin, rangoDiasCoberturaMax, createdBy, createdDate, lastModifiedDate, lastModifiedBy, corresponsal);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CalendarioEjecucionProcesoDTO)) {
+			return false;
+		}
+		final CalendarioEjecucionProcesoDTO other = (CalendarioEjecucionProcesoDTO) obj;
+		return (this.hashCode() == other.hashCode());
 	}
 
 

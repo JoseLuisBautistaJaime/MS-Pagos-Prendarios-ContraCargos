@@ -4,14 +4,10 @@
  */
 package mx.com.nmp.pagos.mimonte.model.conciliacion;
 
-import mx.com.nmp.pagos.mimonte.model.Cuenta;
-import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.Updatable;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Registro de la ejecución de la conciliación.

@@ -1,10 +1,10 @@
 package mx.com.nmp.pagos.mimonte.conector.impl;
 
 import mx.com.nmp.pagos.mimonte.conector.GeneracionLayoutBroker;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusGeneracionLayoutRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestGeneracionLayoutDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.GeneracionLayoutResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.Map;
 @Service("GeneracionLayoutBrokerBus")
 public class GeneracionLayoutBrokerBus implements GeneracionLayoutBroker {
 
-    private Logger LOGGER = LoggerFactory.getLogger(GeneracionLayoutBrokerBus.class);
+    private Logger logger = LoggerFactory.getLogger(GeneracionLayoutBrokerBus.class);
 
     @Autowired
     private BusGeneracionLayoutRestService busGeneracionLayoutRestService;
@@ -33,8 +33,8 @@ public class GeneracionLayoutBrokerBus implements GeneracionLayoutBroker {
      * {@inheritDoc}
      */
     @Override
-    public GeneracionLayoutResponseDTO generarLayouts(Long folio, Integer estadoEnvio) throws ConciliacionException {
-        LOGGER.info(">> Se ejecuta proceso de generación de Layout ({}/{})", folio, estadoEnvio);
+    public GeneracionLayoutResponseDTO generarLayouts(Long folio, Integer estadoEnvio)  {
+        logger.info(">> Se ejecuta proceso de generación de Layout ({}/{})", folio, estadoEnvio);
 
         GeneracionLayoutResponseDTO resultado = new GeneracionLayoutResponseDTO();
 
@@ -44,7 +44,6 @@ public class GeneracionLayoutBrokerBus implements GeneracionLayoutBroker {
         try {
             response = busGeneracionLayoutRestService.generarLayouts(request);
         } catch (HttpClientErrorException ex) {
-            //throw ex;
             resultado.setRespuestaCorrecta(false);
             resultado.setCodigo(String.valueOf(ex.getStatusCode().value()));
             resultado.setMessage(ex.getMessage()+" : \n "+ex.getResponseBodyAsString());
@@ -52,20 +51,27 @@ public class GeneracionLayoutBrokerBus implements GeneracionLayoutBroker {
             return resultado;
         }
 
-        boolean statusResponse = (null != response && null != response.get("codigo") && null == response.get("codigoError"));
+        if(response != null ) {
 
-        LOGGER.debug(statusResponse ? "Respuesta correcta" : "Error al obtener respuesta");
+            boolean statusResponse = ( null != response.get("codigo") && null == response.get("codigoError"));
+            logger.debug(statusResponse ? "Respuesta correcta" : "Respuesta incorrecta");
 
-        if (!statusResponse) {
-            resultado.setRespuestaCorrecta(false);
-            resultado.setCodigo(response.get("codigoError").toString());
-            resultado.setDescripcion(response.get("tipoError").toString());
-            resultado.setMessage(response.get("descripcionError").toString());
+            if (!statusResponse) {
+                resultado.setRespuestaCorrecta(false);
+                resultado.setCodigo(response.get("codigoError").toString());
+                resultado.setDescripcion(response.get("tipoError").toString());
+                resultado.setMessage(response.get("descripcionError").toString());
+            } else {
+                resultado.setRespuestaCorrecta(true);
+                resultado.setCodigo(response.get("codigo").toString());
+                resultado.setDescripcion(response.get("descripcion").toString());
+                resultado.setMessage(response.get("descripcion").toString());
+            }
         } else {
-            resultado.setRespuestaCorrecta(true);
-            resultado.setCodigo(response.get("codigo").toString());
-            resultado.setDescripcion(response.get("descripcion").toString());
-            resultado.setMessage(response.get("descripcion").toString());
+            resultado.setRespuestaCorrecta(false);
+            resultado.setCodigo("404");
+            resultado.setMessage(ConciliacionConstants.ERROR_RESPONSE_PETICION);
+            logger.debug(ConciliacionConstants.ERROR_RESPONSE_PETICION);
         }
 
         return resultado;

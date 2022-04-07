@@ -5,6 +5,8 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 
+import java.util.Objects;
+
 /**
  * @author Quarksoft
  * @version 1.0
@@ -109,6 +111,23 @@ public class CalendarioEjecucionProcesoRequestDTO implements Comparable<Calendar
 	@Override
 	public int compareTo(CalendarioEjecucionProcesoRequestDTO o) {
 		return 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(idCalendario, proceso, configuracionAutomatizacion, activo, reintentos, rangoDiasCoberturaMin, rangoDiasCoberturaMax, corresponsal);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CalendarioEjecucionProcesoRequestDTO)) {
+			return false;
+		}
+		final CalendarioEjecucionProcesoRequestDTO other = (CalendarioEjecucionProcesoRequestDTO) obj;
+		return (this.hashCode() == other.hashCode());
 	}
 
 

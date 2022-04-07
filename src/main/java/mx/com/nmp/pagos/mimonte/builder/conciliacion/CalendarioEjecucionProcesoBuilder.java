@@ -116,7 +116,7 @@ public abstract class CalendarioEjecucionProcesoBuilder {
 			resultadoDTO.setReintentos(elementoRequestDTO.getReintentos());
 			resultadoDTO.setRangoDiasCoberturaMin(elementoRequestDTO.getRangoDiasCoberturaMin());
 			resultadoDTO.setRangoDiasCoberturaMax(elementoRequestDTO.getRangoDiasCoberturaMin());
-			resultadoDTO.setActivo(elementoRequestDTO.getActivo() != null ? elementoRequestDTO.getActivo() : true);
+			resultadoDTO.setActivo(elementoRequestDTO.getActivo() != null ? elementoRequestDTO.getActivo() : Boolean.TRUE);
 			resultadoDTO.setCreatedBy(null);
 			resultadoDTO.setCreatedDate(null);
 			resultadoDTO.setLastModifiedBy(null);

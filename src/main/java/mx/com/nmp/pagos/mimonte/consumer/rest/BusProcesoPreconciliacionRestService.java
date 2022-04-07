@@ -4,18 +4,12 @@
  */
 package mx.com.nmp.pagos.mimonte.consumer.rest;
 
-import mx.com.nmp.pagos.mimonte.constans.CodigoError;
-import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestPreconciliacionDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
 
@@ -30,11 +24,6 @@ import java.util.Map;
  */
 @Component("busProcesoPreconciliacionRestService")
 public class BusProcesoPreconciliacionRestService extends AbstractOAuth2RestService {
-
-	/**
-	 * Instancia que registra los eventos en la bitacora
-	 */
-	private static final Logger LOG = LoggerFactory.getLogger(BusProcesoPreconciliacionRestService.class);
 
 	public BusProcesoPreconciliacionRestService() {
 		super();
@@ -53,27 +42,20 @@ public class BusProcesoPreconciliacionRestService extends AbstractOAuth2RestServ
 		String url;
 		BusRestHeaderDTO header;
 
-		try {
+		// Se obtiene el token
+		auth = new BusRestAuthDTO(
+				applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getAuth().getUsuario() : "",
+				applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getAuth().getPassword() : "");
+		bearerToken = postForGetToken(auth, mc != null ? mc.urlGetToken: "");
 
-			// Se obtiene el token
-			auth = new BusRestAuthDTO(
-					applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getAuth().getUsuario(),
-					applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getAuth().getPassword());
-			bearerToken = postForGetToken(auth, mc.urlGetToken);
+		// Se obtiene la url del servicio
+		url = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getUrl() : "";
 
-			// Se obtiene la url del servicio
-			url = applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getUrl();
+		// Se crea el Header de la petición
+		header = new BusRestHeaderDTO(bearerToken);
 
-			// Se crea el Header de la petición
-			header = new BusRestHeaderDTO(bearerToken);
-
-			// Se lanza la ejecución del proceso de pre-conciliación
-			response = postForObjectHttpClient(auth, body, header, url);
-
-		} catch (HttpClientErrorException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// Se lanza la ejecución del proceso de pre-conciliación
+		response = postForObjectHttpClient(auth, body, header, url);
 
 		return response;
 	}
@@ -90,12 +72,12 @@ public class BusProcesoPreconciliacionRestService extends AbstractOAuth2RestServ
 	protected HttpHeaders createHeadersPostTo(BusRestAuthDTO auth, BusRestHeaderDTO header) {
 		String base64Creds = buildBase64Hash(auth);
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("Authorization", "Basic " + base64Creds);
+		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("Content-Type", "application/json");
-		headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getHeader().getIdConsumidor());
-		headers.add(mc.idDestinoKey, applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getHeader().getIdDestino());
-		headers.add(mc.usuarioKey,	applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getHeader().getUsuario());
+		headers.add( mc != null ? mc.idConsumidorKey : "", applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getHeader().getIdConsumidor() : "");
+		headers.add( mc != null ? mc.idDestinoKey : "", applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getHeader().getIdDestino() : "");
+		headers.add( mc != null ? mc.usuarioKey : "",	applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoPreconciliacion().getHeader().getUsuario() : "");
 		headers.add("oauth.bearer", header.getBearerToken());
 		return headers;
 	}

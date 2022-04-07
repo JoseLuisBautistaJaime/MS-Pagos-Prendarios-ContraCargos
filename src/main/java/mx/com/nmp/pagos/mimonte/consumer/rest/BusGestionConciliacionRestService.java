@@ -7,12 +7,9 @@ package mx.com.nmp.pagos.mimonte.consumer.rest;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAuthDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestGestionConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestHeaderDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
 
@@ -28,10 +25,6 @@ import java.util.Map;
 @Component("busGestionConciliacionRestService")
 public class BusGestionConciliacionRestService extends AbstractOAuth2RestService {
 
-	/**
-	 * Instancia que registra los eventos en la bitacora
-	 */
-	private static final Logger LOG = LoggerFactory.getLogger(BusGestionConciliacionRestService.class);
 
 	public BusGestionConciliacionRestService() {
 		super();
@@ -44,33 +37,25 @@ public class BusGestionConciliacionRestService extends AbstractOAuth2RestService
 	 */
 	public Map<String, Object> crearProcesoConciliacion(BusRestGestionConciliacionDTO body) {
 
-		Map<String, Object> response = null;
 		String url;
 		String bearerToken;
+		Map<String, Object> response = null;
 		BusRestAuthDTO auth;
-		BusRestHeaderDTO header;
 
-		try {
+		// Se obtiene el token
+		auth = new BusRestAuthDTO(
+				applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getAuth().getUsuario() : "",
+				applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getAuth().getPassword() : "");
+		bearerToken = postForGetToken(auth, mc != null ? mc.urlGetToken : "");
 
-			// Se obtiene el token
-			auth = new BusRestAuthDTO(
-					applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getAuth().getUsuario(),
-					applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getAuth().getPassword());
-			bearerToken = postForGetToken(auth, mc.urlGetToken);
+		// Se obtiene la url del servicio
+		url = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getUrlGestionConciliacion() : "";
 
-			// Se obtiene la url del servicio
-			url = applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getUrlGestionConciliacion();
+		// Se crea el Header de la petición
+		BusRestHeaderDTO header = new BusRestHeaderDTO(bearerToken);
 
-			// Se crea el Header de la petición
-			header = new BusRestHeaderDTO(bearerToken);
-
-			// Se lanza el proceso
-			response = postForObjectHttpClient(auth, body, header, url);
-
-		} catch (HttpClientErrorException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// Se lanza el proceso
+		response = postForObjectHttpClient(auth, body, header, url);
 
 		return response;
 	}
@@ -85,15 +70,16 @@ public class BusGestionConciliacionRestService extends AbstractOAuth2RestService
 	 */
 	@Override
 	protected HttpHeaders createHeadersPostTo(BusRestAuthDTO auth, BusRestHeaderDTO header) {
-		String base64Creds = buildBase64Hash(auth);
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("Authorization", "Basic " + base64Creds);
-		headers.add("Content-Type", "application/json");
-		headers.add(mc.idConsumidorKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdConsumidor());
-		headers.add(mc.idDestinoKey, applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdDestino());
-		headers.add(mc.usuarioKey,	applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getUsuario());
 		headers.add("oauth.bearer", header.getBearerToken());
+		headers.add("Content-Type", "application/json");
+		headers.add( mc != null ? mc.idConsumidorKey : "", applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdConsumidor() : "");
+		headers.add( mc != null ? mc.usuarioKey : "",	applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getUsuario() : "");
+		headers.add( mc != null ? mc.idDestinoKey : "", applicationProperties != null ? applicationProperties.getMimonte().getVariables().getProcesoConciliacion().getHeader().getIdDestino() : "");
+		String base64Creds = buildBase64Hash(auth);
+		headers.add("Authorization", "Basic " + base64Creds);
 		return headers;
 	}
 

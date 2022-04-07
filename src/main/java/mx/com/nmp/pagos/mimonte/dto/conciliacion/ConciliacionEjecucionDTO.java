@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.Objects;
+
 /**
  * @name ConciliacionEjecucionDTO
  * @description Clase que encapsula la información de la conciliación asociada a la
@@ -55,4 +57,22 @@ public class ConciliacionEjecucionDTO implements Comparable<ConciliacionEjecucio
 	public int compareTo(ConciliacionEjecucionDTO o) {
 		return 0;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(folio, folioConciliacion);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof ConciliacionEjecucionDTO)) {
+			return false;
+		}
+		final ConciliacionEjecucionDTO other = (ConciliacionEjecucionDTO) obj;
+		return (this.hashCode() == other.hashCode());
+	}
+
 }

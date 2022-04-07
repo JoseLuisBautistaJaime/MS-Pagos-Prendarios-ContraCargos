@@ -41,7 +41,7 @@ public class ConciliacionLayoutsScheduler {
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
-	private final Logger LOG = LoggerFactory.getLogger(ConciliacionLayoutsScheduler.class);
+	private final Logger logger = LoggerFactory.getLogger(ConciliacionLayoutsScheduler.class);
 
 	/**
 	 * Los métodos para generar y enviar los layouts de pagos, comisiones y devoluciones.
@@ -60,7 +60,7 @@ public class ConciliacionLayoutsScheduler {
 	/**
 	 * Ejecuta tareas de programadas.
 	 */
-	private void createSchedulers(){
+	public void createSchedulers(){
 
 		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones = obtenerCalendarizacionConciliacionEtapa3();
 
@@ -87,11 +87,11 @@ public class ConciliacionLayoutsScheduler {
 				if (ejecucionConciliacion != null && ejecucionConciliacion.getId() != 0) {
 					conciliacionLayouts.ejecutarProcesoConciliacionE3(ejecucionConciliacion);
 				}else{
-					LOG.info("No se encontraron los datos de ejecución del proceso");
+					logger.info("No se encontraron los datos de ejecución del proceso");
 				}
 			}
 		} else{
-			LOG.info("No se encontraron procesos sin sus layouts generados y enviados");
+			logger.info("No se encontraron procesos sin sus layouts generados y enviados");
 		}
 
 	}

@@ -5,11 +5,11 @@
 package mx.com.nmp.pagos.mimonte.conector.impl;
 
 import mx.com.nmp.pagos.mimonte.conector.MovimientosNocturnosBroker;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMovimientosNocturnosRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestCorresponsalDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMovimientosNocturnosDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosNocturnosResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -31,57 +29,60 @@ import java.util.Map;
 @Service("movimientosNocturnosBrokerBus")
 public class MovimientosNocturnosBrokerBus implements MovimientosNocturnosBroker {
 
-	private Logger LOGGER = LoggerFactory.getLogger(MovimientosNocturnosBrokerBus.class);
+	private Logger logger = LoggerFactory.getLogger(MovimientosNocturnosBrokerBus.class);
 
 	@Autowired
 	private BusMovimientosNocturnosRestService busMovimientosNocturnosRestService;
-
-	/**
-	 * Temporal format para los LOGs de timers
-	 */
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 
 	@Override
-	public MovimientosNocturnosResponseDTO cargarMovimientosNocturnos(Long folio, Date fechaInicio, Date fechaFin, String corresponsal, Long estadoProceso) throws ConciliacionException {
-
-		LOGGER.info(">> ejecuta proceso de carga de movimientos nocturnos ({}/{}/{})", sdf.format(fechaInicio), sdf.format(fechaFin), corresponsal);
+	public MovimientosNocturnosResponseDTO cargarMovimientosNocturnos(Long folio, Date fechaInicio, Date fechaFin, String corresponsal, Long estadoProceso)  {
 
 		MovimientosNocturnosResponseDTO resultado = new MovimientosNocturnosResponseDTO();
 
 		BusRestMovimientosNocturnosDTO request = new BusRestMovimientosNocturnosDTO(folio, fechaInicio, fechaFin, new BusRestCorresponsalDTO(corresponsal), estadoProceso);
+
+		logger.info(">> ejecuta proceso de carga de movimientos nocturnos ({}/{}/{})", request.getFechaInicio(), request.getFechaFin(), request.getCorresponsal().getIdCorresponsal());
 
 		Map<String, Object> response = null;
 		try {
 			response = busMovimientosNocturnosRestService.cargarMovimientosNocturnos(request);
 		}
 		catch (HttpClientErrorException ex) {
-			//throw ex;
-			resultado.setCargaCorrecta(false);
 			resultado.setCodigo(String.valueOf(ex.getStatusCode().value()));
+			resultado.setCargaCorrecta(false);
 			resultado.setMessage(ex.getMessage()+" : \n "+ex.getResponseBodyAsString());
 			return resultado;
 		}
 
-		boolean statusResponse = (null != response && null != response.get("codigo") &&  null == response.get("codigoError"));
+		if(response != null ) {
 
-		LOGGER.debug(statusResponse? "Carga correcta" : "Error al cargar los movimientos nocturnos");
+			boolean statusResponse = ( null != response.get("codigo") &&  null == response.get("codigoError"));
+			logger.debug(statusResponse? "Carga correcta" : "Error al cargar los movimientos nocturnos");
 
-		if (!statusResponse) {
-			resultado.setCargaCorrecta(false);
-			resultado.setCodigo(response.get("codigoError").toString());
-			resultado.setDescripcion(response.get("tipoError").toString());
-			resultado.setMessage(response.get("descripcionError").toString());
+			if (!statusResponse) {
+				resultado.setCodigo(response.get("codigoError").toString());
+				resultado.setDescripcion(response.get("tipoError").toString());
+				resultado.setMessage(response.get("descripcionError").toString());
+				resultado.setCargaCorrecta(false);
+			} else {
+				resultado.setCodigo(response.get("codigo").toString());
+				resultado.setDescripcion(response.get("descripcion").toString());
+				resultado.setMessage(response.get("descripcion").toString());
+				resultado.setCargaCorrecta(true);
+			}
+
 		} else {
-			resultado.setCargaCorrecta(true);
-			resultado.setCodigo(response.get("codigo").toString());
-			resultado.setDescripcion(response.get("descripcion").toString());
-			resultado.setMessage(response.get("descripcion").toString());
+			resultado.setCargaCorrecta(false);
+			resultado.setCodigo("404");
+			resultado.setDescripcion(ConciliacionConstants.ERROR_RESPONSE_PETICION);
+			resultado.setMessage(ConciliacionConstants.ERROR_RESPONSE_PETICION);
+			logger.debug(ConciliacionConstants.ERROR_RESPONSE_PETICION);
 		}
+
 		return resultado;
 	}
 }

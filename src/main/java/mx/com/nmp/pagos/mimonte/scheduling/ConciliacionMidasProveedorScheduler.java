@@ -39,7 +39,7 @@ public class ConciliacionMidasProveedorScheduler {
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
-	private final Logger LOG = LoggerFactory.getLogger(ConciliacionMidasProveedorScheduler.class);
+	private final Logger logger = LoggerFactory.getLogger(ConciliacionMidasProveedorScheduler.class);
 
 	/**
 	 * Los métodos para consultar y cargar los movimientos del estado de cuenta.
@@ -59,7 +59,7 @@ public class ConciliacionMidasProveedorScheduler {
 	/**
 	 * Ejecuta tareas de programadas.
 	 */
-	private void createSchedulers(){
+	public void createSchedulers(){
 
 		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones = obtenerCalendarizacionConciliacionEtapa1();
 
@@ -86,10 +86,10 @@ public class ConciliacionMidasProveedorScheduler {
 			if(conciliacionMidasProveedor.validarDuplicidadProceso(ejecucionConciliacion)) {
 				conciliacionMidasProveedor.ejecutarProcesoConciliacionE1(ejecucionConciliacion);
 			} else{
-				LOG.info("Proceso de conciliación duplicado");
+				logger.info("Proceso de conciliación duplicado");
 			}
 		}else{
-			LOG.info("Ejecución del proceso duplicado");
+			logger.info("Ejecución del proceso duplicado");
 		}
 
 	}

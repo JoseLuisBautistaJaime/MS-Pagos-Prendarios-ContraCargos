@@ -43,14 +43,14 @@
       </thead>
       <tbody>
           <tr>
-            <td>$elemento.folio</td>
-            <td>$elemento.correponsal</td>
-            <td>$elemento.idEntidad - $elemento.entidad</td>
-            <td>$elemento.idCuenta - $elemento.cuenta</td>
-            <td>$elemento.fechaInicio</td>
-            <td>$elemento.fechaFin</td>
-            <td>$elemento.fechaInicial</td>
-            <td>$elemento.fechaFinal</td>
+            <td>$elementoE2.folio</td>
+            <td>$elementoE2.correponsal</td>
+            <td>$elementoE2.idEntidad - $elementoE2.entidad</td>
+            <td>$elementoE2.idCuenta - $elementoE2.cuenta</td>
+            <td>$elementoE2.fechaInicio</td>
+            <td>$elementoE2.fechaFin</td>
+            <td>$elementoE2.fechaInicial</td>
+            <td>$elementoE2.fechaFinal</td>
           </tr>
       </tbody>
     </table>

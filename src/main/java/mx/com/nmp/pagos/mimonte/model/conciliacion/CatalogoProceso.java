@@ -9,6 +9,7 @@ import mx.com.nmp.pagos.mimonte.model.AbstractCatalogo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * @name CatalogoProceso
@@ -18,7 +19,12 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tk_proceso")
-public class CatalogoProceso extends AbstractCatalogo {
+public class CatalogoProceso extends AbstractCatalogo  implements Serializable {
+
+    /**
+     * Serial id.
+     */
+    private static final long serialVersionUID = 2405172041950251807L;
 
     public CatalogoProceso() {
         super();

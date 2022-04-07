@@ -7,9 +7,7 @@ package mx.com.nmp.pagos.mimonte.model.conciliacion;
 import mx.com.nmp.pagos.mimonte.model.Updatable;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Registro de la calendarizacion de los procesos de automatización.
@@ -53,7 +51,6 @@ public class CalendarioEjecucionProceso extends Updatable implements Serializabl
 	@JoinColumn(name = "proveedor")
 	private Proveedor proveedor;
 
-	@NotNull
 	@Column(name = "activo", nullable = false)
 	private Boolean activo;
 
@@ -66,7 +63,7 @@ public class CalendarioEjecucionProceso extends Updatable implements Serializabl
 		this.id = id;
 	}
 
-	public CalendarioEjecucionProceso(Long id, CatalogoProceso proceso, String configuracion, Integer reintentos, Integer rangoDiasCoberturaMin,Integer rangoDiasCoberturaMax, Proveedor proveedor, @NotNull Boolean activo) {
+	public CalendarioEjecucionProceso(Long id, CatalogoProceso proceso, String configuracion, Integer reintentos, Integer rangoDiasCoberturaMin,Integer rangoDiasCoberturaMax, Proveedor proveedor) {
 		super();
 		this.id = id;
 		this.proceso = proceso;
@@ -75,7 +72,6 @@ public class CalendarioEjecucionProceso extends Updatable implements Serializabl
 		this.rangoDiasCoberturaMin=rangoDiasCoberturaMin;
 		this.rangoDiasCoberturaMax=rangoDiasCoberturaMax;
 		this.proveedor = proveedor;
-		this.activo = activo;
 	}
 
 	public Long getId() {

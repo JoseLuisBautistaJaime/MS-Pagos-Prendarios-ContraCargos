@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusEjecucionConciliacion;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author Quarksoft
@@ -81,12 +82,12 @@ public class TrazadoEjecucionConciliacionDTO implements Comparable<TrazadoEjecuc
 		return fechaInicio;
 	}
 
-	public void setFechaInicio(Date fechaInicio) {
-		this.fechaInicio = fechaInicio;
-	}
-
 	public Date getFechaFin() {
 		return fechaFin;
+	}
+
+	public void setFechaInicio(Date fechaInicio) {
+		this.fechaInicio = fechaInicio;
 	}
 
 	public void setFechaFin(Date fechaFin) {
@@ -102,6 +103,24 @@ public class TrazadoEjecucionConciliacionDTO implements Comparable<TrazadoEjecuc
 	@Override
 	public int compareTo(TrazadoEjecucionConciliacionDTO o) {
 		return 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, estatusEjecucion, ejecucionConciliacion, estatusDescripcion, fechaInicio, fechaFin);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof TrazadoEjecucionConciliacionDTO)) {
+			return false;
+		}
+		final TrazadoEjecucionConciliacionDTO other = (TrazadoEjecucionConciliacionDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 

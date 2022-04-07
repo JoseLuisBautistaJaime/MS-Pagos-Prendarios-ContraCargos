@@ -37,11 +37,11 @@
       </thead>
       <tbody>
           <tr>
-            <td>$elemento.correponsal</td>
-            <td>$elemento.idEntidad - $elemento.entidad</td>
-            <td>$elemento.idCuenta - $elemento.cuenta</td>
-            <td>$elemento.fechaInicio</td>
-            <td>$elemento.fechaFin</td>
+            <td>$elementoE1.correponsal</td>
+            <td>$elementoE1.idEntidad - $elementoE1.entidad</td>
+            <td>$elementoE1.idCuenta - $elementoE1.cuenta</td>
+            <td>$elementoE1.fechaInicio</td>
+            <td>$elementoE1.fechaFin</td>
           </tr>
       </tbody>
     </table>

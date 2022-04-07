@@ -9,7 +9,6 @@ import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.EjecucionConciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.TrazadoEjecucionConciliacion;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -53,7 +52,7 @@ public interface EjecucionConciliacionService {
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public EjecucionConciliacion save(EjecucionConciliacion ejecucionConciliacion, String registerBy) throws ConciliacionException ;
+	public EjecucionConciliacion save(EjecucionConciliacion ejecucionConciliacion, String registerBy) ;
 
 	/**
 	 *  Método que regresa un objeto de tipo EjecucionConciliacion con la
@@ -61,7 +60,7 @@ public interface EjecucionConciliacionService {
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public EjecucionConciliacion consultarByIdConciliacion(Long idConciliacion) throws ConciliacionException;
+	public EjecucionConciliacion consultarByIdConciliacion(Long idConciliacion) ;
 
 
 	}

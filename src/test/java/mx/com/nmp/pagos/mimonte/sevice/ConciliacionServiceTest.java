@@ -1,4 +1,7 @@
-
+/*
+ * Proyecto:        NMP - HABILITAR COBRANZA 24/7 -  CONCILIACION AUTOMATICA.
+ * Quarksoft S.A.P.I. de C.V. – Todos los derechos reservados. Para uso exclusivo de Nacional Monte de Piedad.
+ */
 package mx.com.nmp.pagos.mimonte.sevice;
 
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.ConciliacionRepository;
@@ -6,6 +9,7 @@ import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.model.Cuenta;
 import mx.com.nmp.pagos.mimonte.model.Entidad;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
+import mx.com.nmp.pagos.mimonte.services.conciliacion.ConciliacionService;
 import mx.com.nmp.pagos.mimonte.services.impl.conciliacion.ConciliacionServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,12 +27,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-
+/**
+ * @name ConciliacionServiceTest
+ * @description Clase de pruebas automatizadas para el proyecto Conciliacion
+ *              correspondiente a el servicio ConciliacionService
+ *
+ * @author Juan Manuel Reveles jmreveles@quarksoft.net
+ * @creationDate 28/03/2022 12:55 hrs.
+ * @version 0.1
+ *
+ */
 @RunWith(SpringRunner.class)
 public class ConciliacionServiceTest {
 
 	@InjectMocks
-	private ConciliacionServiceImpl conciliacionService;
+	private ConciliacionService conciliacionService = new ConciliacionServiceImpl();
 
 	@Mock
 	private ConciliacionRepository conciliacionRepository;;

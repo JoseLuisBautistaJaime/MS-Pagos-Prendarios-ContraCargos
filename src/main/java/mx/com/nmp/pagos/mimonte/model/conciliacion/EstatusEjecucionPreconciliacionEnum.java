@@ -25,16 +25,8 @@ public enum EstatusEjecucionPreconciliacionEnum {
         return idEstadoEjecucion;
     }
 
-    public void setIdEstadoEjecucion(Integer idEstadoEjecucion) {
-        this.idEstadoEjecucion = idEstadoEjecucion;
-    }
-
     public String getEstadoEjecucion() {
         return estadoEjecucion;
-    }
-
-    public void setEstadoEjecucion(String estadoEjecucion) {
-        this.estadoEjecucion = estadoEjecucion;
     }
 
 }

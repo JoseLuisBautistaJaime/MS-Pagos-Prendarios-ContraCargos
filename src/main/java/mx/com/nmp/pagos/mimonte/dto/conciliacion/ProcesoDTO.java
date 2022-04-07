@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.Objects;
+
 /**
  * @name ProcesoDTO
  * @description Clase que encapsula la información del proceso de automatización.
@@ -70,4 +72,23 @@ public class ProcesoDTO implements Comparable<ProcesoDTO> {
 	public int compareTo(ProcesoDTO o) {
 		return 0;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, descripcionCorta, descripcion);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof ProcesoDTO)) {
+			return false;
+		}
+		final ProcesoDTO other = (ProcesoDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
+	}
+
 }

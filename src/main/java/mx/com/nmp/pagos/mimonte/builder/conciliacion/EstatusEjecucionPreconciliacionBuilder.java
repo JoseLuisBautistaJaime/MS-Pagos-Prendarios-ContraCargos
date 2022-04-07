@@ -18,7 +18,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.EstatusEjecucionPreconciliaci
  */
 public abstract class EstatusEjecucionPreconciliacionBuilder {
 
-	public EstatusEjecucionPreconciliacionBuilder() {
+	private EstatusEjecucionPreconciliacionBuilder() {
 		super();
 	}
 

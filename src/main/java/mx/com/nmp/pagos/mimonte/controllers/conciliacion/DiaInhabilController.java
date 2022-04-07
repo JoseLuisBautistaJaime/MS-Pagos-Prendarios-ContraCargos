@@ -24,8 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,16 +56,11 @@ public class DiaInhabilController {
 	 */
 	@Autowired
 	AsyncLayer asyncLayer;
-	
-	/**
-	 * Temporal format para los LOGs de timers
-	 */
-	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
-	private final Logger LOG = LoggerFactory.getLogger(DiaInhabilController.class);
+	private final Logger logger = LoggerFactory.getLogger(DiaInhabilController.class);
 
 
 	/**
@@ -85,7 +78,7 @@ public class DiaInhabilController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultar(@RequestBody FiltroDiaInhabilDTO filtroDiaInhabilDTO) {
 
-		LOG.info(">>>URL: POST /diainhabil/consulta > REQUEST ENTRANTE: {}", filtroDiaInhabilDTO);
+		logger.info(">>>URL: POST /diainhabil/consulta > REQUEST ENTRANTE: {}", filtroDiaInhabilDTO);
 
 		// Validaciones generales del request
 		if (!ValidadorConciliacion.validateFiltroDiaInhabilDTO(filtroDiaInhabilDTO)) {
@@ -117,7 +110,7 @@ public class DiaInhabilController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response saveDiaInhabil(@RequestBody DiaInhabilDTO diaInhabilDTO) {
 
-		LOG.info(">>>URL: POST /diainhabil > REQUEST ENTRANTE: {}", diaInhabilDTO.toString());
+		logger.info(">>>URL: POST /diainhabil > REQUEST ENTRANTE: {}", diaInhabilDTO);
 
 		// Validacion general de objeto y atributos
 		if (!ValidadorConciliacion.validateSaveDiaInhabil(diaInhabilDTO)) {

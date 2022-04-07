@@ -5,6 +5,7 @@
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @name DiaInhabilDTO
@@ -81,4 +82,22 @@ public class DiaInhabilDTO implements Comparable<DiaInhabilDTO> {
 	public int compareTo(DiaInhabilDTO o) {
 		return 0;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, descripcionCorta, descripcion, fecha);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof DiaInhabilDTO)) {
+			return false;
+		}
+		final DiaInhabilDTO other = (DiaInhabilDTO) obj;
+		return (this.hashCode() == other.hashCode());
+	}
+
 }

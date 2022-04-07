@@ -7,6 +7,7 @@ package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author Quarksoft
@@ -161,6 +162,24 @@ public class EjecucionPreconciliacionDTO implements Comparable<EjecucionPreconci
 	@Override
 	public int compareTo(EjecucionPreconciliacionDTO o) {
 		return 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, estatus, estatusDescripcion, fechaEjecucion, fechaPeriodoInicio, fechaPeriodoFin, createdBy, createdDate, lastModifiedDate, lastModifiedBy, corresponsal);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof EjecucionPreconciliacionDTO)) {
+			return false;
+		}
+		final EjecucionPreconciliacionDTO other = (EjecucionPreconciliacionDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 

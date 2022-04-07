@@ -8,6 +8,7 @@ import mx.com.nmp.pagos.mimonte.model.AbstractCatalogo;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @name CatalogoDiaInhabil
@@ -47,4 +48,22 @@ public class CatalogoDiaInhabil extends AbstractCatalogo {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, descripcionCorta, descripcion, fecha);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (!(obj instanceof CatalogoDiaInhabil))
+            return false;
+
+        final CatalogoDiaInhabil other = (CatalogoDiaInhabil) obj;
+        return (this.hashCode() == other.hashCode());
+    }
+
 }

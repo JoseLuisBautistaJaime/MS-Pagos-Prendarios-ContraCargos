@@ -5,7 +5,6 @@
 package mx.com.nmp.pagos.mimonte.conector;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MovimientosNocturnosResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 
 import java.util.Date;
 
@@ -25,6 +24,6 @@ public interface MovimientosNocturnosBroker {
      * @param estadoProceso
      * @return
      */
-	public MovimientosNocturnosResponseDTO cargarMovimientosNocturnos(Long folio,Date fechaInicio, Date fechaFin, String corresponsal, Long estadoProceso) throws ConciliacionException;
+	public MovimientosNocturnosResponseDTO cargarMovimientosNocturnos(Long folio,Date fechaInicio, Date fechaFin, String corresponsal, Long estadoProceso);
 
 }

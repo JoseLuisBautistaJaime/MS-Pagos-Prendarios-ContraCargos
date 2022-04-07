@@ -9,6 +9,8 @@ import mx.com.nmp.pagos.mimonte.model.AbstractCatalogo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @name EstatusEjecucionConciliacion
@@ -18,7 +20,12 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tk_estatus_ejecucion_conciliacion")
-public class EstatusEjecucionConciliacion extends AbstractCatalogo {
+public class EstatusEjecucionConciliacion extends AbstractCatalogo implements Serializable {
+
+    /**
+     * Serial id.
+     */
+    private static final long serialVersionUID = -3886314835601436753L;
 
     @Column(name = "order_number", nullable = true)
     private Integer orderNumber;
@@ -46,6 +53,23 @@ public class EstatusEjecucionConciliacion extends AbstractCatalogo {
 
     public void setOrderNumber(Integer orderNumber) {
         this.orderNumber = orderNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, descripcionCorta, descripcion, orderNumber);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (!(obj instanceof EstatusEjecucionConciliacion))
+            return false;
+
+        final EstatusEjecucionConciliacion other = (EstatusEjecucionConciliacion) obj;
+        return (this.hashCode() == other.hashCode());
     }
 
 }

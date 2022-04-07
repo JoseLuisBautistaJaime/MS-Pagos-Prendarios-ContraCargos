@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public class BusRestMovimientosProveedorDTO implements BusRestBodyDTO {
 
-	private static final SimpleDateFormat sf;
+	private SimpleDateFormat sf= new SimpleDateFormat("yyyy-MM-dd");
 
 	private Long folio;
 	private String fechaInicio;
@@ -26,10 +26,6 @@ public class BusRestMovimientosProveedorDTO implements BusRestBodyDTO {
 	private BusRestCorresponsalDTO corresponsal;
 	private Long estadoProceso;
 	private String proveedor;
-
-	static {
-		sf = new SimpleDateFormat("yyyy-MM-dd");
-	}
 
 	public BusRestMovimientosProveedorDTO() {
 		super();

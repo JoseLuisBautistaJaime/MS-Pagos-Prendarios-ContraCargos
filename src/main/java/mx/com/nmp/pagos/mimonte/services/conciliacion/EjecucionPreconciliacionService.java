@@ -38,7 +38,7 @@ public interface EjecucionPreconciliacionService {
 	 * @return
 	 * @throws ConciliacionException
 	 */
-	public EjecucionPreconciliacion save(EjecucionPreconciliacion ejecucionPreconciliacion, String registerBy) throws ConciliacionException;
+	public EjecucionPreconciliacion save(EjecucionPreconciliacion ejecucionPreconciliacion, String registerBy);
 
 
 }

@@ -41,7 +41,7 @@ public class ConciliacionEstadoCuentaScheduler {
 	/**
 	 * Logger para el registro de actividad en la bitacora
 	 */
-	private final Logger LOG = LoggerFactory.getLogger(ConciliacionEstadoCuentaScheduler.class);
+	private final Logger logger = LoggerFactory.getLogger(ConciliacionEstadoCuentaScheduler.class);
 
 	/**
 	 * Los métodos para consultar y cargar los movimientos del estado de cuenta.
@@ -61,7 +61,7 @@ public class ConciliacionEstadoCuentaScheduler {
 	/**
 	 * Ejecuta tareas de programadas.
 	 */
-	private void createSchedulers(){
+	public void createSchedulers(){
 
 		List<CalendarioEjecucionProcesoDTO> listaConfiguraciones = obtenerCalendarizacionConciliacionEtapa2();
 
@@ -86,10 +86,10 @@ public class ConciliacionEstadoCuentaScheduler {
 			if(ejecucionConciliacion != null && ejecucionConciliacion.getId() != 0 ) {
 				conciliacionEstadoCuenta.ejecutarProcesoConciliacionE2(ejecucionConciliacion);
 			}else{
-				LOG.info("No se encontraron los datos de ejecución del proceso");
+				logger.info("No se encontraron los datos de ejecución del proceso");
 			}
 		}else{
-			LOG.info("No se encontraron procesos sin el estado de cuenta conciliado");
+			logger.info("No se encontraron procesos sin el estado de cuenta conciliado");
 		}
 	}
 

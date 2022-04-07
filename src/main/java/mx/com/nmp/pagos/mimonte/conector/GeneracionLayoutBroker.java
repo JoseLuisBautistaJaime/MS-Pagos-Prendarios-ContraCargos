@@ -7,9 +7,7 @@ package mx.com.nmp.pagos.mimonte.conector;
 
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.GeneracionLayoutResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 
-import java.util.Date;
 
 /**
  *  Referencia al servicio que genera y envia los Layout.
@@ -23,7 +21,7 @@ public interface GeneracionLayoutBroker {
      * @param folio
      * @param estadoEnvio
      */
-    public GeneracionLayoutResponseDTO generarLayouts(Long folio, Integer estadoEnvio) throws ConciliacionException;
+    public GeneracionLayoutResponseDTO generarLayouts(Long folio, Integer estadoEnvio);
 
 
 }

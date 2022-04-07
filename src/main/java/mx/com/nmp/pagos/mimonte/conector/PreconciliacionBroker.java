@@ -5,7 +5,6 @@
 package mx.com.nmp.pagos.mimonte.conector;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.ProcesoPreconciliacionResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import java.util.Date;
 
 /**
@@ -22,6 +21,6 @@ public interface PreconciliacionBroker {
      * @param corresponsal
      * @return
      */
-    public ProcesoPreconciliacionResponseDTO ejecutarPreconciliacion(Date fechaPeriodoInicio, Date fechaPeriodoFin, String corresponsal) throws ConciliacionException;
+    public ProcesoPreconciliacionResponseDTO ejecutarPreconciliacion(Date fechaPeriodoInicio, Date fechaPeriodoFin, String corresponsal) ;
 
     }

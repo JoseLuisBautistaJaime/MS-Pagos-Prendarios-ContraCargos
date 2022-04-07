@@ -6,7 +6,6 @@ package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.DiaInhabilDTO;
-import mx.com.nmp.pagos.mimonte.dto.conciliacion.EjecucionPreconciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.FiltroDiaInhabilDTO;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.CatalogoDiaInhabil;
 import org.springframework.stereotype.Service;

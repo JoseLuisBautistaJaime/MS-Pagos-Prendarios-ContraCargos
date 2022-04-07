@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
+import java.util.Objects;
+
 /**
  * @name EstatusEjecucionPreconciliacionDTO
  * @description Clase que encapsula la información del estatus de la
@@ -80,4 +82,22 @@ public class EstatusEjecucionPreconciliacionDTO implements Comparable<EstatusEje
 	public int compareTo(EstatusEjecucionPreconciliacionDTO o) {
 		return 0;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, descripcionCorta, descripcion,orderNumber);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof EstatusEjecucionPreconciliacionDTO)) {
+			return false;
+		}
+		final EstatusEjecucionPreconciliacionDTO other = (EstatusEjecucionPreconciliacionDTO) obj;
+		return (this.hashCode() == other.hashCode());
+	}
+
 }

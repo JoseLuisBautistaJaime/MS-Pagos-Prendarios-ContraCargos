@@ -26,16 +26,9 @@ public enum ProcesoEnum {
         return idProceso;
     }
 
-    public void setIdProceso(Integer idProceso) {
-        this.idProceso = idProceso;
-    }
-
     public String getProceso() {
         return proceso;
     }
 
-    public void setProceso(String proceso) {
-        this.proceso = proceso;
-    }
 
 }

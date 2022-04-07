@@ -5,17 +5,16 @@
 package mx.com.nmp.pagos.mimonte.conector.impl;
 
 import mx.com.nmp.pagos.mimonte.conector.MergeConciliacionBroker;
+import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.BusMergeConciliacionRestService;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMergeConciliacionDTO;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MergeConciliacionResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-
 import java.util.Map;
 
 /**
@@ -27,7 +26,7 @@ import java.util.Map;
 @Service("mergeConciliacionBrokerBus")
 public class MergeConciliacionBrokerBus implements MergeConciliacionBroker {
 
-	private Logger LOGGER = LoggerFactory.getLogger(MergeConciliacionBrokerBus.class);
+	private Logger logger = LoggerFactory.getLogger(MergeConciliacionBrokerBus.class);
 
 	@Autowired
 	private BusMergeConciliacionRestService busMergeConciliacionRestService;
@@ -38,10 +37,10 @@ public class MergeConciliacionBrokerBus implements MergeConciliacionBroker {
 	 */
 
 	@Override
-	public MergeConciliacionResponseDTO generarMergeConciliacion(Long folio) throws ConciliacionException {
-		LOGGER.info(">> ejecuta proceso de conciliación de los movimientos cargados ({})", folio);
+	public MergeConciliacionResponseDTO generarMergeConciliacion(Long folio)  {
+		logger.info(">> ejecuta proceso de conciliación de los movimientos cargados ({})", folio);
 
-		MergeConciliacionResponseDTO resultado = new MergeConciliacionResponseDTO();
+		MergeConciliacionResponseDTO resultadoMerge = new MergeConciliacionResponseDTO();
 
 		BusRestMergeConciliacionDTO request = new BusRestMergeConciliacionDTO(folio);
 
@@ -50,29 +49,36 @@ public class MergeConciliacionBrokerBus implements MergeConciliacionBroker {
 			response = busMergeConciliacionRestService.generarMergeConciliacion(request);
 		}
 		catch (HttpClientErrorException ex) {
-			//throw ex;
-			resultado.setCargaCorrecta(false);
-			resultado.setCodigo(String.valueOf(ex.getStatusCode().value()));
-			resultado.setMessage(ex.getMessage()+" : \n "+ex.getResponseBodyAsString());
-			return resultado;
+			resultadoMerge.setCargaCorrecta(false);
+			resultadoMerge.setMessage(ex.getMessage()+" : \n "+ex.getResponseBodyAsString());
+			resultadoMerge.setCodigo(String.valueOf(ex.getStatusCode().value()));
+			return resultadoMerge;
 		}
 
-		boolean statusResponse = (null != response && null != response.get("codigo") &&  null == response.get("codigoError"));
+		if(response != null ) {
 
-		LOGGER.debug(statusResponse? "Se generó la conciliación de movimientos" : "Error al generar la conciliación de los movimientos cargados");
+			boolean statusResponse = ( null != response.get("codigo") &&  null == response.get("codigoError"));
+			logger.debug(statusResponse? "Se generó la conciliación de movimientos" : "Error al generar la conciliación de los movimientos cargados");
 
-		if (!statusResponse) {
-			resultado.setCargaCorrecta(false);
-			resultado.setCodigo(response.get("codigoError").toString());
-			resultado.setDescripcion(response.get("tipoError").toString());
-			resultado.setMessage(response.get("descripcionError").toString());
+			if (!statusResponse) {
+				resultadoMerge.setCargaCorrecta(false);
+				resultadoMerge.setMessage(response.get("descripcionError").toString());
+				resultadoMerge.setCodigo(response.get("codigoError").toString());
+				resultadoMerge.setDescripcion(response.get("tipoError").toString());
+			} else {
+				resultadoMerge.setCargaCorrecta(true);
+				resultadoMerge.setCodigo(response.get("codigo").toString());
+				resultadoMerge.setMessage(response.get("descripcion").toString());
+				resultadoMerge.setDescripcion(response.get("descripcion").toString());
+			}
+
 		} else {
-			resultado.setCargaCorrecta(true);
-			resultado.setCodigo(response.get("codigo").toString());
-			resultado.setDescripcion(response.get("descripcion").toString());
-			resultado.setMessage(response.get("descripcion").toString());
+			resultadoMerge.setCargaCorrecta(false);
+			resultadoMerge.setCodigo("404");
+			resultadoMerge.setMessage(ConciliacionConstants.ERROR_RESPONSE_PETICION);
+			logger.debug(ConciliacionConstants.ERROR_RESPONSE_PETICION);
 		}
 
-		return resultado;
+		return resultadoMerge;
 	}
 }

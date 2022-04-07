@@ -4,10 +4,8 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
-import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 
-import java.util.Date;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Quarksoft
@@ -64,6 +62,24 @@ public class MontoLayoutConciliacionDTO implements Comparable<MontoLayoutConcili
 	@Override
 	public int compareTo(MontoLayoutConciliacionDTO o) {
 		return 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(folioConciliacion, acumulado, tipoLayout);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof MontoLayoutConciliacionDTO)) {
+			return false;
+		}
+		final MontoLayoutConciliacionDTO other = (MontoLayoutConciliacionDTO) obj;
+		return (this.hashCode() == other.hashCode());
+
 	}
 
 

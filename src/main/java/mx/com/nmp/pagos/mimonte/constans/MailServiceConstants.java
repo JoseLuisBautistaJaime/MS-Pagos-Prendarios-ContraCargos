@@ -30,7 +30,7 @@ public class MailServiceConstants {
 	/**
 	 * Layout velocity para e-mail para solicitud de pagos
 	 */
-	@Value("${mimonte.variables.mail.solicitud-pagos.velocity-layout}")
+	@Value("${mimonte.variables.mail.solicitud-pagos.velocity-layout}" )
 	public String velocityLayout;
 
 	/**

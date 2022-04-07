@@ -8,6 +8,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.CorresponsalEnum;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Quarksoft
@@ -71,100 +72,100 @@ public class EjecucionConciliacionDTO implements Comparable<EjecucionConciliacio
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public EstatusEjecucionConciliacionDTO getEstatus() {
 		return estatus;
-	}
-
-	public void setEstatus(EstatusEjecucionConciliacionDTO estatus) {
-		this.estatus = estatus;
 	}
 
 	public String getEstatusDescripcion() {
 		return estatusDescripcion;
 	}
 
-	public void setEstatusDescripcion(String estatusDescripcion) {
-		this.estatusDescripcion = estatusDescripcion;
-	}
-
 	public ConciliacionEjecucionDTO getConciliacion() {
 		return conciliacion;
-	}
-
-	public void setConciliacion(ConciliacionEjecucionDTO conciliacion) {
-		this.conciliacion = conciliacion;
 	}
 
 	public Date getFechaEjecucion() {
 		return fechaEjecucion;
 	}
 
-	public void setFechaEjecucion(Date fechaEjecucion) {
-		this.fechaEjecucion = fechaEjecucion;
-	}
-
 	public Date getFechaPeriodoInicio() {
 		return fechaPeriodoInicio;
-	}
-
-	public void setFechaPeriodoInicio(Date fechaPeriodoInicio) {
-		this.fechaPeriodoInicio = fechaPeriodoInicio;
 	}
 
 	public Date getFechaPeriodoFin() {
 		return fechaPeriodoFin;
 	}
 
-	public void setFechaPeriodoFin(Date fechaPeriodoFin) {
-		this.fechaPeriodoFin = fechaPeriodoFin;
-	}
-
 	public String getCreatedBy() {
 		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public String getLastModifiedBy() {
-		return lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public CorresponsalEnum getCorresponsal() {
-		return corresponsal;
-	}
-
-	public void setCorresponsal(CorresponsalEnum corresponsal) {
-		this.corresponsal = corresponsal;
 	}
 
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public CorresponsalEnum getCorresponsal() {
+		return corresponsal;
 	}
 
 	public List<TrazadoEjecucionConciliacionDTO> getListaTrazado() {
 		return listaTrazado;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setEstatus(EstatusEjecucionConciliacionDTO estatus) {
+		this.estatus = estatus;
+	}
+
+	public void setEstatusDescripcion(String estatusDescripcion) {
+		this.estatusDescripcion = estatusDescripcion;
+	}
+
+	public void setConciliacion(ConciliacionEjecucionDTO conciliacion) {
+		this.conciliacion = conciliacion;
+	}
+
+	public void setFechaEjecucion(Date fechaEjecucion) {
+		this.fechaEjecucion = fechaEjecucion;
+	}
+
+	public void setFechaPeriodoInicio(Date fechaPeriodoInicio) {
+		this.fechaPeriodoInicio = fechaPeriodoInicio;
+	}
+
+	public void setFechaPeriodoFin(Date fechaPeriodoFin) {
+		this.fechaPeriodoFin = fechaPeriodoFin;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	public void setCorresponsal(CorresponsalEnum corresponsal) {
+		this.corresponsal = corresponsal;
 	}
 
 	public void setListaTrazado(List<TrazadoEjecucionConciliacionDTO> listaTrazado) {
@@ -184,5 +185,21 @@ public class EjecucionConciliacionDTO implements Comparable<EjecucionConciliacio
 		return 0;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, estatus, estatusDescripcion, conciliacion, fechaEjecucion, fechaPeriodoInicio, fechaPeriodoFin, createdBy, createdDate, lastModifiedDate, lastModifiedBy, corresponsal, listaTrazado);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof EjecucionConciliacionDTO)) {
+			return false;
+		}
+		final EjecucionConciliacionDTO other = (EjecucionConciliacionDTO) obj;
+		return (this.hashCode() == other.hashCode());
+	}
 
 }

@@ -18,7 +18,7 @@ import mx.com.nmp.pagos.mimonte.model.conciliacion.CatalogoDiaInhabil;
  */
 public abstract class DiaInhabilBuilder {
 
-	public DiaInhabilBuilder() {
+	private DiaInhabilBuilder() {
 		super();
 	}
 

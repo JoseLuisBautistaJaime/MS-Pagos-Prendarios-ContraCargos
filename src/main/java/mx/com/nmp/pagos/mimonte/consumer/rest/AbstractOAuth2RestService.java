@@ -222,9 +222,9 @@ public abstract class AbstractOAuth2RestService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Basic " + base64Creds);
 		headers.add("Content-Type", "application/x-www-form-urlencoded");
-		headers.add(mc.idConsumidorKey, mc.idConsumidorValue);
-		headers.add(mc.idDestinoKey, mc.idDestinoValue);
-		headers.add(mc.usuarioKey, mc.usuarioValue);
+		headers.add(mc != null ? mc.idConsumidorKey : "", mc != null ? mc.idConsumidorValue : "");
+		headers.add(mc != null ? mc.idDestinoKey : "", mc != null ? mc.idDestinoValue : "");
+		headers.add(mc != null ? mc.usuarioKey : "", mc != null ? mc.usuarioValue : "");
 		return headers;
 	}
 

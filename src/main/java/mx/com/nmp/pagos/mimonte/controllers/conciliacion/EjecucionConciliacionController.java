@@ -67,7 +67,7 @@ public class EjecucionConciliacionController {
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
-	private final Logger LOG = LoggerFactory.getLogger(EjecucionConciliacionController.class);
+	private final Logger logger = LoggerFactory.getLogger(EjecucionConciliacionController.class);
 
 
 	/**
@@ -84,8 +84,8 @@ public class EjecucionConciliacionController {
 			@ApiResponse(code = 400, response = Response.class, message = "El o los parametros especificados son invalidos."),
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultar(@RequestBody FiltroEjecucionConciliacionDTO filtroEjecucionConciliacionDTO) {
-		
-		LOG.info(">>>URL: POST /ejecucionconciliacion/consulta > REQUEST ENTRANTE: {}", filtroEjecucionConciliacionDTO);
+
+		logger.info(">>>URL: POST /ejecucionconciliacion/consulta > REQUEST ENTRANTE: {}", filtroEjecucionConciliacionDTO);
 
 		// Validaciones generales del request
 		if (!ValidadorConciliacion.validateFiltroEjecucionConciliacionDTO(filtroEjecucionConciliacionDTO)) {
@@ -117,12 +117,12 @@ public class EjecucionConciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultarByIdEjecucion(@PathVariable(value = "idEjecucion", required = true) Long idEjecucion) {
 
-		LOG.info(">>>URL: GET /ejecucionconciliacion/consulta/{idEjecucion} > REQUEST ENTRANTE: {}", idEjecucion);
+		logger.info(">>>URL: GET /ejecucionconciliacion/consulta/{idEjecucion} > REQUEST ENTRANTE: {}", idEjecucion);
 
-		LOG.info(">> consultaByIdEjecucion({})", idEjecucion);
+		logger.info(">> consultaByIdEjecucion({})", idEjecucion);
 		EjecucionConciliacionDTO consultaEjecucion = ejecucionConciliacionService.consultarByIdEjecucion(idEjecucion);
 
-		LOG.info(">>>URL: GET /ejecucionconciliacion/consulta/{idEjecucion} > RESPONSE: {}", consultaEjecucion);
+		logger.info(">>>URL: GET /ejecucionconciliacion/consulta/{idEjecucion} > RESPONSE: {}", consultaEjecucion);
 
 		return beanFactory.getBean(Response.class, HttpStatus.OK.toString(), ConciliacionConstants.SUCCESSFUL_SEARCH, consultaEjecucion);
 	}

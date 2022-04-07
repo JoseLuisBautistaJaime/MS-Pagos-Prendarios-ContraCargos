@@ -150,7 +150,6 @@ public interface FechasUtil {
 		ZonedDateTime fechaZonaHorario = ZonedDateTime.now(zonaHorario);
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(fechaZonaHorario.getYear(), fechaZonaHorario.getMonthValue()-1, fechaZonaHorario.getDayOfMonth(), fechaZonaHorario.getHour(), fechaZonaHorario.getMinute(),fechaZonaHorario.getSecond());
-		Date fecha = calendar.getTime();
-		return fecha;
+		return calendar.getTime();
 	}
 }

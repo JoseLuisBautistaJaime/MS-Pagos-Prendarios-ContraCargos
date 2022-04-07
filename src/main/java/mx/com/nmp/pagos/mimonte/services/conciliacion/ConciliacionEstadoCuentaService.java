@@ -4,17 +4,13 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import com.ibm.icu.util.Calendar;
 import mx.com.nmp.pagos.mimonte.conector.MergeConciliacionBroker;
 import mx.com.nmp.pagos.mimonte.conector.MovimientosEstadoCuentaBroker;
-import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestAdjuntoDTO;
 import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestMailDTO;
 import mx.com.nmp.pagos.mimonte.controllers.conciliacion.MovimientosController;
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.*;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
-import mx.com.nmp.pagos.mimonte.exception.InformationNotFoundException;
 import mx.com.nmp.pagos.mimonte.model.Contactos;
 import mx.com.nmp.pagos.mimonte.model.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.util.Response;
@@ -68,28 +64,8 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 	public Conciliacion buscarConciliacionSinEstadoCuenta(CalendarioEjecucionProcesoDTO calendarizacion) {
 
 		Date fechaActual = obtenerFechaActual();
-		com.ibm.icu.util.Calendar calendarEjecucionInicial = com.ibm.icu.util.Calendar.getInstance();
-		com.ibm.icu.util.Calendar calendarEjecucionFin = com.ibm.icu.util.Calendar.getInstance();
-		com.ibm.icu.util.Calendar ini = com.ibm.icu.util.Calendar.getInstance();
-		com.ibm.icu.util.Calendar fin = com.ibm.icu.util.Calendar.getInstance();
 
-		calendarEjecucionInicial.setTime(fechaActual);
-		calendarEjecucionFin.setTime(fechaActual);
-		calendarEjecucionInicial.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMin());
-		calendarEjecucionFin.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMax());
-
-		ini.setTime( calendarEjecucionInicial.getTime());
-		fin.setTime( calendarEjecucionFin.getTime());
-		ini.set(com.ibm.icu.util.Calendar.HOUR_OF_DAY, 0);
-		ini.set(com.ibm.icu.util.Calendar.MINUTE, 0);
-		ini.set(com.ibm.icu.util.Calendar.SECOND, 0);
-		ini.set(com.ibm.icu.util.Calendar.MILLISECOND, 1);
-		fin.set(com.ibm.icu.util.Calendar.HOUR_OF_DAY, 23);
-		fin.set(com.ibm.icu.util.Calendar.MINUTE, 59);
-		fin.set(com.ibm.icu.util.Calendar.SECOND, 59);
-		fin.set(Calendar.MILLISECOND, 59);
-
-		ConsultaConciliacionEtapa2DTO filtro = new ConsultaConciliacionEtapa2DTO( ini.getTime(), fin.getTime(), ConciliacionConstants.CON_SUB_ESTATUS_CONCILIACION_SIN_ESTADO_CUENTA, calendarizacion.getCorresponsal().getNombre() );
+		ConsultaConciliacionEtapa2DTO filtro = new ConsultaConciliacionEtapa2DTO( this.calcularFechaInicial(fechaActual, calendarizacion.getRangoDiasCoberturaMin()) , this.calcularFechaFinal(fechaActual,calendarizacion.getRangoDiasCoberturaMax() ), ConciliacionConstants.CON_SUB_ESTATUS_CONCILIACION_SIN_ESTADO_CUENTA, calendarizacion.getCorresponsal().getNombre() );
 
 		return conciliacionService.getConciliacionSinEstadoCuenta(filtro);
 
@@ -114,7 +90,7 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 			flgEjecucionCorrecta = response.getCargaCorrecta();
 			descripcionEstatusFase = response.getMessage();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(MSG_ERROR, ex);
 			finFase = obtenerFechaActual();
 			descripcionEstatusFase = ex.getMessage();
 			flgEjecucionCorrecta = false;
@@ -124,13 +100,13 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 
 			Conciliacion resultadoEjecucion= escucharSubEstatusConciliacion(ejecucionConciliacion.getConciliacion().getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_CARGA_MOV_EC);
 
-			if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA){
+			if(resultadoEjecucion != null  &&  resultadoEjecucion.getSubEstatus().getId().equals(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA)){
 				flgEjecucionCorrecta= true;
 				descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.SUCCESSFUL_CARGA_MOVS_ESTADO_CUENTA;
 				ejecucionConciliacion.setConciliacion(resultadoEjecucion);
 			} else{
 				flgEjecucionCorrecta= false;
-				descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.ERROR_CARGA_MOVS_ESTADO_CUENTA;
+				descripcionEstatusFase = resultadoEjecucion != null && resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.ERROR_CARGA_MOVS_ESTADO_CUENTA;
 			}
 		}
 
@@ -145,7 +121,7 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 				flgEjecucionCorrecta = response.getCargaCorrecta();
 				descripcionEstatusFase = response.getMessage();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(MSG_ERROR, ex);
 				finFase = obtenerFechaActual();
 				descripcionEstatusFase = ex.getMessage();
 				flgEjecucionCorrecta = false;
@@ -155,13 +131,13 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 
 				Conciliacion resultadoEjecucion= escucharSubEstatusConciliacion(ejecucionConciliacion.getConciliacion().getId(),ConciliacionConstants.CON_SUB_ESTATUS_RESULTADO_MERGE_CONCILIACION_E2);
 
-				if(resultadoEjecucion != null  && ( resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA || resultadoEjecucion.getSubEstatus().getId() == ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA) ){
+				if(resultadoEjecucion != null  && ( resultadoEjecucion.getSubEstatus().getId().equals(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONCILIACION_COMPLETADA) || resultadoEjecucion.getSubEstatus().getId().equals(ConciliacionConstants.SUBESTATUS_CONCILIACION_CONSULTA_ESTADO_DE_CUENTA_COMPLETADA)) ){
 					flgEjecucionCorrecta= true;
 					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.SUCCESSFUL_MERGE_MIDAS_PROVEEDOR_ESTADODECUENTA ;
 					ejecucionConciliacion.setConciliacion(resultadoEjecucion);
 				} else{
 					flgEjecucionCorrecta= false;
-					descripcionEstatusFase = resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.ERROR_MERGE_MIDAS_PROVEEDOR_ESTADODECUENTA;
+					descripcionEstatusFase = resultadoEjecucion != null  && resultadoEjecucion.getSubEstatusDescripcion() != null  && !resultadoEjecucion.getSubEstatusDescripcion().isEmpty() ? resultadoEjecucion.getSubEstatusDescripcion() : ConciliacionConstants.ERROR_MERGE_MIDAS_PROVEEDOR_ESTADODECUENTA;
 				}
 			}
 
@@ -172,38 +148,6 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 
 		if(!flgEjecucionCorrecta){
 			enviarNotificacionEjecucionErronea(ejecucionConciliacion);
-		}
-
-	}
-
-	/**
-	 * Método que envia las notificación vía correo electrónico  cuando el proceso automatizado falla u obtiene un resultado erróneo.
-	 * @param ejecucionConciliacion
-	 *
-	 */
-	@Override
-	public  void enviarNotificacionEjecucionErronea(EjecucionConciliacion ejecucionConciliacion) {
-		BusRestMailDTO generalBusMailDTO = null;
-
-		// Se obtienen los contactos del proceso de pre-conciliación
-		List<Contactos> contactos = contactoRespository.findByIdTipoContacto(ConciliacionConstants.TIPO_CONTACTO_CONCILIACION);
-		if (null == contactos || contactos.isEmpty()) {
-			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL, CodigoError.NMP_PMIMONTE_BUSINESS_151);
-		}
-
-		// Construye e-mail
-		try {
-			generalBusMailDTO = construyeEMailProcesoConciliacion( contactos, ejecucionConciliacion);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL,	CodigoError.NMP_PMIMONTE_BUSINESS_152);
-		}
-		try {
-			// Envia e-mail
-			busMailRestService.enviaEmail(generalBusMailDTO);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL, CodigoError.NMP_PMIMONTE_BUSINESS_153);
 		}
 
 	}
@@ -221,23 +165,23 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
-		String titulo = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa2().getTitle();
-		String remitente = applicationProperties.getMimonte().getVariables().getMail().getFrom();
+		String titulo = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa2().getTitle(): "";
+		String remitente = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getMail().getFrom(): "";
 		String destinatarios = contactos.stream().map(Contactos::getEmail).collect(Collectors.joining(","));
-		String template = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa2().getVelocityTemplate();
+		String template = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa2().getVelocityTemplate(): "";
 
-		// Se constrye el cuerpo de correo HTML
+		// Se construye el cuerpo de correo HTML
 		Map<String, Object> model = new HashMap<>();
-		model.put("elemento", datos);
+		model.put("elementoE2", datos);
 		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, "UTF-8", model);
 
 		// Se construye el DTO
 		BusRestMailDTO mailDTO = new BusRestMailDTO();
-		mailDTO.setAdjuntos(new BusRestAdjuntoDTO(new ArrayList<>()));
+		mailDTO.setPara(destinatarios);
 		mailDTO.setAsunto(titulo);
 		mailDTO.setContenidoHTML(htmlMail);
 		mailDTO.setDe(remitente);
-		mailDTO.setPara(destinatarios);
+		mailDTO.setAdjuntos(new BusRestAdjuntoDTO(new ArrayList<>()));
 
 		return mailDTO;
 	}
@@ -252,19 +196,15 @@ public class ConciliacionEstadoCuentaService extends ConciliacionCommonService {
 	 */
 	public MovimientosEstadoCuentaResponseDTO cargarMovimientosEstadoCuenta(Long folio, Date fechaInicial, Date fechaFinal) {
 		MovimientosEstadoCuentaResponseDTO resultado = new MovimientosEstadoCuentaResponseDTO();
-		try {
-			SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO = new SaveEstadoCuentaRequestDTO();
-			saveEstadoCuentaRequestDTO.setFolio(folio);
-			saveEstadoCuentaRequestDTO.setFechaInicial(fechaInicial);
-			saveEstadoCuentaRequestDTO.setFechaFinal(fechaFinal);
-			Response response = movimientosController.saveMovimientoEsadoCuenta(saveEstadoCuentaRequestDTO, "sistema");
-			resultado.setCargaCorrecta(true);
-			resultado.setCodigo(response.getCode());
-			resultado.setDescripcion(response.getMessage());
-			resultado.setMessage(response.getMessage());
-		} catch (ConciliacionException ex) {
-			throw ex;
-		}
+		SaveEstadoCuentaRequestDTO saveEstadoCuentaRequestDTO = new SaveEstadoCuentaRequestDTO();
+		saveEstadoCuentaRequestDTO.setFolio(folio);
+		saveEstadoCuentaRequestDTO.setFechaInicial(fechaInicial);
+		saveEstadoCuentaRequestDTO.setFechaFinal(fechaFinal);
+		Response response = movimientosController.saveMovimientoEsadoCuenta(saveEstadoCuentaRequestDTO, "sistema");
+		resultado.setCargaCorrecta(true);
+		resultado.setCodigo(response.getCode());
+		resultado.setDescripcion(response.getMessage());
+		resultado.setMessage(response.getMessage());
 		return resultado;
 	}
 	

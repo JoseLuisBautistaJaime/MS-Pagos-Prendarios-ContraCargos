@@ -32,14 +32,14 @@ public abstract class EjecucionConciliacionBuilder {
 	 * @return
 	 */
 	public static List<EjecucionConciliacionDTO> buildEjecucionConciliacionDTOListFromEjecucionConciliacionList(List<EjecucionConciliacion> ejecucionConciliacionList) {
-		List<EjecucionConciliacionDTO> EjecucionConciliacionDTOList = null;
+		List<EjecucionConciliacionDTO> ejecucionConciliacionDTOList = null;
 		if (ejecucionConciliacionList != null && !ejecucionConciliacionList.isEmpty()) {
-			EjecucionConciliacionDTOList = new ArrayList<>();
+			ejecucionConciliacionDTOList = new ArrayList<>();
 			for (EjecucionConciliacion elemento : ejecucionConciliacionList) {
-				EjecucionConciliacionDTOList.add(buildEjecucionConciliacionDTOFromEjecucionConciliacion(elemento));
+				ejecucionConciliacionDTOList.add(buildEjecucionConciliacionDTOFromEjecucionConciliacion(elemento));
 			}
 		}
-		return EjecucionConciliacionDTOList;
+		return ejecucionConciliacionDTOList;
 	}
 
 	/**

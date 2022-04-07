@@ -4,7 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
-import java.util.Date;
 
 /**
  * @author Quarksoft

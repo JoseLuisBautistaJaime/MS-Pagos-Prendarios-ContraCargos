@@ -4,8 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.dto.conciliacion;
 
-import mx.com.nmp.pagos.mimonte.consumer.rest.dto.BusRestBodyDTO;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,7 +17,7 @@ import java.util.Date;
  */
 public class DatosNotificacionDTO {
 
-	private static final SimpleDateFormat sf;
+	private SimpleDateFormat sf= new SimpleDateFormat("yyyy-MM-dd");
 
 	private Long folio;
 	private String fechaInicio;
@@ -32,9 +30,6 @@ public class DatosNotificacionDTO {
 	private String fechaInicial;
 	private String fechaFinal;
 
-	static {
-		sf = new SimpleDateFormat("yyyy-MM-dd");
-	}
 
 	public DatosNotificacionDTO() {
 		super();

@@ -4,7 +4,6 @@
  */
 package mx.com.nmp.pagos.mimonte.services.conciliacion;
 
-import com.ibm.icu.util.Calendar;
 import mx.com.nmp.pagos.mimonte.conector.GeneracionLayoutBroker;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
@@ -55,30 +54,8 @@ public class ConciliacionLayoutsService extends ConciliacionCommonService {
 	 * @return
 	 */
 	public List<Conciliacion> buscarConciliacionSinLayouts(CalendarioEjecucionProcesoDTO calendarizacion) {
-
 		Date fechaActual = obtenerFechaActual();
-		com.ibm.icu.util.Calendar calendarEjecucionInicial = com.ibm.icu.util.Calendar.getInstance();
-		com.ibm.icu.util.Calendar calendarEjecucionFin = com.ibm.icu.util.Calendar.getInstance();
-		com.ibm.icu.util.Calendar ini = com.ibm.icu.util.Calendar.getInstance();
-		com.ibm.icu.util.Calendar fin = com.ibm.icu.util.Calendar.getInstance();
-
-		calendarEjecucionInicial.setTime(fechaActual);
-		calendarEjecucionFin.setTime(fechaActual);
-		calendarEjecucionInicial.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMin());
-		calendarEjecucionFin.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, 0 - calendarizacion.getRangoDiasCoberturaMax());
-
-		ini.setTime( calendarEjecucionInicial.getTime());
-		fin.setTime( calendarEjecucionFin.getTime());
-		ini.set(com.ibm.icu.util.Calendar.HOUR_OF_DAY, 0);
-		ini.set(com.ibm.icu.util.Calendar.MINUTE, 0);
-		ini.set(com.ibm.icu.util.Calendar.SECOND, 0);
-		ini.set(com.ibm.icu.util.Calendar.MILLISECOND, 1);
-		fin.set(com.ibm.icu.util.Calendar.HOUR_OF_DAY, 23);
-		fin.set(com.ibm.icu.util.Calendar.MINUTE, 59);
-		fin.set(com.ibm.icu.util.Calendar.SECOND, 59);
-		fin.set(Calendar.MILLISECOND, 59);
-
-		ConsultaConciliacionEtapa3DTO filtro = new ConsultaConciliacionEtapa3DTO( ini.getTime(), fin.getTime(), ConciliacionConstants.CON_SUB_ESTATUS_CONCILIACION_SIN_LAYOUT, calendarizacion.getCorresponsal().getNombre());
+		ConsultaConciliacionEtapa3DTO filtro = new ConsultaConciliacionEtapa3DTO( this.calcularFechaInicial(fechaActual,calendarizacion.getRangoDiasCoberturaMin()), this.calcularFechaFinal(fechaActual,calendarizacion.getRangoDiasCoberturaMax()), ConciliacionConstants.CON_SUB_ESTATUS_CONCILIACION_SIN_LAYOUT, calendarizacion.getCorresponsal().getNombre());
 		return conciliacionService.getConciliacionSinLayout(filtro);
 	}
 
@@ -104,7 +81,7 @@ public class ConciliacionLayoutsService extends ConciliacionCommonService {
 				flgLayoutCorrectos = false;
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(MSG_ERROR, ex);
 			finFase = obtenerFechaActual();
 			descripcionEstatusFase = ex.getMessage();
 			flgEjecucionCorrecta = false;
@@ -118,7 +95,7 @@ public class ConciliacionLayoutsService extends ConciliacionCommonService {
 				flgLayoutCorrectos = false;
 				descripcionEstatusFase = ConciliacionConstants.ERROR_GENERACION_LAYOUT ;
 			} else {
-				Long montoValidacion = montosLayoutsConciliacion.stream().mapToLong(o -> o.getAcumulado()).sum();
+				Long montoValidacion = montosLayoutsConciliacion.stream().mapToLong(MontoLayoutConciliacionDTO :: getAcumulado).sum();
 				if(montoValidacion !=  0){
 					flgLayoutCorrectos = false;
 					descripcionEstatusFase = ConciliacionConstants.ERROR_VALIDAR_MONTOS_LAYOUT;
@@ -138,7 +115,7 @@ public class ConciliacionLayoutsService extends ConciliacionCommonService {
 				flgEjecucionCorrecta = response.getRespuestaCorrecta();
 				descripcionEstatusFase = response.getMessage();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(MSG_ERROR, ex);
 				finFase = obtenerFechaActual();
 				descripcionEstatusFase = ex.getMessage();
 				flgEjecucionCorrecta = false;
@@ -158,38 +135,6 @@ public class ConciliacionLayoutsService extends ConciliacionCommonService {
 	}
 
 	/**
-	 * Método que envia las notificación vía correo electrónico  cuando el proceso automatizado falla u obtiene un resultado erróneo.
-	 * @param ejecucionConciliacion
-	 *
-	 */
-	@Override
-	public  void enviarNotificacionEjecucionErronea(EjecucionConciliacion ejecucionConciliacion) {
-		BusRestMailDTO generalBusMailDTO = null;
-
-		// Se obtienen los contactos del proceso de conciliación
-		List<Contactos> contactos = contactoRespository.findByIdTipoContacto(ConciliacionConstants.TIPO_CONTACTO_CONCILIACION);
-		if (null == contactos || contactos.isEmpty()) {
-			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL, CodigoError.NMP_PMIMONTE_BUSINESS_151);
-		}
-
-		// Construye e-mail
-		try {
-			generalBusMailDTO = construyeEMailProcesoConciliacion( contactos, ejecucionConciliacion);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL,	CodigoError.NMP_PMIMONTE_BUSINESS_152);
-		}
-		try {
-			// Envia e-mail
-			busMailRestService.enviaEmail(generalBusMailDTO);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL, CodigoError.NMP_PMIMONTE_BUSINESS_153);
-		}
-
-	}
-
-	/**
 	 * Método que construye el cuerpo del correo electrónico con el que se notificara cuando el proceso automatizado falla u obtiene un resultado erróneo.
 	 * @param contactos
 	 * @param ejecucionConciliacion
@@ -198,24 +143,24 @@ public class ConciliacionLayoutsService extends ConciliacionCommonService {
 	@Override
 	public  BusRestMailDTO construyeEMailProcesoConciliacion(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
 
-		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
+		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
-		String titulo = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa3Error().getTitle();
-		String remitente = applicationProperties.getMimonte().getVariables().getMail().getFrom();
+		String titulo = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa3Error().getTitle() : "";
+		String remitente = applicationProperties != null ?applicationProperties.getMimonte().getVariables().getMail().getFrom() : "";
 		String destinatarios = contactos.stream().map(Contactos::getEmail).collect(Collectors.joining(","));
-		String template = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa3Error().getVelocityTemplate();
+		String template = applicationProperties != null ?applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa3Error().getVelocityTemplate() : "";
 
 		// Se constrye el cuerpo de correo HTML
 		Map<String, Object> model = new HashMap<>();
-		model.put("elemento", datos);
+		model.put("elementoE3", datos);
 		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, "UTF-8", model);
 
 		// Se construye el DTO
 		BusRestMailDTO mailDTO = new BusRestMailDTO();
-		mailDTO.setAdjuntos(new BusRestAdjuntoDTO(new ArrayList<>()));
 		mailDTO.setAsunto(titulo);
+		mailDTO.setAdjuntos(new BusRestAdjuntoDTO(new ArrayList<>()));
 		mailDTO.setContenidoHTML(htmlMail);
 		mailDTO.setDe(remitente);
 		mailDTO.setPara(destinatarios);
@@ -232,25 +177,24 @@ public class ConciliacionLayoutsService extends ConciliacionCommonService {
 	public  void enviarNotificacionLayoutsIncorrectos(EjecucionConciliacion ejecucionConciliacion) {
 		BusRestMailDTO generalBusMailDTO = null;
 
-		// Se obtienen los contactos del proceso de conciliación
 		List<Contactos> contactos = contactoRespository.findByIdTipoContacto(ConciliacionConstants.TIPO_CONTACTO_CONCILIACION);
-		if (null == contactos || contactos.isEmpty()) {
+		if (contactos != null && !contactos.isEmpty()) {
+			// Construye e-mail
+			try {
+				generalBusMailDTO = construyeEMailLayoutsIncorrectos(contactos, ejecucionConciliacion);
+			} catch (Exception ex) {
+				logger.error(MSG_ERROR, ex);
+				throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL, CodigoError.NMP_PMIMONTE_BUSINESS_152);
+			}
+			try {
+				// Envia e-mail
+				busMailRestService.enviaEmail(generalBusMailDTO);
+			} catch (Exception ex) {
+				logger.error(MSG_ERROR, ex);
+				throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL, CodigoError.NMP_PMIMONTE_BUSINESS_153);
+			}
+		} else {
 			throw new InformationNotFoundException(ConciliacionConstants.THERE_IS_NO_CONTACTS_TO_SEND_MAIL, CodigoError.NMP_PMIMONTE_BUSINESS_151);
-		}
-
-		// Construye e-mail
-		try {
-			generalBusMailDTO = construyeEMailLayoutsIncorrectos( contactos, ejecucionConciliacion);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_BUILD_EMAIL,	CodigoError.NMP_PMIMONTE_BUSINESS_152);
-		}
-		try {
-			// Envia e-mail
-			busMailRestService.enviaEmail(generalBusMailDTO);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_SENDING_EMAIL, CodigoError.NMP_PMIMONTE_BUSINESS_153);
 		}
 
 	}
@@ -263,28 +207,27 @@ public class ConciliacionLayoutsService extends ConciliacionCommonService {
 	 */
 	public  BusRestMailDTO construyeEMailLayoutsIncorrectos(List<Contactos> contactos, EjecucionConciliacion ejecucionConciliacion) {
 
-		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta().toString(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
+		DatosNotificacionDTO datos = new DatosNotificacionDTO(ejecucionConciliacion.getConciliacion().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getId(), ejecucionConciliacion.getConciliacion().getEntidad().getNombre(),ejecucionConciliacion.getConciliacion().getCuenta().getId(),ejecucionConciliacion.getConciliacion().getCuenta().getNumeroCuenta(), ejecucionConciliacion.getFechaPeriodoInicio(), ejecucionConciliacion.getFechaPeriodoFin(), ejecucionConciliacion.getProveedor().getNombre().getNombre());
 
 		// Se obtienen destinatarios
 		// Se obtiene titulo, destinatarios, remitente y cuerpo del mensaje
-		String titulo = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa3Layout().getTitle();
-		String remitente = applicationProperties.getMimonte().getVariables().getMail().getFrom();
+		String titulo = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa3Layout().getTitle() : "";
+		String remitente = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getMail().getFrom() : "";
 		String destinatarios = contactos.stream().map(Contactos::getEmail).collect(Collectors.joining(","));
-		String template = applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa3Layout().getVelocityTemplate();
+		String template = applicationProperties != null ? applicationProperties.getMimonte().getVariables().getMail().getSolicitudEjecucionConciliacionEtapa3Layout().getVelocityTemplate() : "";
 
 		// Se constrye el cuerpo de correo HTML
 		Map<String, Object> model = new HashMap<>();
-		model.put("elemento", datos);
+		model.put("elementoLI", datos);
 		String htmlMail = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, "UTF-8", model);
 
 		// Se construye el DTO
 		BusRestMailDTO mailDTO = new BusRestMailDTO();
-		mailDTO.setAdjuntos(new BusRestAdjuntoDTO(new ArrayList<>()));
 		mailDTO.setAsunto(titulo);
-		mailDTO.setContenidoHTML(htmlMail);
 		mailDTO.setDe(remitente);
 		mailDTO.setPara(destinatarios);
-
+		mailDTO.setContenidoHTML(htmlMail);
+		mailDTO.setAdjuntos(new BusRestAdjuntoDTO(new ArrayList<>()));
 		return mailDTO;
 	}
 	

@@ -5,7 +5,6 @@
 package mx.com.nmp.pagos.mimonte.conector;
 
 import mx.com.nmp.pagos.mimonte.dto.conciliacion.MergeConciliacionResponseDTO;
-import mx.com.nmp.pagos.mimonte.exception.ConciliacionException;
 
 /**
  * Referencia al servicio que carga los movimientos de estado de cuenta.
@@ -19,6 +18,6 @@ public interface MergeConciliacionBroker {
      * @param folio
      * @return
      */
-	public MergeConciliacionResponseDTO generarMergeConciliacion(Long folio) throws ConciliacionException;
+	public MergeConciliacionResponseDTO generarMergeConciliacion(Long folio) ;
 
 }

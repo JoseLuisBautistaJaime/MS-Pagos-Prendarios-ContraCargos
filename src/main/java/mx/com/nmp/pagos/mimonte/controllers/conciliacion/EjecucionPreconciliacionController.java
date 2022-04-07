@@ -23,8 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -56,16 +54,11 @@ public class EjecucionPreconciliacionController {
 	 */
 	@Autowired
 	AsyncLayer asyncLayer;
-	
-	/**
-	 * Temporal format para los LOGs de timers
-	 */
-	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
 	/**
 	 * Instancia que registra los eventos en la bitacora
 	 */
-	private final Logger LOG = LoggerFactory.getLogger(EjecucionPreconciliacionController.class);
+	private final Logger logger = LoggerFactory.getLogger(EjecucionPreconciliacionController.class);
 
 
 	/**
@@ -83,7 +76,7 @@ public class EjecucionPreconciliacionController {
 			@ApiResponse(code = 500, response = Response.class, message = "Error no esperado") })
 	public Response consultar(@RequestBody FiltroEjecucionPreconciliacionDTO filtroEjecucionPreconciliacionDTO) {
 
-		LOG.info(">>>URL: POST /ejecucionpreconciliacion/consulta > REQUEST ENTRANTE: {}", filtroEjecucionPreconciliacionDTO);
+		logger.info(">>>URL: POST /ejecucionpreconciliacion/consulta > REQUEST ENTRANTE: {}", filtroEjecucionPreconciliacionDTO);
 
 		// Validaciones generales del request
 		if (!ValidadorConciliacion.validateFiltroEjecucionPreconciliacionDTO(filtroEjecucionPreconciliacionDTO)) {

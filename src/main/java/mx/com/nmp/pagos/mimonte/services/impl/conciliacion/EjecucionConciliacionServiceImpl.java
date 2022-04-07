@@ -5,7 +5,6 @@
 package mx.com.nmp.pagos.mimonte.services.impl.conciliacion;
 
 import com.ibm.icu.util.Calendar;
-import mx.com.nmp.pagos.mimonte.builder.conciliacion.*;
 import mx.com.nmp.pagos.mimonte.constans.CodigoError;
 import mx.com.nmp.pagos.mimonte.constans.ConciliacionConstants;
 import mx.com.nmp.pagos.mimonte.dao.conciliacion.*;
@@ -40,7 +39,7 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 	/**
 	 * Instancia para impresion de LOG's
 	 */
-	private static final Logger LOG = LoggerFactory.getLogger(EjecucionConciliacionServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EjecucionConciliacionServiceImpl.class);
 
 
 	@Autowired
@@ -70,30 +69,29 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 		// Ajuste de fechas para filtros
 		if (null ==  filtroEjecucionConciliacionDTO.getFechaEjecucionDesde() && null !=  filtroEjecucionConciliacionDTO.getFechaEjecucionHasta()) {
 			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.YEAR, 1975);
 			cal.set(Calendar.MONTH, 1);
 			cal.set(Calendar.DAY_OF_MONTH, 1);
+			cal.set(Calendar.YEAR, 1975);
 			filtroEjecucionConciliacionDTO.setFechaEjecucionDesde(cal.getTime());
 		}
 		if (null !=  filtroEjecucionConciliacionDTO.getFechaEjecucionDesde() && null ==  filtroEjecucionConciliacionDTO.getFechaEjecucionHasta()) {
 			Calendar cal = Calendar.getInstance();
 			filtroEjecucionConciliacionDTO.setFechaEjecucionHasta(cal.getTime());
 		}
-		if (null !=  filtroEjecucionConciliacionDTO.getFechaEjecucionDesde()
-				&& null !=  filtroEjecucionConciliacionDTO.getFechaEjecucionHasta()) {
+		if (null !=  filtroEjecucionConciliacionDTO.getFechaEjecucionDesde()&& null !=  filtroEjecucionConciliacionDTO.getFechaEjecucionHasta()) {
 			Calendar ini = Calendar.getInstance();
-			Calendar fin = Calendar.getInstance();
 			ini.setTime( filtroEjecucionConciliacionDTO.getFechaEjecucionDesde());
-			fin.setTime( filtroEjecucionConciliacionDTO.getFechaEjecucionHasta());
-			ini.set(Calendar.HOUR_OF_DAY, 0);
-			ini.set(Calendar.MINUTE, 0);
-			ini.set(Calendar.SECOND, 0);
 			ini.set(Calendar.MILLISECOND, 0);
+			ini.set(Calendar.SECOND, 0);
+			ini.set(Calendar.MINUTE, 0);
+			ini.set(Calendar.HOUR_OF_DAY, 0);
+			filtroEjecucionConciliacionDTO.setFechaEjecucionDesde(ini.getTime());
+			Calendar fin = Calendar.getInstance();
+			fin.setTime( filtroEjecucionConciliacionDTO.getFechaEjecucionHasta());
+			fin.set(Calendar.MILLISECOND, 59);
 			fin.set(Calendar.HOUR_OF_DAY, 23);
 			fin.set(Calendar.MINUTE, 59);
 			fin.set(Calendar.SECOND, 59);
-			fin.set(Calendar.MILLISECOND, 59);
-			filtroEjecucionConciliacionDTO.setFechaEjecucionDesde(ini.getTime());
 			filtroEjecucionConciliacionDTO.setFechaEjecucionHasta(fin.getTime());
 		}
 
@@ -111,23 +109,23 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 	 * devolviendo como resultado un objeto de tipo EjecucionConciliacionDTO con el resultado de la busqueda.
 	 */
 	@Override
-	public EjecucionConciliacionDTO consultarByIdEjecucion(Long idEjecucionConciliacion) throws ConciliacionException {
+	public EjecucionConciliacionDTO consultarByIdEjecucion(Long idEjecucionConciliacion){
 
 		// Declaracion de objetos necesarios
 		EjecucionConciliacionDTO result = null;
 
 
-		LOG.info(">> consultarById");
+		logger.info(">> consultarById");
 
 		if (idEjecucionConciliacion == null) {
-			LOG.debug("El id recibido es nulo");
+			logger.debug("El id recibido es nulo");
 			throw new ConciliacionException(ConciliacionConstants.ERROR_WHILE_ID_EJECUCION_CONCILIACION_VALIDATION, CodigoError.NMP_PMIMONTE_BUSINESS_141);
 		}
 
 		try {
 			result = ejecucionConciliacionRepository.findByIdEjecucion(idEjecucionConciliacion);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error:", ex);
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_GET_EJECUCION_CONCILIACION, CodigoError.NMP_PMIMONTE_BUSINESS_143);
 		}
 
@@ -147,51 +145,28 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void guardarEjecucionConciliacion(TrazadoEjecucionConciliacion trazadoEjecucionConciliacion, String usuario){
 
-		long start = 0;
-		long finish = 0;
-		long globalStart = 0;
-		long globalFinish = 0;
-		
-		globalStart = System.currentTimeMillis();
-		LOG.debug("T>>> INICIA ACTUALIZACION DEl ESTATUS: {}", sdf.format(new Date(globalStart)));
-
 		// Se actualiza el estatus de la ejecución del proceso de conciliación que se recibio como
 		// parametro, adicionalmente se actualizan los campos createdBy y createdDate
 		try {
 			if( trazadoEjecucionConciliacion.getEjecucionConciliacion().getId() != null && trazadoEjecucionConciliacion.getEjecucionConciliacion().getId() > 0L  ){
-				start = System.currentTimeMillis();
-				LOG.debug("T>>> INICIA ACTUALIZACION DEl ESTATUS EN BASE DE DATOS: {}", sdf.format(new Date(start)));
 				ejecucionConciliacionRepository.actualizaEstatusEjecucionConciliacion(trazadoEjecucionConciliacion.getEjecucionConciliacion().getId(), trazadoEjecucionConciliacion.getEjecucionConciliacion().getEstatus(), usuario, new Date());
-				finish = System.currentTimeMillis();
-				LOG.debug("T>>> FINALIZA ACTUALIZACION DEl ESTATUS EN BASE DE DATOS: {}, EN: {}", sdf.format(new Date(finish)), (finish - start));
 			} else {
-				start = System.currentTimeMillis();
-				LOG.debug("T>>> INICIA CREACION DE LA EJECUCION: {}", sdf.format(new Date(start)));
 				EjecucionConciliacion ejecucionCreada = ejecucionConciliacionRepository.save(trazadoEjecucionConciliacion.getEjecucionConciliacion());
 				trazadoEjecucionConciliacion.getEjecucionConciliacion().setId(ejecucionCreada.getId());
-				finish = System.currentTimeMillis();
-				LOG.debug("T>>> FINALIZA CREACION DE LA EJECUCION: {}, EN: {}", sdf.format(new Date(finish)), (finish - start));
-
 			}
 		} catch (Exception ex) {
-			LOG.error("Error al actualizar el estatus de la ejecución del proceso de conciliación.", ex);
+			logger.error("Error al actualizar el estatus de la ejecución del proceso de conciliación.", ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_144.getDescripcion(),	CodigoError.NMP_PMIMONTE_BUSINESS_144);
 		}
 
 		// Registro de trazado de estatus
 		try {
-			start = System.currentTimeMillis();
-			LOG.debug("T>>> INICIA REGISTRO DEl TRAZADO DE ESTATUS: {}", sdf.format(new Date(start)));
 			trazadoEjecucionConciliacionRepository.save(trazadoEjecucionConciliacion);
-			finish = System.currentTimeMillis();
-			LOG.debug("T>>> FINALIZA REGISTRO DEl TRAZADO DE ESTATUS: {}, EN: {}", sdf.format(new Date(finish)), (finish-start) );
 		} catch (Exception ex) {
-			LOG.error("Error al registrar el trazado de estatus de la ejecución del proceso de conciliación.", ex);
+			logger.error("Error al registrar el trazado de estatus de la ejecución del proceso de conciliación.", ex);
 			throw new ConciliacionException(CodigoError.NMP_PMIMONTE_BUSINESS_145.getDescripcion(),	CodigoError.NMP_PMIMONTE_BUSINESS_145);
 		}
 
-		globalFinish = System.currentTimeMillis();
-		LOG.debug("T>>> FINALIZA ACTUALIZACION DEl ESTATUS : {}, EN: {}", sdf.format(new Date(globalFinish)), (globalFinish-globalStart) );
 	}
 
 
@@ -204,7 +179,7 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 	 */
 	@Override
 	@Transactional
-	public EjecucionConciliacion save(EjecucionConciliacion ejecucionConciliacion, String registerBy) throws ConciliacionException {
+	public EjecucionConciliacion save(EjecucionConciliacion ejecucionConciliacion, String registerBy) {
 		EjecucionConciliacion resultado = null;
 		try {
 			ejecucionConciliacion.setCreatedDate(new Date());
@@ -222,7 +197,7 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 	 * devolviendo como resultado un objeto de tipo EjecucionConciliacion con el resultado de la busqueda.
 	 */
 	@Override
-	public EjecucionConciliacion consultarByIdConciliacion(Long idConciliacion) throws ConciliacionException {
+	public EjecucionConciliacion consultarByIdConciliacion(Long idConciliacion) {
 
 		// Declaracion de objetos necesarios
 		EjecucionConciliacion result = null;
@@ -234,7 +209,7 @@ public class EjecucionConciliacionServiceImpl implements EjecucionConciliacionSe
 		try {
 			result = ejecucionConciliacionRepository.findByIdConciliacion(idConciliacion);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error:", ex);
 			throw new ConciliacionException(ConciliacionConstants.ERROR_ON_GET_EJECUCION_CONCILIACION, CodigoError.NMP_PMIMONTE_BUSINESS_143);
 		}
 
