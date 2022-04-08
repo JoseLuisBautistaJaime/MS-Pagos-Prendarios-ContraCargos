@@ -140,7 +140,7 @@ public abstract class ConciliacionCommonService {
 		Conciliacion resultado = null;
 		for (int i = 0; i <= 3; i++) {
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(4000);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
