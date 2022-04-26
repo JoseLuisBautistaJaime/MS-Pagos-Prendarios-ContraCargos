@@ -25,6 +25,7 @@ import mx.com.nmp.pagos.mimonte.constans.PagoConstants;
 import mx.com.nmp.pagos.mimonte.constans.TarjetaConstants;
 import mx.com.nmp.pagos.mimonte.dao.PagoRepository;
 import mx.com.nmp.pagos.mimonte.dss.DSSModule;
+import mx.com.nmp.pagos.mimonte.dto.BayonetReglasDTO;
 import mx.com.nmp.pagos.mimonte.dto.ClienteDTO;
 import mx.com.nmp.pagos.mimonte.dto.EstatusPagoResponseDTO;
 import mx.com.nmp.pagos.mimonte.dto.PagoRequestDTO;
@@ -37,6 +38,7 @@ import mx.com.nmp.pagos.mimonte.exception.TarjetaIdentifierException;
 import mx.com.nmp.pagos.mimonte.model.Pago;
 import mx.com.nmp.pagos.mimonte.model.PagoPartidas;
 import mx.com.nmp.pagos.mimonte.services.ClienteService;
+import mx.com.nmp.pagos.mimonte.services.DSSService;
 import mx.com.nmp.pagos.mimonte.services.PagoService;
 import mx.com.nmp.pagos.mimonte.services.TarjetasService;
 import mx.com.nmp.pagos.mimonte.util.validacion.ValidadorDatosPago;
@@ -59,6 +61,12 @@ public class PagoServiceImpl implements PagoService {
 	private TarjetasService tarjetaService;
 
 	/**
+	 * Servicio DSS para procesar peticiones referentes a modulo DSS
+	 */
+	@Autowired
+	private DSSService dssService;
+	
+	/**
 	 * Service de clientes para obtener los datos del cliente para agregar a la
 	 * tarjeta a guardar
 	 */
@@ -76,6 +84,12 @@ public class PagoServiceImpl implements PagoService {
 	 */
 	@Autowired
 	private DSSModule dssModule;
+	
+	/**
+	 * Modulo DSS para las operaciones correspondientes a la respuesta de bayonet
+	 */
+	@Autowired
+	private BayonetReglasServiceImpl bayonetReglasServiceImpl;
 
 	/**
 	 * Logger para el registro de actividad en la bitacora
@@ -112,13 +126,32 @@ public class PagoServiceImpl implements PagoService {
 		LOG.debug("Ingreso al servicio: savePago(PagoRequestDTO pagoRequestDTO)");
 		PagoResponseDTO pagoResponseDTO = new PagoResponseDTO();
 		List<EstatusPagoResponseDTO> estatus;
-		LOG.debug("Intentando obtener un numero de afiliacion");
-		// DSS invocation
-		TipoAutorizacionDTO tipoAutorizacionDTO = dssModule.getNoAfiliacion(pagoRequestDTO);
-		pagoResponseDTO.setIdTipoAfiliacion(
-				null != tipoAutorizacionDTO && null != tipoAutorizacionDTO.getId() ? tipoAutorizacionDTO.getId()
-						: null);
-		pagoResponseDTO.setTipoAutorizacion(tipoAutorizacionDTO);
+		TipoAutorizacionDTO tipoAutorizacionDTO = new TipoAutorizacionDTO();
+		
+		LOG.debug("Recuperando la respuesta de bayonet (de bus)");
+		if (null == pagoRequestDTO.getBayonet() || pagoRequestDTO.getBayonet().isEmpty()) {
+			LOG.debug("No viene respuesta de bayonet");
+			obtieneReglasNormales(pagoRequestDTO, pagoResponseDTO);
+		}
+		else {
+			LOG.debug("  ========  La respuesta de bayonet es: " + pagoRequestDTO.getBayonet());
+			BayonetReglasDTO bayonetReglasDTO = bayonetReglasServiceImpl.getReglasBayonetByStatus(pagoRequestDTO.getBayonet().toLowerCase().trim());
+			if (null  == bayonetReglasDTO)
+				throw new PagoException(PagoConstants.BAYONET_RESPONSE_INCORRECT);
+
+			if (bayonetReglasDTO.getReglaAutorizacion().equals(0)){
+				LOG.debug("  0 ==> vamos por reglas normales " );
+				obtieneReglasNormales(pagoRequestDTO, pagoResponseDTO);
+			}
+			else {
+				LOG.debug("  1,2 ==> vamos por reglas bayonet " );
+				tipoAutorizacionDTO = dssService.getTipoAutorizacionById(bayonetReglasDTO.getReglaAutorizacion());
+				pagoResponseDTO.setIdTipoAfiliacion(tipoAutorizacionDTO.getId());
+				pagoResponseDTO.setTipoAutorizacion(tipoAutorizacionDTO);
+			}
+		}
+		
+		
 		LOG.debug("Se validara objeto pagoRequestDTO");
 		ValidadorDatosPago.validacionesInicialesPago(pagoRequestDTO, cantidadMaximaPartidas);
 		try {
@@ -242,6 +275,19 @@ public class PagoServiceImpl implements PagoService {
 			flag = true;
 		LOG.debug("El resultado del metodo validaCantidadTarjetasExistentes(PagoRequestDTO) es: {}", flag);
 		return flag;
+	}
+
+	/**
+	 * Metodo que va por un numero de afilicacion y obtener el tipo de autorizacion (3d secure o no)
+	 *
+	 * @return void
+	 */
+	private void obtieneReglasNormales(PagoRequestDTO pagoRequestDTO, PagoResponseDTO pagoResponseDTO) throws SQLDataException, SQLException{
+		LOG.debug("Intentando obtener un numero de afiliacion");
+		// DSS invocation
+		TipoAutorizacionDTO tipoAutorizacionDTO = this.dssModule.getNoAfiliacion(pagoRequestDTO);
+		pagoResponseDTO.setIdTipoAfiliacion(null != tipoAutorizacionDTO && null != tipoAutorizacionDTO.getId() ? tipoAutorizacionDTO.getId() : null);
+		pagoResponseDTO.setTipoAutorizacion(tipoAutorizacionDTO);
 	}
 
 }

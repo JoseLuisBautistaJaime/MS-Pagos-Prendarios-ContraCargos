@@ -315,4 +315,8 @@ public final class PagoConstants {
 	 */
 	public static final String NOMBRE_OPERACION_CANT_BE_EMPTY = "El nombre de la operacion no puede ser vacio";
 	
+	/**
+	 * Mensaje que es mostrado cuando se recibe una respuesta incorrecta de bayonet
+	 */
+	public static final String BAYONET_RESPONSE_INCORRECT = "La respuesta de BAYONET es incorrecta";
 }

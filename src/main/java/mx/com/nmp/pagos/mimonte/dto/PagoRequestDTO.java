@@ -24,13 +24,14 @@ public class PagoRequestDTO {
 	private Long idCliente;
 	private String concepto;
 	private String idTransaccionMidas;
+	private String bayonet;
 
 	public PagoRequestDTO() {
 		super();
 	}
 
 	public PagoRequestDTO(List<OperacionDTO> operaciones, TarjetaPagoDTO tarjeta, BigDecimal montoTotal,
-			Boolean guardaTarjeta, Long idCliente, String concepto, String idTransaccionMidas) {
+			Boolean guardaTarjeta, Long idCliente, String concepto, String idTransaccionMidas, String bayonet) {
 		super();
 		this.operaciones = operaciones;
 		this.tarjeta = tarjeta;
@@ -39,6 +40,7 @@ public class PagoRequestDTO {
 		this.idCliente = idCliente;
 		this.concepto = concepto;
 		this.idTransaccionMidas = idTransaccionMidas;
+		this.bayonet = bayonet;
 	}
 
 	public List<OperacionDTO> getOperaciones() {
@@ -97,11 +99,19 @@ public class PagoRequestDTO {
 		this.idTransaccionMidas = idTransaccionMidas;
 	}
 
+	public String getBayonet() {
+		return bayonet;
+	}
+
+	public void setBayonet(String bayonet) {
+		this.bayonet = bayonet;
+	}
+	
 	@Override
 	public String toString() {
 		return "PagoRequestDTO [operaciones=" + operaciones + ", tarjeta=" + tarjeta + ", montoTotal=" + montoTotal
 				+ ", guardaTarjeta=" + guardaTarjeta + ", idCliente=" + idCliente + ", concepto=" + concepto
-				+ ", idTransaccion=" + idTransaccionMidas + "]";
+				+ ", idTransaccion=" + idTransaccionMidas + ", bayonet=" + bayonet +  "]";
 	}
 
 }
