@@ -267,6 +267,10 @@
 	      <name>central maven repo https</name>
 	      <url>https://repo1.maven.org/maven2</url>
 	   </repository>
+        <repository>
+            <id>jaspersoft-third-party</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
+        </repository>
 	</repositories>
 	<pluginRepositories>
 	    <pluginRepository>
@@ -276,6 +280,10 @@
 	            <enabled>false</enabled>
 	        </snapshots>
 	    </pluginRepository>
+        <pluginRepository>
+            <id>jaspersoft-third-party</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
+        </pluginRepository>
 	</pluginRepositories>
 
     <build>
